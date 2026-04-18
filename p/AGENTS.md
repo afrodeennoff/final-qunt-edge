@@ -119,6 +119,12 @@
 - For admin schedule fields backed by `input[type=\"datetime-local\"]`, never use `toISOString().slice(0, 16)` for default values. Render local wall-clock components so editing and re-saving a timestamp does not shift it by timezone offset.
 - Keep admin control granularity aligned to the schema. Example: `PropFirmReview.rating` is an `Int`, so review forms should use integer steps instead of advertising half-step values that the backend cannot store faithfully.
 
+## Route State & Shell Patterns
+- For UI-only polish passes, start with shared route-state and shell owners before touching route-local page bodies: `components/ui/route-state.tsx`, `components/layout/unified-page-recipes.ts`, public navbar/marketing shell, `components/mobile-nav.tsx`, `dashboard-header.tsx`, and mounted admin/teams layout wrappers.
+- Loading/error/not-found surfaces should use `components/ui/route-state.tsx` plus route-specific copy/actions instead of raw spinners, plain bordered boxes, or route-local fallback card recipes.
+- When refreshing auth/public shell chrome, avoid reintroducing `bg-white/[...]`, blur-heavy atmosphere, or isolated route-local panel styles. Use the shared Obsidian panel/action recipes so auth, landing, dashboard, teams, and admin still read as one product.
+- If verification seems stalled after a large UI pass, inspect for duplicate `tsc`/`eslint` workers before retrying. This repo is slow enough that overlapping repo-wide verifier runs can starve each other and create false “hang” signals.
+
 ## API Route & Rate Limiting Patterns
 - ALL authenticated user-facing API routes should be wrapped with `withRateLimited` from `lib/api/with-api-route.ts`
 - Rate limit config: `{ rateLimitId: string, rateLimitMax: number, rateLimitWindow: number, routeName: string }`

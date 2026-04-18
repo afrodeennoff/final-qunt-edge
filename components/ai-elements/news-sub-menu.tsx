@@ -65,11 +65,11 @@ export function NewsSubMenu({
           size="sm"
           className={cn(
             "h-8 px-3 text-xs font-medium cursor-pointer relative z-0 w-auto justify-center items-center gap-2",
-            "bg-background text-foreground/95 border border-white/[0.06] hover:bg-white/[0.05]",
+            "bg-background text-foreground/95 border border-border/0.04 hover:bg-background/0.08",
             "transition-[opacity,background-color,border-color,transform] duration-200 ease-in-out",
             "hover:scale-105 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]",
             "active:scale-95",
-            selectedNews.length > 0 && "bg-white/[0.05] border-accent-foreground/20",
+            selectedNews.length > 0 && "bg-background/0.08 border-accent-foreground/20",
             className
           )}
         >

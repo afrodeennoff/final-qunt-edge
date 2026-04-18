@@ -258,7 +258,7 @@ function CouponFormGroup({
   children: ReactNode
 }) {
   return (
-    <div className="space-y-4 rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-background/40 p-4">
+    <div className="space-y-4 rounded-xl border border-border/45 bg-background/60 p-4">
       <div className="space-y-1">
         <p className="text-sm font-semibold text-foreground">{title}</p>
         {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
@@ -282,9 +282,9 @@ function CouponEditCard({
     <Card
       variant="frost"
       hover
-      className="overflow-hidden border-border/45 bg-background/72 shadow-[0_20px_48px_-32px_rgba(0,0,0,0.9)]"
+      className="overflow-hidden border-border/45 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
-      <CardHeader size="sm" className="space-y-3 border-b border-[oklch(0.65_0.22_260/0.08)]">
+      <CardHeader size="sm" className="space-y-3 border-b border-border/45">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -453,7 +453,7 @@ function CouponEditCard({
           </div>
         </form>
 
-        <div className="flex items-center justify-between gap-3 border-t border-[oklch(0.65_0.22_260/0.08)] pt-4">
+        <div className="flex items-center justify-between gap-3 border-t border-border/45 pt-4">
           <div className="text-xs text-muted-foreground">
             Updated {new Date(coupon.updatedAt).toLocaleString()}
           </div>
@@ -466,7 +466,7 @@ function CouponEditCard({
               size="sm"
               variant="ghost"
               pendingLabel="Deleting..."
-              className="text-red-500 hover:bg-red-500/10 hover:text-red-400"
+              className="text-destructive hover:bg-destructive/10 hover:text-destructive"
             >
               <Trash2 className="h-4 w-4" />
               Delete
@@ -491,9 +491,9 @@ function CouponSuggestionCard({
     <Card
       variant="frost"
       hover
-      className="overflow-hidden border-primary/15 bg-background/72 shadow-[0_20px_48px_-32px_rgba(0,0,0,0.9)]"
+      className="overflow-hidden border-border/45 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
-      <CardHeader size="sm" className="space-y-3 border-b border-[oklch(0.65_0.22_260/0.08)]">
+      <CardHeader size="sm" className="space-y-3 border-b border-border/45">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -979,7 +979,7 @@ export default async function AdminCouponsPage({
         badge={<Badge variant="secondary">{activeCount} active</Badge>}
       >
         {coupons.length === 0 ? (
-          <Card variant="frost" className="border-border/40 bg-background/60">
+          <Card variant="frost" className="border-border/40 bg-background/80">
             <CardContent size="sm" className="py-10 text-center text-sm text-muted-foreground">
               No coupons yet. Create the first one above.
             </CardContent>

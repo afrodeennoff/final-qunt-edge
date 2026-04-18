@@ -52,26 +52,26 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  <div className="flex-1 p-0 overflow-hidden">
  <div className="grid h-full grid-cols-2">
  {/* Return Risk Ratios */}
- <div className={cn("flex flex-col border-r border-b border-[oklch(0.65_0.22_260/0.08)]",
+ <div className={cn("flex flex-col border-r border-b border-border/30",
  size === 'tiny' ?"p-1.5" :"p-4"
  )}>
  <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] mb-3 text-foreground/35">Ratios</h3>
  <div className="flex-1 flex flex-col justify-center gap-2.5">
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Sharpe</span>
- <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeSharpeRatio > 1 ?"bg-[oklch(0.82_0.185_155/0.10)] text-[oklch(0.82_0.185_155)] border-[oklch(0.82_0.185_155/0.20)]" :"bg-[oklch(0.65_0.22_260/0.06)] text-foreground/70 border-white/[0.08]")}>
+ <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeSharpeRatio > 1 ?"bg-[oklch(0.82_0.185_155/0.10)] text-[oklch(0.82_0.185_155)] border-[oklch(0.82_0.185_155/0.20)]" :"bg-background/30 text-foreground/70 border-border/30")}>
  {safeSharpeRatio.toFixed(2)}
  </span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Sortino</span>
- <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeSortinoRatio > 1.5 ?"bg-[oklch(0.82_0.185_155/0.10)] text-[oklch(0.82_0.185_155)] border-[oklch(0.82_0.185_155/0.20)]" :"bg-[oklch(0.65_0.22_260/0.06)] text-foreground/70 border-white/[0.08]")}>
+ <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeSortinoRatio > 1.5 ?"bg-[oklch(0.82_0.185_155/0.10)] text-[oklch(0.82_0.185_155)] border-[oklch(0.82_0.185_155/0.20)]" :"bg-background/30 text-foreground/70 border-border/30")}>
  {safeSortinoRatio.toFixed(2)}
  </span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Calmar</span>
- <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeCalmarRatio > 1 ?"bg-[oklch(0.82_0.185_155/0.10)] text-[oklch(0.82_0.185_155)] border-[oklch(0.82_0.185_155/0.20)]" :"bg-[oklch(0.65_0.22_260/0.06)] text-foreground/70 border-white/[0.08]")}>
+ <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeCalmarRatio > 1 ?"bg-[oklch(0.82_0.185_155/0.10)] text-[oklch(0.82_0.185_155)] border-[oklch(0.82_0.185_155/0.20)]" :"bg-background/30 text-foreground/70 border-border/30")}>
  {safeCalmarRatio.toFixed(2)}
  </span>
  </div>
@@ -79,7 +79,7 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  </div>
 
  {/* Position Sizing */}
- <div className={cn("flex flex-col border-b border-[oklch(0.65_0.22_260/0.08)]",
+ <div className={cn("flex flex-col border-b border-border/30",
  size === 'tiny' ?"p-1.5" :"p-4"
  )}>
  <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] mb-3 text-foreground/35">Position sizing</h3>

@@ -195,7 +195,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  if (isInitialLoading) {
  return (
  <div className="flex justify-center items-center py-8">
- <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/[0.8]"></div>
+ <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-border/0.56"></div>
  </div>
  )
  }
@@ -439,7 +439,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  <div ref={loadingRef} className="flex justify-center py-4">
  {isLoadingMore ? (
  <div className="animate-pulse">
- <div className="h-8 bg-white/[0.080] rounded w-32"></div>
+ <div className="h-8 bg-background/0.12 rounded w-32"></div>
  </div>
  ) : (
  <div className="text-sm text-muted-foreground">{t('teams.equity.scrollToLoadMore')}</div>

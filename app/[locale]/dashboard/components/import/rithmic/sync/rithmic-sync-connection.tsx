@@ -654,7 +654,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
 
  <div className="space-y-2 max-h-[300px] overflow-y-auto">
  {filteredAccounts.map((account) => (
- <div key={account.account_id} className="flex items-center gap-2 p-2 rounded hover:bg-white/[0.05]">
+ <div key={account.account_id} className="flex items-center gap-2 p-2 rounded hover:bg-background/35">
  <Checkbox
  id={account.account_id}
  checked={selectedAccounts.includes(account.account_id)}

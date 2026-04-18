@@ -419,7 +419,7 @@ function FactTile({
   return (
     <div className="rounded-xl border border-border/20 bg-[linear-gradient(150deg,hsl(var(--background)/0.82),hsl(var(--card)/0.38))] px-4 py-4">
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/40 bg-white/[0.035]">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/40 bg-background/0.05">
           <Icon className="h-4 w-4 text-v2-accent" />
         </div>
         <div>
@@ -468,7 +468,7 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
   }
 
   return (
-    <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+    <Card className="rounded-xl border-border/40 bg-background/35">
       <CardContent className="flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Referral link</p>
@@ -480,7 +480,7 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
             <code className="min-w-0 flex-1 truncate text-xs text-foreground/80">{referralUrl}</code>
             <button
               onClick={handleCopy}
-              className="shrink-0 rounded-xl border border-border/40 bg-white/[0.05] p-2 transition-colors hover:bg-white/[0.010]"
+              className="shrink-0 rounded-xl border border-border/40 bg-background/35 p-2 transition-colors hover:bg-background/0.01"
               title="Copy link"
               type="button"
             >
@@ -516,7 +516,7 @@ function ChallengeCard({
   const dailyLossValue = getDailyLossValue(size)
 
   return (
-    <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+    <Card className="rounded-xl border-border/40 bg-background/35">
       <CardContent className="p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
@@ -612,7 +612,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
 
   if (entries.length === 0) {
     return (
-      <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+      <Card className="rounded-xl border-border/40 bg-background/35">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <Target className="h-5 w-5 text-v2-accent" />
@@ -628,7 +628,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
 
   return (
     <div className="space-y-5">
-      <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+      <Card className="rounded-xl border-border/40 bg-background/35">
         <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <Target className="h-5 w-5 text-v2-accent" />
@@ -653,7 +653,7 @@ function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
   const details = buildAdditionalDetails(firm)
 
   return (
-    <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+    <Card className="rounded-xl border-border/40 bg-background/35">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <svg className="h-5 w-5 text-v2-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -669,7 +669,7 @@ function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
           {details.map((detail) => (
             <div key={detail.label} className="rounded-xl border border-border/40 bg-background/40 px-4 py-4">
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/40 bg-white/[0.05]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/40 bg-background/35">
                   <detail.icon className="h-4 w-4 text-v2-accent" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -693,7 +693,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
 
   return (
     <div className="space-y-5">
-      <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+      <Card className="rounded-xl border-border/40 bg-background/35">
         <CardContent className="p-6 sm:p-8">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Research snapshot</p>
           <CardTitle className="mt-4 text-3xl text-foreground/95">A quick read on reviews, payouts, and fit.</CardTitle>
@@ -740,7 +740,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
       </Card>
 
       <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-        <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+        <Card className="rounded-xl border-border/40 bg-background/35">
           <CardContent className="p-6 sm:p-8">
             <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Profile summary</p>
             <CardTitle className="mt-4 text-3xl text-foreground/95">Firm profile at a glance</CardTitle>
@@ -756,7 +756,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+        <Card className="rounded-xl border-border/40 bg-background/35">
           <CardContent className="p-6 sm:p-8">
             <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Trust signals</p>
             <CardTitle className="mt-4 text-3xl text-foreground/95">What to check before you click out</CardTitle>
@@ -845,7 +845,7 @@ function SocialIcon({ type, url }: { type: 'website' | 'twitter' | 'discord' | '
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-white/[0.010] text-foreground/80 transition-colors hover:bg-white/[0.010] hover:text-foreground/95"
+      className="flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-background/0.01 text-foreground/80 transition-colors hover:bg-background/0.01 hover:text-foreground/95"
     >
       {icons[type]}
     </a>
@@ -856,7 +856,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
   const stats = firm.catalogueStats
   if (!stats) {
     return (
-      <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+      <Card className="rounded-xl border-border/40 bg-background/35">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-v2-accent" />
@@ -873,7 +873,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
   const avgPayout = stats.paidPayoutCount > 0 ? stats.paidPayoutAmount / stats.paidPayoutCount : 0
 
   return (
-    <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+    <Card className="rounded-xl border-border/40 bg-background/35">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <DollarSign className="h-5 w-5 text-v2-accent" />
@@ -925,7 +925,7 @@ function ROISection({ firm }: { firm: FirmData }) {
 
   if (accountSizes.length === 0) {
     return (
-      <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+      <Card className="rounded-xl border-border/40 bg-background/35">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-v2-accent" />
@@ -940,7 +940,7 @@ function ROISection({ firm }: { firm: FirmData }) {
   }
 
   return (
-    <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+    <Card className="rounded-xl border-border/40 bg-background/35">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-v2-accent" />
@@ -1005,7 +1005,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
 
   return (
     <div className="space-y-5">
-      <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+      <Card className="rounded-xl border-border/40 bg-background/35">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-v2-accent" />
@@ -1042,7 +1042,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
       </Card>
 
       {accountSizes.length > 0 && (
-        <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+        <Card className="rounded-xl border-border/40 bg-background/35">
           <CardContent className="p-6">
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-v2-accent" />
@@ -1054,7 +1054,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
 
             <div className="mt-6 grid gap-3 lg:hidden">
               {accountSizes.map(([key, size]) => (
-                <article key={key} className="rounded-xl border border-white/[0.08] bg-background/50 p-4">
+                <article key={key} className="rounded-xl border border-border/30 bg-background/50 p-4">
                   <h3 className="text-base font-semibold text-foreground/95">{size.name}</h3>
                   <dl className="mt-3 grid grid-cols-3 gap-3 text-sm">
                     <div>
@@ -1111,7 +1111,7 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
   const stats = firm.catalogueStats
 
   return (
-    <Card className="rounded-xl border-border/40 bg-white/[0.05]">
+    <Card className="rounded-xl border-border/40 bg-background/35">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <Award className="h-5 w-5 text-v2-accent" />
@@ -1153,7 +1153,7 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
           </div>
         ) : (
           <div className="mt-6 flex flex-col items-center justify-center py-8 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[oklch(0.65_0.22_260/0.045)]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-background/25">
               <Award className="h-6 w-6 text-muted-foreground" />
             </div>
             <p className="mt-4 text-base font-medium text-foreground/95">No payout proof yet</p>
@@ -1278,12 +1278,12 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   const headerMetrics = buildHeaderMetrics(firm)
 
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-border/20 bg-[linear-gradient(180deg,rgba(8,8,8,0.96),rgba(3,3,3,0.94))] p-5 shadow-[0_36px_110px_-66px_hsl(0_0%_0%_/0.95)] sm:p-7 lg:p-9">
+    <section className="relative overflow-hidden rounded-2xl border border-border/20 bg-[linear-gradient(180deg,rgba(8,8,8,0.96),rgba(3,3,3,0.94))] p-5 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.6)] sm:p-7 lg:p-9">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.08),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.04),_transparent_40%)]" />
       <div className="relative space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">
           <div className="flex items-start gap-6">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/40 bg-white/[0.010] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-foreground/20">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/40 bg-background/0.01 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-foreground/20">
               {firm.logoUrl ? (
                 <Image
                   src={firm.logoUrl}
@@ -1367,7 +1367,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
                 value={value}
                 className={cn(
                   'shrink-0 rounded-xl border border-transparent px-4 py-2.5 text-sm text-foreground/80 transition-colors',
-                  'hover:border-border/20 hover:bg-white/[0.050]',
+                  'hover:border-border/20 hover:bg-background/0.08',
                   'data-[state=active]:border-v2-accent/30 data-[state=active]:bg-v2-accent data-[state=active]:text-v2-accent-foreground'
                 )}
               >

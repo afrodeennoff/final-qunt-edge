@@ -265,7 +265,7 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  if (isLoading) {
  return (
  <div
- className={cn("relative overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06)]",
+ className={cn("relative overflow-hidden rounded-xl border border-border/30 bg-[oklch(0.65_0.22_260/0.03)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06)]",
  config.padding,
  className
  )}
@@ -298,8 +298,8 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  role={onClick ?"button" : undefined}
  tabIndex={onClick ? 0 : undefined}
  onClick={onClick}
- className={cn("group relative overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] ","shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06)]",
- glass &&"bg-[oklch(0.65_0.22_260/0.045)]",
+ className={cn("group relative overflow-hidden rounded-xl border border-border/30 bg-[oklch(0.65_0.22_260/0.03)] ","shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06)]",
+ glass &&"bg-background/25",
  !!onClick &&"cursor-pointer hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_8px_24px_-8px_rgba(0,0,0,0.3)]",
  config.padding,
  className

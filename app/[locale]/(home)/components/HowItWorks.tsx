@@ -72,7 +72,7 @@ export default function HowItWorks() {
                 }}
               >
                 <div className="mb-6 flex items-center justify-between gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-sm font-semibold text-primary">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-primary/18 bg-primary/10 text-sm font-semibold text-primary">
                     0{index + 1}
                   </div>
                   <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">

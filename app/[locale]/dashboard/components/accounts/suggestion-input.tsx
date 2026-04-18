@@ -234,7 +234,7 @@ export default function EnhancedInput({
  <button
  type="button"
  onClick={clearInput}
- className="mr-1 rounded-full p-1 text-muted-foreground hover:bg-white/[0.05] hover:text-accent-foreground"
+ className="mr-1 rounded-full p-1 text-muted-foreground hover:bg-background/35 hover:text-accent-foreground"
  aria-label="Clear input"
  >
  <X className="h-4 w-4" />
@@ -266,8 +266,8 @@ export default function EnhancedInput({
  key={suggestion}
  role="option"
  aria-selected={selectedIndex === index}
- className={cn("cursor-pointer px-3 py-2","hover:bg-white/[0.05] hover:text-accent-foreground",
- selectedIndex === index ?"bg-white/[0.05] text-accent-foreground" :""
+ className={cn("cursor-pointer px-3 py-2","hover:bg-background/35 hover:text-accent-foreground",
+ selectedIndex === index ?"bg-background/35 text-accent-foreground" :""
  )}
  onClick={() => handleSuggestionClick(suggestion)}
  >

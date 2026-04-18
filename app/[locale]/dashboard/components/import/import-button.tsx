@@ -578,7 +578,7 @@ export default function ImportButton() {
  }}
  >
  <DialogContent
- className={cn("flex h-[92dvh] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] flex-col overflow-hidden border-v2-border bg-v2-bg-surface p-0 text-v2-text-primary shadow-[0_36px_100px_-28px_rgba(0,0,0,0.85)] sm:h-[80vh] sm:max-w-[80vw]",
+ className={cn("flex h-[92dvh] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] flex-col overflow-hidden border-v2-border bg-v2-bg-surface p-0 text-v2-text-primary shadow-[0_12px_32px_-12px_rgba(0,0,0,0.6)] sm:h-[80vh] sm:max-w-[80vw]",
  )}
  onPointerDownOutside={(e) => {
  // Prevent accidental closes during import flow

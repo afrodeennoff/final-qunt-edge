@@ -44,7 +44,7 @@ function RouteStateShell({
       )}
     >
       <BackgroundGlow variant="accent" />
-      <div className="pointer-events-none absolute inset-x-6 top-0 h-32 rounded-b-[2rem] border border-primary/10 bg-primary/[0.03]" />
+      <div className="pointer-events-none absolute inset-x-6 top-0 h-32 rounded-b-[2rem] border border-border/20 bg-primary/[0.02]" />
 
       <div
         className={cn(
@@ -60,9 +60,9 @@ function RouteStateShell({
             contentClassName,
           )}
         >
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/15 to-transparent" />
           <div className="flex flex-col items-center text-center">
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-[1.1rem] border border-primary/18 bg-primary/10 text-primary shadow-[0_18px_32px_-24px_rgba(0,0,0,0.84)]">
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-border/30 bg-background/40 text-foreground">
               <Logo className="size-5 fill-current" />
             </div>
             <span className={unifiedChipClassName}>{eyebrow}</span>
@@ -103,13 +103,13 @@ function RouteLoadingScreen({
       compact={compact}
     >
       <div className="flex flex-col items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-primary/16 bg-primary/10 text-primary shadow-[0_16px_28px_-24px_rgba(0,0,0,0.88)]">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-border/30 bg-background/40 text-muted-foreground">
           <Loader2 className="size-4 animate-spin" />
         </div>
         <div className="w-full max-w-sm space-y-2">
-          <div className="h-2 rounded-full bg-primary/10" />
-          <div className="mx-auto h-2 w-4/5 rounded-full bg-primary/8" />
-          <div className="mx-auto h-2 w-3/5 rounded-full bg-primary/6" />
+          <div className="h-2 rounded-full bg-muted/60" />
+          <div className="mx-auto h-2 w-4/5 rounded-full bg-muted/40" />
+          <div className="mx-auto h-2 w-3/5 rounded-full bg-muted/30" />
         </div>
       </div>
     </RouteStateShell>
@@ -161,7 +161,7 @@ function RouteErrorScreen({
         </>
       }
     >
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-destructive/20 bg-destructive/10 text-destructive shadow-[0_16px_28px_-24px_rgba(0,0,0,0.88)]">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-destructive/15 bg-destructive/8 text-destructive">
         <AlertTriangle className="size-4" />
       </div>
     </RouteStateShell>

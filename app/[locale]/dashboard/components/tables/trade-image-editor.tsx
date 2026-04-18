@@ -379,7 +379,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  aria-label="View image"
  >
  {isLoadingImages ? (
- <div className="flex items-center justify-center w-full h-full bg-[oklch(0.65_0.22_260/0.045)] animate-pulse">
+ <div className="flex items-center justify-center w-full h-full bg-background/25 animate-pulse">
  <ZoomIn className="h-4 w-4 text-muted-foreground animate-bounce" />
  </div>
  ) : (
@@ -400,7 +400,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  height={40}
  />
  {imageArray.length > 1 && (
- <span className="absolute bottom-1 right-1 bg-white/[0.092] text-foreground/95 text-xs px-1 rounded">
+ <span className="absolute bottom-1 right-1 bg-background/0.14 text-foreground/95 text-xs px-1 rounded">
  {imageArray.length}
  </span>
  )}
@@ -458,7 +458,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  ) : (
  <button
  onClick={handleUploadClick}
- className="relative w-10 h-10 overflow-hidden rounded focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-ring bg-[oklch(0.65_0.22_260/0.045)] hover:bg-muted/80 transition-colors"
+ className="relative w-10 h-10 overflow-hidden rounded focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-ring bg-background/25 hover:bg-muted/80 transition-colors"
  aria-label="Upload image"
  >
  <Upload className="h-4 w-4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -470,7 +470,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  <HoverCardTrigger asChild>
  <button
  onClick={handleUploadClick}
- className="relative w-10 h-10 overflow-hidden rounded focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-ring bg-[oklch(0.65_0.22_260/0.045)] hover:bg-muted/80 transition-colors"
+ className="relative w-10 h-10 overflow-hidden rounded focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-ring bg-background/25 hover:bg-muted/80 transition-colors"
  aria-label="Upload second image"
  >
  <Upload className="h-4 w-4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -534,11 +534,11 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  </div>
  </TransformComponent>
 
- <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-white/[0.095] border border-white/[0.08] z-50">
+ <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-background/0.14 border border-border/30 z-50">
  <Button 
  variant="ghost"
  size="icon"
- className="bg-linear-to-r bg-[oklch(0.65_0.22_260/0.03)] hover:bg-accent/70 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] border border-[oklch(0.65_0.22_260/0.08)] ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
+ className="bg-linear-to-r bg-[oklch(0.65_0.22_260/0.03)] hover:bg-accent/70 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] border border-border/30 ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
  onClick={() => zoomOut()}
  disabled={scale <= 0.5}
  >
@@ -550,7 +550,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  <Button 
  variant="ghost"
  size="icon"
- className="bg-linear-to-r bg-[oklch(0.65_0.22_260/0.03)] hover:bg-accent/70 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] border border-[oklch(0.65_0.22_260/0.08)] ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
+ className="bg-linear-to-r bg-[oklch(0.65_0.22_260/0.03)] hover:bg-accent/70 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] border border-border/30 ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
  onClick={() => zoomIn()}
  disabled={scale >= 3}
  >
@@ -641,9 +641,9 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  duration: 0.3,
  ease: [0.25, 0.46, 0.45, 0.94],
  }}
- className="group relative flex items-center gap-4 p-3 rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] hover:bg-accent/50 transition-colors duration-200"
+ className="group relative flex items-center gap-4 p-3 rounded-lg border border-border/30 bg-[oklch(0.65_0.22_260/0.03)] hover:bg-accent/50 transition-colors duration-200"
  >
- <div className="relative w-24 h-24 rounded-md overflow-hidden flex-shrink-0 border border-[oklch(0.65_0.22_260/0.08)]">
+ <div className="relative w-24 h-24 rounded-md overflow-hidden flex-shrink-0 border border-border/30">
  <Image
  src={withSupabaseImageTransform(imageUrl, {
  width: 192,

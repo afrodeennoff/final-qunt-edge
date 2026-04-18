@@ -2,6 +2,10 @@ import type { ReactNode } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
+const sectionBorder = 'border-border/45'
+const surfaceBg = 'bg-card/98'
+const subtleShadow = 'shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
+
 type AdminPageHeaderProps = {
   eyebrow: string
   title: string
@@ -20,7 +24,7 @@ export function AdminPageHeader({
   return (
     <div
       className={cn(
-        'flex flex-col gap-4 border-b border-[oklch(0.65_0.22_260/0.08)] pb-6 md:flex-row md:items-end md:justify-between',
+        'flex flex-col gap-4 border-b', sectionBorder, 'pb-6 md:flex-row md:items-end md:justify-between',
         className,
       )}
     >
@@ -49,14 +53,14 @@ export function AdminStatCard({ label, value, hint, icon }: AdminStatCardProps) 
     <Card
       variant="frost"
       hover
-      className="border-border/45 bg-background/72 shadow-[0_18px_42px_-30px_rgba(0,0,0,0.86)]"
+      className={`${sectionBorder} ${surfaceBg} ${subtleShadow}`}
     >
       <CardContent size="sm" className="space-y-2">
         <div className="flex items-center justify-between gap-3">
           <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
             {label}
           </p>
-          {icon ? <div className="text-muted-foreground">{icon}</div> : null}
+          {icon ? <div className="text-muted-foreground/60">{icon}</div> : null}
         </div>
         <p className="text-2xl font-semibold tracking-tight">{value}</p>
         {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
@@ -88,11 +92,11 @@ export function AdminSection({
     <Card
       variant="frost"
       className={cn(
-        'overflow-hidden border-border/45 bg-background/72 shadow-[0_22px_52px_-34px_rgba(0,0,0,0.9)]',
+        `overflow-hidden ${sectionBorder} ${surfaceBg} ${subtleShadow}`,
         className,
       )}
     >
-      <CardHeader className="space-y-3 border-b border-[oklch(0.65_0.22_260/0.08)]">
+      <CardHeader className={`space-y-3 border-b ${sectionBorder}`}>
         <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">

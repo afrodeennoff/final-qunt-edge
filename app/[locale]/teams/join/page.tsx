@@ -116,7 +116,7 @@ export default function TeamJoinPage() {
       case 'pending':
         return <Badge variant="secondary">{t('teams.management.pending')}</Badge>
       case 'accepted':
-        return <Badge variant="default" className="bg-white/[0.060] text-foreground/95">{t('teams.invitations.accepted')}</Badge>
+        return <Badge variant="default" className="bg-background/0.09 text-foreground/95">{t('teams.invitations.accepted')}</Badge>
       case 'expired':
         return <Badge variant="error">{t('teams.invitations.expired')}</Badge>
       default:

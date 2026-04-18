@@ -66,7 +66,7 @@ export const WebPreview = ({
     <WebPreviewContext.Provider value={contextValue}>
       <div
         className={cn(
-          "flex size-full flex-col rounded-lg border bg-white/[0.02]",
+          "flex size-full flex-col rounded-lg border bg-background/0.03",
           className
         )}
         {...props}

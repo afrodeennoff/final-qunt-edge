@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils'
 
 const rowDividerClassName = 'border-border/30'
 const tableSurfaceClassName =
-  'overflow-hidden rounded-[1.4rem] border border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.82),hsl(var(--background)/0.9))] shadow-[0_24px_60px_-44px_rgba(0,0,0,0.92)]'
+  'overflow-hidden rounded-xl border border-border/35 bg-card/80 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
 
 interface LeaderboardTableProps {
   entries: LeaderboardEntry[]

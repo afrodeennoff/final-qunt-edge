@@ -46,7 +46,7 @@ export function SidebarUserMenu({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="group/user w-full rounded-[1.15rem] border border-transparent px-2.5 py-1.5 transition-[opacity,background-color,border-color] duration-200 hover:border-sidebar-primary/14 hover:bg-sidebar-primary/8 data-[state=open]:border-sidebar-primary/18 data-[state=open]:bg-sidebar-primary/10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
+              className="group/user w-full rounded-xl border border-transparent px-2.5 py-1.5 transition-[opacity,background-color,border-color] duration-200 hover:border-sidebar-primary/14 hover:bg-sidebar-primary/8 data-[state=open]:border-sidebar-primary/18 data-[state=open]:bg-sidebar-primary/10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
             >
               <div className="flex w-full items-center gap-2.5">
                 <div className="relative shrink-0">
@@ -71,7 +71,7 @@ export function SidebarUserMenu({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-xl border border-sidebar-border/35 bg-sidebar/98 shadow-[0_24px_56px_-32px_rgba(0,0,0,0.94)]"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-xl border border-sidebar-border/35 bg-sidebar/98 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)]"
             side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={6}

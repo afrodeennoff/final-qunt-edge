@@ -43,12 +43,12 @@ function Calendar({
  day_button: cn(
  buttonVariants({ variant:"ghost" }),"h-9 w-9 p-0 font-normal","aria-selected:bg-primary aria-selected:text-primary-foreground aria-selected:opacity-100","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
  ),
- today:"bg-white/[0.05] text-accent-foreground",
+ today:"bg-background/0.08 text-accent-foreground",
  outside:"text-muted-foreground opacity-50",
  disabled:"text-muted-foreground opacity-50",
  range_start:"rounded-l-md",
  range_end:"rounded-r-md",
- range_middle:"aria-selected:bg-white/[0.05] aria-selected:text-accent-foreground",
+ range_middle:"aria-selected:bg-background/0.08 aria-selected:text-accent-foreground",
  hidden:"hidden",
  ...classNames,
  }}

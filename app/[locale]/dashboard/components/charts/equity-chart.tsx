@@ -904,7 +904,7 @@ export default React.memo(function EquityChart({ size ="medium" }: EquityChartPr
  return (
  <ChartSurface>
  <div
- className={cn("flex shrink-0 flex-col items-stretch gap-0 border-b border-white/[0.04]",
+ className={cn("flex shrink-0 flex-col items-stretch gap-0 border-b border-border/0.03",
  size ==="small" ?"p-2 h-10 justify-center" :"p-3 sm:p-3.5 h-12 justify-center"
  )}
  >

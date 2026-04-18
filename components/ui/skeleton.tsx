@@ -11,7 +11,7 @@ function Skeleton({
 }: SkeletonProps) {
  return (
  <Component
- className={cn("animate-pulse rounded-[1rem] border border-primary/8 bg-[linear-gradient(180deg,hsl(var(--background)/0.88),hsl(var(--background)/0.72))]", className)}
+ className={cn("animate-pulse rounded-lg border border-border/20 bg-muted/50", className)}
  {...props}
  />
  )
@@ -44,7 +44,7 @@ export function WidgetGridSkeleton() {
  return (
  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
  {Array.from({ length: 8 }).map((_, i) => (
- <Skeleton key={i} className="h-32 w-full rounded-[1.4rem]" />
+ <Skeleton key={i} className="h-32 w-full rounded-xl" />
  ))}
  </div>
  )
@@ -59,7 +59,7 @@ export function TableSkeleton() {
  </div>
  <div className="space-y-2">
  {Array.from({ length: 10 }).map((_, i) => (
- <Skeleton key={i} className="h-12 w-full rounded-[1.1rem]" />
+ <Skeleton key={i} className="h-12 w-full rounded-lg" />
  ))}
  </div>
  </div>
@@ -70,13 +70,13 @@ export function AccountsSkeleton() {
  return (
  <div className="space-y-4">
  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
- <Skeleton className="h-24 w-full rounded-[1.35rem]" />
- <Skeleton className="h-24 w-full rounded-[1.35rem]" />
- <Skeleton className="h-24 w-full rounded-[1.35rem]" />
+ <Skeleton className="h-24 w-full rounded-xl" />
+ <Skeleton className="h-24 w-full rounded-xl" />
+ <Skeleton className="h-24 w-full rounded-xl" />
  </div>
  <div className="space-y-2">
  {Array.from({ length: 5 }).map((_, i) => (
- <Skeleton key={i} className="h-16 w-full rounded-[1.2rem]" />
+ <Skeleton key={i} className="h-16 w-full rounded-xl" />
  ))}
  </div>
  </div>

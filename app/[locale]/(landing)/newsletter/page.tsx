@@ -34,7 +34,7 @@ export default async function NewsletterPage(
       <div className="w-full px-4 py-6 sm:px-6 sm:py-8 md:py-12 lg:px-8">
         <div className="mx-auto max-w-2xl space-y-6 sm:space-y-8">
           {isUnsubscribed && (
-            <Card className="border-border/30 dark:border-border/40 bg-white/[0.080] dark:bg-white/[0.070]">
+            <Card className="border-border/30 dark:border-border/40 bg-background/0.12 dark:bg-background/0.11">
               <CardHeader className="space-y-3 sm:space-y-4">
                 <div className="flex items-center gap-x-2.5">
                   <CheckCircle2 className="h-5 w-5 text-semantic-success shrink-0" />

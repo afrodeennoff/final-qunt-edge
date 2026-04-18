@@ -291,7 +291,7 @@ function ProfileVisibilityPanel({
     <div
       className={cn(
         insetPanelClassName,
-        'w-full rounded-[1.4rem] p-3.5 sm:w-auto sm:min-w-[18rem] lg:min-w-[19rem]',
+        'w-full rounded-xl p-3.5 sm:w-auto sm:min-w-[18rem] lg:min-w-[19rem]',
       )}
     >
       <div className="flex items-start justify-between gap-3">

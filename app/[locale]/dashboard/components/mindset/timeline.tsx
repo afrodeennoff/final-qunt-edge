@@ -106,12 +106,12 @@ export function Timeline({ onSelectDate, selectedDate, moodHistory, className, o
  <Button 
  variant="ghost"
  className={cn("w-full justify-start gap-2 h-auto p-2","hover:bg-accent/50 transition-colors border-l-2 border-dashed border-muted-foreground/30",
- isToday(selectedDate) &&"bg-white/[0.05]"
+ isToday(selectedDate) &&"bg-background/35"
  )}
  onClick={handleTodayClick}
  >
  <div className="flex flex-col items-center justify-center gap-1 min-w-10">
- <div className="w-2 h-2 rounded-full bg-[oklch(0.65_0.22_260/0.045)]-foreground/50" />
+ <div className="w-2 h-2 rounded-full bg-background/25-foreground/50" />
  </div>
  <div className="flex-1 text-left min-w-0 flex items-center">
  <p className="text-sm font-medium text-muted-foreground">
@@ -145,7 +145,7 @@ export function Timeline({ onSelectDate, selectedDate, moodHistory, className, o
  <Button 
  variant="ghost"
  className={cn("w-full justify-start gap-2 h-auto p-2","hover:bg-accent/50 transition-colors",
- isSelected &&"bg-white/[0.05]",
+ isSelected &&"bg-background/35",
  isCurrentDay &&"border-l-2 border-primary"
  )}
  onClick={() => onSelectDate(moodDate)}

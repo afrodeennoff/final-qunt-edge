@@ -31,7 +31,7 @@ export function FirmCouponsSection({
   }, [firmId])
 
   return (
-    <Card className="rounded-xl border-border/40 bg-white/[0.05] p-6">
+    <Card className="rounded-xl border-border/40 bg-background/35 p-6">
       <div className="mb-2 flex items-center gap-2">
         <DealsIcon size={18} className="text-v2-accent" />
         <span className="text-lg font-semibold text-foreground/95">Current coupons</span>
@@ -47,7 +47,7 @@ export function FirmCouponsSection({
           <Skeleton className="h-16" />
         </div>
       ) : coupons.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-[oklch(0.65_0.22_260/0.08)] bg-background/40 px-5 py-8 text-center text-sm text-muted-foreground">
+        <div className="rounded-xl border border-dashed border-border/30 bg-background/40 px-5 py-8 text-center text-sm text-muted-foreground">
           <p>No active coupons are currently tracked in the database snapshot.</p>
           <p className="mx-auto mt-2 max-w-lg leading-6">
             We only show live codes when the firm record has an active coupon attached. Check the Deals board for current offers or visit the official site for the firm&apos;s latest pricing.

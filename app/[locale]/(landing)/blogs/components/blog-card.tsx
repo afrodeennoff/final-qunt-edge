@@ -32,7 +32,7 @@ const categoryColors: Record<BlogCategory, string> = {
   [BlogCategory.MARKET_ANALYSIS]: 'bg-primary/10 text-primary border-primary/30',
   [BlogCategory.PSYCHOLOGY]: 'bg-secondary/50 text-secondary-foreground border-secondary/30',
   [BlogCategory.RISK_MANAGEMENT]: 'bg-destructive/10 text-destructive border-destructive/30',
-  [BlogCategory.PLATFORM_UPDATES]: 'bg-muted/50 text-muted-foreground border-[oklch(0.65_0.22_260/0.08)]',
+  [BlogCategory.PLATFORM_UPDATES]: 'bg-muted/50 text-muted-foreground border-border/30',
 }
 
 const categoryLabels: Record<BlogCategory, string> = {

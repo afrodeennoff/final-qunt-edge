@@ -108,7 +108,7 @@ export function UnifiedMobileNav({
           type="button"
           variant="ghost"
           className={cn(
-            'h-11 w-11 rounded-[1.15rem] border border-primary/14 bg-[linear-gradient(180deg,hsl(var(--background)/0.84),hsl(var(--background)/0.72))] p-0 text-sidebar-foreground/72 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_18px_34px_-24px_rgba(0,0,0,0.9)] transition-[background-color,border-color,color] duration-200 hover:border-primary/22 hover:bg-primary/10 hover:text-sidebar-foreground lg:hidden',
+            'h-11 w-11 rounded-xl border border-border/30 bg-background/40 p-0 text-sidebar-foreground/72 shadow-sm transition-[background-color,border-color,color] duration-200 hover:border-border/40 hover:bg-background/50 hover:text-sidebar-foreground lg:hidden',
             triggerClassName
           )}
           aria-label="Open navigation menu"

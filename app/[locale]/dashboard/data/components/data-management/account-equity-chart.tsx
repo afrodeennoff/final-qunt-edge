@@ -278,7 +278,7 @@ export function AccountEquityChart({
               if (active && payload && payload.length) {
                 const data = payload[0].payload;
                 return (
-                  <div className="bg-background p-2 border-[oklch(0.65_0.22_260/0.08)] rounded shadow-xs">
+                  <div className="bg-background p-2 border-border/30 rounded shadow-xs">
                     <p className="text-sm font-medium">
                       {format(safeParseDate(data.date) || new Date(), 'MMM dd, yyyy')}
                     </p>

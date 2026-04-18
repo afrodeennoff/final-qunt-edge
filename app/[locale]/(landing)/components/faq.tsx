@@ -7,10 +7,10 @@ export default function FAQ() {
 
  return (
  <section className="py-16 sm:py-20 lg:py-24">
- <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-white/[0.08] bg-[oklch(0.038_0_0)] p-6 shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
+ <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-border/30 bg-[oklch(0.038_0_0)] p-6 shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
  <div className="container mx-auto px-4">
  <div className="grid gap-6 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]">
- <div className="rounded-[1.9rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6">
+ <div className="rounded-2xl border border-border/30 bg-background/30 p-6">
  <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/34">
  FAQ
  </p>
@@ -21,9 +21,9 @@ export default function FAQ() {
  The essentials traders ask before they connect accounts, switch workflows, or evaluate the platform for team use.
  </p>
  </div>
- <div className="rounded-[1.9rem] border border-white/[0.08] bg-black/20 p-5">
+ <div className="rounded-2xl border border-border/30 bg-black/20 p-5">
  <div className="space-y-4">
- <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.04] p-4">
+ <details className="rounded-xl border border-border/30 bg-background/30 p-4">
  <summary className="cursor-pointer font-semibold text-foreground/95">
  {t("faq.question1")}
  </summary>
@@ -31,7 +31,7 @@ export default function FAQ() {
  {t("faq.answer1")}
  </p>
  </details>
- <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.04] p-4">
+ <details className="rounded-xl border border-border/30 bg-background/30 p-4">
  <summary className="cursor-pointer font-semibold text-foreground/95">
  {t("faq.question2")}
  </summary>
@@ -39,7 +39,7 @@ export default function FAQ() {
  {t("faq.answer2")}
  </p>
  </details>
- <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.04] p-4">
+ <details className="rounded-xl border border-border/30 bg-background/30 p-4">
  <summary className="cursor-pointer font-semibold text-foreground/95">
  {t("faq.question3")}
  </summary>
@@ -47,7 +47,7 @@ export default function FAQ() {
  {t("faq.answer3")}
  </p>
  </details>
- <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.04] p-4">
+ <details className="rounded-xl border border-border/30 bg-background/30 p-4">
  <summary className="cursor-pointer font-semibold text-foreground/95">
  {t("faq.question4")}
  </summary>
@@ -55,7 +55,7 @@ export default function FAQ() {
  {t("faq.answer4")}
  </p>
  </details>
- <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.04] p-4">
+ <details className="rounded-xl border border-border/30 bg-background/30 p-4">
  <summary className="cursor-pointer font-semibold text-foreground/95">
  {t("faq.question5")}
  </summary>
@@ -63,7 +63,7 @@ export default function FAQ() {
  {t("faq.answer5")}
  </p>
  </details>
- <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.04] p-4">
+ <details className="rounded-xl border border-border/30 bg-background/30 p-4">
  <summary className="cursor-pointer font-semibold text-foreground/95">
  {t("faq.question6")}
  </summary>

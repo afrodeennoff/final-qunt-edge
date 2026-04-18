@@ -4,7 +4,7 @@ export function WidgetSkeleton() {
   return (
     <Card variant="default" className="h-full">
       <CardHeader className="pb-2">
-        <div className="h-4 w-24 animate-pulse rounded bg-[oklch(0.65_0.22_260/0.08)]" />
+        <div className="h-4 w-24 animate-pulse rounded bg-background/30" />
       </CardHeader>
       <CardContent className="pt-0 space-y-2">
         <div className="h-8 w-full animate-pulse rounded bg-[oklch(0.65_0.22_260/0.05)]" />

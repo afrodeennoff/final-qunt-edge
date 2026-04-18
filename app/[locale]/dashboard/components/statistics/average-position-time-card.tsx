@@ -52,7 +52,7 @@ function AveragePositionTimeCardInner({ size = 'medium' }: AveragePositionTimeCa
  contentClassName="flex items-center justify-center h-full gap-2 p-2"
  info={t('widgets.averagePositionTime.tooltip')}
  >
- <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-[oklch(0.65_0.22_260/0.06)] px-3 py-1">
+ <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-background/30 px-3 py-1">
  <Clock className="h-3 w-3 metric-positive" />
  <span className="micro-sans font-bold text-[11px] uppercase tracking-[0.18em] metric-positive">{averagePositionTime} Avg Time</span>
  </div>

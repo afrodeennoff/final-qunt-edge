@@ -2,6 +2,18 @@
 
 **Updated:** 2026-04-18
 
+## Lesson 81: Route-state UI should be centralized, not recreated per route
+- **M:** The app had a mix of raw spinners, plain bordered fallback boxes, and route-local error markup across auth, landing, dashboard, teams, admin, shared, and embed surfaces
+- **RC:** Loading/error/not-found states had evolved independently, so even after shell improvements the app still felt inconsistent whenever a page was slow or failed
+- **R:** Keep route-state presentation in one shared helper (`components/ui/route-state.tsx`) and compose route-specific copy/actions around it. Use shared recipe classes from `components/layout/unified-page-recipes.ts` rather than route-local fallback chrome
+- **E:** App/global/locale/auth/home/landing/deals/dashboard/teams/admin/shared/embed boundaries now share one Obsidian state-shell language
+
+## Lesson 82: Do not stack repo-wide verifier runs on top of each other
+- **M:** Re-running `npm run typecheck`, `npm run lint -- --quiet`, `npx tsc --noEmit`, and `npx eslint ...` in parallel left multiple long-lived `tsc` and `eslint` workers alive, which made verification look hung
+- **RC:** This repo's route/type generation and full TSX lint surface are heavy enough that overlapping verifier processes compete with each other and slow down completion dramatically
+- **R:** For this codebase, run one repo-wide verifier at a time. If output stalls, inspect the process list and kill duplicate verifier workers before retrying
+- **E:** After cleaning duplicate `robust-typecheck`, `tsc --noEmit`, and `eslint --quiet` processes, one fresh `npm run typecheck` and one fresh `npm run lint -- --quiet` completed cleanly
+
 ## Lesson 62: sed removal of `ssr: false` leaves multiline artifacts
 - **M:** Used `sed 's/ssr: false,//g; s/ssr: false//g'` to remove `ssr: false` from 34+ dynamic imports. This left empty lines and malformed option objects like `{  loading: () => widgetFallback }` with extra whitespace, and `{\n  \n  loading:` multiline patterns
 - **RC:** sed operates line-by-line and can't handle multiline restructuring. Removing a property from a JS object with `sed` leaves the surrounding syntax intact but ugly/fragile

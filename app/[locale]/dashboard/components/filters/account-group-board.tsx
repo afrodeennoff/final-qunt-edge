@@ -716,7 +716,7 @@ export function AccountGroupBoard() {
  <CommandItem
  key={account.id}
  value={`${account.number} ${group.name ??""}`}
- className="flex items-center gap-3 rounded-md border bg-white/[0.060] px-3 py-2"
+ className="flex items-center gap-3 rounded-md border bg-background/0.09 px-3 py-2"
  draggable
  onDragStart={() => handleDragStart(account)}
  onDragEnd={handleDragEnd}

@@ -400,7 +400,7 @@ export function AccountConfigurator({
  {accountSizeOpen && (
  <Command
  shouldFilter={false}
- className="absolute z-50 mt-1 w-full rounded-md border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] text-popover-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] top-full left-0 h-fit"
+ className="absolute z-50 mt-1 w-full rounded-md border-border/30 bg-background/30 text-popover-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] top-full left-0 h-fit"
  >
  <CommandList className="max-h-24 overflow-y-auto">
  <CommandGroup>

@@ -201,7 +201,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
  )}
  <div className="flex flex-wrap gap-2">
  {getRemainingFieldsToMap().map((field, index) => (
- <span key={index} className={`bg-[oklch(0.65_0.22_260/0.06)] text-secondary-foreground px-2 py-1 rounded-md text-sm`}>
+ <span key={index} className={`bg-background/30 text-secondary-foreground px-2 py-1 rounded-md text-sm`}>
  {field}
  {columnConfig[field] && (
  <TooltipProvider>

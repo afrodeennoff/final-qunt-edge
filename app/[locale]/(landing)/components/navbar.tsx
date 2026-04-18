@@ -45,12 +45,12 @@ export default function Navbar() {
         <div
           className={cn(
             unifiedInsetPanelClassName,
-            'relative flex min-h-[4.25rem] items-center justify-between overflow-hidden rounded-[1.65rem] px-3.5 py-2 sm:px-4',
+            'relative flex min-h-[4.25rem] items-center justify-between overflow-hidden rounded-2xl px-3.5 py-2 sm:px-4',
           )}
         >
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/30 to-transparent" />
           <Link href={`/${locale}`} className="flex items-center gap-2 rounded-full px-2 py-1.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-primary shadow-[0_16px_28px_-24px_rgba(0,0,0,0.84)]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/30 bg-background/40 text-muted-foreground">
               <Logo className="h-4.5 w-4.5 fill-current" />
             </div>
             <span className="hidden text-sm font-semibold tracking-tight text-foreground sm:inline-flex">
@@ -64,10 +64,10 @@ export default function Navbar() {
                 key={link.href}
                 href={`/${locale}${link.href}`}
                 className={cn(
-                  'rounded-full px-4 py-2.5 text-sm font-medium transition-[background-color,color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
+                  'rounded-full border border-border/35 px-4 py-2.5 text-sm font-medium transition-[background-color,color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
                   isActive(link.href)
-                    ? 'border border-primary/18 bg-primary/10 text-primary shadow-[0_18px_26px_-24px_rgba(0,0,0,0.84)]'
-                    : 'border border-transparent text-muted-foreground hover:border-border/35 hover:bg-background/72 hover:text-foreground',
+                    ? 'border-border/50 bg-background/60 text-foreground'
+                    : 'text-muted-foreground hover:border-border/50 hover:bg-background/72 hover:text-foreground',
                 )}
               >
                 {link.title}

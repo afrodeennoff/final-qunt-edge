@@ -15,10 +15,10 @@ export function SidebarLogoHeader() {
         <SidebarMenuButton
           asChild
           size="lg"
-          className="h-13 rounded-[1.15rem] border border-transparent px-2.5 data-[state=open]:border-sidebar-primary/20 data-[state=open]:bg-sidebar-primary/10 hover:border-sidebar-primary/16 hover:bg-sidebar-accent/8 hover:text-sidebar-foreground group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2! transition-[opacity,background-color,border-color] duration-200"
+          className="h-13 rounded-xl border border-transparent px-2.5 data-[state=open]:border-sidebar-primary/20 data-[state=open]:bg-sidebar-primary/10 hover:border-sidebar-primary/16 hover:bg-sidebar-accent/8 hover:text-sidebar-foreground group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2! transition-[opacity,background-color,border-color] duration-200"
         >
           <Link href={`/${locale}/dashboard`} prefetch={false}>
-            <div className="flex aspect-square size-9 items-center justify-center rounded-[1rem] bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground shadow-[0_16px_30px_-22px_rgba(0,0,0,0.88)] transition-[opacity,background-color,border-color] duration-300 group-hover:shadow-[0_20px_36px_-24px_rgba(0,0,0,0.92)]">
+            <div className="flex aspect-square size-9 items-center justify-center rounded-xl bg-sidebar-primary/12 text-sidebar-primary shadow-sm transition-[opacity,background-color,border-color] duration-300 group-hover:shadow-sm">
               <Logo className="size-5 fill-current" />
             </div>
             <div className="grid min-w-0 flex-1 gap-0.5 px-1.5 text-left leading-none group-data-[collapsible=icon]:hidden">

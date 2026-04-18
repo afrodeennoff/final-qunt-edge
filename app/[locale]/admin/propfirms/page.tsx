@@ -163,7 +163,7 @@ export default async function PropFirmsListPage({
       >
         <div className="space-y-3 lg:hidden">
           {firms.length === 0 ? (
-            <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] px-4 py-8 text-center text-sm text-muted-foreground">
+            <div className="rounded-xl border border-border/30 px-4 py-8 text-center text-sm text-muted-foreground">
               No prop firms found yet.
             </div>
           ) : (
@@ -176,7 +176,7 @@ export default async function PropFirmsListPage({
               return (
                 <div
                   key={firm.id}
-                  className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-background/40 p-4"
+                  className="rounded-xl border border-border/30 bg-background/40 p-4"
                 >
                   <div className="flex flex-col gap-4">
                     <div className="space-y-1">
@@ -237,7 +237,7 @@ export default async function PropFirmsListPage({
         <div className="hidden overflow-x-auto lg:block">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[oklch(0.65_0.22_260/0.08)]">
+              <tr className="border-b border-border/30">
                 <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Name</th>
                 <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Category</th>
                 <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Platform</th>
@@ -264,7 +264,7 @@ export default async function PropFirmsListPage({
                   return (
                     <tr
                       key={firm.id}
-                      className="border-b border-[oklch(0.65_0.22_260/0.08)] last:border-0"
+                      className="border-b border-border/30 last:border-0"
                     >
                       <td className="py-3 pr-4">
                         <div className="space-y-1">

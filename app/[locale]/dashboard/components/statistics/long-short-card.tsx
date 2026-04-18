@@ -73,11 +73,11 @@ function LongShortPerformanceCardInner({ size = 'medium' }: LongShortPerformance
  contentClassName="flex items-center justify-center h-full gap-2 p-2"
  info={t('widgets.longShortPerformance.tooltip')}
  >
- <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-[oklch(0.65_0.22_260/0.06)] px-2 py-0.5">
+ <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-background/30 px-2 py-0.5">
  <ArrowUpFromLine className="h-3 w-3 metric-positive" />
  <span className="font-terminal font-bold text-[11px] tabular-nums metric-positive">{longNumber} ({longRate}%)</span>
  </div>
- <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-[oklch(0.65_0.22_260/0.04)] px-2 py-0.5">
+ <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-background/20 px-2 py-0.5">
  <ArrowDownFromLine className="h-3 w-3 metric-negative" />
  <span className="font-terminal font-bold text-[11px] tabular-nums metric-negative">{shortNumber} ({shortRate}%)</span>
  </div>

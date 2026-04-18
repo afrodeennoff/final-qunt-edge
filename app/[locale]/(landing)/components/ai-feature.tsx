@@ -13,7 +13,7 @@ const Circle = forwardRef<
  return (
  <div
  ref={ref}
- className={cn("z-10 flex h-12 w-12 items-center justify-center rounded-full border-2 border-white/[0.08] bg-[oklch(0.65_0.22_260/0.03)] p-3 shadow-none",
+ className={cn("z-10 flex h-12 w-12 items-center justify-center rounded-full border-2 border-border/30 bg-[oklch(0.65_0.22_260/0.03)] p-3 shadow-none",
  className,
  )}
  >

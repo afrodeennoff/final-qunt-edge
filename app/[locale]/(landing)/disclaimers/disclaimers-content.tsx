@@ -13,7 +13,7 @@ DISCLAIMER: Futures and forex trading contain substantial risk and is not for ev
   return (
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
       <div className="space-y-6">
-        <Card className="border-border/30 bg-white/[0.090]">
+        <Card className="border-border/30 bg-background/0.14">
           <CardHeader>
             <CardTitle>{t('disclaimer.risk.title')}</CardTitle>
           </CardHeader>
@@ -24,7 +24,7 @@ DISCLAIMER: Futures and forex trading contain substantial risk and is not for ev
           </CardContent>
         </Card>
 
-        <Card className="border-border/30 bg-white/[0.090]">
+        <Card className="border-border/30 bg-background/0.14">
           <CardHeader>
             <CardTitle>{t('disclaimer.hypothetical.title')}</CardTitle>
           </CardHeader>
@@ -35,7 +35,7 @@ DISCLAIMER: Futures and forex trading contain substantial risk and is not for ev
           </CardContent>
         </Card>
 
-        <Card className="border-border/30 bg-white/[0.090]">
+        <Card className="border-border/30 bg-background/0.14">
           <CardHeader>
             <CardTitle>Extended Risk Disclosure</CardTitle>
           </CardHeader>

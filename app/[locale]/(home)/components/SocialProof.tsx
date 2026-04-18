@@ -76,7 +76,7 @@ export default function SocialProof() {
           viewport={{ once: true }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="rounded-lg border border-white/[0.06] bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:p-8">
+          <div className="rounded-lg border border-border/0.04 bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:p-8">
             <Badge
               variant="outline"
               className="rounded-full border-primary/30 bg-primary/10 px-3 py-1 text-xs uppercase tracking-[0.18em] text-primary"
@@ -97,7 +97,7 @@ export default function SocialProof() {
               return (
                 <motion.article
                   key={String(stat.label)}
-                  className="rounded-lg border border-white/[0.06] bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
+                  className="rounded-lg border border-border/0.04 bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
                   initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -107,7 +107,7 @@ export default function SocialProof() {
                     ease: [0.22, 1, 0.36, 1],
                   }}
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-md border border-white/[0.06] bg-background/70 text-primary">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-md border border-border/0.04 bg-background/70 text-primary">
                     <Icon className="h-5 w-5" />
                   </div>
                   <div className="mt-4 tabular-nums text-3xl font-bold tracking-tight text-foreground">
@@ -124,7 +124,7 @@ export default function SocialProof() {
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
           <div>
-            <div className="mb-4 rounded-lg border border-white/[0.06] bg-background/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+            <div className="mb-4 rounded-lg border border-border/0.04 bg-background/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                 {t('landing.home.social.onDeskFeedbackTitle')}
               </p>
@@ -137,7 +137,7 @@ export default function SocialProof() {
               {testimonials.map((testimonial, index) => (
                 <motion.article
                   key={String(testimonial.name)}
-                  className="flex h-full flex-col rounded-lg border border-white/[0.06] bg-card/70 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
+                  className="flex h-full flex-col rounded-lg border border-border/0.04 bg-card/70 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
                   initial={{ opacity: 0, x: -12 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -147,7 +147,7 @@ export default function SocialProof() {
                     ease: [0.22, 1, 0.36, 1],
                   }}
                 >
-                  <div className="mb-4 inline-flex w-fit rounded-full border border-white/[0.06] bg-background/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  <div className="mb-4 inline-flex w-fit rounded-full border border-border/0.04 bg-background/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                     {t('landing.home.social.traderVoice')}
                   </div>
                   <MessageSquare className="mb-4 h-5 w-5 text-primary/60" />
@@ -155,7 +155,7 @@ export default function SocialProof() {
                     &ldquo;{testimonial.quote}&rdquo;
                   </blockquote>
                   <div className="mt-auto flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-md border border-white/[0.06] bg-background/70 text-sm font-semibold text-primary">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-md border border-border/0.04 bg-background/70 text-sm font-semibold text-primary">
                       {testimonial.initials}
                     </div>
                     <div>
@@ -169,7 +169,7 @@ export default function SocialProof() {
           </div>
 
           <div>
-            <div className="mb-4 rounded-lg border border-white/[0.06] bg-background/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+            <div className="mb-4 rounded-lg border border-border/0.04 bg-background/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                 {t('landing.home.social.trustFoundationTitle')}
               </p>
@@ -184,7 +184,7 @@ export default function SocialProof() {
                 return (
                   <motion.article
                     key={String(pillar.title)}
-                    className="rounded-lg border border-white/[0.06] bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
+                    className="rounded-lg border border-border/0.04 bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
                     initial={{ opacity: 0, x: 12 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
@@ -194,7 +194,7 @@ export default function SocialProof() {
                       ease: [0.22, 1, 0.36, 1],
                     }}
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-md border border-white/[0.06] bg-background/70 text-primary">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-md border border-border/0.04 bg-background/70 text-primary">
                       <Icon className="h-5 w-5" />
                     </div>
                     <h3 className="mt-4 text-lg font-semibold tracking-tight text-foreground">

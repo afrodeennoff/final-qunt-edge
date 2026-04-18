@@ -17,7 +17,7 @@ export function UnifiedHeroMedia({
 }: UnifiedHeroMediaProps) {
   return (
     <div className={cn(unifiedHeroPanelClassName, 'relative overflow-hidden', className)}>
-      <div className="pointer-events-none absolute inset-5 rounded-[1.4rem] border border-primary/10" />
+      <div className="pointer-events-none absolute inset-5 rounded-xl border border-primary/10" />
       <div className="relative z-10">{screenshot}</div>
       {overlay ? <div className="pointer-events-none absolute inset-0 z-20">{overlay}</div> : null}
       {caption ? (

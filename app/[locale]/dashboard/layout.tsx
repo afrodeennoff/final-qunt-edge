@@ -23,8 +23,8 @@ const DashboardHeader = dynamic(
   () => import("./components/dashboard-header").then((m) => m.DashboardHeader),
   { loading: () => (
     <div className="flex h-16 items-center justify-between px-4">
-      <div className="h-8 w-32 animate-pulse rounded-lg bg-[oklch(0.65_0.22_260/0.08)]" />
-      <div className="h-8 w-24 animate-pulse rounded-lg bg-[oklch(0.65_0.22_260/0.08)]" />
+      <div className="h-8 w-32 animate-pulse rounded-lg bg-background/30" />
+      <div className="h-8 w-24 animate-pulse rounded-lg bg-background/30" />
     </div>
   ) }
 );

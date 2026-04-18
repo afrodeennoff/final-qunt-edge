@@ -327,37 +327,37 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
  <Table className="w-full h-full border-separate border-spacing-0">
  <TableHeader className="sticky top-0 z-10 bg-muted/90 shadow-xs border-b">
  <TableRow>
- <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0 first:border-l">
+ <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border/30 last:border-r-0 first:border-l">
  Account
  </TableHead>
- <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0 first:border-l">
+ <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border/30 last:border-r-0 first:border-l">
  Instrument
  </TableHead>
- <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0 first:border-l">
+ <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border/30 last:border-r-0 first:border-l">
  Side
  </TableHead>
- <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0 first:border-l">
+ <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border/30 last:border-r-0 first:border-l">
  Quantity
  </TableHead>
- <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0 first:border-l">
+ <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border/30 last:border-r-0 first:border-l">
  Entry Price
  </TableHead>
- <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0 first:border-l">
+ <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border/30 last:border-r-0 first:border-l">
  Close Price
  </TableHead>
- <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0 first:border-l">
+ <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border/30 last:border-r-0 first:border-l">
  Entry Date
  </TableHead>
- <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0 first:border-l">
+ <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border/30 last:border-r-0 first:border-l">
  Close Date
  </TableHead>
- <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0 first:border-l">
+ <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border/30 last:border-r-0 first:border-l">
  PnL
  </TableHead>
- <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0 first:border-l">
+ <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border/30 last:border-r-0 first:border-l">
  Time in Position
  </TableHead>
- <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0 first:border-l">
+ <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border/30 last:border-r-0 first:border-l">
  Commission
  </TableHead>
  </TableRow>
@@ -367,7 +367,7 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
  trades.map((trade) => (
  <TableRow
  key={trade.id}
- className="border-b border-[oklch(0.65_0.22_260/0.08)] transition-[opacity,background-color,border-color] duration-75 hover:bg-muted/40"
+ className="border-b border-border/30 transition-[opacity,background-color,border-color] duration-75 hover:bg-muted/40"
  >
  <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/20 last:border-r-0 first:border-l">
  {trade.accountNumber}

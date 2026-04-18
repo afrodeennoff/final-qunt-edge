@@ -265,8 +265,8 @@ const getDisplayModeButtonClass = (mode: 'currency' | 'percent', currentMode: 'c
 
 const getBlurCardClass = (isActive: boolean) => cn("group border rounded-xl p-4 flex flex-col items-center justify-center text-center transition-[opacity,background-color,border-color] duration-700 cursor-pointer relative overflow-hidden",
  isActive
- ?"bg-white/[0.070] border-border/8 blur-xl scale-[0.98] select-none"
- :"bg-white/[0.050] border-border/14 hover:bg-accent/70 hover:border-border/30"
+ ?"bg-background/0.11 border-border/8 blur-xl scale-[0.98] select-none"
+ :"bg-background/0.08 border-border/14 hover:bg-accent/70 hover:border-border/30"
 )
 
 const getBlurIcon = (isActive: boolean): React.ReactElement => (
@@ -328,7 +328,7 @@ const EditableTarget = ({ customTarget, isEditing, onStartEditing, onFinishEditi
  <input
  autoFocus
  type="number"
- className="w-24 border-b border-white/[0.04] bg-transparent text-sm font-bold text-foreground/95 placeholder:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
+ className="w-24 border-b border-border/0.03 bg-transparent text-sm font-bold text-foreground/95 placeholder:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
  defaultValue={customTarget}
  onBlur={(e) => {
  const val = parseFloat(e.target.value)
@@ -451,7 +451,7 @@ export function DailySummaryModal() {
  <motion.div
  initial={{ scale: 0.95, opacity: 0 }}
  animate={{ scale: 1, opacity: 1 }}
- className="w-full aspect-[7/4] bg-background text-foreground/95 rounded-2xl overflow-hidden border border-[oklch(0.65_0.22_260/0.08)] relative flex flex-col sm:shadow-2xl"
+ className="w-full aspect-[7/4] bg-background text-foreground/95 rounded-2xl overflow-hidden border border-border/30 relative flex flex-col sm:shadow-2xl"
  ref={cardRef}
  >
  {/* Refined Background Mesh */}
@@ -462,7 +462,7 @@ export function DailySummaryModal() {
  {/* Header */}
  <div className="flex justify-between items-center mb-8">
  <div className="flex items-center gap-4">
- <div className="w-10 h-10 rounded-xl bg-secondary/30 border border-[oklch(0.65_0.22_260/0.08)] flex items-center justify-center shadow-inner">
+ <div className="w-10 h-10 rounded-xl bg-secondary/30 border border-border/30 flex items-center justify-center shadow-inner">
  <Zap className="w-5 h-5 text-foreground/95" />
  </div>
  <div className="flex flex-col">
@@ -478,7 +478,7 @@ export function DailySummaryModal() {
  <div className="flex items-center gap-4">
  <button
  type="button"
- className="group flex items-center gap-2 cursor-pointer rounded-lg border border-transparent px-3 py-1.5 transition-[opacity,background-color,border-color] hover:border-[oklch(0.65_0.22_260/0.08)] hover:bg-secondary/30"
+ className="group flex items-center gap-2 cursor-pointer rounded-lg border border-transparent px-3 py-1.5 transition-[opacity,background-color,border-color] hover:border-border/30 hover:bg-secondary/30"
  onClick={(e) => { e.stopPropagation(); setIsEditingHandle(true); }}
  aria-label="Edit handle"
  >
@@ -488,13 +488,13 @@ export function DailySummaryModal() {
  <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground/95 uppercase tracking-wider transition-colors">@{handle}</span>
  )}
  </button>
- <div className="flex items-center bg-[oklch(0.65_0.22_260/0.03)] rounded-lg p-0.5 border border-[oklch(0.65_0.22_260/0.08)]">
+ <div className="flex items-center bg-[oklch(0.65_0.22_260/0.03)] rounded-lg p-0.5 border border-border/30">
  <button onClick={(e) => { e.stopPropagation(); setDisplayMode('currency'); }} className={currencyButtonClass}>$</button>
  <button onClick={(e) => { e.stopPropagation(); setDisplayMode('percent'); }} className={percentButtonClass}>%</button>
  </div>
  <button
  onClick={() => setIsOpen(false)}
- className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary/30 border border-[oklch(0.65_0.22_260/0.08)] text-muted-foreground hover:text-foreground/95 transition-colors"
+ className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary/30 border border-border/30 text-muted-foreground hover:text-foreground/95 transition-colors"
  aria-label="Close summary"
  >
  <X className="w-4 h-4" />
@@ -509,7 +509,7 @@ export function DailySummaryModal() {
  <div className="col-span-12 lg:col-span-7 flex flex-col h-full">
  <div className="flex-1 flex flex-col justify-center items-center text-center">
  <div className="mb-4 flex items-center gap-3">
- <span className="w-1.5 h-1.5 rounded-full bg-[oklch(0.65_0.22_260/0.045)]-foreground/70" />
+ <span className="w-1.5 h-1.5 rounded-full bg-background/25-foreground/70" />
  <span className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">{timeframeLabel} PnL</span>
 
  <div className="ml-auto flex items-center gap-2">
@@ -519,10 +519,10 @@ export function DailySummaryModal() {
  onChange={(e) => setTimeframe(e.target.value as Timeframe)}
  aria-label="Summary timeframe"
  >
- <option value="daily" className="bg-[oklch(0.65_0.22_260/0.06)] text-popover-foreground">Daily</option>
- <option value="weekly" className="bg-[oklch(0.65_0.22_260/0.06)] text-popover-foreground">Weekly</option>
- <option value="monthly" className="bg-[oklch(0.65_0.22_260/0.06)] text-popover-foreground">Monthly</option>
- <option value="total" className="bg-[oklch(0.65_0.22_260/0.06)] text-popover-foreground">All</option>
+ <option value="daily" className="bg-background/30 text-popover-foreground">Daily</option>
+ <option value="weekly" className="bg-background/30 text-popover-foreground">Weekly</option>
+ <option value="monthly" className="bg-background/30 text-popover-foreground">Monthly</option>
+ <option value="total" className="bg-background/30 text-popover-foreground">All</option>
  </select>
  </div>
  </div>
@@ -583,11 +583,11 @@ export function DailySummaryModal() {
  </div>
 
  <div className="grid grid-cols-2 gap-4">
- <div className="bg-white/[0.050] border border-border/14 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors">
+ <div className="bg-background/0.08 border border-border/14 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors">
  <div className="text-2xl font-black text-foreground/90 mb-1">{scoreVal}</div>
  <div className="text-[9px] text-fg-muted uppercase tracking-[0.2em] font-bold">Score</div>
  </div>
- <div className="bg-white/[0.050] border border-border/14 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors">
+ <div className="bg-background/0.08 border border-border/14 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors">
  <div className="text-2xl font-black text-foreground/90 mb-1">{stats.winRate}%</div>
  <div className="text-[9px] text-fg-muted uppercase tracking-[0.2em] font-bold">Win Rate</div>
  </div>

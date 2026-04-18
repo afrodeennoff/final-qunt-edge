@@ -74,7 +74,7 @@ export default function AIFeatures() {
               return (
                 <MotionStaggerItem key={String(feature.title)} className={feature.colSpan}>
                   <article className={cn(unifiedInsetPanelClassName, 'flex h-full flex-col gap-4 p-5')}>
-                    <div className="flex h-12 w-12 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-primary">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-primary/18 bg-primary/10 text-primary">
                       <Icon className="h-5 w-5" />
                     </div>
                     <span className="inline-flex w-fit items-center rounded-full border border-border/35 bg-background/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">

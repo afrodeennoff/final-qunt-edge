@@ -466,7 +466,7 @@ export function DataManagementCard() {
               {expandedAccounts[accountNumber] && (
                 <div id={`account-${accountNumber}`} className="space-y-4 pl-2 sm:pl-4">
                   {Object.entries(instruments).map(([instrumentGroup, trades]) => (
-                    <div key={instrumentGroup} className="bg-[oklch(0.65_0.22_260/0.045)]  p-3 sm:p-4 rounded-lg">
+                    <div key={instrumentGroup} className="bg-background/25  p-3 sm:p-4 rounded-lg">
                       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div className="flex items-center gap-2">
                           <h3 className="text-md font-medium">

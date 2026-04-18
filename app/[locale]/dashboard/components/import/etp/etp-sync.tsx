@@ -160,7 +160,7 @@ export function EtpSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void })
 
  <div className="mt-8 space-y-4">
  <h2 className="text-2xl font-bold">{t('etp.tutorial.title')}</h2>
- <div className="aspect-video rounded-lg overflow-hidden bg-white/[0.040] transition-transform duration-300 hover:scale-[1.02]">
+ <div className="aspect-video rounded-lg overflow-hidden bg-background/0.06 transition-transform duration-300 hover:scale-[1.02]">
  <video
  ref={videoRef}
  height="600"
@@ -170,7 +170,7 @@ export function EtpSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void })
  muted
  controls
  playsInline
- className="rounded-lg border border-[oklch(0.65_0.22_260/0.08)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] w-full h-full object-cover"
+ className="rounded-lg border border-border/30 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] w-full h-full object-cover"
  >
  <source src="/videos/etp-tutorial.mp4" type="video/mp4" />
  <track

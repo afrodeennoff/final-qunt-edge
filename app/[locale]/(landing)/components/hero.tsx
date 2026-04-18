@@ -81,7 +81,7 @@ export default function Hero({ }: HeroProps) {
 
  <Link
  href={`/${locale}/updates`}
- className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-full border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] px-8 text-center text-[13px] font-medium text-foreground/80 tracking-[-0.01em] transition-all hover:border-white/[0.20] hover:bg-white/[0.07] hover:text-foreground/95 sm:w-auto"
+ className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-full border border-border/0.08 bg-background/30 px-8 text-center text-[13px] font-medium text-foreground/80 tracking-[-0.01em] transition-all hover:border-border/0.14 hover:bg-background/0.11 hover:text-foreground/95 sm:w-auto"
  >
  View Product Updates
  <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
@@ -92,7 +92,7 @@ export default function Hero({ }: HeroProps) {
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
  transition={{ duration: 0.6, delay: 0.6 }}
- className="mt-20 border-t border-[oklch(0.65_0.22_260/0.08)] px-4 pt-10 opacity-50 transition-all duration-700 hover:opacity-100 sm:mt-24 sm:pt-12"
+ className="mt-20 border-t border-border/30 px-4 pt-10 opacity-50 transition-all duration-700 hover:opacity-100 sm:mt-24 sm:pt-12"
  >
  <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-20">
  <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground/95 hover:tracking-[0.15em] cursor-default">TRADOVATE</span>

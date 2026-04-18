@@ -59,7 +59,7 @@ export function PnlSection({ searchValue }: PnlSectionProps) {
  key={index}
  onSelect={() => handlePresetSelect(preset.min, preset.max)}
  className={cn("px-2",
- isPresetActive(preset.min, preset.max) &&"bg-white/[0.05]"
+ isPresetActive(preset.min, preset.max) &&"bg-background/35"
  )}
  >
  <span className="text-sm">{preset.label}</span>

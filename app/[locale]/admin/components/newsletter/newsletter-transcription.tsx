@@ -173,7 +173,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
 
  if (segments.length === 0) {
  return (
- <Card className="bg-muted/50 dark:bg-white/[0.2] border-white/[0.6]">
+ <Card className="bg-muted/50 dark:bg-background/0.3 border-border/0.42">
  <CardContent className="p-6 text-center">
  <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
  <p className="text-muted-foreground">
@@ -185,7 +185,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  }
 
  return (
- <Card className="bg-white/[0.2] border-white/[0.6]">
+ <Card className="bg-background/0.3 border-border/0.42">
  <CardHeader>
  <CardTitle className="flex items-center gap-2 text-foreground/95">
  <Mic className="w-5 h-5" />
@@ -253,7 +253,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  onClick={downloadTranscription}
  variant="outline"
  size="sm"
- className="text-foreground/95 border-white/[0.8] hover:bg-accent/70"
+ className="text-foreground/95 border-border/0.56 hover:bg-accent/70"
  >
  <Download className="w-4 h-4 mr-2" />
  Télécharger
@@ -267,7 +267,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  .map((result) => (
  <div
  key={result.segmentIndex}
- className="p-3 bg-muted/50 rounded-lg border border-white/[0.6]"
+ className="p-3 bg-muted/50 rounded-lg border border-border/0.42"
  >
  <div className="flex items-start justify-between gap-3">
  <div className="flex-1">

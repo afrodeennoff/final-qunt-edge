@@ -467,7 +467,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  )}
  </div>
  )}
- <div className="border-b border-white/[0.04] bg-v2-bg-base/55 px-3 pb-2 pt-3">
+ <div className="border-b border-border/0.03 bg-v2-bg-base/55 px-3 pb-2 pt-3">
  <p className="text-xs font-medium text-muted-foreground mb-2">
  {t('filters.commandMenu.categories.title')}
  </p>

@@ -15,7 +15,7 @@ export function SegmentedControl({ options, value, onChange, className }: Segmen
  : []
 
  return (
- <div className={cn("inline-flex rounded-md border border-white/[0.08] bg-white/[0.060] p-0.5", className)}>
+ <div className={cn("inline-flex rounded-md border border-border/0.06 bg-background/0.09 p-0.5", className)}>
  {normalized.map((option) => (
  <button
  key={option.value}

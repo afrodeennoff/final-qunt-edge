@@ -260,7 +260,7 @@ export function AdminDashboard() {
 
  <TabsContent value="overview" className="space-y-6">
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
- <Card className="space-y-2 border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+ <Card className="space-y-2 border-border/30 bg-background/30 p-6 shadow-[0_4px_12px_-6px_rgba(0,0,0,0.5)]">
  <div className="flex items-center justify-between">
  <h3 className="text-sm font-medium">Total Users</h3>
  <Badge variant="secondary">Active</Badge>
@@ -276,7 +276,7 @@ export function AdminDashboard() {
  </TabsContent>
 
  <TabsContent value="users">
- <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+ <Card className="border-border/30 bg-background/30 p-6 shadow-[0_4px_12px_-6px_rgba(0,0,0,0.5)]">
  <div className="flex items-center justify-between mb-4">
  <h3 className="text-lg font-semibold">Free Users</h3>
  <Badge variant="secondary">Active</Badge>
@@ -286,14 +286,14 @@ export function AdminDashboard() {
  </TabsContent>
 
  <TabsContent value="payments" className="space-y-6">
- <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+ <Card className="border-border/30 bg-background/30 p-6 shadow-[0_4px_12px_-6px_rgba(0,0,0,0.5)]">
  <div className="flex items-center justify-between mb-4">
  <h3 className="text-lg font-semibold">Recent Transactions</h3>
  </div>
  <TransactionsTable transactions={paymentData.transactions} />
  </Card>
 
- <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+ <Card className="border-border/30 bg-background/30 p-6 shadow-[0_4px_12px_-6px_rgba(0,0,0,0.5)]">
  <div className="flex items-center justify-between mb-4">
  <h3 className="text-lg font-semibold">Active Subscriptions</h3>
  </div>

@@ -163,7 +163,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-4 rounded",
- size === 'tiny' ?"bg-v2-accent" :"bg-[oklch(0.65_0.22_260/0.045)]"
+ size === 'tiny' ?"bg-v2-accent" :"bg-background/25"
  )} />
  <span>{t('widgets.size.mobile.small')}</span>
  </div>
@@ -176,7 +176,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-8 rounded",
- size === 'medium' ?"bg-v2-accent" :"bg-[oklch(0.65_0.22_260/0.045)]"
+ size === 'medium' ?"bg-v2-accent" :"bg-background/25"
  )} />
  <span>{t('widgets.size.mobile.medium')}</span>
  </div>
@@ -189,7 +189,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-12 rounded",
- size === 'large' ?"bg-v2-accent" :"bg-[oklch(0.65_0.22_260/0.045)]"
+ size === 'large' ?"bg-v2-accent" :"bg-background/25"
  )} />
  <span>{t('widgets.size.mobile.large')}</span>
  </div>
@@ -205,7 +205,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-4 rounded",
- size === 'tiny' ?"bg-v2-accent" :"bg-[oklch(0.65_0.22_260/0.045)]"
+ size === 'tiny' ?"bg-v2-accent" :"bg-background/25"
  )} />
  <span>{t('widgets.size.tiny')}</span>
  </div>
@@ -218,7 +218,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-6 rounded",
- size === 'small' ?"bg-v2-accent" :"bg-[oklch(0.65_0.22_260/0.045)]"
+ size === 'small' ?"bg-v2-accent" :"bg-background/25"
  )} />
  <span>{t('widgets.size.small')}</span>
  </div>
@@ -231,7 +231,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-8 rounded",
- size === 'medium' ?"bg-v2-accent" :"bg-[oklch(0.65_0.22_260/0.045)]"
+ size === 'medium' ?"bg-v2-accent" :"bg-background/25"
  )} />
  <span>{t('widgets.size.medium')}</span>
  </div>
@@ -244,7 +244,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-10 rounded",
- size === 'large' ?"bg-v2-accent" :"bg-[oklch(0.65_0.22_260/0.045)]"
+ size === 'large' ?"bg-v2-accent" :"bg-background/25"
  )} />
  <span>{t('widgets.size.large')}</span>
  </div>
@@ -257,7 +257,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-12 rounded",
- size === 'extra-large' ?"bg-v2-accent" :"bg-[oklch(0.65_0.22_260/0.045)]"
+ size === 'extra-large' ?"bg-v2-accent" :"bg-background/25"
  )} />
  <span>{t('widgets.size.extra-large')}</span>
  </div>

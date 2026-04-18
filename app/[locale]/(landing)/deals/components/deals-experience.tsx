@@ -74,15 +74,15 @@ const TABS: ReadonlyArray<{ id: string; label: string }> = [
 
 const DEALS_SPOTLIGHT_AUTO_SLIDE_MS = 5000
 const dealsPanelClassName =
-  'rounded-[1.75rem] border border-[oklch(0.65_0.22_260/0.14)] bg-[linear-gradient(180deg,oklch(0.65_0.22_260/0.08),oklch(0_0_0/0.92))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_32px_88px_-48px_rgba(0,0,0,0.94)]'
+  'rounded-2xl border border-border/40 bg-[linear-gradient(180deg,oklch(0.65_0.22_260/0.08),oklch(0_0_0/0.92))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_32px_88px_-48px_rgba(0,0,0,0.94)]'
 const dealsInsetPanelClassName =
   'rounded-2xl border border-[oklch(0.65_0.22_260/0.12)] bg-[linear-gradient(180deg,oklch(0.65_0.22_260/0.05),oklch(0_0_0/0.84))] shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
 const dealsChipClassName =
-  'rounded-full border border-[oklch(0.65_0.22_260/0.14)] bg-[oklch(0.65_0.22_260/0.08)]'
+  'rounded-full border border-border/40 bg-background/30'
 const dealsGhostButtonClassName =
-  'inline-flex items-center justify-center gap-2 rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] px-4 py-2.5 text-sm font-medium text-foreground transition-[background-color,border-color,color,transform,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.22)] hover:bg-[oklch(0.65_0.22_260/0.11)]'
+  'inline-flex items-center justify-center gap-2 rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-background/30 px-4 py-2.5 text-sm font-medium text-foreground transition-[background-color,border-color,color,transform,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.22)] hover:bg-[oklch(0.65_0.22_260/0.11)]'
 const dealsPrimaryButtonClassName =
-  'inline-flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-[0_16px_28px_-16px_hsl(var(--primary)/0.85)] transition-[background-color,transform,box-shadow,filter] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_22px_34px_-18px_hsl(var(--primary)/0.9)]'
+  'inline-flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-sm transition-[background-color,transform,box-shadow,filter] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-sm'
 
 const faqFallbackItems: ReadonlyArray<{ question: string; answer: string }> = [
   {
@@ -122,7 +122,7 @@ function DealsTabBar({
   return (
     <nav className="sticky top-16 z-40 border-y border-[oklch(0.65_0.22_260/0.1)] bg-background/95">
       <div className="mx-auto max-w-[1360px] overflow-hidden px-4 sm:px-6 md:px-8 lg:px-12">
-        <div className="my-3 flex gap-1.5 overflow-x-auto overflow-y-hidden rounded-full border border-[oklch(0.65_0.22_260/0.1)] bg-[oklch(0.65_0.22_260/0.06)] p-1.5 scrollbar-none">
+        <div className="my-3 flex gap-1.5 overflow-x-auto overflow-y-hidden rounded-full border border-[oklch(0.65_0.22_260/0.1)] bg-background/30 p-1.5 scrollbar-none">
           {TABS.map((tab) => (
             <button
               key={tab.id}
@@ -130,8 +130,8 @@ function DealsTabBar({
               onClick={() => onTabClick(tab.id)}
               className={`relative whitespace-nowrap rounded-full px-4 py-2 text-[13px] font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-5 ${
                 activeTab === tab.id
-                  ? 'bg-[oklch(0.65_0.22_260/0.12)] text-foreground shadow-[0_0_0_1px_oklch(0.65_0.22_260/0.22),0_16px_28px_-22px_hsl(var(--primary)/0.7)]'
-                  : 'text-muted-foreground hover:bg-[oklch(0.65_0.22_260/0.08)] hover:text-foreground'
+                  ? 'bg-background/35 text-foreground shadow-[0_0_0_1px_oklch(0.65_0.22_260/0.22),0_16px_28px_-22px_hsl(var(--primary)/0.7)]'
+                  : 'text-muted-foreground hover:bg-background/30 hover:text-foreground'
               }`}
             >
               {tab.label}
@@ -571,7 +571,7 @@ function DealsTabSections({
       {/* ── Matchup ── */}
       <section
         id="matchup"
-        className="scroll-mt-[120px] overflow-hidden bg-[oklch(0.65_0.22_260/0.04)] py-16 sm:py-20"
+        className="scroll-mt-[120px] overflow-hidden bg-background/20 py-16 sm:py-20"
       >
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 md:px-8 lg:px-12">
           <div className="mb-8 text-center">
@@ -697,7 +697,7 @@ function DealsTabSections({
       {/* ── Playbooks ── */}
       <section
         id="playbooks"
-        className="scroll-mt-[120px] overflow-hidden bg-[oklch(0.65_0.22_260/0.04)] py-16 sm:py-20"
+        className="scroll-mt-[120px] overflow-hidden bg-background/20 py-16 sm:py-20"
       >
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 md:px-8 lg:px-12">
           <div className="mb-8 text-center">
@@ -1014,7 +1014,7 @@ function BiggestDealsCarousel({
 function BackgroundDealTeaser({ deal, align }: { deal: DealItem; align: 'left' | 'right' }) {
   return (
     <div
-      className={`w-[360px] overflow-hidden rounded-[1.6rem] border border-[oklch(0.65_0.22_260/0.08)] bg-[linear-gradient(180deg,oklch(0.65_0.22_260/0.04),oklch(0_0_0/0.82))] px-6 py-6 opacity-20 ${
+      className={`w-[360px] overflow-hidden rounded-xl border border-border/30 bg-[linear-gradient(180deg,oklch(0.65_0.22_260/0.04),oklch(0_0_0/0.82))] px-6 py-6 opacity-20 ${
         align === 'left' ? 'translate-x-[-56%]' : 'translate-x-[56%]'
       }`}
     >
@@ -1143,7 +1143,7 @@ function BrowseDealsSection({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-2xl border border-dashed border-[oklch(0.65_0.22_260/0.14)] bg-[oklch(0.65_0.22_260/0.06)] p-8 text-center text-sm leading-relaxed text-muted-foreground">
+        <div className="mt-6 rounded-2xl border border-dashed border-border/40 bg-background/30 p-8 text-center text-sm leading-relaxed text-muted-foreground">
           {filteredDeals.length === 0
             ? 'No deals match the current filter stack. Try widening the firm or market selection.'
             : 'All matching deals are already highlighted above.'}
@@ -1295,7 +1295,7 @@ function DealsFilterPanel({
               value={search}
               onChange={(event) => onSearchChange(event.target.value)}
               placeholder="Search by firm, coupon, or platform..."
-              className="h-11 w-full rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] pl-11 pr-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] placeholder:text-muted-foreground/60 focus:border-primary/35"
+              className="h-11 w-full rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-background/30 pl-11 pr-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] placeholder:text-muted-foreground/60 focus:border-primary/35"
             />
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex">
@@ -1318,7 +1318,7 @@ function DealsFilterPanel({
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   selectedDiscount === option.value
                     ? 'border-primary/35 bg-primary text-primary-foreground shadow-[0_12px_20px_-14px_hsl(var(--primary)/0.75)]'
-                    : 'border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] text-muted-foreground hover:border-[oklch(0.65_0.22_260/0.22)] hover:text-foreground'
+                    : 'border-[oklch(0.65_0.22_260/0.12)] bg-background/30 text-muted-foreground hover:border-[oklch(0.65_0.22_260/0.22)] hover:text-foreground'
                 }`}
               >
                 {option.label}
@@ -1334,7 +1334,7 @@ function DealsFilterPanel({
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   sortKey === item.key
                     ? 'border-primary/35 bg-primary text-primary-foreground shadow-[0_12px_20px_-14px_hsl(var(--primary)/0.75)]'
-                    : 'border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] text-muted-foreground hover:border-[oklch(0.65_0.22_260/0.22)] hover:text-foreground'
+                    : 'border-[oklch(0.65_0.22_260/0.12)] bg-background/30 text-muted-foreground hover:border-[oklch(0.65_0.22_260/0.22)] hover:text-foreground'
                 }`}
               >
                 {item.label}
@@ -1344,7 +1344,7 @@ function DealsFilterPanel({
         </div>
 
         {hasActiveFilters ? (
-          <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-dashed border-[oklch(0.65_0.22_260/0.14)] bg-[oklch(0.65_0.22_260/0.05)] px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+          <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-dashed border-border/40 bg-[oklch(0.65_0.22_260/0.05)] px-4 py-3 text-sm leading-relaxed text-muted-foreground">
             <span>
               The deal board is narrowed right now. Reset to return to the full live tape.
             </span>
@@ -1377,7 +1377,7 @@ function DealsFilterPanel({
               <Link
                 key={firm.id}
                 href={getFirmHrefFromPrefix(localePrefix, firm.slug)}
-                className="flex items-center justify-between rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.04)] px-3 py-2 text-sm transition-[background-color,border-color,color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.2)] hover:bg-[oklch(0.65_0.22_260/0.09)]"
+                className="flex items-center justify-between rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-background/20 px-3 py-2 text-sm transition-[background-color,border-color,color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.2)] hover:bg-[oklch(0.65_0.22_260/0.09)]"
               >
                 <span className="font-medium text-foreground">{firm.name}</span>
                 <span className="text-muted-foreground">
@@ -1466,7 +1466,7 @@ function DealCard({
   const isExternalClaim = Boolean(deal.claimUrl)
 
   return (
-    <div className="group overflow-hidden rounded-[1.6rem] border border-[oklch(0.65_0.22_260/0.14)] bg-[linear-gradient(160deg,oklch(0.65_0.22_260/0.08),oklch(0_0_0/0.9))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_64px_-40px_rgba(0,0,0,0.94)] transition-[transform,box-shadow,border-color,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.22)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_30px_78px_-42px_rgba(0,0,0,0.96)]">
+    <div className="group overflow-hidden rounded-xl border border-border/40 bg-[linear-gradient(160deg,oklch(0.65_0.22_260/0.08),oklch(0_0_0/0.9))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_64px_-40px_rgba(0,0,0,0.94)] transition-[transform,box-shadow,border-color,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.22)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_30px_78px_-42px_rgba(0,0,0,0.96)]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div
@@ -1482,7 +1482,7 @@ function DealCard({
             {deal.platform} • {deal.payoutModel}
           </p>
         </div>
-        <div className="rounded-[1.4rem] border border-primary/30 bg-primary/10 px-3 py-2 text-right">
+        <div className="rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-right">
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Discount</p>
           <p className="mt-1 text-xl font-bold text-foreground/95">{deal.discountPercent}%</p>
         </div>
@@ -1557,7 +1557,7 @@ function StatCard({
 
 function StatPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className={cn(dealsInsetPanelClassName, 'rounded-[1.35rem] p-3')}>
+    <div className={cn(dealsInsetPanelClassName, 'rounded-xl p-3')}>
       <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
       <p className="mt-1 text-sm font-bold text-foreground">{value}</p>
     </div>
@@ -1598,7 +1598,7 @@ function SelectLike<T extends string>({
     <select
       value={value}
       onChange={(event) => onChange(event.target.value as T)}
-      className="h-11 rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] px-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:border-primary/35"
+      className="h-11 rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-background/30 px-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:border-primary/35"
     >
       {options.map((option) => (
         <option key={option} value={option}>

@@ -30,7 +30,7 @@ const socialLinks = [
 
 export default function Footer() {
  return (
- <footer className="border-t border-border/20 bg-white/[0.030]">
+ <footer className="border-t border-border/20 bg-background/0.04">
  <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
  <div className="grid grid-cols-2 md:grid-cols-5 gap-6 lg:gap-10 mb-10">
  <div className="col-span-2">

@@ -356,7 +356,7 @@ export function PropFirmCatalogueExperience({
                   href={`/${locale}/firm/${firm.slug}`}
                   className={cn(
                     unifiedInsetPanelClassName,
-                    'group animate-scale-reveal p-4 transition-[transform,background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-primary/24 hover:bg-card/78 hover:shadow-[0_26px_60px_-36px_rgba(0,0,0,0.92)]',
+                    'group animate-scale-reveal p-4 transition-[transform,background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-primary/24 hover:bg-card/78 hover:shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
                     index % 3 === 0 && 'animate-scale-reveal-d1',
                     index % 3 === 1 && 'animate-scale-reveal-d2',
                     index % 3 === 2 && 'animate-scale-reveal-d3',
@@ -647,7 +647,7 @@ function RegisteredAccountsChart({
             </ChartContainer>
           </div>
         ) : (
-          <div className="rounded-xl border border-dashed border-[oklch(0.65_0.22_260/0.08)] bg-background/60 px-4 py-6 text-sm text-muted-foreground">
+          <div className="rounded-xl border border-dashed border-border/30 bg-background/60 px-4 py-6 text-sm text-muted-foreground">
             No account registrations available yet.
           </div>
         )}

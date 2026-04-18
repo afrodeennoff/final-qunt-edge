@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 
 export default function Qualification() {
  return (
- <section className="border-t border-white/[0.08] bg-background px-6 py-16 sm:py-20 lg:py-24">
+ <section className="border-t border-border/30 bg-background px-6 py-16 sm:py-20 lg:py-24">
  <div className="mx-6 rounded-xl p-6 bg-[oklch(0.65_0.22_260/0.03)] shadow-card">
  <div className="max-w-6xl mx-auto">
- <div className="grid md:grid-cols-2 gap-2 bg-white/[0.010] border border-[oklch(0.65_0.22_260/0.08)] p-2 rounded-sm overflow-hidden">
+ <div className="grid md:grid-cols-2 gap-2 bg-background/0.01 border border-border/30 p-2 rounded-sm overflow-hidden">
  <motion.div 
  initial={{ opacity: 0, x: -20 }}
  whileInView={{ opacity: 1, x: 0 }}
@@ -29,7 +29,7 @@ export default function Qualification() {
  initial={{ opacity: 0, x: 20 }}
  whileInView={{ opacity: 1, x: 0 }}
  viewport={{ once: true }}
- className="p-16 bg-white/[0.095]"
+ className="p-16 bg-background/0.14"
  >
  <h3 className="mb-10 text-xs font-bold uppercase tracking-[0.3em] text-foreground/85 mono">Hard Refusals</h3>
  <ul className="space-y-6">

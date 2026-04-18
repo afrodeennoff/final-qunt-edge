@@ -61,18 +61,18 @@ export function AdminClientLayout({
     >
       <SidebarNav />
       <SidebarInset className="qe-v2-app-shell relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-x-6 top-0 z-0 h-32 rounded-b-[2rem] border border-primary/10 bg-primary/[0.03]" />
+        <div className="pointer-events-none absolute inset-x-6 top-0 z-0 h-32 rounded-b-2xl border border-border/20 bg-primary/[0.02]" />
         <header
           className={`${HEADER_Z_INDEX} sticky top-0 px-3 pb-2 pt-3 sm:px-4 sm:pb-3 sm:pt-4`}
         >
           <div className="mx-auto flex w-full max-w-[1800px] items-center">
-            <div className={cn(unifiedSectionPanelClassName, 'relative flex min-h-[4.5rem] w-full flex-col gap-4 overflow-hidden rounded-[2rem] px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between')}>
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className={cn(unifiedSectionPanelClassName, 'relative flex min-h-[4.5rem] w-full flex-col gap-4 overflow-hidden rounded-2xl px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between')}>
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/20 to-transparent" />
               <div className="flex min-w-0 items-center gap-3">
-                <SidebarTrigger className="h-10 w-10 rounded-[1rem] border border-primary/12 bg-primary/[0.05] text-foreground/64 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition-[opacity,background-color,border-color,color] duration-200 hover:border-primary/20 hover:bg-primary/10 hover:text-foreground/95 md:h-9 md:w-9" />
+                <SidebarTrigger className="h-10 w-10 rounded-xl border border-border/30 bg-background/40 text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:border-border/50 hover:bg-background/60 hover:text-foreground md:h-9 md:w-9" />
                 <div className="flex min-w-0 flex-1 flex-col">
                   <div className="flex items-center gap-2.5">
-                    <span className="hidden rounded-full border border-primary/18 bg-primary/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-primary/90 sm:inline-flex">
+                    <span className="hidden rounded-full border border-border/30 bg-background/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-primary/90 sm:inline-flex">
                       Admin
                     </span>
                     <h1 className="truncate whitespace-nowrap text-sm font-bold uppercase tracking-[0.18em] text-foreground/95">

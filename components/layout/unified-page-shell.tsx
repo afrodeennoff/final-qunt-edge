@@ -50,7 +50,7 @@ export function UnifiedPageShell({
         densityClasses,
         variant !== 'minimal' && [
           'before:absolute before:inset-x-6 before:top-0 before:h-44 before:pointer-events-none before:z-0',
-          'before:rounded-b-[2.25rem] before:border before:border-primary/10 before:bg-primary/[0.035]',
+          'before:rounded-b-2xl before:border before:border-border/20 before:bg-primary/[0.02]',
           'after:absolute after:inset-x-0 after:top-0 after:h-px after:pointer-events-none after:z-0 after:bg-border/35',
         ],
         '[&_.scroll-container]:overflow-y-auto [&_.scroll-container]:scrollbar-thin',
@@ -73,19 +73,19 @@ export function UnifiedPageHeader({
   return (
     <header
       className={cn(
-        'mb-8 rounded-[calc(var(--radius)+0.5rem)] border px-5 py-6 shadow-sm sm:px-6',
+        'mb-8 rounded-xl border px-5 py-6 shadow-sm sm:px-6',
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
-          'border-border/45 bg-[hsl(var(--card)/0.94)]',
-          'hover:border-primary/18 hover:bg-[hsl(var(--card)/0.98)]',
+          'border-border/35 bg-card/80',
+          'hover:border-border/50 hover:bg-card/95',
         ],
         variant === 'gradient' && [
           'border-primary/14 bg-[hsl(var(--card)/0.96)]',
-          'hover:border-primary/22 hover:bg-[hsl(var(--card)/0.99)]',
+          'hover:border-border/50 hover:bg-card/95',
         ],
         variant === 'elevated' && [
-          'border-primary/14 bg-[hsl(var(--card)/0.98)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_34px_80px_-42px_rgba(4,10,24,0.92)]',
-          'hover:-translate-y-0.5 hover:border-primary/22 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_40px_90px_-44px_rgba(4,10,24,0.96)]',
+          'border-border/40 bg-card/90 shadow-sm',
+          'hover:border-border/50',
         ],
         className,
       )}
@@ -127,28 +127,28 @@ export function UnifiedSurface({ children, className, variant = 'default' }: Uni
   return (
     <section
       className={cn(
-        'rounded-[calc(var(--radius)+0.45rem)] border p-4 shadow-sm sm:p-6',
+        'rounded-xl border p-4 shadow-sm sm:p-6',
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
-          'border-border/45 bg-[hsl(var(--card)/0.96)]',
-          'hover:border-primary/18 hover:shadow-[0_28px_72px_-40px_rgba(4,10,24,0.9)]',
+          'border-border/35 bg-card/80',
+          'hover:border-border/50',
         ],
         variant === 'glass' && [
-          'border-primary/14 bg-[hsl(var(--primary)/0.08)]',
-          'shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]',
-          'hover:border-primary/22 hover:bg-[hsl(var(--primary)/0.1)] hover:shadow-[0_28px_72px_-40px_rgba(4,10,24,0.9)]',
+          'border-border/30 bg-primary/4',
+          '',
+          'hover:border-border/40 hover:bg-primary/6',
         ],
         variant === 'gradient-border' && [
-          'border-primary/18 bg-v2-bg-surface/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]',
-          'hover:border-primary/26 hover:shadow-[0_28px_72px_-40px_rgba(4,10,24,0.9)]',
+          'border-border/35 bg-card/70',
+          'hover:border-border/45',
         ],
         variant === 'elevated' && [
-          'border-primary/14 bg-[hsl(var(--card)/0.98)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_34px_80px_-42px_rgba(4,10,24,0.92)]',
-          'hover:-translate-y-1 hover:border-primary/22 hover:bg-[hsl(var(--card)/1)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_42px_92px_-44px_rgba(4,10,24,0.96)]',
+          'border-border/40 bg-card/90 shadow-sm',
+          'hover:border-border/50 hover:bg-card/95',
         ],
         variant === 'subtle' && [
           'border-border/35 bg-[hsl(var(--background)/0.62)] shadow-none',
-          'hover:border-primary/18 hover:bg-[hsl(var(--background)/0.68)]',
+          'hover:border-border/40 hover:bg-background/50',
         ],
         className,
       )}

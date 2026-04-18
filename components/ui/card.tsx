@@ -57,21 +57,21 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onClick={isInteractive ? onClick : undefined}
         className={cn(
           'group relative overflow-hidden text-foreground',
-          'rounded-xl border border-border/45 bg-[linear-gradient(180deg,hsl(var(--card)/0.98),hsl(var(--background)/0.92))] shadow-[0_18px_46px_-32px_rgba(0,0,0,0.9)]',
-          variant === 'glass' && 'border-primary/12 bg-primary/8',
+          'rounded-xl border border-border/40 bg-card/95 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.6)]',
+          variant === 'glass' && 'border-primary/10 bg-primary/6',
           variant === 'elevated' &&
-            'border-primary/14 bg-card shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_28px_70px_-42px_rgba(0,0,0,0.92)]',
+            'border-border/50 bg-card shadow-[inset_0_1px_0_hsl(var(--foreground)/0.04),0_12px_32px_-16px_rgba(0,0,0,0.72)]',
           variant === 'outlined' && 'bg-transparent shadow-none',
           variant === 'flat' && 'border-transparent bg-transparent shadow-none',
           variant === 'gradient-border' &&
-            'border-primary/18 bg-card/98 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_22px_52px_-36px_rgba(0,0,0,0.9)]',
-          variant === 'frost' && 'border-border/40 bg-background/74 shadow-[0_16px_38px_-30px_rgba(0,0,0,0.88)]',
+            'border-primary/14 bg-card/95 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03),0_8px_24px_-12px_rgba(0,0,0,0.64)]',
+          variant === 'frost' && 'border-border/35 bg-background/60 shadow-[0_8px_20px_-12px_rgba(0,0,0,0.5)]',
           accent && accentClassMap[accent],
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',
           size === 'lg' && 'type-body-lg',
           hover &&
-            'transition-[background-color,border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-primary/16 hover:shadow-[0_24px_58px_-34px_rgba(0,0,0,0.92)]',
+            'transition-[background-color,border-color,box-shadow] duration-200 hover:border-border/55 hover:shadow-[0_8px_24px_-12px_rgba(0,0,0,0.7)]',
           isInteractive &&
             'cursor-pointer transition-[background-color,border-color,box-shadow,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           isLoading && 'pointer-events-none opacity-80',
@@ -86,7 +86,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ) : null}
 
         {status ? (
-          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-border/45 bg-background/82 px-2.5 py-1 shadow-[0_10px_24px_-18px_rgba(0,0,0,0.85)]">
+          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-border/40 bg-background/70 px-2.5 py-1 shadow-sm">
             <div
               className={cn(
                 'h-1.5 w-1.5 rounded-full',
@@ -117,11 +117,11 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
     <div
       ref={ref}
       className={cn(
-        'relative flex flex-col gap-2.5',
+        'relative flex flex-col gap-3',
         {
           'p-4 pb-0': size === 'sm',
-          'p-5 pb-0 sm:p-6 sm:pb-0': size === 'md',
-          'p-6 pb-0 sm:p-8 sm:pb-0': size === 'lg',
+          'p-5 pb-0': size === 'md',
+          'p-6 pb-0': size === 'lg',
         },
         className,
       )}
@@ -213,8 +213,8 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
         'type-body text-foreground',
         {
           'p-4': size === 'sm',
-          'p-5 sm:p-6': size === 'md',
-          'p-6 sm:p-8': size === 'lg',
+          'p-5': size === 'md',
+          'p-6': size === 'lg',
         },
         className,
       )}
@@ -233,11 +233,11 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-3 border-t border-border/50',
+        'flex items-center gap-3 border-t border-border/35',
         {
           'p-4': size === 'sm',
-          'p-5 sm:p-6': size === 'md',
-          'p-6 sm:p-8': size === 'lg',
+          'p-5': size === 'md',
+          'p-6': size === 'lg',
         },
         className,
       )}

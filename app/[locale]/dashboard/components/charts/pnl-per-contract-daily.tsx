@@ -237,7 +237,7 @@ export default React.memo(function PnLPerContractDailyChart({
  placeholder={t("pnlPerContractDaily.selectInstrument")}
  />
  </SelectTrigger>
- <SelectContent className="bg-white/[0.096] border-border/55">
+ <SelectContent className="bg-background/0.14 border-border/55">
  {availableInstruments.map((instrument) => (
  <SelectItem key={instrument} value={instrument} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground focus:text-foreground/95">
  {instrument}

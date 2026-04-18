@@ -222,9 +222,9 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
           className={cn(
-            'flex h-full w-full flex-col border border-sidebar-border/45 bg-[linear-gradient(180deg,hsl(var(--sidebar)/0.985),hsl(var(--sidebar)/0.95))] shadow-[inset_0_1px_0_hsl(var(--sidebar-foreground)/0.03),0_28px_60px_-42px_rgba(0,0,0,0.92)]',
-            'group-data-[variant=floating]:rounded-[1.4rem]',
-            'group-data-[variant=inset]:rounded-[1.4rem]',
+            'flex h-full w-full flex-col border border-sidebar-border/35 bg-sidebar/95 shadow-[inset_0_1px_0_hsl(var(--sidebar-foreground)/0.02),0_8px_24px_-12px_rgba(0,0,0,0.5)]',
+            'group-data-[variant=floating]:rounded-2xl',
+            'group-data-[variant=inset]:rounded-2xl',
           )}
         >
           {children}
@@ -243,7 +243,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       variant="ghost"
       size="icon"
       className={cn(
-        'size-9 rounded-[1rem] border border-sidebar-border/45 bg-sidebar-accent/45 text-foreground/78 shadow-none hover:border-sidebar-primary/24 hover:bg-sidebar-primary/10 hover:text-foreground',
+        'size-9 rounded-xl border border-sidebar-border/30 bg-sidebar-accent/30 text-foreground/70 shadow-none hover:border-sidebar-border/45 hover:bg-sidebar-accent/50 hover:text-foreground',
         className,
       )}
       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {

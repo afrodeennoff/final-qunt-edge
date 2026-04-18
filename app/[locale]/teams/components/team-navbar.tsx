@@ -33,7 +33,7 @@ const ListItem = React.forwardRef<
  <NavigationMenuLink asChild>
  <a
  ref={ref}
- className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-white/[0.5] hover:text-accent-foreground focus:bg-white/[0.5] focus:text-accent-foreground ${className}`}
+ className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-background/0.75 hover:text-accent-foreground focus:bg-background/0.75 focus:text-accent-foreground ${className}`}
  {...props}
  >
  <div className="text-sm font-medium leading-none flex items-center">

@@ -62,7 +62,7 @@ export default function FeaturesBento() {
             return (
               <MotionStaggerItem key={String(issue.title)}>
                 <article className={cn(unifiedSectionPanelClassName, 'flex h-full flex-col gap-4 p-6')}>
-                  <div className="flex h-11 w-11 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-primary">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-primary/18 bg-primary/10 text-primary">
                     <Icon className="h-5 w-5" />
                   </div>
                   <span className={cn(unifiedChipClassName, 'w-fit px-3 py-1.5')}>{issue.badge}</span>
@@ -100,7 +100,7 @@ export default function FeaturesBento() {
                     feature.highlighted && 'border-primary/16',
                   )}
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-primary">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-primary/18 bg-primary/10 text-primary">
                     <Icon className="h-5 w-5" />
                   </div>
                   {feature.highlighted ? (

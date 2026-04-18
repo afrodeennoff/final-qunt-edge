@@ -940,9 +940,9 @@ export function FormatPreview({
  <TableRow
  key={row.id}
  data-state={row.getIsSelected() &&"selected"}
- className={cn("border-b transition-colors hover:bg-[oklch(0.65_0.22_260/0.045)]",
+ className={cn("border-b transition-colors hover:bg-background/25",
  row.getIsExpanded()
- ?"bg-[oklch(0.65_0.22_260/0.045)]"
+ ?"bg-background/25"
  : row.getCanExpand()
  ?""
  :"bg-muted/50"
