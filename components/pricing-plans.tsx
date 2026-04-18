@@ -109,7 +109,7 @@ function formatPlanAmount(
 
 function getPlanCardClassName(popular: boolean): string {
   return cn(
-    'relative flex w-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1',
+    'relative flex w-full flex-col overflow-hidden transition-[opacity,background-color,border-color,transform] duration-300 hover:-translate-y-1',
     !popular && 'rounded-2xl border border-white/[0.08] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_8px_32px_-8px_rgba(0,0,0,0.80)]',
     popular && 'relative rounded-2xl border border-[oklch(0.65_0.22_260/0.35)] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_oklch(0.65_0.22_260/0.30),0_0_40px_oklch(0.65_0.22_260/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
   )
@@ -118,7 +118,7 @@ function getPlanCardClassName(popular: boolean): string {
 function getPlanCtaClassName(): string {
   return cn(
     'h-12 w-full rounded-xl bg-primary text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground',
-    'shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary/90 active:translate-y-0 active:shadow-md',
+    'shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-[opacity,background-color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-primary/90 active:translate-y-0 active:shadow-md',
     '[font-family:var(--home-copy)]'
   )
 }
@@ -372,7 +372,7 @@ function PlusPlanCard({
                 <button
                   key={option.key}
                   className={cn(
-                    'rounded-xl px-3 py-2 text-xs capitalize transition-all',
+                    'rounded-xl px-3 py-2 text-xs capitalize transition-[opacity,background-color,border-color,transform]',
                     billingPeriod === option.key
                       ? 'bg-white text-black font-semibold shadow-[0_8px_20px_-12px_rgba(255,255,255,0.45)]'
                       : 'text-foreground/46 hover:bg-white/[0.06] hover:text-foreground',
@@ -388,7 +388,7 @@ function PlusPlanCard({
             <div className="border-t border-white/[0.06] pt-3">
               <button
                 className={cn(
-                  'flex w-full items-center justify-center gap-2 rounded-[1rem] border px-3 py-2 text-xs font-medium transition-all',
+                  'flex w-full items-center justify-center gap-2 rounded-[1rem] border px-3 py-2 text-xs font-medium transition-[opacity,background-color,border-color,transform]',
                   billingPeriod === 'lifetime'
                     ? 'border-[oklch(0.65_0.22_260/0.28)] bg-[oklch(0.65_0.22_260/0.08)] text-[oklch(0.75_0.22_260)]'
                     : 'border-white/[0.08] text-foreground/54 hover:bg-white/[0.06] hover:text-foreground',

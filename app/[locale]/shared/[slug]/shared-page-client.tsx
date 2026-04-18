@@ -72,7 +72,7 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
             key={account}
             onClick={() => toggleAccount(account)}
             className={cn(
-              "flex items-center rounded-xl border px-2 py-2 transition-all duration-200 hover:-translate-y-0.5",
+              "flex items-center rounded-xl border px-2 py-2 transition-[opacity,background-color,border-color,transform] duration-200 hover:-translate-y-0.5",
               accountNumbers.includes(account) 
                 ? "border-white/[0.14] bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] text-foreground/95 shadow-[0_18px_36px_-26px_rgba(255,255,255,0.08)]"
                 : "border-white/[0.08] bg-white/[0.04] text-foreground/56 hover:border-white/[0.14] hover:bg-white/[0.06]"

@@ -43,7 +43,7 @@ export default function AuthenticationPageClient() {
  <div className="flex items-center justify-between">
  <Link
  href={`/${locale}`}
- className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.04] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/72 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-white/[0.14] hover:bg-white/[0.08] hover:text-foreground/95"
+ className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.04] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/72 transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-white/[0.14] hover:bg-white/[0.08] hover:text-foreground/95"
  >
  <ArrowLeft className="h-3.5 w-3.5" />
  Back to website

@@ -53,7 +53,7 @@ function InteractiveStarRating({
           onMouseEnter={() => !disabled && setHoverRating(star)}
           onMouseLeave={() => setHoverRating(0)}
           className={cn(
-            "transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-v2-accent rounded",
+            "transition-[opacity,background-color,border-color,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-v2-accent rounded",
             disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:scale-110"
           )}
         >
@@ -112,7 +112,7 @@ function RatingDistributionBar({
       <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
       <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/[0.070]">
         <div
-          className="h-full rounded-full bg-yellow-400/80 transition-all duration-500"
+          className="h-full rounded-full bg-[oklch(0.82_0.16_85)/80] transition-[opacity,background-color,border-color,transform] duration-500"
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -140,7 +140,7 @@ function formatRelativeTime(date: Date): string {
 
 function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFlag: (id: string) => void; canFlag: boolean }) {
   return (
-    <div className="group rounded-xl border border-white/[0.08] bg-white/[0.060] p-5 transition-all duration-200 hover:border-[oklch(0.65_0.22_260/0.08)] hover:bg-white/[0.080]">
+    <div className="group rounded-xl border border-white/[0.08] bg-white/[0.060] p-5 transition-[opacity,background-color,border-color,transform] duration-200 hover:border-[oklch(0.65_0.22_260/0.08)] hover:bg-white/[0.080]">
       <div className="flex items-start gap-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-v2-accent/20 to-v2-accent/5 border border-v2-accent/20">
           <span className="text-sm font-semibold text-v2-accent">

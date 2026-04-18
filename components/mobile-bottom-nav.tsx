@@ -88,14 +88,14 @@ function TabItem({ item }: { item: MobileNavItem }) {
     <Link
       href={item.href}
       className={cn(
-        'relative group flex flex-1 flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-2xl py-1.5 transition-all duration-200',
+        'relative group flex flex-1 flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-2xl py-1.5 transition-[opacity,background-color,border-color,transform] duration-200',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'
       )}
       aria-current={active ? 'page' : undefined}
     >
       <Icon
         className={cn(
-          'size-5 transition-all duration-200',
+          'size-5 transition-[opacity,background-color,border-color,transform] duration-200',
           active ? 'scale-110 text-sidebar-foreground' : 'text-sidebar-foreground/40 group-hover:text-sidebar-foreground/78'
         )}
       />

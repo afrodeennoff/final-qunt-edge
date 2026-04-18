@@ -49,7 +49,7 @@ export function BlogCard({ post }: Props) {
 
   return (
     <Link href={`/${locale}/blogs/${post.slug}`} className="group">
-      <Card variant="default" className="h-full overflow-hidden transition-all hover:border-primary/30">
+      <Card variant="default" className="h-full overflow-hidden transition-[opacity,background-color,border-color,transform] hover:border-primary/30">
         {post.coverImage && (
           <div className="relative aspect-video w-full overflow-hidden">
             <Image
