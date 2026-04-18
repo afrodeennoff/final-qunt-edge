@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimited } from '@/lib/api/with-api-route'
 import { orderSchema } from '../fifo-computation/schema'
 import { type FinancialInstrument } from './schema'
@@ -160,10 +160,7 @@ async function handlePost(request: NextRequest) {
     const { text } = json
 
     if (!text) {
-      return new Response(JSON.stringify({ error: 'No text provided' }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+      return apiError('VALIDATION_FAILED', 'No text provided', 400)
     }
 
     const parsedOrders = parseOrders(text)
@@ -180,19 +177,13 @@ async function handlePost(request: NextRequest) {
       }
     });
 
-    return new Response(JSON.stringify({ 
+    return NextResponse.json({ 
       orders: validOrders, 
       instruments: instrumentInformation 
-    }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error('Error processing request:', error);
-    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Failed to process request' }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return apiError('INTERNAL_ERROR', error instanceof Error ? error.message : 'Failed to process request', 500)
   }
 }
 

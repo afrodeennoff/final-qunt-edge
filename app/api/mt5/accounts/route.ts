@@ -8,7 +8,8 @@ import { z } from 'zod'
 import { createRateLimitResponse, rateLimit } from '@/lib/rate-limit'
 import { parseJson } from '@/app/api/_utils/validate'
 
-const mt5AccountRateLimit = rateLimit({ limit: 10, window: 60_000, identifier: 'mt5-account-write' })
+const mt5AccountWriteRateLimit = rateLimit({ limit: 10, window: 60_000, identifier: 'mt5-account-write' })
+const mt5AccountReadRateLimit = rateLimit({ limit: 60, window: 60_000, identifier: 'mt5-account-read' })
 
 const addMT5AccountSchema = z.object({
   login: z.number().min(1, 'Login is required'),
@@ -41,7 +42,7 @@ export async function POST(req: NextRequest) {
   const requestId = crypto.randomUUID()
   
   try {
-    const limit = await mt5AccountRateLimit(req)
+    const limit = await mt5AccountWriteRateLimit(req)
     if (!limit.success) {
       return createRateLimitResponse({
         limit: limit.limit,
@@ -110,6 +111,15 @@ export async function GET(req: NextRequest) {
   const requestId = crypto.randomUUID()
   
   try {
+    const limit = await mt5AccountReadRateLimit(req)
+    if (!limit.success) {
+      return createRateLimitResponse({
+        limit: limit.limit,
+        remaining: limit.remaining,
+        resetTime: limit.resetTime,
+      })
+    }
+
     const userId = await getAuthenticatedUserId(req)
     if (!userId) {
       return apiError('UNAUTHORIZED', 'Unauthorized', 401)
@@ -164,7 +174,7 @@ export async function PATCH(req: NextRequest) {
   const requestId = crypto.randomUUID()
   
   try {
-    const limit = await mt5AccountRateLimit(req)
+    const limit = await mt5AccountWriteRateLimit(req)
     if (!limit.success) {
       return createRateLimitResponse({
         limit: limit.limit,
@@ -228,7 +238,7 @@ export async function DELETE(req: NextRequest) {
   const requestId = crypto.randomUUID()
   
   try {
-    const limit = await mt5AccountRateLimit(req)
+    const limit = await mt5AccountWriteRateLimit(req)
     if (!limit.success) {
       return createRateLimitResponse({
         limit: limit.limit,
