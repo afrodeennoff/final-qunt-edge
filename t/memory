@@ -8,6 +8,15 @@
 Production deployment: https://qunt-edge.vercel.app (commit b938c939)
 Build: 7min, 177 static pages, 0 TypeScript errors, Prisma migrations up to date.
 
+### Trader profile layout cleanup (2026-04-18)
+- `app/[locale]/dashboard/trader-profile/page-client.tsx` was refined so the public visibility control now lives in the profile identity card’s top-right instead of the review-controls panel.
+- The accounts block is now clearly labeled `Active accounts`, kept above the calendar, and given cleaner hierarchy with a compact description plus a tidier chip/stat split.
+- Left-column spacing was tightened across the profile header, summary strip, active accounts section, and calendar section to reduce the “messy gaps” feel without changing any trader-profile calculations.
+- `app/[locale]/dashboard/trader-profile/loading.tsx` was updated to match the tighter spacing and slightly shorter profile header skeleton.
+- Verification:
+  - `npx eslint 'app/[locale]/dashboard/trader-profile/page-client.tsx' 'app/[locale]/dashboard/trader-profile/loading.tsx'` (warnings only: pre-existing complexity checks)
+  - `npx tsc --noEmit`
+
 ## Previous State: All Requirements Complete + Frontend-Backend Audit Done
 
 ### Admin coupons + prop-firms repair completed (2026-04-18)

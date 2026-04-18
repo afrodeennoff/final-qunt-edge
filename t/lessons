@@ -115,3 +115,9 @@
 - **RC:** The Whop checkout flow is supposed to pass `user_id` in metadata, but direct Whop checkout links bypass the app's metadata injection
 - **R:** Never use `crypto.randomUUID()` as a user ID fallback in webhook handlers. Instead, look up existing users by email first, and only create a new user record if none exists (with a proper auth_user_id mapping strategy)
 - **E:** Identified but not yet fixed — requires product decision on how to handle Whop-native checkout flows
+
+## Lesson 79: Trader-profile identity controls should live in the header, not the filter panel
+- **M:** The trader-profile page felt messy when the public visibility toggle lived inside the review-controls panel, even though that control describes profile identity rather than the selected date range
+- **RC:** The page mixed profile-level state with filter controls, which weakened the top-of-page hierarchy and created awkward spacing in the summary band
+- **R:** Keep public visibility in the profile identity card’s top-right area, and keep the review-controls panel focused on range selection and active-session context. Maintain the reading order as identity header → metric band → active accounts → calendar
+- **E:** Trader profile now uses a dedicated top-right visibility panel in the header and a cleaner `Active accounts` section above the calendar
