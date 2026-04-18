@@ -108,7 +108,7 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
             </Link>
             <Link
               href={`/${locale}/dashboard/trader-profile`}
-              className="inline-flex items-center rounded-full bg-[#ffffff] px-4 py-1.5 text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-90"
+              className="inline-flex items-center rounded-full bg-foreground px-4 py-1.5 text-[13px] font-semibold text-background transition-opacity hover:opacity-90"
             >
               Manage profile
             </Link>
@@ -170,12 +170,12 @@ export default async function TraderProfilePage({
                 <p className="truncate text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-foreground">{snapshot.username}</p>
                 <p className="mt-1 text-[13px] text-muted-foreground">Public profile</p>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <span className={`inline-flex items-center gap-1.5 rounded-full border border-[rgba(59,158,255,0.2)] bg-[rgba(59,158,255,0.08)] px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-[#3b9eff]`}>
+                  <span className={`inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-primary`}>
                     <Zap className="h-3 w-3" />
                     Trader Profile
                   </span>
                   {snapshot.demo ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(17,255,153,0.22)] bg-[rgba(17,255,153,0.08)] px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-[#11ff99]">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/22 bg-emerald-400/8 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-emerald-400">
                       Demo
                     </span>
                   ) : null}
@@ -198,7 +198,7 @@ export default async function TraderProfilePage({
           <div className="grid gap-4 sm:grid-cols-2">
             <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Profit</p>
-              <p className={`mt-2 text-2xl font-semibold tracking-[-0.02em] ${positive ? 'text-[#11ff99]' : negative ? 'text-[#ff2047]' : 'text-foreground'}`}>
+              <p className={`mt-2 text-2xl font-semibold tracking-[-0.02em] ${positive ? 'text-emerald-400' : negative ? 'text-red-400' : 'text-foreground'}`}>
                 {formatCurrency(snapshot.totalPnl)}
               </p>
               <p className="mt-2 text-[12px] text-muted-foreground">Current public performance snapshot</p>
@@ -231,7 +231,7 @@ export default async function TraderProfilePage({
                 {snapshot.returnPct !== undefined && (
                   <div className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
                     <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Return</p>
-                    <p className={`mt-2 text-3xl font-semibold ${snapshot.returnPct >= 0 ? 'text-[#11ff99]' : 'text-[#ff2047]'}`}>
+                    <p className={`mt-2 text-3xl font-semibold ${snapshot.returnPct >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                       {formatSigned(snapshot.returnPct)}%
                     </p>
                     <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
@@ -323,7 +323,7 @@ export default async function TraderProfilePage({
 /* ─── Shared stat cell ─── */
 
 function StatCell({ label, value, accent }: { label: string; value: string; accent?: 'green' | 'red' }) {
-  const color = accent === 'green' ? 'text-[#11ff99]' : accent === 'red' ? 'text-[#ff2047]' : 'text-foreground'
+  const color = accent === 'green' ? 'text-emerald-400' : accent === 'red' ? 'text-red-400' : 'text-foreground'
   return (
     <div className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
       <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
