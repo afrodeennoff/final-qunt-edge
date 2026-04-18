@@ -142,3 +142,10 @@
 - When mocking `@/lib/logger`, always include BOTH `logger` and `createLogger: () => ({ info, warn, error, debug })`
 - This is needed because `cache-service.ts` (transitively imported by many modules) uses `createLogger`
 - For `withRateLimited`-wrapped route tests, pass `{ params: Promise.resolve({}) }` as second arg to the exported handler
+
+## Optimistic Update Pattern
+- ALL optimistic mutations must capture state BEFORE mutation and restore on server error
+- Capture via `useUserStore.getState().fieldName` or `useTradingDomainStore.getState().fieldName` (synchronous snapshot)
+- Pattern: `const previous = store.getState().field` → optimistic update → `try { await serverAction() } catch { store.setState({ field: previous }); throw error }`
+- Reference implementation: `moveAccountToGroup` in `context/data-provider.tsx`
+- NEVER update local state before capturing previous state

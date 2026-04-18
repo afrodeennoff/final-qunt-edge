@@ -197,3 +197,24 @@ None.
 - **F-05 [HIGH]**: Trade multiplication UX — when user selects multiple accounts, trades are duplicated per account (N×M). Needs product decision: add confirmation dialog or change to single-account assignment
 - **F-06 [MED]**: Client/server UUID hash mismatch — `generateTradeHash` (client) and `generateTradeUUID` (server) use different field sets. Should unify for consistent dedup
 - **F-14 [LOW]**: `resolveWritableUserId` error surfaces as `DATABASE_ERROR` — misleading; should be an auth/user-resolution error
+
+### Production Polish Sprint — Cache/State/API/Visual (2026-04-18)
+Full audit + fix pass across 4 layers. 90 findings, 30 fixed (13 CRITICAL + 17 HIGH).
+
+**10 commits, 33 files changed, 991 insertions, 586 deletions:**
+- `3d5dfde0` — Cache invalidation: saveTrades, webhooks, teams, rithmic, tradovate, community, blogs (8 server files)
+- `0659c3f7` — Analysis store 24h auto-expiry on rehydration
+- `ef3a08e8` — Financial events store error state added
+- `d681aa70` — Optimistic update rollback for renameGroup, deleteGroup, deletePayout, saveDashboardLayout, handleApplyTagToAll
+- `2c3b260f` — Rate limiting: MT5 GET (was unprotected), theme PUT, IBKR error standardization
+- `3087384d` — Last backdrop-blur removed (popover.tsx)
+- `815ba179` — 19 transition-all → targeted transitions across 10 components
+- `bddcec78` — Hardcoded hex colors → semantic tokens (trader profile)
+
+**Build status:** tsc 0 errors, eslint 0 new errors, 0 backdrop-blur, 0 transition-all outside embed charts
+
+**Remaining (lower priority, not blocking launch):**
+- Webhook UUID fallback for users without metadata.user_id (needs product decision)
+- Duplicate dashboard layout cache entry (memory waste, not stale data)
+- ~33 transition-all in embed chart SVG (harmless — Recharts internal)
+- ~20 bg-white/[...] on home/embed pages (intentional dark-overlay design choice)

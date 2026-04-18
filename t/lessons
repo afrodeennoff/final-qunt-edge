@@ -127,3 +127,15 @@
 - **RC:** Editor-heavy admin surfaces are not browse cards. When every card contains form controls, badges, links, and destructive actions, multi-column layouts amplify clutter and weaken the “next step” hierarchy
 - **R:** For admin CRUD pages with rich editors, prefer one shared page header, a quiet stat strip, one primary create section, and then stacked editable cards in a single lane. Use inset grouped panels inside a section before reintroducing multiple outer cards per row
 - **E:** `/admin/coupons` now uses grouped create panels plus a single-column stack for live suggestions and saved coupon editors, while `/admin/propfirms` uses the same shared admin shell language
+
+## Lesson 79: Background agents can't access Pi native tools through MCP gateway
+- **M:** Launched 3 background agents via the `Agent` tool to do parallel work (UI polish, API hardening, state rollbacks). All 3 completed but couldn't use `read`, `edit`, `bash`, `write` tools — they only had MCP gateway access.
+- **RC:** Background agents launched by the `Agent` tool run in a sub-agent context where only MCP server tools are available. The Pi-native tools (read, bash, edit, write, grep, find) are direct tool calls in the main Pi conversation, not MCP functions.
+- **R:** For file-editing work, use the `general-purpose` subagent type which has direct tool access. The `Explore` subagent type is read-only. For complex parallel work, run agents sequentially or use worktree isolation. Alternatively, do the work directly in the main conversation.
+- **E:** Had to re-do all 3 agents' work manually after they returned plans without edits.
+
+## Lesson 80: Batch-edit with python3 for safe multi-file transformations
+- **M:** Needed to replace `transition-all` across 15 files and hardcoded hex colors across 2 files. Using `sed` or individual `edit` calls would be slow and error-prone.
+- **RC:** python3 scripts with `open/read/replace/write` are safe for multi-file transformations because they operate on exact string matches, not regex on JSX className strings.
+- **R:** For multi-file class replacements, use python3 scripts with exact string match. Avoid sed on className strings (they can be multiline). Always verify with `npx tsc --noEmit` after batch changes.
+- **E:** python3 script replaced 19 `transition-all` across 10 files in one pass, verified clean with tsc.
