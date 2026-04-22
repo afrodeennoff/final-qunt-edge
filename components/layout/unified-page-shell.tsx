@@ -49,11 +49,6 @@ export function UnifiedPageShell({
         widthClassName,
         'px-4 sm:px-6 lg:px-8 xl:px-12',
         densityClasses,
-        variant !== 'minimal' && [
-          'before:absolute before:inset-x-6 before:top-0 before:h-44 before:pointer-events-none before:z-0',
-          'before:rounded-b-2xl before:border before:border-border/20 before:bg-primary/[0.02]',
-          'after:absolute after:inset-x-0 after:top-0 after:h-px after:pointer-events-none after:z-0 after:bg-border/35',
-        ],
         '[&_.scroll-container]:overflow-y-auto [&_.scroll-container]:scrollbar-thin',
         className,
       )}
@@ -77,15 +72,15 @@ export function UnifiedPageHeader({
         'mb-8 rounded-xl border px-5 py-6 shadow-sm sm:px-6',
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
-          'border-border/35 bg-card/80',
+          'border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.06_0.012_260_/_0.78)]',
           '',
         ],
         variant === 'gradient' && [
-          'border-primary/14 bg-[hsl(var(--card)/0.96)]',
+          'border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.065_0.012_260_/_0.86)]',
           '',
         ],
         variant === 'elevated' && [
-          'border-border/40 bg-card/90 shadow-sm',
+          'border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.065_0.012_260_/_0.84)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05)]',
           '',
         ],
         className,
@@ -131,25 +126,25 @@ export function UnifiedSurface({ children, className, variant = 'default', hover
         'rounded-xl border p-4 shadow-sm sm:p-6',
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
-          'border-border/35 bg-card/80',
-          hover ? 'hover:border-border/50 hover:bg-card/95' : '',
+          'border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.06_0.012_260_/_0.78)]',
+          hover ? 'hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.065_0.012_260_/_0.84)]' : '',
         ],
         variant === 'glass' && [
-          'border-border/30 bg-primary/4',
-          hover ? 'hover:border-border/40 hover:bg-primary/6' : '',
+          'border-[oklch(0.65_0.22_260_/_0.07)] bg-primary/4',
+          hover ? 'hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-primary/6' : '',
           '',
         ],
         variant === 'gradient-border' && [
-          'border-border/35 bg-card/70',
-          hover ? 'hover:border-border/45' : '',
+          'border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.06_0.012_260_/_0.74)]',
+          hover ? 'hover:border-[oklch(0.65_0.22_260_/_0.11)]' : '',
         ],
         variant === 'elevated' && [
-          'border-border/40 bg-card/90 shadow-sm',
-          hover ? 'hover:border-border/50 hover:bg-card/95' : '',
+          'border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.065_0.012_260_/_0.84)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05)]',
+          hover ? 'hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.07_0.012_260_/_0.88)]' : '',
         ],
         variant === 'subtle' && [
-          'border-border/35 bg-[hsl(var(--background)/0.62)] shadow-none',
-          hover ? 'hover:border-border/40 hover:bg-background/80' : '',
+          'border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.05_0.008_260_/_0.62)] shadow-none',
+          hover ? 'hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.055_0.008_260_/_0.72)]' : '',
         ],
         className,
       )}

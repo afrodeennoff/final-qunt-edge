@@ -110,8 +110,8 @@ function formatPlanAmount(
 function getPlanCardClassName(popular: boolean): string {
   return cn(
     'relative flex w-full flex-col overflow-hidden transition-[opacity,background-color,border-color,transform] duration-300 hover:-translate-y-1',
-    !popular && 'rounded-2xl border border-border/0.06 bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_8px_32px_-8px_rgba(0,0,0,0.80)]',
-    popular && 'relative rounded-2xl border border-[hsl(var(--primary)/0.35)] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_hsl(var(--primary)/0.30),0_0_40px_hsl(var(--primary)/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
+    !popular && 'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.055_0.01_260_/_0.68)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_8px_32px_-8px_rgba(0,0,0,0.80)]',
+    popular && 'relative rounded-2xl border border-[oklch(0.65_0.22_260_/_0.14)] bg-[oklch(0.055_0.01_260_/_0.72)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_0_40px_hsl(var(--primary)/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
   )
 }
 
@@ -362,7 +362,7 @@ function PlusPlanCard({
           <CardDescription className="text-sm text-muted-foreground">{plan.description}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="mb-4 space-y-3 rounded-xl border border-border/0.06 bg-background/0.04 p-4">
+          <div className="mb-4 space-y-3 rounded-xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.055_0.01_260_/_0.5)] p-4">
             <span className="block text-center text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/35">
               {t('pricing.billingPeriod')}
             </span>
@@ -391,7 +391,7 @@ function PlusPlanCard({
                   'flex w-full items-center justify-center gap-2 rounded-[1rem] border px-3 py-2 text-xs font-medium transition-[opacity,background-color,border-color,transform]',
                   billingPeriod === 'lifetime'
                     ? 'border-[hsl(var(--primary)/0.28)] bg-[hsl(var(--primary)/0.08)] text-[oklch(0.75_0.22_260)]'
-                    : 'border-border/0.06 text-muted-foreground hover:bg-background/0.09 hover:text-foreground',
+                    : 'border-[oklch(0.65_0.22_260_/_0.07)] text-muted-foreground hover:bg-[oklch(0.055_0.01_260_/_0.58)] hover:text-foreground',
                 )}
                 onClick={() => setBillingPeriod('lifetime')}
               >
