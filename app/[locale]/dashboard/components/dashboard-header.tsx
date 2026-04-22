@@ -6,8 +6,11 @@ import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar'
 import {
   unifiedInsetPanelClassName,
   unifiedPrimaryActionClassName,
-  unifiedSectionPanelClassName,
+  unifiedToolbarBadgeClassName,
+  unifiedToolbarButtonClassName,
+  unifiedToolbarClassName,
 } from '@/components/layout/unified-page-recipes'
+import { WORKSPACE_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
 import { useDashboardActions, useDashboardFilters } from '@/context/data-provider'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -17,24 +20,24 @@ import Link from 'next/link'
 
 const FilterCommandMenu = dynamic(
   () => import('./filters/filter-command-menu').then((m) => m.FilterCommandMenu),
-  {  loading: () => null },
+  { loading: () => null },
 )
 const ImportButton = dynamic(() => import('./import/import-button'), { loading: () => null })
 const DailySummaryModal = dynamic(
   () => import('./daily-summary-modal').then((m) => m.DailySummaryModal),
-  {  loading: () => null },
+  { loading: () => null },
 )
 const GlobalSyncButton = dynamic(
   () => import('./global-sync-button').then((m) => m.GlobalSyncButton),
-  {  loading: () => null },
+  { loading: () => null },
 )
 const ActiveFilterTags = dynamic(
   () => import('./filters/active-filter-tags').then((m) => m.ActiveFilterTags),
-  {  loading: () => null },
+  { loading: () => null },
 )
 const DashboardHeaderWidgetControls = dynamic(
   () => import('./dashboard-header-widget-controls').then((m) => m.DashboardHeaderWidgetControls),
-  {  loading: () => null },
+  { loading: () => null },
 )
 
 export function DashboardHeader() {
@@ -101,28 +104,24 @@ export function DashboardHeader() {
       )}
       data-dashboard-header="true"
     >
-      <div className="relative mx-auto max-w-[1800px]">
-        <div className="pointer-events-none absolute inset-x-4 top-0 h-16 rounded-b-2xl border border-border/25 bg-background/40" />
+      <div className={cn('relative mx-auto', WORKSPACE_SHELL_WIDTH)}>
         <div
           className={cn(
-            unifiedSectionPanelClassName,
+            unifiedToolbarClassName,
             'relative flex min-h-[5rem] items-center justify-between gap-3 overflow-hidden px-3 py-3 transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4',
           )}
         >
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/8 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/16 to-transparent" />
           <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4">
-            <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-border/30 bg-background/40 text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:border-border/50 hover:bg-background/60 hover:text-foreground md:h-9 md:w-9" />
+            <SidebarTrigger
+              className={cn(unifiedToolbarButtonClassName, 'h-10 w-10 shrink-0 md:h-9 md:w-9')}
+            />
             <div className="flex min-w-0 items-center gap-3">
               <div className="hidden h-8 w-px bg-border/40 sm:block" />
               <div className="min-w-0 max-w-[min(32rem,44vw)]">
                 <div className="flex items-center gap-2.5">
                   {showSectionLabel && (
-                    <span
-                      className={cn(
-                        'hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em]',
-                        'border-border/40 bg-background/60 text-muted-foreground',
-                      )}
-                    >
+                    <span className={cn(unifiedToolbarBadgeClassName, 'hidden sm:inline-flex')}>
                       {sectionLabel}
                     </span>
                   )}
@@ -181,7 +180,7 @@ export function DashboardHeader() {
       </div>
 
       {isMobile && isDashboardRoot && isWidgetsTab ? (
-        <div className="relative mx-auto max-w-[1800px] pt-2">
+        <div className={cn('relative mx-auto pt-2', WORKSPACE_SHELL_WIDTH)}>
           <div className={cn(unifiedInsetPanelClassName, 'rounded-xl px-2 py-2 sm:px-3')}>
             <DashboardHeaderWidgetControls isMobile={isMobile} />
           </div>
@@ -189,7 +188,7 @@ export function DashboardHeader() {
       ) : null}
 
       {hasActiveFilters ? (
-        <div className="relative mx-auto max-w-[1800px] pt-2">
+        <div className={cn('relative mx-auto pt-2', WORKSPACE_SHELL_WIDTH)}>
           <div className={cn(unifiedInsetPanelClassName, 'rounded-xl px-3 py-2.5')}>
             <ActiveFilterTags showAccountNumbers={true} />
           </div>

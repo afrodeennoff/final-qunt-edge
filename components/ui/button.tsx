@@ -6,45 +6,44 @@ import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'type-label font-sans inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border border-transparent select-none transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'type-label font-sans inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border border-transparent select-none overflow-hidden transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         solid:
-          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
+          'rounded-xl border-primary/18 bg-primary text-primary-foreground shadow-[0_18px_36px_-24px_oklch(0.65_0.22_260_/_0.5)] hover:bg-primary/92 hover:shadow-[0_20px_40px_-24px_oklch(0.65_0.22_260_/_0.58)] active:scale-[0.98]',
         outline:
-          'rounded-xl border-border/40 bg-background/50 text-foreground hover:border-border/55 hover:bg-primary/6 active:scale-[0.98]',
+          'rounded-xl border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.056_0.009_260_/_0.78)] active:scale-[0.98]',
         ghost:
-          'rounded-xl text-muted-foreground hover:bg-muted/50 hover:text-foreground active:scale-[0.98]',
+          'rounded-xl bg-transparent text-muted-foreground hover:border-[oklch(0.65_0.22_260_/_0.07)] hover:bg-[oklch(0.052_0.009_260_/_0.56)] hover:text-foreground active:scale-[0.98]',
         error:
-          'rounded-xl border-destructive/20 bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 active:scale-[0.98]',
+          'rounded-xl border-destructive/18 bg-destructive text-destructive-foreground shadow-[0_18px_36px_-24px_oklch(0.62_0.22_28_/_0.36)] hover:bg-destructive/92 active:scale-[0.98]',
         destructive:
-          'rounded-xl border-destructive/20 bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 active:scale-[0.98]',
+          'rounded-xl border-destructive/18 bg-destructive text-destructive-foreground shadow-[0_18px_36px_-24px_oklch(0.62_0.22_28_/_0.36)] hover:bg-destructive/92 active:scale-[0.98]',
         link: 'rounded-xl text-primary underline-offset-4 hover:underline',
         'gradient-primary':
-          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
+          'rounded-xl border-primary/18 bg-primary text-primary-foreground shadow-[0_18px_36px_-24px_oklch(0.65_0.22_260_/_0.5)] hover:bg-primary/92 hover:shadow-[0_20px_40px_-24px_oklch(0.65_0.22_260_/_0.58)] active:scale-[0.98]',
         'gradient-secondary':
-          'rounded-xl border-border/40 bg-background/50 text-foreground hover:border-border/55 hover:bg-primary/6 active:scale-[0.98]',
+          'rounded-xl border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.056_0.009_260_/_0.78)] active:scale-[0.98]',
         shimmer:
-          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
+          'rounded-xl border-primary/18 bg-primary text-primary-foreground shadow-[0_18px_36px_-24px_oklch(0.65_0.22_260_/_0.5)] hover:bg-primary/92 hover:shadow-[0_20px_40px_-24px_oklch(0.65_0.22_260_/_0.58)] active:scale-[0.98]',
         default:
-          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
+          'rounded-xl border-primary/18 bg-primary text-primary-foreground shadow-[0_18px_36px_-24px_oklch(0.65_0.22_260_/_0.5)] hover:bg-primary/92 hover:shadow-[0_20px_40px_-24px_oklch(0.65_0.22_260_/_0.58)] active:scale-[0.98]',
         secondary:
-          'rounded-xl border-border/40 bg-secondary/70 text-secondary-foreground hover:border-border/55 hover:bg-secondary/80 active:scale-[0.98]',
-        mono:
-          'rounded-xl border-border/40 bg-background text-foreground hover:bg-muted/50 font-mono',
-        pill: 'rounded-full border-border/40 bg-background/50 text-foreground hover:border-border/55 hover:bg-primary/6 active:scale-[0.98]',
+          'rounded-xl border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.05_0.009_260_/_0.7)] text-secondary-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.11)] hover:bg-[oklch(0.054_0.009_260_/_0.78)] active:scale-[0.98]',
+        mono: 'rounded-xl border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.05_0.009_260_/_0.72)] text-foreground hover:border-[oklch(0.65_0.22_260_/_0.11)] hover:bg-[oklch(0.054_0.009_260_/_0.8)] font-mono',
+        pill: 'rounded-full border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.056_0.009_260_/_0.78)] active:scale-[0.98]',
         'pill-solid':
-          'rounded-full border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
+          'rounded-full border-primary/18 bg-primary text-primary-foreground shadow-[0_18px_36px_-24px_oklch(0.65_0.22_260_/_0.5)] hover:bg-primary/92 active:scale-[0.98]',
         'pill-ghost':
-          'rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground active:scale-[0.98]',
+          'rounded-full bg-transparent text-muted-foreground hover:border-[oklch(0.65_0.22_260_/_0.07)] hover:bg-[oklch(0.052_0.009_260_/_0.56)] hover:text-foreground active:scale-[0.98]',
       },
       size: {
-        sm: 'h-8 min-h-[32px] min-w-[32px] px-3 rounded-xl',
-        default: 'h-9 min-h-[36px] min-w-[36px] px-4 rounded-xl',
-        md: 'h-10 min-h-[40px] min-w-[40px] px-5 rounded-xl',
-        lg: 'h-11 min-h-[44px] min-w-[44px] px-6 text-sm rounded-xl',
-        icon: 'h-9 w-9 min-h-[36px] min-w-[36px] rounded-xl',
+        sm: 'h-8 min-h-[32px] min-w-[32px] px-3',
+        default: 'h-9 min-h-[36px] min-w-[36px] px-4',
+        md: 'h-10 min-h-[40px] min-w-[40px] px-5',
+        lg: 'h-11 min-h-[44px] min-w-[44px] px-6 text-sm',
+        icon: 'h-9 w-9 min-h-[36px] min-w-[36px]',
       },
     },
     defaultVariants: {

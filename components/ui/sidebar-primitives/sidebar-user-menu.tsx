@@ -50,9 +50,9 @@ export function SidebarUserMenu({
             >
               <div className="flex w-full items-center gap-2.5">
                 <div className="relative shrink-0">
-                  <Avatar className="h-9 w-9 overflow-hidden rounded-[1rem] ring-1 ring-sidebar-primary/20">
+                  <Avatar className="h-9 w-9 overflow-hidden rounded-xl ring-1 ring-sidebar-primary/20">
                     <AvatarImage src={user?.avatar_url} alt={displayName} />
-                    <AvatarFallback className="rounded-[var(--radius-icon)] bg-gradient-to-br from-sidebar-primary/80 via-sidebar-primary/60 to-sidebar-primary/40 text-sidebar-primary-foreground text-xs font-bold tracking-wide">
+                    <AvatarFallback className="rounded-xl bg-gradient-to-br from-sidebar-primary/80 via-sidebar-primary/60 to-sidebar-primary/40 text-sidebar-primary-foreground text-xs font-bold tracking-wide">
                       {initials}
                     </AvatarFallback>
                   </Avatar>

@@ -3,30 +3,32 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const badgeVariants = cva(
-  'type-label inline-flex items-center justify-center gap-1 rounded-full border transition-[background-color,border-color,color,box-shadow] duration-150',
+  'type-label inline-flex items-center justify-center gap-1 rounded-full border transition-[background-color,border-color,color,box-shadow] duration-150 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]',
   {
     variants: {
       variant: {
-        default: 'border-primary/18 bg-primary/8 text-primary',
-        secondary: 'border-border/40 bg-background/50 text-muted-foreground',
-        outline: 'border-border/50 bg-transparent text-foreground',
-        destructive: 'border-destructive/18 bg-destructive/8 text-destructive',
-        accent: 'border-accent/20 bg-accent/8 text-accent-foreground',
-        success: 'border-success/18 bg-success/8 text-success',
-        warning: 'border-warning/18 bg-warning/8 text-warning',
-        error: 'border-destructive/18 bg-destructive/8 text-destructive',
-        frost: 'border-border/40 bg-background/40 text-foreground',
-        'frost-accent': 'border-accent/20 bg-accent/8 text-accent-foreground',
-        'frost-success': 'border-success/18 bg-success/8 text-success',
-        'frost-warning': 'border-warning/18 bg-warning/8 text-warning',
-        'frost-error': 'border-destructive/18 bg-destructive/8 text-destructive',
-        'frost-info': 'border-primary/18 bg-primary/8 text-primary',
-        pill: 'border-border/40 bg-transparent text-foreground',
-        'pill-accent': 'border-accent/20 bg-accent/8 text-accent-foreground',
-        'pill-success': 'border-success/18 bg-success/8 text-success',
-        'pill-warning': 'border-warning/18 bg-warning/8 text-warning',
-        'pill-error': 'border-destructive/18 bg-destructive/8 text-destructive',
-        'pill-info': 'border-primary/18 bg-primary/8 text-primary',
+        default: 'border-primary/16 bg-primary/10 text-primary',
+        secondary:
+          'border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] text-muted-foreground',
+        outline: 'border-[oklch(0.65_0.22_260_/_0.08)] bg-transparent text-foreground shadow-none',
+        destructive: 'border-destructive/16 bg-destructive/10 text-destructive',
+        accent: 'border-accent/16 bg-accent/10 text-accent-foreground',
+        success: 'border-success/16 bg-success/10 text-success',
+        warning: 'border-warning/16 bg-warning/10 text-warning',
+        error: 'border-destructive/16 bg-destructive/10 text-destructive',
+        frost:
+          'border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.05_0.009_260_/_0.68)] text-foreground',
+        'frost-accent': 'border-accent/16 bg-accent/10 text-accent-foreground',
+        'frost-success': 'border-success/16 bg-success/10 text-success',
+        'frost-warning': 'border-warning/16 bg-warning/10 text-warning',
+        'frost-error': 'border-destructive/16 bg-destructive/10 text-destructive',
+        'frost-info': 'border-primary/16 bg-primary/10 text-primary',
+        pill: 'border-[oklch(0.65_0.22_260_/_0.08)] bg-transparent text-foreground shadow-none',
+        'pill-accent': 'border-accent/16 bg-accent/10 text-accent-foreground',
+        'pill-success': 'border-success/16 bg-success/10 text-success',
+        'pill-warning': 'border-warning/16 bg-warning/10 text-warning',
+        'pill-error': 'border-destructive/16 bg-destructive/10 text-destructive',
+        'pill-info': 'border-primary/16 bg-primary/10 text-primary',
       },
       size: {
         sm: 'h-5 px-2 py-0',

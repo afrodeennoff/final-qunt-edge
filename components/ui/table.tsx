@@ -6,7 +6,7 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
   ({ className, ...props }, ref) => (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-auto overscroll-x-contain rounded-lg border border-border/60 bg-card shadow-sm"
+      className="relative w-full overflow-auto overscroll-x-contain rounded-2xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.86)_0%,oklch(0.05_0.009_260_/_0.8)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_18px_36px_-28px_rgba(0,0,0,0.76)]"
     >
       <table
         ref={ref}
@@ -27,7 +27,7 @@ const TableHeader = React.forwardRef<
     ref={ref}
     data-slot="table-header"
     className={cn(
-      'border-b border-border/60 bg-background/60 [&_tr]:border-b [&_tr]:border-border/60',
+      'border-b border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.74)] [&_tr]:border-b [&_tr]:border-[oklch(0.65_0.22_260_/_0.08)]',
       className,
     )}
     {...props}
@@ -56,7 +56,7 @@ const TableFooter = React.forwardRef<
     ref={ref}
     data-slot="table-footer"
     className={cn(
-      'border-t border-border/60 bg-background/60 font-medium last:[&>tr]:border-b-0',
+      'border-t border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.74)] font-medium last:[&>tr]:border-b-0',
       className,
     )}
     {...props}
@@ -70,7 +70,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
       ref={ref}
       data-slot="table-row"
       className={cn(
-        'border-b border-border/60 transition-colors hover:bg-muted/40 data-[state=selected]:bg-muted/50',
+        'border-b border-[oklch(0.65_0.22_260_/_0.06)] transition-colors hover:bg-[oklch(0.052_0.009_260_/_0.64)] data-[state=selected]:bg-[oklch(0.65_0.22_260_/_0.1)]',
         className,
       )}
       {...props}
@@ -104,6 +104,7 @@ const TableCell = React.forwardRef<
     data-slot="table-cell"
     className={cn(
       'border-b border-border/60 p-3.5 align-middle type-body-sm sm:p-4 [&:has([role=checkbox])]:pr-0',
+      'border-[oklch(0.65_0.22_260_/_0.06)]',
       className,
     )}
     {...props}

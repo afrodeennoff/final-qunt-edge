@@ -3,10 +3,6 @@
 import * as React from 'react'
 import { SidebarInset } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
-import {
-  CONTENT_PADDING,
-  CONTENT_PADDING_Y,
-} from '@/lib/constants/layout'
 import { BackgroundGlow } from '@/components/ui/background-glow'
 import { MotionSection } from '@/components/animation/enhanced-motion'
 
@@ -41,7 +37,7 @@ export function SidebarLayoutShell({
               contain: 'content',
             }}
           >
-            <MotionSection className={cn('w-full', CONTENT_PADDING, CONTENT_PADDING_Y)} delay={0.02}>
+            <MotionSection className="w-full" delay={0.02}>
               {children}
             </MotionSection>
           </div>

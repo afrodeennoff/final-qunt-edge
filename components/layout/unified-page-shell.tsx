@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { CONTENT_PADDING, WORKSPACE_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
 
 type UnifiedPageShellProps = {
@@ -28,7 +29,7 @@ type UnifiedSurfaceProps = {
 export function UnifiedPageShell({
   children,
   className,
-  widthClassName = 'max-w-none',
+  widthClassName = WORKSPACE_SHELL_WIDTH,
   density = 'default',
   variant = 'default',
 }: UnifiedPageShellProps) {
@@ -36,24 +37,23 @@ export function UnifiedPageShell({
     density === 'compact'
       ? 'py-4 sm:py-6 lg:py-8'
       : density === 'spacious'
-        ? 'py-12 sm:py-16'
-        : 'py-10 sm:py-12'
+        ? 'py-10 sm:py-14 lg:py-16'
+        : 'py-8 sm:py-10 lg:py-12'
 
   return (
     <div
       className={cn(
         'scroll-smooth-butter animate-page-enter relative mx-auto w-full',
-        variant === 'refined' && 'border-x border-border/12',
-        variant === 'minimal' && 'border-x border-border/8',
-        widthClassName === 'max-w-none' && 'max-w-[1800px]',
+        variant === 'refined' && 'border-x border-[oklch(0.65_0.22_260_/_0.06)]',
+        variant === 'minimal' && 'border-x border-[oklch(0.65_0.22_260_/_0.04)]',
         widthClassName,
-        'px-4 sm:px-6 lg:px-8 xl:px-12',
+        CONTENT_PADDING,
         densityClasses,
         '[&_.scroll-container]:overflow-y-auto [&_.scroll-container]:scrollbar-thin',
         className,
       )}
     >
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10 flex flex-col gap-6 sm:gap-8">{children}</div>
     </div>
   )
 }
@@ -69,19 +69,16 @@ export function UnifiedPageHeader({
   return (
     <header
       className={cn(
-        'mb-8 rounded-xl border px-5 py-6 shadow-sm sm:px-6',
+        'rounded-2xl border px-5 py-6 sm:px-6 sm:py-7',
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
-          'border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.06_0.012_260_/_0.78)]',
-          '',
+          'border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.064_0.011_260_/_0.88)_0%,oklch(0.054_0.01_260_/_0.82)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_18px_36px_-28px_rgba(0,0,0,0.78)]',
         ],
         variant === 'gradient' && [
-          'border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.065_0.012_260_/_0.86)]',
-          '',
+          'border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(135deg,oklch(0.07_0.012_260_/_0.92)_0%,oklch(0.055_0.01_260_/_0.86)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_20px_40px_-30px_rgba(0,0,0,0.8)]',
         ],
         variant === 'elevated' && [
-          'border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.065_0.012_260_/_0.84)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05)]',
-          '',
+          'border-[oklch(0.65_0.22_260_/_0.08)] bg-[linear-gradient(180deg,oklch(0.068_0.012_260_/_0.92)_0%,oklch(0.056_0.01_260_/_0.86)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_24px_44px_-30px_rgba(0,0,0,0.82)]',
         ],
         className,
       )}
@@ -119,32 +116,44 @@ export function UnifiedPageHeader({
   )
 }
 
-export function UnifiedSurface({ children, className, variant = 'default', hover = false }: UnifiedSurfaceProps) {
+export function UnifiedSurface({
+  children,
+  className,
+  variant = 'default',
+  hover = false,
+}: UnifiedSurfaceProps) {
   return (
     <section
       className={cn(
-        'rounded-xl border p-4 shadow-sm sm:p-6',
+        'rounded-2xl border p-4 sm:p-6',
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
-          'border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.06_0.012_260_/_0.78)]',
-          hover ? 'hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.065_0.012_260_/_0.84)]' : '',
+          'border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.84)_0%,oklch(0.052_0.009_260_/_0.78)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_16px_34px_-26px_rgba(0,0,0,0.74)]',
+          hover
+            ? 'hover:border-[oklch(0.65_0.22_260_/_0.11)] hover:bg-[linear-gradient(180deg,oklch(0.066_0.01_260_/_0.88)_0%,oklch(0.054_0.009_260_/_0.82)_100%)]'
+            : '',
         ],
         variant === 'glass' && [
-          'border-[oklch(0.65_0.22_260_/_0.07)] bg-primary/4',
-          hover ? 'hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-primary/6' : '',
-          '',
+          'border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.055_0.01_260_/_0.66)]',
+          hover
+            ? 'hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.058_0.01_260_/_0.74)]'
+            : '',
         ],
         variant === 'gradient-border' && [
-          'border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.06_0.012_260_/_0.74)]',
+          'border-[oklch(0.65_0.22_260_/_0.08)] bg-[linear-gradient(180deg,oklch(0.06_0.01_260_/_0.82)_0%,oklch(0.05_0.009_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_18px_36px_-28px_rgba(0,0,0,0.76)]',
           hover ? 'hover:border-[oklch(0.65_0.22_260_/_0.11)]' : '',
         ],
         variant === 'elevated' && [
-          'border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.065_0.012_260_/_0.84)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05)]',
-          hover ? 'hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.07_0.012_260_/_0.88)]' : '',
+          'border-[oklch(0.65_0.22_260_/_0.08)] bg-[linear-gradient(180deg,oklch(0.068_0.012_260_/_0.9)_0%,oklch(0.056_0.01_260_/_0.84)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_22px_40px_-28px_rgba(0,0,0,0.8)]',
+          hover
+            ? 'hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[linear-gradient(180deg,oklch(0.07_0.012_260_/_0.92)_0%,oklch(0.058_0.01_260_/_0.86)_100%)]'
+            : '',
         ],
         variant === 'subtle' && [
-          'border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.05_0.008_260_/_0.62)] shadow-none',
-          hover ? 'hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.055_0.008_260_/_0.72)]' : '',
+          'border-[oklch(0.65_0.22_260_/_0.05)] bg-[oklch(0.048_0.008_260_/_0.6)] shadow-none',
+          hover
+            ? 'hover:border-[oklch(0.65_0.22_260_/_0.09)] hover:bg-[oklch(0.052_0.008_260_/_0.68)]'
+            : '',
         ],
         className,
       )}

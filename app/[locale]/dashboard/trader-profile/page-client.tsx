@@ -800,7 +800,7 @@ export default function TraderProfilePageClient() {
   }, [dateFilterPreset, customDateRange?.from, customDateRange?.to, closedTrades.length])
 
   return (
-    <UnifiedPageShell density="compact" widthClassName="max-w-[1720px]">
+    <UnifiedPageShell density="compact" widthClassName="max-w-[1800px]">
       <div className="animate-page-enter space-y-4 sm:space-y-5">
         <div className="grid gap-3.5 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.92fr)] xl:gap-5">
           <section className="min-w-0 space-y-3.5 sm:space-y-4">

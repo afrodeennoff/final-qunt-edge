@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 
 export function PricingPageClient() {
   return (
-    <UnifiedPageShell widthClassName="max-w-[1320px]" className="py-12 sm:py-16">
+    <UnifiedPageShell widthClassName="max-w-[1360px]" className="py-12 sm:py-16">
       <div className="space-y-6">
         <section
           className={cn(unifiedHeroPanelClassName, 'animate-fade-up-smooth p-5 sm:p-8 lg:p-10')}
@@ -85,7 +85,7 @@ function PricingMetaChip({
   return (
     <div
       className={cn(
-        'rounded-xl border border-border/40 bg-card/55 px-4 py-3 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
+        'rounded-xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] px-4 py-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]',
         className,
       )}
     >

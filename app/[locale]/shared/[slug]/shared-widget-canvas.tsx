@@ -18,7 +18,7 @@ import {
 export function SharedWidgetCanvas() {
   const { isMobile, sharedParams } = useData()
   const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), [])
-  
+
   const activeLayout = isMobile ? 'mobile' : 'desktop'
   const layoutMode = isMobile ? 'mobile' : 'desktop'
 
@@ -35,14 +35,12 @@ export function SharedWidgetCanvas() {
   // Transform shared layout items to include required grid properties
   const transformedLayout = useMemo(() => {
     const sharedLayout = (
-      activeLayout === 'desktop'
-        ? sharedParams?.desktop
-        : sharedParams?.mobile
+      activeLayout === 'desktop' ? sharedParams?.desktop : sharedParams?.mobile
     ) as Widget[] | undefined
 
-    const fallbackLayout = (
-      activeLayout === 'desktop' ? defaultLayouts.desktop : defaultLayouts.mobile
-    ) as unknown as Widget[]
+    const fallbackLayout = (activeLayout === 'desktop'
+      ? defaultLayouts.desktop
+      : defaultLayouts.mobile) as unknown as Widget[]
 
     const layoutItems = (sharedLayout && sharedLayout.length > 0 ? sharedLayout : fallbackLayout)
       .filter((item): item is Widget => Boolean(item?.type))
@@ -67,14 +65,14 @@ export function SharedWidgetCanvas() {
         compactType="vertical"
         preventCollision={false}
         useCSSTransforms={true}
-        style={{ 
+        style={{
           minHeight: isMobile ? '100vh' : 'auto',
-          touchAction: 'auto'
+          touchAction: 'auto',
         }}
       >
         {transformedLayout.map((widget: Widget) => (
           <div key={widget.i} className="h-full">
-            <div className="relative h-full w-full overflow-hidden rounded-[calc(var(--radius)+0.35rem)] transition-transform duration-200 hover:-translate-y-0.5">
+            <div className="relative h-full w-full overflow-hidden rounded-2xl transition-transform duration-200 hover:-translate-y-0.5">
               {renderWidget(widget)}
             </div>
           </div>
@@ -82,4 +80,4 @@ export function SharedWidgetCanvas() {
       </ResponsiveGridLayout>
     </div>
   )
-} 
+}

@@ -98,7 +98,7 @@ export function UnifiedMobileNav({
       const withoutHash = resolvedHref.split('#')[0]
       return pathname === withoutHash || pathname.endsWith(withoutHash)
     },
-    [pathname, locale]
+    [pathname, locale],
   )
 
   return (
@@ -109,22 +109,19 @@ export function UnifiedMobileNav({
           variant="ghost"
           className={cn(
             'h-11 w-11 rounded-xl border border-border/30 bg-background/40 p-0 text-sidebar-foreground/72 shadow-sm transition-[background-color,border-color,color] duration-200 hover:border-border/40 hover:bg-background/50 hover:text-sidebar-foreground lg:hidden',
-            triggerClassName
+            triggerClassName,
           )}
           aria-label="Open navigation menu"
         >
           <Menu className="h-5 w-5" aria-hidden="true" />
         </Button>
       </SheetTrigger>
-      <SheetContent
-        side="right"
-        className="w-[88vw] max-w-[340px] border-none bg-transparent p-0"
-      >
+      <SheetContent side="right" className="w-[88vw] max-w-[340px] border-none bg-transparent p-0">
         <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
         <SheetDescription className="sr-only">
           Primary site navigation. Use links to navigate to different sections.
         </SheetDescription>
-        <div className="flex h-full flex-col overflow-y-auto rounded-[2rem] border border-primary/12 bg-[linear-gradient(180deg,hsl(var(--background)/0.98),hsl(var(--background)/0.9))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_32px_76px_-42px_rgba(0,0,0,0.94)]">
+        <div className="flex h-full flex-col overflow-y-auto rounded-2xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.96)_0%,oklch(0.05_0.009_260_/_0.92)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_32px_76px_-42px_rgba(0,0,0,0.94)]">
           {showUser && (
             <>
               <div className="px-3 pt-6 pb-2">
@@ -155,7 +152,7 @@ export function UnifiedMobileNav({
                               'flex min-h-[44px] items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-[background-color,border-color,color,box-shadow] duration-200',
                               active
                                 ? 'border border-primary/18 bg-primary/10 text-sidebar-foreground shadow-[0_0_0_0.5px_hsl(var(--primary)/0.16),0_18px_28px_-24px_rgba(0,0,0,0.84)]'
-                                : 'border border-transparent text-sidebar-foreground/60 hover:border-border/35 hover:bg-background/72 hover:text-sidebar-foreground'
+                                : 'border border-transparent text-sidebar-foreground/60 hover:border-border/35 hover:bg-background/72 hover:text-sidebar-foreground',
                             )}
                           >
                             {link.icon && (

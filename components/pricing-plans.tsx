@@ -5,7 +5,14 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Check, X, AlertCircle, Sparkles } from 'lucide-react'
 import { useCurrentLocale, useI18n } from '@/locales/client'
 import NumberFlow from '@number-flow/react'
@@ -110,8 +117,10 @@ function formatPlanAmount(
 function getPlanCardClassName(popular: boolean): string {
   return cn(
     'relative flex w-full flex-col overflow-hidden transition-[opacity,background-color,border-color,transform] duration-300 hover:-translate-y-1',
-    !popular && 'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.055_0.01_260_/_0.68)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_8px_32px_-8px_rgba(0,0,0,0.80)]',
-    popular && 'relative rounded-2xl border border-[oklch(0.65_0.22_260_/_0.14)] bg-[oklch(0.055_0.01_260_/_0.72)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_0_40px_hsl(var(--primary)/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
+    !popular &&
+      'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.055_0.01_260_/_0.68)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_8px_32px_-8px_rgba(0,0,0,0.80)]',
+    popular &&
+      'relative rounded-2xl border border-[oklch(0.65_0.22_260_/_0.14)] bg-[oklch(0.055_0.01_260_/_0.72)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_0_40px_hsl(var(--primary)/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
   )
 }
 
@@ -119,7 +128,7 @@ function getPlanCtaClassName(): string {
   return cn(
     'h-12 w-full rounded-xl bg-primary text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground',
     'shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-[opacity,background-color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-primary/90 active:translate-y-0 active:shadow-md',
-    '[font-family:var(--home-copy)]'
+    '[font-family:var(--home-copy)]',
   )
 }
 
@@ -160,7 +169,10 @@ function isCurrentPlan(subscription: CurrentSubscription | undefined, lookupKey:
   )
 }
 
-function isBlockedFromRecurring(subscription: CurrentSubscription | undefined, lookupKey: string): boolean {
+function isBlockedFromRecurring(
+  subscription: CurrentSubscription | undefined,
+  lookupKey: string,
+): boolean {
   if (!hasLifetimeSubscription(subscription)) return false
 
   const parts = lookupKey.split('_')
@@ -169,7 +181,10 @@ function isBlockedFromRecurring(subscription: CurrentSubscription | undefined, l
   return ['yearly', 'monthly', 'quarterly'].includes(interval)
 }
 
-function isBlockedFromLifetime(subscription: CurrentSubscription | undefined, lookupKey: string): boolean {
+function isBlockedFromLifetime(
+  subscription: CurrentSubscription | undefined,
+  lookupKey: string,
+): boolean {
   if (!hasLifetimeSubscription(subscription)) return false
 
   const parts = lookupKey.split('_')
@@ -198,8 +213,12 @@ function FreePlanCard({
     <div className="relative">
       <Card className={getPlanCardClassName(plan.isPopular ?? false)}>
         <CardHeader>
-          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">{plan.name}</CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">{plan.description}</CardDescription>
+          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">
+            {plan.name}
+          </CardTitle>
+          <CardDescription className="text-sm text-muted-foreground">
+            {plan.description}
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="mb-2">
@@ -213,11 +232,16 @@ function FreePlanCard({
               }}
               className="text-[40px] font-[250] tracking-[-0.05em] text-foreground leading-none"
             />
-            <span className="ml-1 text-[13px] text-muted-foreground/70 font-medium tracking-[-0.01em]">{t('pricing.free.name')}</span>
+            <span className="ml-1 text-[13px] text-muted-foreground/70 font-medium tracking-[-0.01em]">
+              {t('pricing.free.name')}
+            </span>
           </div>
           <ul className="space-y-3">
             {plan.features.map((feature, index) => (
-              <li key={index} className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]">
+              <li
+                key={index}
+                className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]"
+              >
                 {index > 2 ? (
                   <X className="size-4 shrink-0 text-[oklch(0.64_0.255_22)]" />
                 ) : (
@@ -358,8 +382,12 @@ function PlusPlanCard({
       <Card className={getPlanCardClassName(true)}>
         <PlanPopularBadge popular={plan.isPopular ?? true} />
         <CardHeader>
-          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">{plan.name}</CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">{plan.description}</CardDescription>
+          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">
+            {plan.name}
+          </CardTitle>
+          <CardDescription className="text-sm text-muted-foreground">
+            {plan.description}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="mb-4 space-y-3 rounded-xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.055_0.01_260_/_0.5)] p-4">
@@ -367,15 +395,15 @@ function PlusPlanCard({
               {t('pricing.billingPeriod')}
             </span>
 
-            <div className="grid grid-cols-3 gap-1 rounded-[1rem] border border-border/0.04 bg-black/25 p-1">
+            <div className="grid grid-cols-3 gap-1 rounded-xl border border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.05_0.009_260_/_0.6)] p-1">
               {recurringBillingOptions.map((option) => (
                 <button
                   key={option.key}
                   className={cn(
                     'rounded-xl px-3 py-2 text-xs capitalize transition-[opacity,background-color,border-color,transform]',
                     billingPeriod === option.key
-                      ? 'bg-white text-black font-semibold shadow-[0_8px_20px_-12px_rgba(255,255,255,0.45)]'
-                      : 'text-muted-foreground/75 hover:bg-background/0.09 hover:text-foreground',
+                      ? 'bg-primary text-primary-foreground font-semibold shadow-[0_18px_32px_-22px_oklch(0.65_0.22_260_/_0.48)]'
+                      : 'text-muted-foreground/75 hover:bg-[oklch(0.052_0.009_260_/_0.72)] hover:text-foreground',
                   )}
                   onClick={() => setBillingPeriod(option.key)}
                   title={option.description}
@@ -385,10 +413,10 @@ function PlusPlanCard({
               ))}
             </div>
 
-            <div className="border-t border-border/0.04 pt-3">
+            <div className="border-t border-[oklch(0.65_0.22_260_/_0.06)] pt-3">
               <button
                 className={cn(
-                  'flex w-full items-center justify-center gap-2 rounded-[1rem] border px-3 py-2 text-xs font-medium transition-[opacity,background-color,border-color,transform]',
+                  'flex w-full items-center justify-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition-[opacity,background-color,border-color,transform]',
                   billingPeriod === 'lifetime'
                     ? 'border-[hsl(var(--primary)/0.28)] bg-[hsl(var(--primary)/0.08)] text-[oklch(0.75_0.22_260)]'
                     : 'border-[oklch(0.65_0.22_260_/_0.07)] text-muted-foreground hover:bg-[oklch(0.055_0.01_260_/_0.58)] hover:text-foreground',
@@ -465,7 +493,10 @@ function PlusPlanCard({
 
           <ul className="space-y-3">
             {plan.features.map((feature, index) => (
-              <li key={index} className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]">
+              <li
+                key={index}
+                className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]"
+              >
                 <Check className="size-4 text-[oklch(0.82_0.185_155)] shrink-0" />
                 <span>{feature}</span>
               </li>
@@ -486,7 +517,7 @@ function PlusPlanCard({
           )}
         </CardContent>
         <CardFooter className="flex flex-col gap-3">
-          <Button 
+          <Button
             onClick={handlePrimaryClick}
             disabled={isLoading || current || blocked}
             variant={current || blocked ? 'outline' : 'default'}
@@ -585,7 +616,13 @@ function PricingPlansContent({
   return (
     <div className="sm:px-6">
       <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-6 lg:grid-cols-2 stagger-reveal">
-        <FreePlanCard plan={plans.basic} isModal={isModal} onClose={onClose} locale={locale} currency={currency} />
+        <FreePlanCard
+          plan={plans.basic}
+          isModal={isModal}
+          onClose={onClose}
+          locale={locale}
+          currency={currency}
+        />
         <PlusPlanCard
           plan={plans.plus}
           billingPeriod={billingPeriod}
@@ -606,9 +643,7 @@ function PricingPlansContent({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('pricing.lifetimeUpgrade.title')}</DialogTitle>
-            <DialogDescription>
-              {t('pricing.lifetimeUpgrade.description')}
-            </DialogDescription>
+            <DialogDescription>{t('pricing.lifetimeUpgrade.description')}</DialogDescription>
           </DialogHeader>
           <div className="gap-4 py-4">
             <div className="rounded-lg border border-semantic-warning-border bg-semantic-warning-bg p-4">
@@ -629,35 +664,42 @@ function PricingPlansContent({
 
             {currentSubscription && (
               <div className="rounded-lg bg-muted p-4">
-                <h4 className="mb-2 font-medium">{t('pricing.lifetimeUpgrade.currentSubscription')}</h4>
+                <h4 className="mb-2 font-medium">
+                  {t('pricing.lifetimeUpgrade.currentSubscription')}
+                </h4>
                 <div className="gap-1 text-sm text-muted-foreground">
-                  <p><strong>{t('billing.currentPlan')}:</strong> {currentSubscription.plan.name}</p>
-                  <p><strong>{t('billing.billingPeriod')}:</strong> {currentSubscription.plan.interval}</p>
-                  <p><strong>{t('billing.status.active')}:</strong> {t('billing.status.active')}</p>
+                  <p>
+                    <strong>{t('billing.currentPlan')}:</strong> {currentSubscription.plan.name}
+                  </p>
+                  <p>
+                    <strong>{t('billing.billingPeriod')}:</strong>{' '}
+                    {currentSubscription.plan.interval}
+                  </p>
+                  <p>
+                    <strong>{t('billing.status.active')}:</strong> {t('billing.status.active')}
+                  </p>
                 </div>
               </div>
             )}
           </div>
           <DialogFooter>
-            <Button 
+            <Button
               variant="outline"
               onClick={() => setShowLifetimeConfirm(false)}
               disabled={isLoading}
             >
               {t('pricing.lifetimeUpgrade.cancel')}
             </Button>
-            <Button 
-              onClick={handleLifetimeConfirm}
-              disabled={isLoading}
-            >
+            <Button onClick={handleLifetimeConfirm} disabled={isLoading}>
               {isLoading ? t('billing.lifetimeUpgrade') : t('pricing.lifetimeUpgrade.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-          <p className="mt-8 text-center text-xs text-muted-foreground/80 [font-family:var(--home-copy)]">
-        Transparent pricing. No hidden data limits. Upgrade only when your review process needs more depth.
+      <p className="mt-8 text-center text-xs text-muted-foreground/80 [font-family:var(--home-copy)]">
+        Transparent pricing. No hidden data limits. Upgrade only when your review process needs more
+        depth.
       </p>
     </div>
   )
@@ -796,12 +838,8 @@ export default function PricingPlans({
   if (trigger) {
     return (
       <Dialog>
-        <DialogTrigger asChild>
-          {trigger}
-        </DialogTrigger>
-        <DialogContent className="max-h-[90vh] max-w-7xl overflow-y-auto">
-          {content}
-        </DialogContent>
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+        <DialogContent className="max-h-[90vh] max-w-7xl overflow-y-auto">{content}</DialogContent>
       </Dialog>
     )
   }

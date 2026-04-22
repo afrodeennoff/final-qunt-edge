@@ -21,8 +21,19 @@ import { applyEmbedTheme, THEME_PRESETS, getOverridesFromSearchParams } from './
 import Script from 'next/script'
 import { I18nProviderClient } from '@/locales/client'
 import { BackgroundGlow } from '@/components/ui/background-glow'
-import { MotionSection, MotionStagger, MotionStaggerItem } from '@/components/animation/enhanced-motion'
-
+import {
+  MotionSection,
+  MotionStagger,
+  MotionStaggerItem,
+} from '@/components/animation/enhanced-motion'
+import {
+  unifiedChipClassName,
+  unifiedHeroPanelClassName,
+  unifiedInsetPanelClassName,
+  unifiedMetricPanelClassName,
+} from '@/components/layout/unified-page-recipes'
+import { WORKSPACE_SHELL_WIDTH } from '@/lib/constants/layout'
+import { cn } from '@/lib/utils'
 
 // Removed ThemeProvider import - using simple theme implementation
 
@@ -32,9 +43,11 @@ const sides = ['long', 'short'] as const
 const now = Date.now()
 const dayMs = 24 * 60 * 60 * 1000
 const mockTrades = Array.from({ length: 60 }, (_, i) => {
-  const entry = new Date(now - Math.floor(Math.random() * 30) * dayMs - Math.floor(Math.random() * 24) * 3600 * 1000)
+  const entry = new Date(
+    now - Math.floor(Math.random() * 30) * dayMs - Math.floor(Math.random() * 24) * 3600 * 1000,
+  )
   const qty = Math.ceil(Math.random() * 3)
-  const pnl = Math.round(((Math.random() - 0.4) * 500) * 100) / 100
+  const pnl = Math.round((Math.random() - 0.4) * 500 * 100) / 100
   const timeInPosition = Math.floor(Math.random() * 3600)
   return {
     pnl,
@@ -66,7 +79,7 @@ function generateRandomTrade() {
 
 // Function to generate multiple random trades
 function generateRandomTrades(count: number = 1) {
-    return Array.from({ length: count }, generateRandomTrade)
+  return Array.from({ length: count }, generateRandomTrade)
 }
 
 function formatChartName(chartKey: string) {
@@ -77,149 +90,176 @@ function formatChartName(chartKey: string) {
 }
 
 export default function EmbedPage() {
-    const searchParams = useSearchParams()
-    const preset = searchParams.get('preset') || undefined
-    const lang = searchParams.get('lang') || 'en'
-    const [trades, setTrades] = React.useState<Array<{ pnl: number; timeInPosition: number; entryDate: string; side: string; quantity: number; commission: number; instrument: string }>>(mockTrades)
+  const searchParams = useSearchParams()
+  const preset = searchParams.get('preset') || undefined
+  const lang = searchParams.get('lang') || 'en'
+  const [trades, setTrades] =
+    React.useState<
+      Array<{
+        pnl: number
+        timeInPosition: number
+        entryDate: string
+        side: string
+        quantity: number
+        commission: number
+        instrument: string
+      }>
+    >(mockTrades)
 
-    // Dark-only theme with optional presets/overrides.
-    React.useEffect(() => {
-        const root = document.documentElement
-        root.classList.add('dark')
+  // Dark-only theme with optional presets/overrides.
+  React.useEffect(() => {
+    const root = document.documentElement
+    root.classList.add('dark')
 
-        // Apply optional preset (ocean, sunset, etc.) on top of light/dark
-        if (preset && THEME_PRESETS[preset as keyof typeof THEME_PRESETS]) {
-            applyEmbedTheme(THEME_PRESETS[preset as keyof typeof THEME_PRESETS], root)
+    // Apply optional preset (ocean, sunset, etc.) on top of light/dark
+    if (preset && THEME_PRESETS[preset as keyof typeof THEME_PRESETS]) {
+      applyEmbedTheme(THEME_PRESETS[preset as keyof typeof THEME_PRESETS], root)
+    }
+
+    // Apply explicit overrides from query params last
+    const overrides = getOverridesFromSearchParams(searchParams)
+    if (Object.keys(overrides).length > 0) {
+      applyEmbedTheme(overrides, root)
+    }
+  }, [preset, searchParams])
+
+  // Message listener for iframe communication
+  React.useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data
+
+        if (data.type === 'ADD_TRADES') {
+          const { count = 1, trades: newTrades } = data
+
+          if (newTrades && Array.isArray(newTrades)) {
+            // Add provided trades
+            setTrades((prev) => [...prev, ...newTrades])
+          } else {
+            toast.error('No trades provided', { description: `Generating ${count} random trades` })
+            // Generate random trades
+            const randomTrades = generateRandomTrades(count)
+            setTrades((prev) => [...prev, ...randomTrades])
+          }
+        } else if (data.type === 'RESET_TRADES') {
+          // Reset to original mock data
+          setTrades(mockTrades)
+        } else if (data.type === 'CLEAR_TRADES') {
+          // Clear all trades
+          setTrades([])
+        } else if (data.type === 'SET_THEME') {
+          const root = document.documentElement
+          const { preset: p, vars } = data
+          root.classList.add('dark')
+          if (p && THEME_PRESETS[p as keyof typeof THEME_PRESETS]) {
+            applyEmbedTheme(THEME_PRESETS[p as keyof typeof THEME_PRESETS], root)
+          }
+          if (vars && typeof vars === 'object') {
+            applyEmbedTheme(vars, root)
+          }
         }
+      } catch (error) {
+        toast.error('Error processing message', {
+          description: error instanceof Error ? error.message : 'Unknown error',
+        })
+      }
+    }
 
-        // Apply explicit overrides from query params last
-        const overrides = getOverridesFromSearchParams(searchParams)
-        if (Object.keys(overrides).length > 0) {
-            applyEmbedTheme(overrides, root)
-        }
-    }, [preset, searchParams])
+    window.addEventListener('message', handleMessage)
 
-    // Message listener for iframe communication
-    React.useEffect(() => {
-        const handleMessage = (event: MessageEvent) => {
-            try {
-                const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data
+    return () => {
+      window.removeEventListener('message', handleMessage)
+    }
+  }, [])
 
-                if (data.type === 'ADD_TRADES') {
-                    const { count = 1, trades: newTrades } = data
+  const selectedInstrument = React.useMemo(() => {
+    const counts: Record<string, number> = {}
+    trades.forEach((t) => {
+      if (!t.instrument) return
+      counts[t.instrument] = (counts[t.instrument] || 0) + 1
+    })
+    return Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || instruments[0]
+  }, [trades])
 
-                    if (newTrades && Array.isArray(newTrades)) {
-                        // Add provided trades
-                        setTrades(prev => [...prev, ...newTrades])
-                    } else {
-                        toast.error('No trades provided', { description: `Generating ${count} random trades` })
-                        // Generate random trades
-                        const randomTrades = generateRandomTrades(count)
-                        setTrades(prev => [...prev, ...randomTrades])
-                    }
-                } else if (data.type === 'RESET_TRADES') {
-                    // Reset to original mock data
-                    setTrades(mockTrades)
-                } else if (data.type === 'CLEAR_TRADES') {
-                    // Clear all trades
-                    setTrades([])
-                } else if (data.type === 'SET_THEME') {
-                    const root = document.documentElement
-                    const { preset: p, vars } = data
-                    root.classList.add('dark')
-                    if (p && THEME_PRESETS[p as keyof typeof THEME_PRESETS]) {
-                        applyEmbedTheme(THEME_PRESETS[p as keyof typeof THEME_PRESETS], root)
-                    }
-                    if (vars && typeof vars === 'object') {
-                        applyEmbedTheme(vars, root)
-                    }
-                }
-            } catch (error) {
-                toast.error('Error processing message', { description: error instanceof Error ? error.message : 'Unknown error' })
-            }
-        }
+  // Parse chart selection via search params: `charts`
+  const chartParam = searchParams.get('charts') || 'all'
+  const selectedCharts = React.useMemo(() => {
+    if (!chartParam || chartParam.toLowerCase() === 'all') return null
+    const set = new Set(
+      chartParam
+        .split(',')
+        .map((v) => v.trim().toLowerCase())
+        .filter(Boolean),
+    )
+    return set.size ? set : null
+  }, [chartParam])
 
-        window.addEventListener('message', handleMessage)
+  const chartDefinitions = React.useMemo(
+    () => [
+      {
+        key: 'time-range-performance',
+        render: () => <TimeRangePerformanceChart trades={trades} />,
+      },
+      { key: 'daily-pnl', render: () => <DailyPnLChartEmbed trades={trades} /> },
+      { key: 'time-of-day', render: () => <TimeOfDayPerformanceChart trades={trades} /> },
+      { key: 'time-in-position', render: () => <TimeInPositionByHourChart trades={trades} /> },
+      { key: 'pnl-by-side', render: () => <PnLBySideChartEmbed trades={trades} /> },
+      { key: 'trade-distribution', render: () => <TradeDistributionChartEmbed trades={trades} /> },
+      { key: 'weekday-pnl', render: () => <WeekdayPnLChartEmbed trades={trades} /> },
+      { key: 'pnl-per-contract', render: () => <PnLPerContractChartEmbed trades={trades} /> },
+      {
+        key: 'pnl-per-contract-daily',
+        render: () => (
+          <PnLPerContractDailyChartEmbed trades={trades} instrument={selectedInstrument} />
+        ),
+      },
+      { key: 'tick-distribution', render: () => <TickDistributionChartEmbed trades={trades} /> },
+      { key: 'commissions-pnl', render: () => <CommissionsPnLEmbed trades={trades} /> },
+      { key: 'contract-quantity', render: () => <ContractQuantityChartEmbed trades={trades} /> },
+    ],
+    [trades, selectedInstrument],
+  )
 
-        return () => {
-            window.removeEventListener('message', handleMessage)
-        }
-    }, [])
-
-    const selectedInstrument = React.useMemo(() => {
-      const counts: Record<string, number> = {}
-      trades.forEach((t) => {
-        if (!t.instrument) return
-        counts[t.instrument] = (counts[t.instrument] || 0) + 1
-      })
-      return Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || instruments[0]
-    }, [trades])
-
-    // Parse chart selection via search params: `charts`
-    const chartParam = searchParams.get('charts') || 'all'
-    const selectedCharts = React.useMemo(() => {
-      if (!chartParam || chartParam.toLowerCase() === 'all') return null
-      const set = new Set(
-        chartParam
-          .split(',')
-          .map((v) => v.trim().toLowerCase())
-          .filter(Boolean)
-      )
-      return set.size ? set : null
-    }, [chartParam])
-
-    const chartDefinitions = React.useMemo(() => (
-      [
-        { key: 'time-range-performance', render: () => <TimeRangePerformanceChart trades={trades} /> },
-        { key: 'daily-pnl', render: () => <DailyPnLChartEmbed trades={trades} /> },
-        { key: 'time-of-day', render: () => <TimeOfDayPerformanceChart trades={trades} /> },
-        { key: 'time-in-position', render: () => <TimeInPositionByHourChart trades={trades} /> },
-        { key: 'pnl-by-side', render: () => <PnLBySideChartEmbed trades={trades} /> },
-        { key: 'trade-distribution', render: () => <TradeDistributionChartEmbed trades={trades} /> },
-        { key: 'weekday-pnl', render: () => <WeekdayPnLChartEmbed trades={trades} /> },
-        { key: 'pnl-per-contract', render: () => <PnLPerContractChartEmbed trades={trades} /> },
-        { key: 'pnl-per-contract-daily', render: () => <PnLPerContractDailyChartEmbed trades={trades} instrument={selectedInstrument} /> },
-        { key: 'tick-distribution', render: () => <TickDistributionChartEmbed trades={trades} /> },
-        { key: 'commissions-pnl', render: () => <CommissionsPnLEmbed trades={trades} /> },
-        { key: 'contract-quantity', render: () => <ContractQuantityChartEmbed trades={trades} /> },
-      ]
-    ), [trades, selectedInstrument])
-
-    // Function to send chart click message to parent
-    const sendChartClickMessage = React.useCallback((chartKey: string, chartName: string) => {
-      if (window.parent && window.parent !== window) {
-        window.parent.postMessage({
+  // Function to send chart click message to parent
+  const sendChartClickMessage = React.useCallback((chartKey: string, chartName: string) => {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(
+        {
           type: 'CHART_CLICKED',
           chartKey,
-          chartName
-        }, '*')
-      }
-    }, [])
+          chartName,
+        },
+        '*',
+      )
+    }
+  }, [])
 
-    const chartsToRender = React.useMemo(() => {
-      const filtered = chartDefinitions.filter((c) => !selectedCharts || selectedCharts.has(c.key))
-      // If selection was provided but no keys matched, fall back to all
-      return (selectedCharts && filtered.length === 0 ? chartDefinitions : filtered).map((component) => (
-        <div 
+  const chartsToRender = React.useMemo(() => {
+    const filtered = chartDefinitions.filter((c) => !selectedCharts || selectedCharts.has(c.key))
+    // If selection was provided but no keys matched, fall back to all
+    return (selectedCharts && filtered.length === 0 ? chartDefinitions : filtered).map(
+      (component) => (
+        <div
           key={component.key}
-          className="group relative cursor-pointer rounded-[2rem] transition-transform duration-200 hover:-translate-y-1"
+          className="group relative cursor-pointer rounded-2xl border border-[oklch(0.65_0.22_260_/_0.05)] bg-[oklch(0.05_0.009_260_/_0.54)] p-1 transition-transform duration-200 hover:-translate-y-1"
           onClick={() => {
             sendChartClickMessage(component.key, formatChartName(component.key))
           }}
           title={`Click to add "${formatChartName(component.key)}" to selection`}
         >
-          <div className="pointer-events-none absolute inset-0 rounded-[inherit] border border-border/0.03 transition-colors duration-200 group-hover:border-border/0.08 group-hover:shadow-[0_4px_12px_-6px_rgba(16,185,129,0.2)]" />
+          <div className="pointer-events-none absolute inset-0 rounded-[inherit] border border-[oklch(0.65_0.22_260_/_0.05)] transition-colors duration-200 group-hover:border-[oklch(0.65_0.22_260_/_0.09)] group-hover:shadow-[0_18px_34px_-26px_rgba(0,0,0,0.72)]" />
           <div className="relative">{component.render()}</div>
         </div>
-      ))
-    }, [chartDefinitions, selectedCharts, sendChartClickMessage])
+      ),
+    )
+  }, [chartDefinitions, selectedCharts, sendChartClickMessage])
 
-    return (
-      <I18nProviderClient locale={lang}>
-        <div className="qe-v2-app-shell relative min-h-screen w-full pb-20">
-          <BackgroundGlow variant="default" />
-          {/*Dismiss cookie consent banner*/}
-          <Script id="embed-autoconsent" strategy="beforeInteractive">
+  return (
+    <I18nProviderClient locale={lang}>
+      <div className="qe-v2-app-shell relative min-h-screen w-full pb-20">
+        <BackgroundGlow variant="default" />
+        {/*Dismiss cookie consent banner*/}
+        <Script id="embed-autoconsent" strategy="beforeInteractive">
           {`try {
             if (!window.localStorage.getItem('cookieConsent')) {
               window.localStorage.setItem('cookieConsent', JSON.stringify({
@@ -232,55 +272,62 @@ export default function EmbedPage() {
                 security_storage: true
               }))
             }
-          } catch (e) {}`
-          }
-          </Script>
+          } catch (e) {}`}
+        </Script>
 
-          <Toaster />
-          <div className="relative z-10 mx-auto flex max-w-[1600px] flex-col gap-4 px-4 pt-4 lg:gap-6 lg:px-6 lg:pt-6">
-            <MotionSection delay={0.03}>
-              <section className="overflow-hidden rounded-[2rem] border border-border/30 bg-black/70 px-5 py-5 shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_24px_70px_-34px_rgba(0,0,0,0.9)] lg:px-6">
-                <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_320px]">
-                  <div className="rounded-2xl border border-border/30 bg-background/30 p-5">
-                    <div className="inline-flex w-fit rounded-full border border-border/0.08 bg-background/30 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
-                      Embed Library
-                    </div>
-                    <div className="pt-4">
-                      <h1 className="text-xl font-[350] tracking-[-0.04em] text-foreground lg:text-2xl">
-                        Qunt Edge chart modules
-                      </h1>
-                      <p className="max-w-3xl pt-2 text-sm leading-[1.75] text-muted-foreground">
-                        Production-ready embed cards with preserved query-param theming, selection, and postMessage contracts.
-                      </p>
-                    </div>
+        <Toaster />
+        <div
+          className={cn(
+            'relative z-10 mx-auto flex flex-col gap-4 px-4 pt-4 lg:gap-6 lg:px-6 lg:pt-6',
+            WORKSPACE_SHELL_WIDTH,
+          )}
+        >
+          <MotionSection delay={0.03}>
+            <section className={cn(unifiedHeroPanelClassName, 'px-5 py-5 lg:px-6')}>
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_320px]">
+                <div className={cn(unifiedInsetPanelClassName, 'p-5')}>
+                  <div className={unifiedChipClassName}>Embed Library</div>
+                  <div className="pt-4">
+                    <h1 className="text-xl font-[350] tracking-[-0.04em] text-foreground lg:text-2xl">
+                      Qunt Edge chart modules
+                    </h1>
+                    <p className="max-w-3xl pt-2 text-sm leading-[1.75] text-muted-foreground">
+                      Production-ready embed cards with preserved query-param theming, selection,
+                      and postMessage contracts.
+                    </p>
                   </div>
-                  <MotionStagger className="grid gap-2 text-xs text-muted-foreground/80 sm:grid-cols-2 lg:grid-cols-1">
-                    <MotionStaggerItem>
-                      <div className="rounded-xl border border-border/30 bg-background/30 px-3 py-2.5">
-                        <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Preset</span>
-                        <span className="block pt-1 text-sm font-medium text-foreground">{preset ?? 'Default'}</span>
-                      </div>
-                    </MotionStaggerItem>
-                    <MotionStaggerItem>
-                      <div className="rounded-xl border border-border/30 bg-background/30 px-3 py-2.5">
-                        <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Charts</span>
-                        <span className="block pt-1 text-sm font-medium text-foreground">
-                          {selectedCharts ? Array.from(selectedCharts).length : 'All'}
-                        </span>
-                      </div>
-                    </MotionStaggerItem>
-                  </MotionStagger>
                 </div>
-              </section>
-            </MotionSection>
-
-            <MotionSection delay={0.08}>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-6">
-                {chartsToRender}
+                <MotionStagger className="grid gap-2 text-xs text-muted-foreground/80 sm:grid-cols-2 lg:grid-cols-1">
+                  <MotionStaggerItem>
+                    <div className={cn(unifiedMetricPanelClassName, 'px-3 py-2.5')}>
+                      <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                        Preset
+                      </span>
+                      <span className="block pt-1 text-sm font-medium text-foreground">
+                        {preset ?? 'Default'}
+                      </span>
+                    </div>
+                  </MotionStaggerItem>
+                  <MotionStaggerItem>
+                    <div className={cn(unifiedMetricPanelClassName, 'px-3 py-2.5')}>
+                      <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                        Charts
+                      </span>
+                      <span className="block pt-1 text-sm font-medium text-foreground">
+                        {selectedCharts ? Array.from(selectedCharts).length : 'All'}
+                      </span>
+                    </div>
+                  </MotionStaggerItem>
+                </MotionStagger>
               </div>
-            </MotionSection>
-          </div>
+            </section>
+          </MotionSection>
+
+          <MotionSection delay={0.08}>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-6">{chartsToRender}</div>
+          </MotionSection>
         </div>
-      </I18nProviderClient>
-    )
+      </div>
+    </I18nProviderClient>
+  )
 }

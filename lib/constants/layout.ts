@@ -1,18 +1,26 @@
 import type { CSSProperties } from 'react'
 
 // Header constants (consistent across Dashboard, Teams, Admin)
-export const HEADER_HEIGHT = 'h-16'
+export const HEADER_HEIGHT = 'h-[4.5rem]'
 
 export const HEADER_Z_INDEX = 'z-50'
 
-export const HEADER_BORDER = 'border-b border-transparent'
+export const HEADER_BORDER = 'border-b border-[oklch(0.65_0.22_260_/_0.07)]'
 
-export const HEADER_BG = 'bg-background/95 backdrop-blur-md'
+export const HEADER_BG = 'bg-[oklch(0.05_0.01_260_/_0.94)]'
 
 // Content padding constants
-export const CONTENT_PADDING = 'px-4 sm:px-6 lg:px-8'
+export const CONTENT_PADDING = 'px-4 sm:px-6 lg:px-8 xl:px-10'
 
 export const CONTENT_PADDING_Y = 'py-6 sm:py-8 lg:py-8'
+
+export const WORKSPACE_SHELL_WIDTH = 'max-w-[1800px]'
+
+export const MARKETING_SHELL_WIDTH = 'max-w-[1360px]'
+
+export const CONTENT_SHELL_WIDTH = 'max-w-[1280px]'
+
+export const READING_SHELL_WIDTH = 'max-w-[800px]'
 
 export const LOCALE_SOFT_BORDER_STYLE: CSSProperties = {
   ['--border' as string]: '214 10% 6%',

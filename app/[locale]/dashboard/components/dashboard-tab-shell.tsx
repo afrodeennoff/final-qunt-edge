@@ -6,6 +6,8 @@ import { clearReferralCode } from '@/lib/referral-storage'
 import { DashboardSkeleton } from './skeletons/dashboard-skeleton'
 import { FEATURE_FLAGS } from '@/lib/feature-flags'
 import { Spinner } from '@/components/ui/skeleton'
+import { WORKSPACE_SHELL_WIDTH } from '@/lib/constants/layout'
+import { cn } from '@/lib/utils'
 
 type DashboardTab = 'widgets' | 'table' | 'accounts' | 'chart'
 
@@ -52,7 +54,7 @@ export function DashboardTabShell({
 
   return (
     <div className="w-full min-h-[calc(100dvh-64px)] px-4 py-4 sm:min-h-[calc(100vh-72px)] sm:px-6 sm:py-5 lg:px-8 lg:py-6">
-      <div className="mx-auto flex h-full w-full max-w-[1600px] flex-col">
+      <div className={cn('mx-auto flex h-full w-full flex-col', WORKSPACE_SHELL_WIDTH)}>
         <Suspense
           fallback={shouldUseEnhancedSkeleton ? <DashboardSkeleton activeTab={activeTab} /> : null}
         >

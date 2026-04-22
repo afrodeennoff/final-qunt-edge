@@ -3,6 +3,7 @@ import Footer from './footer'
 import { cn } from '@/lib/utils'
 import { Suspense } from 'react'
 import RollingAdBanner from '../../(home)/components/RollingAdBanner'
+import { CONTENT_PADDING, MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 
 type MarketingLayoutShellProps = Readonly<{
   children: React.ReactNode
@@ -20,11 +21,11 @@ const MiniMaxNavbarWrapper: React.FC<{ children?: React.ReactNode }> = ({ childr
 
 export default function MarketingLayoutShell({
   children,
-  contentClassName = 'mx-auto w-full max-w-[1380px]',
+  contentClassName,
   className,
   showRollingBanner = true,
-  topSpacingClassName = 'pt-16 sm:pt-20 lg:pt-24',
-  contentSpacingClassName = 'space-y-8 pb-24 pt-6 sm:pt-8 lg:pt-10',
+  topSpacingClassName = 'pt-14 sm:pt-16 lg:pt-20',
+  contentSpacingClassName = 'space-y-6 pb-20 pt-5 sm:pt-6 lg:pt-8',
   shellVariant = 'black',
 }: MarketingLayoutShellProps) {
   return (
@@ -37,11 +38,11 @@ export default function MarketingLayoutShell({
       <div
         className={cn(
           'pointer-events-none fixed inset-0 hidden qe-v2-grid sm:block',
-          shellVariant === 'black' ? 'opacity-[0.05]' : 'opacity-[0.08]',
+          shellVariant === 'black' ? 'opacity-[0.03]' : 'opacity-[0.05]',
         )}
       />
-      <div className="pointer-events-none fixed inset-0 opacity-[0.06] [background-image:radial-gradient(circle_at_top,hsl(var(--primary)/0.12),transparent_38%)]" />
-      <div className="pointer-events-none fixed inset-x-8 top-0 z-0 h-40 rounded-b-2xl border border-border/30 bg-background/30" />
+      <div className="pointer-events-none fixed inset-0 opacity-[0.05] [background-image:radial-gradient(circle_at_top,hsl(var(--primary)/0.1),transparent_38%)]" />
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-28 bg-gradient-to-b from-[oklch(0.65_0.22_260_/_0.06)] to-transparent" />
       <div className="flex min-h-screen w-full">
         {/* Full-width content: no sidebar column */}
         <div className="flex-1 min-h-0 min-w-0 bg-transparent">
@@ -54,7 +55,16 @@ export default function MarketingLayoutShell({
                 <RollingAdBanner />
               </Suspense>
             ) : null}
-            <div className={cn('min-w-0 px-2 sm:px-4', contentSpacingClassName, contentClassName)}>
+            <div
+              className={cn(
+                'min-w-0',
+                CONTENT_PADDING,
+                'mx-auto w-full',
+                MARKETING_SHELL_WIDTH,
+                contentSpacingClassName,
+                contentClassName,
+              )}
+            >
               {children}
             </div>
           </div>

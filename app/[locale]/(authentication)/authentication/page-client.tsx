@@ -1,14 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import {
-  ArrowLeft,
-  CheckCircle2,
-  Gauge,
-  LockKeyhole,
-  ShieldCheck,
-  Workflow,
-} from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Gauge, LockKeyhole, ShieldCheck, Workflow } from 'lucide-react'
 import {
   unifiedBodyCopyClassName,
   unifiedChipClassName,
@@ -19,6 +12,7 @@ import {
   unifiedSectionEyebrowClassName,
   unifiedSectionPanelClassName,
 } from '@/components/layout/unified-page-recipes'
+import { MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 import { Logo } from '@/components/logo'
 import { cn } from '@/lib/utils'
 import { useCurrentLocale, useI18n } from '@/locales/client'
@@ -55,16 +49,15 @@ export default function AuthenticationPageClient() {
   return (
     <main className="qe-v2-app-shell relative min-h-screen overflow-hidden bg-background text-foreground">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-x-6 top-0 h-36 rounded-b-2xl border border-border/20 bg-primary/[0.02]" />
         <div className="absolute left-[-10rem] top-[-8rem] h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.08),transparent_72%)] opacity-70" />
         <div className="absolute bottom-[-10rem] right-[-8rem] h-[32rem] w-[32rem] rounded-full bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.08),transparent_70%)] opacity-80" />
         <div className="absolute inset-0 marketing-grid opacity-[0.07]" />
       </div>
 
       <div className="relative mx-auto flex min-h-screen w-full items-center justify-center px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-        <div className={cn(unifiedHeroPanelClassName, 'w-full max-w-[1380px]')}>
+        <div className={cn(unifiedHeroPanelClassName, 'w-full', MARKETING_SHELL_WIDTH)}>
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.06fr)_minmax(460px,0.94fr)]">
-            <section className="relative overflow-hidden p-6 sm:p-8 lg:border-r lg:border-border/30 lg:p-10 xl:p-12">
+            <section className="relative overflow-hidden p-6 sm:p-8 lg:border-r lg:border-[oklch(0.65_0.22_260_/_0.07)] lg:p-10 xl:p-12">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/20 to-transparent" />
 
               <div className="flex items-center justify-between gap-3">
@@ -83,15 +76,17 @@ export default function AuthenticationPageClient() {
 
               <div className="auth-entrance-1 mt-10 max-w-[39rem] lg:mt-14">
                 <span className={unifiedSectionEyebrowClassName}>Qunt Edge</span>
-                <div className="mt-4 inline-flex items-center gap-3 rounded-xl border border-border/30 bg-background/30 px-4 py-3 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-primary/16 bg-primary/10 text-primary">
+                <div className="mt-4 inline-flex items-center gap-3 rounded-xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] px-4 py-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary/16 bg-primary/10 text-primary">
                     <Logo className="h-4.5 w-4.5 fill-current" />
                   </div>
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/60">
                       Daily trading access
                     </p>
-                    <p className="pt-1 text-sm text-foreground/35">Secure entry for the full workspace.</p>
+                    <p className="pt-1 text-sm text-foreground/35">
+                      Secure entry for the full workspace.
+                    </p>
                   </div>
                 </div>
 
@@ -106,7 +101,7 @@ export default function AuthenticationPageClient() {
                   {VALUE_POINTS.map((point) => (
                     <div key={point.title} className={cn(unifiedMetricPanelClassName, 'p-4')}>
                       <div className="flex items-start gap-3">
-                        <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-[1rem] border border-primary/16 bg-primary/10 text-primary">
+                        <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary/16 bg-primary/10 text-primary">
                           <point.icon className="h-4 w-4" />
                         </div>
                         <div>
@@ -139,14 +134,20 @@ export default function AuthenticationPageClient() {
                         Use the method that fits your routine and resume exactly where you left off.
                       </p>
                     </div>
-                    <div className="flex h-11 w-11 items-center justify-center rounded-[1rem] border border-primary/16 bg-primary/10 text-primary">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-primary/16 bg-primary/10 text-primary">
                       <LockKeyhole className="h-4.5 w-4.5" />
                     </div>
                   </div>
 
                   <div className="mb-6 grid gap-2">
                     {ACCESS_POINTS.map((point) => (
-                      <div key={point} className={cn(unifiedInsetPanelClassName, 'flex items-center gap-2.5 px-3.5 py-3')}>
+                      <div
+                        key={point}
+                        className={cn(
+                          unifiedInsetPanelClassName,
+                          'flex items-center gap-2.5 px-3.5 py-3',
+                        )}
+                      >
                         <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-primary" />
                         <span className="text-sm text-foreground/35">{point}</span>
                       </div>

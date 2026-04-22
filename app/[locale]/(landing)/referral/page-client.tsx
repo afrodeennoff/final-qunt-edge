@@ -55,7 +55,7 @@ export default function ReferralPage() {
   ] as const
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[1320px]" className="py-12 sm:py-16">
+    <UnifiedPageShell widthClassName="max-w-[1360px]" className="py-12 sm:py-16">
       <div className="space-y-6">
         <section
           className={cn(unifiedHeroPanelClassName, 'animate-fade-up-smooth p-6 sm:p-8 lg:p-10')}

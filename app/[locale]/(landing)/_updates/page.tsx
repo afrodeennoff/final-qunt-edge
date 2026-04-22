@@ -3,7 +3,7 @@ import { getI18n } from '@/locales/server'
 import CompletedTimeline from '../components/completed-timeline'
 import { getAllPosts } from '@/lib/posts'
 import { getLatestVideoFromPlaylist } from '@/app/[locale]/admin/actions/youtube'
-import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
+import { UnifiedPageShell, UnifiedPageHeader, UnifiedSurface } from '@/components/layout/unified-page-shell'
 import type { Metadata } from 'next'
 import { buildPublicMetadata } from '@/lib/seo'
 
@@ -28,32 +28,30 @@ export async function generateMetadata({
 
 export default async function UpdatesPage(props: PageProps) {
   const params = await props.params;
-
-  const {
-    locale
-  } = params;
-
+  const { locale } = params;
   const t = await getI18n()
   const posts = await getAllPosts(locale)
-
-  // Only show completed posts as per requirement
   const completedPosts = posts.filter(post => post.meta.status === 'completed')
 
-  // Get the latest video for French locale
   let latestVideoId: string | null = null
   if (locale === 'fr') {
     latestVideoId = await getLatestVideoFromPlaylist()
   }
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
-      {/* Display latest weekly video for French locale */}
+    <UnifiedPageShell widthClassName="max-w-[1080px]" className="py-8">
+      <UnifiedPageHeader
+        eyebrow={t('updates.title')}
+        title={t('updates.completed')}
+        description={t('updates.description')}
+      />
+
       {locale === 'fr' && latestVideoId && (
-        <UnifiedSurface className="mb-8">
-          <h2 className="mb-6 text-2xl font-semibold text-fg-primary">
-              {t('updates.weeklyVideo')}
+        <UnifiedSurface>
+          <h2 className="mb-4 text-lg font-semibold text-foreground">
+            {t('updates.weeklyVideo')}
           </h2>
-          <div className="overflow-hidden rounded-xl border border-border/30 bg-primary/[0.03]">
+          <div className="overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)]">
             <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
               <iframe
                 className="absolute left-0 top-0 h-full w-full"
@@ -68,7 +66,6 @@ export default async function UpdatesPage(props: PageProps) {
       )}
 
       <UnifiedSurface>
-        <h2 className="mb-6 text-2xl font-semibold text-fg-primary">{t('updates.completed')}</h2>
         <CompletedTimeline milestones={completedPosts.map(post => ({
           id: post.meta.slug,
           title: post.meta.title,
