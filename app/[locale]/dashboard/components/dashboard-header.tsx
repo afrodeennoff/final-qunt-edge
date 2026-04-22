@@ -79,15 +79,6 @@ export function DashboardHeader() {
   const title = getTitle()
   const sectionLabel = 'Dashboard'
   const showSectionLabel = !isDashboardRoot
-  const subtitle = isDashboardRoot
-    ? activeTab === 'table'
-      ? 'Review executions, annotate trades, and move through your daily journal.'
-      : activeTab === 'accounts'
-        ? 'Track balances, challenge pressure, and account consistency in one place.'
-        : activeTab === 'chart'
-          ? 'Explore forward-looking scenarios and projection experiments.'
-          : 'Your trading operating system for review, risk, and momentum.'
-    : 'Focused workspace for analysis, review, and execution.'
   const hasActiveFilters =
     (accountNumbers?.length || 0) > 0 ||
     (instruments?.length || 0) > 0 ||
@@ -129,9 +120,6 @@ export function DashboardHeader() {
                     {title}
                   </h1>
                 </div>
-                <p className="hidden truncate pt-1 text-xs text-muted-foreground xl:block">
-                  {subtitle}
-                </p>
               </div>
             </div>
           </div>

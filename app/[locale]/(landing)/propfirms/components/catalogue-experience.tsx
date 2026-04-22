@@ -37,7 +37,6 @@ import { cn } from '@/lib/utils'
 interface PropFirmCatalogueExperienceProps {
   locale: string
   title: string
-  description: string
   firms: Array<{
     key: string
     slug: string
@@ -117,7 +116,6 @@ function sortFirms(firms: PropFirmCatalogueExperienceProps['firms']) {
 export function PropFirmCatalogueExperience({
   locale,
   title,
-  description,
   firms,
 }: PropFirmCatalogueExperienceProps) {
   const [search, setSearch] = useState('')
@@ -193,9 +191,6 @@ export function PropFirmCatalogueExperience({
             <h1 className="mt-5 text-[clamp(2.25rem,5.4vw,4.8rem)] font-medium leading-[0.98] tracking-[-0.04em] text-foreground">
               {title}
             </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-[1.55] text-muted-foreground sm:text-base">
-              {description}
-            </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href={`/${locale}/deals`}

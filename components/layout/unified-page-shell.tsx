@@ -44,8 +44,8 @@ export function UnifiedPageShell({
     <div
       className={cn(
         'scroll-smooth-butter animate-page-enter relative mx-auto w-full',
-        variant === 'refined' && 'border-x border-[oklch(0.65_0.22_260_/_0.06)]',
-        variant === 'minimal' && 'border-x border-[oklch(0.65_0.22_260_/_0.04)]',
+        variant === 'refined' && 'border-x border-[oklch(0.65_0.22_260_/_0.1)]',
+        variant === 'minimal' && 'border-x border-[oklch(0.65_0.22_260_/_0.08)]',
         widthClassName,
         CONTENT_PADDING,
         densityClasses,
@@ -72,13 +72,13 @@ export function UnifiedPageHeader({
         'rounded-2xl border px-5 py-6 sm:px-6 sm:py-7',
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
-          'border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.064_0.011_260_/_0.88)_0%,oklch(0.054_0.01_260_/_0.82)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_18px_36px_-28px_rgba(0,0,0,0.78)]',
+          'border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.074_0.014_260_/_0.94)_0%,oklch(0.06_0.012_260_/_0.88)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_22px_44px_-28px_rgba(0,0,0,0.82)]',
         ],
         variant === 'gradient' && [
-          'border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(135deg,oklch(0.07_0.012_260_/_0.92)_0%,oklch(0.055_0.01_260_/_0.86)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_20px_40px_-30px_rgba(0,0,0,0.8)]',
+          'border-[oklch(0.65_0.22_260_/_0.14)] bg-[linear-gradient(135deg,oklch(0.08_0.015_260_/_0.96)_0%,oklch(0.062_0.012_260_/_0.9)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.1),0_26px_48px_-30px_rgba(0,0,0,0.86)]',
         ],
         variant === 'elevated' && [
-          'border-[oklch(0.65_0.22_260_/_0.08)] bg-[linear-gradient(180deg,oklch(0.068_0.012_260_/_0.92)_0%,oklch(0.056_0.01_260_/_0.86)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_24px_44px_-30px_rgba(0,0,0,0.82)]',
+          'border-[oklch(0.65_0.22_260_/_0.14)] bg-[linear-gradient(180deg,oklch(0.08_0.015_260_/_0.96)_0%,oklch(0.064_0.013_260_/_0.9)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.1),0_28px_52px_-30px_rgba(0,0,0,0.86)]',
         ],
         className,
       )}
@@ -128,31 +128,31 @@ export function UnifiedSurface({
         'rounded-2xl border p-4 sm:p-6',
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
-          'border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.84)_0%,oklch(0.052_0.009_260_/_0.78)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_16px_34px_-26px_rgba(0,0,0,0.74)]',
+          'border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.074_0.014_260_/_0.92)_0%,oklch(0.06_0.012_260_/_0.86)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_20px_42px_-26px_rgba(0,0,0,0.8)]',
           hover
-            ? 'hover:border-[oklch(0.65_0.22_260_/_0.11)] hover:bg-[linear-gradient(180deg,oklch(0.066_0.01_260_/_0.88)_0%,oklch(0.054_0.009_260_/_0.82)_100%)]'
+            ? 'hover:border-[oklch(0.65_0.22_260_/_0.18)] hover:bg-[linear-gradient(180deg,oklch(0.08_0.015_260_/_0.96)_0%,oklch(0.064_0.013_260_/_0.9)_100%)]'
             : '',
         ],
         variant === 'glass' && [
-          'border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.055_0.01_260_/_0.66)]',
+          'border-[oklch(0.65_0.22_260_/_0.1)] bg-[oklch(0.062_0.012_260_/_0.8)]',
           hover
-            ? 'hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.058_0.01_260_/_0.74)]'
+            ? 'hover:border-[oklch(0.65_0.22_260_/_0.16)] hover:bg-[oklch(0.068_0.013_260_/_0.88)]'
             : '',
         ],
         variant === 'gradient-border' && [
-          'border-[oklch(0.65_0.22_260_/_0.08)] bg-[linear-gradient(180deg,oklch(0.06_0.01_260_/_0.82)_0%,oklch(0.05_0.009_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_18px_36px_-28px_rgba(0,0,0,0.76)]',
-          hover ? 'hover:border-[oklch(0.65_0.22_260_/_0.11)]' : '',
+          'border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.074_0.014_260_/_0.9)_0%,oklch(0.06_0.012_260_/_0.84)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_22px_42px_-28px_rgba(0,0,0,0.8)]',
+          hover ? 'hover:border-[oklch(0.65_0.22_260_/_0.18)]' : '',
         ],
         variant === 'elevated' && [
-          'border-[oklch(0.65_0.22_260_/_0.08)] bg-[linear-gradient(180deg,oklch(0.068_0.012_260_/_0.9)_0%,oklch(0.056_0.01_260_/_0.84)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_22px_40px_-28px_rgba(0,0,0,0.8)]',
+          'border-[oklch(0.65_0.22_260_/_0.14)] bg-[linear-gradient(180deg,oklch(0.08_0.015_260_/_0.96)_0%,oklch(0.064_0.013_260_/_0.9)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.1),0_28px_50px_-28px_rgba(0,0,0,0.84)]',
           hover
-            ? 'hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[linear-gradient(180deg,oklch(0.07_0.012_260_/_0.92)_0%,oklch(0.058_0.01_260_/_0.86)_100%)]'
+            ? 'hover:border-[oklch(0.65_0.22_260_/_0.2)] hover:bg-[linear-gradient(180deg,oklch(0.086_0.016_260_/_0.98)_0%,oklch(0.07_0.014_260_/_0.94)_100%)]'
             : '',
         ],
         variant === 'subtle' && [
-          'border-[oklch(0.65_0.22_260_/_0.05)] bg-[oklch(0.048_0.008_260_/_0.6)] shadow-none',
+          'border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.054_0.01_260_/_0.72)] shadow-none',
           hover
-            ? 'hover:border-[oklch(0.65_0.22_260_/_0.09)] hover:bg-[oklch(0.052_0.008_260_/_0.68)]'
+            ? 'hover:border-[oklch(0.65_0.22_260_/_0.14)] hover:bg-[oklch(0.06_0.011_260_/_0.82)]'
             : '',
         ],
         className,

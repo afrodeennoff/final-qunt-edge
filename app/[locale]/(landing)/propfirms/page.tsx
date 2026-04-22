@@ -134,7 +134,6 @@ export default async function PropFirmsPage({
       <PropFirmCatalogueExperience
         locale={locale}
         title={t('landing.propfirms.title')}
-        description={t('landing.propfirms.description')}
         firms={firms}
       />
     </>

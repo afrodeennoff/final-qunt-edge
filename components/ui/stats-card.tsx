@@ -85,7 +85,7 @@ function StatsCardSkeleton({ size ="md", className }: StatsCardSkeletonProps) {
 
  return (
  <div
- className={cn("relative overflow-hidden rounded-xl border border-[oklch(0.2505_0.0293_299.5707/0.9)] bg-[oklch(0.6083_0.2172_297.1153/0.06)]","shadow-[inset_0_1px_0_rgba(145,108,255,0.08),0_4px_16px_-4px_rgba(0,0,0,0.3)]",
+ className={cn("relative overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.07_0.013_260_/_0.92)_0%,oklch(0.058_0.011_260_/_0.86)_100%)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_18px_38px_-26px_rgba(0,0,0,0.78)]",
  config.padding,
  className
  )}
@@ -265,7 +265,7 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  if (isLoading) {
  return (
  <div
- className={cn("relative overflow-hidden rounded-xl border border-border/30 bg-primary/[0.03]","shadow-[inset_0_1px_0_hsl(var(--primary)/0.06)]",
+ className={cn("relative overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.07_0.013_260_/_0.92)_0%,oklch(0.058_0.011_260_/_0.86)_100%)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_18px_38px_-26px_rgba(0,0,0,0.78)]",
  config.padding,
  className
  )}
@@ -298,9 +298,9 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  role={onClick ?"button" : undefined}
  tabIndex={onClick ? 0 : undefined}
  onClick={onClick}
- className={cn("group relative overflow-hidden rounded-xl border border-border/30 bg-primary/[0.03] ","shadow-[inset_0_1px_0_hsl(var(--primary)/0.06)]",
- glass &&"bg-background/25",
- !!onClick &&"cursor-pointer hover:shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_8px_24px_-8px_rgba(0,0,0,0.3)]",
+ className={cn("group relative overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.07_0.013_260_/_0.92)_0%,oklch(0.058_0.011_260_/_0.86)_100%)] ","shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_18px_38px_-26px_rgba(0,0,0,0.78)]",
+ glass &&"bg-[oklch(0.062_0.012_260_/_0.8)]",
+ !!onClick &&"cursor-pointer hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.1),0_22px_44px_-26px_rgba(0,0,0,0.82)]",
  config.padding,
  className
  )}
@@ -310,7 +310,7 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
  
  {/* Hover glow */}
- <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 " />
+ <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.06] via-transparent to-transparent opacity-0 group-hover:opacity-100 " />
 
  {(title || trend) && (
  <div className="relative flex items-center justify-between gap-3 mb-2">

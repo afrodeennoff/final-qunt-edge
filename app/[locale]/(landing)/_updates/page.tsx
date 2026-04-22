@@ -43,7 +43,6 @@ export default async function UpdatesPage(props: PageProps) {
       <UnifiedPageHeader
         eyebrow={t('updates.title')}
         title={t('updates.completed')}
-        description={t('updates.description')}
       />
 
       {locale === 'fr' && latestVideoId && (

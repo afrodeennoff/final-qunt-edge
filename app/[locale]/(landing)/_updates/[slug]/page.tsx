@@ -192,7 +192,6 @@ export default async function Page({ params }: PageProps) {
         <UnifiedPageHeader
           variant="gradient"
           title={meta.title}
-          description={meta.description}
           actions={
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">

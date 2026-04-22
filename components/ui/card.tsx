@@ -57,24 +57,24 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onClick={isInteractive ? onClick : undefined}
         className={cn(
           'group relative overflow-hidden text-foreground',
-          'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.064_0.011_260_/_0.86)_0%,oklch(0.052_0.009_260_/_0.8)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_16px_34px_-26px_rgba(0,0,0,0.74)]',
+          'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.074_0.014_260_/_0.9)_0%,oklch(0.06_0.012_260_/_0.84)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_20px_40px_-26px_rgba(0,0,0,0.78)]',
           variant === 'glass' &&
-            'border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.054_0.009_260_/_0.72)]',
+            'border-[oklch(0.65_0.22_260_/_0.1)] bg-[oklch(0.062_0.012_260_/_0.8)]',
           variant === 'elevated' &&
-            'border-[oklch(0.65_0.22_260_/_0.08)] bg-[linear-gradient(180deg,oklch(0.068_0.011_260_/_0.9)_0%,oklch(0.055_0.009_260_/_0.84)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_22px_40px_-28px_rgba(0,0,0,0.8)]',
+            'border-[oklch(0.65_0.22_260_/_0.14)] bg-[linear-gradient(180deg,oklch(0.08_0.015_260_/_0.94)_0%,oklch(0.064_0.013_260_/_0.88)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.1),0_26px_48px_-28px_rgba(0,0,0,0.84)]',
           variant === 'outlined' &&
-            'border-[oklch(0.65_0.22_260_/_0.08)] bg-transparent shadow-none',
+            'border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent shadow-none',
           variant === 'flat' && 'border-transparent bg-transparent shadow-none',
           variant === 'gradient-border' &&
-            'border-primary/16 bg-[linear-gradient(180deg,oklch(0.066_0.011_260_/_0.88)_0%,oklch(0.054_0.009_260_/_0.82)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_20px_38px_-28px_rgba(0,0,0,0.78)]',
+            'border-primary/22 bg-[linear-gradient(180deg,oklch(0.076_0.014_260_/_0.92)_0%,oklch(0.062_0.012_260_/_0.86)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_24px_46px_-28px_rgba(0,0,0,0.82)]',
           variant === 'frost' &&
-            'border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.05_0.009_260_/_0.74)] shadow-[0_14px_30px_-24px_rgba(0,0,0,0.66)]',
+            'border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.058_0.011_260_/_0.82)] shadow-[0_18px_36px_-24px_rgba(0,0,0,0.72)]',
           accent && accentClassMap[accent],
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',
           size === 'lg' && 'type-body-lg',
           hover &&
-            'transition-[background-color,border-color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.11)] hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_20px_38px_-26px_rgba(0,0,0,0.8)]',
+            'transition-[background-color,border-color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.18)] hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.1),0_24px_46px_-26px_rgba(0,0,0,0.84)]',
           isInteractive &&
             'cursor-pointer transition-[background-color,border-color,box-shadow,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           isLoading && 'pointer-events-none opacity-80',
@@ -89,7 +89,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ) : null}
 
         {status ? (
-          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.76)] px-2.5 py-1 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]">
+          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.06_0.012_260_/_0.82)] px-2.5 py-1 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06)]">
             <div
               className={cn(
                 'h-1.5 w-1.5 rounded-full',
@@ -236,8 +236,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-3 border-t border-border/40',
-        'border-[oklch(0.65_0.22_260_/_0.06)]',
+        'flex items-center gap-3 border-t border-[oklch(0.65_0.22_260_/_0.1)]',
         {
           'p-4': size === 'sm',
           'p-5': size === 'md',

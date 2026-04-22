@@ -12,7 +12,6 @@ import {
   unifiedToolbarBadgeClassName,
   unifiedToolbarButtonClassName,
   unifiedToolbarClassName,
-  unifiedToolbarMetaPanelClassName,
 } from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
 import {
@@ -72,7 +71,7 @@ export function AdminClientLayout({
             <div
               className={cn(
                 unifiedToolbarClassName,
-                'relative flex min-h-[4.5rem] w-full flex-col gap-4 px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between',
+                'flex min-h-[4.5rem] w-full items-center gap-4 px-3 py-3 sm:px-4',
               )}
             >
               <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/16 to-transparent" />
@@ -89,29 +88,6 @@ export function AdminClientLayout({
                       Operations Studio
                     </h1>
                   </div>
-                  <p className="truncate pt-1 text-xs text-muted-foreground">
-                    Production-ready controls for publishing, campaigns, reviews, and internal
-                    operations.
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid gap-2 sm:grid-cols-2 lg:w-auto">
-                <div className={cn(unifiedToolbarMetaPanelClassName, 'min-w-[220px]')}>
-                  <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-                    Mode
-                  </span>
-                  <span className="block pt-1 text-sm text-foreground/60">
-                    Editorial and growth ops
-                  </span>
-                </div>
-                <div className={cn(unifiedToolbarMetaPanelClassName, 'min-w-[220px]')}>
-                  <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-                    Scope
-                  </span>
-                  <span className="block pt-1 text-sm text-foreground/60">
-                    Publishing, offers, mail, recap
-                  </span>
                 </div>
               </div>
             </div>

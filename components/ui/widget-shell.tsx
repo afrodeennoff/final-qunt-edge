@@ -86,13 +86,13 @@ export function WidgetShell({
  return (
  <Card
  data-widget-shell="v2"
- className={cn("widget-enter-smooth relative overflow-hidden rounded-xl border border-[oklch(0.2505_0.0293_299.5707/0.9)] bg-[oklch(0.6083_0.2172_297.1153/0.06)]","shadow-[inset_0_1px_0_rgba(145,108,255,0.08)]","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background","h-full",
+ className={cn("widget-enter-smooth relative overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.07_0.013_260_/_0.92)_0%,oklch(0.058_0.011_260_/_0.86)_100%)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_18px_38px_-26px_rgba(0,0,0,0.78)]","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background","h-full",
  variant ==="hoverable" &&
  className
  )}
  >
  {(title || actions || icon || description) && (
- <CardHeader className="border-b border-[oklch(0.2505_0.0293_299.5707/0.8)] bg-[oklch(0.6083_0.2172_297.1153/0.05)] px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
+ <CardHeader className="border-b border-[oklch(0.65_0.22_260_/_0.1)] bg-[oklch(0.65_0.22_260_/_0.08)] px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
  <div className="flex items-start justify-between gap-[var(--space-3)]">
  <div className="min-w-0 gap-[var(--space-2)]">
  {(title || icon) && (

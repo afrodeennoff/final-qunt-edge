@@ -10,7 +10,6 @@ import {
   unifiedToolbarBadgeClassName,
   unifiedToolbarButtonClassName,
   unifiedToolbarClassName,
-  unifiedToolbarMetaPanelClassName,
 } from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
 import {
@@ -93,7 +92,7 @@ export default async function DashboardLayout({
                 <div
                   className={cn(
                     unifiedToolbarClassName,
-                    'relative flex min-h-[4.5rem] flex-col gap-4 px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between',
+                    'flex min-h-[4.5rem] w-full items-center gap-4 px-3 py-3 sm:px-4',
                   )}
                 >
                   <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/16 to-transparent" />
@@ -113,28 +112,6 @@ export default async function DashboardLayout({
                           Team Command
                         </h1>
                       </div>
-                      <span className="truncate pt-1 text-xs text-muted-foreground">
-                        Unified oversight for members, performance, and operational team health.
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-2 sm:grid-cols-2 lg:w-auto">
-                    <div className={cn(unifiedToolbarMetaPanelClassName, 'min-w-[220px]')}>
-                      <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-                        Focus
-                      </span>
-                      <span className="block pt-1 text-sm text-foreground/60">
-                        Members and process visibility
-                      </span>
-                    </div>
-                    <div className={cn(unifiedToolbarMetaPanelClassName, 'min-w-[220px]')}>
-                      <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-                        Surface
-                      </span>
-                      <span className="block pt-1 text-sm text-foreground/60">
-                        Shared team operating layer
-                      </span>
                     </div>
                   </div>
                 </div>

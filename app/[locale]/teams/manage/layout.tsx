@@ -1,9 +1,6 @@
-import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { createClient } from '@/server/auth'
 import { redirect } from 'next/navigation'
-import { AuthProfileButton } from '../components/auth-profile-button'
-import { AuthProfileButtonSkeleton } from '../components/auth-profile-button-skeleton'
 import { TeamsSidebar } from '../components/teams-sidebar'
 import { cookies } from 'next/headers'
 import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from '@/lib/sidebar-state'
@@ -98,7 +95,7 @@ export default async function TeamManageLayout({
                 <div
                   className={cn(
                     unifiedToolbarClassName,
-                    'flex min-h-[4.5rem] w-full items-center justify-between gap-4 px-3 py-3 sm:px-4',
+                    'flex min-h-[4.5rem] w-full items-center gap-4 px-3 py-3 sm:px-4',
                   )}
                 >
                   <div className="flex min-w-0 items-center gap-3">
@@ -117,16 +114,7 @@ export default async function TeamManageLayout({
                           Team Management
                         </h1>
                       </div>
-                      <span className="truncate pt-1 text-xs text-muted-foreground">
-                        Unified workspace for invites, permissions, and team operations.
-                      </span>
                     </div>
-                  </div>
-
-                  <div className="shrink-0">
-                    <Suspense fallback={<AuthProfileButtonSkeleton />}>
-                      <AuthProfileButton />
-                    </Suspense>
                   </div>
                 </div>
               </div>
