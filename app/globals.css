@@ -212,16 +212,8 @@
     background: oklch(0.69 0.2 260 / 0.5);
   }
 
-  :focus-visible {
-    outline: none;
-    box-shadow:
-      0 0 0 2px oklch(0.045 0.008 260),
-      0 0 0 4px oklch(0.65 0.22 260 / 0.42);
-    transition: box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
   body {
-    background-color: oklch(0.1091 0.0091 301.6956);
+    background-color: oklch(0.06 0.01 260);
     color: oklch(0.9838 0.0035 247.8583);
     font-family:
       var(--font-body),
@@ -520,14 +512,14 @@
 }
 
 .dark {
-  --background: oklch(0 0 0);
-  --foreground: oklch(0.97 0 0);
-  --card: oklch(0 0 0);
-  --card-foreground: oklch(0.97 0 0);
-  --popover: oklch(0.05 0 0);
-  --popover-foreground: oklch(0.97 0 0);
+  --background: oklch(0.06 0.01 260);
+  --foreground: oklch(0.9838 0.0035 247.8583);
+  --card: oklch(0.085 0.014 260);
+  --card-foreground: oklch(0.9838 0.0035 247.8583);
+  --popover: oklch(0.07 0.012 260);
+  --popover-foreground: oklch(0.9838 0.0035 247.8583);
   --primary: oklch(0.6083 0.2172 297.1153);
-  --primary-foreground: oklch(0.1091 0.0091 301.6956);
+  --primary-foreground: oklch(0.9838 0.0035 247.8583);
   --secondary: oklch(0.2363 0.0582 299.6364);
   --secondary-foreground: oklch(0.8266 0.0933 301.9462);
   --muted: oklch(0.2217 0.0242 299.7054);
@@ -3893,15 +3885,15 @@ img[loading='lazy'] {
 
 /* Spring-based transitions */
 .transition-spring {
-  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity, background-color, border-color, box-shadow, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .transition-spring-fast {
-  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity, background-color, border-color, box-shadow, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .transition-spring-slow {
-  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity, background-color, border-color, box-shadow, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Bounce transitions */
@@ -3918,20 +3910,20 @@ img[loading='lazy'] {
 }
 
 .transition-bounce-elastic {
-  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transition: opacity, transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 /* Smooth transitions */
 .transition-smooth {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity, background-color, border-color, box-shadow, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .transition-smooth-fast {
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity, background-color, border-color, box-shadow, transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .transition-smooth-slow {
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity, background-color, border-color, box-shadow, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Property-specific transitions */
