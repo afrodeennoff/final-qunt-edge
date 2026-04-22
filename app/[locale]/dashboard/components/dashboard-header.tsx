@@ -6,6 +6,7 @@ import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar'
 import {
   unifiedInsetPanelClassName,
   unifiedPrimaryActionClassName,
+  unifiedSectionPanelClassName,
 } from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
 import { useDashboardActions, useDashboardFilters } from '@/context/data-provider'
@@ -16,27 +17,24 @@ import Link from 'next/link'
 
 const FilterCommandMenu = dynamic(
   () => import('./filters/filter-command-menu').then((m) => m.FilterCommandMenu),
-  { ssr: false, loading: () => null },
+  {  loading: () => null },
 )
-const ImportButton = dynamic(() => import('./import/import-button'), {
-  ssr: false,
-  loading: () => null,
-})
+const ImportButton = dynamic(() => import('./import/import-button'), { loading: () => null })
 const DailySummaryModal = dynamic(
   () => import('./daily-summary-modal').then((m) => m.DailySummaryModal),
-  { ssr: false, loading: () => null },
+  {  loading: () => null },
 )
 const GlobalSyncButton = dynamic(
   () => import('./global-sync-button').then((m) => m.GlobalSyncButton),
-  { ssr: false, loading: () => null },
+  {  loading: () => null },
 )
 const ActiveFilterTags = dynamic(
   () => import('./filters/active-filter-tags').then((m) => m.ActiveFilterTags),
-  { ssr: false, loading: () => null },
+  {  loading: () => null },
 )
 const DashboardHeaderWidgetControls = dynamic(
   () => import('./dashboard-header-widget-controls').then((m) => m.DashboardHeaderWidgetControls),
-  { ssr: false, loading: () => null },
+  {  loading: () => null },
 )
 
 export function DashboardHeader() {
@@ -104,10 +102,16 @@ export function DashboardHeader() {
       data-dashboard-header="true"
     >
       <div className="relative mx-auto max-w-[1800px]">
-        <div className="pointer-events-none absolute inset-x-4 top-0 h-16 rounded-b-[1.8rem] border border-primary/10 bg-primary/[0.03]" />
-        <div className="relative flex min-h-[5rem] items-center justify-between gap-3 rounded-[2rem] border border-border/45 bg-background/78 px-3 py-3 shadow-[0_20px_60px_-34px_rgba(0,0,0,0.88)] transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4">
-          <div className="relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4 pointer-events-auto">
-            <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-border/40 bg-background/72 text-foreground/62 shadow-none transition-[opacity,background-color,border-color] duration-200 hover:border-primary/18 hover:bg-primary/10 hover:text-foreground/95 md:h-9 md:w-9" />
+        <div className="pointer-events-none absolute inset-x-4 top-0 h-16 rounded-b-2xl border border-border/25 bg-background/40" />
+        <div
+          className={cn(
+            unifiedSectionPanelClassName,
+            'relative flex min-h-[5rem] items-center justify-between gap-3 overflow-hidden px-3 py-3 transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4',
+          )}
+        >
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/8 to-transparent" />
+          <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4">
+            <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-border/30 bg-background/40 text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:border-border/50 hover:bg-background/60 hover:text-foreground md:h-9 md:w-9" />
             <div className="flex min-w-0 items-center gap-3">
               <div className="hidden h-8 w-px bg-border/40 sm:block" />
               <div className="min-w-0 max-w-[min(32rem,44vw)]">
@@ -116,25 +120,25 @@ export function DashboardHeader() {
                     <span
                       className={cn(
                         'hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em]',
-                        'border-primary/18 bg-primary/10 text-primary/90',
+                        'border-border/40 bg-background/60 text-muted-foreground',
                       )}
                     >
                       {sectionLabel}
                     </span>
                   )}
-                  <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground/95 sm:text-sm sm:uppercase sm:tracking-[0.18em]">
+                  <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground sm:text-sm sm:uppercase sm:tracking-[0.18em]">
                     {title}
                   </h1>
                 </div>
-                <p className="hidden truncate pt-1 text-xs text-foreground/46 xl:block">
+                <p className="hidden truncate pt-1 text-xs text-muted-foreground xl:block">
                   {subtitle}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="relative z-10 flex min-w-0 flex-1 items-center justify-end pointer-events-auto">
-            <div className="flex min-w-0 w-full items-center justify-end gap-1">
+          <div className="pointer-events-auto relative z-10 flex min-w-0 flex-1 items-center justify-end">
+            <div className="flex min-w-0 w-full items-center justify-end gap-1.5">
               <div className="flex min-w-0 items-center gap-1">
                 <FilterCommandMenu
                   variant="navbar"
@@ -158,10 +162,10 @@ export function DashboardHeader() {
                     <button
                       className={cn(
                         unifiedPrimaryActionClassName,
-                        'group h-10 px-4 text-[10px] uppercase tracking-[0.22em]',
+                        'group h-9 px-3.5 text-[10px] uppercase tracking-[0.22em]',
                       )}
                     >
-                      <Sparkles className="h-3.5 w-3.5 text-v2-accent" />
+                      <Sparkles className="h-3.5 w-3.5" />
                       <span>Upgrade</span>
                     </button>
                   </Link>
@@ -178,15 +182,15 @@ export function DashboardHeader() {
 
       {isMobile && isDashboardRoot && isWidgetsTab ? (
         <div className="relative mx-auto max-w-[1800px] pt-2">
-          <div className={cn(unifiedInsetPanelClassName, 'rounded-[1.75rem] px-2 py-2 sm:px-3')}>
+          <div className={cn(unifiedInsetPanelClassName, 'rounded-xl px-2 py-2 sm:px-3')}>
             <DashboardHeaderWidgetControls isMobile={isMobile} />
           </div>
         </div>
       ) : null}
 
       {hasActiveFilters ? (
-        <div className={cn('relative mx-auto max-w-[1800px] pt-2')}>
-          <div className={cn(unifiedInsetPanelClassName, 'rounded-[1.75rem] px-3 py-2')}>
+        <div className="relative mx-auto max-w-[1800px] pt-2">
+          <div className={cn(unifiedInsetPanelClassName, 'rounded-xl px-3 py-2.5')}>
             <ActiveFilterTags showAccountNumbers={true} />
           </div>
         </div>

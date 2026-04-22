@@ -361,7 +361,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  ?"text-destructive border-destructive/30"
  : account.riskLevel ==="medium"
  ?"text-semantic-warning border-semantic-warning-border/30"
- :"text-foreground/95 border-[oklch(0.65_0.22_260/0.08)]"
+ :"text-foreground border-border/30"
  }
  >
  {account.riskLevel ||"N/A"}

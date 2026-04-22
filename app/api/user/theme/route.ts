@@ -38,6 +38,18 @@ async function handleGet(request: NextRequest) {
 }
 
 export async function PUT(request: Request) {
+  // Rate limiting for theme writes
+  const { rateLimit, createRateLimitResponse } = await import('@/lib/rate-limit')
+  const limiter = rateLimit({ limit: 30, window: 60_000, identifier: 'user-theme-write' })
+  const rlResult = await limiter(request as unknown as NextRequest)
+  if (!rlResult.success) {
+    return createRateLimitResponse({
+      limit: rlResult.limit,
+      remaining: rlResult.remaining,
+      resetTime: rlResult.resetTime,
+    })
+  }
+
   try {
     const supabase = createRouteClient(request)
     const {

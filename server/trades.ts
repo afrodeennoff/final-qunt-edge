@@ -347,11 +347,9 @@ async function saveTradesForResolvedUser(
 
     // Invalidate caches AFTER successful transaction commit
     if (result.count > 0) {
-      await updateTag(`user-data-core-${userId}`)
-      await updateTag(`user-data-supplemental-${userId}`)
-      await updateTag(`user-data-${userId}`)
+      invalidateTradeDataCaches(userId)
+      // Also invalidate Redis namespaces for AI/behavior caches
       await Promise.all([
-        updateTag(`trades-${userId}`),
         invalidateNamespace('ai-trades'),
         invalidateNamespace('behavior-insights'),
       ])

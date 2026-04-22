@@ -86,7 +86,7 @@ export function RithmicSyncFeedback({ totalAccounts }: RithmicSyncFeedbackProps)
  return (
  <motion.div
  key={accountId}
- className="flex flex-col gap-2 p-3 rounded-lg border bg-[oklch(0.65_0.22_260/0.03)]"
+ className="flex flex-col gap-2 p-3 rounded-lg border bg-primary/[0.03]"
  initial={{ opacity: 0, y: 8 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.3 }}

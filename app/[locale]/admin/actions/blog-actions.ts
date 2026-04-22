@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { createClient, getDatabaseUserId } from '@/server/auth'
 import { assertAdminAccess } from '@/server/authz'
 import { revalidatePath } from 'next/cache'
-import { cacheLife, cacheTag } from 'next/cache'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { BlogCategory } from '@/prisma/generated/prisma'
 function slugify(text: string): string {
   return text
@@ -143,6 +143,7 @@ export async function createBlogPost(data: CreateBlogPostData) {
     revalidatePath('/blogs', 'page')
     revalidatePath('/blogs/[slug]', 'page')
     revalidatePath('/admin/blogs', 'page')
+    updateTag('blog-posts')
     return { post }
   } catch (error) {
     console.error('Failed to create blog post:', error)
@@ -168,6 +169,7 @@ export async function updateBlogPost(id: string, data: UpdateBlogPostData) {
     revalidatePath('/blogs', 'page')
     revalidatePath('/blogs/[slug]', 'page')
     revalidatePath('/admin/blogs', 'page')
+    updateTag('blog-posts')
     return { post }
   } catch (error) {
     console.error('Failed to update blog post:', error)
@@ -182,6 +184,7 @@ export async function deleteBlogPost(id: string) {
     revalidatePath('/blogs', 'page')
     revalidatePath('/blogs/[slug]', 'page')
     revalidatePath('/admin/blogs', 'page')
+    updateTag('blog-posts')
     return { success: true }
   } catch (error) {
     console.error('Failed to delete blog post:', error)
@@ -201,6 +204,7 @@ export async function togglePublish(id: string) {
     revalidatePath('/blogs', 'page')
     revalidatePath('/blogs/[slug]', 'page')
     revalidatePath('/admin/blogs', 'page')
+    updateTag('blog-posts')
     return { success: true }
   } catch (error) {
     console.error('Failed to toggle publish:', error)

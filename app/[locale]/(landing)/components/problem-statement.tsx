@@ -5,34 +5,34 @@ import { motion } from 'framer-motion';
 export default function ProblemStatement() {
  return (
  <section id="problem" className="py-24 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background border-t border-border/30 relative">
- <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
+ <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-border/30 bg-background/40 p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
  <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-start">
  <motion.div
  initial={{ opacity: 0, x: -30 }}
  whileInView={{ opacity: 1, x: 0 }}
  viewport={{ once: true }}
  transition={{ duration: 0.8 }}
- className="sticky top-20 rounded-[1.9rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 lg:top-32"
+ className="sticky top-20 rounded-2xl border border-border/30 bg-background/30 p-6 lg:top-32"
  >
- <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] mb-6 sm:mb-8">
+ <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border/0.08 bg-background/30 mb-6 sm:mb-8">
  <div className="w-1.5 h-1.5 rounded-full bg-foreground/60 animate-pulse"></div>
  <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-fg-secondary">System Failure Detected</span>
  </div>
- <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-[350] mb-6 sm:mb-8 tracking-[-0.05em] leading-[0.92] text-foreground/95">
+ <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-[350] mb-6 sm:mb-8 tracking-[-0.05em] leading-[0.92] text-foreground">
  PnL is a <br/>
- <span className="text-foreground/90">Lagging Indicator.</span>
+ <span className="text-foreground">Lagging Indicator.</span>
  </h2>
- <div className="max-w-lg space-y-6 text-foreground/64 text-base leading-[1.8] font-light sm:space-y-8 sm:text-lg">
+ <div className="max-w-lg space-y-6 text-foreground/60 text-base leading-[1.8] font-light sm:space-y-8 sm:text-lg">
  <p>
  Your bank account tells you <em>what</em> happened. It doesn&apos;t tell you <em>why</em>.
- Legacy journals are static graveyards of data that fail to capture the most critical variable in trading: <strong className="text-foreground/95 font-medium">State of Mind.</strong>
+ Legacy journals are static graveyards of data that fail to capture the most critical variable in trading: <strong className="text-foreground font-medium">State of Mind.</strong>
  </p>
  <p>
  Profit masks incompetence. You can violate every rule in your system, get lucky, and book a win. This reinforcement loop is the silent killer of careers.
  </p>
  <div className="mt-8 border-t border-border/30 pt-6 sm:mt-10 sm:pt-8">
- <p className="text-foreground/95 font-bold uppercase tracking-widest text-[10px] sm:text-xs mono mb-2">The Paradigm Shift</p>
- <p className="text-foreground/95 font-medium text-lg sm:text-xl tracking-tight">
+ <p className="text-foreground font-bold uppercase tracking-widest text-[10px] sm:text-xs mono mb-2">The Paradigm Shift</p>
+ <p className="text-foreground font-medium text-lg sm:text-xl tracking-tight">
  Stop auditing the money. Audit the execution.
  </p>
  </div>
@@ -63,16 +63,16 @@ export default function ProblemStatement() {
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true }}
  transition={{ duration: 0.5, delay: i * 0.1 }}
- className="group relative rounded-[1.7rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5 transition-all duration-500 hover:border-white/[0.14]"
+ className="group relative rounded-xl border border-border/30 bg-background/30 p-5 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 hover:border-border/40"
  >
- <div className="relative h-full overflow-hidden rounded-[1.35rem] border border-white/[0.08] bg-black/25 p-4 transition-colors group-hover:border-white/[0.14] sm:p-6">
+ <div className="relative h-full overflow-hidden rounded-xl border border-border/30 bg-black/25 p-4 transition-colors group-hover:border-border/40 sm:p-6">
  <div className="absolute right-3 top-3 text-[8px] font-mono text-foreground/80 transition-colors group-hover:text-fg-primary sm:right-4 sm:top-4 sm:text-[9px]">
  {item.code}
  </div>
  <div className="flex items-start gap-4 sm:gap-6">
- <div className="mt-1 font-mono text-xl font-bold text-foreground/80 transition-colors group-hover:text-foreground/95 sm:text-2xl">0{i+1}</div>
+ <div className="mt-1 font-mono text-xl font-bold text-foreground/80 transition-colors group-hover:text-foreground sm:text-2xl">0{i+1}</div>
  <div>
- <h3 className="mb-2 text-lg font-bold tracking-tight text-foreground/90 transition-colors group-hover:text-foreground/95 sm:mb-3 sm:text-xl">{item.title}</h3>
+ <h3 className="mb-2 text-lg font-bold tracking-tight text-foreground transition-colors group-hover:text-foreground sm:mb-3 sm:text-xl">{item.title}</h3>
  <p className="text-xs leading-relaxed text-foreground/80 sm:text-sm">{item.desc}</p>
  </div>
  </div>

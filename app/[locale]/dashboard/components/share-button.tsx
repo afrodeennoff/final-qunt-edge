@@ -385,7 +385,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  <Button 
  ref={ref}
  variant={variant}
- className={cn("flex items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary shadow-none transition-[transform,background-color,color] active:scale-95 hover:bg-v2-bg-hover/70 hover:text-v2-text-primary",
+ className={cn("flex items-center justify-center rounded-full border border-transparent bg-transparent text-muted-foreground shadow-none transition-[transform,background-color,color] active:scale-95 hover:bg-background/80/70 hover:text-foreground",
  isMobile ?"h-11 w-11 p-0" :"h-9 min-w-[120px] gap-2.5 px-3.5"
  )}
  >
@@ -422,7 +422,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  <Input
  readOnly
  value={shareUrl}
- className="pr-24 font-mono text-sm bg-[oklch(0.65_0.22_260/0.045)] text-center"
+ className="pr-24 font-mono text-sm bg-background/25 text-center"
  />
  <div className="absolute right-0 top-0 h-full flex items-center gap-1 pr-2">
  <Button 
@@ -548,7 +548,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  <div className="flex-1">
  <div className="space-y-2">
  <Label>{t("share.startDateLabel")}</Label>
- <div className="border-[oklch(0.65_0.22_260/0.08)] rounded-lg bg-[oklch(0.65_0.22_260/0.03)] p-2">
+ <div className="border-border/30 rounded-lg bg-primary/[0.03] p-2">
  <Calendar
  mode="single"
  selected={selectedDateRange.from}
@@ -570,7 +570,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  <div className="flex-1">
  <div className="space-y-2">
  <Label>{t("share.endDateLabel")}</Label>
- <div className="border-[oklch(0.65_0.22_260/0.08)] rounded-lg bg-[oklch(0.65_0.22_260/0.03)] p-2">
+ <div className="border-border/30 rounded-lg bg-primary/[0.03] p-2">
  <Calendar
  mode="single"
  selected={selectedDateRange.to}

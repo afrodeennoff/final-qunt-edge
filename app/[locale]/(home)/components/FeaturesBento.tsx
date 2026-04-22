@@ -39,7 +39,7 @@ export default function FeaturesBento() {
   }))
 
   return (
-    <MotionSection className="relative overflow-hidden px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+    <MotionSection className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
       <div className="mx-auto max-w-[1360px] space-y-6">
         <div className={cn(unifiedSectionPanelClassName, 'p-6 sm:p-8')}>
           <p className={unifiedSectionEyebrowClassName}>{t('landing.home.features.eyebrow')}</p>
@@ -62,7 +62,7 @@ export default function FeaturesBento() {
             return (
               <MotionStaggerItem key={String(issue.title)}>
                 <article className={cn(unifiedSectionPanelClassName, 'flex h-full flex-col gap-4 p-6')}>
-                  <div className="flex h-11 w-11 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-primary">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-primary/18 bg-primary/10 text-primary">
                     <Icon className="h-5 w-5" />
                   </div>
                   <span className={cn(unifiedChipClassName, 'w-fit px-3 py-1.5')}>{issue.badge}</span>
@@ -100,7 +100,7 @@ export default function FeaturesBento() {
                     feature.highlighted && 'border-primary/16',
                   )}
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-primary">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-primary/18 bg-primary/10 text-primary">
                     <Icon className="h-5 w-5" />
                   </div>
                   {feature.highlighted ? (

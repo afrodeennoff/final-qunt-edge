@@ -20,12 +20,9 @@ const mockData = [
   { time: '14:00', price: 4367, ema: 4350, volume: 67 },
 ]
 
-const AnalysisDemoChart = dynamic(() => import('./analysis-demo-chart'), {
-  ssr: false,
-  loading: () => (
+const AnalysisDemoChart = dynamic(() => import('./analysis-demo-chart'), { loading: () => (
     <div className="h-full w-full animate-pulse rounded-md border border-border/40 bg-card/60" />
-  ),
-})
+  ) })
 
 export default function AnalysisDemo() {
   const t = useTypedI18n()
@@ -47,7 +44,7 @@ export default function AnalysisDemo() {
   const activeLog = isMobile ? logs[0] : logs[logIndex]
 
   return (
-    <section className="relative overflow-hidden px-4 py-16 sm:py-20 lg:py-24 md:px-6 lg:px-8">
+    <section className="relative overflow-hidden px-4 py-12 sm:py-16 lg:py-20 md:px-6 lg:px-8">
       {/* Atmospheric glow orb */}
       <div className="pointer-events-none absolute right-0 top-1/3 h-[460px] w-[460px] rounded-full bg-primary/[0.04] blur-[120px]" />
       <motion.div
@@ -64,7 +61,7 @@ export default function AnalysisDemo() {
             </p>
             <h2 className="type-h2 mt-3 text-balance text-foreground lg:text-h1">
               {t('landing.home.analysis.title')}
-              <span className="block text-foreground/90">{t('landing.home.analysis.accent')}</span>
+              <span className="block text-foreground">{t('landing.home.analysis.accent')}</span>
             </h2>
           </div>
           <p className="max-w-xl text-base leading-relaxed text-muted-foreground">
@@ -72,9 +69,9 @@ export default function AnalysisDemo() {
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-lg border-white/[0.06] bg-card/80 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+        <div className="overflow-hidden rounded-lg border-border/0.04 bg-card/80 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
           <div className="grid lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,0.75fr)]">
-            <div className="border-b border-white/[0.06] p-5 md:p-6 lg:border-b-0 lg:border-r lg:border-white/[0.06]">
+            <div className="border-b border-border/0.04 p-5 md:p-6 lg:border-b-0 lg:border-r lg:border-border/0.04">
               <div className="mb-6 flex items-center justify-between gap-4">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
@@ -91,7 +88,7 @@ export default function AnalysisDemo() {
 
               <div
                 className={cn(
-                  'overflow-hidden rounded-md border-white/[0.06] bg-background/70 p-3',
+                  'overflow-hidden rounded-md border-border/0.04 bg-background/70 p-3',
                   isMobile ? 'h-[220px]' : 'h-[320px]',
                 )}
               >
@@ -111,18 +108,18 @@ export default function AnalysisDemo() {
 
               <div
                 className={cn(
-                  'rounded-md border-white/[0.06] bg-background/70 p-4',
+                  'rounded-md border-border/0.04 bg-background/70 p-4',
                   isMobile ? 'min-h-0' : 'min-h-[224px]',
                 )}
               >
-                <p className="text-sm leading-relaxed text-foreground/90">{activeLog}</p>
+                <p className="text-sm leading-relaxed text-foreground">{activeLog}</p>
               </div>
 
               <MetricCard label={String(t('landing.home.analysis.planAdherence'))} value="87%" />
               <MetricCard label={String(t('landing.home.analysis.riskDrift'))} value="-22%" />
               <MetricCard label={String(t('landing.home.analysis.reviewSla'))} value="9m" />
 
-              <div className="rounded-md border-white/[0.06] bg-background/70 p-4">
+              <div className="rounded-md border-border/0.04 bg-background/70 p-4">
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
                   {t('landing.home.analysis.anomalyProbability')}
                 </p>
@@ -140,7 +137,7 @@ export default function AnalysisDemo() {
 
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md border-white/[0.06] bg-background/70 p-4 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
+    <div className="rounded-md border-border/0.04 bg-background/70 p-4 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/0.08 hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
       <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
       <p className="mt-2 tabular-nums text-2xl font-bold text-foreground">{value}</p>
     </div>

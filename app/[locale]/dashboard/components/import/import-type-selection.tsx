@@ -128,26 +128,25 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  (isCompareMode && selectedPlatforms.length >= 2) || (!!selectedType && !!selectedPlatform)
 
  return (
- <div className="flex flex-col h-full bg-v2-bg-base/50">
+ <div className="flex flex-col h-full bg-background/50">
  <div
  className={cn("grid h-full overflow-hidden",
- showDesktopDetailPanel
- ?"lg:grid-cols-[minmax(0,1fr)_320px] lg:divide-x lg:divide-v2-border xl:grid-cols-[minmax(0,1fr)_340px]"
- :"grid-cols-1",
+ "grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_340px]",
+ showDesktopDetailPanel && "lg:divide-x lg:divide-v2-border",
  )}
  >
  {/* Left Side: Grid of options */}
  <div className="flex flex-col gap-4 h-full min-h-0 relative">
  {/* Header & Filter */}
- <div className="p-4 border-b border-v2-border bg-v2-bg-surface/95 sticky top-0 z-10">
+ <div className="p-4 border-b border-border bg-card/95 sticky top-0 z-10">
  <div className="flex items-center gap-3">
  <div className="relative flex-1">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-v2-text-muted" />
+ <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
  <Input
  placeholder={String(t('import.type.search'))}
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="pl-9 bg-v2-bg-hover/50 border-transparent hover:bg-v2-bg-hover/80 focus:bg-v2-bg-surface transition-[opacity,background-color,border-color]"
+ className="pl-9 bg-background/80/50 border-transparent hover:bg-background/80/80 focus:bg-card transition-[opacity,background-color,border-color]"
  />
  </div>
  <Button
@@ -212,13 +211,13 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  ))
  ) : (
  <div className="col-span-full py-16 text-center">
- <div className="inline-flex h-16 w-16 items-center justify-center rounded-xl bg-v2-bg-hover mb-5">
- <ListFilter className="h-8 w-8 text-v2-text-muted" />
+ <div className="inline-flex h-16 w-16 items-center justify-center rounded-xl bg-background/80 mb-5">
+ <ListFilter className="h-8 w-8 text-muted-foreground" />
  </div>
- <p className="text-base font-medium text-v2-text-primary mb-1.5">
+ <p className="text-base font-medium text-foreground mb-1.5">
  {t('import.type.noResults')}
  </p>
- <p className="text-sm text-v2-text-muted">
+ <p className="text-sm text-muted-foreground">
  Try adjusting your search or filter criteria
  </p>
  </div>
@@ -229,8 +228,8 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  {isCompareMode && selectedPlatforms.length >= 2 && (
  <div className="absolute bottom-4 left-4 right-4 z-20"
  >
- <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-v2-bg-surface/95 border border-v2-border shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-v2-bg-base/50">
- <div className="flex items-center gap-2 text-sm text-v2-text-secondary">
+ <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-card/95 border border-border shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] shadow-v2-bg-base/50">
+ <div className="flex items-center gap-2 text-sm text-muted-foreground">
  <span>{selectedPlatforms.length} platforms selected</span>
  </div>
  <div className="flex items-center gap-2">
@@ -238,7 +237,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  variant="ghost"
  size="sm"
  onClick={clearSelection}
- className="text-v2-text-muted hover:text-v2-text-primary"
+ className="text-muted-foreground hover:text-foreground"
  >
  <X className="h-4 w-4 mr-1" />
  Clear
@@ -258,12 +257,12 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  )}
  </div>
 
- {showDesktopDetailPanel && (
- <div className="relative hidden h-full overflow-hidden bg-v2-bg-hover/20 lg:flex">
+ {/* Always reserve right panel space on desktop */}
+ <div className={cn("relative hidden h-full overflow-hidden lg:flex", showDesktopDetailPanel ? "bg-background/80/20" : "bg-transparent")}>
  {isCompareMode && selectedPlatforms.length >= 2 ? (
  <div className="h-full flex flex-col w-full">
- <div className="p-4 border-b border-v2-border flex items-center justify-between">
- <h3 className="text-sm font-semibold text-v2-text-primary">Compare Platforms</h3>
+ <div className="p-4 border-b border-border flex items-center justify-between">
+ <h3 className="text-sm font-semibold text-foreground">Compare Platforms</h3>
  <Button variant="ghost" size="sm" onClick={() => setIsCompareMode(false)}>
  <X className="h-4 w-4" />
  </Button>
@@ -290,10 +289,10 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  </div>
  )}
  <div className="flex-1 min-w-0">
- <h4 className="text-sm font-semibold text-v2-text-primary truncate">
+ <h4 className="text-sm font-semibold text-foreground truncate">
  {t(platform.name, { count: 1 })}
  </h4>
- <p className="text-xs text-v2-text-secondary truncate">
+ <p className="text-xs text-muted-foreground truncate">
  {platform.category}
  </p>
  </div>
@@ -306,7 +305,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  <X className="h-3 w-3" />
  </Button>
  </div>
- <p className="text-xs text-v2-text-muted line-clamp-3">
+ <p className="text-xs text-muted-foreground line-clamp-3">
  {t(platform.description, { count: 1 })}
  </p>
  <div className="flex flex-wrap gap-1.5 mt-auto">
@@ -341,22 +340,25 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  )}
  </div>
  </div>
- ) : null}
+ ) : (
+ <div className="flex items-center justify-center h-full text-muted-foreground">
+ <p className="text-sm">Select a platform to view details</p>
  </div>
  )}
+ </div>
 
  {isMobile && selectedType && selectedPlatform && (
  <Sheet open={!!selectedType} onOpenChange={() => {
  setSelectedType('')
  setLastSelectedType('')
  }}>
- <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl bg-v2-bg-surface border-v2-border p-0">
+ <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl bg-card border-border p-0">
  {/* Drag Handle */}
  <div className="flex justify-center py-3">
  <div className="h-1.5 w-12 rounded-full bg-v2-border" />
  </div>
  <SheetHeader className="px-4 pb-2">
- <SheetTitle className="text-v2-text-primary">
+ <SheetTitle className="text-foreground">
  {t(selectedPlatform.name, { count: 1 })}
  </SheetTitle>
  </SheetHeader>

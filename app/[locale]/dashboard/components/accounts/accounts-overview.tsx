@@ -243,7 +243,7 @@ function SortRuleItem({
         variant="ghost"
         size="icon"
         onClick={onRemove}
-        className="h-7 w-7 text-muted-foreground hover:text-foreground/95"
+        className="h-7 w-7 text-muted-foreground hover:text-foreground"
         aria-label={removeLabel}
       >
         <X className="h-4 w-4" />
@@ -1135,7 +1135,7 @@ function AccountsOverviewComponent({
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      'text-muted-foreground hover:text-foreground/95 transition-colors cursor-help',
+                      'text-muted-foreground hover:text-foreground transition-colors cursor-help',
                       size === 'small' ? 'h-3.5 w-3.5' : 'h-4 w-4',
                     )}
                   />
@@ -1333,7 +1333,7 @@ function AccountsOverviewComponent({
                       setSelectedAccountForTable(tempAccount as unknown as Account)
                     }}
                   >
-                    <Settings className="h-3.5 w-3.5 text-muted-foreground transition-colors hover:text-foreground/95" />
+                    <Settings className="h-3.5 w-3.5 text-muted-foreground transition-colors hover:text-foreground" />
                   </Button>
                 </div>
               ))}

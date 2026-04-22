@@ -1,7 +1,13 @@
+import { RouteLoadingScreen } from '@/components/ui/route-state'
+
 export default function Loading() {
- return (
-   <div className="flex h-full min-h-[50vh] items-center justify-center">
-     <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-   </div>
- )
+  return (
+    <RouteLoadingScreen
+      eyebrow="Settings"
+      title="Loading workspace preferences"
+      description="Preparing profile, app, and dashboard configuration controls."
+      fullScreen={false}
+      compact
+    />
+  )
 }

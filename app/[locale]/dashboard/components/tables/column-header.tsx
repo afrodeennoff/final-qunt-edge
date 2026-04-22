@@ -100,8 +100,8 @@ export function DataTableColumnHeader<TData, TValue>({
  <Button 
  variant="ghost"
  size="sm"
- className={cn("-ml-3 h-8 data-[state=open]:bg-white/[0.05]",
- isFiltered &&"bg-white/[0.05]"
+ className={cn("-ml-3 h-8 data-[state=open]:bg-background/35",
+ isFiltered &&"bg-background/35"
  )}
  >
  <span>{title}</span>

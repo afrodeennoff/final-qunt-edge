@@ -60,15 +60,15 @@ function RiskRewardRatioCardInner({ size = 'tiny' }: RiskRewardRatioCardProps) {
  contentClassName="flex h-full items-center justify-center px-2 py-1"
  >
  <div className="mx-auto inline-flex items-center justify-center gap-2.5 text-center">
- <Scale className="h-4 w-4 shrink-0 text-v2-text-primary" />
- <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-v2-text-secondary">RR</span>
- <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-v2-text-primary">
+ <Scale className="h-4 w-4 shrink-0 text-foreground" />
+ <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">RR</span>
+ <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground">
  {riskRewardRatio.toFixed(2)}
  </span>
  <TooltipProvider delayDuration={100}>
  <Tooltip>
  <TooltipTrigger asChild>
- <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-v2-text-secondary transition-colors hover:text-v2-text-primary" />
+ <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-muted-foreground transition-colors hover:text-foreground" />
  </TooltipTrigger>
  <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
  {t('widgets.riskRewardRatio.tooltip')}
@@ -83,26 +83,26 @@ function RiskRewardRatioCardInner({ size = 'tiny' }: RiskRewardRatioCardProps) {
  return (
  <WidgetShell
  title="Risk/Reward"
- icon={<Scale className="h-3.5 w-3.5 text-v2-text-secondary" />}
+ icon={<Scale className="h-3.5 w-3.5 text-muted-foreground" />}
  info={t('widgets.riskRewardRatio.tooltip')}
  className="h-full"
  contentClassName="flex flex-col justify-between gap-2 p-3"
  >
  <div className="flex items-end justify-center gap-2 px-1">
- <span className="micro-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-v2-text-secondary">RR</span>
- <span className="micro-sans text-[24px] font-black leading-none tracking-tight text-v2-text-primary">
+ <span className="micro-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">RR</span>
+ <span className="micro-sans text-[24px] font-black leading-none tracking-tight text-foreground">
  {riskRewardRatio.toFixed(2)}
  </span>
  </div>
 
  <div className="gap-1.5">
  <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider">
- <span className="text-v2-text-secondary">Avg Win</span>
- <span className="text-v2-text-primary">${avgWin.toFixed(2)}</span>
+ <span className="text-muted-foreground">Avg Win</span>
+ <span className="text-foreground">${avgWin.toFixed(2)}</span>
  </div>
  <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider">
- <span className="text-v2-text-secondary">Avg Loss</span>
- <span className="text-v2-text-secondary">${avgLoss.toFixed(2)}</span>
+ <span className="text-muted-foreground">Avg Loss</span>
+ <span className="text-muted-foreground">${avgLoss.toFixed(2)}</span>
  </div>
  <TooltipProvider delayDuration={100}>
  <Tooltip>

@@ -629,7 +629,7 @@ export function TeamManagement({
  case 'viewer':
  return 'bg-surface-subtle' // Green for viewer
  default:
- return 'bg-white/[0.3]'
+ return 'bg-background/0.45'
  }
  }
 
@@ -698,8 +698,8 @@ export function TeamManagement({
  <div className="mx-auto py-4">
  {/* Header */}
  <div className={cn(unifiedSectionPanelClassName, 'mb-6 p-5 sm:p-6')}>
- <h1 className="text-2xl font-bold tracking-tight text-v2-text-primary">{t('teams.management.component.title')}</h1>
- <p className="text-v2-text-secondary mt-2 text-sm">{t('teams.management.component.description')}</p>
+ <h1 className="text-2xl font-bold tracking-tight text-foreground">{t('teams.management.component.title')}</h1>
+ <p className="text-muted-foreground mt-2 text-sm">{t('teams.management.component.description')}</p>
  </div>
 
 
@@ -713,7 +713,7 @@ export function TeamManagement({
  const isActive = pathname.includes(`/teams/dashboard/${team.id}`)
 
  return (
- <Card key={team.id} className={cn("cursor-pointer transition-all duration-200 border-border/40 bg-background/72 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:border-primary/24",
+ <Card key={team.id} className={cn("cursor-pointer transition-[opacity,background-color,border-color,transform] duration-200 border-border/40 bg-background/72 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:border-primary/24",
  isActive 
  ?"border-primary ring-2 ring-primary/20" 
  :""
@@ -725,7 +725,7 @@ export function TeamManagement({
  getStatusIndicator(access, isOwner)
  )} />
  <div className="min-w-0 flex-1">
- <CardTitle className={cn("text-sm truncate flex items-center gap-2 text-v2-text-primary",
+ <CardTitle className={cn("text-sm truncate flex items-center gap-2 text-foreground",
  isActive &&"text-v2-accent"
  )}>
  {team.name}
@@ -735,7 +735,7 @@ export function TeamManagement({
  </Badge>
  )}
  </CardTitle>
- <p className="text-xs text-v2-text-secondary mt-1">
+ <p className="text-xs text-muted-foreground mt-1">
  {getAccessLabel(access, isOwner)}
  </p>
  </div>
@@ -744,12 +744,12 @@ export function TeamManagement({
  </CardHeader>
  <CardContent className="pt-0 space-y-3">
  <div className="flex justify-between items-baseline text-sm">
- <span className="text-v2-text-secondary">{t('dashboard.teams.traders')}</span>
+ <span className="text-muted-foreground">{t('dashboard.teams.traders')}</span>
  <span className="font-medium">{team.traderIds.length}</span>
  </div>
 
  <div className="flex justify-between items-baseline text-sm">
- <span className="text-v2-text-secondary">{t('teams.management.created')}</span>
+ <span className="text-muted-foreground">{t('teams.management.created')}</span>
  <span className="text-xs">{formatDate(team.createdAt)}</span>
  </div>
 
@@ -796,7 +796,7 @@ export function TeamManagement({
  {isOwner && (
  <AlertDialog>
  <AlertDialogTrigger asChild>
- <Button variant="error" size="sm" className="flex-1 text-xs">
+ <Button variant="destructive" size="sm" className="flex-1 text-xs">
  <Trash2 className="h-3 w-3 mr-1" />
  {t('teams.management.delete')}
  </Button>
@@ -859,7 +859,7 @@ export function TeamManagement({
  {filteredTeams.length > 0 && (
  <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
  <DialogTrigger asChild>
- <Card className="cursor-pointer transition-all duration-200 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] border-dashed border-2 border-v2-border/40 hover:border-v2-accent/40 bg-v2-bg-surface/30">
+ <Card className="cursor-pointer transition-[opacity,background-color,border-color,transform] duration-200 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] border-dashed border-2 border-border/40 hover:border-v2-accent/40 bg-card/30">
  <CardContent className="flex flex-col items-center justify-center h-48 p-6">
  <Plus className="h-12 w-12 text-muted-foreground mb-4" />
  <CardTitle className="text-lg text-center mb-2">
@@ -905,11 +905,11 @@ export function TeamManagement({
  {/* Empty State */}
  {filteredTeams.length === 0 && (
  <div className="text-center py-12">
- <Building2 className="h-12 w-12 text-v2-text-muted mx-auto mb-4" />
- <h3 className="text-lg font-semibold mb-2 text-v2-text-primary">
+ <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+ <h3 className="text-lg font-semibold mb-2 text-foreground">
  {t('teams.management.component.emptyStateMessage')}
  </h3>
- <p className="text-v2-text-secondary mb-4">
+ <p className="text-muted-foreground mb-4">
  {t('teams.management.getStarted')}
  </p>
  {(

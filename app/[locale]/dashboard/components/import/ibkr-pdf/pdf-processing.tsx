@@ -362,7 +362,7 @@ export default function PdfProcessing({
  <TooltipProvider>
  <Tooltip>
  <TooltipTrigger asChild>
- <TableRow className="border-b transition-colors hover:bg-[oklch(0.65_0.22_260/0.045)] cursor-default">
+ <TableRow className="border-b transition-colors hover:bg-background/25 cursor-default">
  {row.getVisibleCells().map((cell: any) => (
  <TableCell
  key={cell.id}
@@ -376,7 +376,7 @@ export default function PdfProcessing({
  </TooltipTrigger>
  <TooltipContent side="right" className="p-0">
  <div className="max-w-md">
- <div className="p-2 border-b border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.045)]">
+ <div className="p-2 border-b border-border/30 bg-background/25">
  <p className="font-medium text-sm">Trade Orders</p>
  </div>
  <div className="p-2">

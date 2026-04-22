@@ -275,7 +275,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  variant="outline"
  className={cn(
  variant ==="navbar"
- ?"h-9 w-9 rounded-full border-v2-border/20 bg-v2-bg-base/60 p-0 justify-center text-v2-text-primary shadow-none hover:border-v2-border/35 hover:bg-v2-bg-hover"
+ ?"h-9 w-9 rounded-full border-border/20 bg-background/60 p-0 justify-center text-foreground shadow-none hover:border-border/35 hover:bg-background/80"
  :"justify-start text-left font-normal",
  variant ==="toolbar" &&"h-10 rounded-full",
  className
@@ -326,7 +326,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  const DesktopTriggerInput = (
  <PopoverAnchor asChild>
  <div className={cn("relative w-[clamp(220px,28vw,340px)] max-w-full", className)}>
- <Search className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-v2-text-secondary" />
+ <Search className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
  <Input
  ref={inputRef}
  value={searchValue}
@@ -341,8 +341,8 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  placeholder={t('filters.commandMenu.searchPlaceholder')}
  className={cn(
  variant ==="navbar"
- ?"h-9 w-full rounded-full border border-transparent bg-v2-bg-base/20 pl-9 pr-20 text-v2-text-primary shadow-none transition-[opacity,background-color,border-color] hover:bg-v2-bg-hover/60 focus-visible:border-v2-border/15 focus-visible:bg-v2-bg-hover/70 focus-visible:ring-0"
- :"w-full rounded-full border-v2-border/20 bg-v2-bg-base/60 pl-9 pr-20 text-v2-text-primary shadow-none transition-[opacity,background-color,border-color] hover:border-v2-border/35 hover:bg-v2-bg-hover focus-visible:ring-1 focus-visible:ring-v2-border/20",
+ ?"h-9 w-full rounded-full border border-transparent bg-background/20 pl-9 pr-20 text-foreground shadow-none transition-[opacity,background-color,border-color] hover:bg-background/80/60 focus-visible:border-border/15 focus-visible:bg-background/80/70 focus-visible:ring-0"
+ :"w-full rounded-full border-border/20 bg-background/60 pl-9 pr-20 text-foreground shadow-none transition-[opacity,background-color,border-color] hover:border-border/35 hover:bg-background/80 focus-visible:ring-1 focus-visible:ring-v2-border/20",
  variant ==="toolbar" &&"h-10 rounded-full",
  isParsingDate &&"opacity-50",
  isParsingDate &&"border-primary ring-2 ring-primary ring-offset-2 animate-pulse"
@@ -419,7 +419,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  const CommandContent = (
  <Command 
  ref={commandRef} 
- className={cn("rounded-xl border border-v2-border/18 bg-v2-bg-surface/95 shadow-xl shadow-black/20",
+ className={cn("rounded-xl border border-border/18 bg-card/95 shadow-xl shadow-black/20",
  (isMobileDevice || isMobile) &&"h-full"
  )} 
  shouldFilter={false}
@@ -467,7 +467,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  )}
  </div>
  )}
- <div className="border-b border-white/[0.04] bg-v2-bg-base/55 px-3 pb-2 pt-3">
+ <div className="border-b border-border/0.03 bg-background/55 px-3 pb-2 pt-3">
  <p className="text-xs font-medium text-muted-foreground mb-2">
  {t('filters.commandMenu.categories.title')}
  </p>

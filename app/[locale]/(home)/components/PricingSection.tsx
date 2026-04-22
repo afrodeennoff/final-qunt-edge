@@ -69,7 +69,7 @@ export default function PricingSection({ locale }: { locale: string }) {
   ]
 
   return (
-    <section id="pricing" className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+    <section id="pricing" className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
       <div className="mx-auto max-w-[1360px] space-y-6">
         <motion.div
           className={cn(unifiedSectionPanelClassName, 'p-6 text-center md:p-8')}
@@ -163,7 +163,7 @@ export default function PricingSection({ locale }: { locale: string }) {
                     <span className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Check className="h-3 w-3" />
                     </span>
-                    <span className="text-sm leading-relaxed text-foreground/90">{feature}</span>
+                    <span className="text-sm leading-relaxed text-foreground">{feature}</span>
                   </li>
                 ))}
               </ul>

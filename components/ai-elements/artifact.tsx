@@ -50,7 +50,7 @@ export const ArtifactClose = ({
 }: ArtifactCloseProps) => (
   <Button 
     className={cn(
-      "size-8 p-0 text-muted-foreground hover:text-foreground/95",
+      "size-8 p-0 text-muted-foreground hover:text-foreground",
       className
     )}
     size={size}
@@ -67,7 +67,7 @@ export type ArtifactTitleProps = HTMLAttributes<HTMLParagraphElement>;
 
 export const ArtifactTitle = ({ className, ...props }: ArtifactTitleProps) => (
   <p
-    className={cn("font-medium text-foreground/95 text-sm", className)}
+    className={cn("font-medium text-foreground text-sm", className)}
     {...props}
   />
 );
@@ -109,7 +109,7 @@ export const ArtifactAction = ({
   const button = (
     <Button 
       className={cn(
-        "size-8 p-0 text-muted-foreground hover:text-foreground/95",
+        "size-8 p-0 text-muted-foreground hover:text-foreground",
         className
       )}
       size={size}

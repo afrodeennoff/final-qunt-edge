@@ -81,8 +81,8 @@ export function PlatformTutorial({
  )}
  </div>
  {selectedPlatform.videoUrl ? (
- <div className="aspect-video rounded-lg overflow-hidden bg-white/[0.040] transition-transform duration-300 hover:scale-[1.02]">
- <div className="aspect-video rounded-lg overflow-hidden bg-white/[0.040]">
+ <div className="aspect-video rounded-lg overflow-hidden bg-background/0.06 transition-transform duration-300 hover:scale-[1.02]">
+ <div className="aspect-video rounded-lg overflow-hidden bg-background/0.06">
  <video
  ref={videoRef}
  height="600"
@@ -92,7 +92,7 @@ export function PlatformTutorial({
  muted
  controls
  playsInline
- className="rounded-lg border border-[oklch(0.65_0.22_260/0.08)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] w-full h-full object-cover"
+ className="rounded-lg border border-border/30 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] w-full h-full object-cover"
  >
  <source src={selectedPlatform.videoUrl} type="video/mp4" />
  <track

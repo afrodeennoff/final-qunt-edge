@@ -28,7 +28,7 @@ export function EmailTemplateSelector({ selectedTemplate, onSelect }: EmailTempl
  {templates.map((template) => (
  <Card
  key={template.value}
- className={cn("cursor-pointer transition-all hover:border-primary",
+ className={cn("cursor-pointer transition-[opacity,background-color,border-color,transform] hover:border-primary",
  selectedTemplate === template.value &&"border-primary ring-2 ring-primary"
  )}
  onClick={() => onSelect(template.value)}

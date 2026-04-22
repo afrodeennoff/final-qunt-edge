@@ -49,7 +49,7 @@ const Dropzone = ({
  <div
  {...getRootProps({
  className: cn(
- 'border-2 border-[oklch(0.65_0.22_260/0.08)] rounded-lg p-6 text-center bg-[oklch(0.65_0.22_260/0.03)] transition-colors duration-300 text-foreground/95',
+ 'border-2 border-border/30 rounded-lg p-6 text-center bg-primary/[0.03] transition-colors duration-300 text-foreground',
  className,
  isSuccess ? 'border-solid' : 'border-dashed',
  isActive && 'border-primary bg-primary/10',
@@ -110,7 +110,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
  className="flex items-center gap-x-4 border-b py-2 first:mt-4 last:mb-4"
  >
  {file.type.startsWith('image/') && file.preview ? (
- <div className="h-10 w-10 rounded border overflow-hidden shrink-0 bg-[oklch(0.65_0.22_260/0.045)] flex items-center justify-center relative">
+ <div className="h-10 w-10 rounded border overflow-hidden shrink-0 bg-background/25 flex items-center justify-center relative">
  <Image
  src={file.preview}
  alt={file.name}
@@ -122,7 +122,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
  />
  </div>
  ) : (
- <div className="h-10 w-10 rounded border bg-[oklch(0.65_0.22_260/0.045)] flex items-center justify-center">
+ <div className="h-10 w-10 rounded border bg-background/25 flex items-center justify-center">
  <File size={18} />
  </div>
  )}
@@ -156,7 +156,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
  <Button 
  size="icon"
  variant="link"
- className="shrink-0 justify-self-end text-muted-foreground hover:text-foreground/95"
+ className="shrink-0 justify-self-end text-muted-foreground hover:text-foreground"
  onClick={() => handleRemoveFile(file.name)}
  >
  <X />
@@ -210,7 +210,7 @@ const DropzoneEmptyState = ({ className }: { className?: string }) => {
  <p className="text-xs text-muted-foreground">
  {t('dropzone.clickToBrowse.prefix')}{' '}
  <span
- className="underline cursor-pointer transition hover:text-foreground/95"
+ className="underline cursor-pointer transition hover:text-foreground"
  >
  {t('dropzone.clickToBrowse.action')}
  </span>{' '}

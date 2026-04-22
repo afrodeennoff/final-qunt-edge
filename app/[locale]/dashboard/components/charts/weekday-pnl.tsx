@@ -134,25 +134,25 @@ export default React.memo(function WeekdayPNLChart({
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-v2-bg-surface/96 p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
+ <div className="bg-card/96 p-3 border border-border/50 rounded-xl shadow-xl min-w-[140px]">
  <div className="flex flex-col mb-2">
- <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
+ <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">
  {t("weekdayPnl.tooltip.day")}
  </span>
- <span className="font-semibold text-v2-text-primary text-sm">
+ <span className="font-semibold text-foreground text-sm">
  {translateWeekdayPnL(t, data.day)}
  </span>
  </div>
  <div className="flex flex-col mb-2">
- <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
+ <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">
  {t("weekdayPnl.tooltip.averagePnl")}
  </span>
  <span className={cn("font-bold text-sm tabular-nums",
  data.pnl >= 0 ?"metric-positive" :"metric-negative"
  )}>{formatCurrency(data.pnl)}</span>
  </div>
- <div className="flex flex-col pt-2 border-t border-v2-border/40">
- <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
+ <div className="flex flex-col pt-2 border-t border-border/40">
+ <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">
  {t("weekdayPnl.tooltip.trades")}
  </span>
  <span className={cn("font-bold text-sm", data.tradeCount > 0 ?"metric-positive" :"metric-negative")}>
@@ -178,7 +178,7 @@ export default React.memo(function WeekdayPNLChart({
  <div className="flex items-center justify-between w-full">
  <div className="flex items-center gap-2">
  <span
- className={cn("line-clamp-1 font-bold tracking-tight text-foreground/95",
+ className={cn("line-clamp-1 font-bold tracking-tight text-foreground",
  size ==="small" ?"text-sm" :"text-base",
  )}
  >
@@ -188,7 +188,7 @@ export default React.memo(function WeekdayPNLChart({
  <UITooltip>
  <TooltipTrigger asChild>
  <Info
- className={cn("text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
+ className={cn("text-muted-foreground hover:text-foreground transition-colors cursor-help",
  size ==="small" ?"h-3.5 w-3.5" :"h-4 w-4",
  )}
  />
@@ -203,7 +203,7 @@ export default React.memo(function WeekdayPNLChart({
  <Button 
  variant="ghost"
  size="sm"
- className="h-6 px-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground/95 hover:bg-secondary/30"
+ className="h-6 px-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary/30"
  onClick={() => setWeekdayFilter({ days: [] })}
  >
  {t("weekdayPnl.clearFilter")}

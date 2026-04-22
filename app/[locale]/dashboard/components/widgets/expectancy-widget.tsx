@@ -30,8 +30,8 @@ export default function ExpectancyWidget({ size }: { size?: string }) {
  <div className="flex-1 flex flex-col items-center justify-center p-4">
  <div className="flex flex-col items-center justify-center">
  <span className="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/35">Value per trade</span>
- <div className={cn("text-[28px] font-[250] tracking-[-0.04em] text-foreground/95 tabular-nums",
- expectancy > 0 ?"text-[oklch(0.82_0.185_155)]" : expectancy < 0 ?"text-[oklch(0.74_0.255_22)]" :"text-foreground/95"
+ <div className={cn("text-[28px] font-[250] tracking-[-0.04em] text-foreground tabular-nums",
+ expectancy > 0 ?"text-[oklch(0.82_0.185_155)]" : expectancy < 0 ?"text-[oklch(0.74_0.255_22)]" :"text-foreground"
  )}>
  {expectancy > 0 ? '+' : ''}{formattedExpectancy}
  </div>
@@ -41,7 +41,7 @@ export default function ExpectancyWidget({ size }: { size?: string }) {
  ?"bg-[oklch(0.82_0.185_155/0.10)] text-[oklch(0.82_0.185_155)] border-[oklch(0.82_0.185_155/0.20)]"
  : expectancy < 0
  ?"bg-[oklch(0.64_0.255_22/0.10)] text-[oklch(0.74_0.255_22)] border-[oklch(0.64_0.255_22/0.20)]"
- :"bg-[oklch(0.65_0.22_260/0.06)] text-foreground/70 border-white/[0.08]"
+ :"bg-background/30 text-foreground/70 border-border/30"
  )}>
  {expectancy > 0 ?"Positive edge" : expectancy < 0 ?"Negative edge" :"Neutral"}
  </div>

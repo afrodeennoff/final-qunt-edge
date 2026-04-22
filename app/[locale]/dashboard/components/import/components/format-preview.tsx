@@ -721,7 +721,7 @@ export function FormatPreview({
  <Tooltip>
  <TooltipTrigger>
  <div className="flex items-center gap-1">
- <span className={pnl >= 0 ?"text-foreground/95" :"text-semantic-error"}>
+ <span className={pnl >= 0 ?"text-foreground" :"text-semantic-error"}>
  ${pnl.toFixed(2)}
  </span>
  {isMismatch && (
@@ -843,13 +843,13 @@ export function FormatPreview({
  {isAutoProcessing && (
  <div className="flex items-center gap-2">
  <div className="w-2 h-2 bg-muted/50 rounded-full animate-pulse"></div>
- <span className="text-xs text-foreground/95 font-medium">{t('import.processing.autoProcessing')}</span>
+ <span className="text-xs text-foreground font-medium">{t('import.processing.autoProcessing')}</span>
  </div>
  )}
  {!isAutoProcessing && completedBatches.size === totalBatches && totalBatches > 0 && (
  <div className="flex items-center gap-2">
  <div className="w-2 h-2 bg-muted/50 rounded-full"></div>
- <span className="text-xs text-foreground/95 font-medium">{t('import.processing.allBatchesCompleted')}</span>
+ <span className="text-xs text-foreground font-medium">{t('import.processing.allBatchesCompleted')}</span>
  </div>
  )}
  </div>
@@ -858,7 +858,7 @@ export function FormatPreview({
  <Button 
  onClick={startProcessing}
  disabled={isProcessing || totalBatches === 0}
- className="bg-muted/50 hover:bg-muted/50 text-foreground/95"
+ className="bg-muted/50 hover:bg-muted/50 text-foreground"
  >
  {isProcessing ? t('import.processing.starting') : t('import.processing.startProcessing')}
  </Button>
@@ -867,7 +867,7 @@ export function FormatPreview({
  {isAutoProcessing && (
  <Button 
  onClick={stopProcessing}
- variant="error"
+ variant="destructive"
  >
  {t('import.processing.stopProcessing')}
  </Button>
@@ -940,9 +940,9 @@ export function FormatPreview({
  <TableRow
  key={row.id}
  data-state={row.getIsSelected() &&"selected"}
- className={cn("border-b transition-colors hover:bg-[oklch(0.65_0.22_260/0.045)]",
+ className={cn("border-b transition-colors hover:bg-background/25",
  row.getIsExpanded()
- ?"bg-[oklch(0.65_0.22_260/0.045)]"
+ ?"bg-background/25"
  : row.getCanExpand()
  ?""
  :"bg-muted/50"
@@ -996,7 +996,7 @@ export function FormatPreview({
  {t('trade-table.footer.totalPnl')}
  </TableCell>
  <TableCell className="px-4 py-3 text-sm">
- <span className={totals.totalPnl >= 0 ?"text-foreground/95" :"text-semantic-error"}>
+ <span className={totals.totalPnl >= 0 ?"text-foreground" :"text-semantic-error"}>
  ${totals.totalPnl.toFixed(2)}
  </span>
  </TableCell>
@@ -1010,7 +1010,7 @@ export function FormatPreview({
  {t('trade-table.footer.netPnl')}
  </TableCell>
  <TableCell className="px-4 py-3 text-sm">
- <span className={totals.netPnl >= 0 ?"text-foreground/95" :"text-semantic-error"}>
+ <span className={totals.netPnl >= 0 ?"text-foreground" :"text-semantic-error"}>
  ${totals.netPnl.toFixed(2)}
  </span>
  </TableCell>

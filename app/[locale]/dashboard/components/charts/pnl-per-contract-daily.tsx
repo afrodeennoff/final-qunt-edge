@@ -155,33 +155,33 @@ export default React.memo(function PnLPerContractDailyChart({
  const data = payload[0]?.payload as ChartDatum | undefined;
  if (!data) return null;
  return (
- <div className="bg-v2-bg-surface/96 p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
- <div className="flex justify-between items-center mb-2 border-b border-v2-border/40 pb-1">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.date")}</span>
- <span className="font-semibold text-v2-text-primary text-sm uppercase">{data.date}</span>
+ <div className="bg-card/96 p-3 border border-border/50 rounded-xl shadow-xl min-w-[140px]">
+ <div className="flex justify-between items-center mb-2 border-b border-border/40 pb-1">
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.date")}</span>
+ <span className="font-semibold text-foreground text-sm uppercase">{data.date}</span>
  </div>
  <div className="space-y-1.5">
  <div className="flex justify-between items-center">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.averagePnl")}</span>
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.averagePnl")}</span>
  <span className={cn("font-bold text-sm tabular-nums",
  data.averagePnl >= 0 ?"metric-positive" :"metric-negative"
  )}>{formatCurrency(data.averagePnl)}</span>
  </div>
- <div className="flex justify-between items-center pt-1.5 border-t border-v2-border/40">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.totalPnl")}</span>
- <span className="font-bold text-v2-text-primary text-sm tabular-nums">
+ <div className="flex justify-between items-center pt-1.5 border-t border-border/40">
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.totalPnl")}</span>
+ <span className="font-bold text-foreground text-sm tabular-nums">
  {formatCurrency(data.totalPnl)}
  </span>
  </div>
  <div className="flex justify-between items-center">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.trades")}</span>
- <span className="font-bold text-v2-text-primary text-sm tabular-nums">
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.trades")}</span>
+ <span className="font-bold text-foreground text-sm tabular-nums">
  {data.tradeCount} ({formatWinRate(data.winCount, data.tradeCount)}% WR)
  </span>
  </div>
  <div className="flex justify-between items-center">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.totalContracts")}</span>
- <span className="font-bold text-v2-text-primary text-sm tabular-nums">
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.totalContracts")}</span>
+ <span className="font-bold text-foreground text-sm tabular-nums">
  {data.totalContracts}
  </span>
  </div>
@@ -202,7 +202,7 @@ export default React.memo(function PnLPerContractDailyChart({
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-1.5">
  <CardTitle
- className={cn("line-clamp-1 font-bold tracking-tight text-foreground/95 uppercase tracking-widest",
+ className={cn("line-clamp-1 font-bold tracking-tight text-foreground uppercase tracking-widest",
  size ==="small" ?"text-sm" :"text-base",
  )}
  >
@@ -212,7 +212,7 @@ export default React.memo(function PnLPerContractDailyChart({
  <UITooltip>
  <TooltipTrigger asChild>
  <Info
- className={cn("text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
+ className={cn("text-muted-foreground hover:text-foreground transition-colors cursor-help",
  size ==="small" ?"h-3.5 w-3.5" :"h-4 w-4",
  )}
  />
@@ -230,16 +230,16 @@ export default React.memo(function PnLPerContractDailyChart({
  >
  <SelectTrigger
  className={cn("w-[120px]",
- size ==="small" ?"h-6 text-[9px]" :"h-8 text-[10px]","bg-secondary/22 border-border/55 text-foreground/95 font-black uppercase tracking-widest"
+ size ==="small" ?"h-6 text-[9px]" :"h-8 text-[10px]","bg-secondary/22 border-border/55 text-foreground font-black uppercase tracking-widest"
  )}
  >
  <SelectValue
  placeholder={t("pnlPerContractDaily.selectInstrument")}
  />
  </SelectTrigger>
- <SelectContent className="bg-white/[0.096] border-border/55">
+ <SelectContent className="bg-background/0.14 border-border/55">
  {availableInstruments.map((instrument) => (
- <SelectItem key={instrument} value={instrument} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground focus:text-foreground/95">
+ <SelectItem key={instrument} value={instrument} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground focus:text-foreground">
  {instrument}
  </SelectItem>
  ))}

@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimited } from '@/lib/api/with-api-route'
 import { tradeSchema, orderSchema } from './schema'
 import { type FinancialInstrument } from '../extract-orders/schema'
@@ -141,17 +141,11 @@ async function handlePost(request: NextRequest) {
         const { orders, instruments } = json
 
         if (!orders || !Array.isArray(orders)) {
-            return new Response(JSON.stringify({ error: 'No orders provided or invalid format' }), {
-                status: 400,
-                headers: { "Content-Type": "application/json" },
-            });
+            return apiError('VALIDATION_FAILED', 'No orders provided or invalid format', 400);
         }
 
         if (!instruments || !Array.isArray(instruments)) {
-            return new Response(JSON.stringify({ error: 'No instruments provided or invalid format' }), {
-                status: 400,
-                headers: { "Content-Type": "application/json" },
-            });
+            return apiError('VALIDATION_FAILED', 'No instruments provided or invalid format', 400);
         }
 
         // Validate orders
@@ -179,17 +173,11 @@ async function handlePost(request: NextRequest) {
             }
         });
 
-        return new Response(JSON.stringify(validTrades), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-        });
+        return NextResponse.json(validTrades);
 
     } catch (error) {
         console.error('Error processing request:', error);
-        return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Failed to process request' }), {
-            status: 500,
-            headers: { "Content-Type": "application/json" },
-        });
+        return apiError('INTERNAL_ERROR', error instanceof Error ? error.message : 'Failed to process request', 500);
     }
 }
 

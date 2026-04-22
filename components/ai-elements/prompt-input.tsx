@@ -683,7 +683,7 @@ export const PromptInputModelSelectTrigger = ({
   <SelectTrigger
     className={cn(
       "border-none bg-transparent font-medium text-muted-foreground shadow-none transition-colors",
-      'hover:bg-white/[0.05] hover:text-foreground/95 aria-expanded:bg-white/[0.05] aria-expanded:text-foreground/95',
+      'hover:bg-background/0.08 hover:text-foreground aria-expanded:bg-background/0.08 aria-expanded:text-foreground',
       className
     )}
     {...props}

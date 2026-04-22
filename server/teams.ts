@@ -2,9 +2,16 @@ import { prisma } from '@/lib/prisma'
 import { getDatabaseUserId } from '@/server/auth'
 import { MemberRole, Prisma } from '@/prisma/generated/prisma'
 import { ensureTeamMembership } from '@/server/team-membership'
-import { cacheLife, cacheTag } from 'next/cache'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 
 const TEAMS_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as const
+
+/** Invalidate teams cache for all affected user IDs after a mutation */
+function invalidateTeamsCache(userIds: string[]): void {
+  for (const uid of userIds) {
+    updateTag(`teams-${uid}`)
+  }
+}
 
 export async function createTeam(userId: string, name: string, organizationId?: string) {
   try {
@@ -27,12 +34,14 @@ export async function createTeam(userId: string, name: string, organizationId?: 
       return createdTeam
     })
 
+    invalidateTeamsCache([userId])
     return { success: true, team }
   } catch (error) {
     console.error('Error creating team:', error)
     return { success: false, error: 'Failed to create team' }
   }
 }
+
 
 async function _getTeamsByUser(userId: string) {
   const teams = await prisma.team.findMany({
@@ -135,6 +144,7 @@ export async function updateTeam(teamId: string, userId: string, data: { name?: 
       data
     })
 
+    invalidateTeamsCache([userId])
     return { success: true, team: updatedTeam }
   } catch (error) {
     console.error('Error updating team:', error)
@@ -160,6 +170,8 @@ export async function deleteTeam(teamId: string, userId?: string) {
       where: { id: teamId }
     })
 
+    // Invalidate for all team members before the team is gone
+    invalidateTeamsCache(team.traderIds || [actorUserId])
     return { success: true }
   } catch (error) {
     console.error('Error deleting team:', error)
@@ -191,6 +203,7 @@ export async function inviteMember(teamId: string, email: string, invitedBy: str
       }
     })
 
+    invalidateTeamsCache([invitedBy])
     return { success: true, invitation }
   } catch (error) {
     console.error('Error inviting member:', error)
@@ -237,6 +250,10 @@ export async function acceptInvitation(invitationId: string, userId: string) {
       })
     })
 
+    // Invalidate for the accepting user and the team owner
+    const team = await prisma.team.findUnique({ where: { id: invitation.teamId }, select: { userId: true, traderIds: true } })
+    const affectedUsers = [userId, ...(team?.traderIds || [])]
+    invalidateTeamsCache(affectedUsers)
     return { success: true }
   } catch (error) {
     console.error('Error accepting invitation:', error)
@@ -274,6 +291,7 @@ export async function updateMemberRole(teamId: string, userId: string, requester
       data: { role }
     })
 
+    invalidateTeamsCache([userId, requesterUserId])
     return { success: true }
   } catch (error) {
     console.error('Error updating member role:', error)
@@ -317,6 +335,7 @@ export async function removeMember(teamId: string, userId: string, requesterUser
       }
     })
 
+    invalidateTeamsCache([userId, requesterUserId])
     return { success: true }
   } catch (error) {
     console.error('Error removing member:', error)
@@ -471,6 +490,7 @@ export async function updateTeamAnalytics(
       }
     })
 
+    invalidateTeamsCache(userIds)
     return { success: true, analytics }
   } catch (error) {
     console.error('Error updating team analytics:', error)

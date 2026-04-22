@@ -34,7 +34,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={type}
             className={cn(
-              'type-body-sm flex h-10 w-full rounded-md border border-border/60 bg-background/70 px-3.5 py-2 text-foreground shadow-sm ring-offset-background placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+              'type-body-sm flex h-10 w-full rounded-xl border border-border/40 bg-background/60 px-3.5 py-2 text-foreground transition-[border-color,background-color] duration-200 ring-offset-background placeholder:text-muted-foreground/50 focus-visible:border-border/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
               leftIcon && 'pl-10',
               rightIcon && 'pr-10',
               error && 'border-destructive/50 focus-visible:ring-destructive/40',
@@ -69,8 +69,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <label
             htmlFor={inputId}
             className={cn(
-              'type-label pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 origin-left bg-background px-1 text-muted-foreground transition-[transform,color] duration-200',
-              (isFocused || hasValue) && '-translate-y-7 text-primary',
+              'type-label pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 origin-left bg-background/80 px-1 text-muted-foreground/80 transition-[transform,color] duration-200',
+              (isFocused || hasValue) && '-translate-y-7 text-foreground',
               leftIcon && !(isFocused || hasValue) && 'left-10',
               leftIcon && (isFocused || hasValue) && 'left-9',
               error && 'text-destructive',

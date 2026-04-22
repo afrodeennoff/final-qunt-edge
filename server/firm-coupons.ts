@@ -1,5 +1,6 @@
 'use server'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
+import { buildPublicCouponWindowWhere } from '@/lib/prop-firms/coupon-visibility'
 import { cacheLife, cacheTag } from 'next/cache'
 
 const COUPONS_CACHE_LIFETIME = { stale: 1_800, revalidate: 1_800, expire: 3_600 } as const
@@ -15,10 +16,7 @@ function loadFirmCoupons(propfirmId: string) {
     where: {
       propFirmId: propfirmId,
       isActive: true,
-      OR: [
-        { expiresAt: null },
-        { expiresAt: { gte: now } },
-      ],
+      ...buildPublicCouponWindowWhere(now),
     },
     orderBy: [
       { challengeFee: 'asc' },

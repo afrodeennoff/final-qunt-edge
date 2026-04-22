@@ -151,7 +151,7 @@ export default function PnLPerContractChartEmbed({ trades }: { trades: TradeLike
               />
               <ReferenceLine y={0} stroke="hsl(var(--border))" />
               <Tooltip content={<CustomTooltip t={t} />} wrapperStyle={{ fontSize: '12px', zIndex: 1000 }} />
-              <Bar dataKey="averagePnl" radius={[3, 3, 0, 0]} maxBarSize={40} className="transition-all duration-300 ease-in-out">
+              <Bar dataKey="averagePnl" radius={[3, 3, 0, 0]} maxBarSize={40} className="transition-[opacity,fill] duration-300 ease-in-out">
                 {chartData.map((entry, idx) => (
                   <Cell key={`cell-${idx}`} fill={getColor(entry.averagePnl)} />
                 ))}

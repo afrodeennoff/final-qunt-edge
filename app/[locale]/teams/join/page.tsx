@@ -116,9 +116,9 @@ export default function TeamJoinPage() {
       case 'pending':
         return <Badge variant="secondary">{t('teams.management.pending')}</Badge>
       case 'accepted':
-        return <Badge variant="default" className="bg-white/[0.060] text-foreground/95">{t('teams.invitations.accepted')}</Badge>
+        return <Badge variant="default" className="bg-background/0.09 text-foreground">{t('teams.invitations.accepted')}</Badge>
       case 'expired':
-        return <Badge variant="error">{t('teams.invitations.expired')}</Badge>
+        return <Badge variant="destructive">{t('teams.invitations.expired')}</Badge>
       default:
         return <Badge variant="outline">{status}</Badge>
     }
@@ -272,7 +272,7 @@ export default function TeamJoinPage() {
                   <span className="text-muted-foreground">{t('teams.join.details.expiresOn')}</span>
                   <span className={cn(
                     "text-sm",
-                    isExpired ? "text-semantic-error" : "text-foreground/95"
+                    isExpired ? "text-semantic-error" : "text-foreground"
                   )}>
                     {formatDate(invitation.expiresAt)}
                   </span>

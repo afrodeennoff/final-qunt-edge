@@ -33,7 +33,7 @@ export default function PrivacyPolicy() {
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
       <UnifiedSurface className="space-y-8 text-fg-muted">
         <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground/95">Privacy Policy</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground">Privacy Policy</h1>
           <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
             This policy explains what data we collect and how we use it to provide the Qunt Edge platform.
           </p>
@@ -123,7 +123,7 @@ export default function PrivacyPolicy() {
           </p>
         </section>
 
-        <p className="border-t border-[oklch(0.65_0.22_260/0.08)] pt-5 text-xs uppercase tracking-[0.12em] text-fg-muted">
+        <p className="border-t border-border/30 pt-5 text-xs uppercase tracking-[0.12em] text-fg-muted">
           Last updated: {LAST_UPDATED}
         </p>
       </UnifiedSurface>

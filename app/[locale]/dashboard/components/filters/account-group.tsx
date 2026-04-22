@@ -78,7 +78,7 @@ export function AccountGroup({
  return (
  <Card
  className={cn("transition-[opacity,background-color,border-color] duration-300 ease-out",
- isDragOver &&"ring-2 ring-primary shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] scale-[1.02]",
+ isDragOver &&"ring-2 ring-primary shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] scale-[1.02]",
  isHiddenGroup &&"border-destructive",
  className,
  )}
@@ -131,7 +131,7 @@ export function AccountGroup({
 
  <CardContent>
  {group.accounts.length === 0 ? (
- <div className="flex items-center justify-center h-16 border-2 border-dashed border-[oklch(0.65_0.22_260/0.08)] rounded-lg">
+ <div className="flex items-center justify-center h-16 border-2 border-dashed border-border/30 rounded-lg">
  <p className="text-muted-foreground text-sm">{t("filters.dropAccountsHere")}</p>
  </div>
  ) : (

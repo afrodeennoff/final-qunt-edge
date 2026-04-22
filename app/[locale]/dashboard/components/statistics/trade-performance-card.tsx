@@ -39,14 +39,14 @@ function TradePerformanceCardInner({ size = 'medium' }: TradePerformanceCardProp
  >
  <div className="mx-auto inline-flex items-center justify-center gap-2.5 text-center">
  <TrendingUp className="h-4 w-4 shrink-0 metric-positive" />
- <span className="shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-v2-text-secondary">W/L</span>
- <span className="font-terminal shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-v2-text-primary">
+ <span className="shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">W/L</span>
+ <span className="font-terminal shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground">
  {winRate}/{lossRate}
  </span>
  <TooltipProvider delayDuration={100}>
  <Tooltip>
  <TooltipTrigger asChild>
- <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-v2-text-secondary transition-colors hover:text-v2-text-primary" />
+ <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-muted-foreground transition-colors hover:text-foreground" />
  </TooltipTrigger>
  <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
  {t('widgets.tradePerformance.tooltip')}
@@ -64,15 +64,15 @@ function TradePerformanceCardInner({ size = 'medium' }: TradePerformanceCardProp
  contentClassName="flex items-center justify-center h-full gap-2 p-2"
  info={t('widgets.tradePerformance.tooltip')}
  >
- <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-secondary/18 px-2 py-0.5">
+ <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-background/30 px-2 py-0.5">
  <TrendingUp className="h-3 w-3 metric-positive" />
  <span className="font-terminal font-bold text-[11px] tabular-nums metric-positive">{winRate}%</span>
  </div>
- <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-secondary/14 px-2 py-0.5">
- <Minus className="h-3 w-3 text-v2-text-secondary" />
- <span className="font-terminal font-bold text-[11px] tabular-nums text-v2-text-secondary">{beRate}%</span>
+ <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-background/20 px-2 py-0.5">
+ <Minus className="h-3 w-3 text-muted-foreground" />
+ <span className="font-terminal font-bold text-[11px] tabular-nums text-muted-foreground">{beRate}%</span>
  </div>
- <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-secondary/14 px-2 py-0.5">
+ <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-background/20 px-2 py-0.5">
  <TrendingDown className="h-3 w-3 metric-negative" />
  <span className="font-terminal font-bold text-[11px] tabular-nums metric-negative">{lossRate}%</span>
  </div>

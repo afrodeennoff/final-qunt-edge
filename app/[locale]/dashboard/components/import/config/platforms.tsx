@@ -14,19 +14,25 @@ import ColumnMapping from '../column-mapping'
 import { FormatPreview } from '../components/format-preview'
 
 // Lazy-load heavy processor modules to prevent import dialog freeze
-const TradezellaProcessor = dynamic(() => import('../tradezella/tradezella-processor'), { ssr: false })
-const TradovateProcessor = dynamic(() => import('../tradovate/tradovate-processor'), { ssr: false })
-const QuantowerOrderProcessor = dynamic(() => import('../quantower/quantower-processor'), { ssr: false })
-const TopstepProcessor = dynamic(() => import('../topstep/topstep-processor'), { ssr: false })
-const NinjaTraderPerformanceProcessor = dynamic(() => import('../ninjatrader/ninjatrader-performance-processor'), { ssr: false })
-const RithmicPerformanceProcessor = dynamic(() => import('../rithmic/rithmic-performance-processor'), { ssr: false })
-const RithmicOrderProcessor = dynamic(() => import('../rithmic/rithmic-order-processor-new'), { ssr: false })
-const PdfUpload = dynamic(() => import('../ibkr-pdf/pdf-upload'), { ssr: false })
-const PdfProcessing = dynamic(() => import('../ibkr-pdf/pdf-processing'), { ssr: false })
-const AtasFileUpload = dynamic(() => import('../atas/atas-file-upload'), { ssr: false })
-const AtasProcessor = dynamic(() => import('../atas/atas-processor'), { ssr: false })
-const FtmoProcessor = dynamic(() => import('../ftmo/ftmo-processor'), { ssr: false })
-const ManualProcessor = dynamic(() => import('../manual/manual-processor'), { ssr: false })
+const importLoading = () => (
+  <div className="flex items-center justify-center p-8">
+    <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary/30 border-t-[hsl(var(--primary))]" />
+  </div>
+)
+
+const TradezellaProcessor = dynamic(() => import('../tradezella/tradezella-processor'), { loading: importLoading })
+const TradovateProcessor = dynamic(() => import('../tradovate/tradovate-processor'), { loading: importLoading })
+const QuantowerOrderProcessor = dynamic(() => import('../quantower/quantower-processor'), { loading: importLoading })
+const TopstepProcessor = dynamic(() => import('../topstep/topstep-processor'), { loading: importLoading })
+const NinjaTraderPerformanceProcessor = dynamic(() => import('../ninjatrader/ninjatrader-performance-processor'), { loading: importLoading })
+const RithmicPerformanceProcessor = dynamic(() => import('../rithmic/rithmic-performance-processor'), { loading: importLoading })
+const RithmicOrderProcessor = dynamic(() => import('../rithmic/rithmic-order-processor-new'), { loading: importLoading })
+const PdfUpload = dynamic(() => import('../ibkr-pdf/pdf-upload'), { loading: importLoading })
+const PdfProcessing = dynamic(() => import('../ibkr-pdf/pdf-processing'), { loading: importLoading })
+const AtasFileUpload = dynamic(() => import('../atas/atas-file-upload'), { loading: importLoading })
+const AtasProcessor = dynamic(() => import('../atas/atas-processor'), { loading: importLoading })
+const FtmoProcessor = dynamic(() => import('../ftmo/ftmo-processor'), { loading: importLoading })
+const ManualProcessor = dynamic(() => import('../manual/manual-processor'), { loading: importLoading })
 import { Step } from '../import-button'
 import { Sparkles, PenTool } from 'lucide-react'
 import Image from 'next/image'
@@ -522,6 +528,7 @@ export const platforms: PlatformConfig[] = [
  },
  processFile: processStandardCsv,
  processorComponent: NinjaTraderPerformanceProcessor,
+ skipHeaderSelection: true,
  steps: [
  {
  id: 'select-import-type',
@@ -535,12 +542,8 @@ export const platforms: PlatformConfig[] = [
  description: 'import.steps.uploadFileDescription',
  component: FileUpload
  },
- // {
- // id: 'select-headers',
- // title: 'import.steps.selectHeaders',
- // description: 'import.steps.selectHeadersDescription',
- // component: HeaderSelection
- // },
+ // select-headers step removed: NinjaTrader CSV files have standard headers
+ // and the processor handles them directly via skipHeaderSelection
  {
  id: 'preview-trades',
  title: 'import.steps.processTrades',
@@ -562,7 +565,7 @@ export const platforms: PlatformConfig[] = [
  path: '/logos/rithmic.png',
  alt: 'Rithmic Logo'
  },
- isDisabled: true,
+ isDisabled: false,
  isRithmic: true,
  skipHeaderSelection: true,
  processFile: processRithmicPerformance,
@@ -601,7 +604,7 @@ export const platforms: PlatformConfig[] = [
  path: '/logos/rithmic.png',
  alt: 'Rithmic Logo'
  },
- isDisabled: true,
+ isDisabled: false,
  isRithmic: true,
  skipHeaderSelection: true,
  processFile: processRithmicOrders,

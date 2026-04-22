@@ -15,7 +15,7 @@ const TradingChatAssistant = lazy(() => import("./chat-feature").then(m => ({ de
 
 function ChatLoadingFallback() {
  return (
- <div className="h-full w-full flex items-center justify-center bg-white/[0.050]">
+ <div className="h-full w-full flex items-center justify-center bg-background/0.08">
  <div className="space-y-3 w-full max-w-[280px]">
  <Skeleton className="h-4 w-3/4" />
  <Skeleton className="h-4 w-1/2" />
@@ -41,7 +41,7 @@ type FeatureCard = {
 function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; index: number; isVisible: boolean }) {
  return (
  <div
- className={cn("group relative overflow-hidden rounded-[1.85rem] border transition-all duration-500","border-white/[0.08] bg-[oklch(0.038_0.005_264)]","shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_24px_60px_-36px_rgba(0,0,0,0.92)] hover:border-white/[0.14] hover:shadow-[0_30px_70px_-34px_rgba(0,0,0,0.95)]","hover:-translate-y-1","opacity-0 translate-y-8",
+ className={cn("group relative overflow-hidden rounded-xl border transition-[transform,opacity,background-color,border-color,box-shadow] duration-500","border-border/30 bg-background/40","shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] hover:border-border/40 hover:shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)]","hover:-translate-y-1","opacity-0 translate-y-8",
  isVisible &&"opacity-100 translate-y-0",
  index < 2 ? 'lg:col-span-3' :
  index === 2 ? 'lg:col-span-4' : 'lg:col-span-2',
@@ -56,8 +56,8 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
  
  <div className="relative h-full">
- <CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-[oklch(0.65_0.22_260/0.08)] pb-4">
- <CardTitle className="text-base font-medium tracking-[-0.02em] text-foreground/95 sm:text-lg">{feature.title}</CardTitle>
+ <CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-border/30 pb-4">
+ <CardTitle className="text-base font-medium tracking-[-0.02em] text-foreground sm:text-lg">{feature.title}</CardTitle>
  <div className="relative">
  <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
  <div className="relative">
@@ -68,13 +68,13 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
  <CardContent>
  <div className="flex flex-col gap-3 sm:gap-4">
  <div>
- <div className="text-[28px] font-[250] tracking-[-0.04em] text-foreground/95 sm:text-[32px]">{feature.stat}</div>
- <p className="mt-3 text-xs leading-[1.7] text-foreground/54 sm:text-sm">
+ <div className="text-[28px] font-[250] tracking-[-0.04em] text-foreground sm:text-[32px]">{feature.stat}</div>
+ <p className="mt-3 text-xs leading-[1.7] text-muted-foreground sm:text-sm">
  {feature.description}
  </p>
  </div>
  <div
- className={cn("relative flex w-full items-center justify-center overflow-hidden rounded-[1.25rem]","border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.045)]","group-hover:border-white/[0.10] group-hover:bg-white/[0.05] transition-all duration-500",
+ className={cn("relative flex w-full items-center justify-center overflow-hidden rounded-xl","border border-border/30 bg-background/25","group-hover:border-border/35 group-hover:bg-background/35 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500",
  feature.wrapperClass ??"h-[250px] sm:h-[300px] md:h-[350px]"
  )}
  >
@@ -177,7 +177,7 @@ export default function Features() {
  <section 
  id="features" 
  ref={sectionRef}
- className="relative px-6 py-16 sm:py-20 lg:py-24"
+ className="relative px-6 py-12 sm:py-16 lg:py-24"
  >
  <div className="absolute inset-0 overflow-hidden pointer-events-none">
  <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
@@ -186,14 +186,14 @@ export default function Features() {
  
  <div className="relative mx-auto max-w-6xl space-y-8">
  <div className="grid gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
- <div className={cn("transition-all duration-700","opacity-0 translate-y-4",
+ <div className={cn("transition-[transform,opacity] duration-700","opacity-0 translate-y-4",
  isVisible &&"opacity-100 translate-y-0"
  )}>
- <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/34 [font-family:var(--home-copy)]">Platform Weapons</p>
- <h2 className="mt-3 text-[clamp(1.95rem,4.9vw,3.4rem)] font-[350] leading-[0.92] tracking-[-0.045em] text-foreground/95 [font-family:var(--home-display)]">
+ <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground [font-family:var(--home-copy)]">Platform Weapons</p>
+ <h2 className="mt-3 text-[clamp(1.95rem,4.9vw,3.4rem)] font-[350] leading-[0.92] tracking-[-0.045em] text-foreground [font-family:var(--home-display)]">
  {t("landing.features.heading")}
  </h2>
- <p className="mt-4 max-w-2xl text-sm leading-[1.8] text-foreground/56 sm:text-base md:text-lg">
+ <p className="mt-4 max-w-2xl text-sm leading-[1.8] text-muted-foreground sm:text-base md:text-lg">
  {t("landing.features.subheading")}
  </p>
  </div>
@@ -201,17 +201,17 @@ export default function Features() {
  {features.map((feature, index) => (
  <div
  key={feature.id}
- className={cn("rounded-[1.5rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 transition-all duration-500 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_20px_50px_-34px_rgba(0,0,0,0.92)]","hover:-translate-y-1","opacity-0",
+ className={cn("rounded-xl border border-border/35 bg-background/40 p-5 sm:p-6 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]","hover:-translate-y-1","opacity-0",
  isVisible &&"opacity-100"
  )}
  style={{
  transitionDelay: isVisible ? `${index * 100}ms` : '0ms',
  }}
  >
- <div className="mb-4 flex size-8 items-center justify-center rounded-[1rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.06)]">
+ <div className="mb-4 flex size-8 items-center justify-center rounded-lg border border-border/30 bg-background/30">
  {feature.icon}
  </div>
- <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-foreground/72">
+ <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-foreground/70">
  {feature.title}
  </p>
  </div>

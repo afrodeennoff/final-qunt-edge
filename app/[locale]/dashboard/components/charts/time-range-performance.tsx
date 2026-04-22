@@ -126,19 +126,19 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  if (active && payload && payload.length) {
  const data = payload[0].payload
  return (
- <div className="bg-v2-bg-surface/96 p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
+ <div className="bg-card/96 p-3 border border-border/50 rounded-xl shadow-xl min-w-[140px]">
  <div className="flex flex-col mb-2">
- <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
+ <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">
  {t('timeRangePerformance.tooltip.timeRange')}
  </span>
- <span className={cn("font-semibold text-v2-text-primary text-sm",
- timeRange.range === data.range ?"text-v2-text-primary" :""
+ <span className={cn("font-semibold text-foreground text-sm",
+ timeRange.range === data.range ?"text-foreground" :""
  )}>
  {getTimeRangeLabel(label)}
  </span>
  </div>
  <div className="flex flex-col mb-2">
- <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
+ <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">
  {t('timeRangePerformance.tooltip.avgPnl')}
  </span>
  <span className={cn("font-bold text-sm tabular-nums",
@@ -147,8 +147,8 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  {data.avgPnl.toFixed(2)}
  </span>
  </div>
- <div className="flex flex-col pt-2 border-t border-v2-border/40">
- <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
+ <div className="flex flex-col pt-2 border-t border-border/40">
+ <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">
  {t('timeRangePerformance.tooltip.winRate')}
  </span>
  <span className={cn("font-bold text-sm",
@@ -158,10 +158,10 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  </span>
  </div>
  <div className="flex flex-col pt-2">
- <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
+ <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">
  Trades
  </span>
- <span className="font-semibold text-v2-text-primary text-sm">
+ <span className="font-semibold text-foreground text-sm">
  {data.trades}
  </span>
  </div>
@@ -181,7 +181,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  <div className="flex items-center justify-between w-full">
  <div className="flex items-center gap-2">
  <span
- className={cn("line-clamp-1 font-bold tracking-tight text-foreground/95",
+ className={cn("line-clamp-1 font-bold tracking-tight text-foreground",
  size === 'small' ?"text-sm" :"text-base"
  )}
  >
@@ -191,7 +191,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  <UITooltip>
  <TooltipTrigger asChild>
  <Info
- className={cn("text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
+ className={cn("text-muted-foreground hover:text-foreground transition-colors cursor-help",
  size === 'small' ?"h-3.5 w-3.5" :"h-4 w-4"
  )}
  />
@@ -206,7 +206,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  <Button 
  variant="ghost"
  size="sm"
- className="h-6 px-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground/95 hover:bg-secondary/30"
+ className="h-6 px-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary/30"
  onClick={() => setTimeRange({ range: null })}
  >
  {t('timeRangePerformance.clearFilter')}

@@ -1,5 +1,6 @@
 'use server'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
+import { buildPublicCouponWindowWhere } from '@/lib/prop-firms/coupon-visibility'
 import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { assertAdminAccess } from '@/server/authz'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
@@ -23,6 +24,7 @@ const PROP_FIRMS_CACHE_TAG = 'prop-firms'
 const PROP_FIRMS_BANNER_ITEMS_COOLDOWN_KEY = 'prop-firms-banner-items'
 const PROP_FIRM_TABLE_NAME = 'PropFirm'
 const PROP_FIRM_COUPON_TABLE_NAME = 'PropFirmCoupon'
+const PROP_FIRM_REVIEW_TABLE_NAME = 'PropFirmReview'
 const MAX_COUPON_CODE_LENGTH = 64
 const ALLOWED_CLAIM_URL_PROTOCOLS = new Set(['http:', 'https:'])
 
@@ -44,7 +46,7 @@ function isPropFirmDataUnavailableError(error: unknown): boolean {
     message.includes('attempted to access prisma.') ||
     message.includes('prisma missing connection proxy') ||
     message.includes('econnrefused') ||
-    message.includes('can\'t reach database server') ||
+    message.includes("can't reach database server") ||
     message.includes('timeout exceeded when trying to connect') ||
     message.includes('timed out when trying to connect')
   )
@@ -66,7 +68,9 @@ function normalizeOptionalCouponDate(value: Date | null | undefined): Date | nul
 
   const normalized = new Date(value)
   if (Number.isNaN(normalized.getTime())) {
-    throw new PropFirmCouponAdminError('Use a valid start and expiry date before saving the coupon.')
+    throw new PropFirmCouponAdminError(
+      'Use a valid start and expiry date before saving the coupon.',
+    )
   }
 
   return normalized
@@ -147,9 +151,7 @@ function normalizePropFirmCouponInput(data: PropFirmCouponInput): PropFirmCoupon
 
 async function assertCouponMutationAvailable() {
   if (!hasConfiguredDatabaseConnection) {
-    throw new PropFirmCouponAdminError(
-      'Coupon editing requires a configured database connection.',
-    )
+    throw new PropFirmCouponAdminError('Coupon editing requires a configured database connection.')
   }
 
   const couponTableAvailable = await isPrismaTableAvailable(PROP_FIRM_COUPON_TABLE_NAME)
@@ -170,9 +172,7 @@ function toPropFirmCouponMutationError(error: unknown): Error {
   const maybeError = error as { code?: string }
 
   if (maybeError?.code === 'P2002') {
-    return new PropFirmCouponAdminError(
-      'This prop firm already has a coupon with that code.',
-    )
+    return new PropFirmCouponAdminError('This prop firm already has a coupon with that code.')
   }
 
   if (maybeError?.code === 'P2003' || maybeError?.code === 'P2025') {
@@ -182,9 +182,7 @@ function toPropFirmCouponMutationError(error: unknown): Error {
   }
 
   if (isPrismaSchemaMismatchError(error)) {
-    return new PropFirmCouponAdminError(
-      'The coupon schema is missing in the current database.',
-    )
+    return new PropFirmCouponAdminError('The coupon schema is missing in the current database.')
   }
 
   if (isPropFirmDataUnavailableError(error)) {
@@ -227,10 +225,17 @@ const _listPropFirms = async () => {
   }
 
   try {
+    const now = new Date()
+
     return await prisma.propFirm.findMany({
       where: { isActive: true },
       include: {
-        coupons: { where: { isActive: true } },
+        coupons: {
+          where: {
+            isActive: true,
+            ...buildPublicCouponWindowWhere(now),
+          },
+        },
         _count: { select: { reviews: true, coupons: true } },
       },
       orderBy: { name: 'asc' },
@@ -261,7 +266,10 @@ export type PropFirmBannerItem = {
   type: 'deal' | 'firm'
 }
 
-function toBannerBadge(coupon?: { code: string; discountPercent: number | null }): Pick<PropFirmBannerItem, 'badge' | 'type'> {
+function toBannerBadge(coupon?: {
+  code: string
+  discountPercent: number | null
+}): Pick<PropFirmBannerItem, 'badge' | 'type'> {
   if (!coupon) {
     return { badge: 'Live', type: 'firm' }
   }
@@ -314,7 +322,7 @@ const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
             coupons: {
               where: {
                 isActive: true,
-                OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
+                ...buildPublicCouponWindowWhere(now),
               },
               orderBy: [{ discountPercent: 'desc' }, { updatedAt: 'desc' }],
               take: 1,
@@ -338,7 +346,7 @@ const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
           }
         })
       },
-      fallbackItems
+      fallbackItems,
     )
   } catch (error) {
     if (!isPropFirmDataUnavailableError(error)) {
@@ -369,18 +377,25 @@ const _getPropFirmBySlug = async (slug: string) => {
   }
 
   try {
+    const now = new Date()
+
     return await withPrismaSchemaMismatchFallback(
       `prop-firms-by-slug-${slug}`,
       async () =>
         prisma.propFirm.findUnique({
           where: { slug },
           include: {
-            coupons: { where: { isActive: true } },
+            coupons: {
+              where: {
+                isActive: true,
+                ...buildPublicCouponWindowWhere(now),
+              },
+            },
             reviews: { orderBy: { createdAt: 'desc' }, take: 20 },
             _count: { select: { reviews: true, coupons: true } },
           },
         }),
-      null
+      null,
     )
   } catch (error) {
     if (!isPropFirmDataUnavailableError(error)) {
@@ -431,9 +446,120 @@ export type PropFirmUpdateInput = PropFirmCreateInput & {
   isActive?: boolean
 }
 
+// ---------------------------------------------------------------------------
+// Prop firm validation
+// ---------------------------------------------------------------------------
+
+const SLUG_PATTERN = /^[a-z0-9-]+$/
+const HTTP_URL_PATTERN = /^https?:\/\/.+/
+
+async function assertPropFirmMutationAvailable(): Promise<void> {
+  if (!hasConfiguredDatabaseConnection) {
+    throw new PropFirmCouponAdminError(
+      'Database connection is not available. Please try again later.',
+    )
+  }
+  if (!(await isPrismaTableAvailable(PROP_FIRM_TABLE_NAME))) {
+    throw new PropFirmCouponAdminError('PropFirm table is not available. Please try again later.')
+  }
+}
+
+async function assertPropFirmReviewMutationAvailable(): Promise<void> {
+  await assertPropFirmMutationAvailable()
+
+  if (!(await isPrismaTableAvailable(PROP_FIRM_REVIEW_TABLE_NAME))) {
+    throw new PropFirmCouponAdminError(
+      'PropFirmReview table is not available. Please try again later.',
+    )
+  }
+}
+
+function normalizePropFirmInput(data: PropFirmCreateInput | PropFirmUpdateInput) {
+  const name = data.name?.trim()
+  if (!name || name.length === 0) {
+    throw new PropFirmCouponAdminError('Firm name is required.')
+  }
+  if (name.length > 200) {
+    throw new PropFirmCouponAdminError('Firm name must be 200 characters or fewer.')
+  }
+
+  const slug = data.slug?.trim().toLowerCase()
+  if (!slug || slug.length === 0) {
+    throw new PropFirmCouponAdminError('Slug is required.')
+  }
+  if (slug.length > 100) {
+    throw new PropFirmCouponAdminError('Slug must be 100 characters or fewer.')
+  }
+  if (!SLUG_PATTERN.test(slug)) {
+    throw new PropFirmCouponAdminError(
+      'Slug must contain only lowercase letters, numbers, and hyphens.',
+    )
+  }
+
+  if (data.referralUrl && data.referralUrl.trim() !== '') {
+    const url = data.referralUrl.trim()
+    if (!HTTP_URL_PATTERN.test(url)) {
+      throw new PropFirmCouponAdminError('Referral URL must start with http:// or https://.')
+    }
+  }
+
+  if (data.logoUrl && data.logoUrl.trim() !== '') {
+    const url = data.logoUrl.trim()
+    if (!HTTP_URL_PATTERN.test(url)) {
+      throw new PropFirmCouponAdminError('Logo URL must start with http:// or https://.')
+    }
+  }
+
+  if (data.description && data.description.length > 2000) {
+    throw new PropFirmCouponAdminError('Description must be 2000 characters or fewer.')
+  }
+
+  return {
+    ...data,
+    name,
+    slug,
+    referralUrl: data.referralUrl?.trim() || undefined,
+    logoUrl: data.logoUrl?.trim() || undefined,
+    description: data.description?.trim() || undefined,
+    platform: data.platform?.trim() || undefined,
+  }
+}
+
+function normalizePropFirmReviewInput(data: PropFirmReviewInput) {
+  const title = data.title?.trim()
+  if (!title || title.length === 0) {
+    throw new PropFirmCouponAdminError('Review title is required.')
+  }
+  if (title.length > 200) {
+    throw new PropFirmCouponAdminError('Review title must be 200 characters or fewer.')
+  }
+
+  const content = data.content?.trim()
+  if (!content || content.length === 0) {
+    throw new PropFirmCouponAdminError('Review content is required.')
+  }
+  if (content.length > 5000) {
+    throw new PropFirmCouponAdminError('Review content must be 5000 characters or fewer.')
+  }
+
+  const rating = Number(data.rating)
+  if (Number.isNaN(rating) || rating < 0 || rating > 5) {
+    throw new PropFirmCouponAdminError('Rating must be between 0 and 5.')
+  }
+
+  return {
+    ...data,
+    title,
+    content,
+    rating,
+  }
+}
+
 export async function createPropFirm(data: PropFirmCreateInput) {
   await assertAdminAccess()
-  const result = await prisma.propFirm.create({ data })
+  await assertPropFirmMutationAvailable()
+  const normalized = normalizePropFirmInput(data)
+  const result = await prisma.propFirm.create({ data: normalized })
   updateTag('prop-firms')
   updateTag('deals')
   updateTag('prop-firms-catalogue')
@@ -442,13 +568,16 @@ export async function createPropFirm(data: PropFirmCreateInput) {
 
 export async function updatePropFirm(id: string, data: PropFirmUpdateInput) {
   await assertAdminAccess()
-  const result = await prisma.propFirm.update({ where: { id }, data })
+  await assertPropFirmMutationAvailable()
+  const normalized = normalizePropFirmInput(data)
+  const result = await prisma.propFirm.update({ where: { id }, data: normalized })
   updateTag('prop-firms')
   updateTag('deals')
   updateTag('prop-firms-catalogue')
   return result
 }
 
+/** @deprecated Use softDeletePropFirm instead. Hard deletes cascade to all related data. */
 export async function deletePropFirm(id: string) {
   await assertAdminAccess()
   const result = await prisma.propFirm.delete({ where: { id } })
@@ -460,6 +589,7 @@ export async function deletePropFirm(id: string) {
 
 export async function softDeletePropFirm(id: string) {
   await assertAdminAccess()
+  await assertPropFirmMutationAvailable()
   const result = await prisma.propFirm.update({
     where: { id },
     data: { isActive: false },
@@ -479,8 +609,10 @@ export type PropFirmReviewInput = {
 
 export async function createPropFirmReview(propFirmId: string, data: PropFirmReviewInput) {
   await assertAdminAccess()
+  await assertPropFirmReviewMutationAvailable()
+  const normalized = normalizePropFirmReviewInput(data)
   const result = await prisma.propFirmReview.create({
-    data: { propFirmId, ...data },
+    data: { propFirmId, ...normalized },
   })
   updateTag('prop-firms')
   updateTag('deals')
@@ -490,9 +622,11 @@ export async function createPropFirmReview(propFirmId: string, data: PropFirmRev
 
 export async function updatePropFirmReview(id: string, data: PropFirmReviewInput) {
   await assertAdminAccess()
+  await assertPropFirmReviewMutationAvailable()
+  const normalized = normalizePropFirmReviewInput(data)
   const result = await prisma.propFirmReview.update({
     where: { id },
-    data,
+    data: normalized,
   })
   updateTag('prop-firms')
   updateTag('deals')
@@ -502,6 +636,7 @@ export async function updatePropFirmReview(id: string, data: PropFirmReviewInput
 
 export async function deletePropFirmReview(id: string) {
   await assertAdminAccess()
+  await assertPropFirmReviewMutationAvailable()
   const result = await prisma.propFirmReview.delete({ where: { id } })
   updateTag('prop-firms')
   updateTag('deals')

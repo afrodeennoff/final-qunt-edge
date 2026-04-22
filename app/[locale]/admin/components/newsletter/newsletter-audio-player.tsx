@@ -139,7 +139,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
 
  if (!audioUrl) {
  return (
- <div className={`p-4 bg-white/[0.030] rounded-lg ${className}`}>
+ <div className={`p-4 bg-background/0.04 rounded-lg ${className}`}>
  <div className="text-center text-muted-foreground">
  No audio file loaded
  </div>
@@ -148,10 +148,10 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  }
 
  return (
- <div className={`p-4 bg-white/[0.2] border border-white/[0.6] rounded-lg ${className}`}>
+ <div className={`p-4 bg-background/0.3 border border-border/0.42 rounded-lg ${className}`}>
  <div className="space-y-4">
  {/* File name */}
- <div className="text-sm font-medium text-foreground/95 truncate">
+ <div className="text-sm font-medium text-foreground truncate">
  {fileName}
  </div>
 
@@ -182,7 +182,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  className="p-2 bg-semantic-info-bg hover:bg-semantic-info-bg/90 dark:bg-semantic-info-bg dark:hover:bg-semantic-info-bg/90 text-card-foreground rounded-full transition-colors disabled:opacity-50"
  >
  {isLoading ? (
- <div className="w-4 h-4 border-2 border-white/[0.6] border-t-transparent rounded-full animate-spin" />
+ <div className="w-4 h-4 border-2 border-border/0.42 border-t-transparent rounded-full animate-spin" />
  ) : isPlaying ? (
  <Pause className="w-4 h-4" />
  ) : (
@@ -194,7 +194,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  <div className="flex items-center gap-2">
  <button
  onClick={toggleMute}
- className="p-1 text-muted-foreground hover:text-foreground/95 transition-colors"
+ className="p-1 text-muted-foreground hover:text-foreground transition-colors"
  >
  {isMuted ? (
  <VolumeX className="w-4 h-4" />
@@ -217,7 +217,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  {/* Download button */}
  <button
  onClick={handleDownload}
- className="p-2 bg-white/[0.020] hover:bg-white/[0.030] text-card-foreground rounded-full transition-colors"
+ className="p-2 bg-background/0.03 hover:bg-background/0.04 text-card-foreground rounded-full transition-colors"
  title="Download audio file"
  >
  <Download className="w-4 h-4" />

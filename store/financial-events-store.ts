@@ -4,7 +4,9 @@ import { FinancialEvent } from '@/prisma/generated/prisma'
 type FinancialEventsStore = {
   events: FinancialEvent[]
   isLoading: boolean
+  error: string | null
   setEvents: (events: FinancialEvent[]) => void
+  setError: (error: string | null) => void
   getEventsByDate: (date: Date) => FinancialEvent[]
   getEventsByType: (type: string) => FinancialEvent[]
   getEventsByImportance: (importance: string) => FinancialEvent[]
@@ -14,8 +16,10 @@ type FinancialEventsStore = {
 export const useFinancialEventsStore = create<FinancialEventsStore>()((set, get) => ({
   events: [],
   isLoading: false,
+  error: null,
 
-  setEvents: (events) => set({ events }),
+  setEvents: (events) => set({ events, error: null }),
+  setError: (error) => set({ error, isLoading: false }),
   
   getEventsByDate: (date) => {
     const dateStr = date.toISOString().split('T')[0]

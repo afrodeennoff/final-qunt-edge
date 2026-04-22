@@ -1,5 +1,52 @@
 # Project Conventions & Patterns
 
+## Enterprise Surface System (2026-04-19 refresh)
+- **Card surface**: `border-border/35-40 bg-card/80-95 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5-0.6)]`
+- **Elevated surface**: `border-border/45-50 bg-card/90 shadow-sm`
+- **Inset/subtle surface**: `border-border/25-30 bg-background/30-50`
+- **Dialog/modal**: `border-border/40 bg-card shadow-[0_8px_32px_-8px_rgba(0,0,0,0.7)]`
+- **Sidebar inner**: `border-sidebar-border/35 bg-sidebar/95 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.5)]`
+- **Tab/toolbar surface**: `border-border/40 bg-background/50-60`
+- **Badge/chip**: `border-[semantic]/18 bg-[semantic]/8`
+- **Primary button**: `border-primary/15 bg-primary shadow-sm`
+- **Ghost/outline button**: `border-border/40 bg-background/50`
+- **Input field**: `border-border/40 bg-background/60 focus:border-border/60`
+- **Skeleton**: `border-border/20 bg-muted/50`
+- **Never use** `bg-white/[X]` or `border-white/[X]` — use `bg-background/[X]` and `border-border/[X]` with scaled opacity
+- **Never use** `rounded-[1.Xrem]` — use standard `rounded-lg`, `rounded-xl`, `rounded-2xl` tokens
+- **Never exceed** 16px shadow spread on product surfaces (except modals at 32px)
+- **Never use** hardcoded Tailwind color names — use semantic tokens: `text-destructive` (not `text-red-*`), `text-success` (not `text-emerald-*`), `text-warning` (not `text-yellow-*
+
+### Border Opacity Tiers (3 levels)
+- **Neutral/inset**: `border-border/30` — inset panels, subtle separators, nested groups
+- **Primary surfaces**: `border-border/40` — cards, panels, dialogs, surfaces
+- **Hover/emphasis**: `border-border/50` — only on interactive elements during hover
+
+### Eyebrow/Label Typography
+- One shared token: `text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground`
+- Use for all eyebrow labels, info labels, section tags, admin badges, panel labels
+
+### Text Opacity Tiers (5 levels)
+- **`text-foreground`** — headings, primary content, key values (was /95, /90, /85 — normalized to full)
+- **`text-foreground/80`** — marketing body text (deliberate softening for long-form copy)
+- **`text-foreground/70`** — secondary text, supporting descriptions
+- **`text-foreground/60`** — tertiary labels, metric descriptions, admin panel values
+- **`text-foreground/35`** — widget micro-labels, stat section headers, very subtle captions
+- **`text-muted-foreground`** — semantic secondary text (use for labels, descriptions, form hints)
+- Never use intermediate values like /34, /46, /52, /56, /62, /68, /72, /78, /85, /90, /95
+
+### Semantic Color Tokens
+- **Positive/Success**: `text-success`, `bg-success/8`, `border-success/30` — PnL gains, live status
+- **Negative/Destructive**: `text-destructive`, `bg-destructive/8`, `border-destructive/30` — PnL losses, errors
+- **Warning**: `text-warning`, `bg-warning/8`, `border-warning/30` — star ratings, caution
+- **Primary/Info**: `text-primary`, `bg-primary/8`, `border-primary/30` — accent, focus, info
+- Never use `text-red-*`, `text-emerald-*`, `text-yellow-*`, `text-blue-*`, `text-green-*` in product code
+
+### Hover Policy
+- **Interactive elements** (buttons, links, tabs, clickable cards): hover border/bg/shadow OK
+- **Structural containers** (page headers, section shells, inset panels): NO hover states
+- `UnifiedSurface` and `UnifiedPageHeader` must not have hover transitions by default
+
 ## Performance Rules (Enforced)
 - No `repeat: Infinity` in interactive components (loading states OK)
 - No `filter:blur()` in any animation
@@ -88,6 +135,9 @@
 - For trader-profile-style analytics pages, prefer a two-stage composition: an elevated summary hero first, then a responsive main/aside grid with `min-w-0` content columns and a sticky right rail only at larger breakpoints.
 - On trader-profile-style pages, the hero should carry a short performance brief plus compact signal tiles inside the control rail so the page reads overview → day pattern → benchmark/feed instead of a flat stack of equal-weight stats.
 - If a trader-profile-style page is being aligned to a user wireframe, lock the macro order before styling details: profile/control row, thin metrics strip, dedicated active-account block, large calendar/content panel, stacked analytics rail, then full-width trade history.
+- If trader-profile controls start feeling detached from the summary story, fold the visibility/date-range controls into the same summary band as the quick metrics. Keep the seven quick metrics in a `3 + 4` hierarchy, with the first row reserved for the top three signals and a taller calendar panel below to rebalance the page.
+- On the live trader-profile page, keep public visibility anchored in the profile identity card’s top-right area rather than the review-controls panel. The review-controls surface should stay focused on date-range selection and active-session context.
+- Keep the trader-profile content order as identity header, metric band, active accounts, daily calendar, right-rail analytics, then trade history. If the page starts feeling messy, tighten inter-section gaps before adding more chrome.
 - For full-site visual refreshes, start with shared chrome first: `components/layout/unified-page-shell.tsx`, `components/layout/unified-page-recipes.ts`, public navbar/footer/shell wrappers, and core CTA/surface primitives. Route-by-route passes should inherit from that refreshed base instead of inventing local shells again.
 - Home page hero redesigns should use a dominant product-UI canvas plus restrained animated SVG overlays rather than gradient-heavy marketing treatment. Prefer one-shot stroke/node animations and flat tinted surfaces over decorative gradients or continuous glow effects.
 - If the user asks for “unified like `/deals`” with no function changes, treat it as a visual-only system pass: shared shell, shared panel recipes, shared CTA hierarchy, and route-local content reflow only. Do not change route behavior, data loading, filtering, or server contracts.
@@ -98,18 +148,29 @@
 - Admin CRUD server action types must expose ALL Prisma schema fields that the public UI consumes, not just a subset. When the public page reads `claimUrl`, `challengeFee`, `expiresAt`, `isActive`, the admin input type and forms must allow editing all of them.
 - `PropFirmCouponInput` in `server/prop-firms.ts` is the canonical admin input type for coupons/deals. It maps to all 11 editable fields on the `PropFirmCoupon` Prisma model.
 - Coupon forms exist in two locations: inline on `/admin/propfirms/[id]` (CouponsSection component) and standalone on `/admin/coupons` (CouponEditCard component). Both must stay in sync when fields change.
+- Read-only prop-firm admin gating should come from the shared `getPropFirmAdminPageState()` helper, not route-local booleans. That helper is the contract for `isFallbackRecord`, `isReadOnly`, and the `canManage*` flags across `/admin/propfirms` list/detail surfaces.
 - When a coupon has override fields (platform, payoutModel, drawdownType), the deals data mapping (`server/deals.ts`) uses coupon-level values first, falling back to firm-level values: `coupon.platform || coupon.propFirm.platform || 'Default'`.
 - Admin coupon fields that flow to the public deals page: `code` → coupon code display + copy button, `discountPercent` → discount badge, `challengeFee` → price display, `claimUrl` → affiliate/claim link, `expiresAt` → expiry badge, `isActive` → visibility filter.
 - Coupon visibility on public surfaces must honor the full schedule window, not just `isActive`/`expiresAt`. If admin exposes `startsAt`, public readers (`server/deals.ts`, `server/firm-coupons.ts`, firm detail surfaces) must also require `startsAt <= now`.
+- Keep that public schedule logic centralized in `lib/prop-firms/coupon-visibility.ts`. Reuse `buildPublicCouponWindowWhere(now)` for deals, firm-detail readers, banner readers, and any future public coupon query instead of rewriting schedule filters inline.
 - Public deals can also fall back to spotlight/web-sourced offers when no coupon rows exist. If admin needs to manage those offers, bridge them into prefilled create flows rather than leaving admin screens blank.
 - Keep spotlight-to-coupon fallback values centralized. Public deals fallback and admin suggestion UIs should read from the same helper so discount/code/fee/claim defaults stay aligned.
 - Admin server actions are co-located in `server/prop-firms.ts` and re-exported from the admin page files where they are consumed. All admin mutations call `assertAdminAccess()` and call `updateTag('prop-firms')` after writes.
 - For admin update forms, blank optional coupon fields should normalize to `null`, not `undefined`, so Prisma actually clears persisted values when an admin removes a discount, claim URL, fee override, or date.
 - Coupon admin writes should go through shared server-side validation/error translation in `server/prop-firms.ts`, not page-local ad hoc checks. Duplicate codes, invalid URLs, invalid date ranges, and unavailable DB/schema states should surface as friendly admin messages.
 - Admin coupon entry points should show mutation feedback explicitly: success/error banners after redirects and pending-submit states on create/save/delete buttons.
+- Shared admin visual chrome now lives in `app/[locale]/admin/components/admin-surface.tsx`. Use `AdminPageHeader`, `AdminStatCard`, and `AdminSection` before inventing route-local admin header/card wrappers.
+- For editor-heavy admin pages like `/admin/coupons`, keep the page on one primary vertical lane: calm stat strip, one create section, then stacked suggestion/editor cards. Avoid restoring `xl:grid-cols-2` for full coupon/review editor cards unless the form body is substantially reduced first.
 - If admin coupon pages are using fallback/read-only data because the database connection is unavailable, disable the write forms and show a warning instead of leaving dead-looking controls on screen.
 - Apply that same read-only contract to `/admin/propfirms` and any sibling admin CRUD page: if the page is showing fallback data or the schema is unavailable, do not leave live create/edit/delete controls mounted for firms or reviews.
 - For admin schedule fields backed by `input[type=\"datetime-local\"]`, never use `toISOString().slice(0, 16)` for default values. Render local wall-clock components so editing and re-saving a timestamp does not shift it by timezone offset.
+- Keep admin control granularity aligned to the schema. Example: `PropFirmReview.rating` is an `Int`, so review forms should use integer steps instead of advertising half-step values that the backend cannot store faithfully.
+
+## Route State & Shell Patterns
+- For UI-only polish passes, start with shared route-state and shell owners before touching route-local page bodies: `components/ui/route-state.tsx`, `components/layout/unified-page-recipes.ts`, public navbar/marketing shell, `components/mobile-nav.tsx`, `dashboard-header.tsx`, and mounted admin/teams layout wrappers.
+- Loading/error/not-found surfaces should use `components/ui/route-state.tsx` plus route-specific copy/actions instead of raw spinners, plain bordered boxes, or route-local fallback card recipes.
+- When refreshing auth/public shell chrome, avoid reintroducing `bg-white/[...]`, blur-heavy atmosphere, or isolated route-local panel styles. Use the shared Obsidian panel/action recipes so auth, landing, dashboard, teams, and admin still read as one product.
+- If verification seems stalled after a large UI pass, inspect for duplicate `tsc`/`eslint` workers before retrying. This repo is slow enough that overlapping repo-wide verifier runs can starve each other and create false “hang” signals.
 
 ## API Route & Rate Limiting Patterns
 - ALL authenticated user-facing API routes should be wrapped with `withRateLimited` from `lib/api/with-api-route.ts`
@@ -125,8 +186,19 @@
 - Use `updateTag()` for Next.js `'use cache'` cached server functions
 - Use `CacheService.invalidateNamespace()` for Redis-layer cached data
 - Always invalidate both layers when mutating data that flows through both
+- **Always use composite invalidation helpers** from `lib/cache/cache-invalidation.ts` (`invalidateTradeDataCaches`, `invalidateAccountRelatedCaches`, etc.) instead of listing individual `updateTag()` calls. Manual tag lists are error-prone.
+- **`revalidatePath()` alone is NOT sufficient** for `'use cache'` data. Always pair with `updateTag()` for the relevant cache tags.
+- **Webhook handlers MUST invalidate caches** after subscription/payment mutations. Add invalidation at the central `processEvent` level, not in individual handlers.
+- **Team mutations MUST invalidate** `teams-${userId}` cache tag for all affected user IDs (owner + members).
 
 ## Test Mock Patterns
 - When mocking `@/lib/logger`, always include BOTH `logger` and `createLogger: () => ({ info, warn, error, debug })`
 - This is needed because `cache-service.ts` (transitively imported by many modules) uses `createLogger`
 - For `withRateLimited`-wrapped route tests, pass `{ params: Promise.resolve({}) }` as second arg to the exported handler
+
+## Optimistic Update Pattern
+- ALL optimistic mutations must capture state BEFORE mutation and restore on server error
+- Capture via `useUserStore.getState().fieldName` or `useTradingDomainStore.getState().fieldName` (synchronous snapshot)
+- Pattern: `const previous = store.getState().field` → optimistic update → `try { await serverAction() } catch { store.setState({ field: previous }); throw error }`
+- Reference implementation: `moveAccountToGroup` in `context/data-provider.tsx`
+- NEVER update local state before capturing previous state

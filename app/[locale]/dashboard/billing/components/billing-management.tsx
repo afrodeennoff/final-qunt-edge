@@ -119,7 +119,7 @@ export default function BillingManagement() {
                 </span>
                 <span className="text-muted-foreground">•</span>
                 {subscription?.status === 'ACTIVE' ? (
-                  <span className="text-foreground/95 inline-flex items-center gap-1">
+                  <span className="text-foreground inline-flex items-center gap-1">
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     {t('billing.status.active')}
                   </span>
@@ -172,7 +172,7 @@ export default function BillingManagement() {
                   <div>
                     {subscription?.plan?.interval === 'lifetime' ? (
                       <div className="space-y-1">
-                        <div className="text-2xl font-bold text-foreground/95">
+                        <div className="text-2xl font-bold text-foreground">
                           {t('pricing.lifetimeAccess')}
                         </div>
                         <p className="text-sm text-muted-foreground">
@@ -201,7 +201,7 @@ export default function BillingManagement() {
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge variant="secondary" className="bg-secondary/25 text-foreground/95">
+                          <Badge variant="secondary" className="bg-secondary/25 text-foreground">
                             {subscription.promotion.percent_off
                               ? `${subscription.promotion.percent_off}% OFF`
                               : subscription.promotion.amount_off
@@ -367,7 +367,7 @@ export default function BillingManagement() {
                   <div className="flex flex-wrap items-center gap-4">
                     <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
                       <DialogTrigger asChild>
-                        <Button variant="error" className="sm:w-auto">
+                        <Button variant="destructive" className="sm:w-auto">
                           {t('billing.cancelSubscription')}
                         </Button>
                       </DialogTrigger>
@@ -436,7 +436,7 @@ export default function BillingManagement() {
                             {t('pricing.cancelSubscription.cancel')}
                           </Button>
                           <Button
-                            variant="error"
+                            variant="destructive"
                             onClick={() => {
                               handleSubscriptionAction('cancel')
                               setIsCancelDialogOpen(false)
@@ -525,7 +525,7 @@ export default function BillingManagement() {
                     </div>
                     <div className="flex items-center gap-2">
                       {invoice.status === 'paid' && (
-                        <Badge variant="secondary" className="bg-secondary/25 text-foreground/95">
+                        <Badge variant="secondary" className="bg-secondary/25 text-foreground">
                           {t('billing.paymentStatus.succeeded')}
                         </Badge>
                       )}

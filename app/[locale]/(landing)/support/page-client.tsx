@@ -145,7 +145,7 @@ const ChatBotDemo = () => {
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
       <UnifiedSurface className="flex h-[calc(100vh-220px)] min-h-[680px] flex-col">
         <header className="mb-4">
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground/95 sm:text-3xl">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             Qunt Edge Support
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -157,7 +157,7 @@ const ChatBotDemo = () => {
           href={process.env.NEXT_PUBLIC_DISCORD_INVITATION || '#'}
           target="_blank"
           rel="noreferrer"
-          className="mb-6 block cursor-pointer rounded-xl border border-white/[0.08] bg-white/[0.070] p-4 transition-colors duration-150 hover:border-border/36 hover:bg-[oklch(0.65_0.22_260/0.03)] group"
+          className="mb-6 block cursor-pointer rounded-xl border border-border/0.06 bg-background/0.11 p-4 transition-colors duration-150 hover:border-border/36 hover:bg-primary/[0.03] group"
         >
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex-1">

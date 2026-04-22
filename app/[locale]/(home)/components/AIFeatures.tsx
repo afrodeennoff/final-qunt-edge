@@ -29,7 +29,7 @@ export default function AIFeatures() {
   }))
 
   return (
-    <MotionSection className="relative overflow-hidden px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+    <MotionSection className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
       <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-8">
         <div className={cn(unifiedSectionPanelClassName, 'p-6 md:p-8')}>
           <p className={unifiedSectionEyebrowClassName}>{t('landing.home.ai.eyebrow')}</p>
@@ -45,7 +45,7 @@ export default function AIFeatures() {
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.ai.reasonTrailTitle')}
               </p>
-              <p className="text-sm leading-relaxed text-foreground/90">
+              <p className="text-sm leading-relaxed text-foreground">
                 {t('landing.home.ai.reasonTrailDescription')}
               </p>
             </div>
@@ -53,7 +53,7 @@ export default function AIFeatures() {
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.ai.liveContextTitle')}
               </p>
-              <p className="text-sm leading-relaxed text-foreground/90">
+              <p className="text-sm leading-relaxed text-foreground">
                 {t('landing.home.ai.liveContextDescription')}
               </p>
             </div>
@@ -74,7 +74,7 @@ export default function AIFeatures() {
               return (
                 <MotionStaggerItem key={String(feature.title)} className={feature.colSpan}>
                   <article className={cn(unifiedInsetPanelClassName, 'flex h-full flex-col gap-4 p-5')}>
-                    <div className="flex h-12 w-12 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-primary">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-primary/18 bg-primary/10 text-primary">
                       <Icon className="h-5 w-5" />
                     </div>
                     <span className="inline-flex w-fit items-center rounded-full border border-border/35 bg-background/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">

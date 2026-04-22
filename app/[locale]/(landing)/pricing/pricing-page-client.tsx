@@ -25,7 +25,7 @@ export function PricingPageClient() {
                 Pricing plans
               </span>
 
-              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.3rem)] font-medium leading-[0.98] tracking-[-0.035em] text-foreground/95">
+              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.3rem)] font-medium leading-[0.98] tracking-[-0.035em] text-foreground">
                 Pick a plan that matches your execution cadence.
               </h1>
 
@@ -85,7 +85,7 @@ function PricingMetaChip({
   return (
     <div
       className={cn(
-        'rounded-xl border border-border/40 bg-card/55 px-4 py-3 shadow-[0_20px_42px_-34px_rgba(0,0,0,0.88)]',
+        'rounded-xl border border-border/40 bg-card/55 px-4 py-3 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
         className,
       )}
     >
@@ -93,7 +93,7 @@ function PricingMetaChip({
         <Icon className="h-3.5 w-3.5 text-primary" />
         {label}
       </p>
-      <p className="mt-2 text-sm font-medium text-foreground/95">{value}</p>
+      <p className="mt-2 text-sm font-medium text-foreground">{value}</p>
     </div>
   )
 }

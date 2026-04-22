@@ -32,7 +32,7 @@ const categoryColors: Record<BlogCategory, string> = {
   [BlogCategory.MARKET_ANALYSIS]: 'bg-primary/10 text-primary border-primary/30',
   [BlogCategory.PSYCHOLOGY]: 'bg-secondary/50 text-secondary-foreground border-secondary/30',
   [BlogCategory.RISK_MANAGEMENT]: 'bg-destructive/10 text-destructive border-destructive/30',
-  [BlogCategory.PLATFORM_UPDATES]: 'bg-muted/50 text-muted-foreground border-[oklch(0.65_0.22_260/0.08)]',
+  [BlogCategory.PLATFORM_UPDATES]: 'bg-muted/50 text-muted-foreground border-border/30',
 }
 
 const categoryLabels: Record<BlogCategory, string> = {
@@ -49,7 +49,7 @@ export function BlogCard({ post }: Props) {
 
   return (
     <Link href={`/${locale}/blogs/${post.slug}`} className="group">
-      <Card variant="default" className="h-full overflow-hidden transition-all hover:border-primary/30">
+      <Card variant="default" className="h-full overflow-hidden transition-[opacity,background-color,border-color,transform] hover:border-primary/30">
         {post.coverImage && (
           <div className="relative aspect-video w-full overflow-hidden">
             <Image
@@ -67,7 +67,7 @@ export function BlogCard({ post }: Props) {
               {categoryLabels[post.category]}
             </Badge>
           </div>
-          <h3 className="font-semibold line-clamp-2 text-lg leading-snug text-foreground/95 group-hover:text-primary transition-colors">
+          <h3 className="font-semibold line-clamp-2 text-lg leading-snug text-foreground group-hover:text-primary transition-colors">
             {post.title}
           </h3>
           <p className="text-sm text-muted-foreground line-clamp-3">

@@ -129,13 +129,13 @@ export function AdminDashboard() {
  return (
  <div className="p-6">
  <div className="animate-pulse space-y-4">
- <div className="h-8 w-1/4 rounded bg-[oklch(0.65_0.22_260/0.10)]"></div>
+ <div className="h-8 w-1/4 rounded bg-muted/50"></div>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
- <div className="h-32 rounded bg-[oklch(0.65_0.22_260/0.10)]"></div>
- <div className="h-32 rounded bg-[oklch(0.65_0.22_260/0.10)]"></div>
- <div className="h-32 rounded bg-[oklch(0.65_0.22_260/0.10)]"></div>
+ <div className="h-32 rounded bg-muted/50"></div>
+ <div className="h-32 rounded bg-muted/50"></div>
+ <div className="h-32 rounded bg-muted/50"></div>
  </div>
- <div className="h-80 rounded bg-[oklch(0.65_0.22_260/0.10)]"></div>
+ <div className="h-80 rounded bg-muted/50"></div>
  </div>
  </div>
  )
@@ -207,7 +207,7 @@ export function AdminDashboard() {
  className={cn(unifiedInsetPanelClassName, 'group p-4 transition-[opacity,background-color,border-color,transform,box-shadow] hover:-translate-y-0.5 hover:border-primary/18 hover:bg-background/78 hover:shadow-[0_18px_30px_-24px_hsl(var(--foreground)/0.45)]')}
  >
  <div className="flex items-start gap-3">
- <div className="rounded-lg border border-border/35 bg-background/70 p-2 text-foreground/95 transition-colors group-hover:bg-foreground group-hover:text-background">
+ <div className="rounded-lg border border-border/35 bg-background/70 p-2 text-foreground transition-colors group-hover:bg-foreground group-hover:text-background">
  <Icon className="h-4 w-4" />
  </div>
  <div className="space-y-1">
@@ -252,7 +252,7 @@ export function AdminDashboard() {
  </div>
 
  <Tabs defaultValue="overview" className="w-full">
- <TabsList className="border border-border/35 bg-background/70 p-1 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+ <TabsList className="border border-border/35 bg-background/70 p-1 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
  <TabsTrigger value="overview">Overview</TabsTrigger>
  <TabsTrigger value="users">Users</TabsTrigger>
  <TabsTrigger value="payments">Payments</TabsTrigger>
@@ -260,7 +260,7 @@ export function AdminDashboard() {
 
  <TabsContent value="overview" className="space-y-6">
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
- <Card className="space-y-2 border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+ <Card className="space-y-2 border-border/30 bg-background/30 p-6 shadow-[0_4px_12px_-6px_rgba(0,0,0,0.5)]">
  <div className="flex items-center justify-between">
  <h3 className="text-sm font-medium">Total Users</h3>
  <Badge variant="secondary">Active</Badge>
@@ -276,7 +276,7 @@ export function AdminDashboard() {
  </TabsContent>
 
  <TabsContent value="users">
- <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+ <Card className="border-border/30 bg-background/30 p-6 shadow-[0_4px_12px_-6px_rgba(0,0,0,0.5)]">
  <div className="flex items-center justify-between mb-4">
  <h3 className="text-lg font-semibold">Free Users</h3>
  <Badge variant="secondary">Active</Badge>
@@ -286,14 +286,14 @@ export function AdminDashboard() {
  </TabsContent>
 
  <TabsContent value="payments" className="space-y-6">
- <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+ <Card className="border-border/30 bg-background/30 p-6 shadow-[0_4px_12px_-6px_rgba(0,0,0,0.5)]">
  <div className="flex items-center justify-between mb-4">
  <h3 className="text-lg font-semibold">Recent Transactions</h3>
  </div>
  <TransactionsTable transactions={paymentData.transactions} />
  </Card>
 
- <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+ <Card className="border-border/30 bg-background/30 p-6 shadow-[0_4px_12px_-6px_rgba(0,0,0,0.5)]">
  <div className="flex items-center justify-between mb-4">
  <h3 className="text-lg font-semibold">Active Subscriptions</h3>
  </div>

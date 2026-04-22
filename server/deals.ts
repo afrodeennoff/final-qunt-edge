@@ -8,6 +8,7 @@ import {
 } from '@/lib/propfirmmatch/source'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { normalizeFirmName } from '@/lib/prop-firms/normalize'
+import { buildPublicCouponWindowWhere } from '@/lib/prop-firms/coupon-visibility'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import { listSpotlightCouponSuggestions } from '@/lib/prop-firms/spotlight-coupon-suggestions'
 import {
@@ -348,10 +349,7 @@ async function loadFirmWithRelations(where: { id?: string; slug?: string }): Pro
         coupons: {
           where: {
             isActive: true,
-            OR: [
-              { expiresAt: null },
-              { expiresAt: { gte: now } },
-            ],
+            ...buildPublicCouponWindowWhere(now),
           },
           orderBy: [
             { challengeFee: 'asc' },
@@ -469,10 +467,7 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
       where: {
         isActive: true,
         propFirm: { isActive: true },
-        OR: [
-          { expiresAt: null },
-          { expiresAt: { gte: now } },
-        ],
+        ...buildPublicCouponWindowWhere(now),
       },
       include: {
         propFirm: {
@@ -555,10 +550,7 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
           coupons: {
             where: {
               isActive: true,
-              OR: [
-                { expiresAt: null },
-                { expiresAt: { gte: now } },
-              ],
+              ...buildPublicCouponWindowWhere(now),
             },
             orderBy: [
               { challengeFee: 'asc' },
@@ -684,10 +676,7 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
       where: {
         propFirmId: firmId,
         isActive: true,
-        OR: [
-          { expiresAt: null },
-          { expiresAt: { gte: now } },
-        ],
+        ...buildPublicCouponWindowWhere(now),
       },
       include: {
         propFirm: {

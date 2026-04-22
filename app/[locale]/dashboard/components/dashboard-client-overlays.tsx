@@ -8,7 +8,7 @@ import { useRithmicSyncStore } from "@/store/rithmic-sync-store";
 import { useDashboardRefreshError, useDashboardActions } from "@/context/data-provider";
 
 const Modals = dynamic(() => import("@/components/modals"), {
- ssr: false,
+ 
 });
 
 const RithmicSyncNotifications = dynamic(
@@ -17,7 +17,7 @@ const RithmicSyncNotifications = dynamic(
  (module) => module.RithmicSyncNotifications
  ),
  {
- ssr: false,
+ 
  }
 );
 

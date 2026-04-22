@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 const TiptapEditor = dynamic(
  () => import("@/components/tiptap-editor").then((m) => ({ default: m.TiptapEditor })),
- { ssr: false, loading: () => <Skeleton className="h-[400px] w-full" /> }
+ {  loading: () => <Skeleton className="h-[400px] w-full" /> }
 )
 
 interface JournalingProps {

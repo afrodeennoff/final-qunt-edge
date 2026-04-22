@@ -13,7 +13,7 @@ import { logger } from '@/lib/logger'
 import { authSecurityConfig } from '@/lib/security/auth-config'
 import { createOAuthState, consumeOAuthState } from '@/lib/security/oauth-state'
 import { decryptToken, encryptToken } from '@/lib/security/token-crypto'
-import { invalidateEquityChart } from '@/lib/cache/cache-invalidation'
+import { invalidateEquityChart, CACHE_TAGS } from '@/lib/cache/cache-invalidation'
 
 import { formatTimestamp, formatDateToTimestamp } from '@/lib/date-utils'
 import { createTradeWithDefaults } from '@/lib/trade-factory'
@@ -1320,6 +1320,16 @@ export async function removeTradovateToken(accountId?: string) {
       0
     )
 
+    // Invalidate user data caches so token removal reflects immediately
+    if (deletedCount > 0) {
+      const { updateTag } = await import('next/cache')
+      updateTag(CACHE_TAGS.USER_DATA(databaseUserId))
+      updateTag(CACHE_TAGS.USER_DATA_CORE(databaseUserId))
+      updateTag(CACHE_TAGS.USER_DATA_SUPPLEMENTAL(databaseUserId))
+      updateTag(CACHE_TAGS.DASHBOARD(databaseUserId))
+      invalidateEquityChart(databaseUserId)
+    }
+
     return { deletedCount }
   } catch (error) {
     console.error('Failed to remove Tradovate token:', error)
@@ -1660,7 +1670,7 @@ export async function updateDailySyncTimeAction(
   utcTimeString: string | null
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const userId = await getUserId()
+    const userId = await getDatabaseUserId()
 
     // Parse the UTC time string
     let syncDateTime: Date | null = null
@@ -1679,6 +1689,11 @@ export async function updateDailySyncTimeAction(
         dailySyncTime: syncDateTime
       }
     })
+
+    // Invalidate caches so new sync time reflects in UI
+    const { updateTag } = await import('next/cache')
+    updateTag(CACHE_TAGS.USER_DATA(userId))
+    updateTag(CACHE_TAGS.DASHBOARD(userId))
 
     return { success: true }
   } catch (error) {

@@ -47,7 +47,7 @@ export default function TeamsPageClient() {
           <div className="relative grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.8fr)] xl:items-end">
             <div className="space-y-5">
               <span className={unifiedChipClassName}>Teams</span>
-              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.35rem)] font-medium leading-[0.98] tracking-[-0.04em] text-foreground/95">
+              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.35rem)] font-medium leading-[0.98] tracking-[-0.04em] text-foreground">
                 A shared trading desk, rebuilt as one command surface.
               </h1>
               <p className="max-w-2xl text-sm leading-[1.75] text-muted-foreground sm:text-base">
@@ -104,7 +104,7 @@ export default function TeamsPageClient() {
                     <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                       {label}
                     </p>
-                    <p className="mt-2 text-sm leading-relaxed text-foreground/85">{value}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-foreground">{value}</p>
                   </div>
                 ))}
               </div>

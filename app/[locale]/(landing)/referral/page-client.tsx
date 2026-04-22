@@ -66,7 +66,7 @@ export default function ReferralPage() {
           <div className="relative grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.82fr)] xl:items-end">
             <div className="space-y-5">
               <span className={unifiedChipClassName}>{t('referral.landing.heroBadge')}</span>
-              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.3rem)] font-medium leading-[0.98] tracking-[-0.04em] text-foreground/95">
+              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.3rem)] font-medium leading-[0.98] tracking-[-0.04em] text-foreground">
                 {t('referral.landing.heroTitle')}
               </h1>
               <p className="max-w-2xl text-sm leading-[1.7] text-muted-foreground sm:text-base">

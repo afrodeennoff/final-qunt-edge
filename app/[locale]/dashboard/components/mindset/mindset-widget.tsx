@@ -116,6 +116,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
  }
 
  const handleApplyTagToAll = async (tag: string) => {
+ const previousTrades = useTradingDomainStore.getState().trades
  try {
  const dateKey = format(selectedDate, 'yyyy-MM-dd')
 
@@ -149,6 +150,8 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
  description: t('mindset.tags.tagAppliedDescription', { tag }),
  })
  } catch (error) {
+ // Rollback trades to pre-mutation state
+ setTrades(previousTrades)
  toast.error(t('mindset.tags.tagApplyError'), {
  description: t('mindset.tags.tagApplyErrorDescription'),
  })
@@ -321,7 +324,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
  className={cn("h-1.5 w-1.5 rounded-full transition-colors",
  current === index
  ?"bg-primary"
- :"bg-[oklch(0.65_0.22_260/0.045)]"
+ :"bg-background/25"
  )}
  />
  ))}

@@ -81,7 +81,7 @@ export default function ContractQuantityChartEmbed({ trades }: { trades: { quant
                 borderColor: 'hsl(var(--embed-tooltip-border, var(--border)))',
                 borderRadius: 'var(--embed-tooltip-radius, 0.5rem)'
               }} />
-              <Bar dataKey="totalQuantity" radius={[4,4,0,0]} className="transition-all duration-300 ease-in-out">
+              <Bar dataKey="totalQuantity" radius={[4,4,0,0]} className="transition-[opacity,fill] duration-300 ease-in-out">
                 {chartData.map((entry, idx) => (
                   <Cell key={`cell-${idx}`} fill={getColor(entry.tradeCount)} />
                 ))}

@@ -262,7 +262,7 @@ function AccountsTableSection({
  </div>
  <Progress
  value={summary.summary.averageProgress}
- className="h-1.5 bg-white/[0.010]"
+ className="h-1.5 bg-background/0.01"
  indicatorClassName="transition-colors duration-300 bg-primary/80"
  />
  </div>
@@ -295,16 +295,16 @@ function AccountsTableSection({
  <div className="relative">
  <div className="overflow-x-auto" ref={tableWrapperRef}>
  <table className="w-full border-separate border-spacing-0 text-sm">
- <thead className="sticky top-0 z-10 bg-white/[0.090] shadow-xs border-b [&_tr]:border-b">
+ <thead className="sticky top-0 z-10 bg-background/0.14 shadow-xs border-b [&_tr]:border-b">
  {table.getHeaderGroups().map((headerGroup) => (
  <tr
  key={headerGroup.id}
- className="border-b transition-colors hover:bg-white/[0.040]"
+ className="border-b transition-colors hover:bg-background/0.06"
  >
  {headerGroup.headers.map((header) => (
  <th
  key={header.id}
- className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-white/[0.090] border-r border-border/20 last:border-r-0 first:border-l align-middle text-foreground/80"
+ className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-background/0.14 border-r border-border/20 last:border-r-0 first:border-l align-middle text-foreground/80"
  style={{ width: header.getSize() }}
  >
  {header.isPlaceholder
@@ -324,7 +324,7 @@ function AccountsTableSection({
  return (
  <tr
  key={entry.summary.id}
- className="border-b border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.090] font-semibold"
+ className="border-b border-border/30 bg-background/0.14 font-semibold"
  >
  {table.getVisibleLeafColumns().map((column) => (
  <td
@@ -343,9 +343,9 @@ function AccountsTableSection({
  return (
  <tr
  key={row.id}
- className={cn("border-b border-[oklch(0.65_0.22_260/0.08)] transition-[opacity,background-color,border-color] duration-75 hover:bg-white/[0.040]",
- rowIndex % 2 === 1 &&"bg-white/[0.05]",
- row.getCanExpand() &&"bg-white/[0.010] font-medium",
+ className={cn("border-b border-border/30 transition-[opacity,background-color,border-color] duration-75 hover:bg-background/0.06",
+ rowIndex % 2 === 1 &&"bg-background/35",
+ row.getCanExpand() &&"bg-background/0.01 font-medium",
  isDrawdownBreached(row.original) &&"opacity-50",
  (row.getCanExpand() || row.depth > 0) &&"cursor-pointer"
  )}
@@ -379,7 +379,7 @@ function AccountsTableSection({
  </div>
  {showScrollHint && (
  <div className="pointer-events-none absolute bottom-2 right-2">
- <div className="pointer-events-auto flex items-start gap-2 rounded-md border border-[oklch(0.65_0.22_260/0.08)] bg-background/90 px-3 py-2 text-xs text-muted-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+ <div className="pointer-events-auto flex items-start gap-2 rounded-md border border-border/30 bg-background/90 px-3 py-2 text-xs text-muted-foreground shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
  <span className="max-w-[220px] leading-snug">
  {t("accounts.table.scrollHint")}
  </span>
@@ -428,7 +428,7 @@ export function AccountsTableView({
  event.stopPropagation()
  row.toggleExpanded()
  }}
- className="flex items-center justify-center h-6 w-6 rounded hover:bg-white/[0.060] transition-colors"
+ className="flex items-center justify-center h-6 w-6 rounded hover:bg-background/0.09 transition-colors"
  aria-label={
  row.getIsExpanded()
  ? t("accounts.table.collapseGroup")

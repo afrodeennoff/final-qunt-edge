@@ -64,7 +64,7 @@ export function AccountTable({
  if (!isConfigured) {
  return (
  <div className="space-y-4">
- <div className="rounded-md border-[oklch(0.65_0.22_260/0.08)]">
+ <div className="rounded-md border-border/30">
  <Table>
  {renderTableHeader()}
  <TableBody>
@@ -309,7 +309,7 @@ export function AccountTable({
  <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
  {t('propFirm.beforeReset')}
  </div>
- <div className="rounded-md border-[oklch(0.65_0.22_260/0.08)]">
+ <div className="rounded-md border-border/30">
  <Table>
  {renderTableHeader()}
  <TableBody>
@@ -328,15 +328,15 @@ export function AccountTable({
  )}
 
  {resetDate && (
- <div className="rounded-md border border-[oklch(0.65_0.22_260/0.08)] bg-secondary/20 p-4">
+ <div className="rounded-md border border-border/30 bg-secondary/20 p-4">
  <div className="flex items-center justify-between">
  <div>
  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">{t('propFirm.resetDate.label')}</div>
- <div className="font-medium text-foreground/95">{format(resetDate, 'PP', { locale: dateLocale })}</div>
+ <div className="font-medium text-foreground">{format(resetDate, 'PP', { locale: dateLocale })}</div>
  </div>
  <div className="text-right">
  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">{t('propFirm.startingBalance')}</div>
- <div className="font-medium text-foreground/95">${startingBalance.toFixed(2)}</div>
+ <div className="font-medium text-foreground">${startingBalance.toFixed(2)}</div>
  </div>
  </div>
  </div>
@@ -348,7 +348,7 @@ export function AccountTable({
  {t('propFirm.afterReset')}
  </div>
  )}
- <div className="rounded-md border-[oklch(0.65_0.22_260/0.08)]">
+ <div className="rounded-md border-border/30">
  <Table>
  {renderTableHeader()}
  <TableBody>

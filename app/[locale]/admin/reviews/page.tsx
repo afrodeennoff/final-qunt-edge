@@ -79,7 +79,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               status === option.value
                 ? 'bg-primary text-primary-foreground'
-                : 'bg-[oklch(0.65_0.22_260/0.06)] text-muted-foreground hover:bg-[oklch(0.65_0.22_260/0.12)]'
+                : 'bg-background/30 text-muted-foreground hover:bg-background/35'
             }`}
           >
             {option.label}
@@ -97,7 +97,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
           items.map((item) => (
             <div
               key={item.id}
-              className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] p-6"
+              className="rounded-xl border border-border/30 bg-background/20 p-6"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
@@ -115,17 +115,17 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                   </div>
                   
                   {/* The flagged review */}
-                  <div className="mb-4 rounded-xl bg-[oklch(0.65_0.22_260/0.08)] p-4">
+                  <div className="mb-4 rounded-xl bg-background/30 p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="font-medium">
                         {item.review.propFirm.name}
                       </span>
-                      <span className="text-yellow-400">
+                      <span className="text-warning">
                         {'★'.repeat(item.review.rating)}
                       </span>
                     </div>
                     {item.review.title && (
-                      <h4 className="mb-1 text-sm font-medium text-foreground/95">
+                      <h4 className="mb-1 text-sm font-medium text-foreground">
                         {item.review.title}
                       </h4>
                     )}
@@ -225,7 +225,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
         <div className="flex items-center justify-center gap-2 mt-6">
           <Link
             href={`/${locale}/admin/reviews?page=${Math.max(1, currentPage - 1)}&status=${status}`}
-            className={`rounded-lg p-2 ${currentPage === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-[oklch(0.65_0.22_260/0.12)]'}`}
+            className={`rounded-lg p-2 ${currentPage === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-background/35'}`}
           >
             <ChevronLeft className="h-5 w-5" />
           </Link>
@@ -234,7 +234,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
           </span>
           <Link
             href={`/${locale}/admin/reviews?page=${Math.min(totalPages, currentPage + 1)}&status=${status}`}
-            className={`rounded-lg p-2 ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-[oklch(0.65_0.22_260/0.12)]'}`}
+            className={`rounded-lg p-2 ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-background/35'}`}
           >
             <ChevronRight className="h-5 w-5" />
           </Link>

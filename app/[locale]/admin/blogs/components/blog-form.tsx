@@ -125,7 +125,7 @@ export function BlogForm({ post, locale }: Props) {
           error={!!errors.title}
         />
         {errors.title && (
-          <p className="text-sm text-red-500">{errors.title.message}</p>
+          <p className="text-sm text-destructive">{errors.title.message}</p>
         )}
       </div>
 
@@ -138,7 +138,7 @@ export function BlogForm({ post, locale }: Props) {
           error={!!errors.slug}
         />
         {errors.slug && (
-          <p className="text-sm text-red-500">{errors.slug.message}</p>
+          <p className="text-sm text-destructive">{errors.slug.message}</p>
         )}
       </div>
 
@@ -163,7 +163,7 @@ export function BlogForm({ post, locale }: Props) {
           error={!!errors.excerpt}
         />
         {errors.excerpt && (
-          <p className="text-sm text-red-500">{errors.excerpt.message}</p>
+          <p className="text-sm text-destructive">{errors.excerpt.message}</p>
         )}
       </div>
 
@@ -182,7 +182,7 @@ export function BlogForm({ post, locale }: Props) {
         <select
           id="category"
           {...register('category', { required: 'Category is required' })}
-          className="flex h-10 w-full rounded-v2-md border border-v2-border bg-v2-bg-surface px-3 py-2 text-sm text-v2-text-primary outline-none focus-visible:ring-2 focus-visible:ring-v2-accent focus-visible:ring-offset-2 focus-visible:ring-offset-v2-bg-base"
+          className="flex h-10 w-full rounded-v2-md border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-v2-accent focus-visible:ring-offset-2 focus-visible:ring-offset-v2-bg-base"
         >
           {categoryOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -191,7 +191,7 @@ export function BlogForm({ post, locale }: Props) {
           ))}
         </select>
         {errors.category && (
-          <p className="text-sm text-red-500">{errors.category.message}</p>
+          <p className="text-sm text-destructive">{errors.category.message}</p>
         )}
       </div>
 
@@ -206,7 +206,7 @@ export function BlogForm({ post, locale }: Props) {
           className="font-mono text-sm"
         />
         {errors.content && (
-          <p className="text-sm text-red-500">{errors.content.message}</p>
+          <p className="text-sm text-destructive">{errors.content.message}</p>
         )}
       </div>
 
@@ -227,7 +227,7 @@ export function BlogForm({ post, locale }: Props) {
         )}
       </div>
 
-      <div className="flex items-center justify-end gap-3 pt-4 border-t border-[oklch(0.65_0.22_260/0.08)]">
+      <div className="flex items-center justify-end gap-3 pt-4 border-t border-border/30">
         <Button
           type="button"
           variant="outline"

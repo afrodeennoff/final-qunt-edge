@@ -30,8 +30,8 @@ export const TYPO_EYEBROW = 'text-[0.68rem] font-bold uppercase tracking-[0.2em]
 // ── Surface & Border Tokens ──────────────────────────────────────────────────
 export const SURFACE_CARD = 'bg-[hsl(var(--mk-surface)/0.6)]'
 export const SURFACE_SUBTLE = 'bg-[hsl(var(--mk-surface)/0.3)]'
-export const BORDER_CARD = 'border-white/[0.06]'
-export const BORDER_SECTION = 'border-y border-white/[0.04] bg-card/20'
+export const BORDER_CARD = 'border-border/0.04'
+export const BORDER_SECTION = 'border-y border-border/0.03 bg-card/20'
 export const TEXT_SECONDARY = 'text-muted-foreground'
 
 // ── Premium Shadow Tokens ────────────────────────────────────────────────────
@@ -46,4 +46,4 @@ export const SHADOW_SECTION =
 export const TRANSITION_CARD =
   'transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]'
 export const TRANSITION_INTERACTIVE =
-  'transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]'
+  'transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]'

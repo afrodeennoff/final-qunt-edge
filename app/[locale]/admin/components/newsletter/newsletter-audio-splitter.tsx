@@ -177,7 +177,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  }
 
  return (
- <div className="p-4 bg-white/[0.2] border border-white/[0.6] rounded-lg">
+ <div className="p-4 bg-background/0.3 border border-border/0.42 rounded-lg">
  {error && (
  <div className="mb-4 p-3 bg-semantic-error-bg dark:bg-semantic-error-bg/20 border border-semantic-error-border dark:border-semantic-error-border rounded-md text-semantic-error dark:text-semantic-error">
  {error}
@@ -206,7 +206,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  </div>
  <div className="w-full bg-muted/30 dark:bg-muted/60 rounded-full h-2">
  <div 
- className="bg-semantic-info-bg dark:bg-semantic-info-bg h-2 rounded-full transition-all duration-300"
+ className="bg-semantic-info-bg dark:bg-semantic-info-bg h-2 rounded-full transition-[width] duration-300"
  style={{ width: `${progress}%` }}
  ></div>
  </div>
@@ -219,17 +219,17 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  {/* Segments List */}
  {segments.length > 0 && (
  <div className="mt-6">
- <h3 className="text-lg font-semibold text-foreground/95 mb-4">
+ <h3 className="text-lg font-semibold text-foreground mb-4">
  Generated Segments ({segments.length})
  </h3>
  <div className="space-y-3">
  {segments.map((segment) => (
  <div 
  key={segment.index} 
- className="flex items-center justify-between p-3 bg-white/[0.030] dark:bg-white/[0.070] rounded-lg border border-white/[0.6]"
+ className="flex items-center justify-between p-3 bg-background/0.04 dark:bg-background/0.11 rounded-lg border border-border/0.42"
  >
  <div className="flex-1">
- <div className="font-medium text-foreground/95">
+ <div className="font-medium text-foreground">
  {segment.fileName}
  </div>
  <div className="text-sm text-muted-foreground">
@@ -250,7 +250,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  </button>
  <button
  onClick={() => downloadSegment(segment)}
- className="p-2 text-card-foreground hover:bg-white/[0.030] rounded-md transition-colors"
+ className="p-2 text-card-foreground hover:bg-background/0.04 rounded-md transition-colors"
  title="Download"
  >
  <Download className="w-4 h-4" />
@@ -274,7 +274,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
 
  {/* Transcription Component - Removed */}
  {segments.length > 0 && (
- <div className="mt-6 p-4 bg-white/[0.040] rounded-lg border border-white/[0.6]">
+ <div className="mt-6 p-4 bg-background/0.06 rounded-lg border border-border/0.42">
  <p className="text-sm text-muted-foreground">
  Transcription feature has been removed. Segments are ready for manual processing.
  </p>

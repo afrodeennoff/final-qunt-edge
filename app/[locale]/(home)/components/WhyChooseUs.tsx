@@ -39,15 +39,15 @@ const socialProof = [
 
 export default function WhyChooseUs() {
  return (
- <section id="why-us" className="relative border-y border-border/30 bg-white/[0.010] px-4 py-16 sm:py-20 lg:py-24 sm:px-6 lg:px-8">
+ <section id="why-us" className="relative border-y border-border/30 bg-background/0.01 px-4 py-12 sm:py-16 lg:py-20 sm:px-6 lg:px-8">
  <div className="mx-auto max-w-6xl space-y-10">
  <div className="text-center">
- <Badge variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground/95 [font-family:var(--home-copy)]">
+ <Badge variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
  Why Traders Choose Us
  </Badge>
  <h2 className="mt-3 text-[clamp(2rem,4.9vw,3.55rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
  Why high-standard traders
- <span className="block text-foreground/95">choose Qunt Edge over basic journals</span>
+ <span className="block text-foreground">choose Qunt Edge over basic journals</span>
  </h2>
  <p className="mx-auto mt-4 max-w-3xl text-[15px] leading-[1.78] text-foreground/80 sm:text-base [font-family:var(--home-copy)]">
  Qunt Edge merges execution analytics, journaling, and AI coaching into one weekly cadence so your process gets sharper, not noisier.
@@ -76,7 +76,7 @@ export default function WhyChooseUs() {
  >
  <Card variant="glass" className="h-full rounded-xl border-[hsl(var(--mk-border)/0.35)]">
  <CardHeader>
- <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.7)] text-foreground/95">
+ <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.7)] text-foreground">
  <Icon className="h-5 w-5" />
  </div>
  <CardTitle className="text-xl tracking-[-0.01em] [font-family:var(--home-display)]">{reason.title}</CardTitle>
@@ -96,9 +96,9 @@ export default function WhyChooseUs() {
  key={item}
  className="flex items-center gap-3 rounded-xl border border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface)/0.7)] px-4 py-3 text-sm"
  >
- {idx === 0 && <Sparkles className="h-4 w-4 text-foreground/95" />}
- {idx === 1 && <CheckCircle2 className="h-4 w-4 text-foreground/95" />}
- {idx === 2 && <CheckCircle2 className="h-4 w-4 text-foreground/95" />}
+ {idx === 0 && <Sparkles className="h-4 w-4 text-foreground" />}
+ {idx === 1 && <CheckCircle2 className="h-4 w-4 text-foreground" />}
+ {idx === 2 && <CheckCircle2 className="h-4 w-4 text-foreground" />}
  <span className="text-foreground/80 [font-family:var(--home-copy)]">{item}</span>
  </div>
  ))}

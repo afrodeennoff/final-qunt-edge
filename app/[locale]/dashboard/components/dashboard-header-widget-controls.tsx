@@ -20,12 +20,12 @@ import { CheckCircle2, CloudUpload, RotateCcw, Sparkles, Trash2 } from "lucide-r
 
 const AddWidgetSheet = dynamic(
  () => import("@/app/[locale]/dashboard/components/add-widget-sheet").then((m) => m.AddWidgetSheet),
- { ssr: false }
+ {  }
 );
 
 const ShareButton = dynamic(
  () => import("./share-button").then((m) => m.ShareButton),
- { ssr: false }
+ {  }
 );
 
 type DashboardHeaderWidgetControlsProps = {
@@ -111,7 +111,7 @@ function CustomizingControls({
  <button
  type="button"
  aria-label={t("widgets.restoreDefaults")}
- className="flex h-9 w-9 items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary transition-colors hover:bg-v2-bg-hover/70 hover:text-v2-text-primary"
+ className="flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-transparent text-muted-foreground transition-[opacity,background-color,border-color,color] duration-200 hover:border-primary/18 hover:bg-primary/10 hover:text-foreground"
  title={t("widgets.restoreDefaults")}
  >
  <RotateCcw className="h-4 w-4" />
@@ -138,7 +138,7 @@ function CustomizingControls({
  <button
  type="button"
  aria-label={t("widgets.deleteAll")}
- className="flex h-9 w-9 items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary transition-colors hover:bg-v2-bg-hover/70 hover:text-v2-text-primary"
+ className="flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-transparent text-muted-foreground transition-[opacity,background-color,border-color,color] duration-200 hover:border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
  title={t("widgets.deleteAll")}
  >
  <Trash2 className="h-4 w-4" />
@@ -153,7 +153,7 @@ function CustomizingControls({
  <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
  <AlertDialogAction
  onClick={removeAllWidgets}
- className="bg-foreground/10 text-foreground/95 hover:bg-foreground/20 border border-border/14"
+ className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
  >
  {t("widgets.confirmDeleteAll")}
  </AlertDialogAction>
@@ -167,7 +167,7 @@ function CustomizingControls({
  type="button"
  onClick={flushPendingSaves}
  aria-label="Save pending dashboard changes"
- className={cn("flex items-center justify-center rounded-full border border-transparent bg-v2-accent/10 text-v2-text-primary transition-colors animate-pulse",
+ className={cn("flex items-center justify-center rounded-full border border-transparent bg-primary/10 text-foreground transition-[opacity,background-color,border-color,color] duration-200 hover:bg-primary/15",
  isMobile ?"h-11 w-11" :"h-9 w-9"
  )}
  title="Save Changes"
@@ -178,12 +178,12 @@ function CustomizingControls({
  <div
  role="status"
  aria-label="All changes saved"
- className={cn("flex items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary",
+ className={cn("flex items-center justify-center rounded-full border border-transparent bg-transparent text-muted-foreground",
  isMobile ?"h-11 w-11" :"h-9 w-9"
  )}
  title="All changes saved"
  >
- <CheckCircle2 className="w-4 h-4 text-v2-text-primary" />
+ <CheckCircle2 className="w-4 h-4 text-foreground/70" />
  </div>
  )}
  </div>
@@ -191,15 +191,15 @@ function CustomizingControls({
 }
 
 function getHeaderWrapperClass() {
- return cn("ml-0.5 flex shrink-0 items-center gap-1");
+ return cn("ml-0.5 flex shrink-0 items-center gap-1.5");
 }
 
 function getCustomizeButtonClasses(isMobile: boolean, isCustomizing: boolean) {
- return cn("relative group flex items-center gap-2 rounded-lg transition-[opacity,background-color,border-color] duration-200",
+ return cn("relative group flex items-center gap-2 rounded-full transition-[opacity,background-color,border-color] duration-200",
  isMobile ?"h-11 w-11 justify-center px-0" :"h-9 px-3.5",
  isCustomizing
- ?"border border-transparent bg-v2-accent/12 text-v2-text-primary ring-1 ring-v2-accent/15"
- :"rounded-full border border-transparent bg-transparent text-v2-text-secondary hover:bg-v2-bg-hover/70 hover:text-v2-text-primary"
+ ?"border border-primary/18 bg-primary/10 text-foreground"
+ :"border border-transparent bg-transparent text-muted-foreground hover:bg-background/80 hover:text-foreground"
  );
 }
 

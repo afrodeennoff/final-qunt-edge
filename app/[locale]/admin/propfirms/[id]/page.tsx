@@ -1,8 +1,11 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
+import { connection } from 'next/server'
+import type { ReactNode } from 'react'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getSpotlightCouponSuggestionForFirm } from '@/lib/prop-firms/spotlight-coupon-suggestions'
+import { getPropFirmAdminPageState } from '@/lib/prop-firms/admin-state'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import {
   createPropFirm,
@@ -23,68 +26,25 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import {
-  AlertTriangle,
-  ArrowUpRight,
-  CheckCircle2,
-  Eye,
-  Plus,
-  Trash2,
-} from 'lucide-react'
+import { AlertTriangle, ArrowUpRight, CheckCircle2, Eye, Plus, Trash2 } from 'lucide-react'
+import { AdminStatCard } from '../../components/admin-surface'
 import {
   buildCouponAdminRedirectUrl,
   formatAdminDateTimeInput,
   getCouponAdminNotice,
+  getFirmAdminNotice,
   getCouponTimingState,
-  type CouponAdminSearchParamValue,
-  type CouponAdminNotice,
 } from '../../components/coupon-admin-utils'
 import { FormActionButton } from '../../components/form-action-button'
-
-// ---------------------------------------------------------------------------
-// Shared helpers (module scope — no closure capture)
-// ---------------------------------------------------------------------------
-
-function normalizeOptionalText(value: FormDataEntryValue | null): string | undefined {
-  const text = value?.toString().trim()
-  return text ? text : undefined
-}
-
-function requireText(value: FormDataEntryValue | null, fallback = ''): string {
-  return value?.toString().trim() || fallback
-}
-
-function parseOptionalNumber(value: FormDataEntryValue | null): number | undefined {
-  const text = value?.toString().trim()
-  if (!text) return undefined
-  const parsed = Number.parseFloat(text)
-  return Number.isFinite(parsed) ? parsed : undefined
-}
-
-function parseOptionalNumberForUpdate(value: FormDataEntryValue | null): number | null | undefined {
-  const text = value?.toString().trim()
-  if (!text) return null
-  const parsed = Number.parseFloat(text)
-  return Number.isFinite(parsed) ? parsed : undefined
-}
-
-function parseOptionalDate(value: FormDataEntryValue | null): Date | null | undefined {
-  const text = value?.toString().trim()
-  if (!text) return null
-  const parsed = new Date(text)
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed
-}
-
-function normalizeOptionalTextForUpdate(value: FormDataEntryValue | null): string | null | undefined {
-  const text = value?.toString().trim()
-  return typeof text === 'string' ? (text ? text : null) : undefined
-}
-
-function requireFormString(formData: FormData, key: string): string {
-  const val = formData.get(key)
-  if (!val || typeof val !== 'string') throw new Error(`Missing required field: ${key}`)
-  return val
-}
+import {
+  requireText,
+  parseOptionalNumber,
+  normalizeOptionalText,
+  normalizeOptionalTextForUpdate,
+  parseOptionalDate,
+  parseOptionalNumberForUpdate,
+  requireFormString,
+} from '../../lib/admin-form-helpers'
 
 // ---------------------------------------------------------------------------
 // Server actions (module scope — read locale from FormData, not closure)
@@ -114,19 +74,25 @@ async function handleAction(formData: FormData) {
 
   if (isUpdating) {
     try {
-      await updatePropFirm(firmId!, data)
+      const result = await updatePropFirm(firmId!, data)
+      redirect(`/${locale}/admin/propfirms/${result.id}?firmStatus=saved`)
     } catch (error) {
-      redirect(`/${locale}/admin/propfirms/${firmId}?firmStatus=error&firmMessage=Failed+to+save+firm`)
+      const message = error instanceof Error ? error.message : 'Failed to save the prop firm.'
+      redirect(
+        `/${locale}/admin/propfirms/${firmId}?firmStatus=error&firmMessage=${encodeURIComponent(message)}`,
+      )
     }
   } else {
     try {
-      await createPropFirm(data)
+      const result = await createPropFirm(data)
+      redirect(`/${locale}/admin/propfirms/${result.id}?firmStatus=saved`)
     } catch (error) {
-      redirect(`/${locale}/admin/propfirms/new?firmStatus=error&firmMessage=Failed+to+create+firm`)
+      const message = error instanceof Error ? error.message : 'Failed to create the prop firm.'
+      redirect(
+        `/${locale}/admin/propfirms/new?firmStatus=error&firmMessage=${encodeURIComponent(message)}`,
+      )
     }
   }
-
-  redirect(`/${locale}/admin/propfirms?firmStatus=saved`)
 }
 
 async function handleCreateReview(formData: FormData) {
@@ -140,8 +106,11 @@ async function handleCreateReview(formData: FormData) {
       content: normalizeOptionalText(formData.get('content')),
       isVerified: formData.has('isVerified'),
     })
-  } catch {
-    redirect(`/${locale}/admin/propfirms/${propFirmId}?firmStatus=error&firmMessage=Failed+to+create+review`)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to create the review.'
+    redirect(
+      `/${locale}/admin/propfirms/${propFirmId}?firmStatus=error&firmMessage=${encodeURIComponent(message)}`,
+    )
   }
   redirect(`/${locale}/admin/propfirms/${propFirmId}?firmStatus=saved`)
 }
@@ -158,8 +127,11 @@ async function handleUpdateReview(formData: FormData) {
       content: normalizeOptionalText(formData.get('content')),
       isVerified: formData.has('isVerified'),
     })
-  } catch {
-    redirect(`/${locale}/admin/propfirms/${propFirmId}?firmStatus=error&firmMessage=Failed+to+update+review`)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to update the review.'
+    redirect(
+      `/${locale}/admin/propfirms/${propFirmId}?firmStatus=error&firmMessage=${encodeURIComponent(message)}`,
+    )
   }
   redirect(`/${locale}/admin/propfirms/${propFirmId}?firmStatus=saved`)
 }
@@ -171,8 +143,11 @@ async function handleDeleteReview(formData: FormData) {
   const locale = requireFormString(formData, 'locale')
   try {
     await deletePropFirmReview(reviewId)
-  } catch {
-    redirect(`/${locale}/admin/propfirms/${propFirmId}?firmStatus=error&firmMessage=Failed+to+delete+review`)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to delete the review.'
+    redirect(
+      `/${locale}/admin/propfirms/${propFirmId}?firmStatus=error&firmMessage=${encodeURIComponent(message)}`,
+    )
   }
   redirect(`/${locale}/admin/propfirms/${propFirmId}?firmStatus=deleted`)
 }
@@ -207,7 +182,9 @@ async function handleCreateCoupon(formData: FormData) {
     )
   }
 
-  redirect(buildCouponAdminRedirectUrl(`/${locale}/admin/propfirms/${fallbackPropFirmId}`, 'created'))
+  redirect(
+    buildCouponAdminRedirectUrl(`/${locale}/admin/propfirms/${fallbackPropFirmId}`, 'created'),
+  )
 }
 
 async function handleUpdateCoupon(formData: FormData) {
@@ -338,27 +315,29 @@ function buildFallbackFirm(id: string): PropFirmData | null {
   }
 }
 
+function FormFieldGroup({
+  title,
+  description,
+  children,
+}: {
+  title: string
+  description?: string
+  children: ReactNode
+}) {
+  return (
+    <div className="space-y-4 rounded-xl border border-border/30 bg-background/40 p-4">
+      <div className="space-y-1">
+        <p className="text-sm font-semibold text-foreground">{title}</p>
+        {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
+      </div>
+      {children}
+    </div>
+  )
+}
+
 // ---------------------------------------------------------------------------
 // Page (Server Component — no function props passed to client boundaries)
 // ---------------------------------------------------------------------------
-
-// eslint-disable-next-line complexity
-function getFirmAdminNotice(searchParams: Record<string, CouponAdminSearchParamValue>): CouponAdminNotice | null {
-  const status = Array.isArray(searchParams.firmStatus) ? searchParams.firmStatus[0] : searchParams.firmStatus
-  if (!status) return null
-  const message = Array.isArray(searchParams.firmMessage) ? searchParams.firmMessage[0] : searchParams.firmMessage
-
-  switch (status) {
-    case 'saved':
-      return { variant: 'success', title: 'Saved', description: message ?? 'Changes saved successfully.' }
-    case 'deleted':
-      return { variant: 'success', title: 'Deleted', description: message ?? 'Item removed.' }
-    case 'error':
-      return { variant: 'destructive', title: 'Action failed', description: message ?? 'The change did not save.' }
-    default:
-      return null
-  }
-}
 
 // eslint-disable-next-line complexity
 export default async function PropFirmEditPage({
@@ -369,12 +348,12 @@ export default async function PropFirmEditPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   await assertAdminAccess()
+  await connection()
   const { locale, id } = await params
   const couponNotice = getCouponAdminNotice(await searchParams)
   const firmNotice = getFirmAdminNotice(await searchParams)
   const notice = firmNotice ?? couponNotice
   const isNew = id === 'new'
-  const isReadOnlyFallback = !hasConfiguredDatabaseConnection
 
   let firm: PropFirmData | null = null
   if (!isNew) {
@@ -399,17 +378,49 @@ export default async function PropFirmEditPage({
     }
   }
 
+  const pageState = getPropFirmAdminPageState({
+    hasConfiguredDatabaseConnection,
+    firmId: firm?.id ?? (isNew ? null : id),
+  })
+
   const fieldClass = 'grid gap-2'
 
   return (
-    <div className="space-y-6 max-w-4xl">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="sm" asChild>
-          <Link href={`/${locale}/admin/propfirms`}>← Back</Link>
-        </Button>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {isNew ? 'Add Prop Firm' : 'Edit Prop Firm'}
-        </h1>
+    <div className="max-w-5xl space-y-5">
+      <div className="flex flex-col gap-3 border-b border-border/30 pb-6 md:flex-row md:items-end md:justify-between">
+        <div className="space-y-2">
+          <Button variant="ghost" size="sm" asChild className="w-fit">
+            <Link href={`/${locale}/admin/propfirms`}>← Back to firms</Link>
+          </Button>
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-3xl font-semibold tracking-tight">
+                {isNew ? 'Add Prop Firm' : (firm?.name ?? 'Edit Prop Firm')}
+              </h1>
+              {!isNew && firm ? (
+                <Badge variant={firm.isActive ? 'default' : 'secondary'}>
+                  {firm.isActive ? 'Active' : 'Inactive'}
+                </Badge>
+              ) : null}
+              {pageState.isReadOnly ? <Badge variant="outline">Read-only</Badge> : null}
+            </div>
+            <p className="max-w-2xl text-sm text-muted-foreground">
+              Edit the firm profile, manage reviews, and keep coupon data aligned with the public
+              deals surfaces from one workspace.
+            </p>
+          </div>
+        </div>
+
+        {!isNew && firm ? (
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="outline" asChild>
+              <Link href={`/${locale}/firm/${firm.slug}`}>
+                <Eye className="h-4 w-4" />
+                Public page
+              </Link>
+            </Button>
+          </div>
+        ) : null}
       </div>
 
       {notice ? (
@@ -424,114 +435,190 @@ export default async function PropFirmEditPage({
         </Alert>
       ) : null}
 
-      {isReadOnlyFallback ? (
+      {pageState.isReadOnly ? (
         <Alert variant="warning">
           <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Read-only fallback mode</AlertTitle>
+          <AlertTitle>Prop-firm workspace is read-only</AlertTitle>
           <AlertDescription>
-            The database connection is not configured in this environment, so coupon changes and related admin writes are unavailable until the live schema is connected.
+            {pageState.isFallbackRecord
+              ? 'This page is rendering fallback/reference firm data, so save and delete actions are disabled until a live database record is available again.'
+              : 'The database connection is not configured in this environment, so firm, review, and coupon mutations are disabled until the live schema is connected.'}
           </AlertDescription>
         </Alert>
       ) : null}
 
+      {!isNew && firm ? (
+        <div className="grid gap-3 sm:grid-cols-3">
+          <AdminStatCard label="Reviews" value={firm.reviews.length.toString()} />
+          <AdminStatCard label="Coupons" value={firm.coupons.length.toString()} />
+          <AdminStatCard
+            label="Workspace mode"
+            value={pageState.isReadOnly ? 'Read-only' : 'Editable'}
+            hint={
+              pageState.isReadOnly ? 'Fallback or DB unavailable' : 'Live admin schema connected'
+            }
+          />
+        </div>
+      ) : null}
+
       <form action={handleAction}>
-        <Card>
-          <CardHeader>
-            <CardTitle>Firm Details</CardTitle>
+        <Card
+          variant="frost"
+          className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+        >
+          <CardHeader className="space-y-1 border-b border-border/30">
+            <CardTitle>Firm details</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              These fields drive the public catalogue, firm detail page, and admin suggestion
+              matching.
+            </p>
           </CardHeader>
           <CardContent className="space-y-4">
             <input type="hidden" name="locale" value={locale} />
             {firm && <input type="hidden" name="id" value={id} />}
+            <fieldset disabled={!pageState.canManageFirm} className="space-y-4">
+              <FormFieldGroup
+                title="Identity"
+                description="Core details that control how the firm appears in the catalogue and routing."
+              >
+                <div className={fieldClass}>
+                  <Label htmlFor="name">Name</Label>
+                  <Input id="name" name="name" defaultValue={firm?.name ?? ''} required />
+                </div>
 
-            <div className={fieldClass}>
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" defaultValue={firm?.name ?? ''} required />
-            </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className={fieldClass}>
+                    <Label htmlFor="slug">Slug</Label>
+                    <Input id="slug" name="slug" defaultValue={firm?.slug ?? ''} required />
+                  </div>
+                  <div className={fieldClass}>
+                    <Label htmlFor="category">Category</Label>
+                    <Input
+                      id="category"
+                      name="category"
+                      defaultValue={firm?.category ?? ''}
+                      placeholder="Futures, Forex, Crypto..."
+                    />
+                  </div>
+                </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className={fieldClass}>
-                <Label htmlFor="slug">Slug</Label>
-                <Input id="slug" name="slug" defaultValue={firm?.slug ?? ''} required />
-              </div>
-              <div className={fieldClass}>
-                <Label htmlFor="category">Category</Label>
-                <Input id="category" name="category" defaultValue={firm?.category ?? ''} placeholder="Futures, Forex, Crypto..." />
-              </div>
-            </div>
+                <div className={fieldClass}>
+                  <Label htmlFor="shortDesc">Short description</Label>
+                  <Input id="shortDesc" name="shortDesc" defaultValue={firm?.shortDesc ?? ''} />
+                </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className={fieldClass}>
-                <Label htmlFor="platform">Platform</Label>
-                <Input id="platform" name="platform" defaultValue={firm?.platform ?? ''} />
-              </div>
-              <div className={fieldClass}>
-                <Label htmlFor="payoutModel">Payout Model</Label>
-                <Input id="payoutModel" name="payoutModel" defaultValue={firm?.payoutModel ?? ''} />
-              </div>
-            </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="isActive"
+                    name="isActive"
+                    value="1"
+                    defaultChecked={firm?.isActive ?? true}
+                    className="h-4 w-4 rounded border-input accent-primary"
+                  />
+                  <Label htmlFor="isActive" className="cursor-pointer font-normal">
+                    Active
+                  </Label>
+                </div>
+              </FormFieldGroup>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className={fieldClass}>
-                <Label htmlFor="drawdownType">Drawdown Type</Label>
-                <Input id="drawdownType" name="drawdownType" defaultValue={firm?.drawdownType ?? ''} />
-              </div>
-              <div className={fieldClass}>
-                <Label htmlFor="profitSplit">Profit Split</Label>
-                <Input id="profitSplit" name="profitSplit" defaultValue={firm?.profitSplit ?? ''} />
-              </div>
-            </div>
+              <FormFieldGroup
+                title="Commercial profile"
+                description="Platform, payout, and funding terms used across the firm detail and deals surfaces."
+              >
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className={fieldClass}>
+                    <Label htmlFor="platform">Platform</Label>
+                    <Input id="platform" name="platform" defaultValue={firm?.platform ?? ''} />
+                  </div>
+                  <div className={fieldClass}>
+                    <Label htmlFor="payoutModel">Payout model</Label>
+                    <Input
+                      id="payoutModel"
+                      name="payoutModel"
+                      defaultValue={firm?.payoutModel ?? ''}
+                    />
+                  </div>
+                </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className={fieldClass}>
-                <Label htmlFor="maxAllocation">Max Allocation</Label>
-                <Input id="maxAllocation" name="maxAllocation" defaultValue={firm?.maxAllocation ?? ''} />
-              </div>
-              <div className={fieldClass}>
-                <Label htmlFor="referralUrl">Referral URL</Label>
-                <Input id="referralUrl" name="referralUrl" type="url" defaultValue={firm?.referralUrl ?? ''} />
-              </div>
-            </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className={fieldClass}>
+                    <Label htmlFor="drawdownType">Drawdown type</Label>
+                    <Input
+                      id="drawdownType"
+                      name="drawdownType"
+                      defaultValue={firm?.drawdownType ?? ''}
+                    />
+                  </div>
+                  <div className={fieldClass}>
+                    <Label htmlFor="profitSplit">Profit split</Label>
+                    <Input
+                      id="profitSplit"
+                      name="profitSplit"
+                      defaultValue={firm?.profitSplit ?? ''}
+                    />
+                  </div>
+                </div>
 
-            <div className={fieldClass}>
-              <Label htmlFor="logoUrl">Logo URL</Label>
-              <Input id="logoUrl" name="logoUrl" type="url" defaultValue={firm?.logoUrl ?? ''} />
-            </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className={fieldClass}>
+                    <Label htmlFor="maxAllocation">Max allocation</Label>
+                    <Input
+                      id="maxAllocation"
+                      name="maxAllocation"
+                      defaultValue={firm?.maxAllocation ?? ''}
+                    />
+                  </div>
+                  <div className={fieldClass}>
+                    <Label htmlFor="referralUrl">Referral URL</Label>
+                    <Input
+                      id="referralUrl"
+                      name="referralUrl"
+                      type="url"
+                      defaultValue={firm?.referralUrl ?? ''}
+                    />
+                  </div>
+                </div>
+              </FormFieldGroup>
 
-            <div className={fieldClass}>
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                name="description"
-                rows={3}
-                defaultValue={firm?.description ?? ''}
-              />
-            </div>
+              <FormFieldGroup
+                title="Copy and media"
+                description="Public-facing copy and branding assets used on firm pages."
+              >
+                <div className={fieldClass}>
+                  <Label htmlFor="logoUrl">Logo URL</Label>
+                  <Input
+                    id="logoUrl"
+                    name="logoUrl"
+                    type="url"
+                    defaultValue={firm?.logoUrl ?? ''}
+                  />
+                </div>
 
-            <div className={fieldClass}>
-              <Label htmlFor="shortDesc">Short Description</Label>
-              <Input id="shortDesc" name="shortDesc" defaultValue={firm?.shortDesc ?? ''} />
-            </div>
+                <div className={fieldClass}>
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    name="description"
+                    rows={5}
+                    defaultValue={firm?.description ?? ''}
+                  />
+                </div>
+              </FormFieldGroup>
+            </fieldset>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="isActive"
-                name="isActive"
-                value="1"
-                defaultChecked={firm?.isActive ?? true}
-                className="h-4 w-4 rounded border-input accent-primary"
-              />
-              <Label htmlFor="isActive" className="font-normal cursor-pointer">Active</Label>
-            </div>
             <p className="text-xs text-muted-foreground">
-              Inactive firms are hidden from public catalogue pages and the rolling prop-firm banner.
+              Inactive firms are hidden from public catalogue pages and the rolling prop-firm
+              banner.
             </p>
 
             <div className="flex justify-end gap-2 pt-2">
               <Button variant="outline" asChild>
                 <Link href={`/${locale}/admin/propfirms`}>Cancel</Link>
               </Button>
-              <FormActionButton type="submit">{isNew ? 'Create' : 'Save Changes'}</FormActionButton>
+              <FormActionButton type="submit" disabled={!pageState.canManageFirm}>
+                {isNew ? 'Create firm' : 'Save changes'}
+              </FormActionButton>
             </div>
           </CardContent>
         </Card>
@@ -539,8 +626,16 @@ export default async function PropFirmEditPage({
 
       {!isNew && firm && (
         <>
-          <ReviewsSection firm={firm} locale={locale} />
-          <CouponsSection firm={firm} locale={locale} canManageCoupons={!isReadOnlyFallback} />
+          <ReviewsSection
+            firm={firm}
+            locale={locale}
+            canManageReviews={pageState.canManageReviews}
+          />
+          <CouponsSection
+            firm={firm}
+            locale={locale}
+            canManageCoupons={pageState.canManageCoupons}
+          />
         </>
       )}
     </div>
@@ -551,26 +646,73 @@ export default async function PropFirmEditPage({
 // Section components (Server Components — use module-scope actions directly)
 // ---------------------------------------------------------------------------
 
-function ReviewsSection({ firm, locale }: { firm: PropFirmData; locale: string }) {
+function ReviewsSection({
+  firm,
+  locale,
+  canManageReviews,
+}: {
+  firm: PropFirmData
+  locale: string
+  canManageReviews: boolean
+}) {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Reviews ({firm.reviews.length})</CardTitle>
-        <form action={handleCreateReview}>
+    <Card
+      variant="frost"
+      className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+    >
+      <CardHeader className="space-y-3 border-b border-border/30">
+        <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+          <div className="space-y-1">
+            <CardTitle>Reviews ({firm.reviews.length})</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Use this section to keep the visible review set clean and consistent with the public
+              firm page.
+            </p>
+          </div>
+        </div>
+
+        {!canManageReviews ? (
+          <Alert variant="warning">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Review editing unavailable</AlertTitle>
+            <AlertDescription>
+              This firm record is currently read-only, so review create, edit, and delete actions
+              are disabled.
+            </AlertDescription>
+          </Alert>
+        ) : null}
+
+        <form
+          action={handleCreateReview}
+          className="rounded-xl border border-border/30 bg-background/40 p-4"
+        >
           <input type="hidden" name="propFirmId" value={firm.id} />
           <input type="hidden" name="locale" value={locale} />
-          <div className="flex items-center gap-2">
-            <Input name="title" placeholder="Review title" className="w-40" />
-            <Input name="rating" type="number" min="0" max="5" placeholder="Rating" className="w-20" />
-            <Input name="content" placeholder="Content" className="w-60" />
-            <label className="flex items-center gap-1 text-sm">
-              <input type="checkbox" name="isVerified" className="h-4 w-4 rounded border-input accent-primary" />
-              Verified
-            </label>
-            <FormActionButton type="submit" size="sm" variant="outline" pendingLabel="Adding...">
-              <Plus className="w-4 h-4 mr-1" /> Add
-            </FormActionButton>
-          </div>
+          <fieldset disabled={!canManageReviews} className="space-y-3">
+            <div className="grid gap-3 md:grid-cols-[minmax(0,1.5fr)_120px]">
+              <Input name="title" placeholder="Review title" />
+              <Input name="rating" type="number" min="0" max="5" step="1" placeholder="Rating" />
+            </div>
+            <Textarea
+              name="content"
+              placeholder="Review content"
+              rows={3}
+              className="min-h-[96px]"
+            />
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  name="isVerified"
+                  className="h-4 w-4 rounded border-input accent-primary"
+                />
+                Verified
+              </label>
+              <FormActionButton type="submit" size="sm" variant="outline" pendingLabel="Adding...">
+                <Plus className="mr-1 h-4 w-4" /> Add review
+              </FormActionButton>
+            </div>
+          </fieldset>
         </form>
       </CardHeader>
       <CardContent>
@@ -579,40 +721,77 @@ function ReviewsSection({ firm, locale }: { firm: PropFirmData; locale: string }
         ) : (
           <div className="space-y-3">
             {firm.reviews.map((review) => (
-              <div key={review.id} className="flex items-start gap-3 p-3 rounded-lg border border-[oklch(0.65_0.22_260/0.08)]">
-                <div className="flex-1 gap-2">
+              <div
+                key={review.id}
+                className="rounded-lg border border-border/30 p-4"
+              >
+                <div className="space-y-3">
                   <form action={handleUpdateReview} className="space-y-2">
                     <input type="hidden" name="reviewId" value={review.id} />
                     <input type="hidden" name="propFirmId" value={firm.id} />
                     <input type="hidden" name="locale" value={locale} />
-                    <div className="flex items-center gap-2">
-                      <Input name="title" defaultValue={review.title ?? ''} placeholder="Title" className="w-40" />
-                      <Input name="rating" type="number" min="0" max="5" defaultValue={review.rating} className="w-20" />
-                      <label className="flex items-center gap-1 text-sm">
-                        <input type="checkbox" name="isVerified" defaultChecked={review.isVerified} className="h-4 w-4 rounded border-input accent-primary" />
-                        Verified
-                      </label>
-                      <FormActionButton type="submit" size="sm" variant="outline" pendingLabel="Saving...">Save</FormActionButton>
-                    </div>
-                    <Textarea
-                      name="content"
-                      defaultValue={review.content ?? ''}
-                      placeholder="Review content"
-                      rows={2}
-                    />
+                    <fieldset disabled={!canManageReviews} className="space-y-3">
+                      <div className="grid gap-3 md:grid-cols-[minmax(0,1.5fr)_120px]">
+                        <Input name="title" defaultValue={review.title ?? ''} placeholder="Title" />
+                        <Input
+                          name="rating"
+                          type="number"
+                          min="0"
+                          max="5"
+                          step="1"
+                          defaultValue={review.rating}
+                        />
+                      </div>
+                      <Textarea
+                        name="content"
+                        defaultValue={review.content ?? ''}
+                        placeholder="Review content"
+                        rows={3}
+                        className="min-h-[96px]"
+                      />
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <label className="flex items-center gap-2 text-sm">
+                          <input
+                            type="checkbox"
+                            name="isVerified"
+                            defaultChecked={review.isVerified}
+                            className="h-4 w-4 rounded border-input accent-primary"
+                          />
+                          Verified
+                        </label>
+                        <FormActionButton
+                          type="submit"
+                          size="sm"
+                          variant="outline"
+                          pendingLabel="Saving..."
+                        >
+                          Save review
+                        </FormActionButton>
+                      </div>
+                    </fieldset>
                   </form>
-                  <p className="text-xs text-muted-foreground">
-                    Created: {new Date(review.createdAt).toLocaleDateString()}
-                  </p>
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/30 pt-3">
+                    <p className="text-xs text-muted-foreground">
+                      Created: {new Date(review.createdAt).toLocaleDateString()}
+                    </p>
+                    <form action={handleDeleteReview}>
+                      <input type="hidden" name="reviewId" value={review.id} />
+                      <input type="hidden" name="propFirmId" value={firm.id} />
+                      <input type="hidden" name="locale" value={locale} />
+                      <FormActionButton
+                        type="submit"
+                        size="sm"
+                        variant="ghost"
+                        disabled={!canManageReviews}
+                        pendingLabel="Deleting..."
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Delete review
+                      </FormActionButton>
+                    </form>
+                  </div>
                 </div>
-                <form action={handleDeleteReview}>
-                  <input type="hidden" name="reviewId" value={review.id} />
-                  <input type="hidden" name="propFirmId" value={firm.id} />
-                  <input type="hidden" name="locale" value={locale} />
-                  <FormActionButton type="submit" size="sm" variant="ghost" pendingLabel="Deleting..." className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
-                    <Trash2 className="w-4 h-4" />
-                  </FormActionButton>
-                </form>
               </div>
             ))}
           </div>
@@ -639,39 +818,57 @@ function CouponsSection({
   const createDefaults = firm.coupons.length === 0 ? spotlightSuggestion : null
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Coupons ({firm.coupons.length})</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
+    <Card
+      variant="frost"
+      className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+    >
+      <CardHeader className="space-y-3 border-b border-border/30">
+        <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+          <div className="space-y-1">
+            <CardTitle>Coupons ({firm.coupons.length})</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Manage the codes shown on the firm page and keep their live timing aligned with the
+              public deals surfaces.
+            </p>
+          </div>
+          <Button variant="outline" asChild>
+            <Link href={`/${locale}/admin/coupons`}>Open coupon workspace</Link>
+          </Button>
+        </div>
+
         {!canManageCoupons ? (
           <Alert variant="warning">
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle>Coupon editing unavailable</AlertTitle>
             <AlertDescription>
-              This prop-firm detail page is in read-only fallback mode until the database connection is configured.
+              This prop-firm detail page is in read-only fallback mode until the database connection
+              is configured.
             </AlertDescription>
           </Alert>
         ) : null}
-
-        {/* Create new coupon form */}
+      </CardHeader>
+      <CardContent className="space-y-6">
         {canManageCoupons ? (
-          <form action={handleCreateCoupon} className="space-y-4 rounded-lg border border-[oklch(0.65_0.22_260/0.08)] p-4">
+          <form
+            action={handleCreateCoupon}
+            className="space-y-4 rounded-xl border border-border/30 p-4"
+          >
             <input type="hidden" name="propFirmId" value={firm.id} />
             <input type="hidden" name="locale" value={locale} />
             <div className="space-y-2">
-              <p className="text-sm font-medium">Add New Coupon</p>
+              <p className="text-sm font-medium">Add new coupon</p>
               {createDefaults ? (
                 <Alert variant="warning">
                   <AlertTriangle className="h-4 w-4" />
                   <AlertTitle>Public deal found for this firm</AlertTitle>
                   <AlertDescription>
-                    The deals page already has spotlight values for this firm. They are prefilled below so you can save them as a real admin coupon and edit them normally.
+                    The deals page already has spotlight values for this firm. They are prefilled
+                    below so you can save them as a real admin coupon and edit them normally.
                   </AlertDescription>
                 </Alert>
               ) : null}
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-3 md:grid-cols-2">
               <div className="space-y-1">
                 <Label htmlFor="new-code">Code *</Label>
                 <Input
@@ -725,7 +922,7 @@ function CouponsSection({
                 className="min-h-[92px] resize-y"
               />
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid gap-3 md:grid-cols-3">
               <div className="space-y-1">
                 <Label htmlFor="new-platform">Platform Override</Label>
                 <Input
@@ -754,7 +951,7 @@ function CouponsSection({
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-3 md:grid-cols-2">
               <div className="space-y-1">
                 <Label htmlFor="new-starts">Starts At</Label>
                 <Input id="new-starts" name="startsAt" type="datetime-local" />
@@ -773,183 +970,253 @@ function CouponsSection({
                 defaultChecked
                 className="h-4 w-4 rounded border-input accent-primary"
               />
-              <Label htmlFor="new-active" className="font-normal cursor-pointer">Active</Label>
+              <Label htmlFor="new-active" className="font-normal cursor-pointer">
+                Active
+              </Label>
             </div>
             <div className="flex justify-end">
               <FormActionButton type="submit" size="sm" pendingLabel="Creating coupon...">
-                <Plus className="w-4 h-4 mr-1" /> Add Coupon
+                <Plus className="w-4 h-4 mr-1" /> Add coupon
               </FormActionButton>
             </div>
           </form>
         ) : null}
 
-        {/* Existing coupons */}
         {firm.coupons.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No coupons yet.</p>
+          <p className="text-sm text-muted-foreground">No coupons stored for this firm yet.</p>
         ) : (
           <div className="space-y-4">
-            {firm.coupons.map((coupon) => {
-              const timing = getCouponTimingState(coupon)
-
-              return (
-                <div key={coupon.id} className="flex items-start gap-3 p-4 rounded-lg border border-[oklch(0.65_0.22_260/0.08)]">
-                  <div className="flex-1 gap-2">
-                    <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant={coupon.isActive ? 'default' : 'secondary'}>
-                          {coupon.isActive ? 'Active' : 'Inactive'}
-                        </Badge>
-                        {timing.isLive ? (
-                          <Badge variant="outline" className="border-emerald-500/40 text-emerald-300">
-                            Live on deals
-                          </Badge>
-                        ) : null}
-                        {timing.isScheduled ? (
-                          <Badge variant="outline" className="border-sky-500/40 text-sky-300">
-                            Scheduled
-                          </Badge>
-                        ) : null}
-                        {timing.isExpired ? (
-                          <Badge variant="outline" className="border-border/40 text-muted-foreground">
-                            Expired
-                          </Badge>
-                        ) : null}
-                        {timing.isExpiringSoon ? (
-                          <Badge variant="outline" className="border-amber-500/40 text-amber-300">
-                            Expires soon
-                          </Badge>
-                        ) : null}
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Button variant="ghost" size="sm" asChild>
-                          <Link href={publicFirmHref}>
-                            <Eye className="h-4 w-4" />
-                            Public
-                          </Link>
-                        </Button>
-                        {coupon.claimUrl ? (
-                          <Button variant="ghost" size="sm" asChild>
-                            <a href={coupon.claimUrl} target="_blank" rel="noreferrer">
-                              <ArrowUpRight className="h-4 w-4" />
-                              Claim
-                            </a>
-                          </Button>
-                        ) : null}
-                      </div>
-                    </div>
-
-                    <form action={handleUpdateCoupon} className="space-y-3">
-                      <input type="hidden" name="couponId" value={coupon.id} />
-                      <input type="hidden" name="propFirmId" value={firm.id} />
-                      <input type="hidden" name="locale" value={locale} />
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1">
-                        <Label>Code *</Label>
-                        <Input name="code" defaultValue={coupon.code} placeholder="Code" required />
-                      </div>
-                      <div className="space-y-1">
-                        <Label>Discount %</Label>
-                        <Input name="discountPercent" type="number" step="0.01" defaultValue={coupon.discountPercent ?? ''} placeholder="0" />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1">
-                        <Label>Challenge Fee</Label>
-                        <Input name="challengeFee" type="number" step="0.01" defaultValue={coupon.challengeFee ?? ''} placeholder="149" />
-                      </div>
-                      <div className="space-y-1">
-                        <Label>Claim / Affiliate URL</Label>
-                        <Input name="claimUrl" type="url" defaultValue={coupon.claimUrl ?? ''} placeholder="https://..." />
-                      </div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <Label>Description</Label>
-                      <Textarea
-                        name="description"
-                        defaultValue={coupon.description ?? ''}
-                        placeholder="Coupon description"
-                        className="min-h-[92px] resize-y"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="space-y-1">
-                        <Label>Platform Override</Label>
-                        <Input name="platform" defaultValue={coupon.platform ?? ''} placeholder="Auto" />
-                      </div>
-                      <div className="space-y-1">
-                        <Label>Payout Override</Label>
-                        <Input name="payoutModel" defaultValue={coupon.payoutModel ?? ''} placeholder="Auto" />
-                      </div>
-                      <div className="space-y-1">
-                        <Label>Drawdown Override</Label>
-                        <Input name="drawdownType" defaultValue={coupon.drawdownType ?? ''} placeholder="Auto" />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1">
-                        <Label>Starts At</Label>
-                        <Input
-                          name="startsAt"
-                          type="datetime-local"
-                          defaultValue={formatAdminDateTimeInput(coupon.startsAt)}
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <Label>Expires At</Label>
-                        <Input
-                          name="expiresAt"
-                          type="datetime-local"
-                          defaultValue={formatAdminDateTimeInput(coupon.expiresAt)}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          name="couponIsActive"
-                          value="1"
-                          defaultChecked={coupon.isActive}
-                          className="h-4 w-4 rounded border-input accent-primary"
-                        />
-                        <span className="text-sm">Active</span>
-                      </div>
-                      <FormActionButton type="submit" size="sm" variant="outline" pendingLabel="Saving coupon...">
-                        Save
-                      </FormActionButton>
-                    </div>
-                    </form>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      Created: {new Date(coupon.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <form action={handleDeleteCoupon}>
-                    <input type="hidden" name="couponId" value={coupon.id} />
-                    <input type="hidden" name="propFirmId" value={firm.id} />
-                    <input type="hidden" name="locale" value={locale} />
-                    <FormActionButton
-                      type="submit"
-                      size="sm"
-                      variant="ghost"
-                      pendingLabel="Deleting..."
-                      className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </FormActionButton>
-                  </form>
-                </div>
-              )
-            })}
+            {firm.coupons.map((coupon) => (
+              <CouponEditorCard
+                key={coupon.id}
+                coupon={coupon}
+                firmId={firm.id}
+                locale={locale}
+                publicFirmHref={publicFirmHref}
+                canManageCoupons={canManageCoupons}
+              />
+            ))}
           </div>
         )}
       </CardContent>
     </Card>
+  )
+}
+
+function CouponEditorCard({
+  coupon,
+  firmId,
+  locale,
+  publicFirmHref,
+  canManageCoupons,
+}: {
+  coupon: PropFirmData['coupons'][number]
+  firmId: string
+  locale: string
+  publicFirmHref: string
+  canManageCoupons: boolean
+}) {
+  const timing = getCouponTimingState(coupon)
+
+  return (
+    <div className="rounded-xl border border-border/30 p-4">
+      <div className="flex flex-col gap-4 border-b border-border/30 pb-4 md:flex-row md:items-start md:justify-between">
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-base font-semibold tracking-tight">{coupon.code}</p>
+            <Badge variant={coupon.isActive ? 'default' : 'secondary'}>
+              {coupon.isActive ? 'Active' : 'Inactive'}
+            </Badge>
+            {timing.isLive ? (
+              <Badge variant="outline" className="border-success/30 text-success">
+                Live on deals
+              </Badge>
+            ) : null}
+            {timing.isScheduled ? (
+              <Badge variant="outline" className="border-sky-500/40 text-sky-300">
+                Scheduled
+              </Badge>
+            ) : null}
+            {timing.isExpired ? (
+              <Badge variant="outline" className="border-border/40 text-muted-foreground">
+                Expired
+              </Badge>
+            ) : null}
+            {timing.isExpiringSoon ? (
+              <Badge variant="outline" className="border-amber-500/40 text-amber-300">
+                Expires soon
+              </Badge>
+            ) : null}
+          </div>
+          <p className="text-sm text-muted-foreground">
+            {coupon.description?.trim() || 'No coupon description saved yet.'}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="ghost" size="sm" asChild>
+            <Link href={publicFirmHref}>
+              <Eye className="h-4 w-4" />
+              Public
+            </Link>
+          </Button>
+          {coupon.claimUrl ? (
+            <Button variant="ghost" size="sm" asChild>
+              <a href={coupon.claimUrl} target="_blank" rel="noreferrer">
+                <ArrowUpRight className="h-4 w-4" />
+                Claim
+              </a>
+            </Button>
+          ) : null}
+        </div>
+      </div>
+
+      <form action={handleUpdateCoupon} className="mt-4 space-y-4">
+        <input type="hidden" name="couponId" value={coupon.id} />
+        <input type="hidden" name="propFirmId" value={firmId} />
+        <input type="hidden" name="locale" value={locale} />
+
+        <fieldset disabled={!canManageCoupons} className="space-y-4">
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-1">
+              <Label>Code *</Label>
+              <Input name="code" defaultValue={coupon.code} placeholder="SAVE20" required />
+            </div>
+            <div className="space-y-1">
+              <Label>Discount %</Label>
+              <Input
+                name="discountPercent"
+                type="number"
+                step="0.01"
+                defaultValue={coupon.discountPercent ?? ''}
+                placeholder="0"
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-1">
+              <Label>Challenge Fee</Label>
+              <Input
+                name="challengeFee"
+                type="number"
+                step="0.01"
+                defaultValue={coupon.challengeFee ?? ''}
+                placeholder="149"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>Claim / Affiliate URL</Label>
+              <Input
+                name="claimUrl"
+                type="url"
+                defaultValue={coupon.claimUrl ?? ''}
+                placeholder="https://..."
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <Label>Description</Label>
+            <Textarea
+              name="description"
+              defaultValue={coupon.description ?? ''}
+              placeholder="Coupon description"
+              className="min-h-[92px] resize-y"
+            />
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-3">
+            <div className="space-y-1">
+              <Label>Platform Override</Label>
+              <Input name="platform" defaultValue={coupon.platform ?? ''} placeholder="Auto" />
+            </div>
+            <div className="space-y-1">
+              <Label>Payout Override</Label>
+              <Input
+                name="payoutModel"
+                defaultValue={coupon.payoutModel ?? ''}
+                placeholder="Auto"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>Drawdown Override</Label>
+              <Input
+                name="drawdownType"
+                defaultValue={coupon.drawdownType ?? ''}
+                placeholder="Auto"
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-1">
+              <Label>Starts At</Label>
+              <Input
+                name="startsAt"
+                type="datetime-local"
+                defaultValue={formatAdminDateTimeInput(coupon.startsAt)}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>Expires At</Label>
+              <Input
+                name="expiresAt"
+                type="datetime-local"
+                defaultValue={formatAdminDateTimeInput(coupon.expiresAt)}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                name="couponIsActive"
+                value="1"
+                defaultChecked={coupon.isActive}
+                className="h-4 w-4 rounded border-input accent-primary"
+              />
+              Active
+            </label>
+            <FormActionButton
+              type="submit"
+              size="sm"
+              variant="outline"
+              disabled={!canManageCoupons}
+              pendingLabel="Saving coupon..."
+            >
+              Save coupon
+            </FormActionButton>
+          </div>
+        </fieldset>
+      </form>
+
+      <div className="mt-4 flex flex-col gap-3 border-t border-border/30 pt-4 md:flex-row md:items-center md:justify-between">
+        <div className="space-y-1 text-xs text-muted-foreground">
+          <p>Created {new Date(coupon.createdAt).toLocaleString()}</p>
+          <p>
+            Starts {coupon.startsAt ? new Date(coupon.startsAt).toLocaleString() : 'immediately'} •
+            Expires {coupon.expiresAt ? new Date(coupon.expiresAt).toLocaleString() : 'never'}
+          </p>
+        </div>
+        <form action={handleDeleteCoupon}>
+          <input type="hidden" name="couponId" value={coupon.id} />
+          <input type="hidden" name="propFirmId" value={firmId} />
+          <input type="hidden" name="locale" value={locale} />
+          <FormActionButton
+            type="submit"
+            size="sm"
+            variant="ghost"
+            disabled={!canManageCoupons}
+            pendingLabel="Deleting..."
+            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+          >
+            <Trash2 className="w-4 h-4" />
+            Delete coupon
+          </FormActionButton>
+        </form>
+      </div>
+    </div>
   )
 }

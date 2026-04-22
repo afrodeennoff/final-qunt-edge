@@ -319,7 +319,7 @@ export default function FileUpload({
  className={cn("h-80 w-full max-w-2xl border-2 border-dashed rounded-lg p-12 text-center transition-[opacity,background-color,border-color] duration-300 ease-in-out","hover:border-primary/50 group relative",
  isDragActive 
  ?"border-primary bg-primary/5 scale-[0.99]" 
- :"border-v2-border hover:bg-v2-bg-hover","cursor-pointer flex items-center justify-center"
+ :"border-border hover:bg-background/80","cursor-pointer flex items-center justify-center"
  )}
  >
  <input {...getInputProps()} />
@@ -328,7 +328,7 @@ export default function FileUpload({
  className={cn("h-14 w-14 transition-[opacity,background-color,border-color] duration-300 ease-bounce",
  isDragActive 
  ?"text-primary scale-110 -translate-y-2" 
- :"text-v2-text-muted group-hover:text-primary group-hover:scale-110 group-hover:-translate-y-2"
+ :"text-muted-foreground group-hover:text-primary group-hover:scale-110 group-hover:-translate-y-2"
  )} 
  />
  {isDragActive ? (
@@ -336,7 +336,7 @@ export default function FileUpload({
  <p className="text-xl font-medium text-primary animate-in fade-in slide-in-from-bottom-2">
  {t('import.upload.dropHere')}
  </p>
- <p className="text-sm text-v2-text-muted animate-in fade-in slide-in-from-bottom-3">
+ <p className="text-sm text-muted-foreground animate-in fade-in slide-in-from-bottom-3">
  {t('import.upload.weWillHandle')}
  </p>
  </div>
@@ -345,7 +345,7 @@ export default function FileUpload({
  <p className="text-xl font-medium group-hover:text-primary transition-colors">
  {t('import.upload.dragAndDrop')}
  </p>
- <p className="text-sm text-v2-text-muted">
+ <p className="text-sm text-muted-foreground">
  {t('import.upload.clickToBrowse')}
  </p>
  </div>
@@ -359,7 +359,7 @@ export default function FileUpload({
  {uploadedFiles.map((file, index) => (
  <div 
  key={index} 
- className={cn("flex items-center justify-between","bg-v2-bg-base rounded-lg","p-3 hover:bg-v2-bg-hover","transition-[opacity,background-color,border-color] duration-200 ease-in-out","animate-in slide-in-from-bottom fade-in","group"
+ className={cn("flex items-center justify-between","bg-background rounded-lg","p-3 hover:bg-background/80","transition-[opacity,background-color,border-color] duration-200 ease-in-out","animate-in slide-in-from-bottom fade-in","group"
  )}
  style={{ animationDelay: `${index * 100}ms` }}
  >
@@ -369,7 +369,7 @@ export default function FileUpload({
  </div>
  <div className="flex flex-col">
  <span className="text-sm font-medium">{file.name}</span>
- <span className="text-xs text-v2-text-muted">
+ <span className="text-xs text-muted-foreground">
  {t('import.upload.fileSize', { size: (file.size / 1024).toFixed(1) })}
  </span>
  </div>

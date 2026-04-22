@@ -56,7 +56,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-border/35 bg-black py-12 sm:py-16"
+      className="border-t border-border/50 bg-black py-12 sm:py-16"
     >
       <h2 id="footer-heading" className="sr-only">
         {t('footer.heading')}
@@ -77,7 +77,7 @@ export default function Footer() {
         >
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-primary">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border/30 bg-background/40 text-muted-foreground">
                 <Logo className="h-5 w-5 fill-current" />
               </div>
               <div className="leading-none">
@@ -111,7 +111,7 @@ export default function Footer() {
               </Link>
             </div>
 
-            <div className="h-px w-full max-w-md bg-border/35" />
+            <div className="h-px w-full max-w-md bg-border/45" />
 
             <div className="flex items-center gap-2">
               {socialLinks.map((item, index) => (
@@ -143,8 +143,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-border/35 pt-5 text-muted-foreground/90">
-          <p className="text-xs tracking-[-0.005em] text-foreground/30">
+        <div className="mt-8 border-t border-border/50 pt-5">
+          <p className="text-xs tracking-[-0.005em] text-muted-foreground">
             {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
           <p className="mt-2 text-xs leading-6 text-muted-foreground/70">
@@ -161,7 +161,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
 
   return (
     <div>
-      <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+      <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-foreground/70">
         {title}
       </h3>
       <ul className="space-y-3">

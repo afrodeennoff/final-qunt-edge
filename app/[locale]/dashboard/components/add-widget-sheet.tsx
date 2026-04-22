@@ -81,7 +81,7 @@ const LazyWidgetPreview: React.FC<LazyWidgetPreviewProps> = ({
  <div ref={elementRef} className="w-full h-full">
  {!isVisible ? (
  <div className="w-full h-full bg-muted/30 rounded-md flex items-center justify-center">
- <div className="w-8 h-8 bg-[oklch(0.65_0.22_260/0.045)] rounded animate-pulse" />
+ <div className="w-8 h-8 bg-background/25 rounded animate-pulse" />
  </div>
  ) : !hasLoaded ? (
  <div className="w-full h-full bg-muted/30 rounded-md flex items-center justify-center">
@@ -101,7 +101,7 @@ const PreviewCard = forwardRef<HTMLDivElement, PreviewCardProps>(
  return (
  <div 
  ref={ref}
- className={cn("cursor-pointer rounded-xl relative group m-1 w-full overflow-hidden border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.060] px-2 shadow-[0_16px_34px_-28px_hsl(var(--background)/0.85)]","active:scale-[0.98] transition-[opacity,background-color,border-color] duration-150 ease-in-out",
+ className={cn("cursor-pointer rounded-xl relative group m-1 w-full overflow-hidden border border-border/30 bg-background/0.09 px-2 shadow-[0_16px_34px_-28px_hsl(var(--background)/0.85)]","active:scale-[0.98] transition-[opacity,background-color,border-color] duration-150 ease-in-out",
  className
  )}
  style={style}
@@ -206,7 +206,7 @@ export const AddWidgetSheet = forwardRef<HTMLButtonElement, AddWidgetSheetProps>
  ref={ref}
  variant="ghost"
  disabled={!isCustomizing}
- className={cn("flex items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary shadow-none transition-[transform,background-color,color] active:scale-95 hover:bg-v2-bg-hover/70 hover:text-v2-text-primary",
+ className={cn("flex items-center justify-center rounded-full border border-transparent bg-transparent text-muted-foreground shadow-none transition-[transform,background-color,color] active:scale-95 hover:bg-background/80/70 hover:text-foreground",
  !isCustomizing &&"opacity-60",
  isMobile && !showLabelOnMobile ?"h-10 w-10 p-0" :"h-9 min-w-[120px] gap-2.5 px-3.5"
  )}

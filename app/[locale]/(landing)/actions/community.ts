@@ -6,6 +6,7 @@ import { PostType, PostStatus, VoteType } from '@/prisma/generated/prisma'
 
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { cacheLife, cacheTag } from 'next/cache'
+import { updateTag } from 'next/cache'
 import sharp from 'sharp'
 import { Resend } from 'resend'
 import { formatDistanceToNow } from 'date-fns'
@@ -220,6 +221,7 @@ export async function createPost(formData: {
     })
 
     revalidatePath('/community', 'page')
+    updateTag('community-posts')
     return { post }
   } catch (error) {
     console.warn('Failed to create post:', error)
@@ -243,6 +245,7 @@ export async function updatePostStatus(id: string, status: PostStatus) {
     })
 
     revalidatePath('/community')
+    updateTag('community-posts')
     return { success: true }
   } catch (error) {
     console.warn('Failed to update post status:', error)
@@ -269,6 +272,7 @@ export async function deletePost(id: string) {
     })
 
     revalidatePath('/community')
+    updateTag('community-posts')
     return { success: true }
   } catch (error) {
     console.warn('Failed to delete post:', error)
@@ -327,6 +331,7 @@ export async function votePost(postId: string, voteType: VoteType) {
     }
 
     revalidatePath('/community')
+    updateTag('community-posts')
     return { success: true }
   } catch (error) {
     console.warn('Failed to vote:', error)
@@ -567,6 +572,7 @@ export async function addComment(postId: string, content: string, parentId: stri
     }
 
     revalidatePath('/community')
+    updateTag('community-posts')
     return {
       ...comment,
       user: sanitizeCommunityUser(comment.user),
@@ -598,6 +604,7 @@ export async function editComment(commentId: string, content: string) {
     })
 
     revalidatePath('/community')
+    updateTag('community-posts')
     return { success: true }
   } catch (error) {
     console.warn('Failed to edit comment:', error)
@@ -624,6 +631,7 @@ export async function deleteComment(commentId: string) {
     })
 
     revalidatePath('/community')
+    updateTag('community-posts')
     return { success: true }
   } catch (error) {
     console.warn('Failed to delete comment:', error)
@@ -656,6 +664,7 @@ export async function editPost(id: string, content: string) {
     })
 
     revalidatePath('/community')
+    updateTag('community-posts')
     return { success: true }
   } catch (error) {
     console.warn('Failed to edit post:', error)

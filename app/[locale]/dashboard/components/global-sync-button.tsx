@@ -115,8 +115,8 @@ export function GlobalSyncButton() {
  type="button"
  className={cn("group relative flex h-9 items-center gap-2 rounded-full border px-3.5 transition-[opacity,background-color,border-color] duration-200",
  isAnySyncing
- ?"cursor-wait border-v2-accent/20 bg-v2-accent/10 text-v2-text-primary"
- :"border-transparent bg-transparent text-v2-text-secondary hover:bg-v2-bg-hover/70 hover:text-v2-text-primary"
+ ?"cursor-wait border-v2-accent/20 bg-v2-accent/10 text-foreground"
+ :"border-transparent bg-transparent text-muted-foreground hover:bg-background/80/70 hover:text-foreground"
  )}
  >
  <RefreshCw className={cn("h-4 w-4 shrink-0 transition-transform duration-700",
@@ -128,7 +128,7 @@ export function GlobalSyncButton() {
  {isAnySyncing ?"Syncing" :"Sync"}
  </span>
  {!isAnySyncing && (rithmicAutoEnabled || tradovate.enableAutoSync) && (
- <span className="text-[9px] font-medium uppercase tracking-[0.14em] text-v2-text-muted transition-colors group-hover:text-v2-text-secondary">
+ <span className="text-[9px] font-medium uppercase tracking-[0.14em] text-muted-foreground transition-colors group-hover:text-muted-foreground">
  Auto
  </span>
  )}
@@ -139,13 +139,13 @@ export function GlobalSyncButton() {
  )}
  </button>
  </DropdownMenuTrigger>
- <DropdownMenuContent align="end" className="w-72 rounded-xl border border-v2-border/20 bg-v2-bg-surface/95 text-popover-foreground shadow-xl shadow-black/20">
+ <DropdownMenuContent align="end" className="w-72 rounded-xl border border-border/20 bg-card/95 text-popover-foreground shadow-xl shadow-black/20">
  <DropdownMenuLabel className="flex items-center justify-between">
  <span className="text-xs font-bold uppercase tracking-widest">Sync Status</span>
  {isAnySyncing ? (
  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[8px] animate-pulse">Syncing...</Badge>
  ) : (
- <Badge variant="outline" className="bg-[oklch(0.65_0.22_260/0.045)] text-muted-foreground border-[oklch(0.65_0.22_260/0.08)] text-[8px]">Standby</Badge>
+ <Badge variant="outline" className="bg-background/25 text-muted-foreground border-border/30 text-[8px]">Standby</Badge>
  )}
  </DropdownMenuLabel>
 
@@ -185,14 +185,14 @@ export function GlobalSyncButton() {
  <Clock className="w-3 h-3" />
  <span>Next Sync</span>
  </div>
- <span className="font-mono text-foreground/95">{nextSyncText}</span>
+ <span className="font-mono text-foreground">{nextSyncText}</span>
  </div>
 
  <button
  type="button"
  onClick={handleGlobalSync}
  disabled={isAnySyncing}
- className="flex h-9 w-full items-center justify-center gap-2 rounded-full border border-v2-border/20 bg-v2-bg-base/70 text-[10px] font-bold uppercase tracking-[0.18em] text-v2-text-primary transition-[opacity,background-color,border-color] hover:border-v2-border/35 hover:bg-v2-bg-hover disabled:opacity-50"
+ className="flex h-9 w-full items-center justify-center gap-2 rounded-full border border-border/20 bg-background/70 text-[10px] font-bold uppercase tracking-[0.18em] text-foreground transition-[opacity,background-color,border-color] hover:border-border/35 hover:bg-background/80 disabled:opacity-50"
  >
  <RefreshCw className={cn("w-3.5 h-3.5", isAnySyncing &&"animate-spin")} />
  <span>Force Sync Now</span>

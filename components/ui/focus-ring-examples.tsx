@@ -19,7 +19,7 @@ export function FocusRingComponentExample() {
  <div className="space-y-4 p-6">
  {/* Wrap custom interactive elements */}
  <FocusRing className="block cursor-pointer rounded-lg">
- <div className="border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4">
+ <div className="border border-border/30 bg-primary/[0.03] p-4">
  <h3 className="font-semibold">Custom Interactive Card</h3>
  <p className="text-sm text-muted-foreground">
  Click or Tab to focus - consistent ring appears
@@ -142,7 +142,7 @@ export function KeyboardNavigationExample() {
  </div>
 
  <FocusRing className="block cursor-pointer">
- <div className="border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4">
+ <div className="border border-border/30 bg-primary/[0.03] p-4">
  Fourth Focusable Element
  </div>
  </FocusRing>
@@ -167,7 +167,7 @@ export function ReducedMotionExample() {
  <Button size="lg">Test Focus Ring Animation</Button>
 
  <FocusRing>
- <div className="border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4 cursor-pointer">
+ <div className="border border-border/30 bg-primary/[0.03] p-4 cursor-pointer">
  Custom Element with Adaptive Animation
  </div>
  </FocusRing>

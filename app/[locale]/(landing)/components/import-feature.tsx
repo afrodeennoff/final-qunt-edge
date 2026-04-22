@@ -15,7 +15,7 @@ const Circle = forwardRef<
  return (
  <div
  ref={ref}
- className={cn("z-10 flex size-12 items-center justify-center rounded-full border-2 border-white/[0.08] bg-[oklch(0.65_0.22_260/0.03)] p-3 shadow-none",
+ className={cn("z-10 flex size-12 items-center justify-center rounded-full border-2 border-border/30 bg-primary/[0.03] p-3 shadow-none",
  className,
  )}
  >
@@ -37,12 +37,12 @@ export function ImportFeature() {
  const div7Ref = useRef<HTMLDivElement>(null);
 
  return (
- <div className="mx-6 rounded-xl p-6 bg-[oklch(0.65_0.22_260/0.03)] shadow-card">
+ <div className="mx-6 rounded-xl p-6 bg-primary/[0.03] shadow-card">
  <div className="flex items-center gap-3 mb-4">
  <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
  <Database className="size-[18px] text-primary" strokeWidth={2} />
  </div>
- <p className="text-[12px] uppercase tracking-[0.05em] text-foreground/85 font-medium">
+ <p className="text-[12px] uppercase tracking-[0.05em] text-foreground font-medium">
  Data Import
  </p>
  </div>

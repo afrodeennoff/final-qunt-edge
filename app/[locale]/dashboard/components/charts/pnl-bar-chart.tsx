@@ -79,26 +79,26 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
  const data = payload[0].payload;
  const date = new Date(data.date +"T00:00:00Z");
  return (
- <div className="bg-v2-bg-surface/96 p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
- <p className="font-semibold text-v2-text-secondary text-[10px] uppercase tracking-widest mb-2 border-b border-v2-border/40 pb-1">
+ <div className="bg-card/96 p-3 border border-border/50 rounded-xl shadow-xl min-w-[140px]">
+ <p className="font-semibold text-muted-foreground text-[10px] uppercase tracking-widest mb-2 border-b border-border/40 pb-1">
  {formatInTimeZone(date, timezone,"MMM d, yyyy", {
  locale: dateLocale,
  })}
  </p>
  <div className="flex justify-between items-center mb-2">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("pnl.tooltip.pnl")}</span>
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnl.tooltip.pnl")}</span>
  <span className={cn("font-bold text-sm tabular-nums", data.pnl >= 0 ?"metric-positive" :"metric-negative")}>
  {formatCurrency(data.pnl)}
  </span>
  </div>
- <div className="grid grid-cols-2 gap-x-4 pt-2 border-t border-v2-border/40">
+ <div className="grid grid-cols-2 gap-x-4 pt-2 border-t border-border/40">
  <div className="flex flex-col">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("pnl.tooltip.longTrades")}</span>
- <span className="text-sm font-bold text-v2-text-primary">{data.longNumber}</span>
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnl.tooltip.longTrades")}</span>
+ <span className="text-sm font-bold text-foreground">{data.longNumber}</span>
  </div>
  <div className="flex flex-col text-right">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("pnl.tooltip.shortTrades")}</span>
- <span className="text-sm font-bold text-v2-text-primary">{data.shortNumber}</span>
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnl.tooltip.shortTrades")}</span>
+ <span className="text-sm font-bold text-foreground">{data.shortNumber}</span>
  </div>
  </div>
  </div>
@@ -153,7 +153,7 @@ export default React.memo(function PNLChart({ size ="medium" }: PNLChartProps) {
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <span
- className={cn("line-clamp-1 font-bold tracking-tight text-foreground/95",
+ className={cn("line-clamp-1 font-bold tracking-tight text-foreground",
  size ==="small" ?"text-sm" :"text-base",
  )}
  >
@@ -163,7 +163,7 @@ export default React.memo(function PNLChart({ size ="medium" }: PNLChartProps) {
  <UITooltip>
  <TooltipTrigger asChild>
  <Info
- className={cn("text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
+ className={cn("text-muted-foreground hover:text-foreground transition-colors cursor-help",
  size ==="small" ?"h-3.5 w-3.5" :"h-4 w-4",
  )}
  />

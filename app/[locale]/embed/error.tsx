@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { RouteErrorScreen } from '@/components/ui/route-state'
 
 export default function EmbedError({
   error,
@@ -14,8 +15,13 @@ export default function EmbedError({
   }, [error])
 
   return (
-    <div className="flex h-screen items-center justify-center bg-background">
-      <p className="text-xs text-muted-foreground">Failed to load embedded chart.</p>
-    </div>
+    <RouteErrorScreen
+      eyebrow="Embed"
+      title="Embedded chart failed to load"
+      description={error.message || 'The embedded view could not be rendered right now.'}
+      onRetry={reset}
+      retryLabel="Reload chart"
+      compact
+    />
   )
 }

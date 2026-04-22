@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { Button } from '@/components/ui/button'
+import { RouteErrorScreen } from '@/components/ui/route-state'
 
 export default function SharedError({
   error,
@@ -15,13 +15,15 @@ export default function SharedError({
   }, [error])
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-6 text-center">
-      <p className="text-sm text-muted-foreground">
-        This shared link may have expired or been removed by the owner.
-      </p>
-      <Button variant="outline" onClick={reset} className="rounded-full">
-        Try again
-      </Button>
-    </div>
+    <RouteErrorScreen
+      eyebrow="Shared view"
+      title="This shared view is unavailable"
+      description={
+        error.message || 'The shared link may have expired, been removed, or failed to render.'
+      }
+      onRetry={reset}
+      retryLabel="Try again"
+      compact
+    />
   )
 }

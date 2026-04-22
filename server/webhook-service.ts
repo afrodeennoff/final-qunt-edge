@@ -16,6 +16,8 @@ import {
   type InvoicePayload,
 } from './webhook-schemas'
 import crypto from 'crypto'
+import { updateTag } from 'next/cache'
+import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
 
 interface WebhookEvent {
   id: string
@@ -163,6 +165,8 @@ export class WebhookService {
 
       if (result.success) {
         this.stats.successfulEvents += 1
+        // Invalidate caches for the user affected by this webhook
+        await this.invalidateUserCachesForWebhook(event)
         await this.finalizeWebhookLock(prisma, event, result)
       } else {
         this.stats.failedEvents += 1
@@ -383,6 +387,39 @@ export class WebhookService {
           eventType: type,
           processed: false,
         }
+    }
+  }
+
+  /** Invalidate user caches after a subscription/payment webhook */
+  private async invalidateUserCachesForWebhook(event: WebhookEvent): Promise<void> {
+    try {
+      // Extract email from the webhook payload to find the affected user
+      const data = event.data as Record<string, unknown>
+      const membershipData = (data?.membership || data) as Record<string, unknown> | undefined
+      const userData = membershipData?.user as Record<string, unknown> | undefined
+      const email = userData?.email as string | undefined
+
+      if (!email) return
+
+      // Find user by email to get their database ID
+      const user = await prisma.user.findFirst({
+        where: { email: email.toLowerCase().trim() },
+        select: { id: true },
+      })
+
+      if (!user) return
+
+      // Invalidate all caches that could show subscription status
+      updateTag(CACHE_TAGS.USER_DATA(user.id))
+      updateTag(CACHE_TAGS.USER_DATA_CORE(user.id))
+      updateTag(CACHE_TAGS.USER_DATA_SUPPLEMENTAL(user.id))
+      updateTag(CACHE_TAGS.DASHBOARD(user.id))
+    } catch (error) {
+      // Cache invalidation failure should never break webhook processing
+      logger.warn('[WebhookService] Failed to invalidate user caches', {
+        error: error instanceof Error ? error.message : 'Unknown',
+        eventType: event.type,
+      })
     }
   }
 

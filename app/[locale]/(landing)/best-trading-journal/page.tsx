@@ -80,10 +80,10 @@ export default async function BestTradingJournalPage({
 
       <UnifiedSurface className="space-y-10">
         <section className="space-y-5">
-          <p className="inline-flex rounded-full border border-border/26 bg-white/[0.070] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="inline-flex rounded-full border border-border/26 bg-background/0.11 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             Trading Journal Guide
           </p>
-          <h1 className="max-w-4xl text-4xl font-semibold leading-tight tracking-tight text-foreground/95 sm:text-5xl">
+          <h1 className="max-w-4xl text-4xl font-semibold leading-tight tracking-tight text-foreground sm:text-5xl">
             Best Trading Journal for Discretionary Traders
           </h1>
           <p className="max-w-3xl text-sm leading-7 text-muted-foreground sm:text-base">
@@ -94,26 +94,26 @@ export default async function BestTradingJournalPage({
             <Link href={`/${locale}/authentication?next=dashboard`} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">
               Start Free Audit
             </Link>
-            <Link href={`/${locale}/deals`} className="rounded-full border border-border/26 bg-[oklch(0.65_0.22_260/0.03)] px-5 py-3 text-sm font-semibold text-foreground/95">
+            <Link href={`/${locale}/deals`} className="rounded-full border border-border/26 bg-primary/[0.03] px-5 py-3 text-sm font-semibold text-foreground">
               Explore Deals
             </Link>
-            <Link href={`/${locale}/propfirms`} className="rounded-full border border-border/26 bg-[oklch(0.65_0.22_260/0.03)] px-5 py-3 text-sm font-semibold text-foreground/95">
+            <Link href={`/${locale}/propfirms`} className="rounded-full border border-border/26 bg-primary/[0.03] px-5 py-3 text-sm font-semibold text-foreground">
               Compare Prop Firms
             </Link>
           </div>
         </section>
 
         <section className="grid gap-4 lg:grid-cols-2">
-          <article className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.050] p-5">
-            <h2 className="text-xl font-semibold text-foreground/95">Why traders outgrow spreadsheets</h2>
+          <article className="rounded-xl border border-border/30 bg-background/0.08 p-5">
+            <h2 className="text-xl font-semibold text-foreground">Why traders outgrow spreadsheets</h2>
             <ul className="mt-4 space-y-2 text-sm leading-6 text-muted-foreground">
               <li>Manual rows capture outcomes but usually miss execution context.</li>
               <li>Behavior patterns are hard to detect without structured review fields.</li>
               <li>Cross-session consistency breaks when templates drift over time.</li>
             </ul>
           </article>
-          <article className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.050] p-5">
-            <h2 className="text-xl font-semibold text-foreground/95">What Qunt Edge adds</h2>
+          <article className="rounded-xl border border-border/30 bg-background/0.08 p-5">
+            <h2 className="text-xl font-semibold text-foreground">What Qunt Edge adds</h2>
             <ul className="mt-4 space-y-2 text-sm leading-6 text-muted-foreground">
               <li>Centralized journal + chart + behavior review workflows.</li>
               <li>Execution analytics and performance breakdowns in one interface.</li>
@@ -122,29 +122,29 @@ export default async function BestTradingJournalPage({
           </article>
         </section>
 
-        <section className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.050] p-5">
-          <h2 className="text-2xl font-semibold text-foreground/95">Feature Evidence From Existing Product Capabilities</h2>
+        <section className="rounded-xl border border-border/30 bg-background/0.08 p-5">
+          <h2 className="text-2xl font-semibold text-foreground">Feature Evidence From Existing Product Capabilities</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <article className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4">
-              <h3 className="font-semibold text-foreground/95">Execution Review</h3>
+            <article className="rounded-xl border border-border/30 bg-primary/[0.03] p-4">
+              <h3 className="font-semibold text-foreground">Execution Review</h3>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 Session-level journaling, chart reviews, and behavior context designed for discretionary decision quality.
               </p>
             </article>
-            <article className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4">
-              <h3 className="font-semibold text-foreground/95">Performance Analytics</h3>
+            <article className="rounded-xl border border-border/30 bg-primary/[0.03] p-4">
+              <h3 className="font-semibold text-foreground">Performance Analytics</h3>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 Trade and account analytics surfaces help isolate patterns across setups, time windows, and outcomes.
               </p>
             </article>
-            <article className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4">
-              <h3 className="font-semibold text-foreground/95">Prop-Firm Research Flow</h3>
+            <article className="rounded-xl border border-border/30 bg-primary/[0.03] p-4">
+              <h3 className="font-semibold text-foreground">Prop-Firm Research Flow</h3>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 Public deals and prop-firm pages connect journal decisions to challenge cost and rule context.
               </p>
             </article>
-            <article className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4">
-              <h3 className="font-semibold text-foreground/95">Team Workflows</h3>
+            <article className="rounded-xl border border-border/30 bg-primary/[0.03] p-4">
+              <h3 className="font-semibold text-foreground">Team Workflows</h3>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 Team areas provide shared analytics and trader-level review structure for prop environments.
               </p>
@@ -152,43 +152,43 @@ export default async function BestTradingJournalPage({
           </div>
         </section>
 
-        <section className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.050] p-5">
-          <h2 className="text-2xl font-semibold text-foreground/95">Trust Signals Backed by Internal Product Data</h2>
+        <section className="rounded-xl border border-border/30 bg-background/0.08 p-5">
+          <h2 className="text-2xl font-semibold text-foreground">Trust Signals Backed by Internal Product Data</h2>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
             Qunt Edge publishes connected public surfaces (leaderboard, community, support, and firm/deal datasets) so users can validate workflow context.
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4">
+            <div className="rounded-xl border border-border/30 bg-primary/[0.03] p-4">
               <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Tracked Firms</p>
-              <p className="mt-2 text-2xl font-semibold text-foreground/95">{overview?.totalTrackedFirms ?? "—"}</p>
+              <p className="mt-2 text-2xl font-semibold text-foreground">{overview?.totalTrackedFirms ?? "—"}</p>
             </div>
-            <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4">
+            <div className="rounded-xl border border-border/30 bg-primary/[0.03] p-4">
               <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Live Deals</p>
-              <p className="mt-2 text-2xl font-semibold text-foreground/95">{overview?.totalLiveDeals ?? "—"}</p>
+              <p className="mt-2 text-2xl font-semibold text-foreground">{overview?.totalLiveDeals ?? "—"}</p>
             </div>
-            <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4">
+            <div className="rounded-xl border border-border/30 bg-primary/[0.03] p-4">
               <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Paid Payouts Tracked</p>
-              <p className="mt-2 text-2xl font-semibold text-foreground/95">
+              <p className="mt-2 text-2xl font-semibold text-foreground">
                 {typeof overview?.totalPaidPayoutCount === "number" ? overview.totalPaidPayoutCount : "—"}
               </p>
             </div>
           </div>
         </section>
 
-        <section className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.050] p-5">
-          <h2 className="text-2xl font-semibold text-foreground/95">Frequently Asked Questions</h2>
+        <section className="rounded-xl border border-border/30 bg-background/0.08 p-5">
+          <h2 className="text-2xl font-semibold text-foreground">Frequently Asked Questions</h2>
           <div className="mt-4 space-y-3">
             {FAQ_ITEMS.map((item) => (
-              <article key={item.question} className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4">
-                <h3 className="font-semibold text-foreground/95">{item.question}</h3>
+              <article key={item.question} className="rounded-xl border border-border/30 bg-primary/[0.03] p-4">
+                <h3 className="font-semibold text-foreground">{item.question}</h3>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.answer}</p>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.060] p-5 text-center">
-          <h2 className="text-2xl font-semibold text-foreground/95">Build a Repeatable Review System</h2>
+        <section className="rounded-xl border border-border/30 bg-background/0.09 p-5 text-center">
+          <h2 className="text-2xl font-semibold text-foreground">Build a Repeatable Review System</h2>
           <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
             Move from fragmented logs to a workflow that supports consistent execution review and better decision quality.
           </p>
@@ -196,10 +196,10 @@ export default async function BestTradingJournalPage({
             <Link href={`/${locale}/authentication?next=dashboard`} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">
               Start Free Audit
             </Link>
-            <Link href={`/${locale}/deals`} className="rounded-full border border-border/26 bg-[oklch(0.65_0.22_260/0.03)] px-5 py-3 text-sm font-semibold text-foreground/95">
+            <Link href={`/${locale}/deals`} className="rounded-full border border-border/26 bg-primary/[0.03] px-5 py-3 text-sm font-semibold text-foreground">
               Review Deals
             </Link>
-            <Link href={`/${locale}/propfirms`} className="rounded-full border border-border/26 bg-[oklch(0.65_0.22_260/0.03)] px-5 py-3 text-sm font-semibold text-foreground/95">
+            <Link href={`/${locale}/propfirms`} className="rounded-full border border-border/26 bg-primary/[0.03] px-5 py-3 text-sm font-semibold text-foreground">
               Compare Firms
             </Link>
           </div>

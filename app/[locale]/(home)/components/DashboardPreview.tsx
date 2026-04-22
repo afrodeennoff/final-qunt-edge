@@ -43,7 +43,7 @@ export default function DashboardPreview() {
       role="img"
       aria-label={String(t('landing.home.preview.ariaLabel'))}
     >
-      <div className="flex h-full min-h-[560px] flex-col overflow-hidden rounded-[1.7rem] border border-border/35 bg-black/80 p-4 sm:p-5">
+      <div className="flex h-full min-h-[560px] flex-col overflow-hidden rounded-2xl border border-border/35 bg-black/80 p-4 sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/30 pb-4">
           <div className="flex items-center gap-2">
             <div className="flex gap-1.5">
@@ -103,7 +103,7 @@ export default function DashboardPreview() {
                 </div>
               </div>
 
-              <div className="relative h-[190px] overflow-hidden rounded-[1.2rem] border border-border/30 bg-background/78">
+              <div className="relative h-[190px] overflow-hidden rounded-xl border border-border/30 bg-background/78">
                 <div className="absolute inset-x-0 top-0 flex h-full items-end justify-around gap-1 px-3 pb-3 sm:px-4 sm:pb-4">
                   {bars.map((height, index) => (
                     <span
@@ -149,7 +149,7 @@ export default function DashboardPreview() {
               {trades.map((trade) => (
                 <div
                   key={`${trade.symbol}-${trade.time}`}
-                  className="rounded-[1rem] border border-border/30 bg-background/78 px-3.5 py-3"
+                  className="rounded-lg border border-border/30 bg-background/78 px-3.5 py-3"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div>
@@ -179,7 +179,7 @@ export default function DashboardPreview() {
             </div>
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-[1rem] border border-border/30 bg-background/78 p-3.5">
+              <div className="rounded-lg border border-border/30 bg-background/78 p-3.5">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   Risk channel
                 </p>
@@ -187,7 +187,7 @@ export default function DashboardPreview() {
                   controlled exposure
                 </p>
               </div>
-              <div className="rounded-[1rem] border border-border/30 bg-background/78 p-3.5">
+              <div className="rounded-lg border border-border/30 bg-background/78 p-3.5">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   Active review
                 </p>

@@ -118,7 +118,7 @@ export function OptimizedVirtualTable<TData, TValue>({
  return (
  <div
  className={cn(
- 'flex items-center border-b border-[oklch(0.65_0.22_260/0.08)] transition-colors hover:bg-v2-bg-hover',
+ 'flex items-center border-b border-border/30 transition-colors hover:bg-background/80',
  onRowClick && 'cursor-pointer'
  )}
  style={{
@@ -131,7 +131,7 @@ export function OptimizedVirtualTable<TData, TValue>({
  {row.getVisibleCells().map((cell) => (
  <div
  key={cell.id}
- className='px-4 py-2 border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0'
+ className='px-4 py-2 border-r border-border/30 last:border-r-0'
  style={{ width: cell.column.getSize() }}
  >
  {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -160,7 +160,7 @@ export function OptimizedVirtualTable<TData, TValue>({
  {headerGroup.headers.map((header) => (
  <div
  key={header.id}
- className='px-4 py-3 font-medium text-sm text-muted-foreground border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0'
+ className='px-4 py-3 font-medium text-sm text-muted-foreground border-r border-border/30 last:border-r-0'
  style={{ width: header.getSize() }}
  >
  {header.isPlaceholder

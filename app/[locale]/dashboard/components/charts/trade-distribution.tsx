@@ -77,20 +77,20 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
  if (!data) return null
 
  return (
- <div className="bg-v2-bg-surface/96 p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
- <div className="flex flex-col mb-1 border-b border-v2-border/40 pb-1">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">
+ <div className="bg-card/96 p-3 border border-border/50 rounded-xl shadow-xl min-w-[140px]">
+ <div className="flex flex-col mb-1 border-b border-border/40 pb-1">
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
  {t('tradeDistribution.tooltip.type')}
  </span>
- <span className="font-bold text-v2-text-primary text-sm uppercase">
+ <span className="font-bold text-foreground text-sm uppercase">
  {data.name}
  </span>
  </div>
  <div className="flex flex-col">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
  {t('tradeDistribution.tooltip.percentage')}
  </span>
- <span className={cn('font-bold text-sm tabular-nums', data.count > 0 ? 'text-v2-text-primary' : 'text-v2-text-secondary')}>
+ <span className={cn('font-bold text-sm tabular-nums', data.count > 0 ? 'text-foreground' : 'text-muted-foreground')}>
  {data.value.toFixed(2)}%
  </span>
  </div>
@@ -110,7 +110,7 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
  <div className="flex items-center gap-2">
  <span
  className={cn(
- 'line-clamp-1 font-bold tracking-tight text-foreground/95',
+ 'line-clamp-1 font-bold tracking-tight text-foreground',
  size === 'small' ? 'text-sm' : 'text-base'
  )}
  >
@@ -121,7 +121,7 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
  <TooltipTrigger asChild>
  <Info
  className={cn(
- 'text-muted-foreground hover:text-foreground/95 transition-colors cursor-help',
+ 'text-muted-foreground hover:text-foreground transition-colors cursor-help',
  size === 'small' ? 'h-3.5 w-3.5' : 'h-4 w-4'
  )}
  />

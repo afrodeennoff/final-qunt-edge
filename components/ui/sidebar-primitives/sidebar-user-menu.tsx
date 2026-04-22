@@ -46,11 +46,11 @@ export function SidebarUserMenu({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="group/user w-full rounded-xl px-2.5 py-1.5 transition-[opacity,background-color,border-color] duration-200 hover:bg-sidebar-primary/8 data-[state=open]:bg-sidebar-primary/10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
+              className="group/user w-full rounded-xl border border-transparent px-2.5 py-1.5 transition-[opacity,background-color,border-color] duration-200 hover:border-sidebar-primary/14 hover:bg-sidebar-primary/8 data-[state=open]:border-sidebar-primary/18 data-[state=open]:bg-sidebar-primary/10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
             >
               <div className="flex w-full items-center gap-2.5">
                 <div className="relative shrink-0">
-                  <Avatar className="h-9 w-9 overflow-hidden rounded-[var(--radius-icon)] ring-1 ring-sidebar-primary/20">
+                  <Avatar className="h-9 w-9 overflow-hidden rounded-[1rem] ring-1 ring-sidebar-primary/20">
                     <AvatarImage src={user?.avatar_url} alt={displayName} />
                     <AvatarFallback className="rounded-[var(--radius-icon)] bg-gradient-to-br from-sidebar-primary/80 via-sidebar-primary/60 to-sidebar-primary/40 text-sidebar-primary-foreground text-xs font-bold tracking-wide">
                       {initials}
@@ -71,14 +71,14 @@ export function SidebarUserMenu({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-xl border border-sidebar-border/35 bg-sidebar/98 shadow-[0_24px_56px_-32px_rgba(0,0,0,0.94)]"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-xl border border-sidebar-border/35 bg-sidebar/98 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)]"
             side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={6}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2.5 bg-gradient-to-r from-sidebar-primary/18 to-sidebar-accent/10 px-3 py-2.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-xl shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+                <Avatar className="h-8 w-8 rounded-xl shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
                   <AvatarImage src={user?.avatar_url} alt={displayName} />
                   <AvatarFallback className="rounded-lg bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
                     {initials}

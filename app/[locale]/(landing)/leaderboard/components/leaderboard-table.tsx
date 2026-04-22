@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils'
 
 const rowDividerClassName = 'border-border/30'
 const tableSurfaceClassName =
-  'overflow-hidden rounded-[1.4rem] border border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.82),hsl(var(--background)/0.9))] shadow-[0_24px_60px_-44px_rgba(0,0,0,0.92)]'
+  'overflow-hidden rounded-xl border border-border/35 bg-card/80 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
 
 interface LeaderboardTableProps {
   entries: LeaderboardEntry[]
@@ -150,7 +150,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
           <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/70">
             Leaderboard table
           </p>
-          <h3 className="mt-2 text-2xl font-semibold tracking-tight text-foreground/95">
+          <h3 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
             All visible traders
           </h3>
           <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-muted-foreground">
@@ -231,7 +231,7 @@ function LeaderboardEntryCard({ entry, locale }: { entry: LeaderboardEntry; loca
             #{entry.rank}
           </span>
           <div className="min-w-0">
-            <p className="truncate text-[15px] font-semibold tracking-tight text-foreground/95">
+            <p className="truncate text-[15px] font-semibold tracking-tight text-foreground">
               {entry.username}
             </p>
             <p className="truncate text-[11px] uppercase tracking-[0.16em] text-muted-foreground/70">
@@ -239,7 +239,7 @@ function LeaderboardEntryCard({ entry, locale }: { entry: LeaderboardEntry; loca
             </p>
           </div>
         </div>
-        <p className={cn('text-sm font-semibold', positive ? 'text-emerald-400' : 'text-red-400')}>
+        <p className={cn('text-sm font-semibold', positive ? 'text-success' : 'text-destructive')}>
           {positive ? '+' : ''}
           {formatCurrency(entry.monthlyPnl)}
         </p>
@@ -256,7 +256,7 @@ function LeaderboardEntryCard({ entry, locale }: { entry: LeaderboardEntry; loca
             <dt className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground/70">
               {label}
             </dt>
-            <dd className="mt-1 text-[14px] font-medium text-foreground/95">{value}</dd>
+            <dd className="mt-1 text-[14px] font-medium text-foreground">{value}</dd>
           </div>
         ))}
       </dl>
@@ -290,7 +290,7 @@ function LeaderboardEntryRow({ entry, locale }: { entry: LeaderboardEntry; local
         </span>
       </td>
       <td className={cn('border-b px-6 py-4 align-middle', rowDividerClassName)}>
-        <p className="text-[15px] font-semibold tracking-tight text-foreground/95">
+        <p className="text-[15px] font-semibold tracking-tight text-foreground">
           {entry.username}
         </p>
         <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground/70">
@@ -301,7 +301,7 @@ function LeaderboardEntryRow({ entry, locale }: { entry: LeaderboardEntry; local
         className={cn(
           'border-b px-6 py-4 align-middle text-sm font-semibold',
           rowDividerClassName,
-          positive ? 'text-emerald-400' : 'text-red-400',
+          positive ? 'text-success' : 'text-destructive',
         )}
       >
         {positive ? '+' : ''}
@@ -309,7 +309,7 @@ function LeaderboardEntryRow({ entry, locale }: { entry: LeaderboardEntry; local
       </td>
       <td
         className={cn(
-          'border-b px-6 py-4 align-middle text-sm font-medium text-foreground/95',
+          'border-b px-6 py-4 align-middle text-sm font-medium text-foreground',
           rowDividerClassName,
         )}
       >
@@ -317,7 +317,7 @@ function LeaderboardEntryRow({ entry, locale }: { entry: LeaderboardEntry; local
       </td>
       <td
         className={cn(
-          'border-b px-6 py-4 align-middle text-sm font-medium text-foreground/95',
+          'border-b px-6 py-4 align-middle text-sm font-medium text-foreground',
           rowDividerClassName,
         )}
       >
@@ -325,7 +325,7 @@ function LeaderboardEntryRow({ entry, locale }: { entry: LeaderboardEntry; local
       </td>
       <td
         className={cn(
-          'border-b px-6 py-4 align-middle text-sm font-medium text-foreground/95',
+          'border-b px-6 py-4 align-middle text-sm font-medium text-foreground',
           rowDividerClassName,
         )}
       >
@@ -333,7 +333,7 @@ function LeaderboardEntryRow({ entry, locale }: { entry: LeaderboardEntry; local
       </td>
       <td
         className={cn(
-          'border-b px-6 py-4 align-middle text-sm font-medium text-foreground/95',
+          'border-b px-6 py-4 align-middle text-sm font-medium text-foreground',
           rowDividerClassName,
         )}
       >

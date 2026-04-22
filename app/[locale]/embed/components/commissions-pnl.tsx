@@ -135,7 +135,7 @@ export default function CommissionsPnLEmbed({
                   <Cell
                     key={`cell-${idx}`}
                     fill={entry.fill}
-                    className="transition-all duration-300 ease-in-out"
+                    className="transition-[opacity,fill] duration-300 ease-in-out"
                   />
                 ))}
               </Pie>

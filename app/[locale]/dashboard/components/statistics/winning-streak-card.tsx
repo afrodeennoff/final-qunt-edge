@@ -28,12 +28,12 @@ function WinningStreakCardInner({ size = 'medium' }: WinningStreakCardProps) {
  >
  <div className="mx-auto inline-flex items-center justify-center gap-2.5 text-center">
  <Award className="h-4 w-4 shrink-0 metric-positive" />
- <span className="shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-v2-text-secondary">Streak</span>
- <span className="font-terminal shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-v2-text-primary">{winningStreak}</span>
+ <span className="shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Streak</span>
+ <span className="font-terminal shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground">{winningStreak}</span>
  <TooltipProvider delayDuration={100}>
  <Tooltip>
  <TooltipTrigger asChild>
- <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-v2-text-secondary transition-colors hover:text-v2-text-primary" />
+ <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-muted-foreground transition-colors hover:text-foreground" />
  </TooltipTrigger>
  <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
  {t('widgets.winningStreak.tooltip')}
@@ -51,7 +51,7 @@ function WinningStreakCardInner({ size = 'medium' }: WinningStreakCardProps) {
  contentClassName="flex items-center justify-center h-full gap-2 p-2"
  info={t('widgets.winningStreak.tooltip')}
  >
- <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-secondary/18 px-3 py-1">
+ <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-background/30 px-3 py-1">
  <Award className="h-3 w-3 metric-positive" />
  <span className="font-terminal font-bold text-[11px] uppercase tracking-wider metric-positive">{winningStreak} Trade Streak</span>
  </div>

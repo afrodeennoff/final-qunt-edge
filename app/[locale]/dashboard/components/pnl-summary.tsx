@@ -115,7 +115,7 @@ export function PnLSummary({ className }: PnLSummaryProps) {
                 'text-[15px] font-semibold tracking-[-0.03em] tabular-nums',
                 item.accent === 'metric-positive' && 'text-[oklch(0.82_0.185_155)]',
                 item.accent === 'metric-negative' && 'text-[oklch(0.74_0.255_22)]',
-                !item.accent && 'text-foreground/95',
+                !item.accent && 'text-foreground',
               )}
             >
               {item.value}

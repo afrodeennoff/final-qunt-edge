@@ -190,7 +190,7 @@ export function PropFirmCatalogueExperience({
               <Sparkles className="h-3.5 w-3.5 text-primary" />
               Prop firm catalogue
             </div>
-            <h1 className="mt-5 text-[clamp(2.25rem,5.4vw,4.8rem)] font-medium leading-[0.98] tracking-[-0.04em] text-foreground/95">
+            <h1 className="mt-5 text-[clamp(2.25rem,5.4vw,4.8rem)] font-medium leading-[0.98] tracking-[-0.04em] text-foreground">
               {title}
             </h1>
             <p className="mt-4 max-w-2xl text-sm leading-[1.55] text-muted-foreground sm:text-base">
@@ -252,7 +252,7 @@ export function PropFirmCatalogueExperience({
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                     Leaders
                   </p>
-                  <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground/95">
+                  <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
                     Top firms in the current shortlist
                   </h2>
                 </div>
@@ -279,14 +279,14 @@ export function PropFirmCatalogueExperience({
                         <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                           Rank #{index + 1}
                         </p>
-                        <p className="mt-2 text-base font-semibold text-foreground/95">
+                        <p className="mt-2 text-base font-semibold text-foreground">
                           {firm.name}
                         </p>
                         <p className="mt-1 text-xs text-muted-foreground">
                           {firm.platform} • {firm.drawdownType}
                         </p>
                       </div>
-                      <p className="text-sm font-semibold text-foreground/95">
+                      <p className="text-sm font-semibold text-foreground">
                         {formatCompactCurrency(firm.stats.payouts.paidAmount)}
                       </p>
                     </div>
@@ -310,7 +310,7 @@ export function PropFirmCatalogueExperience({
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search firm..."
-                className="h-10 w-full rounded-full border border-border/40 bg-card/55 pl-9 pr-3 text-sm text-foreground/95 outline-none placeholder:text-muted-foreground/55 transition-[border-color,background-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:border-primary/35 focus:bg-card/70 focus:shadow-[0_0_0_1px_hsl(var(--primary)/0.12)]"
+                className="h-10 w-full rounded-full border border-border/40 bg-card/55 pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/55 transition-[border-color,background-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:border-primary/35 focus:bg-card/70 focus:shadow-[0_0_0_1px_hsl(var(--primary)/0.12)]"
               />
             </div>
             <span className="shrink-0 text-xs text-muted-foreground">
@@ -339,7 +339,7 @@ export function PropFirmCatalogueExperience({
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Catalogue board
               </p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground/95">
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
                 All tracked firms
               </h2>
             </div>
@@ -356,7 +356,7 @@ export function PropFirmCatalogueExperience({
                   href={`/${locale}/firm/${firm.slug}`}
                   className={cn(
                     unifiedInsetPanelClassName,
-                    'group animate-scale-reveal p-4 transition-[transform,background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-primary/24 hover:bg-card/78 hover:shadow-[0_26px_60px_-36px_rgba(0,0,0,0.92)]',
+                    'group animate-scale-reveal p-4 transition-[transform,background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-primary/24 hover:bg-card/78 hover:shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
                     index % 3 === 0 && 'animate-scale-reveal-d1',
                     index % 3 === 1 && 'animate-scale-reveal-d2',
                     index % 3 === 2 && 'animate-scale-reveal-d3',
@@ -364,7 +364,7 @@ export function PropFirmCatalogueExperience({
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-xl font-semibold tracking-tight text-foreground/95">
+                      <h3 className="text-xl font-semibold tracking-tight text-foreground">
                         {firm.name}
                       </h3>
                       <p className="mt-1 text-sm text-muted-foreground">
@@ -412,7 +412,7 @@ export function PropFirmCatalogueExperience({
                         ? `${firm.stats.accountsCount.toLocaleString()} accounts • ${formatCompactCurrency(firm.stats.totalAccountValue)} total`
                         : firm.stats.sizeBreakdown}
                     </p>
-                    <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground/95">
+                    <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
                       View firm
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                     </span>
@@ -446,7 +446,7 @@ function StatCard({
         <Icon className="h-3.5 w-3.5" />
         {label}
       </div>
-      <p className="mt-3 text-2xl font-semibold tracking-tight text-foreground/95">{value}</p>
+      <p className="mt-3 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
     </div>
   )
 }
@@ -590,7 +590,7 @@ function RegisteredAccountsChart({
                   className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                     activeMetric === tab.key
                       ? 'bg-primary text-primary-foreground shadow-[0_12px_20px_-14px_hsl(var(--primary)/0.75)]'
-                      : 'text-muted-foreground hover:bg-card/75 hover:text-foreground/95'
+                      : 'text-muted-foreground hover:bg-card/75 hover:text-foreground'
                   }`}
                 >
                   {tab.label}
@@ -647,7 +647,7 @@ function RegisteredAccountsChart({
             </ChartContainer>
           </div>
         ) : (
-          <div className="rounded-xl border border-dashed border-[oklch(0.65_0.22_260/0.08)] bg-background/60 px-4 py-6 text-sm text-muted-foreground">
+          <div className="rounded-xl border border-dashed border-border/30 bg-background/60 px-4 py-6 text-sm text-muted-foreground">
             No account registrations available yet.
           </div>
         )}

@@ -41,7 +41,7 @@ export function DataDebug() {
  variant="outline"
  size="icon"
  onClick={() => setIsOpen(true)}
- className="rounded-full bg-background/80 border-border/14 hover:bg-foreground/10 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)]"
+ className="rounded-full bg-background/80 border-border/14 hover:bg-foreground/10 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
  >
  <Bug className="h-4 w-4 text-primary" />
  </Button>
@@ -50,9 +50,9 @@ export function DataDebug() {
  <div className="flex items-center justify-between mb-4 border-b border-border/8 pb-2">
  <div className="flex items-center gap-2">
  <Bug className="h-4 w-4 text-primary" />
- <span className="text-xs font-bold uppercase tracking-widest text-foreground/90">Debug Dashboard</span>
+ <span className="text-xs font-bold uppercase tracking-widest text-foreground">Debug Dashboard</span>
  </div>
- <button onClick={() => setIsOpen(false)} className="text-foreground/60 hover:text-foreground/95 transition-colors">
+ <button onClick={() => setIsOpen(false)} className="text-foreground/60 hover:text-foreground transition-colors">
  <X className="h-4 w-4" />
  </button>
  </div>
@@ -60,15 +60,15 @@ export function DataDebug() {
  <div className="space-y-3">
  <div className="flex justify-between items-center text-[10px]">
  <span className="text-foreground/60 uppercase font-black tracking-tighter">Trades in Store</span>
- <span className="text-foreground/90 font-mono">{trades.length}</span>
+ <span className="text-foreground font-mono">{trades.length}</span>
  </div>
  <div className="flex justify-between items-center text-[10px]">
  <span className="text-foreground/60 uppercase font-black tracking-tighter">Filtered Trades</span>
- <span className="text-foreground/90 font-mono">{formattedTrades.length}</span>
+ <span className="text-foreground font-mono">{formattedTrades.length}</span>
  </div>
  <div className="flex justify-between items-center text-[10px]">
  <span className="text-foreground/60 uppercase font-black tracking-tighter">Accounts</span>
- <span className="text-foreground/90 font-mono">{accounts.length}</span>
+ <span className="text-foreground font-mono">{accounts.length}</span>
  </div>
  <div className="flex justify-between items-center text-[10px]">
  <span className="text-foreground/60 uppercase font-black tracking-tighter">Environment</span>
@@ -84,7 +84,7 @@ export function DataDebug() {
  </div>
  <div className="flex justify-between items-center text-[10px]">
  <span className="text-foreground/60 uppercase font-black tracking-tighter">User ID</span>
- <span className="text-foreground/90 font-mono truncate max-w-[120px]">
+ <span className="text-foreground font-mono truncate max-w-[120px]">
  {user?.id || supabaseUser?.id ||"None"}
  </span>
  </div>

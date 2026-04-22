@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { getDatabaseUserId } from "@/server/auth"
 import { Synchronization } from "@/prisma/generated/prisma"
 import { withPrismaSchemaMismatchFallback } from "@/lib/prisma-guard"
+import { CACHE_TAGS } from "@/lib/cache/cache-invalidation"
 
 async function resolveSyncUserIds() {
   const databaseUserId = await getDatabaseUserId()
@@ -51,6 +52,10 @@ export async function setRithmicSynchronization(synchronization: Partial<Synchro
     },
     undefined
   )
+  // Invalidate user data caches so sync status reflects immediately
+  const { updateTag } = await import('next/cache')
+  updateTag(CACHE_TAGS.USER_DATA(databaseUserId))
+  updateTag(CACHE_TAGS.DASHBOARD(databaseUserId))
 }
 
 export async function removeRithmicSynchronization(accountId: string) {
@@ -70,6 +75,15 @@ export async function removeRithmicSynchronization(accountId: string) {
     },
     0
   )
+
+  // Invalidate user data caches so sync removal reflects immediately
+  if (deletedCount > 0) {
+    const { updateTag } = await import('next/cache')
+    updateTag(CACHE_TAGS.USER_DATA(databaseUserId))
+    updateTag(CACHE_TAGS.DASHBOARD(databaseUserId))
+    updateTag(CACHE_TAGS.USER_DATA_CORE(databaseUserId))
+    updateTag(CACHE_TAGS.USER_DATA_SUPPLEMENTAL(databaseUserId))
+  }
 
   return { deletedCount }
 }
