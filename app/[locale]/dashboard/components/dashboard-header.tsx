@@ -100,10 +100,11 @@ export function DashboardHeader() {
         <div
           className={cn(
             unifiedToolbarClassName,
-            'relative flex min-h-[4.5rem] items-center justify-between gap-3 overflow-hidden px-3 py-2.5 transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4',
+            'relative flex min-h-[3.5rem] items-center justify-between gap-3 overflow-hidden px-3 py-2.5 transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4',
           )}
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/12 to-transparent" />
+          <div className="pointer-events-none absolute bottom-0 inset-x-0 h-px bg-[rgba(255,255,255,0.15)]" />
           <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4">
             <WindowChrome className="hidden md:block" />
             <SidebarTrigger
@@ -118,7 +119,7 @@ export function DashboardHeader() {
                       {sectionLabel}
                     </span>
                   )}
-                  <h1 className="truncate text-[0.8rem] font-semibold tracking-[0.04em] text-foreground sm:text-[0.92rem] sm:tracking-[0.02em]">
+                  <h1 className="truncate text-[14px] font-semibold tracking-[0.01em] text-foreground">
                     {title}
                   </h1>
                 </div>

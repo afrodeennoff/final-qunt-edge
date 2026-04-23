@@ -225,7 +225,7 @@ function Sidebar({
             'flex h-full w-full flex-col border border-sidebar-border/35 bg-sidebar/95 shadow-[inset_0_1px_0_hsl(var(--sidebar-foreground)/0.02),0_8px_24px_-12px_rgba(0,0,0,0.5)]',
             'group-data-[variant=floating]:rounded-2xl',
             'group-data-[variant=inset]:rounded-2xl',
-            'border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.064_0.012_260_/_0.72)_0%,oklch(0.052_0.01_260_/_0.68)_100%)] backdrop-blur-[48px] backdrop-saturate-[1.7] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_26px_48px_-30px_rgba(0,0,0,0.8)]',
+            'border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.064_0.012_260_/_0.72)_0%,oklch(0.052_0.01_260_/_0.68)_100%)] backdrop-blur-[48px] backdrop-saturate-[1.7] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_1px_2px_rgba(0,0,0,0.2)]',
           )}
         >
           {children}
@@ -270,7 +270,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<'button'>) {
       onClick={toggleSidebar}
       title="Toggle Sidebar"
       className={cn(
-        'absolute inset-y-0 z-20 hidden w-4 ltr:-translate-x-1/2 rtl:-translate-x-1/2 transition-[opacity,background-color,border-color] ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border sm:flex',
+        'absolute inset-y-0 z-20 hidden w-4 ltr:-translate-x-1/2 rtl:-translate-x-1/2 transition-all duration-200 group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[1px] after:bg-[rgba(255,255,255,0.1)] hover:after:w-[4px] hover:after:bg-[rgba(255,255,255,0.2)] sm:flex',
         'in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize',
         '[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize',
         'group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full hover:group-data-[collapsible=offcanvas]:bg-sidebar',
@@ -380,7 +380,7 @@ function SidebarGroupLabel({
       data-slot="sidebar-group-label"
       data-sidebar="group-label"
       className={cn(
-        'flex h-7 shrink-0 items-center rounded-lg px-2 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-sidebar-foreground/42 outline-hidden transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
+        'flex h-7 shrink-0 items-center rounded-lg px-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-sidebar-foreground/42 outline-hidden transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
         'group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0',
         className,
       )}

@@ -6,35 +6,35 @@ import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'type-label font-sans inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border border-transparent select-none overflow-hidden transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'type-label font-sans inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border border-transparent select-none overflow-hidden transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         solid:
-          'rounded-xl border-primary/18 bg-primary text-primary-foreground shadow-[0_14px_28px_-22px_oklch(0.65_0.22_260_/_0.42)] hover:bg-primary/92 hover:shadow-[0_16px_30px_-22px_oklch(0.65_0.22_260_/_0.48)] active:scale-[0.98]',
+          'rounded-lg border-primary/18 bg-primary text-primary-foreground shadow-[0_2px_4px_rgba(0,0,0,0.15)] hover:bg-primary/92 hover:shadow-[0_2px_4px_rgba(0,0,0,0.25)] active:scale-[0.98]',
         outline:
-          'rounded-xl border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.052_0.009_260_/_0.66)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.056_0.009_260_/_0.74)] active:scale-[0.98]',
+          'rounded-lg border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.052_0.009_260_/_0.66)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.056_0.009_260_/_0.74)] active:scale-[0.98]',
         ghost:
-          'rounded-xl bg-transparent text-muted-foreground hover:border-[oklch(0.65_0.22_260_/_0.07)] hover:bg-[oklch(0.052_0.009_260_/_0.56)] hover:text-foreground active:scale-[0.98]',
+          'rounded-lg bg-transparent text-muted-foreground hover:border-[oklch(0.65_0.22_260_/_0.07)] hover:bg-[oklch(0.052_0.009_260_/_0.56)] hover:text-foreground active:scale-[0.98]',
         error:
-          'rounded-xl border-destructive/18 bg-destructive text-destructive-foreground shadow-[0_18px_36px_-24px_oklch(0.62_0.22_28_/_0.36)] hover:bg-destructive/92 active:scale-[0.98]',
+          'rounded-lg border-destructive/18 bg-destructive text-destructive-foreground shadow-[0_2px_4px_rgba(0,0,0,0.15)] hover:bg-destructive/92 active:scale-[0.98]',
         destructive:
-          'rounded-xl border-destructive/18 bg-destructive text-destructive-foreground shadow-[0_18px_36px_-24px_oklch(0.62_0.22_28_/_0.36)] hover:bg-destructive/92 active:scale-[0.98]',
-        link: 'rounded-xl text-primary underline-offset-4 hover:underline',
+          'rounded-lg border-destructive/18 bg-destructive text-destructive-foreground shadow-[0_2px_4px_rgba(0,0,0,0.15)] hover:bg-destructive/92 active:scale-[0.98]',
+        link: 'rounded-lg text-primary underline-offset-4 hover:underline',
         'gradient-primary':
-          'rounded-xl border-primary/18 bg-primary text-primary-foreground shadow-[0_18px_36px_-24px_oklch(0.65_0.22_260_/_0.5)] hover:bg-primary/92 hover:shadow-[0_20px_40px_-24px_oklch(0.65_0.22_260_/_0.58)] active:scale-[0.98]',
+          'rounded-lg border-primary/18 bg-primary text-primary-foreground shadow-[0_2px_4px_rgba(0,0,0,0.15)] hover:bg-primary/92 hover:shadow-[0_2px_4px_rgba(0,0,0,0.25)] active:scale-[0.98]',
         'gradient-secondary':
-          'rounded-xl border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.056_0.009_260_/_0.78)] active:scale-[0.98]',
+          'rounded-lg border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.056_0.009_260_/_0.78)] active:scale-[0.98]',
         shimmer:
-          'rounded-xl border-primary/18 bg-primary text-primary-foreground shadow-[0_18px_36px_-24px_oklch(0.65_0.22_260_/_0.5)] hover:bg-primary/92 hover:shadow-[0_20px_40px_-24px_oklch(0.65_0.22_260_/_0.58)] active:scale-[0.98]',
+          'rounded-lg border-primary/18 bg-primary text-primary-foreground shadow-[0_2px_4px_rgba(0,0,0,0.15)] hover:bg-primary/92 hover:shadow-[0_2px_4px_rgba(0,0,0,0.25)] active:scale-[0.98]',
         default:
-          'rounded-xl border-primary/18 bg-primary text-primary-foreground shadow-[0_18px_36px_-24px_oklch(0.65_0.22_260_/_0.5)] hover:bg-primary/92 hover:shadow-[0_20px_40px_-24px_oklch(0.65_0.22_260_/_0.58)] active:scale-[0.98]',
+          'rounded-lg border-primary/18 bg-primary text-primary-foreground shadow-[0_2px_4px_rgba(0,0,0,0.15)] hover:bg-primary/92 hover:shadow-[0_2px_4px_rgba(0,0,0,0.25)] active:scale-[0.98]',
         secondary:
-          'rounded-xl border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.05_0.009_260_/_0.68)] text-secondary-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.054_0.009_260_/_0.74)] active:scale-[0.98]',
-        mono: 'rounded-xl border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.05_0.009_260_/_0.72)] text-foreground hover:border-[oklch(0.65_0.22_260_/_0.11)] hover:bg-[oklch(0.054_0.009_260_/_0.8)] font-mono',
+          'rounded-lg border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.05_0.009_260_/_0.68)] text-secondary-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.054_0.009_260_/_0.74)] active:scale-[0.98]',
+        mono: 'rounded-lg border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.05_0.009_260_/_0.72)] text-foreground hover:border-[oklch(0.65_0.22_260_/_0.11)] hover:bg-[oklch(0.054_0.009_260_/_0.8)] font-mono',
         pill: 'rounded-full border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.056_0.009_260_/_0.78)] active:scale-[0.98]',
         'pill-solid':
-          'rounded-full border-primary/18 bg-primary text-primary-foreground shadow-[0_18px_36px_-24px_oklch(0.65_0.22_260_/_0.5)] hover:bg-primary/92 active:scale-[0.98]',
+          'rounded-full border-primary/18 bg-primary text-primary-foreground shadow-[0_2px_4px_rgba(0,0,0,0.15)] hover:bg-primary/92 active:scale-[0.98]',
         'pill-ghost':
           'rounded-full bg-transparent text-muted-foreground hover:border-[oklch(0.65_0.22_260_/_0.07)] hover:bg-[oklch(0.052_0.009_260_/_0.56)] hover:text-foreground active:scale-[0.98]',
       },

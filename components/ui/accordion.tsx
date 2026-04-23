@@ -15,7 +15,7 @@ const AccordionItem = React.forwardRef<
  <AccordionPrimitive.Item
  ref={ref}
  data-slot="accordion-item"
- className={cn("border-b", className)}
+ className={cn("border-b border-[oklch(0.65_0.22_260_/_0.06)]", className)}
  {...props}
  />
 ))
@@ -29,7 +29,7 @@ const AccordionTrigger = React.forwardRef<
  <AccordionPrimitive.Trigger
  ref={ref}
  data-slot="accordion-trigger"
- className={cn("flex flex-1 items-center justify-between py-4 font-medium transition-[opacity,background-color,border-color] hover:underline [&[data-state=open]>svg]:rotate-180",
+ className={cn("type-body-sm flex flex-1 items-center justify-between rounded-lg px-2 py-3 text-foreground/80 transition-[background-color,color] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:bg-[oklch(0.052_0.009_260_/_0.72)] hover:text-foreground [&[data-state=open]>svg]:rotate-180",
  className
  )}
  {...props}
@@ -48,7 +48,7 @@ const AccordionContent = React.forwardRef<
  <AccordionPrimitive.Content
  ref={ref}
  data-slot="accordion-content"
- className="overflow-hidden text-sm transition-[opacity,background-color,border-color] data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+ className="overflow-hidden type-body-sm text-muted-foreground transition-[opacity] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
  {...props}
  >
  <div className={cn("pb-4 pt-0", className)}>{children}</div>

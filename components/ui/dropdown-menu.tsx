@@ -46,7 +46,7 @@ const DropdownMenuSubContent = React.forwardRef<
   <DropdownMenuPrimitive.SubContent
     ref={ref}
     className={cn(
-      'z-50 min-w-[10rem] overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.96)_0%,oklch(0.05_0.009_260_/_0.92)_100%)] p-1.5 text-popover-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_24px_48px_-30px_rgba(0,0,0,0.86)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+      'z-50 min-w-[10rem] overflow-hidden rounded-[10px] border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.72)_0%,oklch(0.05_0.009_260_/_0.68)_100%)] backdrop-blur-[20px] backdrop-saturate-[1.2] p-1.5 text-popover-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_4px_20px_rgba(0,0,0,0.3)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
       className,
     )}
     {...props}
@@ -63,7 +63,7 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        'z-50 min-w-[10rem] overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.96)_0%,oklch(0.05_0.009_260_/_0.92)_100%)] p-1.5 text-popover-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_24px_48px_-30px_rgba(0,0,0,0.86)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+        'z-50 min-w-[10rem] overflow-hidden rounded-[10px] border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.72)_0%,oklch(0.05_0.009_260_/_0.68)_100%)] backdrop-blur-[20px] backdrop-saturate-[1.2] p-1.5 text-popover-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_4px_20px_rgba(0,0,0,0.3)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
         className,
       )}
       {...props}
