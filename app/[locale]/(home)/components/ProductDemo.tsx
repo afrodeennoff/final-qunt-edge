@@ -1,8 +1,28 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Player } from '@remotion/player';
-import { QuntEdgeDemo } from './remotion/QuntEdgeDemo';
+import dynamic from 'next/dynamic';
+
+// Lazy-load the Remotion player — heavy dependency (~100KB+)
+const Player = dynamic(
+  () => import('@remotion/player').then((mod) => mod.Player),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        style={{ width: '100%', aspectRatio: '16/9' }}
+        className="flex items-center justify-center rounded-2xl border border-border/35 bg-background/55"
+      >
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+      </div>
+    ),
+  }
+);
+
+// Lazy-load the demo composition
+const QuntEdgeDemo = dynamic(() => import('./remotion/QuntEdgeDemo'), {
+  ssr: false,
+});
 
 const TOTAL_FRAMES = 540;
 const FPS = 30;

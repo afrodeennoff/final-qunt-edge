@@ -42,16 +42,9 @@ import { MetricsSkeleton, TableSkeleton, CalendarSkeleton } from './components/S
 
 const RadarChartCard = dynamic(() => import('./components/RadarChartCard'), {
   loading: () => (
-    <UnifiedSurface variant="elevated" className="p-5 sm:p-6">
-      <div className="flex items-start justify-between gap-3">
-        <div className="h-3 w-20 animate-pulse rounded-lg bg-muted/30" />
-        <div className="h-5 w-14 animate-pulse rounded-md bg-muted/30" />
-      </div>
-      <div className="mt-5 rounded-2xl border border-border/35 bg-background/55 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
-        <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
-      </div>
-      <div className="mt-3 h-3 w-36 animate-pulse rounded bg-muted/30" />
-    </UnifiedSurface>
+    <div className="rounded-2xl border border-border/35 bg-background/55 p-3">
+      <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
+    </div>
   ),
 })
 
@@ -1110,7 +1103,20 @@ export default function TraderProfilePageClient() {
           </section>
 
           <aside ref={rightPanelRef} className="space-y-4">
-            <Suspense fallback={<MetricsSkeleton />}>
+            <Suspense
+              fallback={
+                <UnifiedSurface variant="elevated" className="p-5 sm:p-6">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="h-3 w-20 animate-pulse rounded-lg bg-muted/30" />
+                    <div className="h-5 w-14 animate-pulse rounded-md bg-muted/30" />
+                  </div>
+                  <div className="mt-5 rounded-2xl border border-border/35 bg-background/55 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+                    <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
+                  </div>
+                  <div className="mt-3 h-3 w-36 animate-pulse rounded bg-muted/30" />
+                </UnifiedSurface>
+              }
+            >
               <UnifiedSurface
                 variant="elevated"
                 className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6"

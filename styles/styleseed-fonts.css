@@ -1,4 +1,11 @@
-/* StyleSeed Fonts */
+/*
+ * DEPRECATED: This file is not imported anywhere in the build.
+ * Fonts are loaded via next/font/google in app/layout.tsx instead.
+ * The Google Fonts @import below is dead code and should be removed
+ * when this file is cleaned up.
+ *
+ * StyleSeed Fonts (ORIGINAL - DO NOT USE)
+ */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @layer base {

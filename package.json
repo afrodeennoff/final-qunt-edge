@@ -216,9 +216,9 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.1",
+    "@types/d3": "^7.4.3",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.1.16",
-    "@types/d3": "^7.4.3",
     "@types/ms": "^2.1.0",
     "@types/node": "^25.0.3",
     "@types/papaparse": "^5.3.15",
