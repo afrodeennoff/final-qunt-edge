@@ -30,6 +30,11 @@ const config = {
       '2xl': `${BREAKPOINTS['2xl']}px`,
       '3xl': '1920px',
       '4xl': '2560px',
+      '5xl': '3840px',
+      '6xl': '5120px',
+      '7xl': '7680px',
+      '8xl': '10240px',
+      '12k': '12288px',
     },
     extend: {
       fontFamily: {
@@ -66,6 +71,21 @@ const config = {
         'gradient-glow': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
         'gradient-shine':
           'linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)',
+        // ── 12K PREMIUM GRADIENT SURFACES ──
+        'gradient-aurora':
+          'linear-gradient(135deg, color(display-p3 0.45 0.25 0.95) 0%, color(display-p3 0.20 0.45 0.98) 50%, color(display-p3 0.18 0.98 0.65) 100%)',
+        'gradient-luxe':
+          'linear-gradient(135deg, color(display-p3 0.45 0.25 0.95 / 0.8) 0%, color(display-p3 0.95 0.72 0.18 / 0.6) 100%)',
+        'gradient-plasma':
+          'linear-gradient(135deg, color(display-p3 0.95 0.30 0.55) 0%, color(display-p3 0.45 0.25 0.95) 100%)',
+        'gradient-ice':
+          'linear-gradient(135deg, color(display-p3 0.55 0.65 0.98) 0%, color(display-p3 0.75 0.85 0.98) 50%, color(display-p3 0.90 0.92 0.98) 100%)',
+        'gradient-obsidian':
+          'linear-gradient(180deg, oklch(0.06 0.01 260) 0%, oklch(0.03 0.005 265) 100%)',
+        'gradient-cinematic':
+          'radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.6083 0.2172 297.1153 / 0.12) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 100%, color(display-p3 0.20 0.45 0.98 / 0.06) 0%, transparent 60%)',
+        'gradient-depth':
+          'radial-gradient(ellipse 1200px 800px at 20% 0%, oklch(0.6083 0.2172 297.1153 / 0.08) 0%, transparent 50%), radial-gradient(ellipse 900px 600px at 80% 100%, oklch(0.4865 0.2423 291.8661 / 0.05) 0%, transparent 50%), radial-gradient(ellipse 600px 400px at 50% 50%, oklch(0.7001 0.1882 313.2907 / 0.03) 0%, transparent 50%)',
       },
       backgroundSize: {
         '300': '300%',
@@ -110,6 +130,19 @@ const config = {
         'fluid-7xl': 'clamp(4.5rem, 3.75rem + 3.75vw, 7.5rem)',
         'fluid-8xl': 'clamp(6rem, 5rem + 5vw, 10rem)',
         'fluid-9xl': 'clamp(7.5rem, 6.25rem + 6.25vw, 12.5rem)',
+        // 12K-ready ultra-fluid typography — scales proportionally to extreme viewports
+        'fluid-10xl': 'clamp(8rem, 5rem + 20vw, 16rem)',
+        'fluid-11xl': 'clamp(9rem, 6rem + 24vw, 20rem)',
+        'fluid-12xl': 'clamp(10rem, 7rem + 28vw, 24rem)',
+        'fluid-ultra-xs': 'clamp(0.625rem, 0.55rem + 0.35vw, 0.875rem)',
+        'fluid-ultra-sm': 'clamp(0.75rem, 0.65rem + 0.5vw, 1rem)',
+        'fluid-ultra-base': 'clamp(0.875rem, 0.75rem + 0.625vw, 1.125rem)',
+        'fluid-ultra-lg': 'clamp(1rem, 0.85rem + 0.75vw, 1.375rem)',
+        'fluid-ultra-xl': 'clamp(1.125rem, 0.95rem + 0.875vw, 1.625rem)',
+        'fluid-ultra-2xl': 'clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem)',
+        'fluid-ultra-3xl': 'clamp(1.875rem, 1.5rem + 1.875vw, 3.5rem)',
+        'fluid-ultra-4xl': 'clamp(2.25rem, 1.8rem + 2.25vw, 4.5rem)',
+        'fluid-ultra-5xl': 'clamp(3rem, 2.2rem + 4vw, 7rem)',
         '2xs': '0.625rem',
         xs: '0.75rem',
         sm: '0.8125rem',
@@ -176,6 +209,13 @@ const config = {
         'container-lg-plus': '1120px',
         'container-xl-plus': '1320px',
         'container-2xl-plus': '1600px',
+        // Ultra-high resolution containers (12K-ready)
+        'container-5xl': '3840px',
+        'container-6xl': '5120px',
+        'container-7xl': '7680px',
+        'container-8xl': '10240px',
+        'container-12k': '12288px',
+        'container-12k-content': '9600px',
       },
       gridTemplateColumns: {
         '13': 'repeat(13, minmax(0, 1fr))',
@@ -254,6 +294,28 @@ const config = {
           '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -4px rgb(0 0 0 / 0.04), 0 0 0 1px rgb(0 0 0 / 0.05)',
         'dramatic-xl':
           '0 25px 50px -12px rgb(0 0 0 / 0.25), 0 12px 24px -4px rgb(0 0 0 / 0.08), 0 0 0 1px rgb(0 0 0 / 0.05)',
+        // ── 12K ULTRA-RESOLUTION SHADOWS (multi-layer cinematic) ──
+        'ultra-sm':
+          '0 1px 2px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.14), 0 12px 28px rgba(0,0,0,0.10), 0 0 0 0.5px rgba(180,210,255,0.05)',
+        'ultra-md':
+          '0 2px 4px rgba(0,0,0,0.16), 0 8px 20px rgba(0,0,0,0.20), 0 24px 48px rgba(0,0,0,0.18), 0 64px 96px rgba(0,0,0,0.12), 0 0 0 0.5px rgba(180,210,255,0.06)',
+        'ultra-lg':
+          '0 4px 8px rgba(0,0,0,0.14), 0 12px 28px rgba(0,0,0,0.22), 0 32px 64px rgba(0,0,0,0.24), 0 80px 140px rgba(0,0,0,0.18), 0 0 0 0.5px rgba(180,210,255,0.07)',
+        'ultra-xl':
+          '0 8px 16px rgba(0,0,0,0.12), 0 20px 40px rgba(0,0,0,0.20), 0 48px 96px rgba(0,0,0,0.28), 0 96px 192px rgba(0,0,0,0.22), 0 0 0 1px rgba(180,210,255,0.08)',
+        'ultra-2xl':
+          '0 12px 24px rgba(0,0,0,0.10), 0 32px 64px rgba(0,0,0,0.22), 0 64px 128px rgba(0,0,0,0.30), 0 128px 256px rgba(0,0,0,0.24), 0 0 0 1px rgba(180,210,255,0.09)',
+        // ── PREMIUM IRIDESCENT GLOW SHADOWS ──
+        'glow-aurora': '0 0 32px color(display-p3 0.45 0.25 0.95 / 0.3), 0 0 64px color(display-p3 0.45 0.25 0.95 / 0.15)',
+        'glow-sapphire': '0 0 32px color(display-p3 0.20 0.45 0.98 / 0.3), 0 0 64px color(display-p3 0.20 0.45 0.98 / 0.15)',
+        'glow-gold': '0 0 32px color(display-p3 0.95 0.72 0.18 / 0.3), 0 0 64px color(display-p3 0.95 0.72 0.18 / 0.15)',
+        'glow-plasma': '0 0 32px color(display-p3 0.95 0.30 0.55 / 0.3), 0 0 64px color(display-p3 0.95 0.30 0.55 / 0.15)',
+        // ── PREMIUM DEPTH LAYERS (for 12K card surfaces) ──
+        'surface-0': '0 0 0 0.5px rgba(180,210,255,0.04)',
+        'surface-1': '0 1px 3px rgba(0,0,0,0.35), 0 0 0 0.5px rgba(180,210,255,0.05)',
+        'surface-2': '0 4px 12px rgba(0,0,0,0.40), 0 1px 3px rgba(0,0,0,0.25), 0 0 0 0.5px rgba(180,210,255,0.06)',
+        'surface-3': '0 8px 24px rgba(0,0,0,0.45), 0 4px 12px rgba(0,0,0,0.30), 0 1px 3px rgba(0,0,0,0.20), 0 0 0 0.5px rgba(180,210,255,0.07)',
+        'surface-4': '0 16px 48px rgba(0,0,0,0.50), 0 8px 24px rgba(0,0,0,0.35), 0 4px 12px rgba(0,0,0,0.25), 0 0 0 1px rgba(180,210,255,0.08)',
       },
       // Glass & Blur Utilities
       backdropBlur: {
@@ -312,6 +374,65 @@ const config = {
         '1000': '1000ms',
       },
       colors: {
+        // ── P3 WIDE GAMUT PREMIUM COLORS ──
+        aurora: {
+          DEFAULT: 'color(display-p3 0.45 0.25 0.95)',
+          50: 'color(display-p3 0.95 0.92 1.0)',
+          100: 'color(display-p3 0.88 0.82 0.98)',
+          200: 'color(display-p3 0.78 0.68 0.96)',
+          300: 'color(display-p3 0.66 0.50 0.94)',
+          400: 'color(display-p3 0.55 0.35 0.95)',
+          500: 'color(display-p3 0.45 0.25 0.95)',
+          600: 'color(display-p3 0.38 0.18 0.88)',
+          700: 'color(display-p3 0.30 0.12 0.75)',
+          800: 'color(display-p3 0.22 0.08 0.55)',
+          900: 'color(display-p3 0.14 0.04 0.35)',
+        },
+        plasma: {
+          DEFAULT: 'color(display-p3 0.95 0.30 0.55)',
+          50: 'color(display-p3 1.0 0.94 0.96)',
+          100: 'color(display-p3 0.98 0.85 0.90)',
+          200: 'color(display-p3 0.97 0.68 0.78)',
+          300: 'color(display-p3 0.96 0.48 0.64)',
+          400: 'color(display-p3 0.95 0.30 0.55)',
+          500: 'color(display-p3 0.88 0.20 0.45)',
+          600: 'color(display-p3 0.75 0.14 0.38)',
+          700: 'color(display-p3 0.58 0.08 0.28)',
+          800: 'color(display-p3 0.40 0.05 0.18)',
+          900: 'color(display-p3 0.25 0.02 0.10)',
+        },
+        sapphire: {
+          DEFAULT: 'color(display-p3 0.20 0.45 0.98)',
+          50: 'color(display-p3 0.94 0.96 1.0)',
+          100: 'color(display-p3 0.85 0.90 0.98)',
+          200: 'color(display-p3 0.68 0.78 0.96)',
+          300: 'color(display-p3 0.48 0.62 0.97)',
+          400: 'color(display-p3 0.30 0.50 0.98)',
+          500: 'color(display-p3 0.20 0.45 0.98)',
+          600: 'color(display-p3 0.14 0.35 0.88)',
+          700: 'color(display-p3 0.10 0.25 0.72)',
+          800: 'color(display-p3 0.06 0.16 0.52)',
+          900: 'color(display-p3 0.03 0.08 0.32)',
+        },
+        gold: {
+          DEFAULT: 'color(display-p3 0.95 0.72 0.18)',
+          50: 'color(display-p3 1.0 0.98 0.92)',
+          100: 'color(display-p3 0.98 0.94 0.80)',
+          200: 'color(display-p3 0.97 0.88 0.55)',
+          300: 'color(display-p3 0.96 0.80 0.35)',
+          400: 'color(display-p3 0.95 0.72 0.18)',
+          500: 'color(display-p3 0.90 0.62 0.10)',
+          600: 'color(display-p3 0.78 0.50 0.06)',
+          700: 'color(display-p3 0.60 0.36 0.04)',
+          800: 'color(display-p3 0.42 0.24 0.02)',
+          900: 'color(display-p3 0.28 0.14 0.01)',
+        },
+        neon: {
+          mint: 'color(display-p3 0.18 0.98 0.65)',
+          cyan: 'color(display-p3 0.10 0.90 0.98)',
+          magenta: 'color(display-p3 0.95 0.15 0.90)',
+          yellow: 'color(display-p3 0.98 0.95 0.15)',
+        },
         cobalt: {
           DEFAULT: 'oklch(0.65 0.22 260)',
           50: 'oklch(0.95 0.05 260)',
@@ -330,6 +451,20 @@ const config = {
           50: 'oklch(0.05 0.006 264)',
           100: 'oklch(0.08 0.007 264)',
           200: 'oklch(0.12 0.009 264)',
+        },
+        // ── PREMIUM SURFACE DEPTH (Obsidian gradient scale) ──
+        depth: {
+          DEFAULT: 'oklch(0.06 0.01 260)',
+          50: 'oklch(0.03 0.005 265)',
+          100: 'oklch(0.05 0.008 263)',
+          200: 'oklch(0.07 0.010 261)',
+          300: 'oklch(0.09 0.012 260)',
+          400: 'oklch(0.12 0.014 259)',
+          500: 'oklch(0.15 0.016 258)',
+          600: 'oklch(0.18 0.018 257)',
+          700: 'oklch(0.22 0.020 256)',
+          800: 'oklch(0.28 0.022 255)',
+          900: 'oklch(0.35 0.025 254)',
         },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -736,6 +871,46 @@ const config = {
             borderRadius: '30% 60% 70% 40% / 50% 60% 30% 60%',
           },
         },
+        // ── PREMIUM 12K ANIMATIONS ──
+        'aurora-shift': {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
+        'depth-breathe': {
+          '0%, 100%': {
+            transform: 'scale(1)',
+            boxShadow: '0 0 32px oklch(0.6083 0.2172 297.1153 / 0.12)',
+          },
+          '50%': {
+            transform: 'scale(1.01)',
+            boxShadow: '0 0 48px oklch(0.6083 0.2172 297.1153 / 0.20)',
+          },
+        },
+        'iridescent': {
+          '0%': { filter: 'hue-rotate(0deg)' },
+          '100%': { filter: 'hue-rotate(360deg)' },
+        },
+        'cinematic-reveal': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(32px) scale(0.97)',
+            filter: 'blur(8px)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0) scale(1)',
+            filter: 'blur(0px)',
+          },
+        },
+        'premium-pulse': {
+          '0%, 100%': {
+            opacity: '1',
+          },
+          '50%': {
+            opacity: '0.85',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -759,6 +934,12 @@ const config = {
         float: 'float 3s ease-in-out infinite',
         wiggle: 'wiggle 0.5s ease-in-out',
         morph: 'morph 8s ease-in-out infinite',
+        // ── PREMIUM 12K ANIMATIONS ──
+        'aurora-shift': 'aurora-shift 8s ease infinite',
+        'depth-breathe': 'depth-breathe 4s ease-in-out infinite',
+        iridescent: 'iridescent 12s linear infinite',
+        'cinematic-reveal': 'cinematic-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'premium-pulse': 'premium-pulse 3s ease-in-out infinite',
       },
       typography: {
         DEFAULT: {

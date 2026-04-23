@@ -1,4 +1,4 @@
-export const VALID_DASHBOARD_THEMES = ['blue', 'violet', 'emerald', 'amber', 'rose'] as const
+export const VALID_DASHBOARD_THEMES = ['blue', 'violet', 'emerald', 'amber', 'rose', 'aurora', 'sapphire', 'gold', 'plasma'] as const
 
 export type DashboardTheme = typeof VALID_DASHBOARD_THEMES[number]
 
@@ -66,6 +66,54 @@ export const THEME_PALETTES: Record<DashboardTheme, Record<string, string>> = {
     '--sidebar-accent': 'oklch(0.20 0.08 8)',
     '--sidebar-accent-foreground': 'oklch(0.58 0.22 10)',
     '--shadow-base': '350 100% 60%',
+  },
+  aurora: {
+    '--primary': 'oklch(0.55 0.28 290)',
+    '--primary-foreground': 'oklch(1 0 0)',
+    '--accent': 'oklch(0.22 0.10 288)',
+    '--accent-foreground': 'oklch(0.90 0.08 290)',
+    '--ring': 'oklch(0.55 0.28 290)',
+    '--sidebar-primary': 'oklch(0.55 0.28 290)',
+    '--sidebar-ring': 'oklch(0.55 0.28 290)',
+    '--sidebar-accent': 'oklch(0.18 0.12 286)',
+    '--sidebar-accent-foreground': 'oklch(0.55 0.28 290)',
+    '--shadow-base': '274 84% 67%',
+  },
+  sapphire: {
+    '--primary': 'oklch(0.52 0.22 255)',
+    '--primary-foreground': 'oklch(1 0 0)',
+    '--accent': 'oklch(0.22 0.06 256)',
+    '--accent-foreground': 'oklch(0.90 0.04 255)',
+    '--ring': 'oklch(0.52 0.22 255)',
+    '--sidebar-primary': 'oklch(0.52 0.22 255)',
+    '--sidebar-ring': 'oklch(0.52 0.22 255)',
+    '--sidebar-accent': 'oklch(0.18 0.08 254)',
+    '--sidebar-accent-foreground': 'oklch(0.52 0.22 255)',
+    '--shadow-base': '225 90% 62%',
+  },
+  gold: {
+    '--primary': 'oklch(0.72 0.18 80)',
+    '--primary-foreground': 'oklch(0.12 0.02 70)',
+    '--accent': 'oklch(0.25 0.06 78)',
+    '--accent-foreground': 'oklch(0.72 0.18 80)',
+    '--ring': 'oklch(0.72 0.18 80)',
+    '--sidebar-primary': 'oklch(0.72 0.18 80)',
+    '--sidebar-ring': 'oklch(0.72 0.18 80)',
+    '--sidebar-accent': 'oklch(0.20 0.10 76)',
+    '--sidebar-accent-foreground': 'oklch(0.72 0.18 80)',
+    '--shadow-base': '42 95% 65%',
+  },
+  plasma: {
+    '--primary': 'oklch(0.58 0.26 340)',
+    '--primary-foreground': 'oklch(1 0 0)',
+    '--accent': 'oklch(0.24 0.08 338)',
+    '--accent-foreground': 'oklch(0.95 0.04 340)',
+    '--ring': 'oklch(0.58 0.26 340)',
+    '--sidebar-primary': 'oklch(0.58 0.26 340)',
+    '--sidebar-ring': 'oklch(0.58 0.26 340)',
+    '--sidebar-accent': 'oklch(0.20 0.12 336)',
+    '--sidebar-accent-foreground': 'oklch(0.58 0.26 340)',
+    '--shadow-base': '340 85% 62%',
   },
 }
 

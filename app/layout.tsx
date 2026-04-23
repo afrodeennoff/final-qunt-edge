@@ -169,9 +169,13 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
+  minimumScale: 0.5,
   userScalable: true,
   viewportFit: 'cover',
-  themeColor: 'black',
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: 'oklch(0.06 0.01 260)' },
+    { media: '(prefers-color-scheme: light)', color: 'oklch(0.9838 0.0035 247.8583)' },
+  ],
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -198,11 +202,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="dns-prefetch" href={siteOrigin} />
 
         {/* Mobile-First Meta Tags */}
-        <meta name="theme-color" content="black" />
+        <meta name="theme-color" content="oklch(0.06 0.01 260)" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="format-detection" content="telephone=no, address=no, email=no" />
+        <meta name="color-gamut" content="p3" />
 
         {/* Accessibility & SEO */}
         <meta name="google" content="notranslate" />

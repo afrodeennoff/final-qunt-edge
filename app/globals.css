@@ -420,6 +420,36 @@
   --accent-green-subtle: color-mix(in oklab, var(--success) 12%, transparent);
   --accent-green-border: color-mix(in oklab, var(--success) 30%, transparent);
 
+  /* ── P3 WIDE GAMUT PREMIUM ACCENTS ── */
+  --p3-aurora: color(display-p3 0.45 0.25 0.95);
+  --p3-aurora-subtle: color(display-p3 0.45 0.25 0.95 / 0.12);
+  --p3-aurora-border: color(display-p3 0.45 0.25 0.95 / 0.25);
+  --p3-aurora-glow: color(display-p3 0.45 0.25 0.95 / 0.30);
+  --p3-plasma: color(display-p3 0.95 0.30 0.55);
+  --p3-plasma-subtle: color(display-p3 0.95 0.30 0.55 / 0.12);
+  --p3-plasma-border: color(display-p3 0.95 0.30 0.55 / 0.25);
+  --p3-sapphire: color(display-p3 0.20 0.45 0.98);
+  --p3-sapphire-subtle: color(display-p3 0.20 0.45 0.98 / 0.12);
+  --p3-sapphire-border: color(display-p3 0.20 0.45 0.98 / 0.25);
+  --p3-gold: color(display-p3 0.95 0.72 0.18);
+  --p3-gold-subtle: color(display-p3 0.95 0.72 0.18 / 0.12);
+  --p3-gold-border: color(display-p3 0.95 0.72 0.18 / 0.25);
+
+  /* ── 12K ULTRA-DEPTH SHADOW TOKENS ── */
+  --shadow-ultra-sm: 0 1px 3px rgba(0,0,0,0.35), 0 4px 12px rgba(0,0,0,0.20), 0 0 0 0.5px rgba(180,210,255,0.05);
+  --shadow-ultra-md: 0 2px 4px rgba(0,0,0,0.30), 0 8px 20px rgba(0,0,0,0.28), 0 24px 48px rgba(0,0,0,0.16), 0 0 0 0.5px rgba(180,210,255,0.06);
+  --shadow-ultra-lg: 0 4px 8px rgba(0,0,0,0.25), 0 12px 28px rgba(0,0,0,0.30), 0 32px 64px rgba(0,0,0,0.22), 0 80px 140px rgba(0,0,0,0.14), 0 0 0 0.5px rgba(180,210,255,0.07);
+  --shadow-ultra-xl: 0 8px 16px rgba(0,0,0,0.22), 0 20px 40px rgba(0,0,0,0.28), 0 48px 96px rgba(0,0,0,0.26), 0 96px 192px rgba(0,0,0,0.18), 0 0 0 1px rgba(180,210,255,0.08);
+
+  /* ── PREMIUM GRADIENT TOKENS ── */
+  --gradient-aurora: linear-gradient(135deg, color(display-p3 0.45 0.25 0.95) 0%, color(display-p3 0.20 0.45 0.98) 50%, color(display-p3 0.18 0.98 0.65) 100%);
+  --gradient-luxe: linear-gradient(135deg, color(display-p3 0.45 0.25 0.95 / 0.8) 0%, color(display-p3 0.95 0.72 0.18 / 0.6) 100%);
+  --gradient-plasma: linear-gradient(135deg, color(display-p3 0.95 0.30 0.55) 0%, color(display-p3 0.45 0.25 0.95) 100%);
+  --gradient-ice: linear-gradient(135deg, color(display-p3 0.55 0.65 0.98) 0%, color(display-p3 0.75 0.85 0.98) 50%, color(display-p3 0.90 0.92 0.98) 100%);
+  --gradient-cinematic:
+    radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.6083 0.2172 297.1153 / 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 100%, color(display-p3 0.20 0.45 0.98 / 0.05) 0%, transparent 60%);
+
   /* ── TEXT HIERARCHY ── */
   --text-primary: oklch(0.97 0 0);
   --text-secondary: oklch(0.64 0 0);
@@ -634,6 +664,190 @@
       )
       1;
   }
+
+  /* ═══════════════════════════════════════════════════════════
+     12K ULTRA-PREMIUM SURFACE UTILITIES
+     ═══════════════════════════════════════════════════════════ */
+
+  /* ── P3 WIDE GAMUT TEXT GRADIENTS ── */
+  .text-gradient-aurora {
+    background: linear-gradient(135deg, color(display-p3 0.45 0.25 0.95) 0%, color(display-p3 0.20 0.45 0.98) 50%, color(display-p3 0.18 0.98 0.65) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-plasma {
+    background: linear-gradient(135deg, color(display-p3 0.95 0.30 0.55) 0%, color(display-p3 0.45 0.25 0.95) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-sapphire {
+    background: linear-gradient(135deg, color(display-p3 0.20 0.45 0.98) 0%, color(display-p3 0.55 0.65 0.98) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, color(display-p3 0.95 0.72 0.18) 0%, color(display-p3 0.98 0.90 0.55) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── PREMIUM SURFACE EFFECTS ── */
+  .surface-premium {
+    background: oklch(0.1376 0.0118 301.0607);
+    border: 1px solid rgba(145, 108, 255, 0.08);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.35),
+      0 4px 12px rgba(0, 0, 0, 0.25),
+      0 0 0 0.5px rgba(180, 210, 255, 0.05);
+  }
+
+  .surface-premium-hover {
+    transition: all 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .surface-premium-hover:hover {
+    border-color: rgba(145, 108, 255, 0.18);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.35),
+      0 8px 24px rgba(0, 0, 0, 0.30),
+      0 0 24px oklch(0.6083 0.2172 297.1153 / 0.08),
+      0 0 0 0.5px rgba(180, 210, 255, 0.08);
+  }
+
+  .surface-iridescent {
+    background: oklch(0.1376 0.0118 301.0607);
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+  }
+
+  .surface-iridescent::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, oklch(0.6083 0.2172 297.1153 / 0.20), oklch(0.4865 0.2423 291.8661 / 0.10), oklch(0.82 0.185 155 / 0.08));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* ── 12K CINEMATIC GRADIENT SURFACES ── */
+  .bg-cinematic {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.6083 0.2172 297.1153 / 0.10) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 50% at 80% 100%, color(display-p3 0.20 0.45 0.98 / 0.05) 0%, transparent 60%),
+      oklch(0.06 0.01 260);
+  }
+
+  .bg-depth {
+    background:
+      radial-gradient(ellipse 1200px 800px at 20% 0%, oklch(0.6083 0.2172 297.1153 / 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse 900px 600px at 80% 100%, oklch(0.4865 0.2423 291.8661 / 0.04) 0%, transparent 50%),
+      radial-gradient(ellipse 600px 400px at 50% 50%, oklch(0.7001 0.1882 313.2907 / 0.02) 0%, transparent 50%),
+      oklch(0.06 0.01 260);
+  }
+
+  /* ── PREMIUM GLOW EFFECTS ── */
+  .glow-aurora {
+    box-shadow:
+      0 0 32px color(display-p3 0.45 0.25 0.95 / 0.25),
+      0 0 64px color(display-p3 0.45 0.25 0.95 / 0.12),
+      0 0 128px color(display-p3 0.45 0.25 0.95 / 0.06);
+  }
+
+  .glow-sapphire {
+    box-shadow:
+      0 0 32px color(display-p3 0.20 0.45 0.98 / 0.25),
+      0 0 64px color(display-p3 0.20 0.45 0.98 / 0.12),
+      0 0 128px color(display-p3 0.20 0.45 0.98 / 0.06);
+  }
+
+  .glow-gold {
+    box-shadow:
+      0 0 32px color(display-p3 0.95 0.72 0.18 / 0.25),
+      0 0 64px color(display-p3 0.95 0.72 0.18 / 0.12),
+      0 0 128px color(display-p3 0.95 0.72 0.18 / 0.06);
+  }
+
+  .glow-premium {
+    box-shadow:
+      0 0 24px oklch(0.6083 0.2172 297.1153 / 0.18),
+      0 0 48px oklch(0.6083 0.2172 297.1153 / 0.10),
+      0 0 96px oklch(0.6083 0.2172 297.1153 / 0.05),
+      0 0 0 0.5px rgba(145, 108, 255, 0.12);
+  }
+
+  /* ── 12K ULTRA-DEEP CARD SURFACES ── */
+  .card-ultra {
+    background: oklch(0.09 0.012 260);
+    border: 1px solid rgba(145, 108, 255, 0.06);
+    border-radius: var(--radius-lg);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.40),
+      0 4px 12px rgba(0, 0, 0, 0.30),
+      0 16px 40px rgba(0, 0, 0, 0.25),
+      0 32px 64px rgba(0, 0, 0, 0.15),
+      0 0 0 0.5px rgba(180, 210, 255, 0.05);
+    transition: all 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .card-ultra:hover {
+    border-color: rgba(145, 108, 255, 0.14);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.40),
+      0 8px 20px rgba(0, 0, 0, 0.35),
+      0 24px 56px rgba(0, 0, 0, 0.30),
+      0 48px 96px rgba(0, 0, 0, 0.18),
+      0 0 32px oklch(0.6083 0.2172 297.1153 / 0.06),
+      0 0 0 0.5px rgba(180, 210, 255, 0.08);
+  }
+
+  /* ── PREMIUM INTERACTIVE STATES ── */
+  .btn-premium {
+    position: relative;
+    overflow: hidden;
+    transition: all 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .btn-premium::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.08) 50%, transparent 70%);
+    background-size: 200% 100%;
+    opacity: 0;
+    transition: opacity 300ms ease;
+  }
+
+  .btn-premium:hover::after {
+    opacity: 1;
+    animation: shimmer 1.5s ease infinite;
+  }
+
+  /* ── 12K ADAPTIVE SPACING ── */
+  .p-ultra-sm { padding: clamp(0.375rem, 0.3rem + 0.25vw, 0.75rem); }
+  .p-ultra-md { padding: clamp(0.75rem, 0.6rem + 0.75vw, 1.5rem); }
+  .p-ultra-lg { padding: clamp(1rem, 0.8rem + 1vw, 2.5rem); }
+  .p-ultra-xl { padding: clamp(1.5rem, 1.2rem + 1.5vw, 4rem); }
+  .p-ultra-2xl { padding: clamp(2rem, 1.5rem + 2.5vw, 6rem); }
+
+  .gap-ultra-sm { gap: clamp(0.25rem, 0.2rem + 0.25vw, 0.625rem); }
+  .gap-ultra-md { gap: clamp(0.5rem, 0.4rem + 0.5vw, 1.25rem); }
+  .gap-ultra-lg { gap: clamp(0.75rem, 0.6rem + 0.75vw, 2rem); }
+  .gap-ultra-xl { gap: clamp(1rem, 0.8rem + 1vw, 3rem); }
+
+  .m-ultra-auto { margin-inline: auto; max-width: clamp(320px, 90vw, 9600px); }
 }
 
 /* ===== MINI MAX LIGHT THEME ===== */
