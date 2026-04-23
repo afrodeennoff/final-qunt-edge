@@ -41,20 +41,20 @@ export default function Navbar() {
   }
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 px-4 py-3 sm:px-6">
+    <header className="fixed left-0 right-0 top-0 z-50 px-4 py-2.5 sm:px-6 sm:py-3">
       <div className={cn('mx-auto w-full', MARKETING_SHELL_WIDTH)}>
         <div
           className={cn(
             unifiedInsetPanelClassName,
-            'relative flex min-h-16 items-center justify-between overflow-hidden rounded-[1.4rem] px-3 py-2 sm:px-4',
+            'relative flex min-h-[4rem] items-center justify-between overflow-hidden rounded-[1.15rem] px-3 py-2 sm:px-4',
           )}
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/22 to-transparent" />
           <Link href={`/${locale}`} className="flex items-center gap-2 rounded-full px-2 py-1.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-[1rem] border border-border/18 bg-background/28 text-muted-foreground">
+            <div className="flex h-9 w-9 items-center justify-center rounded-[0.95rem] border border-border/18 bg-background/28 text-muted-foreground">
               <Logo className="h-4.5 w-4.5 fill-current" />
             </div>
-            <span className="hidden text-sm font-semibold tracking-tight text-foreground sm:inline-flex">
+            <span className="hidden text-[15px] font-semibold tracking-[-0.02em] text-foreground sm:inline-flex">
               Qunt Edge
             </span>
           </Link>
@@ -65,10 +65,10 @@ export default function Navbar() {
                 key={link.href}
                 href={`/${locale}${link.href}`}
                 className={cn(
-                  'h-9 rounded-full border border-border/18 px-4 text-sm font-medium transition-[background-color,color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
+                  'inline-flex h-[38px] items-center rounded-[0.95rem] border border-border/16 px-4 text-[13px] font-medium tracking-[-0.01em] transition-[background-color,color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
                   isActive(link.href)
-                    ? 'border-border/28 bg-background/48 text-foreground'
-                    : 'text-muted-foreground hover:border-border/24 hover:bg-background/52 hover:text-foreground',
+                    ? 'border-border/24 bg-background/48 text-foreground'
+                    : 'text-muted-foreground hover:border-border/22 hover:bg-background/52 hover:text-foreground',
                 )}
               >
                 {link.title}

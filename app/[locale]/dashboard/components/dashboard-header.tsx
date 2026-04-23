@@ -104,7 +104,7 @@ export function DashboardHeader() {
           )}
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/12 to-transparent" />
-          <div className="pointer-events-none absolute bottom-0 inset-x-0 h-px bg-[rgba(255,255,255,0.15)]" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[oklch(0.65_0.22_260_/_0.12)]" />
           <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4">
             <WindowChrome className="hidden md:block" />
             <SidebarTrigger
@@ -119,7 +119,7 @@ export function DashboardHeader() {
                       {sectionLabel}
                     </span>
                   )}
-                  <h1 className="truncate text-[14px] font-semibold tracking-[0.01em] text-foreground">
+                  <h1 className="truncate text-[15px] font-semibold tracking-[-0.01em] text-foreground">
                     {title}
                   </h1>
                 </div>
@@ -152,7 +152,7 @@ export function DashboardHeader() {
                     <button
                       className={cn(
                         unifiedPrimaryActionClassName,
-                        'group h-9 px-3.5 text-[10px] uppercase tracking-[0.22em]',
+                        'group h-[38px] px-3.5 text-[13px] font-semibold tracking-[-0.01em]',
                       )}
                     >
                       <Sparkles className="h-3.5 w-3.5" />

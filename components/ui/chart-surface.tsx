@@ -119,14 +119,14 @@ export function ChartSurface({
  return (
  <div
  data-chart-surface="modern"
- className={cn("relative flex h-full flex-col overflow-hidden rounded-xl border","border-[oklch(0.65_0.22_260_/_0.12)]","bg-[linear-gradient(180deg,oklch(0.074_0.014_260_/_0.94)_0%,oklch(0.06_0.012_260_/_0.9)_100%)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_18px_38px_-26px_rgba(0,0,0,0.78)]","","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.5] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
+ className={cn("relative flex h-full flex-col overflow-hidden rounded-[1.15rem] border","border-[oklch(0.65_0.22_260_/_0.1)]","bg-[linear-gradient(180deg,oklch(0.072_0.013_260_/_0.92)_0%,oklch(0.058_0.011_260_/_0.86)_100%)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_20px_38px_-28px_rgba(0,0,0,0.68)]","","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.32] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
  className
  )}
  style={height ? { height } : undefined}
  >
  {hasHeader && (
  <div
- className={cn("flex shrink-0 items-center border-b border-[oklch(0.65_0.22_260_/_0.1)] bg-[oklch(0.65_0.22_260_/_0.08)]",
+ className={cn("flex shrink-0 items-center border-b border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.06)]",
  isSmall ?"h-10 px-2.5" :"h-12 px-3.5",
  headerClassName
  )}
@@ -136,7 +136,7 @@ export function ChartSurface({
  {title ? (
  <span
  className={cn("line-clamp-1 text-fg-primary",
- isSmall ?"text-[13px] font-semibold" :"text-sm font-semibold"
+ isSmall ?"text-[13px] font-semibold tracking-[-0.01em]" :"text-sm font-semibold tracking-[-0.01em]"
  )}
  >
  {title}

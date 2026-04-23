@@ -4,8 +4,8 @@ import { useRef, useEffect, useState } from "react"
 import { motion, useReducedMotion, useInView, useSpring, Variants } from "framer-motion"
 import { cn } from "@/lib/utils"
 
-export const SPRING_GENTLE = { type:"spring" as const, stiffness: 300, damping: 20 }
-export const SPRING_BOUNCY = { type:"spring" as const, stiffness: 400, damping: 15 }
+export const SPRING_GENTLE = { type:"spring" as const, stiffness: 280, damping: 26, mass: 0.9 }
+export const SPRING_BOUNCY = { type:"spring" as const, stiffness: 340, damping: 24, mass: 0.9 }
 
 // ============================================================================
 // StyleSeed motion tokens
@@ -14,7 +14,7 @@ export const SPRING_BOUNCY = { type:"spring" as const, stiffness: 400, damping: 
 export const MOTION_DURATION = {
  fast: 100, // --duration-fast: hover, color changes
  normal: 200, // --duration-normal: enter animations, expand
- slow: 350, // --duration-slow: page transitions, spring
+ slow: 300, // --duration-slow: page transitions, spring
 } as const
 
 export const MOTION_EASE = {
@@ -40,24 +40,24 @@ export function getStagedRevealClassName(stage = 0) {
 // ============================================================================
 
 const BLUR_ENTRANCE: Variants = {
- hidden: { opacity: 0, y: 24 },
+ hidden: { opacity: 0, y: 12 },
  show: {
  opacity: 1,
  y: 0,
- transition: { duration: 0.9, ease: MOTION_EASE.spring }
+ transition: { duration: 0.55, ease: MOTION_EASE.spring }
  }
 }
 
 export const blurIn: Variants = {
  hidden: {
  opacity: 0,
- scale: 0.95,
+ scale: 0.98,
  },
  visible: {
  opacity: 1,
  scale: 1,
  transition: {
- duration: 0.5,
+ duration: 0.36,
  ease: MOTION_EASE.entrance as unknown as number[],
  },
  },
@@ -111,7 +111,7 @@ export function MotionSection({
  initial={false}
  animate={isInView ? { opacity: 1, y: 0 } : undefined}
  transition={{
- duration: 0.5,
+ duration: 0.42,
  delay,
  ease: [0.22, 1, 0.36, 1],
  ...spring,
@@ -196,13 +196,13 @@ export function MotionStaggerItem({ children, className, blur = false }: MotionS
  blur
  ? BLUR_ENTRANCE
  : {
- hidden: { opacity: 0, y: 10, scale: 0.99 },
+ hidden: { opacity: 0, y: 8, scale: 0.995 },
  visible: {
  opacity: 1,
  y: 0,
  scale: 1,
  transition: {
- duration: 0.45,
+ duration: 0.38,
  ease: [0.22, 1, 0.36, 1],
  },
  },

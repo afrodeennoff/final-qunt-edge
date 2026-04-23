@@ -6,7 +6,7 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
   ({ className, ...props }, ref) => (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-auto overscroll-x-contain rounded-2xl border border-[oklch(0.65_0.22_260_/_0.06)] bg-[linear-gradient(180deg,oklch(0.06_0.01_260_/_0.86)_0%,oklch(0.048_0.009_260_/_0.8)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.03),0_1px_2px_rgba(0,0,0,0.2)]"
+      className="relative w-full overflow-auto overscroll-x-contain rounded-[1.2rem] border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.058_0.01_260_/_0.84)_0%,oklch(0.048_0.009_260_/_0.78)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.03),0_18px_34px_-28px_rgba(0,0,0,0.58)]"
     >
       <table
         ref={ref}
@@ -27,7 +27,7 @@ const TableHeader = React.forwardRef<
     ref={ref}
     data-slot="table-header"
     className={cn(
-      'border-b border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.05_0.009_260_/_0.60)] backdrop-blur-lg backdrop-saturate-[1.4] sticky top-0 [&_tr]:border-b [&_tr]:border-[oklch(0.65_0.22_260_/_0.06)]',
+      'sticky top-0 border-b border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.05_0.009_260_/_0.76)] [&_tr]:border-b [&_tr]:border-[oklch(0.65_0.22_260_/_0.06)]',
       className,
     )}
     {...props}
@@ -86,10 +86,10 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     data-slot="table-head"
-    className={cn(
-      'type-label h-10 px-3.5 text-left align-middle text-muted-foreground sm:h-11 sm:px-4 [&:has([role=checkbox])]:pr-0',
-      className,
-    )}
+      className={cn(
+        'type-label h-10 px-3.5 text-left align-middle text-muted-foreground sm:h-11 sm:px-4 [&:has([role=checkbox])]:pr-0',
+        className,
+      )}
     {...props}
   />
 ))
@@ -102,8 +102,8 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     data-slot="table-cell"
-    className={cn(
-      'border-b border-border/60 p-3.5 align-middle type-body-sm sm:p-4 [&:has([role=checkbox])]:pr-0',
+      className={cn(
+        'border-b border-border/60 p-3.5 align-middle type-body-sm leading-[1.5] sm:p-4 [&:has([role=checkbox])]:pr-0',
       'border-[oklch(0.65_0.22_260_/_0.06)]',
       className,
     )}

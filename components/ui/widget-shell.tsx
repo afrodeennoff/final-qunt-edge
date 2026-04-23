@@ -86,20 +86,20 @@ export function WidgetShell({
  return (
  <Card
  data-widget-shell="v2"
- className={cn("widget-enter-smooth relative overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.07_0.013_260_/_0.92)_0%,oklch(0.058_0.011_260_/_0.86)_100%)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_18px_38px_-26px_rgba(0,0,0,0.78)]","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background","h-full",
+ className={cn("widget-enter-smooth relative h-full overflow-hidden rounded-[1.15rem] border border-[oklch(0.65_0.22_260_/_0.1)] bg-[linear-gradient(180deg,oklch(0.068_0.012_260_/_0.9)_0%,oklch(0.056_0.01_260_/_0.84)_100%)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_20px_38px_-28px_rgba(0,0,0,0.68)]","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/32 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
  variant ==="hoverable" &&
  className
  )}
  >
  {(title || actions || icon || description) && (
- <CardHeader className="border-b border-[oklch(0.65_0.22_260_/_0.1)] bg-[oklch(0.65_0.22_260_/_0.08)] px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
+ <CardHeader className="border-b border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.06)] px-[var(--space-4)] py-[0.9rem] sm:px-[var(--space-4)] sm:py-[0.9rem]">
  <div className="flex items-start justify-between gap-[var(--space-3)]">
  <div className="min-w-0 gap-[var(--space-2)]">
  {(title || icon) && (
  <div className="flex items-center gap-[var(--space-2)]">
  {icon ? <span className="text-fg-muted">{icon}</span> : null}
  {title ? (
- <CardTitle className="line-clamp-1 text-sm font-semibold text-fg-primary sm:text-[15px]">{title}</CardTitle>
+ <CardTitle className="line-clamp-1 text-sm font-semibold tracking-[-0.01em] text-fg-primary sm:text-[15px]">{title}</CardTitle>
  ) : null}
  {info ? (
  <TooltipProvider>
@@ -120,7 +120,7 @@ export function WidgetShell({
  </div>
  )}
  {description ? (
- <p className="line-clamp-1 text-[11px] text-fg-muted">{description}</p>
+ <p className="line-clamp-1 text-[12px] text-fg-muted">{description}</p>
  ) : null}
  </div>
  {actions ? <div className="shrink-0">{actions}</div> : null}
