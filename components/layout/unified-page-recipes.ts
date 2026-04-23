@@ -20,7 +20,7 @@ export const unifiedPrimaryActionClassName =
   'inline-flex items-center justify-center gap-2 rounded-[1rem] border border-primary/18 bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[0_18px_34px_-24px_oklch(0.65_0.22_260_/_0.46)] transition-[background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-primary/94 hover:shadow-[0_22px_38px_-24px_oklch(0.65_0.22_260_/_0.52)]'
 
 export const unifiedToolbarClassName =
-  'relative overflow-hidden rounded-[1.4rem] border border-[oklch(0.65_0.22_260_/_0.08)] bg-[linear-gradient(180deg,oklch(0.07_0.012_260_/_0.95)_0%,oklch(0.056_0.01_260_/_0.92)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.66)]'
+  'relative overflow-hidden rounded-[1.4rem] border border-[oklch(0.65_0.22_260_/_0.08)] bg-[linear-gradient(180deg,oklch(0.07_0.012_260_/_0.70)_0%,oklch(0.056_0.01_260_/_0.65)_100%)] backdrop-blur-[20px] backdrop-saturate-[1.5] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.66)]'
 
 export const unifiedToolbarBadgeClassName =
   'inline-flex items-center gap-2 rounded-full border border-[oklch(0.65_0.22_260_/_0.11)] bg-[oklch(0.061_0.012_260_/_0.74)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground'

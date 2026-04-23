@@ -105,11 +105,11 @@
     --border-success: var(--success);
 
     /* ===== GLASSMORPHISM — Premium Luxury grade ===== */
-    --glass-bg: 0 0% 3% / 0.70;
-    --glass-bg-strong: 0 0% 4% / 0.88;
-    --glass-bg-subtle: 0 0% 1% / 0.50;
-    --glass-blur: blur(24px) saturate(180%);
-    --glass-blur-strong: blur(48px) saturate(200%);
+    --glass-bg: 0 0% 3% / 0.55;
+    --glass-bg-strong: 0 0% 4% / 0.72;
+    --glass-bg-subtle: 0 0% 1% / 0.35;
+    --glass-blur: blur(40px) saturate(180%);
+    --glass-blur-strong: blur(60px) saturate(200%);
     --glass-border: 0 0% 8%;
     --glass-border-opacity: 0.10;
     --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.14),

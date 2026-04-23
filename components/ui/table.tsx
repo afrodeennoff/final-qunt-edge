@@ -27,7 +27,7 @@ const TableHeader = React.forwardRef<
     ref={ref}
     data-slot="table-header"
     className={cn(
-      'border-b border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.05_0.009_260_/_0.72)] [&_tr]:border-b [&_tr]:border-[oklch(0.65_0.22_260_/_0.06)]',
+      'border-b border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.05_0.009_260_/_0.60)] backdrop-blur-lg backdrop-saturate-[1.4] sticky top-0 [&_tr]:border-b [&_tr]:border-[oklch(0.65_0.22_260_/_0.06)]',
       className,
     )}
     {...props}

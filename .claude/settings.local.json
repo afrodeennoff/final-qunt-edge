@@ -9,7 +9,9 @@
       "Bash(npx:*)",
       "Bash(bun:*)",
       "Bash(git:*)",
-      "Bash(head:*)"
+      "Bash(head:*)",
+      "WebSearch",
+      "mcp__duckduckgo-search__duckduckgo_web_search"
     ]
   },
   "model": "sonnet",

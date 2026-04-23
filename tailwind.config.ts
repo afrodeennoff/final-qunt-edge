@@ -348,6 +348,10 @@ const config = {
         'ease-out-back-custom': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         'ease-elastic': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
         'ease-overstep': 'cubic-bezier(0.7, 0, 0.3, 1)',
+        // macOS native animation curves
+        macos: 'cubic-bezier(0.25, 0.1, 0.25, 1.0)',
+        'macos-spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.1)',
+        'macos-sheet': 'cubic-bezier(0.32, 0.72, 0, 1)',
       },
       transitionDuration: {
         '400': '400ms',

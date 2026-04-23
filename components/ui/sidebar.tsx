@@ -225,7 +225,7 @@ function Sidebar({
             'flex h-full w-full flex-col border border-sidebar-border/35 bg-sidebar/95 shadow-[inset_0_1px_0_hsl(var(--sidebar-foreground)/0.02),0_8px_24px_-12px_rgba(0,0,0,0.5)]',
             'group-data-[variant=floating]:rounded-2xl',
             'group-data-[variant=inset]:rounded-2xl',
-            'border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.064_0.012_260_/_0.98)_0%,oklch(0.052_0.01_260_/_0.96)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_26px_48px_-30px_rgba(0,0,0,0.8)]',
+            'border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.064_0.012_260_/_0.72)_0%,oklch(0.052_0.01_260_/_0.68)_100%)] backdrop-blur-[48px] backdrop-saturate-[1.7] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_26px_48px_-30px_rgba(0,0,0,0.8)]',
           )}
         >
           {children}

@@ -12,6 +12,7 @@ import {
 } from '@/components/layout/unified-page-recipes'
 import { WORKSPACE_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
+import { WindowChrome } from '@/components/ui/window-chrome'
 import { useDashboardActions, useDashboardFilters } from '@/context/data-provider'
 import { useIsMobile } from '@/hooks/use-mobile'
 import dynamic from 'next/dynamic'
@@ -104,6 +105,7 @@ export function DashboardHeader() {
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/12 to-transparent" />
           <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4">
+            <WindowChrome className="hidden md:block" />
             <SidebarTrigger
               className={cn(unifiedToolbarButtonClassName, 'h-10 w-10 shrink-0 md:h-9 md:w-9')}
             />

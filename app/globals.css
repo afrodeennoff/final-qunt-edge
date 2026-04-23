@@ -165,8 +165,8 @@
   }
 
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
@@ -174,28 +174,32 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.2 0 0);
-    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
     transition: background 200ms ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.32 0 0);
+    background: rgba(255, 255, 255, 0.25);
+    border: 2px solid transparent;
+    background-clip: content-box;
   }
 
   ::-webkit-scrollbar-corner {
     background: transparent;
   }
 
-  /* Premium scrollbar — thin elegant track */
+  /* Premium scrollbar — macOS native pill style */
   * {
     scrollbar-width: thin;
-    scrollbar-color: oklch(0.65 0.22 260 / 0.34) transparent;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
   }
 
   *::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 8px;
+    height: 8px;
   }
 
   *::-webkit-scrollbar-track {
@@ -203,13 +207,17 @@
   }
 
   *::-webkit-scrollbar-thumb {
-    background: oklch(0.65 0.22 260 / 0.34);
-    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
     transition: background 200ms ease;
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.69 0.2 260 / 0.5);
+    background: rgba(255, 255, 255, 0.25);
+    border: 2px solid transparent;
+    background-clip: content-box;
   }
 
   body {
@@ -449,6 +457,20 @@
   --gradient-cinematic:
     radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.6083 0.2172 297.1153 / 0.10) 0%, transparent 70%),
     radial-gradient(ellipse 60% 50% at 80% 100%, color(display-p3 0.20 0.45 0.98 / 0.05) 0%, transparent 60%);
+
+  /* ── macOS NATIVE DESIGN TOKENS ── */
+  --macos-blur: blur(40px) saturate(180%);
+  --macos-blur-heavy: blur(60px) saturate(200%);
+  --macos-blur-sidebar: blur(48px) saturate(170%);
+  --macos-blur-toolbar: blur(20px) saturate(150%);
+  --macos-easing: cubic-bezier(0.25, 0.1, 0.25, 1.0);
+  --macos-easing-spring: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  --macos-easing-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+  --macos-toolbar-height: 52px;
+  --macos-sidebar-width: 260px;
+  --easing-macos: cubic-bezier(0.25, 0.1, 0.25, 1.0);
+  --easing-macos-spring: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  --easing-macos-sheet: cubic-bezier(0.32, 0.72, 0, 1);
 
   /* ── TEXT HIERARCHY ── */
   --text-primary: oklch(0.97 0 0);
