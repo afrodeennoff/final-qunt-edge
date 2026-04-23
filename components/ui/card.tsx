@@ -57,11 +57,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onClick={isInteractive ? onClick : undefined}
         className={cn(
           'group relative overflow-hidden text-foreground',
-          'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.074_0.014_260_/_0.9)_0%,oklch(0.06_0.012_260_/_0.84)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_20px_40px_-26px_rgba(0,0,0,0.78)]',
+          'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.1)] bg-[linear-gradient(180deg,oklch(0.07_0.013_260_/_0.9)_0%,oklch(0.056_0.011_260_/_0.84)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_16px_32px_-24px_rgba(0,0,0,0.74)]',
           variant === 'glass' &&
             'border-[oklch(0.65_0.22_260_/_0.1)] bg-[oklch(0.062_0.012_260_/_0.8)]',
           variant === 'elevated' &&
-            'border-[oklch(0.65_0.22_260_/_0.14)] bg-[linear-gradient(180deg,oklch(0.08_0.015_260_/_0.94)_0%,oklch(0.064_0.013_260_/_0.88)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.1),0_26px_48px_-28px_rgba(0,0,0,0.84)]',
+            'border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.076_0.014_260_/_0.94)_0%,oklch(0.06_0.012_260_/_0.88)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_20px_38px_-24px_rgba(0,0,0,0.78)]',
           variant === 'outlined' &&
             'border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent shadow-none',
           variant === 'flat' && 'border-transparent bg-transparent shadow-none',
@@ -74,7 +74,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           size === 'md' && 'type-body',
           size === 'lg' && 'type-body-lg',
           hover &&
-            'transition-[background-color,border-color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.18)] hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.1),0_24px_46px_-26px_rgba(0,0,0,0.84)]',
+            'transition-[background-color,border-color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.15)] hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_20px_40px_-24px_rgba(0,0,0,0.8)]',
           isInteractive &&
             'cursor-pointer transition-[background-color,border-color,box-shadow,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           isLoading && 'pointer-events-none opacity-80',

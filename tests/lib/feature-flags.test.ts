@@ -40,6 +40,7 @@ describe('Feature Flags System', () => {
       expect(featureFlagsModule.FEATURE_FLAGS).toHaveProperty('ENABLE_QUERY_CACHING')
       expect(featureFlagsModule.FEATURE_FLAGS).toHaveProperty('ROLLOUT_PERCENTAGE')
       expect(featureFlagsModule.FEATURE_FLAGS).toHaveProperty('DARK_ONLY_SURFACE_ENFORCEMENT')
+      expect(featureFlagsModule.FEATURE_FLAGS).toHaveProperty('ENABLE_DEV_MOCK_TRADES')
       expect(featureFlagsModule.FEATURE_FLAGS).toHaveProperty('ENABLE_EMERGENCY_ROLLBACK')
     })
 
@@ -52,6 +53,7 @@ describe('Feature Flags System', () => {
       expect(typeof FEATURE_FLAGS.ENABLE_QUERY_CACHING).toBe('boolean')
       expect(typeof FEATURE_FLAGS.ROLLOUT_PERCENTAGE).toBe('number')
       expect(typeof FEATURE_FLAGS.DARK_ONLY_SURFACE_ENFORCEMENT).toBe('boolean')
+      expect(typeof FEATURE_FLAGS.ENABLE_DEV_MOCK_TRADES).toBe('boolean')
       expect(typeof FEATURE_FLAGS.ENABLE_EMERGENCY_ROLLBACK).toBe('boolean')
     })
   })
@@ -61,12 +63,10 @@ describe('Feature Flags System', () => {
       const userId = 'test-user-123'
       const { shouldShowOptimizations } = featureFlagsModule
 
-      const results = Array.from({ length: 100 }, () =>
-        shouldShowOptimizations(userId)
-      )
+      const results = Array.from({ length: 100 }, () => shouldShowOptimizations(userId))
 
       // All results should be identical
-      expect(results.every(r => r === results[0])).toBe(true)
+      expect(results.every((r) => r === results[0])).toBe(true)
     })
 
     it('should produce different results for different inputs', () => {
@@ -111,11 +111,9 @@ describe('Feature Flags System', () => {
       const { shouldShowOptimizations } = featureFlagsModule
 
       // Test with 100 different user IDs
-      const results = Array.from({ length: 100 }, (_, i) =>
-        shouldShowOptimizations(`user-${i}`)
-      )
+      const results = Array.from({ length: 100 }, (_, i) => shouldShowOptimizations(`user-${i}`))
 
-      const includedCount = results.filter(r => r).length
+      const includedCount = results.filter((r) => r).length
 
       // With 50% rollout, we expect roughly 50% (allow 30-70% range)
       expect(includedCount).toBeGreaterThan(30)
@@ -136,7 +134,7 @@ describe('Feature Flags System', () => {
         'FULL_ROLLOUT',
         'PILOT',
         'EARLY_ACCESS',
-        'GRADUAL_ROLLOUT'
+        'GRADUAL_ROLLOUT',
       ]
 
       expect(validStatuses).toContain(status)
@@ -148,6 +146,14 @@ describe('Feature Flags System', () => {
       const { shouldEnforceDarkOnlySurfaces } = featureFlagsModule
 
       expect(shouldEnforceDarkOnlySurfaces()).toBe(true)
+    })
+  })
+
+  describe('shouldUseDevMockTrades', () => {
+    it('defaults development mock trades to disabled unless explicitly enabled', () => {
+      const { shouldUseDevMockTrades } = featureFlagsModule
+
+      expect(shouldUseDevMockTrades()).toBe(false)
     })
   })
 
@@ -181,7 +187,9 @@ describe('Feature Flags System', () => {
 
       // Status should be valid
       const status = getRolloutStatus()
-      expect(['DISABLED', 'PILOT', 'EARLY_ACCESS', 'GRADUAL_ROLLOUT', 'FULL_ROLLOUT']).toContain(status)
+      expect(['DISABLED', 'PILOT', 'EARLY_ACCESS', 'GRADUAL_ROLLOUT', 'FULL_ROLLOUT']).toContain(
+        status,
+      )
     })
 
     it('should handle edge cases gracefully', () => {

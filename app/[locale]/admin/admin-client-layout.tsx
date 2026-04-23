@@ -71,10 +71,10 @@ export function AdminClientLayout({
             <div
               className={cn(
                 unifiedToolbarClassName,
-                'flex min-h-[4.5rem] w-full items-center gap-4 px-3 py-3 sm:px-4',
+                'flex min-h-[4.5rem] w-full items-center gap-4 px-3 py-2.5 sm:px-4',
               )}
             >
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/16 to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/12 to-transparent" />
               <div className="flex min-w-0 items-center gap-3">
                 <SidebarTrigger
                   className={cn(unifiedToolbarButtonClassName, 'h-10 w-10 md:h-9 md:w-9')}
@@ -84,7 +84,7 @@ export function AdminClientLayout({
                     <span className={cn(unifiedToolbarBadgeClassName, 'hidden sm:inline-flex')}>
                       Admin
                     </span>
-                    <h1 className="truncate whitespace-nowrap text-sm font-bold uppercase tracking-[0.18em] text-foreground">
+                    <h1 className="truncate whitespace-nowrap text-[0.92rem] font-semibold tracking-[0.02em] text-foreground">
                       Operations Studio
                     </h1>
                   </div>

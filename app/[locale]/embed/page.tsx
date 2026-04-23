@@ -93,18 +93,17 @@ export default function EmbedPage() {
   const searchParams = useSearchParams()
   const preset = searchParams.get('preset') || undefined
   const lang = searchParams.get('lang') || 'en'
-  const [trades, setTrades] =
-    React.useState<
-      Array<{
-        pnl: number
-        timeInPosition: number
-        entryDate: string
-        side: string
-        quantity: number
-        commission: number
-        instrument: string
-      }>
-    >(mockTrades)
+  const [trades, setTrades] = React.useState<
+    Array<{
+      pnl: number
+      timeInPosition: number
+      entryDate: string
+      side: string
+      quantity: number
+      commission: number
+      instrument: string
+    }>
+  >(mockTrades)
 
   // Dark-only theme with optional presets/overrides.
   React.useEffect(() => {
@@ -241,13 +240,13 @@ export default function EmbedPage() {
       (component) => (
         <div
           key={component.key}
-          className="group relative cursor-pointer rounded-2xl border border-[oklch(0.65_0.22_260_/_0.05)] bg-[oklch(0.05_0.009_260_/_0.54)] p-1 transition-transform duration-200 hover:-translate-y-1"
+          className="group relative cursor-pointer rounded-[1.4rem] border border-[oklch(0.65_0.22_260_/_0.045)] bg-[oklch(0.05_0.009_260_/_0.52)] p-1 transition-transform duration-200 hover:-translate-y-0.5"
           onClick={() => {
             sendChartClickMessage(component.key, formatChartName(component.key))
           }}
           title={`Click to add "${formatChartName(component.key)}" to selection`}
         >
-          <div className="pointer-events-none absolute inset-0 rounded-[inherit] border border-[oklch(0.65_0.22_260_/_0.05)] transition-colors duration-200 group-hover:border-[oklch(0.65_0.22_260_/_0.09)] group-hover:shadow-[0_18px_34px_-26px_rgba(0,0,0,0.72)]" />
+          <div className="pointer-events-none absolute inset-0 rounded-[inherit] border border-[oklch(0.65_0.22_260_/_0.045)] transition-colors duration-200 group-hover:border-[oklch(0.65_0.22_260_/_0.08)] group-hover:shadow-[0_14px_26px_-24px_rgba(0,0,0,0.62)]" />
           <div className="relative">{component.render()}</div>
         </div>
       ),

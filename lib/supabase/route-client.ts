@@ -1,23 +1,23 @@
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient } from '@supabase/ssr'
 
-type CookiePair = { name: string; value: string };
+type CookiePair = { name: string; value: string }
 
 function parseCookieHeader(header: string | null): CookiePair[] {
-  if (!header) return [];
+  if (!header) return []
 
   return header
-    .split(";")
+    .split(';')
     .map((part) => part.trim())
     .filter(Boolean)
     .map((part) => {
-      const eq = part.indexOf("=");
-      if (eq === -1) return { name: part, value: "" };
+      const eq = part.indexOf('=')
+      if (eq === -1) return { name: part, value: '' }
       return {
         name: part.slice(0, eq).trim(),
         value: part.slice(eq + 1).trim(),
-      };
+      }
     })
-    .filter((pair) => pair.name.length > 0);
+    .filter((pair) => pair.name.length > 0)
 }
 
 /**
@@ -27,31 +27,35 @@ function parseCookieHeader(header: string | null): CookiePair[] {
  * so route handlers remain callable from unit tests without a Next request scope.
  */
 export function createRouteClient(request: Request) {
-  const url = (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '').trim();
-  const key =
-    (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '').trim();
+  const url = (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '').trim()
+  const key = (
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_ANON_KEY ||
+    ''
+  ).trim()
 
-  // Fail closed in production; only allow local defaults in non-production.
   if (!url || !key) {
-    if (process.env.NODE_ENV === "production") {
-      throw new Error("Missing Supabase environment variables for route client");
+    if (process.env.NODE_ENV !== 'test') {
+      throw new Error(
+        'Missing Supabase environment variables for route client. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.',
+      )
     }
   }
 
-  const resolvedUrl = url || "http://127.0.0.1:54321";
-  const resolvedKey = key || "dummy-anon-key";
+  const resolvedUrl = url || 'http://127.0.0.1:54321'
+  const resolvedKey = key || 'dummy-anon-key'
 
-  const cookieHeader = request.headers.get("cookie");
-  const cookies = parseCookieHeader(cookieHeader);
+  const cookieHeader = request.headers.get('cookie')
+  const cookies = parseCookieHeader(cookieHeader)
 
   return createServerClient(resolvedUrl, resolvedKey, {
     cookies: {
       getAll() {
-        return cookies;
+        return cookies
       },
       // Route handlers generally shouldn't be mutating auth cookies.
       // Keep this a no-op so unit tests and non-middleware routes stay stable.
       setAll() {},
     },
-  });
+  })
 }

@@ -11,9 +11,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         solid:
-          'rounded-xl border-primary/18 bg-primary text-primary-foreground shadow-[0_18px_36px_-24px_oklch(0.65_0.22_260_/_0.5)] hover:bg-primary/92 hover:shadow-[0_20px_40px_-24px_oklch(0.65_0.22_260_/_0.58)] active:scale-[0.98]',
+          'rounded-xl border-primary/18 bg-primary text-primary-foreground shadow-[0_14px_28px_-22px_oklch(0.65_0.22_260_/_0.42)] hover:bg-primary/92 hover:shadow-[0_16px_30px_-22px_oklch(0.65_0.22_260_/_0.48)] active:scale-[0.98]',
         outline:
-          'rounded-xl border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.056_0.009_260_/_0.78)] active:scale-[0.98]',
+          'rounded-xl border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.052_0.009_260_/_0.66)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.056_0.009_260_/_0.74)] active:scale-[0.98]',
         ghost:
           'rounded-xl bg-transparent text-muted-foreground hover:border-[oklch(0.65_0.22_260_/_0.07)] hover:bg-[oklch(0.052_0.009_260_/_0.56)] hover:text-foreground active:scale-[0.98]',
         error:
@@ -30,7 +30,7 @@ const buttonVariants = cva(
         default:
           'rounded-xl border-primary/18 bg-primary text-primary-foreground shadow-[0_18px_36px_-24px_oklch(0.65_0.22_260_/_0.5)] hover:bg-primary/92 hover:shadow-[0_20px_40px_-24px_oklch(0.65_0.22_260_/_0.58)] active:scale-[0.98]',
         secondary:
-          'rounded-xl border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.05_0.009_260_/_0.7)] text-secondary-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.11)] hover:bg-[oklch(0.054_0.009_260_/_0.78)] active:scale-[0.98]',
+          'rounded-xl border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.05_0.009_260_/_0.68)] text-secondary-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.054_0.009_260_/_0.74)] active:scale-[0.98]',
         mono: 'rounded-xl border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.05_0.009_260_/_0.72)] text-foreground hover:border-[oklch(0.65_0.22_260_/_0.11)] hover:bg-[oklch(0.054_0.009_260_/_0.8)] font-mono',
         pill: 'rounded-full border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.056_0.009_260_/_0.78)] active:scale-[0.98]',
         'pill-solid':
@@ -40,8 +40,8 @@ const buttonVariants = cva(
       },
       size: {
         sm: 'h-8 min-h-[32px] min-w-[32px] px-3',
-        default: 'h-9 min-h-[36px] min-w-[36px] px-4',
-        md: 'h-10 min-h-[40px] min-w-[40px] px-5',
+        default: 'h-9 min-h-[36px] min-w-[36px] px-3.5',
+        md: 'h-10 min-h-[40px] min-w-[40px] px-4.5',
         lg: 'h-11 min-h-[44px] min-w-[44px] px-6 text-sm',
         icon: 'h-9 w-9 min-h-[36px] min-w-[36px]',
       },

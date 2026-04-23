@@ -6,7 +6,7 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
   ({ className, ...props }, ref) => (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-auto overscroll-x-contain rounded-2xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.86)_0%,oklch(0.05_0.009_260_/_0.8)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_18px_36px_-28px_rgba(0,0,0,0.76)]"
+      className="relative w-full overflow-auto overscroll-x-contain rounded-2xl border border-[oklch(0.65_0.22_260_/_0.06)] bg-[linear-gradient(180deg,oklch(0.06_0.01_260_/_0.86)_0%,oklch(0.048_0.009_260_/_0.8)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.03),0_14px_28px_-26px_rgba(0,0,0,0.72)]"
     >
       <table
         ref={ref}
@@ -27,7 +27,7 @@ const TableHeader = React.forwardRef<
     ref={ref}
     data-slot="table-header"
     className={cn(
-      'border-b border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.74)] [&_tr]:border-b [&_tr]:border-[oklch(0.65_0.22_260_/_0.08)]',
+      'border-b border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.05_0.009_260_/_0.72)] [&_tr]:border-b [&_tr]:border-[oklch(0.65_0.22_260_/_0.06)]',
       className,
     )}
     {...props}
@@ -70,7 +70,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
       ref={ref}
       data-slot="table-row"
       className={cn(
-        'border-b border-[oklch(0.65_0.22_260_/_0.06)] transition-colors hover:bg-[oklch(0.052_0.009_260_/_0.64)] data-[state=selected]:bg-[oklch(0.65_0.22_260_/_0.1)]',
+        'border-b border-[oklch(0.65_0.22_260_/_0.05)] transition-colors hover:bg-[oklch(0.05_0.009_260_/_0.62)] data-[state=selected]:bg-[oklch(0.65_0.22_260_/_0.08)]',
         className,
       )}
       {...props}
@@ -87,7 +87,7 @@ const TableHead = React.forwardRef<
     ref={ref}
     data-slot="table-head"
     className={cn(
-      'type-label h-11 px-3.5 text-left align-middle text-muted-foreground sm:h-12 sm:px-4 [&:has([role=checkbox])]:pr-0',
+      'type-label h-10 px-3.5 text-left align-middle text-muted-foreground sm:h-11 sm:px-4 [&:has([role=checkbox])]:pr-0',
       className,
     )}
     {...props}

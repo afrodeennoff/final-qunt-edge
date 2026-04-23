@@ -1,80 +1,83 @@
-import { withRateLimited } from '@/lib/api/with-api-route'
-import { NextRequest, NextResponse } from "next/server";
+import { apiSuccess, withRateLimited } from '@/lib/api/with-api-route'
+import { NextRequest } from 'next/server'
 import {
   getTradovateSynchronizations,
   removeTradovateToken,
-} from "@/server/imports/tradovate-actions";
-import { createRouteClient } from "@/lib/supabase/route-client";
-import { z } from "zod";
-import { parseJson, toValidationErrorResponse } from "@/app/api/_utils/validate";
-import { apiError } from "@/lib/api-response";
+} from '@/server/imports/tradovate-actions'
+import { createRouteClient } from '@/lib/supabase/route-client'
+import { z } from 'zod'
+import { parseJson, toValidationErrorResponse } from '@/app/api/_utils/validate'
+import { apiError } from '@/lib/api-response'
 
 const tradovateDeleteBodySchema = z.object({
   accountId: z.string().min(1),
-});
+})
 
 async function requireSessionUser(request: Request) {
-  const supabase = createRouteClient(request);
+  const supabase = createRouteClient(request)
   const {
     data: { user },
     error,
-  } = await supabase.auth.getUser();
-  return { user, error };
+  } = await supabase.auth.getUser()
+  return { user, error }
 }
 
 async function handleGet(request: NextRequest) {
+  const requestId = crypto.randomUUID()
   try {
-    const { user, error } = await requireSessionUser(request);
+    const { user, error } = await requireSessionUser(request)
     if (error || !user?.id) {
-      return apiError("UNAUTHORIZED", "Unauthorized", 401);
+      return apiError('UNAUTHORIZED', 'Unauthorized', 401, { requestId })
     }
 
-    const result = await getTradovateSynchronizations();
+    const result = await getTradovateSynchronizations()
     if (result.error) {
-      if (result.error === "User not authenticated") {
-        return apiError("UNAUTHORIZED", result.error, 401);
+      if (result.error === 'User not authenticated') {
+        return apiError('UNAUTHORIZED', result.error, 401, { requestId })
       }
-      return apiError("BAD_REQUEST", result.error, 400);
+      return apiError('BAD_REQUEST', result.error, 400, { requestId })
     }
 
-    return NextResponse.json({
+    return apiSuccess({
       success: true,
       data: result.synchronizations || [],
-    });
+    })
   } catch (error) {
-    console.error("Error fetching Tradovate synchronizations:", error);
-    return apiError("INTERNAL_ERROR", "Failed to fetch Tradovate synchronizations", 500);
+    console.error('Error fetching Tradovate synchronizations:', error)
+    return apiError('INTERNAL_ERROR', 'Failed to fetch Tradovate synchronizations', 500, {
+      requestId,
+    })
   }
 }
 
 async function handleDelete(request: NextRequest) {
-  const requestId = crypto.randomUUID();
+  const requestId = crypto.randomUUID()
   try {
-    const { user, error } = await requireSessionUser(request);
+    const { user, error } = await requireSessionUser(request)
     if (error || !user?.id) {
-      return apiError("UNAUTHORIZED", "Unauthorized", 401);
+      return apiError('UNAUTHORIZED', 'Unauthorized', 401, { requestId })
     }
 
-    const { accountId } = await parseJson(request, tradovateDeleteBodySchema);
+    const { accountId } = await parseJson(request, tradovateDeleteBodySchema)
 
-    const result = await removeTradovateToken(accountId);
+    const result = await removeTradovateToken(accountId)
     if (result.error) {
-      return apiError("BAD_REQUEST", result.error, 400);
+      return apiError('BAD_REQUEST', result.error, 400, { requestId })
     }
 
     if (!result.deletedCount) {
-      return apiError("NOT_FOUND", "Synchronization not found", 404, { requestId });
+      return apiError('NOT_FOUND', 'Synchronization not found', 404, { requestId })
     }
 
-    return NextResponse.json({
+    return apiSuccess({
       success: true,
-      message: "Synchronization removed",
-    });
+      message: 'Synchronization removed',
+    })
   } catch (error) {
-    const validationResponse = toValidationErrorResponse(error);
-    if (validationResponse.status !== 500) return validationResponse;
-    console.error("Error deleting Tradovate synchronization:", error);
-    return apiError("INTERNAL_ERROR", "Failed to delete synchronization", 500, { requestId });
+    const validationResponse = toValidationErrorResponse(error)
+    if (validationResponse.status !== 500) return validationResponse
+    console.error('Error deleting Tradovate synchronization:', error)
+    return apiError('INTERNAL_ERROR', 'Failed to delete synchronization', 500, { requestId })
   }
 }
 

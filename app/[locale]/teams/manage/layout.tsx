@@ -95,7 +95,7 @@ export default async function TeamManageLayout({
                 <div
                   className={cn(
                     unifiedToolbarClassName,
-                    'flex min-h-[4.5rem] w-full items-center gap-4 px-3 py-3 sm:px-4',
+                    'flex min-h-[4.5rem] w-full items-center gap-4 px-3 py-2.5 sm:px-4',
                   )}
                 >
                   <div className="flex min-w-0 items-center gap-3">
@@ -110,7 +110,7 @@ export default async function TeamManageLayout({
                         <span className={cn(unifiedToolbarBadgeClassName, 'hidden sm:inline-flex')}>
                           Team
                         </span>
-                        <h1 className="truncate text-sm font-bold uppercase tracking-[0.18em] text-foreground">
+                        <h1 className="truncate text-[0.92rem] font-semibold tracking-[0.02em] text-foreground">
                           Team Management
                         </h1>
                       </div>

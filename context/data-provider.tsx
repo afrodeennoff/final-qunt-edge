@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import React, {
   createContext,
   useState,
@@ -8,7 +8,7 @@ import React, {
   useCallback,
   useMemo,
   useRef,
-} from "react";
+} from 'react'
 import {
   Prisma,
   Trade as PrismaTrade,
@@ -22,15 +22,15 @@ import {
   FinancialEvent,
   Mood,
   TickDetails,
-} from "@/prisma/generated/prisma";
-import { SharedParams } from "@/server/shared";
+} from '@/prisma/generated/prisma'
+import { SharedParams } from '@/server/shared'
 import {
   getUserData,
   getDashboardLayout,
   loadSharedData,
   updateIsFirstConnectionAction,
-} from "@/server/user-data";
-import { loadDashboardLayoutAction } from "@/server/layouts";
+} from '@/server/user-data'
+import { loadDashboardLayoutAction } from '@/server/layouts'
 import {
   getTradesAction,
   getTradeImagesAction,
@@ -39,7 +39,7 @@ import {
   updateTradesAction,
   saveDashboardLayoutAction,
   SerializedTrade,
-} from "@/server/database";
+} from '@/server/database'
 import {
   deletePayoutAction,
   deleteAccountAction,
@@ -48,40 +48,51 @@ import {
   calculateAccountBalanceAction,
   calculateAccountMetricsAction,
   deleteTradesByIdsAction,
-} from "@/server/accounts";
-import { computeMetricsForAccounts } from "@/lib/account-metrics";
+} from '@/server/accounts'
+import { computeMetricsForAccounts } from '@/lib/account-metrics'
 import {
   saveGroupAction,
   deleteGroupAction,
   moveAccountToGroupAction,
   renameGroupAction,
-} from "@/server/groups";
-import { createClient } from "@/lib/supabase";
-import { User as SupabaseUser } from "@supabase/supabase-js";
+} from '@/server/groups'
+import { createClient } from '@/lib/supabase'
+import { User as SupabaseUser } from '@supabase/supabase-js'
 
-import { signOut, getUserId, getDatabaseUserId, updateUserLanguage } from "@/server/auth";
-import { DashboardLayoutWithWidgets, useUserStore } from "@/store/user-store";
-import { useTickDetailsStore } from "@/store/tick-details-store";
-import { useFinancialEventsStore } from "@/store/financial-events-store";
-import { useTradingDomainStore } from "@/store/trading-domain-store";
-import { clearTradesCache, getTradesCache, setTradesCache, getUserDataCache, setUserDataCache } from "@/lib/indexeddb/trades-cache"
-import { deleteTagAction } from "@/server/tags";
-import { useCurrentLocale } from "@/locales/client";
-import { useMoodStore } from "@/store/mood-store";
-import { useSubscriptionStore } from "@/store/subscription-store";
-import { getSubscriptionData } from "@/server/billing";
-import { defaultLayouts } from "@/lib/default-layouts";
-import { MOBILE_BREAKPOINT } from "@/lib/config/breakpoints";
-import { removeAccountFromGroups } from "@/context/data-provider-utils";
-
+import { signOut, getUserId, getDatabaseUserId, updateUserLanguage } from '@/server/auth'
+import { DashboardLayoutWithWidgets, useUserStore } from '@/store/user-store'
+import { useTickDetailsStore } from '@/store/tick-details-store'
+import { useFinancialEventsStore } from '@/store/financial-events-store'
+import { useTradingDomainStore } from '@/store/trading-domain-store'
 import {
-  generateMockTrades
-} from "@/lib/mock-trades";
-import { isValid, startOfDay, endOfDay } from "date-fns";
-import { formatInTimeZone, toZonedTime } from "date-fns-tz";
-import { calculateStatistics, formatCalendarData, cn, groupBy, calculateTradingDays } from "@/lib/utils";
-import { useParams } from "next/navigation";
-import { logger } from "@/lib/logger";
+  clearTradesCache,
+  getTradesCache,
+  setTradesCache,
+  getUserDataCache,
+  setUserDataCache,
+} from '@/lib/indexeddb/trades-cache'
+import { deleteTagAction } from '@/server/tags'
+import { useCurrentLocale } from '@/locales/client'
+import { useMoodStore } from '@/store/mood-store'
+import { useSubscriptionStore } from '@/store/subscription-store'
+import { getSubscriptionData } from '@/server/billing'
+import { defaultLayouts } from '@/lib/default-layouts'
+import { MOBILE_BREAKPOINT } from '@/lib/config/breakpoints'
+import { shouldUseDevMockTrades } from '@/lib/feature-flags'
+import { removeAccountFromGroups } from '@/context/data-provider-utils'
+
+import { generateMockTrades } from '@/lib/mock-trades'
+import { isValid, startOfDay, endOfDay } from 'date-fns'
+import { formatInTimeZone, toZonedTime } from 'date-fns-tz'
+import {
+  calculateStatistics,
+  formatCalendarData,
+  cn,
+  groupBy,
+  calculateTradingDays,
+} from '@/lib/utils'
+import { useParams } from 'next/navigation'
+import { logger } from '@/lib/logger'
 
 import {
   StatisticsProps,
@@ -109,170 +120,151 @@ import {
   normalizeAccountForClient,
   normalizeAccountsForClient,
   normalizeGroupsForClient,
-} from "@/lib/data-types";
-import type { DashboardBootstrapPayload } from "@/lib/types/bootstrap";
+} from '@/lib/data-types'
+import type { DashboardBootstrapPayload } from '@/lib/types/bootstrap'
 
 // Combined Context Type
 export interface DashboardDataState {
-  isLoading: boolean;
-  isRevalidating: boolean;
-  isMobile: boolean;
-  isSharedView: boolean;
-  sharedParams: SharedParams | null;
-  setSharedParams: React.Dispatch<React.SetStateAction<SharedParams | null>>;
-  isFirstConnection: boolean;
-  setIsFirstConnection: (isFirstConnection: boolean) => void;
-  trades: Trade[];
-  accounts: Account[];
+  isLoading: boolean
+  isRevalidating: boolean
+  isMobile: boolean
+  isSharedView: boolean
+  sharedParams: SharedParams | null
+  setSharedParams: React.Dispatch<React.SetStateAction<SharedParams | null>>
+  isFirstConnection: boolean
+  setIsFirstConnection: (isFirstConnection: boolean) => void
+  trades: Trade[]
+  accounts: Account[]
 }
 
 interface DashboardUiState {
-  isLoading: boolean;
-  isRevalidating: boolean;
-  refreshError: string | null;
-  isMobile: boolean;
-  isSharedView: boolean;
-  isAdmin: boolean;
+  isLoading: boolean
+  isRevalidating: boolean
+  refreshError: string | null
+  isMobile: boolean
+  isSharedView: boolean
+  isAdmin: boolean
 }
 
 export interface DashboardFiltersState {
-  instruments: string[];
-  setInstruments: React.Dispatch<React.SetStateAction<string[]>>;
-  accountNumbers: string[];
-  setAccountNumbers: React.Dispatch<React.SetStateAction<string[]>>;
-  dateRange: DateRange | undefined;
-  setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
-  tickRange: TickRange;
-  setTickRange: React.Dispatch<React.SetStateAction<TickRange>>;
-  pnlRange: PnlRange;
-  setPnlRange: React.Dispatch<React.SetStateAction<PnlRange>>;
-  timeRange: TimeRange;
-  setTimeRange: React.Dispatch<React.SetStateAction<TimeRange>>;
-  tickFilter: TickFilter;
-  setTickFilter: React.Dispatch<React.SetStateAction<TickFilter>>;
-  weekdayFilter: WeekdayFilter;
-  setWeekdayFilter: React.Dispatch<React.SetStateAction<WeekdayFilter>>;
-  hourFilter: HourFilter;
-  setHourFilter: React.Dispatch<React.SetStateAction<HourFilter>>;
-  tagFilter: TagFilter;
-  setTagFilter: React.Dispatch<React.SetStateAction<TagFilter>>;
+  instruments: string[]
+  setInstruments: React.Dispatch<React.SetStateAction<string[]>>
+  accountNumbers: string[]
+  setAccountNumbers: React.Dispatch<React.SetStateAction<string[]>>
+  dateRange: DateRange | undefined
+  setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>
+  tickRange: TickRange
+  setTickRange: React.Dispatch<React.SetStateAction<TickRange>>
+  pnlRange: PnlRange
+  setPnlRange: React.Dispatch<React.SetStateAction<PnlRange>>
+  timeRange: TimeRange
+  setTimeRange: React.Dispatch<React.SetStateAction<TimeRange>>
+  tickFilter: TickFilter
+  setTickFilter: React.Dispatch<React.SetStateAction<TickFilter>>
+  weekdayFilter: WeekdayFilter
+  setWeekdayFilter: React.Dispatch<React.SetStateAction<WeekdayFilter>>
+  hourFilter: HourFilter
+  setHourFilter: React.Dispatch<React.SetStateAction<HourFilter>>
+  tagFilter: TagFilter
+  setTagFilter: React.Dispatch<React.SetStateAction<TagFilter>>
 }
 
 export interface DashboardDerivedState {
-  formattedTrades: Trade[];
-  statistics: StatisticsProps;
-  calendarData: CalendarData;
+  formattedTrades: Trade[]
+  statistics: StatisticsProps
+  calendarData: CalendarData
 }
 
 export interface DashboardActions {
-  refreshTrades: () => Promise<void>;
-  refreshTradesOnly: (options?: { force?: boolean }) => Promise<void>;
-  refreshUserDataOnly: (options?: { force?: boolean; includeSubscription?: boolean }) => Promise<void>;
-  refreshAllData: (options?: { force?: boolean }) => Promise<void>;
-  retryDataLoad: () => Promise<void>;
-  isPlusUser: () => boolean;
-  changeIsFirstConnection: (isFirstConnection: boolean) => void;
+  refreshTrades: () => Promise<void>
+  refreshTradesOnly: (options?: { force?: boolean }) => Promise<void>
+  refreshUserDataOnly: (options?: {
+    force?: boolean
+    includeSubscription?: boolean
+  }) => Promise<void>
+  refreshAllData: (options?: { force?: boolean }) => Promise<void>
+  retryDataLoad: () => Promise<void>
+  isPlusUser: () => boolean
+  changeIsFirstConnection: (isFirstConnection: boolean) => void
 
   // Mutations
   // Trades
-  updateTrades: (
-    tradeIds: string[],
-    update: Partial<Trade>
-  ) => Promise<void>;
-  deleteTrades: (tradeIds: string[]) => Promise<void>;
-  groupTrades: (tradeIds: string[]) => Promise<void>;
-  ungroupTrades: (tradeIds: string[]) => Promise<void>;
+  updateTrades: (tradeIds: string[], update: Partial<Trade>) => Promise<void>
+  deleteTrades: (tradeIds: string[]) => Promise<void>
+  groupTrades: (tradeIds: string[]) => Promise<void>
+  ungroupTrades: (tradeIds: string[]) => Promise<void>
   getTradeImages: (tradeId: string) => Promise<{
-    imageBase64: string | null;
-    imageBase64Second: string | null;
-  } | null>;
+    imageBase64: string | null
+    imageBase64Second: string | null
+  } | null>
 
   // Accounts
-  deleteAccount: (account: Account) => Promise<void>;
-  saveAccount: (account: Account) => Promise<void>;
+  deleteAccount: (account: Account) => Promise<void>
+  saveAccount: (account: Account) => Promise<void>
 
   // Groups
-  saveGroup: (name: string) => Promise<Group | undefined>;
-  renameGroup: (groupId: string, name: string) => Promise<void>;
-  deleteGroup: (groupId: string) => Promise<void>;
-  moveAccountToGroup: (
-    accountId: string,
-    targetGroupId: string | null
-  ) => Promise<void>;
-  moveAccountsToGroup: (
-    accountIds: string[],
-    targetGroupId: string | null
-  ) => Promise<void>;
+  saveGroup: (name: string) => Promise<Group | undefined>
+  renameGroup: (groupId: string, name: string) => Promise<void>
+  deleteGroup: (groupId: string) => Promise<void>
+  moveAccountToGroup: (accountId: string, targetGroupId: string | null) => Promise<void>
+  moveAccountsToGroup: (accountIds: string[], targetGroupId: string | null) => Promise<void>
 
   // Payouts
-  savePayout: (payout: PrismaPayout | AccountPayout) => Promise<void>;
-  deletePayout: (payoutId: string) => Promise<void>;
+  savePayout: (payout: PrismaPayout | AccountPayout) => Promise<void>
+  deletePayout: (payoutId: string) => Promise<void>
 
   // Dashboard layout
-  saveDashboardLayout: (layout: PrismaDashboardLayout) => Promise<void>;
+  saveDashboardLayout: (layout: PrismaDashboardLayout) => Promise<void>
 }
 type DataContextType = DashboardDataState &
   DashboardFiltersState &
   DashboardDerivedState &
-  DashboardActions;
+  DashboardActions
 
-const DataContext = createContext<DataContextType | undefined>(undefined);
-const DashboardDataStateContext = createContext<DashboardDataState | undefined>(
-  undefined
-);
-const DashboardUiStateContext = createContext<DashboardUiState | undefined>(
-  undefined
-);
-const DashboardTradesListContext = createContext<Trade[] | undefined>(undefined);
-const DashboardAccountsListContext = createContext<Account[] | undefined>(
-  undefined
-);
-const DashboardFiltersContext = createContext<DashboardFiltersState | undefined>(
-  undefined
-);
-const DashboardDerivedContext = createContext<DashboardDerivedState | undefined>(
-  undefined
-);
-const DashboardActionsContext = createContext<DashboardActions | undefined>(
-  undefined
-);
+const DataContext = createContext<DataContextType | undefined>(undefined)
+const DashboardDataStateContext = createContext<DashboardDataState | undefined>(undefined)
+const DashboardUiStateContext = createContext<DashboardUiState | undefined>(undefined)
+const DashboardTradesListContext = createContext<Trade[] | undefined>(undefined)
+const DashboardAccountsListContext = createContext<Account[] | undefined>(undefined)
+const DashboardFiltersContext = createContext<DashboardFiltersState | undefined>(undefined)
+const DashboardDerivedContext = createContext<DashboardDerivedState | undefined>(undefined)
+const DashboardActionsContext = createContext<DashboardActions | undefined>(undefined)
 
 // Add this hook before the UserDataProvider component
 function useIsMobileDetection() {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return
 
-    const mobileQuery = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
-    const checkMobile = (e: MediaQueryListEvent | MediaQueryList) =>
-      setIsMobile(e.matches);
+    const mobileQuery = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`)
+    const checkMobile = (e: MediaQueryListEvent | MediaQueryList) => setIsMobile(e.matches)
 
     // Check immediately
-    checkMobile(mobileQuery);
+    checkMobile(mobileQuery)
 
     // Add listener for changes
-    mobileQuery.addEventListener("change", checkMobile);
-    return () => mobileQuery.removeEventListener("change", checkMobile);
-  }, []);
+    mobileQuery.addEventListener('change', checkMobile)
+    return () => mobileQuery.removeEventListener('change', checkMobile)
+  }, [])
 
-  return isMobile;
+  return isMobile
 }
 
 export const DataProvider: React.FC<{
-  children: React.ReactNode;
-  isSharedView?: boolean;
-  initialSharedSlug?: string;
+  children: React.ReactNode
+  isSharedView?: boolean
+  initialSharedSlug?: string
   initialSharedData?: {
-    params: SharedParams;
-    trades: Trade[];
-    groups: GroupInput[];
-  } | null;
+    params: SharedParams
+    trades: Trade[]
+    groups: GroupInput[]
+  } | null
   adminView?: {
-    userId: string;
-  };
-  isAdmin?: boolean;
-  initialBootstrap?: DashboardBootstrapPayload | null;
+    userId: string
+  }
+  isAdmin?: boolean
+  initialBootstrap?: DashboardBootstrapPayload | null
 }> = ({
   children,
   isSharedView = false,
@@ -282,132 +274,126 @@ export const DataProvider: React.FC<{
   isAdmin = false,
   initialBootstrap = null,
 }) => {
-  const supabase = useMemo(() => createClient(), []);
-  const params = useParams();
-  const isMobile = useIsMobileDetection();
+  const supabase = useMemo(() => createClient(), [])
+  const params = useParams()
+  const isMobile = useIsMobileDetection()
 
   // Get store values
-  const setUser = useUserStore((state) => state.setUser);
-  const setSubscription = useUserStore((state) => state.setSubscription);
-  const setTags = useUserStore((state) => state.setTags);
-  const setAccounts = useUserStore((state) => state.setAccounts);
-  const setGroups = useUserStore((state) => state.setGroups);
-  const setDashboardLayout = useUserStore((state) => state.setDashboardLayout);
-  const setMoods = useMoodStore((state) => state.setMoods);
-  const supabaseUser = useUserStore((state) => state.supabaseUser);
-  const timezone = useUserStore((state) => state.timezone);
-  const groups = useUserStore((state) => state.groups);
-  const accounts = useUserStore((state) => state.accounts);
-  const setSupabaseUser = useUserStore((state) => state.setSupabaseUser);
-  const resetUserState = useUserStore((state) => state.resetUser);
-  const setTickDetails = useTickDetailsStore((state) => state.setTickDetails);
-  const tickDetails = useTickDetailsStore((state) => state.tickDetails);
-  const setEvents = useFinancialEventsStore((state) => state.setEvents);
-  const trades = useTradingDomainStore((state) => state.trades);
-  const setTrades = useTradingDomainStore((state) => state.setTrades);
-  const dashboardLayout = useUserStore((state) => state.dashboardLayout);
-  const locale = useCurrentLocale();
-  const isLoading = useUserStore((state) => state.isLoading);
-  const setIsLoading = useUserStore((state) => state.setIsLoading);
-  const setStoreIsMobile = useUserStore((state) => state.setIsMobile);
+  const setUser = useUserStore((state) => state.setUser)
+  const setSubscription = useUserStore((state) => state.setSubscription)
+  const setTags = useUserStore((state) => state.setTags)
+  const setAccounts = useUserStore((state) => state.setAccounts)
+  const setGroups = useUserStore((state) => state.setGroups)
+  const setDashboardLayout = useUserStore((state) => state.setDashboardLayout)
+  const setMoods = useMoodStore((state) => state.setMoods)
+  const supabaseUser = useUserStore((state) => state.supabaseUser)
+  const timezone = useUserStore((state) => state.timezone)
+  const groups = useUserStore((state) => state.groups)
+  const accounts = useUserStore((state) => state.accounts)
+  const setSupabaseUser = useUserStore((state) => state.setSupabaseUser)
+  const resetUserState = useUserStore((state) => state.resetUser)
+  const setTickDetails = useTickDetailsStore((state) => state.setTickDetails)
+  const tickDetails = useTickDetailsStore((state) => state.tickDetails)
+  const setEvents = useFinancialEventsStore((state) => state.setEvents)
+  const trades = useTradingDomainStore((state) => state.trades)
+  const setTrades = useTradingDomainStore((state) => state.setTrades)
+  const dashboardLayout = useUserStore((state) => state.dashboardLayout)
+  const locale = useCurrentLocale()
+  const isLoading = useUserStore((state) => state.isLoading)
+  const setIsLoading = useUserStore((state) => state.setIsLoading)
+  const setStoreIsMobile = useUserStore((state) => state.setIsMobile)
 
   // Subscription store
-  const setSubscriptionData = useSubscriptionStore(
-    (state) => state.setSubscription
-  );
-  const setSubscriptionLoading = useSubscriptionStore(
-    (state) => state.setIsLoading
-  );
-  const setSubscriptionError = useSubscriptionStore(
-    (state) => state.setError
-  );
-  const [isRevalidating, setIsRevalidating] = useState(false);
-  const [refreshError, setRefreshError] = useState<string | null>(null);
-  const bootstrappedSharedSlugRef = useRef<string | null>(null);
-  const appliedBootstrapRef = useRef(false);
-  const dashboardLayoutRef = useRef(dashboardLayout);
-  const activeUserIdRef = useRef<string | null>(null);
-  const loadInProgressRef = useRef(false);
+  const setSubscriptionData = useSubscriptionStore((state) => state.setSubscription)
+  const setSubscriptionLoading = useSubscriptionStore((state) => state.setIsLoading)
+  const setSubscriptionError = useSubscriptionStore((state) => state.setError)
+  const [isRevalidating, setIsRevalidating] = useState(false)
+  const [refreshError, setRefreshError] = useState<string | null>(null)
+  const bootstrappedSharedSlugRef = useRef<string | null>(null)
+  const appliedBootstrapRef = useRef(false)
+  const dashboardLayoutRef = useRef(dashboardLayout)
+  const activeUserIdRef = useRef<string | null>(null)
+  const loadInProgressRef = useRef(false)
 
   useEffect(() => {
-    dashboardLayoutRef.current = dashboardLayout;
-  }, [dashboardLayout]);
+    dashboardLayoutRef.current = dashboardLayout
+  }, [dashboardLayout])
 
   useEffect(() => {
-    setStoreIsMobile(isMobile);
-  }, [isMobile, setStoreIsMobile]);
+    setStoreIsMobile(isMobile)
+  }, [isMobile, setStoreIsMobile])
 
   const buildSharedAccountNumbers = useCallback(
     (sharedData: NonNullable<typeof initialSharedData>) =>
       sharedData.params.accountNumbers.length > 0
         ? sharedData.params.accountNumbers
         : Array.from(new Set(sharedData.trades.map((trade) => trade.accountNumber))),
-    []
-  );
+    [],
+  )
 
   const buildSharedParams = useCallback(
     (sharedData: NonNullable<typeof initialSharedData>) => ({
       ...sharedData.params,
       accountNumbers: buildSharedAccountNumbers(sharedData),
     }),
-    [buildSharedAccountNumbers]
-  );
+    [buildSharedAccountNumbers],
+  )
 
   const prepareSharedTrades = useCallback(
     (incomingTrades: Trade[]) =>
       incomingTrades
         .filter((trade) => isValid(new Date(trade.entryDate)))
         .map((trade) => {
-          let utcDateStr = "";
+          let utcDateStr = ''
           try {
             utcDateStr = formatInTimeZone(
               new Date(trade.entryDate),
-              timezone || "UTC",
-              "yyyy-MM-dd"
-            );
+              timezone || 'UTC',
+              'yyyy-MM-dd',
+            )
           } catch (error) {
-            logger.error({ tradeId: trade.id, error }, "Error formatting trade date");
+            logger.error({ tradeId: trade.id, error }, 'Error formatting trade date')
           }
 
           return {
             ...trade,
             utcDateStr,
-          };
+          }
         }),
-    [timezone]
-  );
+    [timezone],
+  )
 
   // Local states
   const [sharedParams, setSharedParams] = useState<SharedParams | null>(() =>
-    initialSharedData ? buildSharedParams(initialSharedData) : null
-  );
+    initialSharedData ? buildSharedParams(initialSharedData) : null,
+  )
 
   // Filter states
-  const [instruments, setInstruments] = useState<string[]>([]);
+  const [instruments, setInstruments] = useState<string[]>([])
   const [accountNumbers, setAccountNumbers] = useState<string[]>(() =>
-    initialSharedData ? buildSharedAccountNumbers(initialSharedData) : []
-  );
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+    initialSharedData ? buildSharedAccountNumbers(initialSharedData) : [],
+  )
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined)
   const [tickRange, setTickRange] = useState<TickRange>({
     min: undefined,
     max: undefined,
-  });
+  })
   const [pnlRange, setPnlRange] = useState<PnlRange>({
     min: undefined,
     max: undefined,
-  });
-  const [timeRange, setTimeRange] = useState<TimeRange>({ range: null });
-  const [tickFilter, setTickFilter] = useState<TickFilter>({ value: null });
+  })
+  const [timeRange, setTimeRange] = useState<TimeRange>({ range: null })
+  const [tickFilter, setTickFilter] = useState<TickFilter>({ value: null })
   const [weekdayFilter, setWeekdayFilter] = useState<WeekdayFilter>({
     days: [],
-  });
-  const [hourFilter, setHourFilter] = useState<HourFilter>({ hour: null });
-  const [tagFilter, setTagFilter] = useState<TagFilter>({ tags: [] });
-  const [isFirstConnection, setIsFirstConnection] = useState(false);
+  })
+  const [hourFilter, setHourFilter] = useState<HourFilter>({ hour: null })
+  const [tagFilter, setTagFilter] = useState<TagFilter>({ tags: [] })
+  const [isFirstConnection, setIsFirstConnection] = useState(false)
 
   // Sanitize trades to prevent NaN/Infinity poisoning from bad cache/data
   const sanitizeTradesForState = useCallback((incomingTrades: Trade[]) => {
-    if (!Array.isArray(incomingTrades)) return [];
+    if (!Array.isArray(incomingTrades)) return []
     return incomingTrades
       .map((t) => ({
         ...t,
@@ -416,11 +402,11 @@ export const DataProvider: React.FC<{
         quantity: Number.isFinite(Number(t.quantity)) ? Number(t.quantity) : 0,
         commission: Number.isFinite(Number(t.commission)) ? Number(t.commission) : 0,
       }))
-      .filter((t) => isValid(new Date(t.entryDate)));
-  }, []);
+      .filter((t) => isValid(new Date(t.entryDate)))
+  }, [])
 
   const bootstrapSnapshot = useMemo(() => {
-    if (!initialBootstrap || isSharedView || adminView) return null;
+    if (!initialBootstrap || isSharedView || adminView) return null
 
     return {
       user: initialBootstrap.user,
@@ -433,27 +419,27 @@ export const DataProvider: React.FC<{
       tickDetails: initialBootstrap.tickDetails,
       trades: sanitizeTradesForState(normalizeTradesForClient(initialBootstrap.trades)),
       dashboardLayout: initialBootstrap.dashboardLayout as DashboardLayoutWithWidgets | null,
-    };
-  }, [adminView, initialBootstrap, isSharedView, sanitizeTradesForState]);
+    }
+  }, [adminView, initialBootstrap, isSharedView, sanitizeTradesForState])
 
   useLayoutEffect(() => {
-    if (!bootstrapSnapshot || appliedBootstrapRef.current) return;
+    if (!bootstrapSnapshot || appliedBootstrapRef.current) return
 
-    appliedBootstrapRef.current = true;
-    activeUserIdRef.current = bootstrapSnapshot.user?.id ?? null;
+    appliedBootstrapRef.current = true
+    activeUserIdRef.current = bootstrapSnapshot.user?.id ?? null
 
-    setUser(bootstrapSnapshot.user);
-    setSubscription(bootstrapSnapshot.subscription);
-    setTags(bootstrapSnapshot.tags);
-    setMoods(bootstrapSnapshot.moods);
-    setEvents(bootstrapSnapshot.events);
-    setTickDetails(bootstrapSnapshot.tickDetails);
-    setAccounts(bootstrapSnapshot.accounts);
-    setGroups(bootstrapSnapshot.groups);
-    setTrades(bootstrapSnapshot.trades);
+    setUser(bootstrapSnapshot.user)
+    setSubscription(bootstrapSnapshot.subscription)
+    setTags(bootstrapSnapshot.tags)
+    setMoods(bootstrapSnapshot.moods)
+    setEvents(bootstrapSnapshot.events)
+    setTickDetails(bootstrapSnapshot.tickDetails)
+    setAccounts(bootstrapSnapshot.accounts)
+    setGroups(bootstrapSnapshot.groups)
+    setTrades(bootstrapSnapshot.trades)
 
     if (bootstrapSnapshot.dashboardLayout) {
-      setDashboardLayout(bootstrapSnapshot.dashboardLayout);
+      setDashboardLayout(bootstrapSnapshot.dashboardLayout)
     } else if (bootstrapSnapshot.user?.id) {
       setDashboardLayout({
         id: bootstrapSnapshot.user.id,
@@ -462,12 +448,12 @@ export const DataProvider: React.FC<{
         updatedAt: new Date(),
         desktop: defaultLayouts.desktop,
         mobile: defaultLayouts.mobile,
-      });
+      })
     }
 
-    setIsFirstConnection(bootstrapSnapshot.user?.isFirstConnection ?? false);
-    setIsLoading(false);
-    setRefreshError(null);
+    setIsFirstConnection(bootstrapSnapshot.user?.isFirstConnection ?? false)
+    setIsLoading(false)
+    setRefreshError(null)
   }, [
     bootstrapSnapshot,
     setAccounts,
@@ -481,73 +467,73 @@ export const DataProvider: React.FC<{
     setTickDetails,
     setTrades,
     setUser,
-  ]);
+  ])
 
   const withTimeout = useCallback(
     async <T,>(promise: Promise<T>, ms: number, label: string): Promise<T> => {
-      let timeoutId: ReturnType<typeof setTimeout> | null = null;
+      let timeoutId: ReturnType<typeof setTimeout> | null = null
       const timeoutPromise = new Promise<never>((_, reject) => {
         timeoutId = setTimeout(() => {
-          reject(new Error(`[DataProvider] Timeout after ${ms}ms: ${label}`));
-        }, ms);
-      });
+          reject(new Error(`[DataProvider] Timeout after ${ms}ms: ${label}`))
+        }, ms)
+      })
 
       try {
-        return await Promise.race([promise, timeoutPromise]);
+        return await Promise.race([promise, timeoutPromise])
       } finally {
-        if (timeoutId) clearTimeout(timeoutId);
+        if (timeoutId) clearTimeout(timeoutId)
       }
     },
-    []
-  );
+    [],
+  )
 
   const fetchAllTrades = useCallback(
     async (userId: string | null = null, force: boolean = false): Promise<Trade[]> => {
-      const allTrades: Trade[] = [];
-      let page = 1;
-      let hasMore = true;
-      const pageSize = 500;
+      const allTrades: Trade[] = []
+      let page = 1
+      let hasMore = true
+      const pageSize = 500
 
       while (hasMore) {
         const response = await withTimeout(
           getTradesAction(userId, page, pageSize, force && page === 1, false),
           15000,
-          `getTradesAction(page=${page})`
-        );
+          `getTradesAction(page=${page})`,
+        )
         const pageTrades = Array.isArray(response?.trades)
           ? normalizeTradesForClient(response.trades as (PrismaTrade | SerializedTrade)[])
-          : [];
+          : []
 
-        allTrades.push(...pageTrades);
-        hasMore = Boolean(response?.metadata?.hasMore) && pageTrades.length > 0;
-        page += 1;
+        allTrades.push(...pageTrades)
+        hasMore = Boolean(response?.metadata?.hasMore) && pageTrades.length > 0
+        page += 1
       }
 
-      return allTrades;
+      return allTrades
     },
-    [withTimeout]
-  );
+    [withTimeout],
+  )
 
   const syncSharedDataState = useCallback(
     (sharedData: NonNullable<typeof initialSharedData>) => {
-      const hydratedSharedParams = buildSharedParams(sharedData);
-      const sharedGroups = normalizeGroupsForClient(sharedData.groups || []);
+      const hydratedSharedParams = buildSharedParams(sharedData)
+      const sharedGroups = normalizeGroupsForClient(sharedData.groups || [])
       const sharedAccounts = normalizeAccountsForClient(
-        (sharedData.groups?.flatMap((group) => group.accounts) || []) as AccountInput[]
-      );
+        (sharedData.groups?.flatMap((group) => group.accounts) || []) as AccountInput[],
+      )
 
-      setTrades(sanitizeTradesForState(prepareSharedTrades(sharedData.trades)));
-      setSharedParams(hydratedSharedParams);
-      setAccountNumbers(hydratedSharedParams.accountNumbers);
-      setDashboardLayout(defaultLayouts);
-      setGroups(sharedGroups);
-      setAccounts(sharedAccounts);
+      setTrades(sanitizeTradesForState(prepareSharedTrades(sharedData.trades)))
+      setSharedParams(hydratedSharedParams)
+      setAccountNumbers(hydratedSharedParams.accountNumbers)
+      setDashboardLayout(defaultLayouts)
+      setGroups(sharedGroups)
+      setAccounts(sharedAccounts)
 
       if (sharedData.params.tickDetails) {
-        setTickDetails(sharedData.params.tickDetails);
+        setTickDetails(sharedData.params.tickDetails)
       }
 
-      return sharedAccounts;
+      return sharedAccounts
     },
     [
       buildSharedParams,
@@ -558,154 +544,177 @@ export const DataProvider: React.FC<{
       setGroups,
       setTickDetails,
       setTrades,
-    ]
-  );
+    ],
+  )
 
   const hydrateSharedAccountMetrics = useCallback(
     async (sharedAccounts: Account[]) => {
-      let accountsWithMetrics = sharedAccounts;
+      let accountsWithMetrics = sharedAccounts
       try {
         accountsWithMetrics = await withTimeout(
           calculateAccountMetricsAction(sharedAccounts),
           15000,
-          "calculateAccountMetricsAction(shared)"
-        );
+          'calculateAccountMetricsAction(shared)',
+        )
       } catch (error) {
-        logger.warn({ error }, "Account metrics timed out for shared view; continuing without metrics");
+        logger.warn(
+          { error },
+          'Account metrics timed out for shared view; continuing without metrics',
+        )
       }
 
-      setAccounts(normalizeAccountsForClient(accountsWithMetrics));
+      setAccounts(normalizeAccountsForClient(accountsWithMetrics))
     },
-    [setAccounts, withTimeout]
-  );
+    [setAccounts, withTimeout],
+  )
 
   // Load data from the server
-  const loadData = useCallback(async (options?: { withLoading?: boolean }) => {
-    logger.debug({ isSharedView }, "DataProvider: loadData triggered");
-    // Prevent multiple simultaneous loads
-    if (loadInProgressRef.current) {
-      logger.debug("DataProvider: skipping concurrent loadData call");
-      return;
-    }
-    loadInProgressRef.current = true;
-    let hasLocalSnapshot = false;
-    const withLoading = options?.withLoading ?? true;
-
-    try {
-      setRefreshError(null);
-      if (withLoading) {
-        setIsLoading(true);
+  const loadData = useCallback(
+    async (options?: { withLoading?: boolean }) => {
+      logger.debug({ isSharedView }, 'DataProvider: loadData triggered')
+      // Prevent multiple simultaneous loads
+      if (loadInProgressRef.current) {
+        logger.debug('DataProvider: skipping concurrent loadData call')
+        return
       }
+      loadInProgressRef.current = true
+      let hasLocalSnapshot = false
+      const withLoading = options?.withLoading ?? true
 
-      if (isSharedView) {
-        if (initialSharedData) {
-          const sharedAccounts = syncSharedDataState(initialSharedData);
-          await hydrateSharedAccountMetrics(sharedAccounts);
-          setIsLoading(false);
-          return;
+      try {
+        setRefreshError(null)
+        if (withLoading) {
+          setIsLoading(true)
         }
 
-        const sharedData = await withTimeout(
-          loadSharedData(params.slug as string),
+        if (isSharedView) {
+          if (initialSharedData) {
+            const sharedAccounts = syncSharedDataState(initialSharedData)
+            await hydrateSharedAccountMetrics(sharedAccounts)
+            setIsLoading(false)
+            return
+          }
+
+          const sharedData = await withTimeout(
+            loadSharedData(params.slug as string),
+            15000,
+            'loadSharedData',
+          )
+          if (!sharedData.error && sharedData.params) {
+            const sharedAccounts = syncSharedDataState({
+              params: sharedData.params,
+              trades: sharedData.trades as Trade[],
+              groups: (sharedData.groups || []) as GroupInput[],
+            })
+            await hydrateSharedAccountMetrics(sharedAccounts)
+          }
+          setIsLoading(false)
+          return
+        }
+
+        if (adminView) {
+          const adminTrades = await withTimeout(
+            fetchAllTrades(adminView.userId as string, false),
+            20000,
+            'fetchAllTrades(admin)',
+          )
+          setTrades(sanitizeTradesForState(adminTrades))
+          // RESET ALL OTHER STATES
+          setUser(null)
+          setSubscription(null)
+          setTags([])
+          setGroups([])
+          setMoods([])
+          setEvents([])
+          setTickDetails([])
+          setAccounts([])
+          setDashboardLayout({
+            id: 'admin-layout',
+            userId: 'admin',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            desktop: defaultLayouts.desktop,
+            mobile: defaultLayouts.mobile,
+          })
+          return
+        }
+
+        // Step 1: Parallelize auth resolution, layout fetch, and cache reads
+        const authResponse = await withTimeout<Awaited<ReturnType<typeof supabase.auth.getUser>>>(
+          supabase.auth.getUser(),
           15000,
-          "loadSharedData"
-        );
-        if (!sharedData.error && sharedData.params) {
-          const sharedAccounts = syncSharedDataState({
-            params: sharedData.params,
-            trades: sharedData.trades as Trade[],
-            groups: (sharedData.groups || []) as GroupInput[],
-          });
-          await hydrateSharedAccountMetrics(sharedAccounts);
+          'supabase.auth.getUser',
+        )
+        const user = authResponse.data.user
+
+        if (!user?.id) {
+          activeUserIdRef.current = null
+          setTrades([])
+          setAccounts([])
+          setGroups([])
+          setTags([])
+          setMoods([])
+          setEvents([])
+          setTickDetails([])
+          await signOut()
+          setIsLoading(false)
+          return
         }
-        setIsLoading(false);
-        return;
-      }
 
-      if (adminView) {
-        const adminTrades = await withTimeout(
-          fetchAllTrades(adminView.userId as string, false),
-          20000,
-          "fetchAllTrades(admin)"
-        );
-        setTrades(sanitizeTradesForState(adminTrades));
-        // RESET ALL OTHER STATES
-        setUser(null);
-        setSubscription(null);
-        setTags([]);
-        setGroups([]);
-        setMoods([]);
-        setEvents([]);
-        setTickDetails([]);
-        setAccounts([]);
-        setDashboardLayout({
-          id: "admin-layout",
-          userId: "admin",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          desktop: defaultLayouts.desktop,
-          mobile: defaultLayouts.mobile,
-        });
-        return;
-      }
+        setSupabaseUser(user)
+        const userId = await withTimeout(getDatabaseUserId(), 15000, 'getDatabaseUserId')
+        if (activeUserIdRef.current && activeUserIdRef.current !== userId) {
+          // Prevent transient cross-user UI bleed before the next user's snapshot loads.
+          resetUserState()
+          setTrades([])
+          setAccounts([])
+          setGroups([])
+          setTags([])
+          setMoods([])
+          setEvents([])
+          setTickDetails([])
+        }
+        activeUserIdRef.current = userId
 
-      // Step 1: Parallelize auth resolution, layout fetch, and cache reads
-      const {
-        data: { user },
-      } = await withTimeout(supabase.auth.getUser(), 15000, "supabase.auth.getUser");
+        // Parallel: layout fetch + cache reads
+        if (userId && !isSharedView) {
+          const shouldHydrateLayout =
+            !dashboardLayoutRef.current || dashboardLayoutRef.current.userId !== userId
 
-      if (!user?.id) {
-        activeUserIdRef.current = null;
-        setTrades([]);
-        setAccounts([]);
-        setGroups([]);
-        setTags([]);
-        setMoods([]);
-        setEvents([]);
-        setTickDetails([]);
-        await signOut();
-        setIsLoading(false);
-        return;
-      }
+          const [dashboardLayoutResult, cachedTradesResult, cachedUserDataResult] =
+            await Promise.allSettled([
+              // Only fetch layout if not already loaded for this user
+              shouldHydrateLayout
+                ? withTimeout(getDashboardLayout(userId), 15000, 'getDashboardLayout')
+                : Promise.resolve(undefined),
+              withTimeout(getTradesCache(userId), 2000, 'getTradesCache'),
+              withTimeout(getUserDataCache(userId), 2000, 'getUserDataCache'),
+            ])
 
-      setSupabaseUser(user);
-      const userId = await withTimeout(getDatabaseUserId(), 15000, "getDatabaseUserId");
-      if (activeUserIdRef.current && activeUserIdRef.current !== userId) {
-        // Prevent transient cross-user UI bleed before the next user's snapshot loads.
-        resetUserState();
-        setTrades([]);
-        setAccounts([]);
-        setGroups([]);
-        setTags([]);
-        setMoods([]);
-        setEvents([]);
-        setTickDetails([]);
-      }
-      activeUserIdRef.current = userId;
-
-      // Parallel: layout fetch + cache reads
-      if (userId && !isSharedView) {
-        const shouldHydrateLayout =
-          !dashboardLayoutRef.current || dashboardLayoutRef.current.userId !== userId;
-
-        const [dashboardLayoutResult, cachedTradesResult, cachedUserDataResult] = await Promise.allSettled([
-          // Only fetch layout if not already loaded for this user
-          shouldHydrateLayout
-            ? withTimeout(getDashboardLayout(userId), 15000, "getDashboardLayout")
-            : Promise.resolve(undefined),
-          withTimeout(getTradesCache(userId), 2000, "getTradesCache"),
-          withTimeout(getUserDataCache(userId), 2000, "getUserDataCache"),
-        ]);
-
-        // Handle layout result
-        if (dashboardLayoutResult.status === "fulfilled" && dashboardLayoutResult.value !== undefined) {
-          const dashboardLayoutResponse = dashboardLayoutResult.value;
-          if (dashboardLayoutResponse) {
-            setDashboardLayout(
-              dashboardLayoutResponse as unknown as DashboardLayoutWithWidgets
-            );
-          } else {
-            // If no layout exists in database, use default layout
+          // Handle layout result
+          if (
+            dashboardLayoutResult.status === 'fulfilled' &&
+            dashboardLayoutResult.value !== undefined
+          ) {
+            const dashboardLayoutResponse = dashboardLayoutResult.value
+            if (dashboardLayoutResponse) {
+              setDashboardLayout(dashboardLayoutResponse as unknown as DashboardLayoutWithWidgets)
+            } else {
+              // If no layout exists in database, use default layout
+              setDashboardLayout({
+                id: userId,
+                userId,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                desktop: defaultLayouts.desktop,
+                mobile: defaultLayouts.mobile,
+              })
+            }
+          } else if (dashboardLayoutResult.status === 'rejected' && shouldHydrateLayout) {
+            logger.warn(
+              { error: dashboardLayoutResult.reason, userId },
+              'Dashboard layout fetch failed; falling back to defaults',
+            )
             setDashboardLayout({
               id: userId,
               userId,
@@ -713,211 +722,198 @@ export const DataProvider: React.FC<{
               updatedAt: new Date(),
               desktop: defaultLayouts.desktop,
               mobile: defaultLayouts.mobile,
-            });
+            })
           }
-        } else if (dashboardLayoutResult.status === "rejected" && shouldHydrateLayout) {
-          logger.warn(
-            { error: dashboardLayoutResult.reason, userId },
-            "Dashboard layout fetch failed; falling back to defaults"
-          );
-          setDashboardLayout({
-            id: userId,
-            userId,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            desktop: defaultLayouts.desktop,
-            mobile: defaultLayouts.mobile,
-          });
+
+          // Handle cache results
+          const cachedTrades =
+            cachedTradesResult.status === 'fulfilled' ? cachedTradesResult.value : undefined
+          const cachedUserData =
+            cachedUserDataResult.status === 'fulfilled' ? cachedUserDataResult.value : undefined
+
+          if (cachedTradesResult.status === 'rejected') {
+            logger.warn({ error: cachedTradesResult.reason }, 'Trades cache read failed')
+          }
+
+          if (cachedUserDataResult.status === 'rejected') {
+            logger.warn({ error: cachedUserDataResult.reason }, 'User data cache read failed')
+          }
+
+          if (cachedTrades && Array.isArray(cachedTrades) && cachedTrades.length > 0) {
+            hasLocalSnapshot = true
+            setTrades(sanitizeTradesForState(cachedTrades as Trade[]))
+          }
+
+          if (cachedUserData) {
+            hasLocalSnapshot = true
+            setAccounts(normalizeAccountsForClient(cachedUserData.accounts))
+            setUser(cachedUserData.userData)
+            setSubscription(cachedUserData.subscription as PrismaSubscription | null)
+            setTags(cachedUserData.tags)
+            setGroups(normalizeGroupsForClient(cachedUserData.groups))
+            setMoods(cachedUserData.moodHistory)
+            setEvents(cachedUserData.financialEvents)
+            setTickDetails(cachedUserData.tickDetails)
+            setIsFirstConnection(cachedUserData.userData?.isFirstConnection || false)
+          }
+
+          if (hasLocalSnapshot) {
+            setIsLoading(false)
+          }
         }
 
-        // Handle cache results
-        const cachedTrades =
-          cachedTradesResult.status === "fulfilled" ? cachedTradesResult.value : undefined;
-        const cachedUserData =
-          cachedUserDataResult.status === "fulfilled" ? cachedUserDataResult.value : undefined;
+        const refreshFromServer = async () => {
+          setIsRevalidating(true)
+          try {
+            const userDataPromise = withTimeout(getUserData(), 20000, 'getUserData')
+            const tradesPromise =
+              userId && !isSharedView
+                ? withTimeout(fetchAllTrades(userId, false), 20000, 'fetchAllTrades(user)')
+                : withTimeout(fetchAllTrades(null, false), 20000, 'fetchAllTrades(anonymous)')
 
-        if (cachedTradesResult.status === "rejected") {
-          logger.warn({ error: cachedTradesResult.reason }, "Trades cache read failed");
-        }
+            const [data, initialTrades] = await Promise.all([userDataPromise, tradesPromise])
 
-        if (cachedUserDataResult.status === "rejected") {
-          logger.warn({ error: cachedUserDataResult.reason }, "User data cache read failed");
-        }
+            if (!data) {
+              await signOut()
+              return
+            }
 
-        if (cachedTrades && Array.isArray(cachedTrades) && cachedTrades.length > 0) {
-          hasLocalSnapshot = true;
-          setTrades(sanitizeTradesForState(cachedTrades as Trade[]));
-        }
+            let safeTrades = initialTrades
 
-        if (cachedUserData) {
-          hasLocalSnapshot = true;
-          setAccounts(normalizeAccountsForClient(cachedUserData.accounts));
-          setUser(cachedUserData.userData);
-          setSubscription(cachedUserData.subscription as PrismaSubscription | null);
-          setTags(cachedUserData.tags);
-          setGroups(normalizeGroupsForClient(cachedUserData.groups));
-          setMoods(cachedUserData.moodHistory);
-          setEvents(cachedUserData.financialEvents);
-          setTickDetails(cachedUserData.tickDetails);
-          setIsFirstConnection(cachedUserData.userData?.isFirstConnection || false);
+            if (userId && !isSharedView && safeTrades.length === 0) {
+              logger.warn(
+                { userId },
+                'Initial trades fetch returned empty; retrying once with force refresh',
+              )
+              safeTrades = await withTimeout(
+                fetchAllTrades(userId, true),
+                20000,
+                'fetchAllTrades(user,force)',
+              )
+            }
+
+            const tradesToUse =
+              safeTrades.length > 0
+                ? safeTrades
+                : shouldUseDevMockTrades() && userId
+                  ? generateMockTrades(userId)
+                  : []
+            setTrades(sanitizeTradesForState(tradesToUse))
+
+            if (userId) {
+              setTradesCache(userId, tradesToUse).catch((err) =>
+                logger.error({ err }, 'Failed to set trades cache'),
+              )
+            }
+
+            const normalizedAccounts = normalizeAccountsForClient(
+              (data.accounts || []) as AccountInput[],
+            )
+
+            setUser(data.userData)
+            setSubscription(data.subscription as PrismaSubscription | null)
+            setTags(data.tags)
+            setGroups(normalizeGroupsForClient(data.groups as GroupInput[]))
+            setMoods(data.moodHistory)
+            setEvents(data.financialEvents)
+            setTickDetails(data.tickDetails)
+            setIsFirstConnection(data.userData?.isFirstConnection || false)
+
+            // Always write accounts from server — cached snapshot may be stale
+            setAccounts(normalizedAccounts)
+
+            if (!hasLocalSnapshot) {
+              setIsLoading(false)
+            }
+
+            // Defer heavy metrics calculation to background
+            // Don't block initial load on metrics
+            if (userId && !isSharedView) {
+              setUserDataCache(userId, {
+                userData: data.userData,
+                subscription: data.subscription as PrismaSubscription | null,
+                tickDetails: data.tickDetails,
+                tags: data.tags,
+                accounts: normalizeAccountsForClient((data.accounts || []) as AccountInput[]),
+                groups: normalizeGroupsForClient((data.groups || []) as GroupInput[]),
+                financialEvents: data.financialEvents,
+                moodHistory: data.moodHistory,
+              }).catch((err) => logger.error({ err }, 'Failed to set user data cache'))
+
+              // Calculate metrics in background after cache write
+              calculateAccountMetricsAction(normalizedAccounts)
+                .then((accountsWithMetrics) => {
+                  setAccounts(normalizeAccountsForClient(accountsWithMetrics))
+                })
+                .catch((e) => {
+                  logger.warn(
+                    { error: e },
+                    'Account metrics calculation failed; continuing without metrics',
+                  )
+                })
+            }
+          } finally {
+            setIsRevalidating(false)
+          }
         }
 
         if (hasLocalSnapshot) {
-          setIsLoading(false);
+          void refreshFromServer().catch((error) => {
+            const message = error instanceof Error ? error.message : 'Unknown error'
+            logger.error({ error }, 'Background refresh failed')
+            setRefreshError(message)
+          })
+          return
         }
-      }
 
-      const refreshFromServer = async () => {
-        setIsRevalidating(true);
-        try {
-          const userDataPromise = withTimeout(getUserData(), 20000, "getUserData");
-          const tradesPromise =
-            userId && !isSharedView
-              ? withTimeout(fetchAllTrades(userId, false), 20000, "fetchAllTrades(user)")
-              : withTimeout(fetchAllTrades(null, false), 20000, "fetchAllTrades(anonymous)");
-
-          const [data, initialTrades] = await Promise.all([
-            userDataPromise,
-            tradesPromise,
-          ]);
-
-          if (!data) {
-            await signOut();
-            return;
-          }
-
-          let safeTrades = initialTrades;
-
-          if (userId && !isSharedView && safeTrades.length === 0) {
-            logger.warn(
-              { userId },
-              "Initial trades fetch returned empty; retrying once with force refresh"
-            );
-            safeTrades = await withTimeout(
-              fetchAllTrades(userId, true),
-              20000,
-              "fetchAllTrades(user,force)"
-            );
-          }
-
-          const tradesToUse =
-            safeTrades.length > 0
-              ? safeTrades
-              : process.env.NODE_ENV === "development" && userId
-                ? generateMockTrades(userId)
-                : [];
-          setTrades(sanitizeTradesForState(tradesToUse));
-
-          if (userId) {
-            setTradesCache(userId, tradesToUse).catch((err) =>
-              logger.error({ err }, "Failed to set trades cache")
-            );
-          }
-
-          const normalizedAccounts = normalizeAccountsForClient(
-            (data.accounts || []) as AccountInput[]
-          );
-
-          setUser(data.userData);
-          setSubscription(data.subscription as PrismaSubscription | null);
-          setTags(data.tags);
-          setGroups(normalizeGroupsForClient(data.groups as GroupInput[]));
-          setMoods(data.moodHistory);
-          setEvents(data.financialEvents);
-          setTickDetails(data.tickDetails);
-          setIsFirstConnection(data.userData?.isFirstConnection || false);
-
-          // Always write accounts from server — cached snapshot may be stale
-          setAccounts(normalizedAccounts);
-
-          if (!hasLocalSnapshot) {
-            setIsLoading(false);
-          }
-
-          // Defer heavy metrics calculation to background
-          // Don't block initial load on metrics
-          if (userId && !isSharedView) {
-            setUserDataCache(userId, {
-              userData: data.userData,
-              subscription: data.subscription as PrismaSubscription | null,
-              tickDetails: data.tickDetails,
-              tags: data.tags,
-              accounts: normalizeAccountsForClient((data.accounts || []) as AccountInput[]),
-              groups: normalizeGroupsForClient((data.groups || []) as GroupInput[]),
-              financialEvents: data.financialEvents,
-              moodHistory: data.moodHistory,
-            }).catch((err) => logger.error({ err }, "Failed to set user data cache"));
-
-            // Calculate metrics in background after cache write
-            calculateAccountMetricsAction(normalizedAccounts)
-              .then((accountsWithMetrics) => {
-                setAccounts(normalizeAccountsForClient(accountsWithMetrics));
-              })
-              .catch((e) => {
-                logger.warn({ error: e }, "Account metrics calculation failed; continuing without metrics");
-              });
-          }
-        } finally {
-          setIsRevalidating(false);
-        }
-      };
-
-      if (hasLocalSnapshot) {
-        void refreshFromServer().catch((error) => {
-          const message = error instanceof Error ? error.message : "Unknown error";
-          logger.error({ error }, "Background refresh failed");
-          setRefreshError(message);
-        });
-        return;
-      }
-
-      await refreshFromServer();
-    } catch (error) {
-      logger.error({ error }, "FATAL: Error loading data");
-      const message =
-        error instanceof Error ? error.message : "Failed to load dashboard data";
-      setRefreshError(message);
-      if (hasLocalSnapshot) {
-        logger.warn("Preserving cached dashboard snapshot after load failure");
-      } else {
-        // Only fallback to mock data in development
-        if (process.env.NODE_ENV === 'development') {
-          const currentUserId = (await getUserId().catch(() => null)) || "error-fallback";
-          logger.warn({ userId: currentUserId }, "Falling back to mock data due to error");
-          setTrades(sanitizeTradesForState(generateMockTrades(currentUserId)));
+        await refreshFromServer()
+      } catch (error) {
+        logger.error({ error }, 'FATAL: Error loading data')
+        const message = error instanceof Error ? error.message : 'Failed to load dashboard data'
+        setRefreshError(message)
+        if (hasLocalSnapshot) {
+          logger.warn('Preserving cached dashboard snapshot after load failure')
         } else {
-          setTrades([]);
+          // Development mock data must be explicitly opted in.
+          if (shouldUseDevMockTrades()) {
+            const currentUserId = (await getUserId().catch(() => null)) || 'error-fallback'
+            logger.warn({ userId: currentUserId }, 'Falling back to mock data due to error')
+            setTrades(sanitizeTradesForState(generateMockTrades(currentUserId)))
+          } else {
+            setTrades([])
+          }
+          setAccounts([])
+          setGroups([])
         }
-        setAccounts([]);
-        setGroups([]);
+      } finally {
+        loadInProgressRef.current = false
+        setIsLoading(false)
       }
-    } finally {
-      loadInProgressRef.current = false;
-      setIsLoading(false);
-    }
-  }, [
-    adminView,
-    isSharedView,
-    initialSharedData,
-    params?.slug,
-    fetchAllTrades,
-    hydrateSharedAccountMetrics,
-    sanitizeTradesForState,
-    syncSharedDataState,
-    withTimeout,
-    supabase,
-  ]);
+    },
+    [
+      adminView,
+      isSharedView,
+      initialSharedData,
+      params?.slug,
+      fetchAllTrades,
+      hydrateSharedAccountMetrics,
+      sanitizeTradesForState,
+      syncSharedDataState,
+      withTimeout,
+      supabase,
+    ],
+  )
 
   useLayoutEffect(() => {
-    if (!isSharedView || !initialSharedData || !initialSharedSlug) return;
-    if (bootstrappedSharedSlugRef.current === initialSharedSlug) return;
+    if (!isSharedView || !initialSharedData || !initialSharedSlug) return
+    if (bootstrappedSharedSlugRef.current === initialSharedSlug) return
 
-    bootstrappedSharedSlugRef.current = initialSharedSlug;
-    const sharedAccounts = syncSharedDataState(initialSharedData);
-    setIsLoading(false);
+    bootstrappedSharedSlugRef.current = initialSharedSlug
+    const sharedAccounts = syncSharedDataState(initialSharedData)
+    setIsLoading(false)
     hydrateSharedAccountMetrics(sharedAccounts).catch((error) => {
-      logger.error({ error }, "Failed to hydrate shared account metrics");
-    });
+      logger.error({ error }, 'Failed to hydrate shared account metrics')
+    })
   }, [
     hydrateSharedAccountMetrics,
     initialSharedData,
@@ -925,166 +921,154 @@ export const DataProvider: React.FC<{
     isSharedView,
     setIsLoading,
     syncSharedDataState,
-  ]);
+  ])
 
   // Persist language changes without blocking UI
   useEffect(() => {
     const updateLanguage = async () => {
-      if (!supabaseUser?.id || !locale) return;
+      if (!supabaseUser?.id || !locale) return
       // Fire and forget; do not block UI
       await updateUserLanguage(locale).catch((e) => {
-        logger.error({ error: e, locale }, "Failed to update user language");
-      });
-    };
-    updateLanguage();
-  }, [locale, supabaseUser?.id]);
+        logger.error({ error: e, locale }, 'Failed to update user language')
+      })
+    }
+    updateLanguage()
+  }, [locale, supabaseUser?.id])
 
   const loadSubscriptionData = useCallback(async () => {
     try {
-      setSubscriptionLoading(true);
+      setSubscriptionLoading(true)
       const subscriptionData = await withTimeout(
         getSubscriptionData(),
         15000,
-        "getSubscriptionData"
-      );
-      setSubscriptionData(subscriptionData);
-      setSubscriptionError(null);
+        'getSubscriptionData',
+      )
+      setSubscriptionData(subscriptionData)
+      setSubscriptionError(null)
     } catch (error) {
-      logger.error({ error }, "Error loading Whop subscription");
-      setSubscriptionError(
-        error instanceof Error ? error.message : "Failed to load subscription"
-      );
-      setSubscriptionData(null);
+      logger.error({ error }, 'Error loading Whop subscription')
+      setSubscriptionError(error instanceof Error ? error.message : 'Failed to load subscription')
+      setSubscriptionData(null)
     } finally {
-      setSubscriptionLoading(false);
+      setSubscriptionLoading(false)
     }
-  }, [withTimeout, setSubscriptionData, setSubscriptionError, setSubscriptionLoading]);
+  }, [withTimeout, setSubscriptionData, setSubscriptionError, setSubscriptionLoading])
 
   // Load data on mount and when isSharedView changes
   useEffect(() => {
-    let mounted = true;
+    let mounted = true
 
     const loadDataIfMounted = async () => {
-      if (!mounted) return;
+      if (!mounted) return
       if (isSharedView && initialSharedData) {
-        return;
+        return
       }
       if (bootstrapSnapshot) {
-        await loadData({ withLoading: false });
+        await loadData({ withLoading: false })
       } else {
-        await loadData();
+        await loadData()
       }
-      if (isSharedView) return;
-      await loadSubscriptionData();
-    };
+      if (isSharedView) return
+      await loadSubscriptionData()
+    }
 
-    void loadDataIfMounted();
+    void loadDataIfMounted()
 
     return () => {
-      mounted = false;
-    };
-  }, [bootstrapSnapshot, initialSharedData, isSharedView, loadData, loadSubscriptionData]);
+      mounted = false
+    }
+  }, [bootstrapSnapshot, initialSharedData, isSharedView, loadData, loadSubscriptionData])
 
   const refreshTradesOnly = useCallback(
     async (options?: { force?: boolean; withLoading?: boolean }) => {
-      if (!supabaseUser?.id) return;
-      const { force = false, withLoading = true } = options || {};
+      if (!supabaseUser?.id) return
+      const { force = false, withLoading = true } = options || {}
 
-      if (withLoading) setIsLoading(true);
+      if (withLoading) setIsLoading(true)
 
       try {
-        const userId = await getDatabaseUserId();
-        if (!userId) return;
+        const userId = await getDatabaseUserId()
+        if (!userId) return
 
         // Dev-only: serve trades from IndexedDB to avoid DB hits when possible
-        if (process.env.NODE_ENV === "development" && !force) {
-          const cachedTrades = await getTradesCache(userId);
+        if (process.env.NODE_ENV === 'development' && !force) {
+          const cachedTrades = await getTradesCache(userId)
           if (cachedTrades && Array.isArray(cachedTrades) && cachedTrades.length > 0) {
-            setTrades(sanitizeTradesForState(cachedTrades));
-            if (withLoading) setIsLoading(false);
-            return;
+            setTrades(sanitizeTradesForState(cachedTrades))
+            if (withLoading) setIsLoading(false)
+            return
           }
         }
 
         // Clear stale IndexedDB cache when force-refreshing to prevent serving stale data
         if (force) {
           clearTradesCache(userId).catch((err) =>
-            logger.error({ err }, "Failed to clear trades cache in IndexedDB"),
-          );
+            logger.error({ err }, 'Failed to clear trades cache in IndexedDB'),
+          )
         }
 
-        const safeTrades = await fetchAllTrades(userId, force);
+        const safeTrades = await fetchAllTrades(userId, force)
         const tradesToUse =
-          process.env.NODE_ENV === "development" && safeTrades.length === 0
+          shouldUseDevMockTrades() && safeTrades.length === 0
             ? generateMockTrades(userId)
-            : safeTrades;
-        setTrades(sanitizeTradesForState(tradesToUse));
+            : safeTrades
+        setTrades(sanitizeTradesForState(tradesToUse))
 
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.NODE_ENV === 'development') {
           // Best-effort cache write; do not block UI on failure
           setTradesCache(userId, tradesToUse).catch((err) =>
-            logger.error({ err }, "Failed to cache trades in IndexedDB"),
-          );
+            logger.error({ err }, 'Failed to cache trades in IndexedDB'),
+          )
         }
       } catch (error) {
-        logger.error({ error }, "Error refreshing trades");
+        logger.error({ error }, 'Error refreshing trades')
       } finally {
-        if (withLoading) setIsLoading(false);
+        if (withLoading) setIsLoading(false)
       }
     },
-    [supabaseUser?.id, setTrades, fetchAllTrades]
-  );
+    [supabaseUser?.id, setTrades, fetchAllTrades],
+  )
 
   const refreshUserDataOnly = useCallback(
-    async (
-      options?: { force?: boolean; includeSubscription?: boolean; withLoading?: boolean }
-    ) => {
-      if (!supabaseUser?.id) return;
-      const {
-        force = false,
-        includeSubscription = false,
-        withLoading = true,
-      } = options || {};
+    async (options?: { force?: boolean; includeSubscription?: boolean; withLoading?: boolean }) => {
+      if (!supabaseUser?.id) return
+      const { force = false, includeSubscription = false, withLoading = true } = options || {}
 
-      if (withLoading) setIsLoading(true);
+      if (withLoading) setIsLoading(true)
 
       try {
         const [data, dashboardLayoutData] = await Promise.all([
-          withTimeout(
-            getUserData(force),
-            20000,
-            "getUserData(refresh)"
-          ),
+          withTimeout(getUserData(force), 20000, 'getUserData(refresh)'),
           withTimeout(
             loadDashboardLayoutAction(force),
             15000,
-            "loadDashboardLayoutAction(refresh)"
+            'loadDashboardLayoutAction(refresh)',
           ),
-        ]);
+        ])
 
         if (!data) {
-          await signOut();
-          return;
+          await signOut()
+          return
         }
 
         const normalizedAccounts = normalizeAccountsForClient(
-          (data.accounts || []) as AccountInput[]
-        );
+          (data.accounts || []) as AccountInput[],
+        )
         const accountsWithMetrics = await withTimeout(
           calculateAccountMetricsAction(normalizedAccounts),
           20000,
-          "calculateAccountMetricsAction(refresh)"
-        );
-        setAccounts(normalizeAccountsForClient(accountsWithMetrics));
+          'calculateAccountMetricsAction(refresh)',
+        )
+        setAccounts(normalizeAccountsForClient(accountsWithMetrics))
 
-        setUser(data.userData);
-        setSubscription(data.subscription as PrismaSubscription | null);
-        setTags(data.tags);
-        setGroups(normalizeGroupsForClient(data.groups as GroupInput[]));
-        setMoods(data.moodHistory);
-        setEvents(data.financialEvents);
-        setTickDetails(data.tickDetails);
-        setIsFirstConnection(data.userData?.isFirstConnection || false);
+        setUser(data.userData)
+        setSubscription(data.subscription as PrismaSubscription | null)
+        setTags(data.tags)
+        setGroups(normalizeGroupsForClient(data.groups as GroupInput[]))
+        setMoods(data.moodHistory)
+        setEvents(data.financialEvents)
+        setTickDetails(data.tickDetails)
+        setIsFirstConnection(data.userData?.isFirstConnection || false)
         setDashboardLayout(
           dashboardLayoutData
             ? (dashboardLayoutData as unknown as DashboardLayoutWithWidgets)
@@ -1095,19 +1079,19 @@ export const DataProvider: React.FC<{
                 updatedAt: new Date(),
                 desktop: defaultLayouts.desktop,
                 mobile: defaultLayouts.mobile,
-              }
-        );
+              },
+        )
 
         if (includeSubscription) {
-          await loadSubscriptionData();
+          await loadSubscriptionData()
         }
       } catch (error) {
-        logger.error({ error }, "Error refreshing user data");
+        logger.error({ error }, 'Error refreshing user data')
         setRefreshError(
-          error instanceof Error ? error.message : "Failed to refresh dashboard user data"
-        );
+          error instanceof Error ? error.message : 'Failed to refresh dashboard user data',
+        )
       } finally {
-        if (withLoading) setIsLoading(false);
+        if (withLoading) setIsLoading(false)
       }
     },
     [
@@ -1125,15 +1109,15 @@ export const DataProvider: React.FC<{
       supabaseUser?.id,
       loadSubscriptionData,
       withTimeout,
-    ]
-  );
+    ],
+  )
 
   const refreshAllData = useCallback(
     async (options?: { force?: boolean }) => {
-      if (!supabaseUser?.id) return;
-      const force = options?.force ?? false;
+      if (!supabaseUser?.id) return
+      const force = options?.force ?? false
 
-      setIsLoading(true);
+      setIsLoading(true)
       try {
         const results = await Promise.allSettled([
           refreshTradesOnly({ force, withLoading: false }),
@@ -1142,109 +1126,103 @@ export const DataProvider: React.FC<{
             includeSubscription: true,
             withLoading: false,
           }),
-        ]);
-        
+        ])
+
         // Check if both succeeded
-        const failed = results.filter(r => r.status === 'rejected');
+        const failed = results.filter((r) => r.status === 'rejected')
         if (failed.length > 0) {
-          const errors = failed.map(r => r.reason).join(', ');
-          logger.error({ errors }, "Error refreshing some data");
-          setRefreshError(
-            errors || "Failed to refresh dashboard data"
-          );
+          const errors = failed.map((r) => r.reason).join(', ')
+          logger.error({ errors }, 'Error refreshing some data')
+          setRefreshError(errors || 'Failed to refresh dashboard data')
           // Don't clear loading here - keep error state sticky
-          return;
+          return
         }
-        
+
         // Only clear error on full success
-        setRefreshError(null);
-        logger.info("Successfully refreshed trades and user data");
+        setRefreshError(null)
+        logger.info('Successfully refreshed trades and user data')
       } catch (error) {
-        logger.error({ error }, "Error refreshing all data");
-        setRefreshError(
-          error instanceof Error ? error.message : "Failed to refresh dashboard data"
-        );
+        logger.error({ error }, 'Error refreshing all data')
+        setRefreshError(error instanceof Error ? error.message : 'Failed to refresh dashboard data')
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
     },
-    [refreshTradesOnly, refreshUserDataOnly, supabaseUser?.id]
-  );
+    [refreshTradesOnly, refreshUserDataOnly, supabaseUser?.id],
+  )
 
   const retryDataLoad = useCallback(async () => {
-    setRefreshError(null);
-    await loadData();
-  }, [loadData]);
+    setRefreshError(null)
+    await loadData()
+  }, [loadData])
 
   // Dev-only: persist trades store into IndexedDB so reloads avoid DB hits
   useEffect(() => {
-    if (process.env.NODE_ENV !== "development") return;
-    if (!supabaseUser?.id) return;
-    if (!Array.isArray(trades)) return;
-    if (trades.length === 0) return; // avoid caching empty and blocking future fetches
+    if (process.env.NODE_ENV !== 'development') return
+    if (!supabaseUser?.id) return
+    if (!Array.isArray(trades)) return
+    if (trades.length === 0) return // avoid caching empty and blocking future fetches
 
     const timer = window.setTimeout(() => {
       setTradesCache(supabaseUser.id, trades).catch((err) =>
-        logger.error({ err }, "Failed to sync trades to IndexedDB"),
-      );
-    }, 200);
+        logger.error({ err }, 'Failed to sync trades to IndexedDB'),
+      )
+    }, 200)
 
-    return () => window.clearTimeout(timer);
-  }, [trades, supabaseUser?.id]);
+    return () => window.clearTimeout(timer)
+  }, [trades, supabaseUser?.id])
 
   const sortedTrades = useMemo(() => {
     if (!Array.isArray(trades) || trades.length === 0) {
-      return [];
+      return []
     }
 
     return trades
       .filter((trade) => isValid(new Date(trade.entryDate)))
       .sort(
         (first, second) =>
-          new Date(first.entryDate).getTime() - new Date(second.entryDate).getTime()
-      );
-  }, [trades]);
+          new Date(first.entryDate).getTime() - new Date(second.entryDate).getTime(),
+      )
+  }, [trades])
 
   // Stable filter Sets - only recreate when filter inputs change (not on every trade change)
   const filterSets = useMemo(() => {
-    const hiddenGroupId = groups.find((group) => group.name === "Hidden Accounts")?.id;
+    const hiddenGroupId = groups.find((group) => group.name === 'Hidden Accounts')?.id
     const hiddenAccountNumbers = hiddenGroupId
       ? new Set(
           accounts
             .filter((account) => account.groupId === hiddenGroupId)
-            .map((account) => account.number)
+            .map((account) => account.number),
         )
-      : null;
+      : null
 
-    const instrumentFilterSet = instruments.length > 0 ? new Set(instruments) : null;
-    const accountFilterSet = accountNumbers.length > 0 ? new Set(accountNumbers) : null;
-    const tagFilterSet = tagFilter.tags.length > 0 ? new Set(tagFilter.tags) : null;
+    const instrumentFilterSet = instruments.length > 0 ? new Set(instruments) : null
+    const accountFilterSet = accountNumbers.length > 0 ? new Set(accountNumbers) : null
+    const tagFilterSet = tagFilter.tags.length > 0 ? new Set(tagFilter.tags) : null
 
     // Pre-calculate date filter values
-    const fromDate = dateRange?.from ? startOfDay(dateRange.from) : null;
-    const toDate = dateRange?.to ? endOfDay(dateRange.to) : null;
+    const fromDate = dateRange?.from ? startOfDay(dateRange.from) : null
+    const toDate = dateRange?.to ? endOfDay(dateRange.to) : null
     const singleDayTimestamp =
       fromDate && toDate && fromDate.getTime() === startOfDay(toDate).getTime()
         ? fromDate.getTime()
-        : null;
-    const fromTime = fromDate?.getTime() ?? null;
-    const toTime = toDate?.getTime() ?? null;
+        : null
+    const fromTime = fromDate?.getTime() ?? null
+    const toTime = toDate?.getTime() ?? null
 
     // Pre-calculate account reset times
-    const accountResetTimes = new Map<string, number>();
+    const accountResetTimes = new Map<string, number>()
     for (const account of accounts) {
       if (account.resetDate && account.shouldConsiderTradesBeforeReset === false) {
-        accountResetTimes.set(account.number, startOfDay(new Date(account.resetDate)).getTime());
+        accountResetTimes.set(account.number, startOfDay(new Date(account.resetDate)).getTime())
       }
     }
 
-    const tickFilterValue = tickFilter?.value
-      ? Number(tickFilter.value.replace("+", ""))
-      : null;
+    const tickFilterValue = tickFilter?.value ? Number(tickFilter.value.replace('+', '')) : null
     const sortedTickers =
       tickFilterValue !== null
         ? Object.keys(tickDetails).sort((first, second) => second.length - first.length)
-        : [];
+        : []
 
     const hasFilters =
       Boolean(hiddenAccountNumbers) ||
@@ -1260,7 +1238,7 @@ export const DataProvider: React.FC<{
       weekdayFilter.days.length > 0 ||
       hourFilter.hour !== null ||
       tagFilterSet !== null ||
-      accountResetTimes.size > 0;
+      accountResetTimes.size > 0
 
     const requiresDate =
       fromTime !== null ||
@@ -1268,7 +1246,7 @@ export const DataProvider: React.FC<{
       singleDayTimestamp !== null ||
       weekdayFilter.days.length > 0 ||
       hourFilter.hour !== null ||
-      accountResetTimes.size > 0;
+      accountResetTimes.size > 0
 
     return {
       hiddenAccountNumbers,
@@ -1283,7 +1261,7 @@ export const DataProvider: React.FC<{
       sortedTickers,
       hasFilters,
       requiresDate,
-    };
+    }
   }, [
     groups,
     accounts,
@@ -1299,12 +1277,12 @@ export const DataProvider: React.FC<{
     weekdayFilter.days,
     hourFilter.hour,
     tagFilter.tags,
-  ]);
+  ])
 
   // Formatted trades - uses pre-computed filter Sets, only recalculates when trades or filterSets change
   const formattedTrades = useMemo(() => {
     if (!Array.isArray(sortedTrades) || sortedTrades.length === 0) {
-      return [];
+      return []
     }
 
     const {
@@ -1320,108 +1298,104 @@ export const DataProvider: React.FC<{
       sortedTickers,
       hasFilters,
       requiresDate,
-    } = filterSets;
+    } = filterSets
 
     if (!hasFilters) {
-      return sortedTrades;
+      return sortedTrades
     }
 
-    const timezoneName = timezone || "UTC";
+    const timezoneName = timezone || 'UTC'
 
-    return sortedTrades
-      .filter((trade) => {
-        if (hiddenAccountNumbers?.has(trade.accountNumber)) return false;
+    return sortedTrades.filter((trade) => {
+      if (hiddenAccountNumbers?.has(trade.accountNumber)) return false
 
-        const rawDate = new Date(trade.entryDate);
-        if (!isValid(rawDate)) return false;
+      const rawDate = new Date(trade.entryDate)
+      if (!isValid(rawDate)) return false
 
-        let entryDate = rawDate;
-        if (requiresDate) {
-          try {
-            entryDate = toZonedTime(rawDate, timezoneName);
-          } catch {
-            entryDate = rawDate;
-          }
-
-          if (!isValid(entryDate)) return false;
+      let entryDate = rawDate
+      if (requiresDate) {
+        try {
+          entryDate = toZonedTime(rawDate, timezoneName)
+        } catch {
+          entryDate = rawDate
         }
 
-        if (requiresDate) {
-          const resetTime = accountResetTimes.get(trade.accountNumber);
-          if (resetTime !== undefined && startOfDay(entryDate).getTime() < resetTime) {
-            return false;
-          }
+        if (!isValid(entryDate)) return false
+      }
+
+      if (requiresDate) {
+        const resetTime = accountResetTimes.get(trade.accountNumber)
+        if (resetTime !== undefined && startOfDay(entryDate).getTime() < resetTime) {
+          return false
+        }
+      }
+
+      if (instrumentFilterSet && !instrumentFilterSet.has(trade.instrument)) return false
+      if (accountFilterSet && !accountFilterSet.has(trade.accountNumber)) return false
+
+      if (requiresDate) {
+        const entryTime = entryDate.getTime()
+        if (fromTime !== null && entryTime < fromTime) return false
+        if (toTime !== null && entryTime > toTime) return false
+        if (singleDayTimestamp !== null && startOfDay(entryDate).getTime() !== singleDayTimestamp) {
+          return false
+        }
+      }
+
+      const tradePnl = Number(trade.pnl)
+      if (pnlRange.min !== undefined && tradePnl < pnlRange.min) return false
+      if (pnlRange.max !== undefined && tradePnl > pnlRange.max) return false
+
+      if (tickFilterValue !== null) {
+        const matchingTicker = sortedTickers.find((ticker) => trade.instrument.includes(ticker))
+        const rawTickValue = matchingTicker ? Number(tickDetails[matchingTicker]?.tickValue) : 1
+        const tickValue = Number.isFinite(rawTickValue) && rawTickValue !== 0 ? rawTickValue : 1
+
+        const quantity = Number(trade.quantity)
+        if (!Number.isFinite(quantity) || quantity === 0) return false
+
+        const tradeTicks = Math.round(tradePnl / quantity / tickValue)
+        if (tradeTicks !== tickFilterValue) return false
+      }
+
+      if (timeRange.range && getTimeRangeKey(Number(trade.timeInPosition)) !== timeRange.range) {
+        return false
+      }
+
+      if (requiresDate) {
+        if (weekdayFilter.days.length > 0 && !weekdayFilter.days.includes(entryDate.getDay())) {
+          return false
         }
 
-        if (instrumentFilterSet && !instrumentFilterSet.has(trade.instrument)) return false;
-        if (accountFilterSet && !accountFilterSet.has(trade.accountNumber)) return false;
-
-        if (requiresDate) {
-          const entryTime = entryDate.getTime();
-          if (fromTime !== null && entryTime < fromTime) return false;
-          if (toTime !== null && entryTime > toTime) return false;
-          if (singleDayTimestamp !== null && startOfDay(entryDate).getTime() !== singleDayTimestamp) {
-            return false;
-          }
+        if (hourFilter.hour !== null && entryDate.getHours() !== hourFilter.hour) {
+          return false
         }
+      }
 
-        const tradePnl = Number(trade.pnl);
-        if (pnlRange.min !== undefined && tradePnl < pnlRange.min) return false;
-        if (pnlRange.max !== undefined && tradePnl > pnlRange.max) return false;
+      if (tagFilterSet) {
+        if (!Array.isArray(trade.tags)) return false
+        if (!trade.tags.some((tag) => tagFilterSet.has(tag))) return false
+      }
 
-        if (tickFilterValue !== null) {
-          const matchingTicker = sortedTickers.find((ticker) => trade.instrument.includes(ticker));
-          const rawTickValue = matchingTicker
-            ? Number(tickDetails[matchingTicker]?.tickValue)
-            : 1;
-          const tickValue =
-            Number.isFinite(rawTickValue) && rawTickValue !== 0 ? rawTickValue : 1;
-
-          const quantity = Number(trade.quantity);
-          if (!Number.isFinite(quantity) || quantity === 0) return false;
-
-          const tradeTicks = Math.round((tradePnl / quantity) / tickValue);
-          if (tradeTicks !== tickFilterValue) return false;
-        }
-
-        if (timeRange.range && getTimeRangeKey(Number(trade.timeInPosition)) !== timeRange.range) {
-          return false;
-        }
-
-        if (requiresDate) {
-          if (weekdayFilter.days.length > 0 && !weekdayFilter.days.includes(entryDate.getDay())) {
-            return false;
-          }
-
-          if (hourFilter.hour !== null && entryDate.getHours() !== hourFilter.hour) {
-            return false;
-          }
-        }
-
-        if (tagFilterSet) {
-          if (!Array.isArray(trade.tags)) return false;
-          if (!trade.tags.some((tag) => tagFilterSet.has(tag))) return false;
-        }
-
-        return true;
-      });
-  }, [sortedTrades, filterSets, accounts, pnlRange.min, pnlRange.max, timezone]);
+      return true
+    })
+  }, [sortedTrades, filterSets, accounts, pnlRange.min, pnlRange.max, timezone])
 
   const statistics = useMemo(() => {
-    const stats = calculateStatistics(formattedTrades, accounts);
+    const stats = calculateStatistics(formattedTrades, accounts)
 
     // Calculate gross profits and gross losses including commissions
     const grossProfits = formattedTrades.reduce((sum, trade) => {
-      const totalPnL = (trade.pnl || 0) - (trade.commission || 0);
-      return totalPnL > 0 ? sum + totalPnL : sum;
-    }, 0);
+      const totalPnL = (trade.pnl || 0) - (trade.commission || 0)
+      return totalPnL > 0 ? sum + totalPnL : sum
+    }, 0)
 
     const grossLosses = Math.abs(
       formattedTrades.reduce((sum, trade) => {
-        const totalPnL = (trade.pnl || 0) - (trade.commission || 0);
-        return totalPnL < 0 ? sum + totalPnL : sum;
-      }, 0)
-    );
+        const totalPnL = (trade.pnl || 0) - (trade.commission || 0)
+        return totalPnL < 0 ? sum + totalPnL : sum
+      }, 0),
+    )
 
     // Calculate profit factor (handle division by zero)
     const profitFactor =
@@ -1429,56 +1403,50 @@ export const DataProvider: React.FC<{
         ? grossProfits > 0
           ? Number.POSITIVE_INFINITY
           : 1
-        : grossProfits / grossLosses;
+        : grossProfits / grossLosses
 
     return {
       ...stats,
       profitFactor,
-    };
-  }, [formattedTrades, accounts]);
+    }
+  }, [formattedTrades, accounts])
 
   const calendarData = useMemo(
     () => formatCalendarData(formattedTrades, accounts),
-    [formattedTrades, accounts]
-  );
+    [formattedTrades, accounts],
+  )
 
   const isPlusUser = () => {
-    if (isAdmin) return true;
+    if (isAdmin) return true
     // Use Whop subscription store for more accurate subscription status
-    const whopSubscription = useSubscriptionStore.getState().subscription;
+    const whopSubscription = useSubscriptionStore.getState().subscription
     if (whopSubscription) {
-      const planName = whopSubscription.plan?.name?.toLowerCase() || "";
-      return planName.includes("plus") || planName.includes("pro");
+      const planName = whopSubscription.plan?.name?.toLowerCase() || ''
+      return planName.includes('plus') || planName.includes('pro')
     }
 
     // Fallback to database subscription
-    const dbSubscription = useUserStore.getState().subscription;
+    const dbSubscription = useUserStore.getState().subscription
     return Boolean(
-      dbSubscription?.status === "ACTIVE" &&
-      ["PLUS", "PRO"].includes(
-        dbSubscription?.plan?.split("_")[0].toUpperCase() || ""
-      )
-    );
-  };
+      dbSubscription?.status === 'ACTIVE' &&
+      ['PLUS', 'PRO'].includes(dbSubscription?.plan?.split('_')[0].toUpperCase() || ''),
+    )
+  }
 
   const saveAccount = useCallback(
     async (newAccount: Account) => {
-      if (!supabaseUser?.id) return;
+      if (!supabaseUser?.id) return
 
       try {
         // Get the current account to preserve other properties
-        const { accounts } = useUserStore.getState();
-        const currentAccount = accounts.find(
-          (acc) => acc.number === newAccount.number
-        ) as Account;
+        const { accounts } = useUserStore.getState()
+        const currentAccount = accounts.find((acc) => acc.number === newAccount.number) as Account
         // If the account is not found, create it
         if (!currentAccount) {
           // Never send client-only fields to server
-          const { trades: _trades, ...serverAccount } = newAccount;
-          const considerBuffer = newAccount.considerBuffer ?? true;
-          const createdAccount = await setupAccountAction(
-            serverAccount as Account
-          );
+          const { trades: _trades, ...serverAccount } = newAccount
+          const considerBuffer = newAccount.considerBuffer ?? true
+          const createdAccount = await setupAccountAction(serverAccount as Account)
 
           // Recalculate metrics for the new account (optimistic, client-side)
           const accountsWithMetrics = computeMetricsForAccounts(
@@ -1488,11 +1456,11 @@ export const DataProvider: React.FC<{
                 considerBuffer: createdAccount.considerBuffer ?? considerBuffer,
               },
             ],
-            trades
-          );
-          const accountWithMetrics = normalizeAccountForClient(accountsWithMetrics[0]);
+            trades,
+          )
+          const accountWithMetrics = normalizeAccountForClient(accountsWithMetrics[0])
 
-          setAccounts([...accounts, accountWithMetrics]);
+          setAccounts([...accounts, accountWithMetrics])
 
           // If the new account has a groupId, update the groups state to include it
           if (accountWithMetrics.groupId) {
@@ -1502,22 +1470,20 @@ export const DataProvider: React.FC<{
                   return {
                     ...group,
                     accounts: [...group.accounts, accountWithMetrics],
-                  };
+                  }
                 }
-                return group;
-              })
-            );
+                return group
+              }),
+            )
           }
-          return;
+          return
         }
 
         // Update the account in the database
         // Strip client-only fields
-        const { trades: _trades2, ...serverAccount2 } = newAccount;
-        const considerBuffer = newAccount.considerBuffer ?? true;
-        const updatedAccount = await setupAccountAction(
-          serverAccount2 as Account
-        );
+        const { trades: _trades2, ...serverAccount2 } = newAccount
+        const considerBuffer = newAccount.considerBuffer ?? true
+        const updatedAccount = await setupAccountAction(serverAccount2 as Account)
 
         // Recalculate metrics for the updated account (optimistic, client-side)
         const accountsWithMetrics = computeMetricsForAccounts(
@@ -1527,33 +1493,31 @@ export const DataProvider: React.FC<{
               considerBuffer: updatedAccount.considerBuffer ?? considerBuffer,
             },
           ],
-          trades
-        );
-        const accountWithMetrics = normalizeAccountForClient(accountsWithMetrics[0]);
+          trades,
+        )
+        const accountWithMetrics = normalizeAccountForClient(accountsWithMetrics[0])
 
         // Check if groupId changed
-        const oldGroupId = currentAccount.groupId;
-        const newGroupId = accountWithMetrics.groupId;
-        const groupIdChanged = oldGroupId !== newGroupId;
+        const oldGroupId = currentAccount.groupId
+        const newGroupId = accountWithMetrics.groupId
+        const groupIdChanged = oldGroupId !== newGroupId
 
         // Update the account in the local state with recalculated metrics
         const updatedAccounts = accounts.map((account: Account) => {
           if (account.number === accountWithMetrics.number) {
-            return accountWithMetrics;
+            return accountWithMetrics
           }
-          return account;
-        });
-        setAccounts(updatedAccounts);
+          return account
+        })
+        setAccounts(updatedAccounts)
 
         // Update groups state if groupId changed
         if (groupIdChanged) {
           // Get fresh groups from store to avoid stale closure references
-          const currentGroups = useUserStore.getState().groups;
+          const currentGroups = useUserStore.getState().groups
 
           // Check if the target group exists in the groups array
-          const targetGroupExists = currentGroups.some(
-            (g) => g.id === newGroupId
-          );
+          const targetGroupExists = currentGroups.some((g) => g.id === newGroupId)
 
           if (targetGroupExists) {
             // Update existing groups
@@ -1563,35 +1527,33 @@ export const DataProvider: React.FC<{
                 if (group.id === newGroupId) {
                   const accountExists = group.accounts.some(
                     (acc: Account) =>
-                      acc.id === accountWithMetrics.id ||
-                      acc.number === accountWithMetrics.number
-                  );
+                      acc.id === accountWithMetrics.id || acc.number === accountWithMetrics.number,
+                  )
                   return {
                     ...group,
                     accounts: accountExists
                       ? group.accounts
                       : [...group.accounts, accountWithMetrics],
-                  };
+                  }
                 }
                 // For all other groups (including the old group), remove the account if it exists
                 return {
                   ...group,
                   accounts: group.accounts.filter(
                     (acc: Account) =>
-                      acc.id !== accountWithMetrics.id &&
-                      acc.number !== accountWithMetrics.number
+                      acc.id !== accountWithMetrics.id && acc.number !== accountWithMetrics.number,
                   ),
-                };
-              })
-            );
+                }
+              }),
+            )
           } else if (newGroupId) {
             // If the group doesn't exist yet (just created), we need to add it
             // This can happen if a group was just created and saveAccount is called immediately
             // Try to fetch the group from the database, or create a minimal group object
             try {
-              const { getGroupsAction } = await import("@/server/groups");
-              const allGroups = await getGroupsAction();
-              const foundGroup = allGroups.find((g) => g.id === newGroupId);
+              const { getGroupsAction } = await import('@/server/groups')
+              const allGroups = await getGroupsAction()
+              const foundGroup = allGroups.find((g) => g.id === newGroupId)
 
               if (foundGroup) {
                 // Use the actual group from database
@@ -1599,58 +1561,57 @@ export const DataProvider: React.FC<{
                   ...group,
                   accounts: group.accounts.filter(
                     (acc: Account) =>
-                      acc.id !== accountWithMetrics.id &&
-                      acc.number !== accountWithMetrics.number
+                      acc.id !== accountWithMetrics.id && acc.number !== accountWithMetrics.number,
                   ),
-                }));
+                }))
                 setGroups([
                   ...updatedGroups,
-                  ...normalizeGroupsForClient([{ ...foundGroup, accounts: [accountWithMetrics] } as Group]),
-                ]);
+                  ...normalizeGroupsForClient([
+                    { ...foundGroup, accounts: [accountWithMetrics] } as Group,
+                  ]),
+                ])
               } else {
                 // Fallback: create minimal group object (shouldn't happen, but just in case)
                 const newGroup = {
                   id: newGroupId,
-                  name: "New Group", // Temporary name
+                  name: 'New Group', // Temporary name
                   userId: supabaseUser.id,
                   createdAt: new Date(),
                   updatedAt: new Date(),
                   accounts: [accountWithMetrics],
-                };
+                }
 
                 const updatedGroups = currentGroups.map((group) => ({
                   ...group,
                   accounts: group.accounts.filter(
                     (acc: Account) =>
-                      acc.id !== accountWithMetrics.id &&
-                      acc.number !== accountWithMetrics.number
+                      acc.id !== accountWithMetrics.id && acc.number !== accountWithMetrics.number,
                   ),
-                }));
+                }))
 
-                setGroups([...updatedGroups, newGroup]);
+                setGroups([...updatedGroups, newGroup])
               }
             } catch (error) {
-              logger.error({ error }, "Error fetching group");
+              logger.error({ error }, 'Error fetching group')
               // Fallback: create minimal group object
               const newGroup = {
                 id: newGroupId,
-                name: "New Group",
+                name: 'New Group',
                 userId: supabaseUser.id,
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 accounts: [accountWithMetrics],
-              };
+              }
 
               const updatedGroups = currentGroups.map((group) => ({
                 ...group,
                 accounts: group.accounts.filter(
                   (acc: Account) =>
-                    acc.id !== accountWithMetrics.id &&
-                    acc.number !== accountWithMetrics.number
+                    acc.id !== accountWithMetrics.id && acc.number !== accountWithMetrics.number,
                 ),
-              }));
+              }))
 
-              setGroups([...updatedGroups, newGroup]);
+              setGroups([...updatedGroups, newGroup])
             }
           } else {
             // Removing from group (groupId is null)
@@ -1659,129 +1620,119 @@ export const DataProvider: React.FC<{
                 ...group,
                 accounts: group.accounts.filter(
                   (acc: Account) =>
-                    acc.id !== accountWithMetrics.id &&
-                    acc.number !== accountWithMetrics.number
+                    acc.id !== accountWithMetrics.id && acc.number !== accountWithMetrics.number,
                 ),
-              }))
-            );
+              })),
+            )
           }
         }
       } catch (error) {
-        logger.error({ error }, "Error updating account");
-        throw error;
+        logger.error({ error }, 'Error updating account')
+        throw error
       }
     },
-    [supabaseUser?.id, accounts, setAccounts, groups, setGroups, trades]
-  );
+    [supabaseUser?.id, accounts, setAccounts, groups, setGroups, trades],
+  )
 
   // Add createGroup function
   const saveGroup = useCallback(
     async (name: string) => {
-      if (!supabaseUser?.id) return;
+      if (!supabaseUser?.id) return
       try {
-        const newGroup = await saveGroupAction(name);
+        const newGroup = await saveGroupAction(name)
         // Explicitly include accounts in the input if needed, though group action returns them.
-        const normalizedNewGroup = normalizeGroupsForClient([newGroup as GroupInput])[0] as Group;
-        setGroups([...groups, normalizedNewGroup]);
-        return normalizedNewGroup;
+        const normalizedNewGroup = normalizeGroupsForClient([newGroup as GroupInput])[0] as Group
+        setGroups([...groups, normalizedNewGroup])
+        return normalizedNewGroup
       } catch (error) {
-        logger.error({ error }, "Error creating group");
-        throw error;
+        logger.error({ error }, 'Error creating group')
+        throw error
       }
     },
-    [supabaseUser?.id, groups, setGroups]
-  );
+    [supabaseUser?.id, groups, setGroups],
+  )
 
   const renameGroup = useCallback(
     async (groupId: string, name: string) => {
-      if (!supabaseUser?.id) return;
-      const previousGroups = [...useUserStore.getState().groups];
+      if (!supabaseUser?.id) return
+      const previousGroups = [...useUserStore.getState().groups]
       try {
-        setGroups(
-          groups.map((group) =>
-            group.id === groupId ? { ...group, name } : group
-          )
-        );
-        await renameGroupAction(groupId, name);
+        setGroups(groups.map((group) => (group.id === groupId ? { ...group, name } : group)))
+        await renameGroupAction(groupId, name)
       } catch (error) {
-        setGroups(previousGroups);
-        logger.error({ error }, "Error renaming group");
-        throw error;
+        setGroups(previousGroups)
+        logger.error({ error }, 'Error renaming group')
+        throw error
       }
     },
-    [supabaseUser?.id, groups, setGroups]
-  );
+    [supabaseUser?.id, groups, setGroups],
+  )
 
   // Add deleteGroup function
   const deleteGroup = useCallback(
     async (groupId: string) => {
-      const previousGroups = [...useUserStore.getState().groups];
-      const previousAccounts = [...useUserStore.getState().accounts];
+      const previousGroups = [...useUserStore.getState().groups]
+      const previousAccounts = [...useUserStore.getState().accounts]
       try {
         // Remove groupId from accounts
         const updatedAccounts = accounts.map((account: Account) => {
           if (account.groupId === groupId) {
-            return { ...account, groupId: null };
+            return { ...account, groupId: null }
           }
-          return account;
-        });
-        setAccounts(updatedAccounts);
-        setGroups(groups.filter((group) => group.id !== groupId));
-        await deleteGroupAction(groupId);
+          return account
+        })
+        setAccounts(updatedAccounts)
+        setGroups(groups.filter((group) => group.id !== groupId))
+        await deleteGroupAction(groupId)
       } catch (error) {
-        setGroups(previousGroups);
-        setAccounts(previousAccounts);
-        logger.error({ error }, "Error deleting group");
-        throw error;
+        setGroups(previousGroups)
+        setAccounts(previousAccounts)
+        logger.error({ error }, 'Error deleting group')
+        throw error
       }
     },
-    [accounts, setAccounts, groups, setGroups]
-  );
+    [accounts, setAccounts, groups, setGroups],
+  )
 
   // Add moveAccountToGroup function
   const moveAccountToGroup = useCallback(
     async (accountId: string, targetGroupId: string | null) => {
-      const { accounts: previousAccounts, groups: previousGroups } = useUserStore.getState();
+      const { accounts: previousAccounts, groups: previousGroups } = useUserStore.getState()
       try {
-        const { accounts: currentAccounts, groups: currentGroups } =
-          useUserStore.getState();
+        const { accounts: currentAccounts, groups: currentGroups } = useUserStore.getState()
         if (!currentAccounts || currentAccounts.length === 0) {
-          logger.warn("No accounts available to move");
-          return;
+          logger.warn('No accounts available to move')
+          return
         }
 
         // Update accounts state using the freshest snapshot
         const updatedAccounts = currentAccounts.map((account: Account) => {
           if (account.id === accountId) {
-            return { ...account, groupId: targetGroupId };
+            return { ...account, groupId: targetGroupId }
           }
-          return account;
-        });
-        setAccounts(updatedAccounts);
+          return account
+        })
+        setAccounts(updatedAccounts)
 
         // Update groups state using the freshest snapshot
-        const accountToMove = currentAccounts.find(
-          (acc: Account) => acc.id === accountId
-        );
+        const accountToMove = currentAccounts.find((acc: Account) => acc.id === accountId)
         if (accountToMove) {
           // We have to ensure that the target group is created
           if (targetGroupId) {
-            const targetGroup = currentGroups.find(
-              (group) => group.id === targetGroupId
-            );
+            const targetGroup = currentGroups.find((group) => group.id === targetGroupId)
             if (!targetGroup) {
-              const newGroup = await saveGroup(targetGroupId);
+              const newGroup = await saveGroup(targetGroupId)
               if (newGroup) {
                 setGroups(
                   currentGroups.map((group) =>
                     group.id === targetGroupId
                       ? {
-                        ...group,
-                        accounts: [...group.accounts, accountToMove],
-                      }
-                      : group
-                  )
-                );
+                          ...group,
+                          accounts: [...group.accounts, accountToMove],
+                        }
+                      : group,
+                  ),
+                )
               }
             } else {
               setGroups(
@@ -1789,416 +1740,378 @@ export const DataProvider: React.FC<{
                   // If this is the target group, add the account only if it's not already there
                   if (group.id === targetGroupId) {
                     const accountExists = group.accounts.some(
-                      (acc: Account) => acc.id === accountId
-                    );
+                      (acc: Account) => acc.id === accountId,
+                    )
                     return {
                       ...group,
-                      accounts: accountExists
-                        ? group.accounts
-                        : [...group.accounts, accountToMove],
-                    };
+                      accounts: accountExists ? group.accounts : [...group.accounts, accountToMove],
+                    }
                   }
                   // For all other groups, remove the account if it exists
                   return {
                     ...group,
-                    accounts: group.accounts.filter(
-                      (acc: Account) => acc.id !== accountId
-                    ),
-                  };
-                })
-              );
+                    accounts: group.accounts.filter((acc: Account) => acc.id !== accountId),
+                  }
+                }),
+              )
             }
           }
         }
 
-        await moveAccountToGroupAction(accountId, targetGroupId);
+        await moveAccountToGroupAction(accountId, targetGroupId)
       } catch (error) {
-        logger.error({ error }, "Error moving account to group, rolling back");
-        setAccounts(previousAccounts);
-        setGroups(previousGroups);
-        throw error;
+        logger.error({ error }, 'Error moving account to group, rolling back')
+        setAccounts(previousAccounts)
+        setGroups(previousGroups)
+        throw error
       }
     },
-    [setAccounts, setGroups, saveGroup]
-  );
+    [setAccounts, setGroups, saveGroup],
+  )
 
   const moveAccountsToGroup = useCallback(
     async (accountIds: string[], targetGroupId: string | null) => {
-      const { accounts: previousAccounts, groups: previousGroups } = useUserStore.getState();
+      const { accounts: previousAccounts, groups: previousGroups } = useUserStore.getState()
       try {
-        const { accounts: currentAccounts, groups: currentGroups } =
-          useUserStore.getState();
-        if (
-          !currentAccounts ||
-          currentAccounts.length === 0 ||
-          accountIds.length === 0
-        )
-          return;
+        const { accounts: currentAccounts, groups: currentGroups } = useUserStore.getState()
+        if (!currentAccounts || currentAccounts.length === 0 || accountIds.length === 0) return
 
-        const idSet = new Set(accountIds);
-        const accountsToMove = currentAccounts.filter((acc: Account) =>
-          idSet.has(acc.id)
-        );
+        const idSet = new Set(accountIds)
+        const accountsToMove = currentAccounts.filter((acc: Account) => idSet.has(acc.id))
 
         // Update accounts state using the freshest snapshot
         const updatedAccounts = currentAccounts.map((account: Account) =>
-          idSet.has(account.id)
-            ? { ...account, groupId: targetGroupId }
-            : account
-        );
-        setAccounts(updatedAccounts);
+          idSet.has(account.id) ? { ...account, groupId: targetGroupId } : account,
+        )
+        setAccounts(updatedAccounts)
 
         // Update groups state using the freshest snapshot
         setGroups(
           currentGroups.map((group) => {
-            const remainingAccounts = group.accounts.filter(
-              (acc: Account) => !idSet.has(acc.id)
-            );
+            const remainingAccounts = group.accounts.filter((acc: Account) => !idSet.has(acc.id))
             if (group.id === targetGroupId) {
               const missingToAdd = accountsToMove.filter(
-                (acc) =>
-                  !remainingAccounts.some((existing) => existing.id === acc.id)
-              );
+                (acc) => !remainingAccounts.some((existing) => existing.id === acc.id),
+              )
               return {
                 ...group,
                 accounts: [...remainingAccounts, ...missingToAdd],
-              };
+              }
             }
-            return { ...group, accounts: remainingAccounts };
-          })
-        );
+            return { ...group, accounts: remainingAccounts }
+          }),
+        )
 
-        await Promise.all(
-          accountIds.map((id) => moveAccountToGroupAction(id, targetGroupId))
-        );
+        await Promise.all(accountIds.map((id) => moveAccountToGroupAction(id, targetGroupId)))
       } catch (error) {
-        logger.error({ error }, "Error moving accounts to group, rolling back");
-        setAccounts(previousAccounts);
-        setGroups(previousGroups);
-        throw error;
+        logger.error({ error }, 'Error moving accounts to group, rolling back')
+        setAccounts(previousAccounts)
+        setGroups(previousGroups)
+        throw error
       }
     },
-    [setAccounts, setGroups]
-  );
+    [setAccounts, setGroups],
+  )
 
   // Add savePayout function
   const savePayout = useCallback(
     async (payout: PrismaPayout | AccountPayout) => {
-      if (!supabaseUser?.id || isSharedView) return;
+      if (!supabaseUser?.id || isSharedView) return
 
       // Capture state for rollback
-      const previousAccounts = [...accounts];
+      const previousAccounts = [...accounts]
 
       try {
-        const normalizedPayout = normalizePayoutForClient(payout);
+        const normalizedPayout = normalizePayoutForClient(payout)
         const payoutForSave: PrismaPayout = {
           ...payout,
           amount: new Prisma.Decimal(payout.amount),
-        };
+        }
 
         // Update the account with the new/updated payout immediately
         const updatedAccounts = accounts.map((account: Account) => {
           if (account.number === payout.accountNumber) {
-            const existingPayouts = account.payouts || [];
-            const isUpdate =
-              payout.id && existingPayouts.some((p) => p.id === payout.id);
+            const existingPayouts = account.payouts || []
+            const isUpdate = payout.id && existingPayouts.some((p) => p.id === payout.id)
 
             if (isUpdate) {
               return {
                 ...account,
-                payouts: existingPayouts.map((p) =>
-                  p.id === payout.id ? normalizedPayout : p
-                ),
-              };
+                payouts: existingPayouts.map((p) => (p.id === payout.id ? normalizedPayout : p)),
+              }
             } else {
               return {
                 ...account,
                 payouts: [...existingPayouts, normalizedPayout],
-              };
+              }
             }
           }
-          return account;
-        });
+          return account
+        })
 
         // Recalculate metrics for the affected account (optimistic, client-side)
-        const affectedAccount = updatedAccounts.find(
-          (acc) => acc.number === payout.accountNumber
-        );
+        const affectedAccount = updatedAccounts.find((acc) => acc.number === payout.accountNumber)
 
         if (affectedAccount) {
-          const accountsWithMetrics = computeMetricsForAccounts(
-            [affectedAccount],
-            trades
-          );
-          const accountWithMetrics = normalizeAccountForClient(accountsWithMetrics[0]);
+          const accountsWithMetrics = computeMetricsForAccounts([affectedAccount], trades)
+          const accountWithMetrics = normalizeAccountForClient(accountsWithMetrics[0])
           setAccounts(
             updatedAccounts.map((acc) =>
-              acc.number === payout.accountNumber ? accountWithMetrics : acc
-            )
-          );
+              acc.number === payout.accountNumber ? accountWithMetrics : acc,
+            ),
+          )
         } else {
-          setAccounts(updatedAccounts);
+          setAccounts(updatedAccounts)
         }
 
         // Perform server action in background
-        await savePayoutAction(payoutForSave);
+        await savePayoutAction(payoutForSave)
       } catch (error) {
-        logger.error({ error }, "Error saving payout, rolling back");
-        setAccounts(previousAccounts);
-        throw error;
+        logger.error({ error }, 'Error saving payout, rolling back')
+        setAccounts(previousAccounts)
+        throw error
       }
     },
-    [supabaseUser?.id, isSharedView, accounts, setAccounts, trades]
-  );
+    [supabaseUser?.id, isSharedView, accounts, setAccounts, trades],
+  )
 
   // Add deleteAccount function
   const deleteAccount = useCallback(
     async (account: Account) => {
-      if (!supabaseUser?.id || isSharedView) return;
+      if (!supabaseUser?.id || isSharedView) return
 
-      const { accounts: previousAccounts, groups: previousGroups } =
-        useUserStore.getState();
+      const { accounts: previousAccounts, groups: previousGroups } = useUserStore.getState()
       try {
-        const { accounts: currentAccounts, groups: currentGroups } =
-          useUserStore.getState();
+        const { accounts: currentAccounts, groups: currentGroups } = useUserStore.getState()
 
-        const updatedAccounts = currentAccounts.filter(
-          (acc: Account) => acc.id !== account.id
-        );
-        setAccounts(updatedAccounts);
-        setGroups(removeAccountFromGroups(currentGroups, account.id));
+        const updatedAccounts = currentAccounts.filter((acc: Account) => acc.id !== account.id)
+        setAccounts(updatedAccounts)
+        setGroups(removeAccountFromGroups(currentGroups, account.id))
         // Delete from database
-        await deleteAccountAction(account);
+        await deleteAccountAction(account)
       } catch (error) {
-        logger.error({ error }, "Error deleting account, rolling back");
-        setAccounts(previousAccounts);
-        setGroups(previousGroups);
-        throw error;
+        logger.error({ error }, 'Error deleting account, rolling back')
+        setAccounts(previousAccounts)
+        setGroups(previousGroups)
+        throw error
       }
     },
-    [supabaseUser?.id, isSharedView, setAccounts, setGroups]
-  );
+    [supabaseUser?.id, isSharedView, setAccounts, setGroups],
+  )
 
   // Add deletePayout function
   const deletePayout = useCallback(
     async (payoutId: string) => {
-      if (!supabaseUser?.id || isSharedView) return;
-      const previousAccounts = [...useUserStore.getState().accounts];
+      if (!supabaseUser?.id || isSharedView) return
+      const previousAccounts = [...useUserStore.getState().accounts]
 
       try {
         // Find the account that has this payout
         const affectedAccount = accounts.find((account: Account) =>
-          account.payouts?.some((p) => p.id === payoutId)
-        );
+          account.payouts?.some((p) => p.id === payoutId),
+        )
 
         // Update accounts with removed payout
         const updatedAccounts = accounts.map((account: Account) => ({
           ...account,
           payouts: account.payouts?.filter((p) => p.id !== payoutId) || [],
-        }));
+        }))
 
         // Delete from database
-        await deletePayoutAction(payoutId);
+        await deletePayoutAction(payoutId)
 
         // Recalculate metrics for the affected account (optimistic, client-side)
         if (affectedAccount) {
-          const accountToRecalculate = updatedAccounts.find(
-            (acc) => acc.id === affectedAccount.id
-          );
+          const accountToRecalculate = updatedAccounts.find((acc) => acc.id === affectedAccount.id)
           if (accountToRecalculate) {
-            const accountsWithMetrics = computeMetricsForAccounts(
-              [accountToRecalculate],
-              trades
-            );
-            const accountWithMetrics = normalizeAccountForClient(accountsWithMetrics[0]);
+            const accountsWithMetrics = computeMetricsForAccounts([accountToRecalculate], trades)
+            const accountWithMetrics = normalizeAccountForClient(accountsWithMetrics[0])
 
             // Update accounts with recalculated metrics
             setAccounts(
               updatedAccounts.map((acc) =>
-                acc.id === affectedAccount.id ? accountWithMetrics : acc
-              )
-            );
+                acc.id === affectedAccount.id ? accountWithMetrics : acc,
+              ),
+            )
           } else {
-            setAccounts(updatedAccounts);
+            setAccounts(updatedAccounts)
           }
         } else {
-          setAccounts(updatedAccounts);
+          setAccounts(updatedAccounts)
         }
       } catch (error) {
-        setAccounts(previousAccounts);
-        logger.error({ error }, "Error deleting payout");
-        throw error;
+        setAccounts(previousAccounts)
+        logger.error({ error }, 'Error deleting payout')
+        throw error
       }
     },
-    [supabaseUser?.id, isSharedView, accounts, setAccounts, trades]
-  );
+    [supabaseUser?.id, isSharedView, accounts, setAccounts, trades],
+  )
 
   const changeIsFirstConnection = useCallback(
     async (isFirstConnection: boolean) => {
-      if (!supabaseUser?.id) return;
+      if (!supabaseUser?.id) return
       // Update the user in the database
-      setIsFirstConnection(isFirstConnection);
-      await updateIsFirstConnectionAction(isFirstConnection);
+      setIsFirstConnection(isFirstConnection)
+      await updateIsFirstConnectionAction(isFirstConnection)
     },
-    [supabaseUser?.id, setIsFirstConnection]
-  );
+    [supabaseUser?.id, setIsFirstConnection],
+  )
 
   const updateTrades = useCallback(
     async (tradeIds: string[], update: Partial<Trade>) => {
-      if (!supabaseUser?.id) return;
-      if (tradeIds.length === 0) return;
+      if (!supabaseUser?.id) return
+      if (tradeIds.length === 0) return
 
-      const previousTrades = [...trades];
+      const previousTrades = [...trades]
 
       try {
         const updatedTrades = trades.map((trade: Trade) =>
           tradeIds.includes(trade.id)
             ? {
-              ...trade,
-              ...update,
-            }
-            : trade
-        );
-        setTrades(updatedTrades);
-        const updatedCount = await updateTradesAction(tradeIds, update);
+                ...trade,
+                ...update,
+              }
+            : trade,
+        )
+        setTrades(updatedTrades)
+        const updatedCount = await updateTradesAction(tradeIds, update)
 
         // Clear IndexedDB cache since trades were mutated
         clearTradesCache(supabaseUser.id).catch((err) =>
-          logger.error({ err }, "Failed to clear trades cache in IndexedDB"),
-        );
+          logger.error({ err }, 'Failed to clear trades cache in IndexedDB'),
+        )
 
         if (updatedCount === 0 || updatedCount !== tradeIds.length) {
           throw new Error(
             `Failed to persist trade updates (updated ${updatedCount}/${tradeIds.length})`,
-          );
+          )
         }
       } catch (error) {
-        logger.error({ error }, "Error updating trades, rolling back");
-        setTrades(previousTrades);
-        throw error;
+        logger.error({ error }, 'Error updating trades, rolling back')
+        setTrades(previousTrades)
+        throw error
       }
     },
-    [supabaseUser?.id, trades, setTrades]
-  );
+    [supabaseUser?.id, trades, setTrades],
+  )
 
   const groupTrades = useCallback(
     async (tradeIds: string[]) => {
-      if (!supabaseUser?.id) return;
-      const previousTrades = [...trades];
+      if (!supabaseUser?.id) return
+      const previousTrades = [...trades]
       try {
-        const targetGroupId = tradeIds[0];
+        const targetGroupId = tradeIds[0]
         setTrades(
           trades.map((trade: Trade) =>
-            tradeIds.includes(trade.id) ? { ...trade, groupId: targetGroupId } : trade
-          )
-        );
-        await groupTradesAction(tradeIds);
+            tradeIds.includes(trade.id) ? { ...trade, groupId: targetGroupId } : trade,
+          ),
+        )
+        await groupTradesAction(tradeIds)
 
         // Clear IndexedDB cache since trades were mutated
         clearTradesCache(supabaseUser.id).catch((err) =>
-          logger.error({ err }, "Failed to clear trades cache in IndexedDB"),
-        );
+          logger.error({ err }, 'Failed to clear trades cache in IndexedDB'),
+        )
       } catch (error) {
-        logger.error({ error }, "Error grouping trades, rolling back");
-        setTrades(previousTrades);
-        throw error;
+        logger.error({ error }, 'Error grouping trades, rolling back')
+        setTrades(previousTrades)
+        throw error
       }
     },
-    [supabaseUser?.id, trades, setTrades]
-  );
+    [supabaseUser?.id, trades, setTrades],
+  )
 
   const ungroupTrades = useCallback(
     async (tradeIds: string[]) => {
-      if (!supabaseUser?.id) return;
-      const previousTrades = [...trades];
+      if (!supabaseUser?.id) return
+      const previousTrades = [...trades]
       try {
         setTrades(
           trades.map((trade: Trade) =>
-            tradeIds.includes(trade.id) ? { ...trade, groupId: null } : trade
-          )
-        );
-        await ungroupTradesAction(tradeIds);
+            tradeIds.includes(trade.id) ? { ...trade, groupId: null } : trade,
+          ),
+        )
+        await ungroupTradesAction(tradeIds)
 
         // Clear IndexedDB cache since trades were mutated
         clearTradesCache(supabaseUser.id).catch((err) =>
-          logger.error({ err }, "Failed to clear trades cache in IndexedDB"),
-        );
+          logger.error({ err }, 'Failed to clear trades cache in IndexedDB'),
+        )
       } catch (error) {
-        logger.error({ error }, "Error ungrouping trades, rolling back");
-        setTrades(previousTrades);
-        throw error;
+        logger.error({ error }, 'Error ungrouping trades, rolling back')
+        setTrades(previousTrades)
+        throw error
       }
     },
-    [supabaseUser?.id, trades, setTrades]
-  );
+    [supabaseUser?.id, trades, setTrades],
+  )
 
   const deleteTrades = useCallback(
     async (tradeIds: string[]) => {
-      if (!supabaseUser?.id) return;
+      if (!supabaseUser?.id) return
 
       // Optimistically remove trades from local state immediately
       // Use startTransition to mark the expensive recalculation as non-urgent
       // This keeps the UI responsive while formattedTrades recalculates
-      const remainingTrades = trades.filter(
-        (trade) => !tradeIds.includes(trade.id)
-      );
+      const remainingTrades = trades.filter((trade) => !tradeIds.includes(trade.id))
 
       // Update state in a transition so it doesn't block the UI
-      setTrades(remainingTrades);
+      setTrades(remainingTrades)
 
       try {
         // Delete from database
-        await deleteTradesByIdsAction(tradeIds);
+        await deleteTradesByIdsAction(tradeIds)
 
         // Clear IndexedDB cache since trades were mutated
         clearTradesCache(supabaseUser.id).catch((err) =>
-          logger.error({ err }, "Failed to clear trades cache in IndexedDB"),
-        );
+          logger.error({ err }, 'Failed to clear trades cache in IndexedDB'),
+        )
       } catch (error) {
         // On error, refresh to restore the correct state
-        logger.error({ error }, "Error deleting trades");
-        await refreshAllData();
-        throw error;
+        logger.error({ error }, 'Error deleting trades')
+        await refreshAllData()
+        throw error
       }
     },
-    [supabaseUser?.id, trades, setTrades, refreshAllData]
-  );
+    [supabaseUser?.id, trades, setTrades, refreshAllData],
+  )
 
   const getTradeImages = useCallback(
     async (tradeId: string) => {
-      if (!supabaseUser?.id) return null;
+      if (!supabaseUser?.id) return null
       try {
-        return await getTradeImagesAction(tradeId);
+        return await getTradeImagesAction(tradeId)
       } catch (error) {
-        logger.error({ error }, "Error fetching trade images");
-        return null;
+        logger.error({ error }, 'Error fetching trade images')
+        return null
       }
     },
-    [supabaseUser?.id]
-  );
+    [supabaseUser?.id],
+  )
 
   const saveDashboardLayout = useCallback(
     async (layout: PrismaDashboardLayout) => {
-      if (!supabaseUser?.id) return;
-      const previousLayout = useUserStore.getState().dashboardLayout;
+      if (!supabaseUser?.id) return
+      const previousLayout = useUserStore.getState().dashboardLayout
 
       try {
         const normalizedLayout = {
           ...layout,
           id: layout.id || supabaseUser.id,
           userId: layout.userId || supabaseUser.id,
-        };
+        }
 
-        setDashboardLayout(normalizedLayout as unknown as DashboardLayoutWithWidgets);
-        await saveDashboardLayoutAction(normalizedLayout);
+        setDashboardLayout(normalizedLayout as unknown as DashboardLayoutWithWidgets)
+        await saveDashboardLayoutAction(normalizedLayout)
       } catch (error: unknown) {
-        setDashboardLayout(previousLayout as unknown as DashboardLayoutWithWidgets);
-        logger.error({ error }, "Error saving dashboard layout");
-        throw error;
+        setDashboardLayout(previousLayout as unknown as DashboardLayoutWithWidgets)
+        logger.error({ error }, 'Error saving dashboard layout')
+        throw error
       }
     },
-    [supabaseUser?.id, setDashboardLayout]
-  );
+    [supabaseUser?.id, setDashboardLayout],
+  )
 
   const dataStateValue = useMemo<DashboardDataState>(
     () => ({
@@ -2224,8 +2137,8 @@ export const DataProvider: React.FC<{
       setIsFirstConnection,
       trades,
       accounts,
-    ]
-  );
+    ],
+  )
 
   const uiStateValue = useMemo<DashboardUiState>(
     () => ({
@@ -2236,8 +2149,8 @@ export const DataProvider: React.FC<{
       isSharedView,
       isAdmin,
     }),
-    [isLoading, isRevalidating, refreshError, isMobile, isSharedView, isAdmin]
-  );
+    [isLoading, isRevalidating, refreshError, isMobile, isSharedView, isAdmin],
+  )
 
   const filtersValue = useMemo<DashboardFiltersState>(
     () => ({
@@ -2283,8 +2196,8 @@ export const DataProvider: React.FC<{
       setHourFilter,
       tagFilter,
       setTagFilter,
-    ]
-  );
+    ],
+  )
 
   const derivedValue = useMemo<DashboardDerivedState>(
     () => ({
@@ -2292,8 +2205,8 @@ export const DataProvider: React.FC<{
       statistics,
       calendarData,
     }),
-    [formattedTrades, statistics, calendarData]
-  );
+    [formattedTrades, statistics, calendarData],
+  )
 
   const actionsValue = useMemo<DashboardActions>(
     () => ({
@@ -2342,8 +2255,8 @@ export const DataProvider: React.FC<{
       savePayout,
       deletePayout,
       saveDashboardLayout,
-    ]
-  );
+    ],
+  )
 
   const contextValue = useMemo<DataContextType>(
     () => ({
@@ -2352,8 +2265,8 @@ export const DataProvider: React.FC<{
       ...derivedValue,
       ...actionsValue,
     }),
-    [dataStateValue, filtersValue, derivedValue, actionsValue]
-  );
+    [dataStateValue, filtersValue, derivedValue, actionsValue],
+  )
 
   return (
     <DashboardUiStateContext.Provider value={uiStateValue}>
@@ -2363,9 +2276,7 @@ export const DataProvider: React.FC<{
             <DashboardFiltersContext.Provider value={filtersValue}>
               <DashboardDerivedContext.Provider value={derivedValue}>
                 <DashboardActionsContext.Provider value={actionsValue}>
-                  <DataContext.Provider value={contextValue}>
-                    {children}
-                  </DataContext.Provider>
+                  <DataContext.Provider value={contextValue}>{children}</DataContext.Provider>
                 </DashboardActionsContext.Provider>
               </DashboardDerivedContext.Provider>
             </DashboardFiltersContext.Provider>
@@ -2373,115 +2284,115 @@ export const DataProvider: React.FC<{
         </DashboardAccountsListContext.Provider>
       </DashboardTradesListContext.Provider>
     </DashboardUiStateContext.Provider>
-  );
-};
+  )
+}
 
 export const useData = () => {
-  const context = useContext(DataContext);
+  const context = useContext(DataContext)
   if (!context) {
-    throw new Error("useData must be used within a DataProvider");
+    throw new Error('useData must be used within a DataProvider')
   }
-  return context;
-};
+  return context
+}
 
 export const useDashboardTrades = () => {
-  const context = useContext(DashboardDataStateContext);
+  const context = useContext(DashboardDataStateContext)
   if (!context) {
-    throw new Error("useDashboardTrades must be used within a DataProvider");
+    throw new Error('useDashboardTrades must be used within a DataProvider')
   }
-  return context;
-};
+  return context
+}
 
 export const useDashboardIsMobile = () => {
-  const context = useContext(DashboardUiStateContext);
+  const context = useContext(DashboardUiStateContext)
   if (!context) {
-    throw new Error("useDashboardIsMobile must be used within a DataProvider");
+    throw new Error('useDashboardIsMobile must be used within a DataProvider')
   }
-  return context.isMobile;
-};
+  return context.isMobile
+}
 
 export const useDashboardIsLoading = () => {
-  const context = useContext(DashboardUiStateContext);
+  const context = useContext(DashboardUiStateContext)
   if (!context) {
-    throw new Error("useDashboardIsLoading must be used within a DataProvider");
+    throw new Error('useDashboardIsLoading must be used within a DataProvider')
   }
-  return context.isLoading;
-};
+  return context.isLoading
+}
 
 export const useDashboardIsRevalidating = () => {
-  const context = useContext(DashboardUiStateContext);
+  const context = useContext(DashboardUiStateContext)
   if (!context) {
-    throw new Error("useDashboardIsRevalidating must be used within a DataProvider");
+    throw new Error('useDashboardIsRevalidating must be used within a DataProvider')
   }
-  return context.isRevalidating;
-};
+  return context.isRevalidating
+}
 
 export const useDashboardIsSharedView = () => {
-  const context = useContext(DashboardUiStateContext);
+  const context = useContext(DashboardUiStateContext)
   if (!context) {
-    throw new Error("useDashboardIsSharedView must be used within a DataProvider");
+    throw new Error('useDashboardIsSharedView must be used within a DataProvider')
   }
-  return context.isSharedView;
-};
+  return context.isSharedView
+}
 
 export const useDashboardRefreshError = () => {
-  const context = useContext(DashboardUiStateContext);
+  const context = useContext(DashboardUiStateContext)
   if (!context) {
-    throw new Error("useDashboardRefreshError must be used within a DataProvider");
+    throw new Error('useDashboardRefreshError must be used within a DataProvider')
   }
-  return context.refreshError;
-};
+  return context.refreshError
+}
 
 export const useDashboardTradeItems = () => {
-  const context = useContext(DashboardTradesListContext);
+  const context = useContext(DashboardTradesListContext)
   if (!context) {
-    throw new Error("useDashboardTradeItems must be used within a DataProvider");
+    throw new Error('useDashboardTradeItems must be used within a DataProvider')
   }
-  return context;
-};
+  return context
+}
 
 export const useDashboardAccountsList = () => {
-  const context = useContext(DashboardAccountsListContext);
+  const context = useContext(DashboardAccountsListContext)
   if (!context) {
-    throw new Error("useDashboardAccountsList must be used within a DataProvider");
+    throw new Error('useDashboardAccountsList must be used within a DataProvider')
   }
-  return context;
-};
+  return context
+}
 
 export const useDashboardFilters = () => {
-  const context = useContext(DashboardFiltersContext);
+  const context = useContext(DashboardFiltersContext)
   if (!context) {
-    throw new Error("useDashboardFilters must be used within a DataProvider");
+    throw new Error('useDashboardFilters must be used within a DataProvider')
   }
-  return context;
-};
+  return context
+}
 
 export const useDashboardStats = () => {
-  const context = useContext(DashboardDerivedContext);
+  const context = useContext(DashboardDerivedContext)
   if (!context) {
-    throw new Error("useDashboardStats must be used within a DataProvider");
+    throw new Error('useDashboardStats must be used within a DataProvider')
   }
-  return context;
-};
+  return context
+}
 
 export const useDashboardActions = () => {
-  const context = useContext(DashboardActionsContext);
+  const context = useContext(DashboardActionsContext)
   if (!context) {
-    throw new Error("useDashboardActions must be used within a DataProvider");
+    throw new Error('useDashboardActions must be used within a DataProvider')
   }
-  return context;
-};
+  return context
+}
 
- // Add getTimeRangeKey function at the top level
- function getTimeRangeKey(timeInPosition: number): string {
-  const minutes = timeInPosition / 60; // Convert seconds to minutes
-  if (minutes < 1) return "under1min";
-  if (minutes >= 1 && minutes < 5) return "1to5min";
-  if (minutes >= 5 && minutes < 10) return "5to10min";
-  if (minutes >= 10 && minutes < 15) return "10to15min";
-  if (minutes >= 15 && minutes < 30) return "15to30min";
-  if (minutes >= 30 && minutes < 60) return "30to60min";
-  if (minutes >= 60 && minutes < 120) return "1to2hours";
-  if (minutes >= 120 && minutes < 300) return "2to5hours";
-  return "over5hours";
+// Add getTimeRangeKey function at the top level
+function getTimeRangeKey(timeInPosition: number): string {
+  const minutes = timeInPosition / 60 // Convert seconds to minutes
+  if (minutes < 1) return 'under1min'
+  if (minutes >= 1 && minutes < 5) return '1to5min'
+  if (minutes >= 5 && minutes < 10) return '5to10min'
+  if (minutes >= 10 && minutes < 15) return '10to15min'
+  if (minutes >= 15 && minutes < 30) return '15to30min'
+  if (minutes >= 30 && minutes < 60) return '30to60min'
+  if (minutes >= 60 && minutes < 120) return '1to2hours'
+  if (minutes >= 120 && minutes < 300) return '2to5hours'
+  return 'over5hours'
 }

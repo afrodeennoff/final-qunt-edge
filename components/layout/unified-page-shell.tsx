@@ -35,17 +35,17 @@ export function UnifiedPageShell({
 }: UnifiedPageShellProps) {
   const densityClasses =
     density === 'compact'
-      ? 'py-4 sm:py-6 lg:py-8'
+      ? 'py-4 sm:py-5 lg:py-7'
       : density === 'spacious'
-        ? 'py-10 sm:py-14 lg:py-16'
-        : 'py-8 sm:py-10 lg:py-12'
+        ? 'py-8 sm:py-12 lg:py-14'
+        : 'py-6 sm:py-8 lg:py-10'
 
   return (
     <div
       className={cn(
         'scroll-smooth-butter animate-page-enter relative mx-auto w-full',
-        variant === 'refined' && 'border-x border-[oklch(0.65_0.22_260_/_0.1)]',
-        variant === 'minimal' && 'border-x border-[oklch(0.65_0.22_260_/_0.08)]',
+        variant === 'refined' && 'xl:border-x xl:border-[oklch(0.65_0.22_260_/_0.08)]',
+        variant === 'minimal' && 'xl:border-x xl:border-[oklch(0.65_0.22_260_/_0.06)]',
         widthClassName,
         CONTENT_PADDING,
         densityClasses,
@@ -53,7 +53,7 @@ export function UnifiedPageShell({
         className,
       )}
     >
-      <div className="relative z-10 flex flex-col gap-6 sm:gap-8">{children}</div>
+      <div className="relative z-10 flex flex-col gap-5 sm:gap-6 lg:gap-7">{children}</div>
     </div>
   )
 }
@@ -69,31 +69,31 @@ export function UnifiedPageHeader({
   return (
     <header
       className={cn(
-        'rounded-2xl border px-5 py-6 sm:px-6 sm:py-7',
+        'rounded-2xl border px-4 py-4 sm:px-5 sm:py-5',
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
-          'border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.074_0.014_260_/_0.94)_0%,oklch(0.06_0.012_260_/_0.88)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_22px_44px_-28px_rgba(0,0,0,0.82)]',
+          'border-[oklch(0.65_0.22_260_/_0.1)] bg-[linear-gradient(180deg,oklch(0.07_0.013_260_/_0.94)_0%,oklch(0.056_0.011_260_/_0.9)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_18px_36px_-28px_rgba(0,0,0,0.78)]',
         ],
         variant === 'gradient' && [
-          'border-[oklch(0.65_0.22_260_/_0.14)] bg-[linear-gradient(135deg,oklch(0.08_0.015_260_/_0.96)_0%,oklch(0.062_0.012_260_/_0.9)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.1),0_26px_48px_-30px_rgba(0,0,0,0.86)]',
+          'border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(135deg,oklch(0.078_0.015_260_/_0.95)_0%,oklch(0.06_0.012_260_/_0.9)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_20px_40px_-28px_rgba(0,0,0,0.8)]',
         ],
         variant === 'elevated' && [
-          'border-[oklch(0.65_0.22_260_/_0.14)] bg-[linear-gradient(180deg,oklch(0.08_0.015_260_/_0.96)_0%,oklch(0.064_0.013_260_/_0.9)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.1),0_28px_52px_-30px_rgba(0,0,0,0.86)]',
+          'border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.078_0.015_260_/_0.95)_0%,oklch(0.062_0.012_260_/_0.9)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_22px_42px_-28px_rgba(0,0,0,0.82)]',
         ],
         className,
       )}
     >
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="gap-2">
           {eyebrow && (
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground mb-2">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               {eyebrow}
             </p>
           )}
           <h1
             className={cn(
               'font-semibold tracking-tight text-foreground sm:tracking-tight',
-              'text-3xl sm:text-4xl',
+              'text-2xl sm:text-3xl',
               variant === 'gradient' && 'text-foreground',
             )}
           >
@@ -102,7 +102,7 @@ export function UnifiedPageHeader({
           {description && (
             <p
               className={cn(
-                'max-w-3xl mt-2 text-sm text-muted-foreground sm:text-base',
+                'mt-2 max-w-2xl text-sm text-muted-foreground sm:text-[15px]',
                 'leading-relaxed',
               )}
             >
@@ -110,7 +110,7 @@ export function UnifiedPageHeader({
             </p>
           )}
         </div>
-        {actions && <div className="flex flex-wrap items-center gap-2 sm:gap-3">{actions}</div>}
+        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
     </header>
   )
@@ -128,9 +128,9 @@ export function UnifiedSurface({
         'rounded-2xl border p-4 sm:p-6',
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
-          'border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.074_0.014_260_/_0.92)_0%,oklch(0.06_0.012_260_/_0.86)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_20px_42px_-26px_rgba(0,0,0,0.8)]',
+          'border-[oklch(0.65_0.22_260_/_0.1)] bg-[linear-gradient(180deg,oklch(0.07_0.013_260_/_0.92)_0%,oklch(0.056_0.011_260_/_0.86)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_16px_32px_-24px_rgba(0,0,0,0.76)]',
           hover
-            ? 'hover:border-[oklch(0.65_0.22_260_/_0.18)] hover:bg-[linear-gradient(180deg,oklch(0.08_0.015_260_/_0.96)_0%,oklch(0.064_0.013_260_/_0.9)_100%)]'
+            ? 'hover:border-[oklch(0.65_0.22_260_/_0.16)] hover:bg-[linear-gradient(180deg,oklch(0.076_0.014_260_/_0.95)_0%,oklch(0.06_0.012_260_/_0.9)_100%)]'
             : '',
         ],
         variant === 'glass' && [

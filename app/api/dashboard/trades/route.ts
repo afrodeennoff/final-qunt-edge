@@ -1,12 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { getTradesAction } from '@/server/database'
 import { apiError } from '@/lib/api-response'
 import { createRouteClient } from '@/lib/supabase/route-client'
-import { withRateLimited } from '@/lib/api/with-api-route'
+import { apiSuccess, withRateLimited } from '@/lib/api/with-api-route'
 
 const MAX_PAGE_SIZE = 200
 
 async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<string, string>> }) {
+  const requestId = crypto.randomUUID()
   try {
     const supabase = createRouteClient(request)
     const {
@@ -14,9 +15,15 @@ async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<st
       error: authError,
     } = await supabase.auth.getUser()
     if (authError || !user?.id) {
-      return apiError('UNAUTHORIZED', 'Authentication required', 401, undefined, {
-        "Cache-Control": "no-store, max-age=0",
-      })
+      return apiError(
+        'UNAUTHORIZED',
+        'Authentication required',
+        401,
+        { requestId },
+        {
+          'Cache-Control': 'no-store, max-age=0',
+        },
+      )
     }
 
     const { searchParams } = new URL(request.url)
@@ -25,15 +32,21 @@ async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<st
     const pageSize = Math.min(Math.max(pageSizeRaw, 1), MAX_PAGE_SIZE)
 
     if (!Number.isFinite(page) || page < 1) {
-      return apiError('BAD_REQUEST', 'Invalid page parameter', 400, undefined, {
-        "Cache-Control": "no-store, max-age=0",
-      })
+      return apiError(
+        'BAD_REQUEST',
+        'Invalid page parameter',
+        400,
+        { requestId },
+        {
+          'Cache-Control': 'no-store, max-age=0',
+        },
+      )
     }
 
     const result = await getTradesAction(null, page, pageSize, false, false)
-    return NextResponse.json(result, {
+    return apiSuccess(result, 200, {
       headers: {
-        "Cache-Control": "no-store, max-age=0",
+        'Cache-Control': 'no-store, max-age=0',
       },
     })
   } catch (error) {
@@ -41,9 +54,12 @@ async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<st
       'INTERNAL_ERROR',
       'Failed to fetch trades',
       500,
-      error instanceof Error ? error.message : undefined,
       {
-        "Cache-Control": "no-store, max-age=0",
+        requestId,
+        message: error instanceof Error ? error.message : undefined,
+      },
+      {
+        'Cache-Control': 'no-store, max-age=0',
       },
     )
   }

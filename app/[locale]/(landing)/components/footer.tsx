@@ -10,6 +10,7 @@ import {
   unifiedPrimaryActionClassName,
   unifiedSectionPanelClassName,
 } from '@/components/layout/unified-page-recipes'
+import { MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 import { Logo } from '@/components/logo'
 import { cn } from '@/lib/utils'
 import { useCurrentLocale, useI18n } from '@/locales/client'
@@ -56,7 +57,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-border/50 bg-black py-12 sm:py-16"
+      className="border-t border-border/22 bg-black py-12 sm:py-16"
     >
       <h2 id="footer-heading" className="sr-only">
         {t('footer.heading')}
@@ -67,17 +68,17 @@ export default function Footer() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-        className="mx-auto w-full max-w-[1360px] px-4 sm:px-6 lg:px-8"
+        className={cn('mx-auto w-full px-4 sm:px-6 lg:px-8', MARKETING_SHELL_WIDTH)}
       >
         <div
           className={cn(
             unifiedSectionPanelClassName,
-            'grid gap-8 p-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)] lg:p-10',
+            'grid gap-8 p-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)] lg:p-9',
           )}
         >
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border/30 bg-background/40 text-muted-foreground">
+              <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-border/18 bg-background/26 text-muted-foreground">
                 <Logo className="h-5 w-5 fill-current" />
               </div>
               <div className="leading-none">
@@ -111,7 +112,7 @@ export default function Footer() {
               </Link>
             </div>
 
-            <div className="h-px w-full max-w-md bg-border/45" />
+            <div className="h-px w-full max-w-md bg-border/24" />
 
             <div className="flex items-center gap-2">
               {socialLinks.map((item, index) => (
@@ -143,7 +144,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-border/50 pt-5">
+        <div className="mt-8 border-t border-border/22 pt-5">
           <p className="text-xs tracking-[-0.005em] text-muted-foreground">
             {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>

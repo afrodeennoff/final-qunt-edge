@@ -90,7 +90,7 @@ export function DashboardHeader() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full shrink-0 px-3 pb-2 pt-3 transition-[opacity,background-color,border-color] duration-300 sm:px-4 sm:pb-3 sm:pt-4',
+        'sticky top-0 z-50 w-full shrink-0 px-3 pb-2 pt-3 transition-[opacity,background-color,border-color] duration-300 sm:px-4 sm:pb-2.5 sm:pt-3.5',
         isMobile && 'pt-[calc(env(safe-area-inset-top)+0.75rem)]',
       )}
       data-dashboard-header="true"
@@ -99,10 +99,10 @@ export function DashboardHeader() {
         <div
           className={cn(
             unifiedToolbarClassName,
-            'relative flex min-h-[5rem] items-center justify-between gap-3 overflow-hidden px-3 py-3 transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4',
+            'relative flex min-h-[4.5rem] items-center justify-between gap-3 overflow-hidden px-3 py-2.5 transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4',
           )}
         >
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/16 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/12 to-transparent" />
           <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4">
             <SidebarTrigger
               className={cn(unifiedToolbarButtonClassName, 'h-10 w-10 shrink-0 md:h-9 md:w-9')}
@@ -116,7 +116,7 @@ export function DashboardHeader() {
                       {sectionLabel}
                     </span>
                   )}
-                  <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground sm:text-sm sm:uppercase sm:tracking-[0.18em]">
+                  <h1 className="truncate text-[0.8rem] font-semibold tracking-[0.04em] text-foreground sm:text-[0.92rem] sm:tracking-[0.02em]">
                     {title}
                   </h1>
                 </div>
