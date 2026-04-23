@@ -1,64 +1,36 @@
-'use client'
-
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { motion } from 'framer-motion'
-import {
-  unifiedBodyCopyClassName,
-  unifiedGhostActionClassName,
-  unifiedPrimaryActionClassName,
-  unifiedSectionPanelClassName,
-} from '@/components/layout/unified-page-recipes'
-import { cn } from '@/lib/utils'
-import { useI18n } from '@/locales/client'
+import { unifiedPrimaryActionClassName } from '@/components/layout/unified-page-recipes'
+import { getI18n } from '@/locales/server'
+import { ScrollRevealSection } from './ScrollReveal'
 
 interface FinalCTAProps {
   locale: string
 }
 
-export default function FinalCTA({ locale }: FinalCTAProps) {
-  const t = useI18n()
+export default async function FinalCTA({ locale }: FinalCTAProps) {
+  const t = await getI18n()
 
   return (
-    <section className="relative px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-      <motion.div
-        className="mx-auto max-w-5xl"
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className={cn(unifiedSectionPanelClassName, 'px-6 py-10 text-center md:px-10 md:py-14')}>
-          <h2 className="text-balance text-[clamp(2.2rem,4.6vw,3.8rem)] font-medium leading-[1.02] tracking-[-0.05em] text-foreground">
-            {t('landing.home.finalCta.titlePrefix')}{' '}
-            <span className="line-through decoration-muted-foreground/40 decoration-2">
-              {t('landing.home.finalCta.titleStrike')}
-            </span>{' '}
-            {t('landing.home.finalCta.titleBridge')}{' '}
-            <span className="text-primary">{t('landing.home.finalCta.titleHighlight')}</span>
-            {t('landing.home.finalCta.titleSuffix')}
-          </h2>
+    <section className="px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+      <ScrollRevealSection className="mx-auto max-w-3xl text-center">
+        <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+          {t('landing.home.finalCta.titlePrefix')}{' '}
+          <span className="text-primary">{t('landing.home.finalCta.titleHighlight')}</span>
+          {t('landing.home.finalCta.titleSuffix')}
+        </h2>
 
-          <p className={cn(unifiedBodyCopyClassName, 'mx-auto mt-5 max-w-2xl')}>
-            {t('landing.home.finalCta.description')}
-          </p>
-
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href={`/${locale}/authentication?next=dashboard`} className={unifiedPrimaryActionClassName}>
-              {t('landing.home.finalCta.primary')}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-
-            <Link href={`/${locale}/propfirms`} className={unifiedGhostActionClassName}>
-              {t('landing.home.finalCta.secondary')}
-            </Link>
-          </div>
-
-          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            {t('landing.home.finalCta.footnote')}
-          </p>
+        <div className="mt-8">
+          <Link href={`/${locale}/authentication?next=dashboard`} className={unifiedPrimaryActionClassName}>
+            {t('landing.home.finalCta.primary')}
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
-      </motion.div>
+
+        <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+          {t('landing.home.finalCta.footnote')}
+        </p>
+      </ScrollRevealSection>
     </section>
   )
 }

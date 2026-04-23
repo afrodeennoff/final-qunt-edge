@@ -1,93 +1,58 @@
-'use client'
-
-import { motion } from 'framer-motion'
-import { InteractiveWrapper } from '@/components/animation/interactive'
+import { Link2, BarChart3, TrendingUp } from 'lucide-react'
 import {
-  unifiedBodyCopyClassName,
   unifiedInsetPanelClassName,
   unifiedSectionEyebrowClassName,
-  unifiedSectionPanelClassName,
 } from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
-import { useTypedI18n } from '@/locales/client'
+import { getTypedI18n } from '@/locales/server'
+import { ScrollReveal } from './ScrollReveal'
 
-export default function HowItWorks() {
-  const t = useTypedI18n()
+const stepIcons = [Link2, BarChart3, TrendingUp]
 
-  const steps = [1, 2, 3, 4, 5].map((index) => ({
+export default async function HowItWorks() {
+  const t = await getTypedI18n()
+
+  const steps = [1, 2, 3].map((index) => ({
     name: t(`landing.home.workflow.step${index}Name`),
     description: t(`landing.home.workflow.step${index}Description`),
+    icon: stepIcons[index - 1],
   }))
 
   return (
-    <section id="how-it-works" className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-      <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-8">
-        <motion.div
-          className={cn(unifiedSectionPanelClassName, 'p-6 lg:sticky lg:top-28 lg:h-fit')}
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        >
+    <section id="how-it-works" className="px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+      <div className="mx-auto max-w-[1360px] space-y-10">
+        <div className="text-center">
           <p className={unifiedSectionEyebrowClassName}>{t('landing.home.workflow.eyebrow')}</p>
-          <h2 className="mt-4 text-balance text-[clamp(2.2rem,4.6vw,4rem)] font-medium leading-[0.97] tracking-[-0.05em] text-foreground">
+          <h2 className="mt-4 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             {t('landing.home.workflow.title')}
           </h2>
-          <p className={cn(unifiedBodyCopyClassName, 'mt-5 max-w-xl')}>
-            {t('landing.home.workflow.description')}
-          </p>
+        </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className={cn(unifiedInsetPanelClassName, 'space-y-2 p-4')}>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                {t('landing.home.workflow.signalTitle')}
-              </p>
-              <p className="text-sm leading-relaxed text-foreground">
-                {t('landing.home.workflow.signalDescription')}
-              </p>
-            </div>
-            <div className={cn(unifiedInsetPanelClassName, 'space-y-2 p-4')}>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                {t('landing.home.workflow.cadenceTitle')}
-              </p>
-              <p className="text-sm leading-relaxed text-foreground">
-                {t('landing.home.workflow.cadenceDescription')}
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-5">
-          {steps.map((step, index) => (
-            <InteractiveWrapper key={String(step.name)} hover="scale">
-              <motion.article
-                className={cn(unifiedInsetPanelClassName, 'flex h-full flex-col p-5')}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.45,
-                  delay: index * 0.08,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          {steps.map((step, index) => {
+            const Icon = step.icon
+            return (
+              <ScrollReveal
+                key={String(step.name)}
+                as="article"
+                className={cn(unifiedInsetPanelClassName, 'p-8 text-center')}
+                delay={index * 0.1}
               >
-                <div className="mb-6 flex items-center justify-between gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-primary/18 bg-primary/10 text-sm font-semibold text-primary">
-                    0{index + 1}
-                  </div>
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                    {t('landing.home.workflow.stage')} {index + 1}
-                  </span>
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-primary/18 bg-primary/10 text-sm font-semibold text-primary">
+                  0{index + 1}
                 </div>
-                <h3 className="text-[1rem] font-semibold tracking-[-0.02em] text-foreground">
+                <div className="mt-4 flex justify-center text-primary">
+                  <Icon className="h-6 w-6" />
+                </div>
+                <h3 className="mt-4 text-base font-semibold tracking-tight text-foreground">
                   {step.name}
                 </h3>
-                <p className="mt-3 text-sm leading-[1.65] text-muted-foreground">
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {step.description}
                 </p>
-              </motion.article>
-            </InteractiveWrapper>
-          ))}
+              </ScrollReveal>
+            )
+          })}
         </div>
       </div>
     </section>

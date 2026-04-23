@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Check } from 'lucide-react'
 import {
-  unifiedBodyCopyClassName,
   unifiedChipClassName,
   unifiedGhostActionClassName,
   unifiedInsetPanelClassName,
@@ -69,26 +68,17 @@ export default function PricingSection({ locale }: { locale: string }) {
   ]
 
   return (
-    <section id="pricing" className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-      <div className="mx-auto max-w-[1360px] space-y-6">
-        <motion.div
-          className={cn(unifiedSectionPanelClassName, 'p-6 text-center md:p-8')}
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        >
+    <section id="pricing" className="px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+      <div className="mx-auto max-w-[1360px] space-y-10">
+        <div className="text-center">
           <p className={unifiedSectionEyebrowClassName}>Pricing</p>
-          <h2 className="mt-4 text-balance text-[clamp(2.2rem,4.8vw,4.2rem)] font-medium leading-[0.96] tracking-[-0.05em] text-foreground">
+          <h2 className="mt-4 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             {t('landing.pricingNew.headline', {
               highlight: t('landing.pricingNew.highlight'),
             })}
           </h2>
-          <p className={cn(unifiedBodyCopyClassName, 'mx-auto mt-4 max-w-3xl')}>
-            {t('landing.pricingNew.subheadline')}
-          </p>
 
-          <div className="mt-8 inline-flex items-center gap-1 rounded-full border border-border/35 bg-background/70 p-1">
+          <div className="mt-6 inline-flex items-center gap-1 rounded-full border border-border/35 bg-background/70 p-1">
             <button
               type="button"
               onClick={() => setIsAnnual(false)}
@@ -113,9 +103,9 @@ export default function PricingSection({ locale }: { locale: string }) {
               <span className="text-xs font-semibold">{t('landing.pricingNew.annualDiscount')}</span>
             </button>
           </div>
-        </motion.div>
+        </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-3">
           {plans.map((plan, index) => (
             <motion.article
               key={String(plan.name)}
@@ -139,28 +129,28 @@ export default function PricingSection({ locale }: { locale: string }) {
                 </div>
               ) : null}
 
-              <h3 className="text-[1.14rem] font-semibold tracking-[-0.02em] text-foreground">
+              <h3 className="text-base font-semibold tracking-tight text-foreground">
                 {plan.name}
               </h3>
 
               <div className="mt-4">
-                <span className="tabular-nums text-5xl font-semibold tracking-[-0.06em] text-foreground">
+                <span className="tabular-nums text-4xl font-bold tracking-tight text-foreground">
                   {plan.price}
                 </span>
                 <span className="ml-2 text-sm text-muted-foreground">{plan.period}</span>
                 {plan.featured && billingCycle === 'annual' ? (
-                  <span className="ml-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
+                  <span className="ml-2 text-xs font-semibold uppercase tracking-wider text-primary">
                     {t('landing.pricingNew.annualNote')}
                   </span>
                 ) : null}
               </div>
 
-              <p className="mt-4 text-sm leading-[1.65] text-muted-foreground">{plan.description}</p>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{plan.description}</p>
 
               <ul className="mt-6 grid flex-1 gap-3">
                 {plan.features.map((feature) => (
                   <li key={String(feature)} className="flex items-start gap-3">
-                    <span className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <span className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Check className="h-3 w-3" />
                     </span>
                     <span className="text-sm leading-relaxed text-foreground">{feature}</span>

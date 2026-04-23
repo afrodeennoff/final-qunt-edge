@@ -54,11 +54,4 @@
   --surface-elevated: oklch(0.105 0 0); /* Overlay/modal level */
   --surface-overlay: oklch(0.135 0 0);  /* Popovers, top-level */
   --brand-tint: oklch(0.6083 0.2172 297.1153 / 0.08);
-
-  /* IMPACT COLORS (Trading P&L) */
-  --impact-success: oklch(0.82 0.185 155);
-  --impact-urgent: oklch(0.64 0.255 22);
-  --impact-info: oklch(0.6083 0.2172 297.1153);
-  --impact-warning: oklch(0.84 0.175 80);
-  --impact-notification: oklch(0.76 0.19 45);
 }

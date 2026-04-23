@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { endOfDay, format, startOfDay, subDays, subMonths, subYears } from 'date-fns'
-import type { DateRange, DayButtonProps } from 'react-day-picker'
+import type { DateRange } from 'react-day-picker'
 import { CalendarIcon, CircleDot, Globe, Lock, Sparkles, TrendingUp, Wallet } from 'lucide-react'
-import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from 'recharts'
 
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -37,6 +37,27 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
 import { getLeaderboardVisibility, toggleLeaderboardVisibility } from '@/server/user-profile'
 import { useUserStore } from '@/store/user-store'
+
+import { MetricsSkeleton, TableSkeleton, CalendarSkeleton } from './components/Skeletons'
+
+const RadarChartCard = dynamic(() => import('./components/RadarChartCard'), {
+  loading: () => (
+    <UnifiedSurface variant="elevated" className="p-5 sm:p-6">
+      <div className="flex items-start justify-between gap-3">
+        <div className="h-3 w-20 animate-pulse rounded-lg bg-muted/30" />
+        <div className="h-5 w-14 animate-pulse rounded-md bg-muted/30" />
+      </div>
+      <div className="mt-5 rounded-2xl border border-border/35 bg-background/55 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+        <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
+      </div>
+      <div className="mt-3 h-3 w-36 animate-pulse rounded bg-muted/30" />
+    </UnifiedSurface>
+  ),
+})
+
+const CalendarWidget = dynamic(() => import('./components/CalendarWidget'), {
+  loading: () => <CalendarSkeleton />,
+})
 
 interface BenchmarkMetrics {
   riskReward: number
@@ -352,6 +373,9 @@ export default function TraderProfilePageClient() {
   const [tradeFeedPage, setTradeFeedPage] = useState(1)
   const [showOnLeaderboard, setShowOnLeaderboard] = useState(false)
   const [isTogglingVisibility, setIsTogglingVisibility] = useState(false)
+
+  const leftPanelRef = useRef<HTMLElement>(null)
+  const rightPanelRef = useRef<HTMLElement>(null)
 
   const isOwnProfile = Boolean(supabaseUser)
 
@@ -799,11 +823,47 @@ export default function TraderProfilePageClient() {
     setTradeFeedPage(1)
   }, [dateFilterPreset, customDateRange?.from, customDateRange?.to, closedTrades.length])
 
+  // Safety net: ensure both panels remain visible together on xl+ viewports.
+  // Uses IntersectionObserver to detect if the right panel is clipped out of
+  // view while the left panel is still visible — nudges scroll to bring it back.
+  useEffect(() => {
+    const left = leftPanelRef.current
+    const right = rightPanelRef.current
+    if (!left || !right) return
+
+    // Only active on xl+ screens where the two-column layout applies
+    const mql = window.matchMedia('(min-width: 1280px)')
+    if (!mql.matches) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          // If the right panel has left the viewport while the left is still
+          // partially visible, scroll the right panel into view gently.
+          if (entry.target === right && !entry.isIntersecting) {
+            const leftRect = left.getBoundingClientRect()
+            const leftVisible = leftRect.top < window.innerHeight && leftRect.bottom > 0
+            if (leftVisible) {
+              right.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+            }
+          }
+        }
+      },
+      { threshold: 0, rootMargin: '0px' },
+    )
+
+    observer.observe(right)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
+
   return (
     <UnifiedPageShell density="compact" widthClassName="max-w-[1800px]">
       <div className="animate-page-enter space-y-4 sm:space-y-5">
         <div className="grid gap-3.5 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.92fr)] xl:gap-5">
-          <section className="min-w-0 space-y-3.5 sm:space-y-4">
+          <section ref={leftPanelRef} className="min-w-0 space-y-3.5 sm:space-y-4">
             <UnifiedSurface
               variant="elevated"
               className="animate-fade-up-smooth overflow-hidden p-5 sm:p-6 lg:p-[1.75rem]"
@@ -1022,68 +1082,13 @@ export default function TraderProfilePageClient() {
                   'mt-4 min-h-[30rem] overflow-x-auto p-2 sm:p-3 lg:min-h-[36rem]',
                 )}
               >
-                <Calendar
-                  mode="single"
-                  selected={selectedCalendarDay ?? latestTradeDay}
-                  onSelect={setSelectedCalendarDay}
-                  defaultMonth={selectedCalendarDay ?? latestTradeDay}
-                  modifiers={{
-                    positive: positivePnlDays,
-                    negative: negativePnlDays,
-                  }}
-                  modifiersClassNames={{
-                    positive: 'bg-semantic-success-bg/20 text-semantic-success',
-                    negative: 'bg-semantic-error-bg text-semantic-error',
-                  }}
-                  className="w-full min-w-[19rem] p-0"
-                  classNames={{
-                    months: 'flex min-h-[26rem] flex-col gap-4 lg:min-h-[31rem]',
-                    month: 'space-y-4',
-                    weekday:
-                      'w-11 text-center text-[0.75rem] font-medium text-muted-foreground sm:w-12',
-                    day: 'relative h-11 w-11 overflow-hidden rounded-lg p-0 text-center align-middle sm:h-12 sm:w-12',
-                    day_button:
-                      'h-11 w-11 rounded-lg p-0 font-normal text-foreground transition-[background-color,border-color,color] hover:bg-background/90 aria-selected:bg-primary/12 aria-selected:text-foreground sm:h-12 sm:w-12',
-                  }}
-                  components={{
-                    DayButton: ({ day, className, ...buttonProps }: DayButtonProps) => {
-                      const date = day.date
-                      const displayMonth = day.displayMonth
-
-                      if (date.getMonth() !== displayMonth.getMonth()) {
-                        return (
-                          <button type="button" {...buttonProps} className={className}>
-                            <span className="text-[11px] text-muted-foreground">
-                              {format(date, 'd')}
-                            </span>
-                          </button>
-                        )
-                      }
-
-                      const key = date.toISOString().slice(0, 10)
-                      const pnl = tradePnlByDay.get(key) ?? 0
-                      const hasTrade = tradePnlByDay.has(key)
-                      const tint =
-                        pnl > 0
-                          ? 'text-semantic-success'
-                          : pnl < 0
-                            ? 'text-semantic-error'
-                            : hasTrade
-                              ? 'text-foreground'
-                              : 'text-muted-foreground'
-
-                      return (
-                        <button type="button" {...buttonProps} className={className}>
-                          <div className="flex h-full w-full flex-col items-center justify-center gap-1">
-                            <span className="text-[11px] leading-none">{format(date, 'd')}</span>
-                            <span className={`text-[10px] font-semibold leading-none ${tint}`}>
-                              {hasTrade ? formatPnlCell(pnl) : ''}
-                            </span>
-                          </div>
-                        </button>
-                      )
-                    },
-                  }}
+                <CalendarWidget
+                  selectedDay={selectedCalendarDay}
+                  latestTradeDay={latestTradeDay}
+                  onSelectDay={setSelectedCalendarDay}
+                  positivePnlDays={positivePnlDays}
+                  negativePnlDays={negativePnlDays}
+                  tradePnlByDay={tradePnlByDay}
                 />
 
                 <div className="mt-4 flex flex-wrap items-center gap-3 px-1 text-[11px] text-muted-foreground">
@@ -1104,261 +1109,236 @@ export default function TraderProfilePageClient() {
             </UnifiedSurface>
           </section>
 
-          <aside className="space-y-4 xl:sticky xl:top-28 xl:self-start">
-            <UnifiedSurface
-              variant="elevated"
-              className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Benchmark
-                </p>
-                <Badge variant={isBenchmarkLoading ? 'outline' : 'success'}>
-                  {isBenchmarkLoading ? 'Refreshing' : 'Live'}
-                </Badge>
-              </div>
+          <aside ref={rightPanelRef} className="space-y-4">
+            <Suspense fallback={<MetricsSkeleton />}>
+              <UnifiedSurface
+                variant="elevated"
+                className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6"
+              >
+                <RadarChartCard
+                  radarData={radarData}
+                  isBenchmarkLoading={isBenchmarkLoading}
+                  benchmarkSampleSize={benchmark?.sampleSize}
+                />
+              </UnifiedSurface>
+            </Suspense>
 
-              <div className={cn(insetPanelClassName, 'mt-5 p-3')}>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart data={radarData}>
-                      <PolarGrid stroke="hsl(var(--border) / 0.45)" />
-                      <PolarAngleAxis
-                        dataKey="metric"
-                        tick={{
-                          fill: 'hsl(var(--muted-foreground))',
-                          fontSize: 11,
-                          fontWeight: 600,
-                        }}
-                      />
-                      <Radar
-                        dataKey="trader"
-                        stroke="hsl(var(--foreground) / 0.85)"
-                        fill="hsl(var(--foreground) / 0.2)"
-                        fillOpacity={1}
-                      />
-                    </RadarChart>
-                  </ResponsiveContainer>
+            <Suspense fallback={<MetricsSkeleton />}>
+              <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
+                <div className="flex items-center gap-2">
+                  <Wallet className="h-4 w-4 text-muted-foreground" />
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    Capital snapshot
+                  </p>
                 </div>
-              </div>
 
-              <p className="mt-3 text-xs text-muted-foreground">
-                {benchmark?.sampleSize
-                  ? `${benchmark.sampleSize} traders in sample`
-                  : 'Loading benchmark data...'}
-              </p>
-            </UnifiedSurface>
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  <StatTile
+                    label="Total capital"
+                    value={formatCapitalCompact(totalCapitalAllAccounts)}
+                  />
+                  <StatTile
+                    label="Total withdraw"
+                    value={formatCapitalCompact(totalWithdrawAllAccounts)}
+                  />
+                  <StatTile
+                    label="Avg net / trade"
+                    value={formatSigned(metrics.avgReturn)}
+                    tone={
+                      metrics.avgReturn > 0
+                        ? 'positive'
+                        : metrics.avgReturn < 0
+                          ? 'negative'
+                          : 'default'
+                    }
+                  />
+                  <StatTile label="Risk reward" value={formatValue(metrics.riskReward)} />
+                </div>
 
-            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
-              <div className="flex items-center gap-2">
-                <Wallet className="h-4 w-4 text-muted-foreground" />
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Capital snapshot
-                </p>
-              </div>
+                <div className="mt-4">
+                  <MeterRow
+                    label="Consistency"
+                    value={`${formatValue(metrics.consistencyRate)}%`}
+                    progress={Math.min(100, Math.max(10, metrics.consistencyRate))}
+                    fillClassName="bg-semantic-success/60"
+                  />
+                </div>
+              </UnifiedSurface>
+            </Suspense>
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <StatTile
-                  label="Total capital"
-                  value={formatCapitalCompact(totalCapitalAllAccounts)}
-                />
-                <StatTile
-                  label="Total withdraw"
-                  value={formatCapitalCompact(totalWithdrawAllAccounts)}
-                />
-                <StatTile
-                  label="Avg net / trade"
-                  value={formatSigned(metrics.avgReturn)}
-                  tone={
-                    metrics.avgReturn > 0
-                      ? 'positive'
-                      : metrics.avgReturn < 0
-                        ? 'negative'
-                        : 'default'
-                  }
-                />
-                <StatTile label="Risk reward" value={formatValue(metrics.riskReward)} />
-              </div>
+            <Suspense fallback={<MetricsSkeleton />}>
+              <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 p-5 sm:p-6">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    Execution quality
+                  </p>
+                </div>
 
-              <div className="mt-4">
-                <MeterRow
-                  label="Consistency"
-                  value={`${formatValue(metrics.consistencyRate)}%`}
-                  progress={Math.min(100, Math.max(10, metrics.consistencyRate))}
-                  fillClassName="bg-semantic-success/60"
-                />
-              </div>
-            </UnifiedSurface>
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  <StatTile
+                    label="Max drawdown"
+                    value={formatValue(metrics.drawdown)}
+                    tone={metrics.drawdown > 0 ? 'negative' : 'default'}
+                  />
+                  <StatTile
+                    label="Win rate"
+                    value={`${formatValue(metrics.winRate)}%`}
+                    tone={metrics.winRate >= 50 ? 'positive' : 'default'}
+                  />
+                  <StatTile
+                    label="Break-even rate"
+                    value={`${formatValue(metrics.breakEvenRate)}%`}
+                  />
+                  <StatTile
+                    label="Gross wins"
+                    value={formatCapitalCompact(metrics.sumGain)}
+                    tone={metrics.sumGain > 0 ? 'positive' : 'default'}
+                  />
+                </div>
 
-            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 p-5 sm:p-6">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Execution quality
-                </p>
-              </div>
-
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <StatTile
-                  label="Max drawdown"
-                  value={formatValue(metrics.drawdown)}
-                  tone={metrics.drawdown > 0 ? 'negative' : 'default'}
-                />
-                <StatTile
-                  label="Win rate"
-                  value={`${formatValue(metrics.winRate)}%`}
-                  tone={metrics.winRate >= 50 ? 'positive' : 'default'}
-                />
-                <StatTile
-                  label="Break-even rate"
-                  value={`${formatValue(metrics.breakEvenRate)}%`}
-                />
-                <StatTile
-                  label="Gross wins"
-                  value={formatCapitalCompact(metrics.sumGain)}
-                  tone={metrics.sumGain > 0 ? 'positive' : 'default'}
-                />
-              </div>
-
-              <div className="mt-4 space-y-3">
-                <MeterRow
-                  label="Win rate balance"
-                  value={`${formatValue(metrics.winRate)}%`}
-                  progress={Math.min(100, Math.max(8, metrics.winRate))}
-                />
-                <MeterRow
-                  label="Trade volume"
-                  value={`${metrics.totalTrades} trades`}
-                  progress={Math.min(100, Math.max(8, metrics.totalTrades))}
-                  fillClassName="bg-primary/45"
-                />
-                <MeterRow
-                  label="Guide cushion"
-                  value={`${formatValue(winRateGuidePercent)}%`}
-                  progress={winRateGuidePercent}
-                  fillClassName="bg-primary/30"
-                />
-              </div>
-            </UnifiedSurface>
+                <div className="mt-4 space-y-3">
+                  <MeterRow
+                    label="Win rate balance"
+                    value={`${formatValue(metrics.winRate)}%`}
+                    progress={Math.min(100, Math.max(8, metrics.winRate))}
+                  />
+                  <MeterRow
+                    label="Trade volume"
+                    value={`${metrics.totalTrades} trades`}
+                    progress={Math.min(100, Math.max(8, metrics.totalTrades))}
+                    fillClassName="bg-primary/45"
+                  />
+                  <MeterRow
+                    label="Guide cushion"
+                    value={`${formatValue(winRateGuidePercent)}%`}
+                    progress={winRateGuidePercent}
+                    fillClassName="bg-primary/30"
+                  />
+                </div>
+              </UnifiedSurface>
+            </Suspense>
           </aside>
         </div>
 
-        <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d5 p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-              Trade history
-            </p>
-            <Badge variant="secondary">{tradeFeedSummary}</Badge>
-          </div>
-
-          {isLoading ? (
-            <div className="mt-5 space-y-3">
-              {[1, 2, 3].map((index) => (
-                <div
-                  key={index}
-                  className={cn(
-                    insetPanelClassName,
-                    'flex items-center justify-between gap-3 p-4 animate-pulse',
-                  )}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="h-3.5 w-3.5 rounded-full bg-primary/15" />
-                    <div className="space-y-2">
-                      <div className="h-3 w-24 rounded bg-primary/15" />
-                      <div className="h-2.5 w-36 rounded bg-primary/10" />
-                    </div>
-                  </div>
-                  <div className="h-3 w-14 rounded bg-primary/15" />
-                </div>
-              ))}
+        <Suspense fallback={<TableSkeleton />}>
+          <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d5 p-5 sm:p-6">
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                Trade history
+              </p>
+              <Badge variant="secondary">{tradeFeedSummary}</Badge>
             </div>
-          ) : null}
 
-          <div className="mt-5 space-y-3">
-            {paginatedClosedTrades.length === 0 ? (
-              <div className={cn(insetPanelClassName, 'p-5 text-sm text-muted-foreground')}>
-                No closed trades in the current range yet.
-              </div>
-            ) : (
-              paginatedClosedTrades.map((trade) => {
-                const pnl = Number(trade.pnl || 0)
-                const closeDate = (trade as { closeDate?: string | Date | null }).closeDate
-
-                return (
+            {isLoading ? (
+              <div className="mt-5 space-y-3">
+                {[1, 2, 3].map((index) => (
                   <div
-                    key={trade.id}
+                    key={index}
                     className={cn(
                       insetPanelClassName,
-                      'flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between',
+                      'flex items-center justify-between gap-3 p-4 animate-pulse',
                     )}
                   >
-                    <div className="flex min-w-0 items-start gap-3">
-                      <CircleDot
-                        className={cn(
-                          'mt-0.5 h-4 w-4 shrink-0',
-                          pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error',
-                        )}
-                      />
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-foreground">
-                          {trade.instrument || 'Unknown instrument'}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          Closed {formatTradeTimestamp(closeDate ?? trade.entryDate)}
-                        </p>
+                    <div className="flex items-center gap-3">
+                      <div className="h-3.5 w-3.5 rounded-full bg-primary/15" />
+                      <div className="space-y-2">
+                        <div className="h-3 w-24 rounded bg-primary/15" />
+                        <div className="h-2.5 w-36 rounded bg-primary/10" />
                       </div>
                     </div>
+                    <div className="h-3 w-14 rounded bg-primary/15" />
+                  </div>
+                ))}
+              </div>
+            ) : null}
 
-                    <p
+            <div className="mt-5 space-y-3">
+              {paginatedClosedTrades.length === 0 ? (
+                <div className={cn(insetPanelClassName, 'p-5 text-sm text-muted-foreground')}>
+                  No closed trades in the current range yet.
+                </div>
+              ) : (
+                paginatedClosedTrades.map((trade) => {
+                  const pnl = Number(trade.pnl || 0)
+                  const closeDate = (trade as { closeDate?: string | Date | null }).closeDate
+
+                  return (
+                    <div
+                      key={trade.id}
                       className={cn(
-                        'shrink-0 text-sm font-semibold',
-                        pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error',
+                        insetPanelClassName,
+                        'flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between',
                       )}
                     >
-                      {formatSigned(pnl)}
-                    </p>
-                  </div>
-                )
-              })
-            )}
-          </div>
+                      <div className="flex min-w-0 items-start gap-3">
+                        <CircleDot
+                          className={cn(
+                            'mt-0.5 h-4 w-4 shrink-0',
+                            pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error',
+                          )}
+                        />
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-foreground">
+                            {trade.instrument || 'Unknown instrument'}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Closed {formatTradeTimestamp(closeDate ?? trade.entryDate)}
+                          </p>
+                        </div>
+                      </div>
 
-          {closedTrades.length > tradesPerPage ? (
-            <div className={cn(insetPanelClassName, 'mt-4 px-2 py-1.5')}>
-              <Pagination className="justify-end">
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      href="#"
-                      onClick={(event) => {
-                        event.preventDefault()
-                        setTradeFeedPage((current) => Math.max(1, current - 1))
-                      }}
-                      className={tradeFeedPage === 1 ? 'pointer-events-none opacity-50' : ''}
-                    />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#" isActive size="default" className="min-w-24">
-                      {tradeFeedPage} / {tradeFeedTotalPages}
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationNext
-                      href="#"
-                      onClick={(event) => {
-                        event.preventDefault()
-                        setTradeFeedPage((current) => Math.min(tradeFeedTotalPages, current + 1))
-                      }}
-                      className={
-                        tradeFeedPage >= tradeFeedTotalPages ? 'pointer-events-none opacity-50' : ''
-                      }
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+                      <p
+                        className={cn(
+                          'shrink-0 text-sm font-semibold',
+                          pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error',
+                        )}
+                      >
+                        {formatSigned(pnl)}
+                      </p>
+                    </div>
+                  )
+                })
+              )}
             </div>
-          ) : null}
-        </UnifiedSurface>
+
+            {closedTrades.length > tradesPerPage ? (
+              <div className={cn(insetPanelClassName, 'mt-4 px-2 py-1.5')}>
+                <Pagination className="justify-end">
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#"
+                        onClick={(event) => {
+                          event.preventDefault()
+                          setTradeFeedPage((current) => Math.max(1, current - 1))
+                        }}
+                        className={tradeFeedPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                      />
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationLink href="#" isActive size="default" className="min-w-24">
+                        {tradeFeedPage} / {tradeFeedTotalPages}
+                      </PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        onClick={(event) => {
+                          event.preventDefault()
+                          setTradeFeedPage((current) => Math.min(tradeFeedTotalPages, current + 1))
+                        }}
+                        className={
+                          tradeFeedPage >= tradeFeedTotalPages ? 'pointer-events-none opacity-50' : ''
+                        }
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            ) : null}
+          </UnifiedSurface>
+        </Suspense>
       </div>
     </UnifiedPageShell>
   )

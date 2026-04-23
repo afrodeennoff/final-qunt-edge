@@ -11,7 +11,9 @@
       "Bash(git:*)",
       "Bash(head:*)",
       "WebSearch",
-      "mcp__duckduckgo-search__duckduckgo_web_search"
+      "mcp__duckduckgo-search__duckduckgo_web_search",
+      "mcp__web-search__search",
+      "mcp__web-search__fetchGithubReadme"
     ]
   },
   "model": "sonnet",

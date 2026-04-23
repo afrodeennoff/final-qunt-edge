@@ -404,32 +404,6 @@
     0 1px 2px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.16),
     0 24px 64px -24px rgba(0, 0, 0, 0.88), 0 0 0 0.5px rgba(145, 108, 255, 0.08);
 
-  /* ── MULTI-COLOR ACCENT SCALE ── */
-  --accent-cobalt: oklch(0.6083 0.2172 297.1153);
-  --accent-cobalt-subtle: oklch(0.6083 0.2172 297.1153 / 0.12);
-  --accent-cobalt-border: oklch(0.6083 0.2172 297.1153 / 0.28);
-  --accent-cobalt-glow: 0 0 24px oklch(0.6083 0.2172 297.1153 / 0.3);
-  --accent-emerald: oklch(0.82 0.185 155);
-  --accent-emerald-subtle: oklch(0.82 0.185 155 / 0.1);
-  --accent-emerald-border: oklch(0.82 0.185 155 / 0.25);
-  --accent-crimson: oklch(0.64 0.255 22);
-  --accent-crimson-subtle: oklch(0.64 0.255 22 / 0.1);
-  --accent-crimson-border: oklch(0.64 0.255 22 / 0.28);
-  --accent-amber: oklch(0.84 0.175 80);
-  --accent-amber-subtle: oklch(0.84 0.175 80 / 0.1);
-  --accent-amber-border: oklch(0.84 0.175 80 / 0.28);
-  --accent-violet: oklch(0.7 0.2 290);
-  --accent-violet-subtle: oklch(0.7 0.2 290 / 0.1);
-  --accent-orange: oklch(0.68 0.06 70);
-  --accent-orange-subtle: oklch(0.68 0.06 70 / 0.1);
-  --accent-orange-border: oklch(0.68 0.06 70 / 0.28);
-  --accent-blue: var(--primary);
-  --accent-blue-subtle: color-mix(in oklab, var(--primary) 14%, transparent);
-  --accent-blue-border: color-mix(in oklab, var(--primary) 34%, transparent);
-  --accent-green: var(--success);
-  --accent-green-subtle: color-mix(in oklab, var(--success) 12%, transparent);
-  --accent-green-border: color-mix(in oklab, var(--success) 30%, transparent);
-
   /* ── P3 WIDE GAMUT PREMIUM ACCENTS ── */
   --p3-aurora: color(display-p3 0.45 0.25 0.95);
   --p3-aurora-subtle: color(display-p3 0.45 0.25 0.95 / 0.12);
@@ -470,9 +444,6 @@
   --macos-easing-sheet: cubic-bezier(0.32, 0.72, 0, 1);
   --macos-toolbar-height: 52px;
   --macos-sidebar-width: 260px;
-  --easing-macos: cubic-bezier(0.25, 0.1, 0.25, 1.0);
-  --easing-macos-spring: cubic-bezier(0.175, 0.885, 0.32, 1.1);
-  --easing-macos-sheet: cubic-bezier(0.32, 0.72, 0, 1);
 
   /* ── TEXT HIERARCHY ── */
   --text-primary: oklch(0.97 0 0);
@@ -650,20 +621,6 @@
 }
 
 @layer utilities {
-  .glow-cobalt {
-    box-shadow:
-      0 0 24px oklch(0.6083 0.2172 297.1153 / 0.24),
-      0 0 8px oklch(0.6083 0.2172 297.1153 / 0.16);
-  }
-
-  .glow-emerald {
-    box-shadow: 0 0 20px oklch(0.82 0.185 155 / 0.28);
-  }
-
-  .glow-crimson {
-    box-shadow: 0 0 20px oklch(0.64 0.255 22 / 0.28);
-  }
-
   .frost-surface {
     background: rgba(145, 108, 255, 0.05);
     border: 1px solid rgba(145, 108, 255, 0.12);
