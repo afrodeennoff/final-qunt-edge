@@ -38,11 +38,9 @@ export default function MarketingLayoutShell({
       <div
         className={cn(
           'pointer-events-none fixed inset-0 hidden qe-v2-grid sm:block',
-          shellVariant === 'black' ? 'opacity-[0.022]' : 'opacity-[0.035]',
+          shellVariant === 'black' ? 'opacity-[0.012]' : 'opacity-[0.02]',
         )}
       />
-      <div className="pointer-events-none fixed inset-0 opacity-[0.03] [background-image:radial-gradient(circle_at_top,hsl(var(--primary)/0.07),transparent_34%)]" />
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-20 bg-gradient-to-b from-[oklch(0.65_0.22_260_/_0.038)] via-[oklch(0.65_0.22_260_/_0.014)] to-transparent" />
       <div className="flex min-h-screen w-full flex-col">
         <div className="flex flex-1 flex-col min-h-0 min-w-0 bg-transparent">
           <MiniMaxNavbarWrapper>
@@ -64,8 +62,6 @@ export default function MarketingLayoutShell({
                 contentClassName,
               )}
             >
-              <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-px bg-gradient-to-b from-transparent via-[oklch(0.65_0.22_260_/_0.08)] to-transparent xl:block" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-px bg-gradient-to-b from-transparent via-[oklch(0.65_0.22_260_/_0.08)] to-transparent xl:block" />
               {children}
             </div>
           </div>

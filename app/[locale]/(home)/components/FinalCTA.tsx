@@ -1,8 +1,12 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { unifiedPrimaryActionClassName } from '@/components/layout/unified-page-recipes'
+import { ButtonV2 as Button } from '@/components/ui/v2'
+import {
+  MarketingSection,
+  marketingBodyClassName,
+  marketingSectionTitleClassName,
+} from '@/components/layout/marketing-sections'
 import { getI18n } from '@/locales/server'
-import { ScrollRevealSection } from './ScrollReveal'
 
 interface FinalCTAProps {
   locale: string
@@ -12,25 +16,26 @@ export default async function FinalCTA({ locale }: FinalCTAProps) {
   const t = await getI18n()
 
   return (
-    <section className="flex flex-1 flex-col justify-center px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-      <ScrollRevealSection className="mx-auto max-w-3xl text-center">
-        <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-          {t('landing.home.finalCta.titlePrefix')}{' '}
-          <span className="text-primary">{t('landing.home.finalCta.titleHighlight')}</span>
-          {t('landing.home.finalCta.titleSuffix')}
+    <MarketingSection className="pb-28 lg:pb-36">
+      <div className="mx-auto max-w-3xl text-center">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/88">
+          {t('landing.home.finalCta.eyebrow')}
+        </p>
+        <h2 className={`${marketingSectionTitleClassName} mt-4`}>
+          {t('landing.home.finalCta.title')}
         </h2>
+        <p className={`${marketingBodyClassName} mx-auto mt-5 max-w-xl`}>
+          {t('landing.home.finalCta.description')}
+        </p>
 
         <div className="mt-8">
-          <Link href={`/${locale}/authentication?next=dashboard`} className={unifiedPrimaryActionClassName}>
-            {t('landing.home.finalCta.primary')}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          <Button asChild size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
+            <Link href={`/${locale}/authentication?next=dashboard`}>
+              {t('landing.home.finalCta.primary')}
+            </Link>
+          </Button>
         </div>
-
-        <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-          {t('landing.home.finalCta.footnote')}
-        </p>
-      </ScrollRevealSection>
-    </section>
+      </div>
+    </MarketingSection>
   )
 }

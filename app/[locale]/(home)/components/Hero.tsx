@@ -1,54 +1,38 @@
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
-import { UnifiedHeroMedia } from '@/components/layout/unified-hero-media'
+import { ArrowRight, Play } from 'lucide-react'
+import { ButtonV2 as Button } from '@/components/ui/v2'
 import {
-  unifiedPrimaryActionClassName,
-  unifiedGhostActionClassName,
-} from '@/components/layout/unified-page-recipes'
+  MarketingSection,
+  marketingBodyClassName,
+  marketingHeroTitleClassName,
+} from '@/components/layout/marketing-sections'
 import { getI18n } from '@/locales/server'
-import DashboardPreview from './DashboardPreview'
 
 export default async function Hero({ locale }: { locale: string }) {
   const t = await getI18n()
 
   return (
-    <section className="relative overflow-hidden px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40">
-      <div className="mx-auto max-w-[1360px]">
-        {/* Centered copy block */}
-        <div className="mx-auto max-w-3xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            {t('landing.hero.headline')}{' '}
-            <span className="text-primary">{t('landing.hero.headlineAccent')}</span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground">
-            {t('landing.hero.subheadline')}
-          </p>
+    <MarketingSection className="pt-24 sm:pt-28 lg:pt-36" innerClassName="max-w-[980px]">
+      <div className="mx-auto text-center">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/88">
+          {t('landing.hero.badge')}
+        </p>
+        <h1 className={`${marketingHeroTitleClassName} mt-5`}>{t('landing.hero.headline')}</h1>
+        <p className={`${marketingBodyClassName} mx-auto mt-6 max-w-2xl`}>
+          {t('landing.hero.subheadline')}
+        </p>
 
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href={`/${locale}/authentication?next=dashboard`} className={unifiedPrimaryActionClassName}>
+        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Button asChild size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
+            <Link href={`/${locale}/authentication?next=dashboard`}>
               {t('landing.hero.ctaPrimary')}
             </Link>
-            <a href="#how-it-works" className={unifiedGhostActionClassName}>
-              {t('landing.hero.ctaSecondary')}
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
-        </div>
-
-        {/* Dashboard preview */}
-        <div className="mt-16 animate-fade-up-smooth sm:mt-20">
-          <UnifiedHeroMedia
-            screenshot={<DashboardPreview />}
-            caption={
-              <div className="flex flex-wrap items-center gap-2 rounded-full border border-border/45 bg-background/80 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-                <span className="inline-flex h-2 w-2 rounded-full bg-primary" />
-                Live review system
-              </div>
-            }
-            className="min-h-[560px]"
-          />
+          </Button>
+          <Button asChild variant="outline" size="lg" leftIcon={<Play className="h-4 w-4" />}>
+            <a href="#product-walkthrough">{t('landing.hero.ctaSecondary')}</a>
+          </Button>
         </div>
       </div>
-    </section>
+    </MarketingSection>
   )
 }

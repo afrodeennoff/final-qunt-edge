@@ -1,5 +1,5 @@
-import React from 'react';
-import { useCurrentFrame, interpolate, Easing } from 'remotion';
+import React from 'react'
+import { useCurrentFrame, interpolate, Easing } from 'remotion'
 import {
   PRIMARY,
   PRIMARY_SUBTLE,
@@ -12,13 +12,13 @@ import {
   TEXT_SECONDARY,
   TEXT_TERTIARY,
   BORDER_SUBTLE,
-} from '../colors';
+} from '../colors'
 
 interface TradeRow {
-  instrument: string;
-  side: 'Long' | 'Short';
-  pnl: number;
-  duration: string;
+  instrument: string
+  side: 'Long' | 'Short'
+  pnl: number
+  duration: string
 }
 
 const TRADES: TradeRow[] = [
@@ -29,32 +29,32 @@ const TRADES: TradeRow[] = [
   { instrument: 'YM', side: 'Long', pnl: -95, duration: '8m' },
   { instrument: 'ES', side: 'Short', pnl: 580, duration: '45m' },
   { instrument: 'NQ', side: 'Long', pnl: 150, duration: '18m' },
-];
+]
 
 function formatPnl(value: number): string {
-  const sign = value >= 0 ? '+' : '-';
-  return `${sign}$${Math.abs(value).toLocaleString()}`;
+  const sign = value >= 0 ? '+' : '-'
+  return `${sign}$${Math.abs(value).toLocaleString()}`
 }
 
-const COLUMNS = ['Instrument', 'Side', 'PnL', 'Duration'];
+const COLUMNS = ['Instrument', 'Side', 'PnL', 'Signal']
 
 export const TradeTableScene: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useCurrentFrame()
 
   // Header animation
   const headerOpacity = interpolate(frame, [0, 18], [0, 1], {
     extrapolateRight: 'clamp',
-  });
+  })
   const headerY = interpolate(frame, [0, 18], [12, 0], {
     extrapolateRight: 'clamp',
     easing: Easing.out(Easing.cubic),
-  });
+  })
 
   // Table header row animation
   const tableHeaderOpacity = interpolate(frame, [12, 28], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
-  });
+  })
 
   return (
     <div
@@ -65,8 +65,7 @@ export const TradeTableScene: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         padding: 48,
-        fontFamily:
-          'var(--font-ui-native, system-ui, -apple-system, sans-serif)',
+        fontFamily: 'var(--font-ui-native, system-ui, -apple-system, sans-serif)',
       }}
     >
       {/* Section header */}
@@ -87,7 +86,7 @@ export const TradeTableScene: React.FC = () => {
             margin: 0,
           }}
         >
-          Trade Journal
+          Step 03 — Find drift
         </p>
         <p
           style={{
@@ -98,7 +97,7 @@ export const TradeTableScene: React.FC = () => {
             letterSpacing: '-0.02em',
           }}
         >
-          Recent Trade History
+          Behavior tags surface the pattern
         </p>
       </div>
 
@@ -146,18 +145,18 @@ export const TradeTableScene: React.FC = () => {
         {/* Table rows */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           {TRADES.map((trade, i) => {
-            const rowStart = 22 + i * 7;
+            const rowStart = 22 + i * 7
             const rowOpacity = interpolate(frame, [rowStart, rowStart + 14], [0, 1], {
               extrapolateLeft: 'clamp',
               extrapolateRight: 'clamp',
-            });
+            })
             const rowX = interpolate(frame, [rowStart, rowStart + 14], [20, 0], {
               extrapolateLeft: 'clamp',
               extrapolateRight: 'clamp',
               easing: Easing.out(Easing.cubic),
-            });
+            })
 
-            const isPositive = trade.pnl >= 0;
+            const isPositive = trade.pnl >= 0
 
             return (
               <div
@@ -166,12 +165,10 @@ export const TradeTableScene: React.FC = () => {
                   display: 'grid',
                   gridTemplateColumns: '1fr 1fr 1.2fr 1fr',
                   padding: '16px 24px',
-                  borderBottom:
-                    i < TRADES.length - 1 ? `1px solid ${BORDER_SUBTLE}` : 'none',
+                  borderBottom: i < TRADES.length - 1 ? `1px solid ${BORDER_SUBTLE}` : 'none',
                   opacity: rowOpacity,
                   transform: `translateX(${rowX}px)`,
-                  backgroundColor:
-                    i % 2 === 0 ? 'transparent' : 'oklch(0.02 0 0)',
+                  backgroundColor: i % 2 === 0 ? 'transparent' : 'oklch(0.02 0 0)',
                 }}
               >
                 {/* Instrument */}
@@ -218,7 +215,9 @@ export const TradeTableScene: React.FC = () => {
                       textTransform: 'uppercase' as const,
                       padding: '4px 10px',
                       borderRadius: 6,
-                      backgroundColor: isPositive ? 'oklch(0.82 0.185 155 / 0.10)' : 'oklch(0.64 0.255 22 / 0.10)',
+                      backgroundColor: isPositive
+                        ? 'oklch(0.82 0.185 155 / 0.10)'
+                        : 'oklch(0.64 0.255 22 / 0.10)',
                       color: isPositive ? SUCCESS : ERROR,
                     }}
                   >
@@ -248,15 +247,15 @@ export const TradeTableScene: React.FC = () => {
                     alignItems: 'center',
                   }}
                 >
-                  {trade.duration}
+                  {i === 1 || i === 4 ? 'Drift' : 'Clean'}
                 </span>
               </div>
-            );
+            )
           })}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TradeTableScene;
+export default TradeTableScene

@@ -55,14 +55,11 @@ export default function ReferralPage() {
   ] as const
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[1360px]" className="py-12 sm:py-16">
+    <UnifiedPageShell widthClassName="max-w-[1360px]" className="py-20 lg:py-24">
       <div className="space-y-6">
         <section
           className={cn(unifiedHeroPanelClassName, 'animate-fade-up-smooth p-6 sm:p-8 lg:p-10')}
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(740px_280px_at_12%_6%,rgba(255,255,255,0.08),transparent_72%)]" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(560px_220px_at_88%_12%,rgba(255,255,255,0.045),transparent_72%)]" />
-
           <div className="relative grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.82fr)] xl:items-end">
             <div className="space-y-5">
               <span className={unifiedChipClassName}>{t('referral.landing.heroBadge')}</span>

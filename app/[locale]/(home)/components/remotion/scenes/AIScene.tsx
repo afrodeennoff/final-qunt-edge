@@ -1,5 +1,5 @@
-import React from 'react';
-import { useCurrentFrame, interpolate, Easing } from 'remotion';
+import React from 'react'
+import { useCurrentFrame, interpolate, Easing } from 'remotion'
 import {
   PRIMARY,
   PRIMARY_SUBTLE,
@@ -9,61 +9,60 @@ import {
   BG_CARD,
   BG_ELEVATED,
   TEXT_STRONG,
-  TEXT_SECONDARY,
   TEXT_TERTIARY,
   BORDER_SUBTLE,
-} from '../colors';
+} from '../colors'
 
 const AI_MESSAGES = [
-  { role: 'user' as const, text: 'What patterns do you see in my recent ES trades?' },
+  { role: 'user' as const, text: 'What should I change before the next session?' },
   {
     role: 'ai' as const,
-    text: 'I detected a recurring impulse entry pattern between 9:30-10:15 AM. Your win rate drops 23% when entering during the first 15 minutes vs waiting for the 9:45 confirmation candle.',
+    text: 'Reduce size after two losses, wait for the 9:45 confirmation candle, and review only A-grade setups until plan adherence is back above 85%.',
   },
-];
+]
 
 const INSIGHTS = [
   { label: 'Pattern Detected', value: 'Impulse Entry', color: PRIMARY },
   { label: 'Risk Score', value: '7.2/10', color: SUCCESS },
   { label: 'Win Rate Delta', value: '+12%', color: SUCCESS },
-];
+]
 
 export const AIScene: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useCurrentFrame()
 
-  const titleOpacity = interpolate(frame, [0, 20], [0, 1], { extrapolateRight: 'clamp' });
+  const titleOpacity = interpolate(frame, [0, 20], [0, 1], { extrapolateRight: 'clamp' })
   const titleY = interpolate(frame, [0, 20], [12, 0], {
     extrapolateRight: 'clamp',
     easing: Easing.out(Easing.cubic),
-  });
+  })
 
   const userMsgOpacity = interpolate(frame, [20, 38], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
-  });
+  })
   const userMsgX = interpolate(frame, [20, 38], [16, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
     easing: Easing.out(Easing.cubic),
-  });
+  })
 
   const aiTextProgress = interpolate(frame, [40, 100], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
     easing: Easing.out(Easing.cubic),
-  });
+  })
   const aiMsgOpacity = interpolate(frame, [40, 55], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
-  });
+  })
   const aiMsgX = interpolate(frame, [40, 55], [16, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
     easing: Easing.out(Easing.cubic),
-  });
+  })
 
-  const visibleChars = Math.floor(aiTextProgress * AI_MESSAGES[1].text.length);
-  const displayedAiText = AI_MESSAGES[1].text.slice(0, visibleChars);
+  const visibleChars = Math.floor(aiTextProgress * AI_MESSAGES[1].text.length)
+  const displayedAiText = AI_MESSAGES[1].text.slice(0, visibleChars)
 
   return (
     <div
@@ -95,7 +94,7 @@ export const AIScene: React.FC = () => {
             margin: 0,
           }}
         >
-          AI Trading Coach
+          Step 04 — Act on drift
         </p>
         <p
           style={{
@@ -106,7 +105,7 @@ export const AIScene: React.FC = () => {
             letterSpacing: '-0.02em',
           }}
         >
-          Behavioral Insights
+          AI debrief creates the next rule
         </p>
       </div>
 
@@ -172,7 +171,6 @@ export const AIScene: React.FC = () => {
                   height: 14,
                   backgroundColor: PRIMARY,
                   marginLeft: 2,
-                  animation: 'blink 0.6s infinite',
                 }}
               />
             )}
@@ -190,16 +188,16 @@ export const AIScene: React.FC = () => {
         }}
       >
         {INSIGHTS.map((insight, i) => {
-          const cardStart = 90 + i * 10;
+          const cardStart = 90 + i * 10
           const cardOpacity = interpolate(frame, [cardStart, cardStart + 16], [0, 1], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
-          });
+          })
           const cardY = interpolate(frame, [cardStart, cardStart + 16], [10, 0], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
             easing: Easing.out(Easing.cubic),
-          });
+          })
 
           return (
             <div
@@ -236,11 +234,11 @@ export const AIScene: React.FC = () => {
                 {insight.value}
               </p>
             </div>
-          );
+          )
         })}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AIScene;
+export default AIScene

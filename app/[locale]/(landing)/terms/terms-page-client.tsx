@@ -1,8 +1,9 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { useI18n } from '@/locales/client';
-import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell';
+import React from 'react'
+import { useI18n } from '@/locales/client'
+import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
+import { MarketingSectionHeader } from '@/components/layout/marketing-sections'
 
 function LegalSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -10,26 +11,31 @@ function LegalSection({ title, children }: { title: string; children: React.Reac
       <h2 className="text-2xl font-semibold text-fg-primary">{title}</h2>
       <div className="space-y-2 text-fg-muted">{children}</div>
     </section>
-  );
+  )
 }
 
 export function TermsPageClient() {
-  const t = useI18n();
+  const t = useI18n()
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-20 lg:py-24">
       <UnifiedSurface className="space-y-8">
-        <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground">Terms of Service</h1>
-          <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
-            These terms describe account usage, payment policies, and service responsibilities for Qunt Edge.
-          </p>
-        </header>
+        <MarketingSectionHeader
+          eyebrow="Legal"
+          title="Terms of Service"
+          titleAs="h1"
+          align="left"
+          className="m-0"
+          description="These terms describe account usage, payment policies, and service responsibilities for Qunt Edge."
+        />
         <LegalSection title={t('terms.sections.companyInfo.title')}>
           <p>{t('terms.sections.companyInfo.content')}</p>
           <p>
             {t('terms.sections.companyInfo.contact')}
-            <a href="mailto:contact@qunt-edge.com" className="text-fg-primary underline underline-offset-4">
+            <a
+              href="mailto:contact@qunt-edge.com"
+              className="text-fg-primary underline underline-offset-4"
+            >
               contact@qunt-edge.com
             </a>
           </p>
@@ -45,9 +51,13 @@ export function TermsPageClient() {
 
         <LegalSection title={t('terms.sections.subscriptionPayments.title')}>
           <p>{t('terms.sections.subscriptionPayments.content')}</p>
-          <h3 className="pt-2 text-lg font-semibold text-fg-primary">{t('terms.sections.subscriptionPayments.storageClarification')}</h3>
+          <h3 className="pt-2 text-lg font-semibold text-fg-primary">
+            {t('terms.sections.subscriptionPayments.storageClarification')}
+          </h3>
           <p>{t('terms.sections.subscriptionPayments.fairUse')}</p>
-          <h3 className="pt-2 text-lg font-semibold text-fg-primary">{t('terms.sections.subscriptionPayments.lifetimePlan.title')}</h3>
+          <h3 className="pt-2 text-lg font-semibold text-fg-primary">
+            {t('terms.sections.subscriptionPayments.lifetimePlan.title')}
+          </h3>
           <p>{t('terms.sections.subscriptionPayments.lifetimePlan.description')}</p>
           <ul className="list-disc pl-5">
             <li>{t('terms.sections.subscriptionPayments.lifetimePlan.condition1')}</li>
@@ -100,5 +110,5 @@ export function TermsPageClient() {
         </p>
       </UnifiedSurface>
     </UnifiedPageShell>
-  );
+  )
 }

@@ -1,9 +1,8 @@
-import React from 'react';
-import { useCurrentFrame, interpolate, Easing } from 'remotion';
+import React from 'react'
+import { useCurrentFrame, interpolate, Easing } from 'remotion'
 import {
   PRIMARY,
   SUCCESS,
-  ERROR,
   BG_BASE,
   BG_CARD,
   BG_ELEVATED,
@@ -11,28 +10,28 @@ import {
   TEXT_SECONDARY,
   TEXT_TERTIARY,
   BORDER_SUBTLE,
-} from '../colors';
+} from '../colors'
 
 const METRICS = [
-  { label: 'Net PnL', value: '+$12,847', tone: SUCCESS },
-  { label: 'Win Rate', value: '68.4%', tone: SUCCESS },
-  { label: 'Profit Factor', value: '2.31', tone: PRIMARY },
-  { label: 'Max Drawdown', value: '-$1,240', tone: ERROR },
-  { label: 'Avg Trade', value: '+$214', tone: SUCCESS },
-  { label: 'Total Trades', value: '142', tone: PRIMARY },
-];
+  { label: 'Broker Sync', value: 'Live', tone: SUCCESS },
+  { label: 'Imported Trades', value: '142', tone: PRIMARY },
+  { label: 'Accounts Linked', value: '4', tone: PRIMARY },
+  { label: 'Rejected Rows', value: '0', tone: SUCCESS },
+  { label: 'Journal Notes', value: '18', tone: PRIMARY },
+  { label: 'Ready For Review', value: '100%', tone: SUCCESS },
+]
 
 export const DashboardScene: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useCurrentFrame()
 
   // Title fade in
   const titleOpacity = interpolate(frame, [0, 20], [0, 1], {
     extrapolateRight: 'clamp',
-  });
+  })
   const titleY = interpolate(frame, [0, 20], [12, 0], {
     extrapolateRight: 'clamp',
     easing: Easing.out(Easing.cubic),
-  });
+  })
 
   return (
     <div
@@ -43,8 +42,7 @@ export const DashboardScene: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         padding: 48,
-        fontFamily:
-          'var(--font-ui-native, system-ui, -apple-system, sans-serif)',
+        fontFamily: 'var(--font-ui-native, system-ui, -apple-system, sans-serif)',
       }}
     >
       {/* Header */}
@@ -65,7 +63,7 @@ export const DashboardScene: React.FC = () => {
             margin: 0,
           }}
         >
-          Dashboard Overview
+          Step 01 — Connect data
         </p>
         <p
           style={{
@@ -76,7 +74,7 @@ export const DashboardScene: React.FC = () => {
             letterSpacing: '-0.02em',
           }}
         >
-          Performance Analytics
+          Broker fills become one review timeline
         </p>
       </div>
 
@@ -90,21 +88,21 @@ export const DashboardScene: React.FC = () => {
         }}
       >
         {METRICS.map((metric, i) => {
-          const stagger = 15 + i * 6;
+          const stagger = 15 + i * 6
           const tileOpacity = interpolate(frame, [stagger, stagger + 18], [0, 1], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
-          });
+          })
           const tileY = interpolate(frame, [stagger, stagger + 18], [16, 0], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
             easing: Easing.out(Easing.cubic),
-          });
+          })
           const tileScale = interpolate(frame, [stagger, stagger + 18], [0.96, 1], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
             easing: Easing.out(Easing.cubic),
-          });
+          })
 
           return (
             <div
@@ -146,7 +144,7 @@ export const DashboardScene: React.FC = () => {
                 {metric.value}
               </p>
             </div>
-          );
+          )
         })}
       </div>
 
@@ -186,12 +184,12 @@ export const DashboardScene: React.FC = () => {
               margin: 0,
             }}
           >
-            Live session active — Equity trending upward
+            Tradovate, Rithmic, IBKR, and CSV imports normalize into one workspace
           </p>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default DashboardScene;
+export default DashboardScene

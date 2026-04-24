@@ -1,48 +1,51 @@
-import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell';
-import type { Metadata } from "next";
-import { getSiteOrigin } from "@/lib/site-url";
+import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
+import { MarketingSectionHeader } from '@/components/layout/marketing-sections'
+import type { Metadata } from 'next'
+import { getSiteOrigin } from '@/lib/site-url'
 
-const SITE_ORIGIN = getSiteOrigin();
-const PAGE_PATH = "/privacy";
-const LAST_UPDATED = "2026-03-28";
+const SITE_ORIGIN = getSiteOrigin()
+const PAGE_PATH = '/privacy'
+const LAST_UPDATED = '2026-03-28'
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: string }>
 }): Promise<Metadata> {
-  const { locale } = await params;
-  const canonical = `${SITE_ORIGIN}/${locale}${PAGE_PATH}`;
+  const { locale } = await params
+  const canonical = `${SITE_ORIGIN}/${locale}${PAGE_PATH}`
 
   return {
-    title: "Privacy Policy | Qunt Edge",
-    description:
-      "Read how Qunt Edge collects, protects, and processes account and trading data.",
+    title: 'Privacy Policy | Qunt Edge',
+    description: 'Read how Qunt Edge collects, protects, and processes account and trading data.',
     alternates: {
       canonical,
       languages: {
-        "en-US": `${SITE_ORIGIN}/en${PAGE_PATH}`,
-        "fr-FR": `${SITE_ORIGIN}/fr${PAGE_PATH}`,
+        'en-US': `${SITE_ORIGIN}/en${PAGE_PATH}`,
+        'fr-FR': `${SITE_ORIGIN}/fr${PAGE_PATH}`,
       },
     },
-  };
+  }
 }
 
 export default function PrivacyPolicy() {
   return (
-    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-20 lg:py-24">
       <UnifiedSurface className="space-y-8 text-fg-muted">
-        <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground">Privacy Policy</h1>
-          <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
-            This policy explains what data we collect and how we use it to provide the Qunt Edge platform.
-          </p>
-        </header>
+        <MarketingSectionHeader
+          eyebrow="Legal"
+          title="Privacy Policy"
+          titleAs="h1"
+          align="left"
+          className="m-0"
+          description="This policy explains what data we collect and how we use it to provide the Qunt Edge platform."
+        />
         <section className="space-y-3">
           <h2 className="text-2xl font-semibold text-fg-primary">1. Introduction</h2>
           <p>
-            Qunt Edge (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) is committed to protecting your privacy.
-            This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our service.
+            Qunt Edge (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) is committed to
+            protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and
+            safeguard your information when you use our service.
           </p>
         </section>
 
@@ -74,49 +77,59 @@ export default function PrivacyPolicy() {
         <section className="space-y-3">
           <h2 className="text-2xl font-semibold text-fg-primary">4. Data Storage and Security</h2>
           <p>
-            We use Supabase, a SOC 2 compliant service, to store your data. We implement appropriate data collection,
-            storage and processing practices and security measures to protect against unauthorized access, alteration,
-            disclosure or destruction of your personal information and data stored on our service.
+            We use Supabase, a SOC 2 compliant service, to store your data. We implement appropriate
+            data collection, storage and processing practices and security measures to protect
+            against unauthorized access, alteration, disclosure or destruction of your personal
+            information and data stored on our service.
           </p>
         </section>
 
         <section className="space-y-3">
           <h2 className="text-2xl font-semibold text-fg-primary">5. Cookies</h2>
           <p>
-            We use &quot;cookies&quot; to collect information. Cookies are small data files stored on your hard drive by a website.
-            We may use both session cookies and persistent cookies to provide you with a more personal and interactive experience.
+            We use &quot;cookies&quot; to collect information. Cookies are small data files stored
+            on your hard drive by a website. We may use both session cookies and persistent cookies
+            to provide you with a more personal and interactive experience.
           </p>
         </section>
 
         <section className="space-y-3">
           <h2 className="text-2xl font-semibold text-fg-primary">6. Third-Party Services</h2>
           <p>
-            We do not use third-party analytics services. Our service may contain links to other sites that are not
-            operated by us. We strongly advise you to review the privacy policy of every site you visit.
+            We do not use third-party analytics services. Our service may contain links to other
+            sites that are not operated by us. We strongly advise you to review the privacy policy
+            of every site you visit.
           </p>
         </section>
 
         <section className="space-y-3">
           <h2 className="text-2xl font-semibold text-fg-primary">7. GDPR Compliance</h2>
           <p>
-            We comply with the General Data Protection Regulation (GDPR). You have the right to access, update or
-            delete your personal information. Please contact us to exercise these rights.
+            We comply with the General Data Protection Regulation (GDPR). You have the right to
+            access, update or delete your personal information. Please contact us to exercise these
+            rights.
           </p>
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-2xl font-semibold text-fg-primary">8. Changes to This Privacy Policy</h2>
+          <h2 className="text-2xl font-semibold text-fg-primary">
+            8. Changes to This Privacy Policy
+          </h2>
           <p>
-            We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new
-            Privacy Policy on this page and updating the &quot;Last updated&quot; date.
+            We may update our Privacy Policy from time to time. We will notify you of any changes by
+            posting the new Privacy Policy on this page and updating the &quot;Last updated&quot;
+            date.
           </p>
         </section>
 
         <section className="space-y-3">
           <h2 className="text-2xl font-semibold text-fg-primary">9. Contact Us</h2>
           <p>
-            If you have any questions about this Privacy Policy, please contact us at{" "}
-            <a href="mailto:contact@qunt-edge.com" className="text-fg-primary underline underline-offset-4">
+            If you have any questions about this Privacy Policy, please contact us at{' '}
+            <a
+              href="mailto:contact@qunt-edge.com"
+              className="text-fg-primary underline underline-offset-4"
+            >
               contact@qunt-edge.com
             </a>
             .
@@ -128,5 +141,5 @@ export default function PrivacyPolicy() {
         </p>
       </UnifiedSurface>
     </UnifiedPageShell>
-  );
+  )
 }
