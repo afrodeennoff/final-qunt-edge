@@ -3,6 +3,7 @@ import { useCurrentFrame, interpolate, Easing } from 'remotion'
 import {
   PRIMARY,
   SUCCESS,
+  SUCCESS_SUBTLE,
   BG_BASE,
   BG_CARD,
   BG_ELEVATED,
@@ -13,12 +14,12 @@ import {
 } from '../colors'
 
 const METRICS = [
-  { label: 'Broker Sync', value: 'Live', tone: SUCCESS },
-  { label: 'Imported Trades', value: '142', tone: PRIMARY },
-  { label: 'Accounts Linked', value: '4', tone: PRIMARY },
-  { label: 'Rejected Rows', value: '0', tone: SUCCESS },
-  { label: 'Journal Notes', value: '18', tone: PRIMARY },
-  { label: 'Ready For Review', value: '100%', tone: SUCCESS },
+  { label: 'Broker Sync', value: 'Live', hasLiveDot: true },
+  { label: 'Imported Trades', value: '142' },
+  { label: 'Accounts', value: '4' },
+  { label: 'Rejected', value: '0' },
+  { label: 'Journal Notes', value: '18' },
+  { label: 'Ready', value: '100%' },
 ]
 
 export const DashboardScene: React.FC = () => {
@@ -50,20 +51,20 @@ export const DashboardScene: React.FC = () => {
         style={{
           opacity: titleOpacity,
           transform: `translateY(${titleY}px)`,
-          marginBottom: 36,
+          marginBottom: 32,
         }}
       >
         <p
           style={{
-            fontSize: 11,
+            fontSize: 9,
             fontWeight: 600,
-            letterSpacing: '0.18em',
+            letterSpacing: '0.2em',
             textTransform: 'uppercase' as const,
             color: TEXT_TERTIARY,
             margin: 0,
           }}
         >
-          Step 01 — Connect data
+          Step 01 &mdash; Connect data
         </p>
         <p
           style={{
@@ -74,16 +75,17 @@ export const DashboardScene: React.FC = () => {
             letterSpacing: '-0.02em',
           }}
         >
-          Broker fills become one review timeline
+          Connect Your Broker
         </p>
       </div>
 
-      {/* Metric tiles grid */}
+      {/* 3x2 Metric tiles grid */}
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: 16,
+          gridTemplateRows: 'repeat(2, 1fr)',
+          gap: 14,
           flex: 1,
         }}
       >
@@ -93,16 +95,19 @@ export const DashboardScene: React.FC = () => {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
           })
-          const tileY = interpolate(frame, [stagger, stagger + 18], [16, 0], {
+          const tileY = interpolate(frame, [stagger, stagger + 18], [14, 0], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
             easing: Easing.out(Easing.cubic),
           })
-          const tileScale = interpolate(frame, [stagger, stagger + 18], [0.96, 1], {
+          const tileScale = interpolate(frame, [stagger, stagger + 18], [0.97, 1], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
             easing: Easing.out(Easing.cubic),
           })
+
+          const isLive = metric.hasLiveDot
+          const valueColor = isLive ? SUCCESS : TEXT_STRONG
 
           return (
             <div
@@ -113,7 +118,7 @@ export const DashboardScene: React.FC = () => {
                 backgroundColor: BG_CARD,
                 border: `1px solid ${BORDER_SUBTLE}`,
                 borderRadius: 16,
-                padding: '24px 20px',
+                padding: '16px 18px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
@@ -122,9 +127,9 @@ export const DashboardScene: React.FC = () => {
             >
               <p
                 style={{
-                  fontSize: 10,
+                  fontSize: 9,
                   fontWeight: 600,
-                  letterSpacing: '0.16em',
+                  letterSpacing: '0.18em',
                   textTransform: 'uppercase' as const,
                   color: TEXT_TERTIARY,
                   margin: 0,
@@ -134,13 +139,28 @@ export const DashboardScene: React.FC = () => {
               </p>
               <p
                 style={{
-                  fontSize: 32,
+                  fontSize: 18,
                   fontWeight: 700,
-                  color: metric.tone,
-                  margin: '10px 0 0 0',
-                  letterSpacing: '-0.02em',
+                  color: valueColor,
+                  margin: '8px 0 0 0',
+                  letterSpacing: '-0.01em',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
                 }}
               >
+                {isLive && (
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      backgroundColor: SUCCESS,
+                      boxShadow: `0 0 6px ${SUCCESS}`,
+                    }}
+                  />
+                )}
                 {metric.value}
               </p>
             </div>
@@ -148,11 +168,11 @@ export const DashboardScene: React.FC = () => {
         })}
       </div>
 
-      {/* Bottom bar — mini equity curve hint */}
+      {/* Bottom status bar */}
       <div
         style={{
-          marginTop: 24,
-          opacity: interpolate(frame, [50, 70], [0, 1], {
+          marginTop: 20,
+          opacity: interpolate(frame, [48, 68], [0, 1], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
           }),
@@ -163,28 +183,28 @@ export const DashboardScene: React.FC = () => {
             backgroundColor: BG_ELEVATED,
             border: `1px solid ${BORDER_SUBTLE}`,
             borderRadius: 12,
-            padding: '16px 20px',
+            padding: '12px 18px',
             display: 'flex',
             alignItems: 'center',
-            gap: 12,
+            gap: 10,
           }}
         >
           <div
             style={{
-              width: 8,
-              height: 8,
+              width: 7,
+              height: 7,
               borderRadius: '50%',
               backgroundColor: SUCCESS,
             }}
           />
           <p
             style={{
-              fontSize: 13,
+              fontSize: 12,
               color: TEXT_SECONDARY,
               margin: 0,
             }}
           >
-            Tradovate, Rithmic, IBKR, and CSV imports normalize into one workspace
+            Tradovate, Rithmic, IBKR, and CSV imports normalized into one workspace
           </p>
         </div>
       </div>

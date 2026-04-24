@@ -9,6 +9,7 @@ import {
   BG_CARD,
   BG_ELEVATED,
   TEXT_STRONG,
+  TEXT_SECONDARY,
   TEXT_TERTIARY,
   BORDER_SUBTLE,
 } from '../colors'
@@ -36,6 +37,7 @@ export const AIScene: React.FC = () => {
     easing: Easing.out(Easing.cubic),
   })
 
+  // User message animation
   const userMsgOpacity = interpolate(frame, [20, 38], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
@@ -46,16 +48,17 @@ export const AIScene: React.FC = () => {
     easing: Easing.out(Easing.cubic),
   })
 
-  const aiTextProgress = interpolate(frame, [40, 100], [0, 1], {
+  // AI message animation
+  const aiTextProgress = interpolate(frame, [42, 105], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
     easing: Easing.out(Easing.cubic),
   })
-  const aiMsgOpacity = interpolate(frame, [40, 55], [0, 1], {
+  const aiMsgOpacity = interpolate(frame, [42, 58], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   })
-  const aiMsgX = interpolate(frame, [40, 55], [16, 0], {
+  const aiMsgX = interpolate(frame, [42, 58], [16, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
     easing: Easing.out(Easing.cubic),
@@ -81,20 +84,20 @@ export const AIScene: React.FC = () => {
         style={{
           opacity: titleOpacity,
           transform: `translateY(${titleY}px)`,
-          marginBottom: 32,
+          marginBottom: 28,
         }}
       >
         <p
           style={{
-            fontSize: 11,
+            fontSize: 9,
             fontWeight: 600,
-            letterSpacing: '0.18em',
+            letterSpacing: '0.2em',
             textTransform: 'uppercase' as const,
             color: TEXT_TERTIARY,
             margin: 0,
           }}
         >
-          Step 04 — Act on drift
+          Step 04 &mdash; Act on drift
         </p>
         <p
           style={{
@@ -105,32 +108,31 @@ export const AIScene: React.FC = () => {
             letterSpacing: '-0.02em',
           }}
         >
-          AI debrief creates the next rule
+          AI-Powered Insights
         </p>
       </div>
 
       {/* Chat messages */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {/* User message */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {/* User message — right-aligned, PRIMARY bg */}
         <div
           style={{
             opacity: userMsgOpacity,
             transform: `translateX(${userMsgX}px)`,
             alignSelf: 'flex-end',
-            maxWidth: '75%',
-            backgroundColor: PRIMARY_SUBTLE,
-            border: `1px solid oklch(0.6083 0.2172 297.1153 / 0.25)`,
+            maxWidth: '70%',
+            backgroundColor: PRIMARY,
             borderRadius: 16,
             borderBottomRightRadius: 4,
-            padding: '14px 20px',
+            padding: '12px 18px',
           }}
         >
-          <p style={{ fontSize: 14, color: TEXT_STRONG, margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontSize: 13, color: 'white', margin: 0, lineHeight: 1.5 }}>
             {AI_MESSAGES[0].text}
           </p>
         </div>
 
-        {/* AI response */}
+        {/* AI response — left-aligned, card bg */}
         <div
           style={{
             opacity: aiMsgOpacity,
@@ -141,15 +143,16 @@ export const AIScene: React.FC = () => {
             border: `1px solid ${BORDER_SUBTLE}`,
             borderRadius: 16,
             borderBottomLeftRadius: 4,
-            padding: '16px 20px',
+            padding: '14px 18px',
             boxShadow: `0 0 20px ${PRIMARY_GLOW}`,
           }}
         >
+          {/* AI badge with sparkles */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
             <div
               style={{
-                width: 20,
-                height: 20,
+                width: 22,
+                height: 22,
                 borderRadius: 6,
                 backgroundColor: PRIMARY,
                 display: 'flex',
@@ -157,9 +160,15 @@ export const AIScene: React.FC = () => {
                 justifyContent: 'center',
               }}
             >
-              <span style={{ fontSize: 10, color: 'white', fontWeight: 700 }}>AI</span>
+              {/* Sparkles icon (simplified SVG) */}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
+                <path d="M18 14l.75 2.25L21 17l-2.25.75L18 20l-.75-2.25L15 17l2.25-.75L18 14z" />
+              </svg>
             </div>
-            <span style={{ fontSize: 11, fontWeight: 600, color: TEXT_TERTIARY }}>QUNT AI</span>
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: TEXT_TERTIARY }}>
+              QUNT AI
+            </span>
           </div>
           <p style={{ fontSize: 13, color: TEXT_STRONG, margin: 0, lineHeight: 1.6 }}>
             {displayedAiText || ''}
@@ -171,6 +180,7 @@ export const AIScene: React.FC = () => {
                   height: 14,
                   backgroundColor: PRIMARY,
                   marginLeft: 2,
+                  verticalAlign: 'text-bottom',
                 }}
               />
             )}
@@ -184,11 +194,11 @@ export const AIScene: React.FC = () => {
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
           gap: 12,
-          marginTop: 20,
+          marginTop: 16,
         }}
       >
         {INSIGHTS.map((insight, i) => {
-          const cardStart = 90 + i * 10
+          const cardStart = 95 + i * 10
           const cardOpacity = interpolate(frame, [cardStart, cardStart + 16], [0, 1], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',

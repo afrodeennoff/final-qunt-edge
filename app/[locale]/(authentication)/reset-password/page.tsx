@@ -38,7 +38,7 @@ export default function ResetPasswordPage() {
  const result = await updatePassword(password)
  if (result.success) {
  setIsSuccess(true)
- setTimeout(() => router.push('/dashboard'), 2000)
+ setTimeout(() => router.push(`/${locale}/dashboard`), 2000)
  }
  } catch (err) {
  setError(err instanceof Error ? err.message : 'Failed to update password')

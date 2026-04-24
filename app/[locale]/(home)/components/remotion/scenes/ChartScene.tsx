@@ -1,11 +1,13 @@
 import React from 'react'
 import { useCurrentFrame, interpolate, Easing } from 'remotion'
 import {
+  PRIMARY,
   SUCCESS,
   ERROR,
   BG_BASE,
   BG_CARD,
   TEXT_STRONG,
+  TEXT_SECONDARY,
   TEXT_TERTIARY,
   BORDER_SUBTLE,
 } from '../colors'
@@ -16,8 +18,8 @@ const EQUITY_POINTS = [
   1420, 1560, 1500, 1680, 1750, 1620, 1800, 1920, 2050, 1980, 2150,
 ]
 
-// Bar chart data — daily PnL
-const DAILY_PNL = [320, -150, 480, 210, -90, 350, 120, -200, 410, 180, -60, 290, 150]
+// 8 daily PnL bars
+const DAILY_PNL = [320, -150, 480, 210, -90, 350, 120, 280]
 
 function generateSmoothPath(
   points: number[],
@@ -34,7 +36,6 @@ function generateSmoothPath(
     y: padding + (1 - (p - minVal) / range) * (height - padding * 2),
   }))
 
-  // Build smooth path with cubic bezier
   let path = `M ${coords[0].x} ${coords[0].y}`
   for (let i = 1; i < coords.length; i++) {
     const prev = coords[i - 1]
@@ -60,13 +61,12 @@ export const ChartScene: React.FC = () => {
 
   // Equity curve draw-in animation
   const chartWidth = 1100
-  const chartHeight = 340
+  const chartHeight = 320
   const chartPadding = 20
 
   const equityPath = generateSmoothPath(EQUITY_POINTS, chartWidth, chartHeight, chartPadding)
 
-  // Calculate approximate path length for stroke animation
-  const pathLength = chartWidth * 1.8 // approximate
+  const pathLength = chartWidth * 1.8
   const drawProgress = interpolate(frame, [20, 80], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
@@ -75,7 +75,7 @@ export const ChartScene: React.FC = () => {
   const strokeDashoffset = pathLength * (1 - drawProgress)
 
   // Area fill opacity
-  const areaOpacity = interpolate(frame, [50, 90], [0, 0.12], {
+  const areaOpacity = interpolate(frame, [50, 90], [0, 0.15], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   })
@@ -86,7 +86,7 @@ export const ChartScene: React.FC = () => {
     extrapolateRight: 'clamp',
   })
 
-  // Bar chart stagger
+  // Daily PnL bar stagger
   const barStartFrame = 40
 
   return (
@@ -106,64 +106,41 @@ export const ChartScene: React.FC = () => {
         style={{
           opacity: titleOpacity,
           transform: `translateY(${titleY}px)`,
-          marginBottom: 28,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
+          marginBottom: 24,
         }}
       >
-        <div>
-          <p
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase' as const,
-              color: TEXT_TERTIARY,
-              margin: 0,
-            }}
-          >
-            Step 02 — Review session
-          </p>
-          <p
-            style={{
-              fontSize: 28,
-              fontWeight: 700,
-              color: TEXT_STRONG,
-              margin: '8px 0 0 0',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Metrics expose execution quality
-          </p>
-        </div>
-        <div
+        <p
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
+            fontSize: 9,
+            fontWeight: 600,
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase' as const,
+            color: TEXT_TERTIARY,
+            margin: 0,
           }}
         >
-          <span
-            style={{
-              display: 'inline-block',
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              backgroundColor: SUCCESS,
-            }}
-          />
-          <span style={{ fontSize: 14, color: SUCCESS, fontWeight: 600 }}>+$2,150 today</span>
-        </div>
+          Step 02 &mdash; Review session
+        </p>
+        <p
+          style={{
+            fontSize: 28,
+            fontWeight: 700,
+            color: TEXT_STRONG,
+            margin: '8px 0 0 0',
+            letterSpacing: '-0.02em',
+          }}
+        >
+          Review Performance
+        </p>
       </div>
 
-      {/* Main equity curve SVG */}
+      {/* Main equity curve SVG in dark card */}
       <div
         style={{
           backgroundColor: BG_CARD,
           border: `1px solid ${BORDER_SUBTLE}`,
           borderRadius: 16,
-          padding: 24,
+          padding: 20,
           flex: 1,
           position: 'relative',
           boxShadow: '0 1px 2px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.06)',
@@ -189,26 +166,26 @@ export const ChartScene: React.FC = () => {
             />
           ))}
 
-          {/* Gradient fill under curve */}
+          {/* Gradient fill under curve — PRIMARY purple */}
           <defs>
-            <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={SUCCESS} stopOpacity={0.4} />
-              <stop offset="100%" stopColor={SUCCESS} stopOpacity={0} />
+            <linearGradient id="equityAreaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={PRIMARY} stopOpacity={0.35} />
+              <stop offset="100%" stopColor={PRIMARY} stopOpacity={0} />
             </linearGradient>
           </defs>
 
           {/* Filled area */}
           <path
             d={`${equityPath} L ${chartWidth - chartPadding} ${chartHeight - chartPadding} L ${chartPadding} ${chartHeight - chartPadding} Z`}
-            fill="url(#areaGradient)"
+            fill="url(#equityAreaGrad)"
             opacity={areaOpacity}
           />
 
-          {/* Equity line */}
+          {/* Equity line — PRIMARY purple */}
           <path
             d={equityPath}
             fill="none"
-            stroke={SUCCESS}
+            stroke={PRIMARY}
             strokeWidth={2.5}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -226,7 +203,7 @@ export const ChartScene: React.FC = () => {
                   (chartHeight - chartPadding * 2)
               }
               r={5}
-              fill={SUCCESS}
+              fill={PRIMARY}
               opacity={interpolate(frame, [85, 95], [0, 1], {
                 extrapolateLeft: 'clamp',
                 extrapolateRight: 'clamp',
@@ -236,30 +213,30 @@ export const ChartScene: React.FC = () => {
         </svg>
       </div>
 
-      {/* Daily PnL bar chart */}
+      {/* Daily PnL bar chart — 8 bars */}
       <div
         style={{
-          marginTop: 16,
+          marginTop: 14,
           display: 'flex',
-          gap: 6,
+          gap: 8,
           alignItems: 'flex-end',
-          height: 60,
+          height: 56,
           paddingLeft: 4,
         }}
       >
         {DAILY_PNL.map((pnl, i) => {
-          const barFrame = barStartFrame + i * 3
+          const barFrame = barStartFrame + i * 4
           const barHeight = interpolate(
             frame,
-            [barFrame, barFrame + 12],
-            [0, Math.abs(pnl) / 500],
+            [barFrame, barFrame + 14],
+            [0, Math.abs(pnl) / 550],
             {
               extrapolateLeft: 'clamp',
               extrapolateRight: 'clamp',
               easing: Easing.out(Easing.cubic),
             },
           )
-          const barOpacity = interpolate(frame, [barFrame, barFrame + 10], [0, 0.8], {
+          const barOpacity = interpolate(frame, [barFrame, barFrame + 10], [0, 0.85], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
           })
@@ -278,18 +255,52 @@ export const ChartScene: React.FC = () => {
               <div
                 style={{
                   width: '100%',
-                  maxWidth: 32,
+                  maxWidth: 36,
                   height: `${barHeight * 100}%`,
                   minHeight: pnl !== 0 ? 2 : 0,
-                  backgroundColor: pnl >= 0 ? SUCCESS : ERROR,
+                  backgroundColor: pnl >= 0 ? PRIMARY : ERROR,
                   opacity: barOpacity,
                   borderRadius: 4,
-                  transition: 'none',
                 }}
               />
             </div>
           )
         })}
+      </div>
+
+      {/* Daily PnL summary bar */}
+      <div
+        style={{
+          marginTop: 12,
+          opacity: interpolate(frame, [70, 90], [0, 1], {
+            extrapolateLeft: 'clamp',
+            extrapolateRight: 'clamp',
+          }),
+          transform: `translateY(${interpolate(frame, [70, 90], [6, 0], {
+            extrapolateLeft: 'clamp',
+            extrapolateRight: 'clamp',
+            easing: Easing.out(Easing.cubic),
+          })}px)`,
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+          }}
+        >
+          <span
+            style={{
+              display: 'inline-block',
+              width: 7,
+              height: 7,
+              borderRadius: '50%',
+              backgroundColor: SUCCESS,
+            }}
+          />
+          <span style={{ fontSize: 13, color: SUCCESS, fontWeight: 600 }}>+$2,150 today</span>
+        </div>
       </div>
     </div>
   )

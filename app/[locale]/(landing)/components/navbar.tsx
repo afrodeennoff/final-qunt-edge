@@ -95,7 +95,7 @@ export default function Navbar() {
             </Link>
 
             <UnifiedMobileNav
-              groups={[{ links: links.map((link) => ({ href: link.href, label: link.title })) }]}
+              groups={[{ links: links.map((link) => ({ href: `/${locale}${link.href}`, label: link.title })) }]}
               footer={
                 <Link
                   href={`/${locale}/authentication`}

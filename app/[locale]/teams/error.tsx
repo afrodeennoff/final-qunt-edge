@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { useParams } from 'next/navigation'
 import { RouteErrorScreen } from '@/components/ui/route-state'
 
 export default function TeamsError({
@@ -10,6 +11,8 @@ export default function TeamsError({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  const { locale } = useParams<{ locale: string }>()
+
   useEffect(() => {
     console.error('[Teams Error Boundary]', error)
   }, [error])
@@ -21,7 +24,7 @@ export default function TeamsError({
       description={error.message || 'A teams workspace error interrupted this view.'}
       onRetry={reset}
       secondaryLabel="Go to dashboard"
-      onSecondary={() => window.location.assign('/dashboard')}
+      onSecondary={() => window.location.assign(`/${locale || 'en'}/dashboard`)}
       fullScreen={false}
     />
   )

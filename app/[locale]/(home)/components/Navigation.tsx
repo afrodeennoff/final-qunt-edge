@@ -46,12 +46,13 @@ export default function Navigation({ locale }: NavigationProps) {
           <Button
             variant="ghost"
             size="sm"
+            asChild
             className="rounded-full px-4 text-foreground/60 hover:bg-[oklch(0.052_0.009_260_/_0.7)] hover:text-foreground"
           >
-            Login
+            <Link href={`/${locale}/authentication`}>Login</Link>
           </Button>
-          <Button size="sm" className="rounded-full px-4">
-            Start Free
+          <Button size="sm" asChild className="rounded-full px-4">
+            <Link href={`/${locale}/authentication?next=dashboard`}>Start Free</Link>
           </Button>
         </div>
 
@@ -62,12 +63,13 @@ export default function Navigation({ locale }: NavigationProps) {
               <Button
                 variant="outline"
                 size="lg"
+                asChild
                 className="w-full rounded-full border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.68)]"
               >
-                Login
+                <Link href={`/${locale}/authentication`}>Login</Link>
               </Button>
-              <Button size="lg" className="w-full rounded-full">
-                Start Free
+              <Button size="lg" asChild className="w-full rounded-full">
+                <Link href={`/${locale}/authentication?next=dashboard`}>Start Free</Link>
               </Button>
             </div>
           }
