@@ -11,6 +11,30 @@ import { MemberRole } from '@/prisma/generated/prisma'
 import { ensureTeamMembership, resolveTeamUserId } from '@/server/team-membership'
 import { isAdminUser } from '@/server/authz'
 
+export async function updateUserProfile(fullName: string) {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user?.id) {
+      throw new Error('Unauthorized')
+    }
+
+    const { error } = await supabase.auth.updateUser({
+      data: { full_name: fullName.trim() },
+    })
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    revalidatePath('/dashboard/settings')
+    return { success: true }
+  } catch (error) {
+    console.error('Error updating profile:', error)
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to update profile' }
+  }
+}
+
 export async function checkAdminStatus(): Promise<boolean> {
   try {
     const supabase = await createClient()

@@ -41,7 +41,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { leaveTeam, getUserTeams } from './actions'
+import { leaveTeam, getUserTeams, updateUserProfile } from './actions'
 import { toast } from 'sonner'
 import {
   AlertDialog,
@@ -308,6 +308,8 @@ export default function SettingsPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [fullName, setFullName] = useState(user?.user_metadata?.full_name || user?.user_metadata?.name || '')
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false)
 
   const [userTeams, setUserTeams] = useState<UserTeamsState>({ ownedTeams: [], joinedTeams: [] })
 
@@ -344,6 +346,21 @@ export default function SettingsPage() {
       isCancelled = true
     }
   }, [])
+
+  const handleUpdateProfile = async () => {
+    if (!fullName.trim()) {
+      toast.error('Name is required')
+      return
+    }
+    setIsUpdatingProfile(true)
+    const result = await updateUserProfile(fullName)
+    setIsUpdatingProfile(false)
+    if (result.success) {
+      toast.success('Profile updated')
+    } else {
+      toast.error(result.error || 'Failed to update profile')
+    }
+  }
 
   const handleLeaveTeam = async (teamId: string) => {
     const result = await leaveTeam(teamId)

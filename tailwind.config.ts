@@ -72,12 +72,8 @@ const config = {
         'gradient-shine':
           'linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)',
         // ── 12K PREMIUM GRADIENT SURFACES ──
-        'gradient-aurora':
-          'linear-gradient(135deg, color(display-p3 0.45 0.25 0.95) 0%, color(display-p3 0.20 0.45 0.98) 50%, color(display-p3 0.18 0.98 0.65) 100%)',
         'gradient-luxe':
           'linear-gradient(135deg, color(display-p3 0.45 0.25 0.95 / 0.8) 0%, color(display-p3 0.95 0.72 0.18 / 0.6) 100%)',
-        'gradient-plasma':
-          'linear-gradient(135deg, color(display-p3 0.95 0.30 0.55) 0%, color(display-p3 0.45 0.25 0.95) 100%)',
         'gradient-ice':
           'linear-gradient(135deg, color(display-p3 0.55 0.65 0.98) 0%, color(display-p3 0.75 0.85 0.98) 50%, color(display-p3 0.90 0.92 0.98) 100%)',
         'gradient-obsidian':
@@ -306,10 +302,6 @@ const config = {
         'ultra-2xl':
           '0 12px 24px rgba(0,0,0,0.10), 0 32px 64px rgba(0,0,0,0.22), 0 64px 128px rgba(0,0,0,0.30), 0 128px 256px rgba(0,0,0,0.24), 0 0 0 1px rgba(180,210,255,0.09)',
         // ── PREMIUM IRIDESCENT GLOW SHADOWS ──
-        'glow-aurora': '0 0 32px color(display-p3 0.45 0.25 0.95 / 0.3), 0 0 64px color(display-p3 0.45 0.25 0.95 / 0.15)',
-        'glow-sapphire': '0 0 32px color(display-p3 0.20 0.45 0.98 / 0.3), 0 0 64px color(display-p3 0.20 0.45 0.98 / 0.15)',
-        'glow-gold': '0 0 32px color(display-p3 0.95 0.72 0.18 / 0.3), 0 0 64px color(display-p3 0.95 0.72 0.18 / 0.15)',
-        'glow-plasma': '0 0 32px color(display-p3 0.95 0.30 0.55 / 0.3), 0 0 64px color(display-p3 0.95 0.30 0.55 / 0.15)',
         // ── PREMIUM DEPTH LAYERS (for 12K card surfaces) ──
         'surface-0': '0 0 0 0.5px rgba(180,210,255,0.04)',
         'surface-1': '0 1px 3px rgba(0,0,0,0.35), 0 0 0 0.5px rgba(180,210,255,0.05)',
@@ -378,59 +370,6 @@ const config = {
         '1000': '1000ms',
       },
       colors: {
-        // ── P3 WIDE GAMUT PREMIUM COLORS ──
-        aurora: {
-          DEFAULT: 'color(display-p3 0.45 0.25 0.95)',
-          50: 'color(display-p3 0.95 0.92 1.0)',
-          100: 'color(display-p3 0.88 0.82 0.98)',
-          200: 'color(display-p3 0.78 0.68 0.96)',
-          300: 'color(display-p3 0.66 0.50 0.94)',
-          400: 'color(display-p3 0.55 0.35 0.95)',
-          500: 'color(display-p3 0.45 0.25 0.95)',
-          600: 'color(display-p3 0.38 0.18 0.88)',
-          700: 'color(display-p3 0.30 0.12 0.75)',
-          800: 'color(display-p3 0.22 0.08 0.55)',
-          900: 'color(display-p3 0.14 0.04 0.35)',
-        },
-        plasma: {
-          DEFAULT: 'color(display-p3 0.95 0.30 0.55)',
-          50: 'color(display-p3 1.0 0.94 0.96)',
-          100: 'color(display-p3 0.98 0.85 0.90)',
-          200: 'color(display-p3 0.97 0.68 0.78)',
-          300: 'color(display-p3 0.96 0.48 0.64)',
-          400: 'color(display-p3 0.95 0.30 0.55)',
-          500: 'color(display-p3 0.88 0.20 0.45)',
-          600: 'color(display-p3 0.75 0.14 0.38)',
-          700: 'color(display-p3 0.58 0.08 0.28)',
-          800: 'color(display-p3 0.40 0.05 0.18)',
-          900: 'color(display-p3 0.25 0.02 0.10)',
-        },
-        sapphire: {
-          DEFAULT: 'color(display-p3 0.20 0.45 0.98)',
-          50: 'color(display-p3 0.94 0.96 1.0)',
-          100: 'color(display-p3 0.85 0.90 0.98)',
-          200: 'color(display-p3 0.68 0.78 0.96)',
-          300: 'color(display-p3 0.48 0.62 0.97)',
-          400: 'color(display-p3 0.30 0.50 0.98)',
-          500: 'color(display-p3 0.20 0.45 0.98)',
-          600: 'color(display-p3 0.14 0.35 0.88)',
-          700: 'color(display-p3 0.10 0.25 0.72)',
-          800: 'color(display-p3 0.06 0.16 0.52)',
-          900: 'color(display-p3 0.03 0.08 0.32)',
-        },
-        gold: {
-          DEFAULT: 'color(display-p3 0.95 0.72 0.18)',
-          50: 'color(display-p3 1.0 0.98 0.92)',
-          100: 'color(display-p3 0.98 0.94 0.80)',
-          200: 'color(display-p3 0.97 0.88 0.55)',
-          300: 'color(display-p3 0.96 0.80 0.35)',
-          400: 'color(display-p3 0.95 0.72 0.18)',
-          500: 'color(display-p3 0.90 0.62 0.10)',
-          600: 'color(display-p3 0.78 0.50 0.06)',
-          700: 'color(display-p3 0.60 0.36 0.04)',
-          800: 'color(display-p3 0.42 0.24 0.02)',
-          900: 'color(display-p3 0.28 0.14 0.01)',
-        },
         neon: {
           mint: 'color(display-p3 0.18 0.98 0.65)',
           cyan: 'color(display-p3 0.10 0.90 0.98)',
@@ -876,11 +815,6 @@ const config = {
           },
         },
         // ── PREMIUM 12K ANIMATIONS ──
-        'aurora-shift': {
-          '0%': { backgroundPosition: '0% 50%' },
-          '50%': { backgroundPosition: '100% 50%' },
-          '100%': { backgroundPosition: '0% 50%' },
-        },
         'depth-breathe': {
           '0%, 100%': {
             transform: 'scale(1)',
@@ -939,7 +873,6 @@ const config = {
         wiggle: 'wiggle 0.5s ease-in-out',
         morph: 'morph 8s ease-in-out infinite',
         // ── PREMIUM 12K ANIMATIONS ──
-        'aurora-shift': 'aurora-shift 8s ease infinite',
         'depth-breathe': 'depth-breathe 4s ease-in-out infinite',
         iridescent: 'iridescent 12s linear infinite',
         'cinematic-reveal': 'cinematic-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
