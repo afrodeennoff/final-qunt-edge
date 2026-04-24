@@ -5,10 +5,15 @@ import React from 'react'
 const raw = createI18nClient({
   en: () => import('./en'),
   fr: () => import('./fr'),
-  hi: () => import('./en'),
-  ja: () => import('./en'),
-  es: () => import('./en'),
-  it: () => import('./en'),
+  hi: () => import('./hi'),
+  ja: () => import('./ja'),
+  es: () => import('./es'),
+  it: () => import('./it'),
+  de: () => import('./en'),
+  pt: () => import('./en'),
+  vi: () => import('./en'),
+  zh: () => import('./en'),
+  yo: () => import('./en'),
 })
 
 export const useRawI18n = raw.useI18n

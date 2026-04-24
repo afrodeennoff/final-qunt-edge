@@ -2,15 +2,14 @@ import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { Check } from 'lucide-react'
 import { BadgeV2 as Badge, ButtonV2 as Button, CardV2 as Card } from '@/components/ui/v2'
-import { WindowChrome } from '@/components/ui/window-chrome'
 import { MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
 
 export const marketingHeroTitleClassName =
-  'text-balance text-[clamp(3rem,8vw,6.6rem)] font-semibold leading-[0.92] tracking-[-0.04em] text-foreground'
+  'text-balance text-5xl font-semibold leading-[0.98] tracking-normal text-foreground sm:text-6xl lg:text-7xl'
 
 export const marketingSectionTitleClassName =
-  'text-balance text-[clamp(2rem,4.2vw,3.5rem)] font-semibold leading-[1] tracking-[-0.03em] text-foreground'
+  'text-balance text-3xl font-semibold leading-tight tracking-normal text-foreground sm:text-4xl lg:text-5xl'
 
 export const marketingBodyClassName = 'text-sm leading-7 text-muted-foreground sm:text-base'
 
@@ -224,24 +223,37 @@ export function MarketingPricingCard({
   )
 }
 
-export function MarketingBrowserFrame({
+export function MarketingHyperframe({
   children,
+  id,
   label = 'Qunt Edge',
+  status,
   className,
 }: {
   children: ReactNode
+  id?: string
   label?: ReactNode
+  status?: ReactNode
   className?: string
 }) {
   return (
-    <Card variant="elevated" className={cn('overflow-hidden p-0', className)}>
+    <Card id={id} variant="elevated" className={cn('overflow-hidden p-0', className)}>
       <div className="flex items-center justify-between border-b border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.01_260_/_0.88)] px-4 py-3">
-        <WindowChrome />
+        <div className="flex items-center gap-[6px] px-2 py-1.5" aria-hidden>
+          <span className="h-3 w-3 rounded-full bg-[oklch(0.68_0.23_28)] opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
+          <span className="h-3 w-3 rounded-full bg-[oklch(0.85_0.17_87)] opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
+          <span className="h-3 w-3 rounded-full bg-[oklch(0.76_0.2_145)] opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
+        </div>
         <div className="rounded-full border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.05)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {label}
+        </div>
+        <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/88 sm:flex">
+          {status}
         </div>
       </div>
       <div className="relative overflow-hidden">{children}</div>
     </Card>
   )
 }
+
+export const MarketingBrowserFrame = MarketingHyperframe
