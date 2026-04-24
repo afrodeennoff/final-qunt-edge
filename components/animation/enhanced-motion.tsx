@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useEffect, useState } from "react"
-import { motion, useReducedMotion, useInView, useSpring, Variants } from "framer-motion"
+import { motion, useReducedMotion, useInView, useSpring, Variants } from "motion/react"
 import { cn } from "@/lib/utils"
 
 export const SPRING_GENTLE = { type:"spring" as const, stiffness: 280, damping: 26, mass: 0.9 }
@@ -58,7 +58,7 @@ export const blurIn: Variants = {
  scale: 1,
  transition: {
  duration: 0.36,
- ease: MOTION_EASE.entrance as unknown as number[],
+ ease: [...MOTION_EASE.entrance] as [number, number, number, number],
  },
  },
 }

@@ -10,7 +10,7 @@ import { useParams } from "next/navigation"
 import { useRef, useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'motion/react'
 import { useUserStore } from "@/store/user-store"
 
 export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: boolean }) {

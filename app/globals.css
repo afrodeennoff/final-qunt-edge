@@ -509,9 +509,7 @@
     BlinkMacSystemFont,
     'Segoe UI',
     sans-serif;
-  --font-display: var(--font-outfit);
-  --font-mid: var(--font-poppins);
-  --font-data: var(--font-roboto);
+  --font-display: var(--font-sans);
   --v2-accent-rgb: 145 108 255;
   --v2-gradient-blue-purple: linear-gradient(
     135deg,
@@ -883,9 +881,7 @@
   --font-sans: var(--font-dm-sans), 'DM Sans', sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Geist Mono, monospace;
-  --font-display: var(--font-outfit), 'Outfit', sans-serif;
-  --font-mid: var(--font-poppins), 'Poppins', sans-serif;
-  --font-data: var(--font-roboto), 'Roboto', sans-serif;
+  --font-display: var(--font-dm-sans), 'DM Sans', sans-serif;
   --radius: 1rem;
   --shadow-base: 263 70% 50%;
   --shadow-2xs: 0px 8px 30px 0px hsl(263 70% 50% / 0.04);

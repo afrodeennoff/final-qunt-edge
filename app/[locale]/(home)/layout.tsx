@@ -27,13 +27,13 @@ export default function HomeLayout({
     <PublicRootProviders>
       <MarketingLayoutShell
         className="home-borderless-shell dark"
-        contentClassName="w-full"
+        contentClassName="w-full flex-1"
         showRollingBanner={true}
         topSpacingClassName=""
         contentSpacingClassName="pb-safe"
         shellVariant="black"
       >
-        <div className="pb-safe">
+        <div className="flex flex-1 flex-col pb-safe">
           {children}
         </div>
       </MarketingLayoutShell>

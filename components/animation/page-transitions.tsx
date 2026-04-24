@@ -1,7 +1,7 @@
 "use client"
 
 import { ReactNode } from "react"
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
+import { motion, AnimatePresence, useReducedMotion } from "motion/react"
 import { cn } from "@/lib/utils"
 import { SPRING_PRESETS } from "./entrance-exit"
 

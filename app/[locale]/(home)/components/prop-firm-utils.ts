@@ -1,5 +1,3 @@
-'use client'
-
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { safeArrayMax, safeArrayMin } from '@/lib/array-utils'
 

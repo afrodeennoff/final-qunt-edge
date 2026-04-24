@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, LogOut, User } from 'lucide-react'
@@ -54,9 +55,11 @@ function UserSection({ onLogout }: { onLogout: () => void }) {
     <div className={cn(unifiedInsetPanelClassName, 'flex items-center gap-3 px-3 py-2.5')}>
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary/16 bg-primary/10 text-sm font-semibold text-sidebar-foreground">
         {user?.user_metadata?.avatar_url ? (
-          <img
+          <Image
             src={user.user_metadata.avatar_url}
             alt=""
+            width={40}
+            height={40}
             className="h-full w-full rounded-xl object-cover"
           />
         ) : (

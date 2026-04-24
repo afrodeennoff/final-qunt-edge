@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { ArrowRight, Target, TrendingUp } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import {

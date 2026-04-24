@@ -38,8 +38,8 @@ export default async function RootLayout(
 
   return (
     <PublicRootProviders>
-      <MarketingLayoutShell contentClassName="w-full px-4 sm:px-6 lg:px-8">
-        <div className="pb-safe">
+      <MarketingLayoutShell contentClassName="w-full flex-1 px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-1 flex-col pb-safe">
           {children}
         </div>
       </MarketingLayoutShell>

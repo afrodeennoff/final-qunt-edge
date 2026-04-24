@@ -6,7 +6,7 @@ import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, ChevronDown, MessageSquare, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import type { UIMessage } from "ai";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";

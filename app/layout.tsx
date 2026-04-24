@@ -5,9 +5,6 @@ import {
   Geist,
   IBM_Plex_Mono,
   DM_Sans,
-  Outfit,
-  Poppins,
-  Roboto,
 } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -50,33 +47,6 @@ const fontDmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-dm-sans',
   weight: ['400', '500', '600', '700'],
-  display: 'swap',
-  preload: false,
-  fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
-})
-
-const fontOutfit = Outfit({
-  subsets: ['latin'],
-  variable: '--font-outfit',
-  weight: ['500', '600'],
-  display: 'swap',
-  preload: false,
-  fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
-})
-
-const fontPoppins = Poppins({
-  subsets: ['latin'],
-  variable: '--font-poppins',
-  weight: ['400', '500', '600', '700', '800'],
-  display: 'swap',
-  preload: false,
-  fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
-})
-
-const fontRoboto = Roboto({
-  subsets: ['latin'],
-  variable: '--font-roboto',
-  weight: ['400', '500', '600'],
   display: 'swap',
   preload: false,
   fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
@@ -192,7 +162,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
-      className={`${darkRootClass} ${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} ${fontDmSans.variable} ${fontOutfit.variable} ${fontPoppins.variable} ${fontRoboto.variable} bg-background`}
+      className={`${darkRootClass} ${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} ${fontDmSans.variable} bg-background`}
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning
@@ -234,7 +204,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body
-        className="bg-background font-sans type-body antialiased text-foreground"
+        className="flex min-h-screen flex-col bg-background font-sans type-body antialiased text-foreground"
         data-ui-variant={uiVariant}
       >
         <a
@@ -246,7 +216,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ScrollLockFixLazy />
         {enableVercelInsights ? <SpeedInsights /> : null}
         {enableVercelInsights ? <Analytics /> : null}
-        <main id="main-content">{children}</main>
+        <main id="main-content" className="flex flex-1 flex-col">{children}</main>
       </body>
     </html>
   )

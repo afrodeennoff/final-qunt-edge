@@ -12,7 +12,7 @@ export default async function FinalCTA({ locale }: FinalCTAProps) {
   const t = await getI18n()
 
   return (
-    <section className="px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+    <section className="flex flex-1 flex-col justify-center px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
       <ScrollRevealSection className="mx-auto max-w-3xl text-center">
         <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
           {t('landing.home.finalCta.titlePrefix')}{' '}

@@ -25,7 +25,7 @@ import { toast } from "sonner"
 import { defaultLayouts } from "@/lib/default-layouts"
 import type { DashboardLayout } from "@/prisma/generated/prisma"
 import { useDashboard } from '../dashboard-context'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'motion/react'
 import { WidgetShell } from "@/components/ui/widget-shell"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { isUiV2Enabled } from "@/lib/ui-v2"
