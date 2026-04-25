@@ -497,7 +497,7 @@ export async function GET(request: Request) {
         logger.error("[CronComputeTradeData] Route failed", { error })
         return NextResponse.json({
           success: false,
-          error: error instanceof Error ? error.message : 'Unknown error occurred',
+          error: 'Failed to compute trade data',
           processed: 0
         }, { status: 500 })
       }

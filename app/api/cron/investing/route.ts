@@ -373,8 +373,7 @@ export async function GET(request: Request) {
         return NextResponse.json(
           {
             success: false,
-            error: 'Failed to fetch events from Investing.com',
-            details: error instanceof Error ? error.message : 'Unknown error'
+            error: 'Failed to fetch events',
           },
           { status: 500 }
         )
