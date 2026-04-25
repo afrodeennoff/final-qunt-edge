@@ -145,8 +145,8 @@ export default async function HomeContent({ locale }: HomeContentProps) {
   return (
     <div className="relative min-w-0 overflow-x-hidden bg-black selection:bg-primary/30 selection:text-foreground">
       <main className="relative z-10 flex min-w-0 flex-col">
-        <MarketingSection className="pt-24 sm:pt-28 lg:pt-36" innerClassName="max-w-[1180px]">
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(480px,1.1fr)] lg:items-center">
+        <MarketingSection className="pt-24 sm:pt-28 lg:pt-36" innerClassName="max-w-[1340px]">
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(540px,1.15fr)] lg:items-center">
             <div className="max-w-3xl">
               <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/88">
                 {t('landing.hero.badge')}
