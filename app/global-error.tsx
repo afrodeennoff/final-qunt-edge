@@ -41,7 +41,11 @@ export default function GlobalError({
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => window.location.reload()}
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.location.reload()
+                }
+              }}
               className="rounded-xl bg-white px-5 py-2.5 text-sm font-medium text-black transition-opacity hover:opacity-90"
             >
               Reload

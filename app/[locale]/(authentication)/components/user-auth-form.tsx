@@ -110,6 +110,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  const [alreadySignedIn, setAlreadySignedIn] = React.useState(false)
 
  React.useEffect(() => {
+ if (typeof window === 'undefined') return
+
+ try {
  const urlParams = new URLSearchParams(window.location.search)
  const subscription = urlParams.get('subscription')
  const next = normalizeNextPath(urlParams.get('next'))
@@ -146,6 +149,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  const queryErrorMessage = getQueryErrorMessage(errorCode, authErrorCode)
  if (queryErrorMessage) {
  toast.error(t('error'), { description: queryErrorMessage })
+ }
+ } catch (error) {
+ console.warn('Failed to parse URL params:', error)
  }
  }, [t])
 
@@ -342,7 +348,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  }
 
  toast.success(t('success'), { description: t('auth.signIn') })
+ if (typeof window !== 'undefined') {
  window.location.href = result.next || (nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)
+ }
  setLastAuthPreference('password')
  } catch (error) {
  const parsedError = parseAuthError(error)
@@ -386,7 +394,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  toast.success("Successfully verified. Redirecting...", {
  description:"Successfully verified. Redirecting...",
  })
+ if (typeof window !== 'undefined') {
  window.location.href = nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`
+ }
  } catch (error) {
  toast.error("Error", {
  description: error instanceof Error ? error.message :"Failed to verify code",
@@ -462,6 +472,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  }
 
  function openMailClient() {
+ if (typeof window === 'undefined') return
+
  const email = form.getValues('email')
  const domain = email.split('@')[1] ?? ''
 

@@ -11,16 +11,10 @@ import { Toaster } from "@/components/ui/sonner";
 
 function DashboardProvidersInner({ children }: { children: React.ReactNode }) {
   return (
-    <DataStateProvider>
-      <DataDerivedProvider>
-        <DataActionsProvider>
-          <SyncContextProvider>
-            <Toaster />
-            {children}
-          </SyncContextProvider>
-        </DataActionsProvider>
-      </DataDerivedProvider>
-    </DataStateProvider>
+    <SyncContextProvider>
+      <Toaster />
+      {children}
+    </SyncContextProvider>
   );
 }
 
@@ -36,7 +30,13 @@ export function DashboardProviders({
   return (
     <DashboardBootstrapProvider initialBootstrap={initialBootstrap}>
       <DataProvider isAdmin={isAdmin} initialBootstrap={initialBootstrap}>
-        <DashboardProvidersInner>{children}</DashboardProvidersInner>
+        <DataStateProvider>
+          <DataDerivedProvider>
+            <DataActionsProvider>
+              <DashboardProvidersInner>{children}</DashboardProvidersInner>
+            </DataActionsProvider>
+          </DataDerivedProvider>
+        </DataStateProvider>
       </DataProvider>
     </DashboardBootstrapProvider>
   );

@@ -7,6 +7,12 @@ import { Widget } from "@/app/[locale]/dashboard/types/dashboard";
 import { useAnalysisStore } from "@/store/analysis-store";
 import { useTradingDomainStore } from "@/store/trading-domain-store";
 import { useTradovateSyncStore } from "@/store/tradovate-sync-store";
+import { useEquityChartStore } from "@/store/equity-chart-store";
+import { useTableConfigStore } from "@/store/table-config-store";
+import { useAccountOrderStore } from "@/store/account-order-store";
+import { useAccountsGroupExpansionStore } from "@/store/accounts-group-expansion-store";
+import { useDailyTickTargetStore } from "@/store/daily-tick-target-store";
+import { useSubscriptionStore } from "@/store/subscription-store";
 
 // Re-export Widget types for use in other modules
 export type { Widget };
@@ -54,6 +60,10 @@ function resetSessionScopedStores() {
   useTradingDomainStore.getState().setAccounts([])
   useAnalysisStore.getState().clearAnalysis()
   useTradovateSyncStore.getState().clearAll()
+  useEquityChartStore.getState().resetConfig()
+  useTableConfigStore.getState().resetAllConfigs()
+  useAccountsGroupExpansionStore.getState().resetExpanded()
+  useSubscriptionStore.getState().clearSubscription()
   clearSensitiveClientStorage()
 }
 

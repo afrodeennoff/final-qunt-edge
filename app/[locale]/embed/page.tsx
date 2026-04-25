@@ -265,7 +265,7 @@ export default function EmbedPage() {
         {/*Dismiss cookie consent banner*/}
         <Script id="embed-autoconsent" strategy="beforeInteractive">
           {`try {
-            if (!window.localStorage.getItem('cookieConsent')) {
+            if (typeof window !== 'undefined' && window.localStorage && !window.localStorage.getItem('cookieConsent')) {
               window.localStorage.setItem('cookieConsent', JSON.stringify({
                 analytics_storage: false,
                 ad_storage: false,
