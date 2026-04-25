@@ -395,8 +395,25 @@ export async function removeMember(teamId: string, userId: string, requesterUser
   }
 }
 
-export async function getTeamAnalytics(teamId: string, period: 'daily' | 'weekly' | 'monthly' = 'monthly') {
+export async function getTeamAnalytics(teamId: string, period: 'daily' | 'weekly' | 'monthly' = 'monthly', requestingUserId?: string) {
   try {
+    const userId = requestingUserId || await getDatabaseUserId()
+
+    const team = await prisma.team.findFirst({
+      where: {
+        id: teamId,
+        OR: [
+          { userId },
+          { members: { some: { userId } } },
+        ],
+      },
+      select: { id: true }
+    })
+
+    if (!team) {
+      throw new Error('Team not found or unauthorized')
+    }
+
     const analytics = await prisma.teamAnalytics.findFirst({
       where: {
         teamId,
