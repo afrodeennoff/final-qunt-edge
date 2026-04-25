@@ -57,7 +57,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onClick={isInteractive ? onClick : undefined}
         className={cn(
           'group relative overflow-hidden text-foreground',
-          'rounded-[1.25rem] border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]',
+          'rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]',
           variant === 'glass' &&
             'border-[oklch(0.65_0.22_260_/_0.085)] bg-[oklch(0.06_0.011_260_/_0.8)]',
           variant === 'elevated' &&
@@ -124,7 +124,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
         {
           'p-4 pb-0': size === 'sm',
           'p-5 pb-0': size === 'md',
-          'p-[1.375rem] pb-0': size === 'lg',
+          'p-6 pb-0': size === 'lg',
         },
         className,
       )}
@@ -217,7 +217,7 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
         {
           'p-4': size === 'sm',
           'p-5': size === 'md',
-          'p-[1.375rem]': size === 'lg',
+          'p-6': size === 'lg',
         },
         className,
       )}
@@ -240,7 +240,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
         {
           'p-4': size === 'sm',
           'p-5': size === 'md',
-          'p-[1.375rem]': size === 'lg',
+          'p-6': size === 'lg',
         },
         className,
       )}

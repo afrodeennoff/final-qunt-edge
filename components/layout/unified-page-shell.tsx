@@ -69,8 +69,8 @@ export function UnifiedPageHeader({
   return (
     <header
       className={cn(
-        'rounded-[1.35rem] border px-4 py-4 sm:px-5 sm:py-5',
-        'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
+        'rounded-xl border px-4 py-4 sm:px-5 sm:py-5',
+        'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
           'border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.07_0.012_260_/_0.92)_0%,oklch(0.056_0.01_260_/_0.88)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_18px_36px_-28px_rgba(0,0,0,0.72)]',
         ],
@@ -125,8 +125,8 @@ export function UnifiedSurface({
   return (
     <section
       className={cn(
-        'rounded-[1.3rem] border p-4 sm:p-5',
-        'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
+        'rounded-xl border p-4 sm:p-5',
+        'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
           'border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.068_0.012_260_/_0.9)_0%,oklch(0.054_0.01_260_/_0.84)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-24px_rgba(0,0,0,0.7)]',
           hover

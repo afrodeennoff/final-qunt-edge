@@ -15,7 +15,7 @@ import {
 import type { UnifiedSidebarItem, PendingNavigation } from './types'
 
 const ITEM_BUTTON_CLASS =
-  'pointer-events-auto rounded-xl font-medium hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground transition-[opacity,background-color,border-color,box-shadow] duration-150'
+  'pointer-events-auto rounded-lg font-medium hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground transition-[opacity,background-color,border-color,box-shadow] duration-200'
 const INACTIVE_ITEM_CLASS = 'text-sidebar-foreground/68'
 const ACTIVE_ITEM_CLASS =
   'border-sidebar-primary/28 bg-sidebar-primary/12 text-sidebar-foreground shadow-[0_18px_32px_-28px_rgba(0,0,0,0.88)]'
@@ -162,7 +162,7 @@ const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
   )
 
   return (
-    <SidebarGroup className="px-0 py-1.5">
+    <SidebarGroup className="px-0 py-2">
       <SidebarGroupContent>
         <SidebarMenu>
           {flatItems.map((item, index) => {
@@ -180,10 +180,10 @@ const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
 
             return (
               <React.Fragment key={`${item.label}-${index}`}>
-                {showSeparator && <div className="mx-3 my-2 h-px bg-sidebar-border/22" />}
+                {showSeparator && <div className="mx-3 my-2.5 h-px bg-sidebar-border/22" />}
                 <SidebarMenuItem className="relative">
                   {itemIsActive && (
-                    <div className="absolute left-0 top-1/2 h-8 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary/85" />
+                    <div className="absolute left-0 top-1/2 h-9 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary/85" />
                   )}
                   {href ? (
                     <SidebarMenuButton

@@ -39,11 +39,11 @@ const buttonVariants = cva(
           'rounded-full bg-transparent text-muted-foreground hover:border-[oklch(0.65_0.22_260_/_0.07)] hover:bg-[oklch(0.052_0.009_260_/_0.56)] hover:text-foreground active:scale-[0.98]',
       },
       size: {
-        sm: 'h-8 min-h-[32px] min-w-[32px] px-3',
-        default: 'h-[38px] min-h-[38px] min-w-[38px] px-3.5',
-        md: 'h-10 min-h-[40px] min-w-[40px] px-4.5',
-        lg: 'h-11 min-h-[44px] min-w-[44px] px-6 text-sm',
-        icon: 'h-[38px] w-[38px] min-h-[38px] min-w-[38px]',
+        sm: 'h-9 min-h-[36px] min-w-[36px] px-3',
+        default: 'h-10 min-h-[40px] min-w-[40px] px-4',
+        md: 'h-11 min-h-[44px] min-w-[44px] px-5',
+        lg: 'h-12 min-h-[48px] min-w-[48px] px-6 text-sm',
+        icon: 'h-10 w-10 min-h-[40px] min-w-[40px]',
       },
     },
     defaultVariants: {

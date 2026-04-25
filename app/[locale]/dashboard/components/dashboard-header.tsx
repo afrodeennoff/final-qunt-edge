@@ -91,7 +91,7 @@ export function DashboardHeader() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full shrink-0 px-3 pb-2 pt-3 transition-[opacity,background-color,border-color] duration-300 sm:px-4 sm:pb-2.5 sm:pt-3.5',
+        'sticky top-0 z-50 w-full shrink-0 px-3 pb-2 pt-3 transition-[opacity,background-color,border-color] duration-200 sm:px-4 sm:pb-2.5 sm:pt-3.5',
         isMobile && 'pt-[calc(env(safe-area-inset-top)+0.75rem)]',
       )}
       data-dashboard-header="true"
@@ -100,7 +100,7 @@ export function DashboardHeader() {
         <div
           className={cn(
             unifiedToolbarClassName,
-            'relative flex min-h-[3.5rem] items-center justify-between gap-3 overflow-hidden px-3 py-2.5 transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4',
+            'relative flex min-h-[3.5rem] items-center justify-between gap-3 overflow-hidden px-3 py-2.5 transition-[opacity,background-color,border-color] duration-200 sm:gap-4 sm:px-4',
           )}
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/12 to-transparent" />
@@ -108,7 +108,7 @@ export function DashboardHeader() {
           <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4">
             <WindowChrome className="hidden md:block" />
             <SidebarTrigger
-              className={cn(unifiedToolbarButtonClassName, 'h-10 w-10 shrink-0 md:h-7 md:w-7')}
+              className={cn(unifiedToolbarButtonClassName, 'h-9 w-9 shrink-0')}
             />
             <div className="flex min-w-0 items-center gap-3">
               <div className="hidden h-8 w-px bg-border/40 sm:block" />
@@ -134,8 +134,9 @@ export function DashboardHeader() {
                   variant="navbar"
                   className={cn(
                     isSidebarCollapsed
-                      ? 'w-[clamp(280px,34vw,460px)]'
-                      : 'w-[clamp(220px,24vw,360px)]',
+                      ? 'w-[clamp(140px,20vw,280px)]'
+                      : 'w-[clamp(120px,18vw,240px)]',
+                    'max-w-[200px]',
                   )}
                 />
 

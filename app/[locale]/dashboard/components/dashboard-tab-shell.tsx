@@ -53,8 +53,8 @@ export function DashboardTabShell({
   const shouldUseEnhancedSkeleton = FEATURE_FLAGS.ENABLE_SKELETON_LOADING
 
   return (
-    <div className="w-full min-h-[calc(100dvh-64px)] px-4 py-4 sm:min-h-[calc(100vh-72px)] sm:px-6 sm:py-5 lg:px-8 lg:py-6">
-      <div className={cn('mx-auto flex h-full w-full flex-col', WORKSPACE_SHELL_WIDTH)}>
+    <div className="w-full min-h-[calc(100dvh-64px)] overflow-x-hidden px-4 py-4 sm:min-h-[calc(100vh-72px)] sm:px-6 sm:py-5 lg:px-8 lg:py-6">
+      <div className={cn('mx-auto flex h-full w-full max-w-full flex-col', WORKSPACE_SHELL_WIDTH)}>
         <Suspense
           fallback={shouldUseEnhancedSkeleton ? <DashboardSkeleton activeTab={activeTab} /> : null}
         >
