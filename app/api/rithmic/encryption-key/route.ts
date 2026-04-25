@@ -10,7 +10,8 @@ const KEY_LENGTH = 256
 async function handleGet(request: NextRequest) {
   try {
     const supabase = createRouteClient(request)
-    const { data: { user, session }, error: authError } = await supabase.auth.getUser()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { data: { session } } = await supabase.auth.getSession()
 
     if (authError || !user || !session) {
       return apiError('AUTH_UNAUTHORIZED', 'Authentication required', 401)
