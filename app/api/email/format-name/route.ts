@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
   await connection()
 
   if (!isAuthorizedInternalRequest(req)) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 })
+    return toErrorResponse(new Error("Unauthorized"))
   }
 
   try {
@@ -221,7 +221,7 @@ export async function GET(req: NextRequest) {
   await connection()
 
   if (!isAuthorizedInternalRequest(req)) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 })
+    return toErrorResponse(new Error("Unauthorized"))
   }
 
   try {

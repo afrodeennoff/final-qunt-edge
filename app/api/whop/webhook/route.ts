@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { webhookService } from "@/server/webhook-service";
 import { whop } from "@/lib/whop";
 import { logger } from "@/lib/logger";
-import type { ErrorResponse } from "@/server/authz";
+import { apiError } from "@/lib/api-response";
 
 
 export async function POST(req: NextRequest) {
@@ -17,12 +17,7 @@ export async function POST(req: NextRequest) {
             requestId,
             error: message,
         });
-        const response: ErrorResponse = {
-            error: "Failed to read request body",
-            code: "WEBHOOK_BODY_READ_ERROR",
-            requestId,
-        };
-        return NextResponse.json(response, { status: 400 });
+        return apiError('WEBHOOK_BODY_READ_ERROR', 'Failed to read request body', 400, { requestId });
     }
 
     const headers = Object.fromEntries(req.headers);
@@ -37,12 +32,7 @@ export async function POST(req: NextRequest) {
             error: message,
         });
 
-        const response: ErrorResponse = {
-            error: "Webhook signature verification failed",
-            code: "WEBHOOK_SIGNATURE_INVALID",
-            requestId,
-        };
-        return NextResponse.json(response, { status: 400 });
+        return apiError('WEBHOOK_SIGNATURE_INVALID', 'Webhook signature verification failed', 400, { requestId });
     }
 
     logger.info('[Webhook] Event received', { requestId, eventType: event.type, eventId: event.id });
@@ -57,11 +47,6 @@ export async function POST(req: NextRequest) {
             eventType: result.eventType,
             error: result.error,
         });
-        const response: ErrorResponse = {
-            error: result.error || "Processing failed",
-            code: "WEBHOOK_PROCESSING_FAILED",
-            requestId,
-        };
-        return NextResponse.json(response, { status: 500 });
+        return apiError('WEBHOOK_PROCESSING_FAILED', result.error || "Processing failed", 500, { requestId });
     }
 }
