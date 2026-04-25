@@ -12,6 +12,7 @@ import {
     CreditCard,
     Database,
     FileUp,
+    FileText,
     Globe,
     LayoutDashboard,
     RefreshCw,
@@ -59,6 +60,12 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             href: `/${locale}/dashboard?tab=table`,
             icon: <BookOpen className={NAV_ICON_SIZE} />,
             label: "Journal",
+            group: "Overview"
+        },
+        {
+            href: `/${locale}/dashboard/notes`,
+            icon: <FileText className={NAV_ICON_SIZE} />,
+            label: "Notes",
             group: "Overview"
         },
         {

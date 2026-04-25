@@ -12,6 +12,7 @@ import teams from './en/teams'
 import referral from './en/referral'
 import admin from './en/admin'
 import faq from './en/faq'
+import notes from './en/notes'
 export default {
   ...shared,
   ...landing,
@@ -27,6 +28,7 @@ export default {
   ...referral,
   ...admin,
   ...faq,
+  ...notes,
   'footer.heading': 'Footer',
   'footer.description': 'Advanced analytics for modern traders.',
   'footer.product.title': 'Product',
