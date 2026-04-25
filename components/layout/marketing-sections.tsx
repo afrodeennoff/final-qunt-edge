@@ -238,16 +238,16 @@ export function MarketingHyperframe({
 }) {
   return (
     <Card id={id} variant="elevated" className={cn('overflow-hidden p-0', className)}>
-      <div className="flex items-center justify-between border-b border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.01_260_/_0.88)] px-4 py-3">
-        <div className="flex items-center gap-[6px] px-2 py-1.5" aria-hidden>
+      <div className="flex items-center justify-between border-b border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.01_260_/_0.88)] px-4 py-2.5">
+        <div className="flex items-center gap-[6px] px-2 py-1" aria-hidden>
           <span className="h-3 w-3 rounded-full bg-[oklch(0.68_0.23_28)] opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
           <span className="h-3 w-3 rounded-full bg-[oklch(0.85_0.17_87)] opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
           <span className="h-3 w-3 rounded-full bg-[oklch(0.76_0.2_145)] opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
         </div>
-        <div className="rounded-full border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.05)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+        <div className="rounded-full border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.05)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
           {label}
         </div>
-        <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/88 sm:flex">
+        <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80 sm:flex">
           {status}
         </div>
       </div>
