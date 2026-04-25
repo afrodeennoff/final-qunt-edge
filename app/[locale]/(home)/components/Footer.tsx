@@ -11,20 +11,20 @@ export default function Footer() {
     product: [
       { label: 'Features', href: `/${locale}/#features` },
       { label: 'Pricing', href: `/${locale}/pricing` },
-      { label: 'Integrations', href: `/${locale}/integrations` },
-      { label: 'Changelog', href: `/${locale}/changelog` },
+      { label: 'Prop Firms', href: `/${locale}/propfirms` },
+      { label: 'Updates', href: `/${locale}/updates` },
     ],
     resources: [
       { label: 'Documentation', href: `/${locale}/docs` },
-      { label: 'API Reference', href: `/${locale}/api-docs` },
       { label: 'Blog', href: `/${locale}/blogs` },
       { label: 'Community', href: `/${locale}/community` },
+      { label: 'Support', href: `/${locale}/support` },
     ],
     company: [
       { label: 'About', href: `/${locale}/about` },
-      { label: 'Careers', href: `/${locale}/careers` },
-      { label: 'Contact', href: `/${locale}/support` },
-      { label: 'Legal', href: `/${locale}/terms` },
+      { label: 'Terms', href: `/${locale}/terms` },
+      { label: 'Privacy', href: `/${locale}/privacy` },
+      { label: 'Disclaimers', href: `/${locale}/disclaimers` },
     ],
   }
 

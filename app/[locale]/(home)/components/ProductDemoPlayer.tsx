@@ -2,13 +2,13 @@ const PROMO_SRC = '/hyperframes/qunt-edge-promo/index.html'
 
 export default function ProductDemoPlayer() {
   return (
-    <div className="w-full bg-black" style={{ aspectRatio: '16 / 10.5' }}>
+    <div className="relative flex h-full w-full items-center justify-center bg-black">
       <iframe
         title="Qunt Edge product promo"
         src={PROMO_SRC}
-        className="h-full w-full border-0"
-        loading="lazy"
-        sandbox="allow-scripts"
+        className="absolute inset-0 h-full w-full border-0"
+        loading="eager"
+        sandbox="allow-scripts allow-same-origin"
       />
     </div>
   )

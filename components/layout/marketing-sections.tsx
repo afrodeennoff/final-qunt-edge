@@ -6,12 +6,12 @@ import { MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
 
 export const marketingHeroTitleClassName =
-  'text-balance text-5xl font-semibold leading-[0.98] tracking-normal text-foreground sm:text-6xl lg:text-7xl'
+  'text-balance text-5xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-7xl'
 
 export const marketingSectionTitleClassName =
-  'text-balance text-3xl font-semibold leading-tight tracking-normal text-foreground sm:text-4xl lg:text-5xl'
+  'text-balance text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl'
 
-export const marketingBodyClassName = 'text-sm leading-7 text-muted-foreground sm:text-base'
+export const marketingBodyClassName = 'text-sm leading-relaxed text-muted-foreground sm:text-base'
 
 export function MarketingSection({
   children,
@@ -27,7 +27,7 @@ export function MarketingSection({
   return (
     <section
       id={id}
-      className={cn('scroll-smooth-butter px-4 py-20 sm:px-6 lg:px-8 lg:py-28', className)}
+      className={cn('scroll-smooth-butter px-4 py-16 sm:px-6 lg:px-8 lg:py-20', className)}
     >
       <div className={cn('mx-auto w-full', MARKETING_SHELL_WIDTH, innerClassName)}>{children}</div>
     </section>
@@ -60,7 +60,7 @@ export function MarketingSectionHeader({
       )}
     >
       {eyebrow ? (
-        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/88">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80">
           {eyebrow}
         </p>
       ) : null}
@@ -92,10 +92,10 @@ export function MarketingFeatureCard({
       <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.65_0.22_260_/_0.08)] text-primary">
         {icon}
       </div>
-      <h3 className="mt-5 text-base font-semibold tracking-[-0.01em] text-foreground">{title}</h3>
+      <h3 className="mt-4 text-base font-semibold tracking-tight text-foreground">{title}</h3>
       <p className={cn(marketingBodyClassName, 'mt-2 line-clamp-2 text-sm')}>{description}</p>
       {footer ? (
-        <div className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+        <div className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {footer}
         </div>
       ) : null}

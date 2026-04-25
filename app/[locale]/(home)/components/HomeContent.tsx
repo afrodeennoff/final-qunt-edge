@@ -145,26 +145,28 @@ export default async function HomeContent({ locale }: HomeContentProps) {
   return (
     <div className="relative min-w-0 overflow-x-hidden bg-black selection:bg-primary/30 selection:text-foreground">
       <main className="relative z-10 flex min-w-0 flex-col">
-        <MarketingSection className="pt-24 sm:pt-28 lg:pt-36" innerClassName="max-w-[1340px]">
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(540px,1.15fr)] lg:items-center">
-            <div className="max-w-3xl">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/88">
-                {t('landing.hero.badge')}
-              </p>
-              <h1 className={`${marketingHeroTitleClassName} mt-5`}>
-                {t('landing.hero.headline')}
-              </h1>
-              <p className={`${marketingBodyClassName} mt-6 max-w-xl`}>
-                {t('landing.hero.subheadline')}
-              </p>
+        <MarketingSection className="pt-20 sm:pt-24 lg:pt-32" innerClassName="max-w-[1400px]">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(560px,1.1fr)] lg:items-center">
+            <div className="max-w-2xl space-y-8">
+              <div className="space-y-6">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80">
+                  {t('landing.hero.badge')}
+                </p>
+                <h1 className={`${marketingHeroTitleClassName} leading-[1.05]`}>
+                  {t('landing.hero.headline')}
+                </h1>
+                <p className={`${marketingBodyClassName} max-w-lg text-lg leading-relaxed`}>
+                  {t('landing.hero.subheadline')}
+                </p>
+              </div>
 
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
                 <Link
                   href={`/${locale}/authentication?next=dashboard`}
                   className={cn(buttonVariants({ size: 'lg' }), 'w-full sm:w-auto')}
                 >
                   <span>{t('landing.hero.ctaPrimary')}</span>
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
                 <a
                   href="#product-walkthrough"
@@ -178,7 +180,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
                 </a>
               </div>
 
-              <div className="mt-12 grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 pt-4">
                 {stats.map((stat) => (
                   <MarketingStatBlock
                     key={String(stat.label)}
@@ -188,49 +190,35 @@ export default async function HomeContent({ locale }: HomeContentProps) {
                   />
                 ))}
               </div>
-
-              <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                {capabilities.map((capability) => (
-                  <div
-                    key={String(capability.title)}
-                    className="rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.035)] p-4"
-                  >
-                    <p className="text-sm font-semibold text-foreground">{capability.title}</p>
-                    <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                      {capability.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
             </div>
 
             <MarketingHyperframe
               id="product-walkthrough"
               label={t('landing.home.demo.frameLabel')}
               status="Live audit"
-              className="shadow-[0_26px_70px_-46px_oklch(0.65_0.22_260_/_0.55)]"
+              className="shadow-[0_32px_80px_-48px_oklch(0.65_0.22_260_/_0.48)]"
             >
               <ProductDemoPlayer />
             </MarketingHyperframe>
           </div>
         </MarketingSection>
 
-        <MarketingSection className="py-16 lg:py-20">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1fr)] lg:items-end">
+        <MarketingSection className="py-14 lg:py-16">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] lg:items-end">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/88">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80">
                 {t('landing.home.problem.eyebrow')}
               </p>
-              <h2 className={`${marketingSectionTitleClassName} mt-4 max-w-3xl`}>
+              <h2 className={`${marketingSectionTitleClassName} mt-3 max-w-2xl`}>
                 {t('landing.home.problem.title')}{' '}
                 <span className="text-primary">{t('landing.home.problem.accent')}</span>
               </h2>
             </div>
-            <p className={`${marketingBodyClassName} max-w-2xl lg:ml-auto`}>
+            <p className={`${marketingBodyClassName} max-w-xl lg:ml-auto`}>
               {t('landing.home.problem.description')}
             </p>
           </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <div className="mt-8 grid gap-5 md:grid-cols-3">
             {problemCards.map((card) => (
               <MarketingFeatureCard
                 key={String(card.title)}
@@ -242,7 +230,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
           </div>
         </MarketingSection>
 
-        <MarketingSection id="features" className="py-20 lg:py-24">
+        <MarketingSection id="features" className="py-14 lg:py-16">
           <MarketingSectionHeader
             eyebrow={t('landing.home.features.eyebrow')}
             title={
@@ -253,7 +241,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
             }
             description={t('landing.home.features.description')}
           />
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
               <MarketingFeatureCard
                 key={String(feature.title)}
@@ -265,8 +253,8 @@ export default async function HomeContent({ locale }: HomeContentProps) {
           </div>
         </MarketingSection>
 
-        <MarketingSection className="py-20 lg:py-24">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1fr)] lg:items-start">
+        <MarketingSection className="py-14 lg:py-16">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] lg:items-start">
             <MarketingSectionHeader
               eyebrow={t('landing.home.workflow.eyebrow')}
               title={t('landing.home.workflow.title')}
@@ -274,7 +262,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
               align="left"
               className="m-0"
             />
-            <div className="grid gap-6">
+            <div className="grid gap-5">
               {steps.map((step, index) => (
                 <MarketingStepCard
                   key={String(step.title)}
@@ -286,12 +274,12 @@ export default async function HomeContent({ locale }: HomeContentProps) {
               ))}
             </div>
           </div>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.035)] p-5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.65_0.22_260_/_0.08)] text-primary">
                 <Gauge className="h-5 w-5" />
               </div>
-              <h3 className="mt-5 text-base font-semibold text-foreground">
+              <h3 className="mt-4 text-base font-semibold text-foreground">
                 {t('landing.home.workflow.signalTitle')}
               </h3>
               <p className={`${marketingBodyClassName} mt-2 text-sm`}>
@@ -302,7 +290,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[oklch(0.76_0.2_145_/_0.18)] bg-[oklch(0.76_0.2_145_/_0.08)] text-[oklch(0.76_0.2_145)]">
                 <Activity className="h-5 w-5" />
               </div>
-              <h3 className="mt-5 text-base font-semibold text-foreground">
+              <h3 className="mt-4 text-base font-semibold text-foreground">
                 {t('landing.home.workflow.cadenceTitle')}
               </h3>
               <p className={`${marketingBodyClassName} mt-2 text-sm`}>
@@ -314,24 +302,24 @@ export default async function HomeContent({ locale }: HomeContentProps) {
 
         <MarketingPricingSection locale={locale} />
 
-        <MarketingSection className="pb-28 pt-20 text-center lg:pb-36">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/88">
+        <MarketingSection className="pb-24 pt-16 text-center lg:pb-28">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80">
             {t('landing.home.finalCta.eyebrow')}
           </p>
-          <h2 className={`${marketingSectionTitleClassName} mx-auto mt-4 max-w-3xl`}>
+          <h2 className={`${marketingSectionTitleClassName} mx-auto mt-3 max-w-2xl`}>
             {t('landing.home.finalCta.title')}
           </h2>
-          <p className={`${marketingBodyClassName} mx-auto mt-5 max-w-2xl`}>
+          <p className={`${marketingBodyClassName} mx-auto mt-4 max-w-xl`}>
             {t('landing.home.finalCta.description')}
           </p>
-          <div className="mt-8">
+          <div className="mt-6">
             <div className="flex flex-col justify-center gap-3 sm:flex-row">
               <Link
                 href={`/${locale}/authentication?next=dashboard`}
                 className={cn(buttonVariants({ size: 'lg' }), 'w-full sm:w-auto')}
               >
                 <span>{t('landing.home.finalCta.primary')}</span>
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
               <Link
                 href={`/${locale}/propfirms`}
