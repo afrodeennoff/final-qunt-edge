@@ -4,6 +4,13 @@ import { getDatabaseUserId } from "@/server/auth"
 import { Synchronization } from "@/prisma/generated/prisma"
 import { withPrismaSchemaMismatchFallback } from "@/lib/prisma-guard"
 import { CACHE_TAGS } from "@/lib/cache/cache-invalidation"
+import { authSecurityConfig } from "@/lib/security/auth-config"
+import { encryptToken } from "@/lib/security/token-crypto"
+
+type RithmicSynchronizationInput = Pick<
+  Partial<Synchronization>,
+  "accountId" | "dailySyncTime" | "lastSyncedAt" | "service" | "token" | "tokenExpiresAt"
+>
 
 async function resolveSyncUserIds() {
   const databaseUserId = await getDatabaseUserId()
@@ -24,8 +31,44 @@ export async function getRithmicSynchronizations() {
   return synchronizations
 }
 
-export async function setRithmicSynchronization(synchronization: Partial<Synchronization>) {
+function buildTokenFields(token: string | null | undefined) {
+  if (!token) return {}
+
+  if (!authSecurityConfig.tradovateTokenEncryptionEnabled) {
+    return {
+      token,
+      tokenCiphertext: null,
+      tokenIv: null,
+      tokenTag: null,
+      tokenKeyVersion: null,
+    }
+  }
+
+  const encryptedEnvelope = encryptToken(token)
+  return {
+    token: null,
+    tokenCiphertext: encryptedEnvelope.tokenCiphertext,
+    tokenIv: encryptedEnvelope.tokenIv,
+    tokenTag: encryptedEnvelope.tokenTag,
+    tokenKeyVersion: encryptedEnvelope.tokenKeyVersion,
+  }
+}
+
+export async function setRithmicSynchronization(synchronization: RithmicSynchronizationInput) {
   const { databaseUserId } = await resolveSyncUserIds()
+  const service = synchronization.service || 'rithmic'
+  const accountId = synchronization.accountId || ''
+  const tokenFields = buildTokenFields(synchronization.token)
+  const syncData = {
+    service,
+    accountId,
+    userId: databaseUserId,
+    lastSyncedAt: synchronization.lastSyncedAt || new Date(),
+    dailySyncTime: synchronization.dailySyncTime,
+    tokenExpiresAt: synchronization.tokenExpiresAt,
+    ...tokenFields,
+  }
+
   await withPrismaSchemaMismatchFallback<void>(
     'sync:rithmic:upsert',
     async () => {
@@ -33,21 +76,12 @@ export async function setRithmicSynchronization(synchronization: Partial<Synchro
         where: {
           userId_service_accountId: {
             userId: databaseUserId,
-            service: synchronization.service || 'rithmic',
-            accountId: synchronization.accountId || ''
+            service,
+            accountId,
           }
         },
-        update: {
-          ...synchronization,
-          userId: databaseUserId
-        },
-        create: {
-          ...synchronization,
-          service: synchronization.service || 'rithmic',
-          accountId: synchronization.accountId || '',
-          lastSyncedAt: synchronization.lastSyncedAt || new Date(),
-          userId: databaseUserId
-        },
+        update: syncData,
+        create: syncData,
       })
     },
     undefined

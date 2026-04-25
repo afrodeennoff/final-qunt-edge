@@ -69,7 +69,8 @@ export async function verifySecureToken(token: string, tokenType: SecureTokenTyp
       [expiresField]: {
         gte: new Date()
       }
-    }
+    },
+    select: { id: true },
   })
 
   if (user?.id) {

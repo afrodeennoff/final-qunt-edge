@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient, getDatabaseUserId } from '@/server/auth'
-import { saveTradesForUserAction } from '@/server/database'
+import { resolveWritableUserId, saveTradesForUserAction } from '@/server/database'
 import { TickDetails } from '@/prisma/generated/prisma'
 import type { ImportTradeDraft as Trade } from '@/lib/trade-types'
 import crypto from 'crypto'
@@ -1153,6 +1153,7 @@ export async function storeTradovateToken(
     const encryptedEnvelope = authSecurityConfig.tradovateTokenEncryptionEnabled
       ? encryptToken(accessToken)
       : null
+    const tokenValue = encryptedEnvelope ? null : accessToken
 
     await prisma.synchronization.upsert({
       where: {
@@ -1163,7 +1164,7 @@ export async function storeTradovateToken(
         }
       },
       update: {
-        token: accessToken,
+        token: tokenValue,
         tokenCiphertext: encryptedEnvelope?.tokenCiphertext ?? null,
         tokenIv: encryptedEnvelope?.tokenIv ?? null,
         tokenTag: encryptedEnvelope?.tokenTag ?? null,
@@ -1176,7 +1177,7 @@ export async function storeTradovateToken(
         userId: databaseUserId,
         service: 'tradovate',
         accountId: accountId,
-        token: accessToken,
+        token: tokenValue,
         tokenCiphertext: encryptedEnvelope?.tokenCiphertext ?? null,
         tokenIv: encryptedEnvelope?.tokenIv ?? null,
         tokenTag: encryptedEnvelope?.tokenTag ?? null,
@@ -1235,11 +1236,12 @@ export async function getTradovateToken(accountId: string = 'default') {
       const encryptedEnvelope = authSecurityConfig.tradovateTokenEncryptionEnabled
         ? encryptToken(accessToken)
         : null
+      const tokenValue = encryptedEnvelope ? null : accessToken
 
       await prisma.synchronization.update({
         where: { id: syncData.id },
         data: {
-          token: accessToken,
+          token: tokenValue,
           tokenCiphertext: encryptedEnvelope?.tokenCiphertext ?? null,
           tokenIv: encryptedEnvelope?.tokenIv ?? null,
           tokenTag: encryptedEnvelope?.tokenTag ?? null,
@@ -1496,15 +1498,16 @@ export async function getTradovateTrades(
     logger.info('Fetching Tradovate fill pairs for improved trade building (demo only)')
 
     // Resolve userId either from caller (e.g. cron) or current session
-    let userId = options?.userId ?? null
-    if (!userId) {
+    let rawUserId = options?.userId ?? null
+    if (!rawUserId) {
       const supabase = await createClient()
       const { data: { user }, error: authError } = await supabase.auth.getUser()
       if (authError || !user) {
         return { error: 'User not authenticated' }
       }
-      userId = user.id
+      rawUserId = user.id
     }
+    const userId = await resolveWritableUserId(rawUserId)
 
     const apiBaseUrl = TRADOVATE_ENVIRONMENTS.demo.api
 

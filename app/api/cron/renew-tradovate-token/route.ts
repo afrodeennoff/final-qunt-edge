@@ -1,13 +1,19 @@
 // app/api/cron/renew-tradovate-token/route.ts
 import { prisma } from '@/lib/prisma';
-import { NextRequest } from 'next/server';
+import { NextRequest, connection } from 'next/server';
 import { requireCronAuth, toErrorResponse } from '@/server/authz';
+import { authSecurityConfig } from '@/lib/security/auth-config';
+import { decryptToken, encryptToken } from '@/lib/security/token-crypto';
 
 type SynchronizationRecord = {
   id: string
   userId: string
   accountId: string
   token: string | null
+  tokenCiphertext: string | null
+  tokenIv: string | null
+  tokenTag: string | null
+  tokenKeyVersion?: string | null
   tokenExpiresAt: Date | null
   dailySyncTime: Date | null
 }
@@ -35,7 +41,45 @@ function shouldPerformDailySync(dailySyncTime: Date | null): boolean {
   return diffInMinutes <= 15 || diffInMinutes >= (24 * 60 - 15);
 }
 
+function getAccessToken(synchronization: SynchronizationRecord): string | null {
+  return synchronization.token || decryptToken(synchronization);
+}
+
+function getTokenWriteData(accessToken: string) {
+  if (!authSecurityConfig.tradovateTokenEncryptionEnabled) {
+    return {
+      token: accessToken,
+      tokenCiphertext: null,
+      tokenIv: null,
+      tokenTag: null,
+      tokenKeyVersion: null,
+    };
+  }
+
+  const encryptedEnvelope = encryptToken(accessToken);
+  return {
+    token: null,
+    tokenCiphertext: encryptedEnvelope.tokenCiphertext,
+    tokenIv: encryptedEnvelope.tokenIv,
+    tokenTag: encryptedEnvelope.tokenTag,
+    tokenKeyVersion: encryptedEnvelope.tokenKeyVersion,
+  };
+}
+
+function getTokenClearData() {
+  return {
+    token: null,
+    tokenCiphertext: null,
+    tokenIv: null,
+    tokenTag: null,
+    tokenKeyVersion: null,
+    tokenExpiresAt: null,
+  };
+}
+
 export async function GET(request: NextRequest) {
+  await connection();
+
   try {
     requireCronAuth(request, { serviceName: 'cron-renew-tradovate-token' });
   } catch (error) {
@@ -47,8 +91,23 @@ export async function GET(request: NextRequest) {
     const synchronizations = await prisma.synchronization.findMany({
       where: {
         service: 'tradovate',
-        token: { not: null }
-      }
+        OR: [
+          { token: { not: null } },
+          { tokenCiphertext: { not: null } },
+        ],
+      },
+      select: {
+        id: true,
+        userId: true,
+        accountId: true,
+        token: true,
+        tokenCiphertext: true,
+        tokenIv: true,
+        tokenTag: true,
+        tokenKeyVersion: true,
+        tokenExpiresAt: true,
+        dailySyncTime: true,
+      },
     });
 
     // If tokenExpiresAt is null, clear the token (invalid state)
@@ -60,7 +119,7 @@ export async function GET(request: NextRequest) {
         where: {
           id: { in: missingExpiry.map((s) => s.id) }
         },
-        data: { token: null, tokenExpiresAt: null }
+        data: getTokenClearData()
       });
     }
 
@@ -117,26 +176,34 @@ export async function GET(request: NextRequest) {
  */
 async function renewUserToken(synchronization: SynchronizationRecord): Promise<boolean> {
   try {
+    const accessToken = getAccessToken(synchronization);
+    if (!accessToken) {
+      await prisma.synchronization.update({
+        where: { id: synchronization.id },
+        data: getTokenClearData(),
+      });
+      return false;
+    }
+
     // This app uses Tradovate demo endpoints for OAuth/sync flows.
     // `Synchronization` has no persisted `environment` field, so default to demo.
     const apiBaseUrl = 'https://demo.tradovateapi.com';
 
     const renewal = await fetch(`${apiBaseUrl}/auth/renewAccessToken`, {
       headers: {
-        'Authorization': `Bearer ${synchronization.token}`
+        'Authorization': `Bearer ${accessToken}`
       }
     });
 
     if (!renewal.ok) {
-      const errorText = await renewal.text();
       // Security: Log only status code, not sensitive token data
-      console.error(`[CRON] Failed to renew token for account ${synchronization.accountId}: status ${renewal.status}`);
+      console.error(`[CRON] Failed to renew Tradovate token: status ${renewal.status}`);
       // Only clear token on explicit auth failures.
       // For transient provider/network errors, keep current token.
       if (renewal.status === 401 || renewal.status === 403) {
         await prisma.synchronization.update({
           where: { id: synchronization.id },
-          data: { token: null, tokenExpiresAt: null },
+          data: getTokenClearData(),
         });
       }
       return false;
@@ -147,13 +214,16 @@ async function renewUserToken(synchronization: SynchronizationRecord): Promise<b
     // Update database
     await prisma.synchronization.update({
       where: { id: synchronization.id },
-      data: { token: renewalData.accessToken, tokenExpiresAt: new Date(renewalData.expirationTime) },
+      data: {
+        ...getTokenWriteData(renewalData.accessToken),
+        tokenExpiresAt: new Date(renewalData.expirationTime),
+      },
     });
 
     return true;
   } catch (error) {
     // Security: Log only error type and message, not full error object
-    console.error(`[CRON] Error renewing token for account ${synchronization.accountId}:`, 
+    console.error(`[CRON] Error renewing Tradovate token:`,
       error instanceof Error ? error.message : 'Unknown error');
     // Do not clear token on transient runtime errors.
     return false;
@@ -167,7 +237,8 @@ async function renewUserToken(synchronization: SynchronizationRecord): Promise<b
  */
 async function performDailySync(synchronization: SynchronizationRecord): Promise<boolean> {
   try {
-    if (!synchronization.token) {
+    const accessToken = getAccessToken(synchronization);
+    if (!accessToken) {
       // Security: Log without exposing sensitive account details
       console.error(`[CRON] Cannot sync account: missing access token`);
       return false;
@@ -177,7 +248,7 @@ async function performDailySync(synchronization: SynchronizationRecord): Promise
     const { getTradovateTrades } = await import('@/app/[locale]/dashboard/components/import/tradovate/actions');
 
     // Fetch and save trades
-    const result = await getTradovateTrades(synchronization.token, { userId: synchronization.userId, accountId: synchronization.accountId });
+    const result = await getTradovateTrades(accessToken, { userId: synchronization.userId, accountId: synchronization.accountId });
 
     if (result.error) {
       // Security: Log only error message, not full result which may contain sensitive data

@@ -6,12 +6,14 @@ const {
   findManyMock,
   upsertMock,
   deleteManyMock,
+  encryptTokenMock,
 } = vi.hoisted(() => ({
   getUserIdMock: vi.fn(),
   getDatabaseUserIdMock: vi.fn(),
   findManyMock: vi.fn(),
   upsertMock: vi.fn(),
   deleteManyMock: vi.fn(),
+  encryptTokenMock: vi.fn(),
 }))
 
 vi.mock("@/server/auth", () => ({
@@ -33,6 +35,20 @@ vi.mock("@/lib/prisma-guard", () => ({
   withPrismaSchemaMismatchFallback: vi.fn(async (_key: string, run: () => unknown) => run()),
 }))
 
+vi.mock("@/lib/security/auth-config", () => ({
+  authSecurityConfig: {
+    tradovateTokenEncryptionEnabled: true,
+  },
+}))
+
+vi.mock("@/lib/security/token-crypto", () => ({
+  encryptToken: encryptTokenMock,
+}))
+
+vi.mock("next/cache", () => ({
+  updateTag: vi.fn(),
+}))
+
 import {
   getRithmicSynchronizations,
   removeRithmicSynchronization,
@@ -44,6 +60,12 @@ describe("rithmic sync actions", () => {
     vi.clearAllMocks()
     getUserIdMock.mockResolvedValue("auth-user-1")
     getDatabaseUserIdMock.mockResolvedValue("db-user-1")
+    encryptTokenMock.mockReturnValue({
+      tokenCiphertext: "ciphertext",
+      tokenIv: "iv",
+      tokenTag: "tag",
+      tokenKeyVersion: "v-test",
+    })
   })
 
   it("lists synchronizations using resolved database user id", async () => {
@@ -93,9 +115,19 @@ describe("rithmic sync actions", () => {
         },
         update: expect.objectContaining({
           userId: "db-user-1",
+          token: null,
+          tokenCiphertext: "ciphertext",
+          tokenIv: "iv",
+          tokenTag: "tag",
+          tokenKeyVersion: "v-test",
         }),
         create: expect.objectContaining({
           userId: "db-user-1",
+          token: null,
+          tokenCiphertext: "ciphertext",
+          tokenIv: "iv",
+          tokenTag: "tag",
+          tokenKeyVersion: "v-test",
         }),
       })
     )

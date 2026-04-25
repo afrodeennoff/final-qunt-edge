@@ -23,8 +23,6 @@ export type LeaderboardEntry = {
 
  type LeaderboardSeed = Omit<LeaderboardEntry, 'rank'>
 
- export const FALLBACK_LEADERBOARD_SEEDS: LeaderboardSeed[] = []
-
 function toUsername(email: string | null | undefined, fallbackId: string): string {
   const base = email?.split('@')[0]?.trim()
   if (base) return base
@@ -85,12 +83,8 @@ function sortAndRankLeaderboardEntries(
   }))
 }
 
- function getFallbackLeaderboardEntries(_sort: LeaderboardSort): LeaderboardEntry[] {
+ function getEmptyLeaderboardEntries(): LeaderboardEntry[] {
    return []
- }
-
- export async function getFallbackLeaderboardEntryByUserId(_userId: string): Promise<LeaderboardEntry | null> {
-   return null
  }
 
 function isMissingColumnError(error: unknown): boolean {
@@ -127,8 +121,8 @@ export async function getLeaderboardData(
   cacheLife({ stale: 300, revalidate: 300, expire: 600 })
   cacheTag('leaderboard')
   if (!hasConfiguredDatabaseConnection) {
-    console.warn('[Leaderboard] Database connection is missing; returning demo leaderboard entries.')
-    return getFallbackLeaderboardEntries(sort)
+    console.warn('[Leaderboard] Database connection is missing; returning empty leaderboard entries.')
+    return getEmptyLeaderboardEntries()
   }
 
   let eligibleUsers: Array<{ id: string; email: string | null }> = []
@@ -140,8 +134,8 @@ export async function getLeaderboardData(
     })
   } catch (error) {
     if (isLeaderboardUnavailableError(error)) {
-      console.warn('[Leaderboard] Leaderboard query unavailable; returning demo leaderboard entries.')
-      return getFallbackLeaderboardEntries(sort)
+      console.warn('[Leaderboard] Leaderboard query unavailable; returning empty leaderboard entries.')
+      return getEmptyLeaderboardEntries()
     }
 
     throw error
@@ -248,8 +242,8 @@ export async function getLeaderboardData(
       throw error
     }
 
-    console.warn('[Leaderboard] Query unavailable; returning demo leaderboard entries.')
-    return getFallbackLeaderboardEntries(sort)
+    console.warn('[Leaderboard] Query unavailable; returning empty leaderboard entries.')
+    return getEmptyLeaderboardEntries()
   }
   const userMap = Object.fromEntries(
     eligibleUsers.map((user) => [user.id, toUsername(user.email, user.id)])

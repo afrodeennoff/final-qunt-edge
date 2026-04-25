@@ -106,7 +106,14 @@ vi.mock('next/cache', () => ({
 }))
 
 vi.mock('@/lib/cache/cache-invalidation', () => ({
+  CACHE_TAGS: {
+    DASHBOARD: (userId: string | null) => `dashboard:${userId}`,
+    USER_DATA: (userId: string | null) => `user-data:${userId}`,
+    USER_DATA_CORE: (userId: string | null) => `user-data-core:${userId}`,
+    USER_DATA_SUPPLEMENTAL: (userId: string | null) => `user-data-supplemental:${userId}`,
+  },
   invalidateAllUserCaches: invalidateAllUserCachesMock,
+  invalidateEquityChart: vi.fn(),
   invalidateGroupRelatedCaches: invalidateGroupRelatedCachesMock,
   invalidateJournalRelatedCaches: vi.fn(),
   invalidateAccountRelatedCaches: vi.fn(),

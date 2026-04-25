@@ -3,25 +3,22 @@ import React from 'react'
 import type { Metadata } from 'next'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
-import { getFallbackLeaderboardEntryByUserId } from '../../leaderboard/data/leaderboard-query'
 import { Zap, Lock, ArrowLeft } from 'lucide-react'
 import { buildPublicMetadata, buildBreadcrumbSchema, getCanonicalUrl } from '@/lib/seo'
+import { isPrismaColumnAvailable, isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 
 type TraderSnapshot = {
   username: string
   totalPnl: number
   totalTrades: number
-  winRate?: number
-  returnPct?: number
-  topInstrument?: string | null
-  avgDurationMinutes?: number
-  demo: boolean
 }
 
 const FB = 'border-[hsl(var(--border)/0.36)]'
 const FS = 'bg-[hsl(var(--card)/0.34)]'
 const FM = 'bg-[hsl(var(--border)/0.12)]'
 const FR = { boxShadow: '0 24px 48px -32px rgba(0, 0, 0, 0.72)' }
+const USER_TABLE_CANDIDATES = ['User', 'user'] as const
+const LEADERBOARD_VISIBILITY_COLUMN = 'showOnLeaderboard'
 
 function formatSigned(value: number, digits = 2): string {
   if (!Number.isFinite(value)) return "0.00"
@@ -41,35 +38,73 @@ function formatCurrency(value: number): string {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value)
 }
 
-function formatValue(value: number, digits = 2): string {
-  return Number.isFinite(value) ? value.toFixed(digits) : "0.00"
+function toUsername(email: string | null | undefined, fallbackId: string): string {
+  const base = email?.split('@')[0]?.trim()
+  return base || `Trader ${fallbackId.slice(0, 8)}`
+}
+
+async function hasLeaderboardVisibilityColumn(): Promise<boolean> {
+  for (const tableName of USER_TABLE_CANDIDATES) {
+    if (await isPrismaColumnAvailable(tableName, LEADERBOARD_VISIBILITY_COLUMN)) {
+      return true
+    }
+  }
+
+  return false
 }
 
 async function getTraderSnapshot(slug: string): Promise<TraderSnapshot | null> {
   if (!hasConfiguredDatabaseConnection) {
-    const fallbackEntry = await getFallbackLeaderboardEntryByUserId(slug)
-    if (!fallbackEntry) return null
-    return {
-      username: fallbackEntry.username,
-      totalPnl: fallbackEntry.monthlyPnl,
-      totalTrades: fallbackEntry.totalTrades,
-      winRate: fallbackEntry.winRate,
-      returnPct: fallbackEntry.returnPct,
-      topInstrument: fallbackEntry.topInstrument,
-      avgDurationMinutes: fallbackEntry.avgDurationMinutes,
-      demo: true,
-    }
+    return null
   }
-  const traderStats = await prisma.trade.aggregate({
-    where: { userId: slug },
-    _sum: { pnl: true },
-    _count: { id: true },
-  })
+
+  if (!(await hasLeaderboardVisibilityColumn())) {
+    return null
+  }
+
+  let publicUser: { id: string; email: string | null; showOnLeaderboard: boolean } | null = null
+
+  try {
+    publicUser = await prisma.user.findUnique({
+      where: { id: slug },
+      select: {
+        id: true,
+        email: true,
+        showOnLeaderboard: true,
+      },
+    })
+  } catch (error) {
+    if (isPrismaSchemaMismatchError(error)) {
+      return null
+    }
+
+    throw error
+  }
+
+  if (!publicUser?.showOnLeaderboard) {
+    return null
+  }
+
+  let traderStats: { _sum: { pnl: unknown }; _count: { id: number } }
+
+  try {
+    traderStats = await prisma.trade.aggregate({
+      where: { userId: publicUser.id },
+      _sum: { pnl: true },
+      _count: { id: true },
+    })
+  } catch (error) {
+    if (isPrismaSchemaMismatchError(error)) {
+      return null
+    }
+
+    throw error
+  }
+
   return {
-    username: slug,
+    username: toUsername(publicUser.email, publicUser.id),
     totalPnl: Number(traderStats._sum.pnl ?? 0),
     totalTrades: traderStats._count.id,
-    demo: false,
   }
 }
 
@@ -174,11 +209,6 @@ export default async function TraderProfilePage({
                     <Zap className="h-3 w-3" />
                     Trader Profile
                   </span>
-                  {snapshot.demo ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/22 bg-emerald-400/8 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-success">
-                      Demo
-                    </span>
-                  ) : null}
                   <span className={`inline-flex items-center rounded-full border ${FB} ${FS} px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground`}>
                     {snapshot.totalTrades} Trades
                   </span>
@@ -190,7 +220,7 @@ export default async function TraderProfilePage({
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <StatCell label="Total Trades" value={snapshot.totalTrades.toLocaleString()} />
               <StatCell label="Total PnL" value={formatSigned(snapshot.totalPnl)} accent={positive ? 'green' : negative ? 'red' : undefined} />
-              <StatCell label="Profile Type" value={snapshot.demo ? 'Demo' : 'Live'} />
+              <StatCell label="Profile Type" value="Live" />
             </div>
           </div>
 
@@ -210,48 +240,6 @@ export default async function TraderProfilePage({
             </div>
           </div>
 
-          {/* Demo leaderboard stats */}
-          {snapshot.demo && snapshot.winRate !== undefined ? (
-            <div className={`rounded-xl border ${FB} bg-black p-6`} style={FR}>
-              <div className="mb-5 flex items-center justify-between">
-                <p className="text-[14px] font-semibold text-foreground">Demo Leaderboard Stats</p>
-                <span className={`inline-flex items-center gap-1.5 rounded-full border ${FB} ${FS} px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground`}>
-                  <Lock className="h-3 w-3" />
-                  Preview Data
-                </span>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
-                  <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Win Rate</p>
-                  <p className="mt-2 text-3xl font-semibold text-foreground">{formatValue(snapshot.winRate)}%</p>
-                  <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
-                    <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, snapshot.winRate))}%` }} />
-                  </div>
-                </div>
-                {snapshot.returnPct !== undefined && (
-                  <div className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Return</p>
-                    <p className={`mt-2 text-3xl font-semibold ${snapshot.returnPct >= 0 ? 'text-success' : 'text-destructive'}`}>
-                      {formatSigned(snapshot.returnPct)}%
-                    </p>
-                    <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
-                      <div className={`h-full rounded-full ${snapshot.returnPct >= 0 ? 'bg-[rgba(17,255,153,0.35)]' : 'bg-[rgba(255,32,71,0.35)]'}`} style={{ width: `${Math.min(100, Math.max(8, Math.abs(snapshot.returnPct)))}%` }} />
-                    </div>
-                  </div>
-                )}
-                {snapshot.topInstrument && (
-                  <div className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Top Instrument</p>
-                    <p className="mt-2 text-3xl font-semibold text-foreground">{snapshot.topInstrument}</p>
-                    {snapshot.avgDurationMinutes !== undefined && (
-                      <p className="mt-2 text-[12px] text-muted-foreground">Avg Duration: {formatValue(snapshot.avgDurationMinutes, 0)}m</p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : null}
-
           {/* Nav links */}
           <div className="flex flex-wrap gap-2">
             <Link
@@ -263,7 +251,7 @@ export default async function TraderProfilePage({
             </Link>
             <Link
               href={`/${locale}/dashboard/trader-profile`}
-              className="inline-flex items-center rounded-full bg-[#ffffff] px-5 py-1.5 text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-90"
+              className="inline-flex items-center rounded-full bg-foreground px-5 py-1.5 text-[13px] font-semibold text-background transition-opacity hover:opacity-90"
             >
               Manage profile
             </Link>
@@ -276,16 +264,6 @@ export default async function TraderProfilePage({
             <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Capital</p>
             <p className="mt-2 text-3xl font-semibold text-foreground">{formatCapitalCompact(snapshot.totalPnl)}</p>
           </div>
-
-          {snapshot.demo && snapshot.winRate !== undefined && (
-            <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
-              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Win Rate</p>
-              <p className="mt-2 text-4xl font-semibold text-foreground">{formatValue(snapshot.winRate)}%</p>
-              <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
-                <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, snapshot.winRate))}%` }} />
-              </div>
-            </div>
-          )}
 
           <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
             <div className="flex items-center justify-between">
@@ -305,13 +283,11 @@ export default async function TraderProfilePage({
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Profile Status</p>
               <span className={`inline-flex items-center gap-1.5 rounded-full border ${FB} ${FS} px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground`}>
                 <Lock className="h-3 w-3" />
-                {snapshot.demo ? 'Demo' : 'Live'}
+                Public
               </span>
             </div>
             <p className="mt-3 text-[13px] leading-[1.5] text-muted-foreground">
-              {snapshot.demo
-                ? 'Demo profile with preview data from the leaderboard.'
-                : 'Live trading profile with verified performance data.'}
+              Live trading profile with explicitly shared performance data.
             </p>
           </div>
         </aside>

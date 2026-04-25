@@ -65,6 +65,7 @@ import { useTickDetailsStore } from '@/store/tick-details-store'
 import { useFinancialEventsStore } from '@/store/financial-events-store'
 import { useTradingDomainStore } from '@/store/trading-domain-store'
 import {
+  clearAllCache,
   clearTradesCache,
   getTradesCache,
   setTradesCache,
@@ -441,9 +442,10 @@ export const DataProvider: React.FC<{
     if (bootstrapSnapshot.dashboardLayout) {
       setDashboardLayout(bootstrapSnapshot.dashboardLayout)
     } else if (bootstrapSnapshot.user?.id) {
+      const layoutUserId = bootstrapSnapshot.user.auth_user_id ?? bootstrapSnapshot.user.id
       setDashboardLayout({
-        id: bootstrapSnapshot.user.id,
-        userId: bootstrapSnapshot.user.id,
+        id: layoutUserId,
+        userId: layoutUserId,
         createdAt: new Date(),
         updatedAt: new Date(),
         desktop: defaultLayouts.desktop,
@@ -663,6 +665,7 @@ export const DataProvider: React.FC<{
 
         setSupabaseUser(user)
         const userId = await withTimeout(getDatabaseUserId(), 15000, 'getDatabaseUserId')
+        const layoutUserId = user.id
         if (activeUserIdRef.current && activeUserIdRef.current !== userId) {
           // Prevent transient cross-user UI bleed before the next user's snapshot loads.
           resetUserState()
@@ -679,13 +682,13 @@ export const DataProvider: React.FC<{
         // Parallel: layout fetch + cache reads
         if (userId && !isSharedView) {
           const shouldHydrateLayout =
-            !dashboardLayoutRef.current || dashboardLayoutRef.current.userId !== userId
+            !dashboardLayoutRef.current || dashboardLayoutRef.current.userId !== layoutUserId
 
           const [dashboardLayoutResult, cachedTradesResult, cachedUserDataResult] =
             await Promise.allSettled([
               // Only fetch layout if not already loaded for this user
               shouldHydrateLayout
-                ? withTimeout(getDashboardLayout(userId), 15000, 'getDashboardLayout')
+                ? withTimeout(getDashboardLayout(layoutUserId), 15000, 'getDashboardLayout')
                 : Promise.resolve(undefined),
               withTimeout(getTradesCache(userId), 2000, 'getTradesCache'),
               withTimeout(getUserDataCache(userId), 2000, 'getUserDataCache'),
@@ -702,8 +705,8 @@ export const DataProvider: React.FC<{
             } else {
               // If no layout exists in database, use default layout
               setDashboardLayout({
-                id: userId,
-                userId,
+                id: layoutUserId,
+                userId: layoutUserId,
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 desktop: defaultLayouts.desktop,
@@ -716,8 +719,8 @@ export const DataProvider: React.FC<{
               'Dashboard layout fetch failed; falling back to defaults',
             )
             setDashboardLayout({
-              id: userId,
-              userId,
+              id: layoutUserId,
+              userId: layoutUserId,
               createdAt: new Date(),
               updatedAt: new Date(),
               desktop: defaultLayouts.desktop,
@@ -1054,6 +1057,7 @@ export const DataProvider: React.FC<{
         const normalizedAccounts = normalizeAccountsForClient(
           (data.accounts || []) as AccountInput[],
         )
+        const normalizedGroups = normalizeGroupsForClient(data.groups as GroupInput[])
         const accountsWithMetrics = await withTimeout(
           calculateAccountMetricsAction(normalizedAccounts),
           20000,
@@ -1064,7 +1068,7 @@ export const DataProvider: React.FC<{
         setUser(data.userData)
         setSubscription(data.subscription as PrismaSubscription | null)
         setTags(data.tags)
-        setGroups(normalizeGroupsForClient(data.groups as GroupInput[]))
+        setGroups(normalizedGroups)
         setMoods(data.moodHistory)
         setEvents(data.financialEvents)
         setTickDetails(data.tickDetails)
@@ -1081,6 +1085,20 @@ export const DataProvider: React.FC<{
                 mobile: defaultLayouts.mobile,
               },
         )
+
+        const userDataCacheId = data.userData?.id ?? activeUserIdRef.current
+        if (userDataCacheId) {
+          setUserDataCache(userDataCacheId, {
+            userData: data.userData,
+            subscription: data.subscription as PrismaSubscription | null,
+            tickDetails: data.tickDetails,
+            tags: data.tags,
+            accounts: normalizedAccounts,
+            groups: normalizedGroups,
+            financialEvents: data.financialEvents,
+            moodHistory: data.moodHistory,
+          }).catch((err) => logger.error({ err }, 'Failed to refresh user data cache'))
+        }
 
         if (includeSubscription) {
           await loadSubscriptionData()
@@ -1164,7 +1182,10 @@ export const DataProvider: React.FC<{
     if (trades.length === 0) return // avoid caching empty and blocking future fetches
 
     const timer = window.setTimeout(() => {
-      setTradesCache(supabaseUser.id, trades).catch((err) =>
+      const userId = activeUserIdRef.current
+      if (!userId) return
+
+      setTradesCache(userId, trades).catch((err) =>
         logger.error({ err }, 'Failed to sync trades to IndexedDB'),
       )
     }, 200)
@@ -1433,6 +1454,19 @@ export const DataProvider: React.FC<{
     )
   }
 
+  const clearDashboardBrowserCache = useCallback(
+    (scope: 'trades' | 'all', reason: string) => {
+      const userId = activeUserIdRef.current
+      if (!userId) return
+
+      const clearPromise = scope === 'all' ? clearAllCache(userId) : clearTradesCache(userId)
+      clearPromise.catch((err) =>
+        logger.error({ err, reason, userId }, 'Failed to clear dashboard browser cache'),
+      )
+    },
+    [],
+  )
+
   const saveAccount = useCallback(
     async (newAccount: Account) => {
       if (!supabaseUser?.id) return
@@ -1476,6 +1510,7 @@ export const DataProvider: React.FC<{
               }),
             )
           }
+          clearDashboardBrowserCache('all', 'saveAccount:create')
           return
         }
 
@@ -1626,12 +1661,21 @@ export const DataProvider: React.FC<{
             )
           }
         }
+        clearDashboardBrowserCache('all', 'saveAccount:update')
       } catch (error) {
         logger.error({ error }, 'Error updating account')
         throw error
       }
     },
-    [supabaseUser?.id, accounts, setAccounts, groups, setGroups, trades],
+    [
+      supabaseUser?.id,
+      accounts,
+      setAccounts,
+      groups,
+      setGroups,
+      trades,
+      clearDashboardBrowserCache,
+    ],
   )
 
   // Add createGroup function
@@ -1643,13 +1687,14 @@ export const DataProvider: React.FC<{
         // Explicitly include accounts in the input if needed, though group action returns them.
         const normalizedNewGroup = normalizeGroupsForClient([newGroup as GroupInput])[0] as Group
         setGroups([...groups, normalizedNewGroup])
+        clearDashboardBrowserCache('all', 'saveGroup')
         return normalizedNewGroup
       } catch (error) {
         logger.error({ error }, 'Error creating group')
         throw error
       }
     },
-    [supabaseUser?.id, groups, setGroups],
+    [supabaseUser?.id, groups, setGroups, clearDashboardBrowserCache],
   )
 
   const renameGroup = useCallback(
@@ -1659,13 +1704,14 @@ export const DataProvider: React.FC<{
       try {
         setGroups(groups.map((group) => (group.id === groupId ? { ...group, name } : group)))
         await renameGroupAction(groupId, name)
+        clearDashboardBrowserCache('all', 'renameGroup')
       } catch (error) {
         setGroups(previousGroups)
         logger.error({ error }, 'Error renaming group')
         throw error
       }
     },
-    [supabaseUser?.id, groups, setGroups],
+    [supabaseUser?.id, groups, setGroups, clearDashboardBrowserCache],
   )
 
   // Add deleteGroup function
@@ -1684,6 +1730,7 @@ export const DataProvider: React.FC<{
         setAccounts(updatedAccounts)
         setGroups(groups.filter((group) => group.id !== groupId))
         await deleteGroupAction(groupId)
+        clearDashboardBrowserCache('all', 'deleteGroup')
       } catch (error) {
         setGroups(previousGroups)
         setAccounts(previousAccounts)
@@ -1691,7 +1738,7 @@ export const DataProvider: React.FC<{
         throw error
       }
     },
-    [accounts, setAccounts, groups, setGroups],
+    [accounts, setAccounts, groups, setGroups, clearDashboardBrowserCache],
   )
 
   // Add moveAccountToGroup function
@@ -1759,6 +1806,7 @@ export const DataProvider: React.FC<{
         }
 
         await moveAccountToGroupAction(accountId, targetGroupId)
+        clearDashboardBrowserCache('all', 'moveAccountToGroup')
       } catch (error) {
         logger.error({ error }, 'Error moving account to group, rolling back')
         setAccounts(previousAccounts)
@@ -1766,7 +1814,7 @@ export const DataProvider: React.FC<{
         throw error
       }
     },
-    [setAccounts, setGroups, saveGroup],
+    [setAccounts, setGroups, saveGroup, clearDashboardBrowserCache],
   )
 
   const moveAccountsToGroup = useCallback(
@@ -1803,6 +1851,7 @@ export const DataProvider: React.FC<{
         )
 
         await Promise.all(accountIds.map((id) => moveAccountToGroupAction(id, targetGroupId)))
+        clearDashboardBrowserCache('all', 'moveAccountsToGroup')
       } catch (error) {
         logger.error({ error }, 'Error moving accounts to group, rolling back')
         setAccounts(previousAccounts)
@@ -1810,7 +1859,7 @@ export const DataProvider: React.FC<{
         throw error
       }
     },
-    [setAccounts, setGroups],
+    [setAccounts, setGroups, clearDashboardBrowserCache],
   )
 
   // Add savePayout function
@@ -1866,13 +1915,14 @@ export const DataProvider: React.FC<{
 
         // Perform server action in background
         await savePayoutAction(payoutForSave)
+        clearDashboardBrowserCache('all', 'savePayout')
       } catch (error) {
         logger.error({ error }, 'Error saving payout, rolling back')
         setAccounts(previousAccounts)
         throw error
       }
     },
-    [supabaseUser?.id, isSharedView, accounts, setAccounts, trades],
+    [supabaseUser?.id, isSharedView, accounts, setAccounts, trades, clearDashboardBrowserCache],
   )
 
   // Add deleteAccount function
@@ -1889,6 +1939,7 @@ export const DataProvider: React.FC<{
         setGroups(removeAccountFromGroups(currentGroups, account.id))
         // Delete from database
         await deleteAccountAction(account)
+        clearDashboardBrowserCache('all', 'deleteAccount')
       } catch (error) {
         logger.error({ error }, 'Error deleting account, rolling back')
         setAccounts(previousAccounts)
@@ -1896,7 +1947,7 @@ export const DataProvider: React.FC<{
         throw error
       }
     },
-    [supabaseUser?.id, isSharedView, setAccounts, setGroups],
+    [supabaseUser?.id, isSharedView, setAccounts, setGroups, clearDashboardBrowserCache],
   )
 
   // Add deletePayout function
@@ -1939,13 +1990,14 @@ export const DataProvider: React.FC<{
         } else {
           setAccounts(updatedAccounts)
         }
+        clearDashboardBrowserCache('all', 'deletePayout')
       } catch (error) {
         setAccounts(previousAccounts)
         logger.error({ error }, 'Error deleting payout')
         throw error
       }
     },
-    [supabaseUser?.id, isSharedView, accounts, setAccounts, trades],
+    [supabaseUser?.id, isSharedView, accounts, setAccounts, trades, clearDashboardBrowserCache],
   )
 
   const changeIsFirstConnection = useCallback(
@@ -1954,8 +2006,9 @@ export const DataProvider: React.FC<{
       // Update the user in the database
       setIsFirstConnection(isFirstConnection)
       await updateIsFirstConnectionAction(isFirstConnection)
+      clearDashboardBrowserCache('all', 'changeIsFirstConnection')
     },
-    [supabaseUser?.id, setIsFirstConnection],
+    [supabaseUser?.id, setIsFirstConnection, clearDashboardBrowserCache],
   )
 
   const updateTrades = useCallback(
@@ -1977,10 +2030,7 @@ export const DataProvider: React.FC<{
         setTrades(updatedTrades)
         const updatedCount = await updateTradesAction(tradeIds, update)
 
-        // Clear IndexedDB cache since trades were mutated
-        clearTradesCache(supabaseUser.id).catch((err) =>
-          logger.error({ err }, 'Failed to clear trades cache in IndexedDB'),
-        )
+        clearDashboardBrowserCache('trades', 'updateTrades')
 
         if (updatedCount === 0 || updatedCount !== tradeIds.length) {
           throw new Error(
@@ -1993,7 +2043,7 @@ export const DataProvider: React.FC<{
         throw error
       }
     },
-    [supabaseUser?.id, trades, setTrades],
+    [supabaseUser?.id, trades, setTrades, clearDashboardBrowserCache],
   )
 
   const groupTrades = useCallback(
@@ -2009,17 +2059,14 @@ export const DataProvider: React.FC<{
         )
         await groupTradesAction(tradeIds)
 
-        // Clear IndexedDB cache since trades were mutated
-        clearTradesCache(supabaseUser.id).catch((err) =>
-          logger.error({ err }, 'Failed to clear trades cache in IndexedDB'),
-        )
+        clearDashboardBrowserCache('trades', 'groupTrades')
       } catch (error) {
         logger.error({ error }, 'Error grouping trades, rolling back')
         setTrades(previousTrades)
         throw error
       }
     },
-    [supabaseUser?.id, trades, setTrades],
+    [supabaseUser?.id, trades, setTrades, clearDashboardBrowserCache],
   )
 
   const ungroupTrades = useCallback(
@@ -2034,17 +2081,14 @@ export const DataProvider: React.FC<{
         )
         await ungroupTradesAction(tradeIds)
 
-        // Clear IndexedDB cache since trades were mutated
-        clearTradesCache(supabaseUser.id).catch((err) =>
-          logger.error({ err }, 'Failed to clear trades cache in IndexedDB'),
-        )
+        clearDashboardBrowserCache('trades', 'ungroupTrades')
       } catch (error) {
         logger.error({ error }, 'Error ungrouping trades, rolling back')
         setTrades(previousTrades)
         throw error
       }
     },
-    [supabaseUser?.id, trades, setTrades],
+    [supabaseUser?.id, trades, setTrades, clearDashboardBrowserCache],
   )
 
   const deleteTrades = useCallback(
@@ -2063,10 +2107,7 @@ export const DataProvider: React.FC<{
         // Delete from database
         await deleteTradesByIdsAction(tradeIds)
 
-        // Clear IndexedDB cache since trades were mutated
-        clearTradesCache(supabaseUser.id).catch((err) =>
-          logger.error({ err }, 'Failed to clear trades cache in IndexedDB'),
-        )
+        clearDashboardBrowserCache('trades', 'deleteTrades')
       } catch (error) {
         // On error, refresh to restore the correct state
         logger.error({ error }, 'Error deleting trades')
@@ -2074,7 +2115,7 @@ export const DataProvider: React.FC<{
         throw error
       }
     },
-    [supabaseUser?.id, trades, setTrades, refreshAllData],
+    [supabaseUser?.id, trades, setTrades, refreshAllData, clearDashboardBrowserCache],
   )
 
   const getTradeImages = useCallback(
@@ -2099,7 +2140,7 @@ export const DataProvider: React.FC<{
         const normalizedLayout = {
           ...layout,
           id: layout.id || supabaseUser.id,
-          userId: layout.userId || supabaseUser.id,
+          userId: supabaseUser.id,
         }
 
         setDashboardLayout(normalizedLayout as unknown as DashboardLayoutWithWidgets)

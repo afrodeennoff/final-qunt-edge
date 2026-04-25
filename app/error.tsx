@@ -11,7 +11,8 @@ export default function Error({
   error: Error & { digest?: string }
   reset: () => void
 }) {
-  const { locale } = useParams<{ locale: string }>()
+  const params = useParams<{ locale?: string }>() as { locale?: string } | null
+  const locale = params?.locale ?? 'en'
 
   useEffect(() => {
     console.error('[App Error Boundary]', error)

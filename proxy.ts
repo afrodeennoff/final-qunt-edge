@@ -45,6 +45,14 @@ function normalizeEnvValue(value?: string): string {
   return value?.trim() ?? ''
 }
 
+function timingSafeStringEqual(candidate: string, expected: string): boolean {
+  try {
+    return timingSafeEqual(Buffer.from(candidate), Buffer.from(expected))
+  } catch {
+    return false
+  }
+}
+
 async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
   const timeoutPromise = new Promise<never>((_, reject) =>
     setTimeout(() => reject(new Error(message)), timeoutMs),
@@ -95,7 +103,11 @@ function handleCronAuth(request: NextRequest): NextResponse | null {
   }
 
   const vercelCronHeader = request.headers.get('x-vercel-cron')
-  if (vercelCronHeader && vercelCronSecret && vercelCronHeader === vercelCronSecret) {
+  if (
+    vercelCronHeader &&
+    vercelCronSecret &&
+    timingSafeStringEqual(vercelCronHeader, vercelCronSecret)
+  ) {
     return null
   }
 
@@ -107,12 +119,8 @@ function handleCronAuth(request: NextRequest): NextResponse | null {
   }
 
   if (cronSecret) {
-    try {
-      if (timingSafeEqual(Buffer.from(token), Buffer.from(cronSecret))) {
-        return null
-      }
-    } catch {
-      return NextResponse.json({ error: 'Unauthorized: Invalid cron token' }, { status: 401 })
+    if (timingSafeStringEqual(token, cronSecret)) {
+      return null
     }
   }
 
@@ -209,8 +217,10 @@ const PRIVATE_DOCUMENT_PATH_PREFIXES = [
 const PUBLIC_READ_API_PATHS = new Set<string>([])
 const PUBLIC_API_PATH_PREFIXES = [
   '/api/health',
+  '/api/ready',
   '/api/og',
   '/api/email/unsubscribe',
+  '/api/email/welcome',
   '/api/csp-report',
   '/api/auth/callback',
   '/api/whop/checkout',

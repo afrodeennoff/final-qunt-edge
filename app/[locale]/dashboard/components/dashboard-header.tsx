@@ -108,7 +108,7 @@ export function DashboardHeader() {
           <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4">
             <WindowChrome className="hidden md:block" />
             <SidebarTrigger
-              className={cn(unifiedToolbarButtonClassName, 'h-10 w-10 shrink-0 md:h-9 md:w-9')}
+              className={cn(unifiedToolbarButtonClassName, 'h-10 w-10 shrink-0 md:h-7 md:w-7')}
             />
             <div className="flex min-w-0 items-center gap-3">
               <div className="hidden h-8 w-px bg-border/40 sm:block" />

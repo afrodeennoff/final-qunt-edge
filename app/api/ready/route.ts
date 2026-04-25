@@ -7,7 +7,7 @@
  * - All healthy → 200 (ready)
  */
 
-import { NextResponse } from 'next/server'
+import { NextResponse, connection } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { isRedisConfigured } from '@/lib/redis-client'
 import { getCacheMetrics } from '@/lib/cache/cache-service'
@@ -23,6 +23,8 @@ interface DependencyCheck {
 }
 
 export async function GET() {
+  await connection()
+
   const requestId = crypto.randomUUID()
   const checks: DependencyCheck[] = []
 
@@ -36,11 +38,15 @@ export async function GET() {
       latencyMs: Date.now() - dbStart,
     })
   } catch (error) {
+    log.error('Postgres readiness check failed', {
+      requestId,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    })
     checks.push({
       name: 'postgres',
       status: 'down',
       latencyMs: Date.now() - dbStart,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: 'Postgres unavailable',
     })
   }
 

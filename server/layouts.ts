@@ -11,7 +11,7 @@ import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 import { CACHE_TAGS, invalidateDashboardLayout, invalidateEquityChart } from '@/lib/cache/cache-invalidation'
 
 async function assertLayoutOwnership(layoutId: string): Promise<DashboardLayout> {
-  const userId = await getDatabaseUserId()
+  const userId = await getUserId()
   const layout = await prisma.dashboardLayout.findUnique({
     where: { id: layoutId }
   })
@@ -87,7 +87,7 @@ async function _loadDashboardLayoutCached(userId: string): Promise<Layouts | nul
 }
 
 export async function loadDashboardLayoutAction(forceRefresh = false): Promise<Layouts | null> {
-  const userId = await getDatabaseUserId()
+  const userId = await getUserId()
   if (!userId) return null
   try {
     return forceRefresh ? _loadDashboardLayout(userId) : _loadDashboardLayoutCached(userId)
@@ -99,9 +99,10 @@ export async function loadDashboardLayoutAction(forceRefresh = false): Promise<L
 
 export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promise<SaveLayoutResult> {
   const authUserId = await getUserId()
-  const userId = await getDatabaseUserId()
+  const databaseUserId = await getDatabaseUserId()
+  const layoutUserId = authUserId
 
-  if (!userId) {
+  if (!databaseUserId || !layoutUserId) {
     return { success: false, error: 'User not authenticated' }
   }
 
@@ -110,7 +111,7 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
   }
 
   if (!validateLayouts(layouts)) {
-    logger.error('[saveDashboardLayout] Validation failed', { userId })
+    logger.error('[saveDashboardLayout] Validation failed', { userId: databaseUserId })
     return { success: false, error: 'Invalid layout structure' }
   }
 
@@ -122,14 +123,16 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
     resolvedEmail = user?.email || ''
 
     if (!resolvedEmail) {
-      logger.error('[saveDashboardLayout] Missing user email for ensureUserInDatabase', { userId })
+      logger.error('[saveDashboardLayout] Missing user email for ensureUserInDatabase', {
+        userId: databaseUserId,
+      })
       return { success: false, error: 'User email not available' }
     }
 
     await prisma.user.upsert({
-      where: { id: userId },
+      where: { id: databaseUserId },
       create: {
-        id: userId,
+        id: databaseUserId,
         auth_user_id: authUserId,
         email: resolvedEmail,
       },
@@ -143,12 +146,15 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
     ) {
       await prisma.$executeRaw`
         INSERT INTO "public"."User" ("id", "email", "auth_user_id")
-        VALUES (${userId}, ${resolvedEmail}, ${authUserId})
+        VALUES (${databaseUserId}, ${resolvedEmail}, ${authUserId})
         ON CONFLICT ("id")
         DO UPDATE SET "email" = EXCLUDED."email"
       `
     } else {
-      logger.error('[saveDashboardLayout] Failed to ensure user record', { error, userId })
+      logger.error('[saveDashboardLayout] Failed to ensure user record', {
+        error,
+        userId: databaseUserId,
+      })
       return { success: false, error: 'Failed to ensure user record' }
     }
   }
@@ -156,20 +162,25 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
   let verifiedUser: { id: string } | null = null
   try {
     verifiedUser = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: databaseUserId },
       select: { id: true },
     })
   } catch (error) {
-    logger.error('[saveDashboardLayout] Failed to ensure user record', { error, userId })
+    logger.error('[saveDashboardLayout] Failed to ensure user record', {
+      error,
+      userId: databaseUserId,
+    })
     return { success: false, error: 'Failed to ensure user record' }
   }
 
   if (!verifiedUser) {
-    logger.error('[saveDashboardLayout] Missing user record for layout save', { userId })
+    logger.error('[saveDashboardLayout] Missing user record for layout save', {
+      userId: databaseUserId,
+    })
     return { success: false, error: 'User record not found' }
   }
 
-  const lockKey = `layout:${userId}`
+  const lockKey = `layout:${layoutUserId}`
   const now = Date.now()
 
   // Check and clean expired locks first
@@ -180,7 +191,7 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
   }
 
   if (saveLocks.has(lockKey)) {
-    logger.info('[saveDashboardLayout] Debouncing concurrent save', { userId })
+    logger.info('[saveDashboardLayout] Debouncing concurrent save', { userId: layoutUserId })
     return { success: true }
   }
 
@@ -188,27 +199,27 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
     try {
       await prisma.$transaction(async (tx) => {
         await tx.dashboardLayout.upsert({
-          where: { userId },
+          where: { userId: layoutUserId },
           update: {
             desktop: layouts.desktop as unknown as Prisma.JsonArray,
             mobile: layouts.mobile as unknown as Prisma.JsonArray,
             updatedAt: new Date()
           },
           create: {
-            userId,
+            userId: layoutUserId,
             desktop: layouts.desktop as unknown as Prisma.JsonArray,
             mobile: layouts.mobile as unknown as Prisma.JsonArray
           },
         })
       })
 
-      invalidateDashboardLayout(userId)
-      invalidateEquityChart(userId)
+      invalidateDashboardLayout(layoutUserId)
+      invalidateEquityChart(databaseUserId)
 
-      logger.info('[saveDashboardLayout] Success', { userId })
+      logger.info('[saveDashboardLayout] Success', { userId: layoutUserId })
       return { success: true }
     } catch (error) {
-      logger.error('[saveDashboardLayout] Error', { error, userId })
+      logger.error('[saveDashboardLayout] Error', { error, userId: layoutUserId })
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown database error'
@@ -281,8 +292,11 @@ export async function createLayoutVersionAction(
       }
     })
 
+    const databaseUserId = await getDatabaseUserId()
     invalidateDashboardLayout(layout.userId)
-    invalidateEquityChart(layout.userId)
+    if (databaseUserId) {
+      invalidateEquityChart(databaseUserId)
+    }
     logger.info('[createLayoutVersion] Success', { layoutId, version: versionData.version })
   } catch (error) {
     logger.error('[createLayoutVersion] Error', { error, layoutId })
@@ -390,12 +404,12 @@ export async function cleanupOldLayoutVersionsAction(
 
     if (totalCount <= keepCount) return
 
-    const versionsToDelete = await prisma.layoutVersion.findMany({
+    const versionsToDelete = (await prisma.layoutVersion.findMany({
       where: { layoutId },
       orderBy: { version: 'desc' },
       skip: keepCount,
       select: { id: true }
-    })
+    })) ?? []
 
     if (versionsToDelete.length === 0) return
 
@@ -422,9 +436,10 @@ export async function saveDashboardLayoutWithVersionAction(
     deviceId: string
   }
 ): Promise<SaveLayoutResult> {
-  const userId = await getDatabaseUserId()
+  const userId = await getUserId()
+  const databaseUserId = await getDatabaseUserId()
 
-  if (!userId) {
+  if (!userId || !databaseUserId) {
     return { success: false, error: 'User not authenticated' }
   }
 
@@ -486,7 +501,7 @@ export async function saveDashboardLayoutWithVersionAction(
     })
 
     invalidateDashboardLayout(userId)
-      invalidateEquityChart(userId)
+    invalidateEquityChart(databaseUserId)
 
     logger.info('[saveDashboardLayoutWithVersion] Success', { userId })
     return { success: true }

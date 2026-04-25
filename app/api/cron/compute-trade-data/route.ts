@@ -1,6 +1,6 @@
 // CRON JOB RUNNING EVERY WEEK
 
-import { NextResponse } from "next/server";
+import { NextResponse, connection } from "next/server";
 import { prisma } from "@/lib/prisma";
 import type { Trade } from "@/prisma/generated/prisma";
 import { startOfWeek, endOfWeek, subWeeks, format } from "date-fns";
@@ -305,6 +305,8 @@ async function processInstrumentTrades(instrumentData: InstrumentData): Promise<
 }
 
 export async function GET(request: Request) {
+  await connection()
+
   const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID()
   return withLogContext(
     {

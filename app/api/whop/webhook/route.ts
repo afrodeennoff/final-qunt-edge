@@ -35,7 +35,6 @@ export async function POST(req: NextRequest) {
         logger.error('[Webhook] Signature verification failed', {
             requestId,
             error: message,
-            stack: err instanceof Error ? err.stack : undefined,
         });
 
         const response: ErrorResponse = {

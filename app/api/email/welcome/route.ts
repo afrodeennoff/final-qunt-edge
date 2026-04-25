@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextResponse, connection } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { Resend } from 'resend'
 import WelcomeEmail from '@/components/emails/welcome'
@@ -37,6 +37,8 @@ function isAuthorizedWebhook(request: Request): boolean {
 }
 
 export async function POST(req: Request) {
+  await connection()
+
   const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID()
   return withLogContext(
     {

@@ -4,7 +4,7 @@
  * The 'use cache' directive enables SSR caching.
  */
 import { cacheLife, cacheTag } from 'next/cache'
-import { getDatabaseUserId } from '@/server/auth'
+import { getDatabaseUserId, getUserId } from '@/server/auth'
 import { getUserData } from '@/server/user-data'
 import { getDashboardLayout } from '@/server/user-data'
 import { getTradesAction } from '@/server/database'
@@ -21,11 +21,14 @@ export async function getDashboardBootstrap(): Promise<DashboardBootstrapPayload
   'use cache: private'
   cacheLife({ stale: 60, revalidate: 60, expire: 300 })
 
-  const userId = await getDatabaseUserId()
+  const [authUserId, userId] = await Promise.all([getUserId(), getDatabaseUserId()])
 
   // Tag so mutations can invalidate bootstrap data
   if (userId) {
     cacheTag(CACHE_TAGS.DASHBOARD(userId))
+  }
+  if (authUserId && authUserId !== userId) {
+    cacheTag(CACHE_TAGS.DASHBOARD(authUserId))
   }
 
   if (!userId) {

@@ -75,6 +75,26 @@ export const useEquityChartStore = create<EquityChartStore>()(
     {
       name: 'equity-chart-store',
       storage: createJSONStorage(() => localStorage),
+      version: 2,
+      partialize: (state) => ({
+        config: {
+          showIndividual: state.config.showIndividual,
+          showDailyPnL: state.config.showDailyPnL,
+          maxAccountsDisplayed: state.config.maxAccountsDisplayed,
+          dataSampling: state.config.dataSampling,
+          selectedAccountsToDisplay: [],
+        },
+      }),
+      migrate: (persistedState: unknown) => {
+        const state = persistedState as { config?: Partial<EquityChartConfig> } | null
+        return {
+          config: {
+            ...defaultConfig,
+            ...state?.config,
+            selectedAccountsToDisplay: [],
+          },
+        }
+      },
     }
   )
 ) 

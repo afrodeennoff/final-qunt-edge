@@ -37,47 +37,56 @@ import { cn } from '@/lib/utils'
 
 // Removed ThemeProvider import - using simple theme implementation
 
-// Mock trade data enriched with typical fields
 const instruments = ['ES', 'NQ', 'CL', 'GC'] as const
 const sides = ['long', 'short'] as const
-const now = Date.now()
 const dayMs = 24 * 60 * 60 * 1000
-const mockTrades = Array.from({ length: 60 }, (_, i) => {
-  const entry = new Date(
-    now - Math.floor(Math.random() * 30) * dayMs - Math.floor(Math.random() * 24) * 3600 * 1000,
-  )
-  const qty = Math.ceil(Math.random() * 3)
-  const pnl = Math.round((Math.random() - 0.4) * 500 * 100) / 100
-  const timeInPosition = Math.floor(Math.random() * 3600)
-  return {
-    pnl,
-    timeInPosition,
-    entryDate: entry.toISOString(),
-    side: sides[Math.floor(Math.random() * sides.length)],
-    quantity: qty,
-    commission: Math.round(qty * (1 + Math.random() * 3) * 100) / 100,
-    instrument: instruments[Math.floor(Math.random() * instruments.length)],
-  }
-})
 
-// Function to generate random trade data
-function generateRandomTrade() {
+type EmbedTrade = {
+  pnl: number
+  timeInPosition: number
+  entryDate: string
+  side: string
+  quantity: number
+  commission: number
+  instrument: string
+}
+
+function createDemoTrades(): EmbedTrade[] {
+  const base = Date.UTC(2026, 0, 30, 14, 30, 0)
+
+  return Array.from({ length: 60 }, (_, i) => {
+    const entry = new Date(base - (i % 30) * dayMs - (i % 7) * 45 * 60 * 1000)
+    const qty = (i % 3) + 1
+    const direction = i % 5 === 0 ? -1 : 1
+    const pnl = Math.round((direction * (120 + (i % 9) * 37) - (i % 4) * 22) * 100) / 100
+    const timeInPosition = 300 + (i % 11) * 210
+
+    return {
+      pnl,
+      timeInPosition,
+      entryDate: entry.toISOString(),
+      side: sides[i % sides.length] ?? 'long',
+      quantity: qty,
+      commission: Math.round(qty * 2.14 * 100) / 100,
+      instrument: instruments[i % instruments.length] ?? 'ES',
+    }
+  })
+}
+
+function generateRandomTrade(): EmbedTrade {
   const qty = Math.ceil(Math.random() * 3)
-  const pnl = (Math.random() - 0.4) * 500
-  const timeInPosition = Math.random() * 3600
-  const entry = new Date(Date.now() - Math.floor(Math.random() * 20) * dayMs)
+
   return {
-    pnl: Math.round(pnl * 100) / 100,
-    timeInPosition: Math.round(timeInPosition),
-    entryDate: entry.toISOString(),
-    side: sides[Math.floor(Math.random() * sides.length)],
+    pnl: Math.round(((Math.random() - 0.4) * 500) * 100) / 100,
+    timeInPosition: Math.round(Math.random() * 3600),
+    entryDate: new Date(Date.now() - Math.floor(Math.random() * 20) * dayMs).toISOString(),
+    side: sides[Math.floor(Math.random() * sides.length)] ?? 'long',
     quantity: qty,
     commission: Math.round(qty * (1 + Math.random() * 3) * 100) / 100,
-    instrument: instruments[Math.floor(Math.random() * instruments.length)],
+    instrument: instruments[Math.floor(Math.random() * instruments.length)] ?? 'ES',
   }
 }
 
-// Function to generate multiple random trades
 function generateRandomTrades(count: number = 1) {
   return Array.from({ length: count }, generateRandomTrade)
 }
@@ -93,17 +102,10 @@ export default function EmbedPage() {
   const searchParams = useSearchParams()
   const preset = searchParams.get('preset') || undefined
   const lang = searchParams.get('lang') || 'en'
-  const [trades, setTrades] = React.useState<
-    Array<{
-      pnl: number
-      timeInPosition: number
-      entryDate: string
-      side: string
-      quantity: number
-      commission: number
-      instrument: string
-    }>
-  >(mockTrades)
+  const allowDemoData = searchParams.get('demo') === 'true' || process.env.NODE_ENV === 'development'
+  const [trades, setTrades] = React.useState<EmbedTrade[]>(() =>
+    allowDemoData ? createDemoTrades() : []
+  )
 
   // Dark-only theme with optional presets/overrides.
   React.useEffect(() => {
@@ -134,15 +136,18 @@ export default function EmbedPage() {
           if (newTrades && Array.isArray(newTrades)) {
             // Add provided trades
             setTrades((prev) => [...prev, ...newTrades])
-          } else {
+          } else if (allowDemoData) {
             toast.error('No trades provided', { description: `Generating ${count} random trades` })
             // Generate random trades
             const randomTrades = generateRandomTrades(count)
             setTrades((prev) => [...prev, ...randomTrades])
+          } else {
+            toast.error('No trades provided', {
+              description: 'Send trades with the ADD_TRADES message or open with ?demo=true.',
+            })
           }
         } else if (data.type === 'RESET_TRADES') {
-          // Reset to original mock data
-          setTrades(mockTrades)
+          setTrades(allowDemoData ? createDemoTrades() : [])
         } else if (data.type === 'CLEAR_TRADES') {
           // Clear all trades
           setTrades([])
@@ -169,7 +174,7 @@ export default function EmbedPage() {
     return () => {
       window.removeEventListener('message', handleMessage)
     }
-  }, [])
+  }, [allowDemoData])
 
   const selectedInstrument = React.useMemo(() => {
     const counts: Record<string, number> = {}

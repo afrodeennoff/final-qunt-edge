@@ -25,9 +25,9 @@ export function DataDebug() {
  const [isOpen, setIsOpen] = useState(false)
 
  const handleClearCache = async () => {
- const userId = user?.id || supabaseUser?.id
- if (userId) {
- await clearAllCache(userId)
+ const userIds = Array.from(new Set([user?.id, supabaseUser?.id].filter(Boolean) as string[]))
+ if (userIds.length > 0) {
+ await Promise.all(userIds.map((userId) => clearAllCache(userId)))
  window.location.reload()
  }
  }

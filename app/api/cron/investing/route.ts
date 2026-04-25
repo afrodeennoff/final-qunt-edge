@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, connection } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { isValid } from 'date-fns'
 import { scrapeWithSandbox } from '@/lib/browser-sandbox'
@@ -280,6 +280,8 @@ async function fetchInvestingCalendarEvents(lang: 'fr' | 'en' = 'fr') {
 }
 
 export async function GET(request: Request) {
+  await connection()
+
   const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID()
   return withLogContext(
     {

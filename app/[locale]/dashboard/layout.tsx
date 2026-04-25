@@ -79,7 +79,7 @@ export default async function DashboardLayout({
   }
 
   const userTheme = (await getUserDashboardTheme()) ?? undefined
-  const themeScript = serializeThemeVars(userTheme ?? 'violet')
+  const themeScript = serializeThemeVars(userTheme ?? 'blue')
   const cookieStore = await cookies()
   const defaultSidebarOpen = parseSidebarStateCookieValue(
     cookieStore.get(SIDEBAR_STATE_COOKIE_NAME)?.value,
@@ -91,7 +91,7 @@ export default async function DashboardLayout({
         id="init-dashboard-theme"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
-          __html: `(function(){try{var root=document.documentElement;${themeScript};root.setAttribute('data-theme','${userTheme ?? 'violet'}')}catch(e){console.error('[Theme] Bootstrap failed',e)}})()`,
+          __html: `(function(){try{var root=document.documentElement;${themeScript};root.setAttribute('data-theme','${userTheme ?? 'blue'}')}catch(e){console.error('[Theme] Bootstrap failed',e)}})()`,
         }}
       />
       <SidebarRootProviders

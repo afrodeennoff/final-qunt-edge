@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse, connection } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { generateText, Output } from "ai"
 import { z } from "zod"
@@ -53,6 +53,8 @@ function isAuthorizedInternalRequest(req: NextRequest): boolean {
 }
 
 export async function POST(req: NextRequest) {
+  await connection()
+
   if (!isAuthorizedInternalRequest(req)) {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 })
   }
@@ -216,6 +218,8 @@ Return the inferred names with confidence levels:
 
 // GET endpoint to check how many subscribers need name inference
 export async function GET(req: NextRequest) {
+  await connection()
+
   if (!isAuthorizedInternalRequest(req)) {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 })
   }

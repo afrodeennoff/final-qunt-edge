@@ -95,6 +95,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  const [isSubscription, setIsSubscription] = React.useState<boolean>(false)
  const [lookupKey, setLookupKey] = React.useState<string | null>(null)
  const [plan, setPlan] = React.useState<string | null>(null)
+ const [teamName, setTeamName] = React.useState<string | null>(null)
  const [referralCode, setReferralCode] = React.useState<string | null>(null)
  const [promoCode, setPromoCode] = React.useState<string | null>(null)
  const [authMethod, setAuthMethod] = React.useState<AuthMethod>(null)
@@ -118,10 +119,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  const promo_code = urlParams.get('promo_code')
  const lookup_key = urlParams.get('lookup_key')
  const plan_param = urlParams.get('plan')
+ const team_name = urlParams.get('teamName')
 
  setIsSubscription(subscription === 'true')
  setLookupKey(lookup_key)
  setPlan(plan_param)
+ setTeamName(team_name)
  setNextUrl(next)
  setAlreadySignedIn(urlParams.get('already') === 'signed-in')
 
@@ -169,13 +172,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  })
 
  // Helper function to determine the next URL for redirect after authentication
- function getRedirectNextUrl(isSubscription: boolean, plan: string | null, nextUrl: string | null, lookupKey: string | null, referralCode: string | null, promoCode: string | null, locale: string): string | null {
+ function getRedirectNextUrl(isSubscription: boolean, plan: string | null, nextUrl: string | null, lookupKey: string | null, referralCode: string | null, promoCode: string | null, teamName: string | null, locale: string): string | null {
  if (isSubscription) {
  const planPath = plan === 'team' ? '/api/whop/checkout-team' : '/api/whop/checkout'
  const searchParams = new URLSearchParams()
  if (lookupKey) searchParams.set('lookup_key', lookupKey)
  if (referralCode) searchParams.set('referral', referralCode)
  if (promoCode) searchParams.set('promo_code', promoCode)
+ if (plan === 'team' && teamName) searchParams.set('teamName', teamName)
  if (locale) searchParams.set('locale', locale)
  const qs = searchParams.toString()
  return `${planPath}${qs ? `?${qs}` : ''}`
@@ -191,7 +195,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  setIsLoading(true)
  setAuthMethod('email')
  try {
- const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, locale)
+ const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, teamName, locale)
  const result = await signInWithEmail(values.email, next, locale)
 
  if (!result || !('success' in result) || !result.success) {
@@ -326,7 +330,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  setIsLoading(true)
  setAuthMethod('email')
  try {
- const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, locale)
+ const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, teamName, locale)
  const result = await signInWithPasswordAction(values.email, values.password || '', next, locale)
 
  if (!result.success) {
@@ -338,7 +342,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  }
 
  toast.success(t('success'), { description: t('auth.signIn') })
- window.location.href = nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`
+ window.location.href = result.next || (nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)
  setLastAuthPreference('password')
  } catch (error) {
  const parsedError = parseAuthError(error)
@@ -398,20 +402,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  setAuthMethod('discord')
 
  try {
- let next = nextUrl;
- if (isSubscription) {
- const planParam = plan === 'team' ? '/api/whop/checkout-team' : '/api/whop/checkout';
- const searchParams = new URLSearchParams();
- if (lookupKey) searchParams.set('lookup_key', lookupKey);
- if (referralCode) searchParams.set('referral', referralCode);
- if (promoCode) searchParams.set('promo_code', promoCode);
- if (locale) searchParams.set('locale', locale);
-
- const queryString = searchParams.toString();
- next = `${planParam}${queryString ? `?${queryString}` : ''}`;
- } else if (nextUrl) {
- next = withLocalePrefix(nextUrl, locale)
- }
+ const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, teamName, locale)
  await signInWithDiscord(next, locale)
  } catch (error) {
  const parsedError = parseAuthError(error)
@@ -427,20 +418,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  setAuthMethod('google')
 
  try {
- let next = nextUrl;
- if (isSubscription) {
- const planParam = plan === 'team' ? '/api/whop/checkout-team' : '/api/whop/checkout';
- const searchParams = new URLSearchParams();
- if (lookupKey) searchParams.set('lookup_key', lookupKey);
- if (referralCode) searchParams.set('referral', referralCode);
- if (promoCode) searchParams.set('promo_code', promoCode);
- if (locale) searchParams.set('locale', locale);
-
- const queryString = searchParams.toString();
- next = `${planParam}${queryString ? `?${queryString}` : ''}`;
- } else if (nextUrl) {
- next = withLocalePrefix(nextUrl, locale)
- }
+ const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, teamName, locale)
  await signInWithGoogle(next, locale)
  } catch (error) {
  const parsedError = parseAuthError(error)

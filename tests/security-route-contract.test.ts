@@ -22,7 +22,9 @@ describe("security route contracts", () => {
       expect(content, `${routePath} should include auth guard`).toMatch(
         /(assertAdminAccess|authenticateRequest|auth\.getUser\()/
       );
-      expect(content, `${routePath} should include rate limiting`).toMatch(/rateLimit\(/);
+      expect(content, `${routePath} should include rate limiting`).toMatch(
+        /(rateLimit\(|withRateLimited\()/
+      );
       expect(content, `${routePath} should include schema validation`).toMatch(
         /(parseJson\(|parseQuery\()/
       );

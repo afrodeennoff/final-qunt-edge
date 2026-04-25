@@ -417,13 +417,22 @@ export async function getUserData(forceRefresh: boolean = false): Promise<{
 }
 
 export async function getDashboardLayout(userId: string): Promise<DashboardLayout | null> {
-  const actorUserId = await getUserId()
-  if (actorUserId !== userId) {
+  const [actorAuthUserId, actorDatabaseUserId] = await Promise.all([
+    getUserId(),
+    getDatabaseUserId(),
+  ])
+  if (userId !== actorAuthUserId && userId !== actorDatabaseUserId) {
     throw new Error('Forbidden')
   }
 
   try {
-    const layout = await getDashboardLayoutCached(userId)
+    let layout = await getDashboardLayoutCached(actorAuthUserId)
+
+    if (!layout) {
+      const { createDefaultDashboardLayout } = await import('@/server/layouts')
+      await createDefaultDashboardLayout(actorAuthUserId)
+      layout = await loadDashboardLayout(actorAuthUserId)
+    }
 
     if (!layout) return null
 
@@ -433,7 +442,10 @@ export async function getDashboardLayout(userId: string): Promise<DashboardLayou
         try {
           return JSON.parse(val) as Prisma.JsonValue
         } catch (error) {
-          logger.error('[getDashboardLayout] Failed to parse dashboard JSON', { error, userId })
+          logger.error('[getDashboardLayout] Failed to parse dashboard JSON', {
+            error,
+            userId: actorAuthUserId,
+          })
           return []
         }
       }
@@ -446,7 +458,10 @@ export async function getDashboardLayout(userId: string): Promise<DashboardLayou
       mobile: parseIfNeeded(layout.mobile)
     }
   } catch (error) {
-    logger.error('[getDashboardLayout] Error fetching dashboard layout', { error, userId })
+    logger.error('[getDashboardLayout] Error fetching dashboard layout', {
+      error,
+      userId: actorAuthUserId,
+    })
     return null
   }
 }
