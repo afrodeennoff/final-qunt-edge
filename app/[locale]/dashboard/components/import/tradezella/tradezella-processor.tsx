@@ -33,16 +33,16 @@ export default function TradezellaProcessor({ headers, csvData, setProcessedTrad
  closeTime = String(cellValue);
  break;
  case 'pnl':
- item.pnl = parseFloat(cellValue)
+ item.pnl = parseFloat(cellValue) || 0
  break;
  case 'commission':
- item.commission = parseFloat(cellValue)
+ item.commission = parseFloat(cellValue) || 0
  break;
  case 'quantity':
- item.quantity = parseFloat(cellValue)
+ item.quantity = parseFloat(cellValue) || 0
  break;
  case 'timeInPosition':
- item.timeInPosition = parseFloat(cellValue)
+ item.timeInPosition = parseFloat(cellValue) || 0
  break;
  default:
  (item as Record<string, unknown>)[key] = cellValue;
@@ -56,8 +56,13 @@ export default function TradezellaProcessor({ headers, csvData, setProcessedTrad
 
  // Compute entryDate and closeDate with the time from entryTime and closeTime
  if (entryTime && closeTime) {
- item.entryDate = new Date(`${item.entryDate} ${entryTime.slice(0, 8)}`).toISOString();
- item.closeDate = new Date(`${item.closeDate} ${closeTime.slice(0, 8)}`).toISOString();
+ const entryParsed = new Date(`${item.entryDate} ${entryTime.slice(0, 8)}`);
+ const closeParsed = new Date(`${item.closeDate} ${closeTime.slice(0, 8)}`);
+ if (isNaN(entryParsed.getTime()) || isNaN(closeParsed.getTime())) {
+   return;
+ }
+ item.entryDate = entryParsed.toISOString();
+ item.closeDate = closeParsed.toISOString();
  }
 
  newTrades.push(item as Trade);
