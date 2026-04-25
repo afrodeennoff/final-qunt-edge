@@ -726,7 +726,8 @@ export const platforms: PlatformConfig[] = [
  id: 'select-account',
  title: 'import.steps.selectAccount',
  description: 'import.steps.selectAccountDescription',
- component: AccountSelection
+ component: AccountSelection,
+ isLastStep: true,
  },
  ]
  },

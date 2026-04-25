@@ -3,42 +3,44 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Qunt Edge Product Promo</title>
+    <title>Qunt Edge — Product Promo</title>
     <style>
+      /* ── Design Tokens ───────────────────────────────── */
       :root {
         --void: #000000;
         --surface: #070914;
         --raised: #0b1020;
         --cobalt: #3b6cff;
+        --cobalt-dim: #2a4fcc;
         --cobalt-tint: #101a3a;
+        --cobalt-glow: rgba(59, 108, 255, 0.22);
         --text: #f7faff;
-        --muted: #9aa8c7;
+        --muted: #7b8baa;
+        --label: #9aa8c7;
         --positive: #42d98b;
         --warning: #f4be4a;
         --negative: #f06a6a;
-        --border: rgba(59, 108, 255, 0.2);
+        --border: rgba(59, 108, 255, 0.14);
+        --border-subtle: rgba(59, 108, 255, 0.08);
+        --glass: rgba(7, 9, 20, 0.92);
       }
 
-      * {
-        box-sizing: border-box;
-      }
+      /* ── Reset ──────────────────────────────────────── */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-      html,
-      body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
+      html, body {
+        width: 100%; height: 100%;
         overflow: hidden;
         background: var(--void);
         color: var(--text);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family:
-          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
       }
 
+      /* ── Stage ──────────────────────────────────────── */
       [data-composition-id="qunt-edge-product-promo"] {
         position: relative;
         width: 1920px;
@@ -47,542 +49,686 @@
         overflow: hidden;
         transform: scale(var(--stage-scale, 1));
         transform-origin: center center;
-        background:
-          radial-gradient(circle at 74% 22%, rgba(59, 108, 255, 0.18), transparent 32%),
-          radial-gradient(circle at 10% 86%, rgba(66, 217, 139, 0.1), transparent 30%),
-          var(--void);
+        background: var(--void);
       }
 
-      .grid {
+      /* ── Background layers ──────────────────────────── */
+      .bg-grid {
         position: absolute;
         inset: 0;
-        opacity: 0.18;
+        opacity: 0.06;
         background-image:
-          linear-gradient(rgba(59, 108, 255, 0.18) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(59, 108, 255, 0.18) 1px, transparent 1px);
-        background-size: 76px 76px;
+          linear-gradient(var(--cobalt) 1px, transparent 1px),
+          linear-gradient(90deg, var(--cobalt) 1px, transparent 1px);
+        background-size: 64px 64px;
+      }
+
+      .bg-glow {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse 60% 50% at 72% 18%, rgba(59, 108, 255, 0.12), transparent),
+          radial-gradient(ellipse 40% 40% at 8% 82%, rgba(66, 217, 139, 0.06), transparent);
+        pointer-events: none;
       }
 
       .scan-line {
         position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 18%;
-        width: 2px;
-        background: linear-gradient(to bottom, transparent, var(--cobalt), transparent);
-        opacity: 0.7;
-      }
-
-      .brand {
-        position: absolute;
-        top: 56px;
-        left: 72px;
-        z-index: 20;
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        font-weight: 800;
-        font-size: 24px;
-        letter-spacing: 0;
-      }
-
-      .brand-mark {
-        width: 34px;
-        height: 34px;
-        border-radius: 11px;
-        border: 1px solid var(--border);
-        background: linear-gradient(135deg, var(--cobalt), #42d98b);
-        box-shadow: 0 0 34px rgba(59, 108, 255, 0.28);
-      }
-
-      .scene {
-        position: absolute;
-        inset: 0;
-        z-index: 5;
-        display: flex;
-        padding: 112px 128px;
-      }
-
-      html:not(.no-gsap) .scene {
+        top: 0; bottom: 0;
+        left: 0;
+        width: 1px;
+        background: linear-gradient(to bottom, transparent 5%, var(--cobalt) 50%, transparent 95%);
         opacity: 0;
       }
 
+      /* ── Brand mark (persistent) ────────────────────── */
+      .brand {
+        position: absolute;
+        top: 48px; left: 64px;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        opacity: 0;
+      }
+
+      .brand-icon {
+        width: 36px; height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--cobalt), var(--positive));
+        box-shadow: 0 0 20px var(--cobalt-glow);
+      }
+
+      .brand-text {
+        font-size: 20px;
+        font-weight: 750;
+        letter-spacing: -0.02em;
+      }
+
+      /* ── Shared scene ───────────────────────────────── */
+      .scene {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        display: flex;
+        padding: 100px 100px;
+      }
+
+      html:not(.no-gsap) .scene { opacity: 0; }
+
+      /* ── Beat 1 — Cold Open ─────────────────────────── */
       .scene-one {
         align-items: center;
         justify-content: space-between;
         gap: 80px;
       }
 
-      .headline-stack {
-        max-width: 820px;
-      }
+      .hero-stack { max-width: 780px; }
 
       .eyebrow {
-        margin: 0 0 22px;
+        display: inline-block;
         color: var(--cobalt);
-        font-size: 17px;
-        font-weight: 800;
-        letter-spacing: 0.16em;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
+        margin-bottom: 20px;
       }
 
-      .mega {
-        margin: 0;
-        font-size: 104px;
-        line-height: 0.98;
+      .hero-headline {
+        font-size: 72px;
+        line-height: 0.95;
         font-weight: 800;
-        letter-spacing: 0;
+        letter-spacing: -0.03em;
       }
 
-      .subcopy {
-        max-width: 680px;
-        margin: 26px 0 0;
+      .hero-headline .accent { color: var(--cobalt); }
+
+      .hero-sub {
+        margin-top: 24px;
         color: var(--muted);
-        font-size: 28px;
-        line-height: 1.35;
+        font-size: 22px;
+        line-height: 1.45;
+        max-width: 540px;
       }
 
-      .pnl-card,
-      .product-shell,
-      .ai-panel,
-      .final-card {
-        border: 1px solid var(--border);
-        background: rgba(7, 9, 20, 0.94);
-        box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.05),
-          0 36px 90px rgba(0, 0, 0, 0.52);
-      }
-
+      /* PnL card */
       .pnl-card {
-        width: 520px;
-        border-radius: 28px;
-        padding: 34px;
+        width: 480px;
+        border-radius: 24px;
+        border: 1px solid var(--border);
+        background: var(--glass);
+        padding: 32px;
+        box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+      }
+
+      .pnl-label {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
       }
 
       .pnl-value {
-        margin: 10px 0 20px;
-        font-size: 78px;
-        line-height: 1;
+        margin: 14px 0 24px;
+        font-size: 68px;
         font-weight: 800;
-        letter-spacing: 0;
+        letter-spacing: -0.03em;
+        font-variant-numeric: tabular-nums;
+        color: var(--positive);
       }
 
-      .chip-row,
-      .audience-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
+      .chip-row { display: flex; flex-wrap: wrap; gap: 10px; }
 
       .chip {
-        border: 1px solid var(--border);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         border-radius: 999px;
-        padding: 11px 15px;
-        background: rgba(16, 26, 58, 0.72);
-        color: var(--muted);
-        font-size: 16px;
-        font-weight: 800;
+        padding: 8px 14px;
+        background: rgba(16, 26, 58, 0.7);
+        border: 1px solid var(--border-subtle);
+        color: var(--label);
+        font-size: 13px;
+        font-weight: 700;
       }
 
-      .scene-two,
-      .scene-three,
-      .scene-four {
+      .chip-dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+      }
+
+      .chip-dot.green { background: var(--positive); }
+      .chip-dot.amber { background: var(--warning); }
+      .chip-dot.red { background: var(--negative); }
+
+      /* ── Beat 2 — Product Reveal ────────────────────── */
+      .scene-two {
         align-items: center;
         justify-content: center;
       }
 
       .product-shell {
-        width: min(1360px, 86vw);
-        height: min(740px, 72vh);
-        border-radius: 30px;
+        width: min(1440px, 88%);
+        height: min(780px, 78%);
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: var(--surface);
         overflow: hidden;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.5);
       }
 
+      /* Browser chrome */
       .chrome {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 72px;
+        height: 52px;
+        padding: 0 20px;
         border-bottom: 1px solid var(--border);
-        padding: 0 26px;
-        background: #060a16;
+        background: #050810;
       }
 
-      .dots {
-        display: flex;
-        gap: 10px;
-      }
+      .dots { display: flex; gap: 8px; }
+      .dot { width: 11px; height: 11px; border-radius: 50%; }
+      .dot.r { background: #f06a6a; }
+      .dot.y { background: #f4be4a; }
+      .dot.g { background: #42d98b; }
 
-      .dot {
-        width: 13px;
-        height: 13px;
-        border-radius: 50%;
-      }
-
-      .dot.red {
-        background: var(--negative);
-      }
-
-      .dot.yellow {
-        background: var(--warning);
-      }
-
-      .dot.green {
-        background: var(--positive);
-      }
-
-      .status-pill {
-        border: 1px solid var(--border);
+      .chrome-url {
         border-radius: 999px;
-        padding: 9px 18px;
+        padding: 6px 16px;
+        background: rgba(16, 26, 58, 0.4);
+        border: 1px solid var(--border-subtle);
         color: var(--muted);
-        font-size: 15px;
-        font-weight: 800;
-        letter-spacing: 0.14em;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+      }
+
+      .chrome-status {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
+        color: var(--positive);
       }
 
-      .dashboard {
+      /* Dashboard layout */
+      .dash {
         display: grid;
-        grid-template-columns: 1.18fr 0.82fr;
-        gap: 22px;
-        height: calc(100% - 72px);
-        padding: 24px;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 16px;
+        height: calc(100% - 52px);
+        padding: 16px;
       }
 
-      .chart-panel,
-      .rail-panel,
-      .trade-table,
-      .next-rule {
-        border: 1px solid var(--border);
-        border-radius: 22px;
-        background: rgba(16, 26, 58, 0.46);
-      }
+      .dash-left { display: flex; flex-direction: column; gap: 16px; }
+      .dash-right { display: flex; flex-direction: column; gap: 16px; }
 
-      .chart-panel {
-        display: flex;
-        flex-direction: column;
-        padding: 24px;
-      }
-
-      .metrics {
+      /* Metric cards */
+      .metrics-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 14px;
+        gap: 12px;
       }
 
-      .metric {
-        border: 1px solid rgba(59, 108, 255, 0.14);
-        border-radius: 18px;
-        padding: 18px;
-        background: rgba(7, 9, 20, 0.86);
+      .metric-card {
+        border-radius: 14px;
+        border: 1px solid var(--border-subtle);
+        background: rgba(11, 16, 32, 0.8);
+        padding: 16px;
       }
 
-      .metric label {
-        display: block;
-        color: var(--muted);
-        font-size: 15px;
-        font-weight: 800;
-        letter-spacing: 0.12em;
+      .metric-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
+        color: var(--muted);
       }
 
-      .metric strong {
-        display: block;
-        margin-top: 10px;
-        font-size: 38px;
+      .metric-value {
+        margin-top: 8px;
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums;
       }
 
-      .chart {
-        position: relative;
+      .metric-value.positive { color: var(--positive); }
+      .metric-value.cobalt { color: var(--cobalt); }
+      .metric-value.warning { color: var(--warning); }
+
+      /* Chart */
+      .chart-card {
         flex: 1;
-        margin-top: 26px;
-        overflow: hidden;
-        border-radius: 20px;
-        background:
-          linear-gradient(rgba(59, 108, 255, 0.12) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(59, 108, 255, 0.1) 1px, transparent 1px),
-          #050711;
-        background-size: 58px 58px;
+        border-radius: 16px;
+        border: 1px solid var(--border-subtle);
+        background: rgba(11, 16, 32, 0.6);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
       }
 
-      .chart svg {
+      .chart-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--label);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+
+      .chart-area {
+        flex: 1;
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        background:
+          linear-gradient(rgba(59, 108, 255, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(59, 108, 255, 0.04) 1px, transparent 1px),
+          #040610;
+        background-size: 48px 48px;
+      }
+
+      .chart-area svg {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
       }
 
-      .rail-panel {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        padding: 24px;
-      }
-
-      .rail-item {
+      /* Rail items */
+      .rail-card {
+        border-radius: 14px;
+        border: 1px solid var(--border-subtle);
+        background: rgba(11, 16, 32, 0.7);
+        padding: 18px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
-        border: 1px solid rgba(59, 108, 255, 0.14);
-        border-radius: 18px;
-        padding: 18px;
-        background: rgba(7, 9, 20, 0.82);
       }
 
-      .rail-item span {
+      .rail-label {
+        font-size: 14px;
+        font-weight: 600;
         color: var(--muted);
+      }
+
+      .rail-value {
         font-size: 18px;
-        font-weight: 750;
-      }
-
-      .rail-item strong {
-        font-size: 28px;
-      }
-
-      .scene-three .product-shell {
-        height: min(680px, 68vh);
-      }
-
-      .trade-table {
-        width: min(1180px, 82vw);
-        padding: 24px;
-      }
-
-      .table-row {
-        display: grid;
-        grid-template-columns: 1.2fr 0.8fr 0.8fr 0.8fr;
-        gap: 16px;
-        align-items: center;
-        min-height: 74px;
-        border-bottom: 1px solid rgba(59, 108, 255, 0.12);
-        color: var(--muted);
-        font-size: 22px;
-      }
-
-      .table-row:last-child {
-        border-bottom: 0;
-      }
-
-      .status {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--text);
         font-weight: 800;
       }
 
-      .status::before {
-        content: "";
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: var(--positive);
-      }
+      .rail-value.clean { color: var(--positive); }
+      .rail-value.watch { color: var(--warning); }
+      .rail-value.cobalt { color: var(--cobalt); }
 
-      .status.warning::before {
-        background: var(--warning);
-      }
-
-      .status.negative::before {
-        background: var(--negative);
-      }
-
-      .signal-bar {
-        display: grid;
-        grid-template-columns: 52% 31% 17%;
-        gap: 8px;
-        margin-top: 24px;
-      }
-
-      .signal-bar span {
-        height: 16px;
+      .rail-bar {
+        height: 4px;
         border-radius: 999px;
+        margin-top: 14px;
+        background: rgba(59, 108, 255, 0.08);
+        overflow: hidden;
       }
 
+      .rail-bar-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: var(--positive);
+        width: 0%;
+      }
+
+      .rail-bar-fill.amber { background: var(--warning); }
+      .rail-bar-fill.cobalt { background: var(--cobalt); }
+
+      /* ── Beat 3 — Audit Loop ────────────────────────── */
+      .scene-three {
+        align-items: center;
+        justify-content: center;
+      }
+
+      .audit-shell {
+        width: min(1300px, 84%);
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        padding: 32px;
+        box-shadow: 0 32px 80px rgba(0,0,0,0.45);
+      }
+
+      .audit-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+      }
+
+      .audit-title {
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--cobalt);
+      }
+
+      .audit-badge {
+        border-radius: 999px;
+        padding: 6px 14px;
+        background: rgba(66, 217, 139, 0.1);
+        border: 1px solid rgba(66, 217, 139, 0.2);
+        color: var(--positive);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+      }
+
+      .trade-row {
+        display: grid;
+        grid-template-columns: 0.6fr 0.5fr 0.5fr 0.5fr 1fr;
+        gap: 16px;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border-subtle);
+        font-size: 18px;
+        color: var(--muted);
+      }
+
+      .trade-row:last-of-type { border-bottom: none; }
+
+      .trade-row .symbol {
+        font-weight: 750;
+        color: var(--text);
+        font-size: 19px;
+      }
+
+      .trade-row .result {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .trade-row .result.pos { color: var(--positive); }
+      .trade-row .result.neg { color: var(--negative); }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .status-badge .indicator {
+        width: 7px; height: 7px;
+        border-radius: 50%;
+      }
+
+      .status-badge.clean { background: rgba(66, 217, 139, 0.1); color: var(--positive); }
+      .status-badge.clean .indicator { background: var(--positive); }
+      .status-badge.warn { background: rgba(244, 190, 74, 0.1); color: var(--warning); }
+      .status-badge.warn .indicator { background: var(--warning); }
+      .status-badge.bad { background: rgba(240, 106, 106, 0.1); color: var(--negative); }
+      .status-badge.bad .indicator { background: var(--negative); }
+
+      /* Signal rail */
+      .signal-rail {
+        display: flex;
+        gap: 4px;
+        margin-top: 20px;
+        height: 10px;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .signal-segment {
+        height: 100%;
+        border-radius: 999px;
+        width: 0%;
+        transition: width 0.6s ease;
+      }
+
+      .signal-segment.green { background: var(--positive); }
+      .signal-segment.amber { background: var(--warning); }
+      .signal-segment.red { background: var(--negative); }
+
+      /* ── Beat 4 — AI Debrief ────────────────────────── */
       .scene-four {
-        gap: 34px;
+        align-items: center;
+        justify-content: center;
+        gap: 32px;
       }
 
       .ai-panel {
-        width: 620px;
-        border-radius: 28px;
-        padding: 34px;
+        width: 660px;
+        border-radius: 24px;
+        border: 1px solid var(--border);
+        background: var(--glass);
+        padding: 36px;
+        box-shadow: 0 32px 80px rgba(0,0,0,0.4);
       }
 
-      .recommendation {
-        margin-top: 18px;
-        border: 1px solid rgba(59, 108, 255, 0.16);
-        border-radius: 18px;
-        padding: 18px;
-        color: var(--muted);
-        background: rgba(16, 26, 58, 0.54);
-        font-size: 21px;
-        line-height: 1.35;
+      .ai-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 28px;
       }
 
-      .next-rule {
-        width: 480px;
-        padding: 30px;
-        box-shadow: 0 0 0 1px rgba(59, 108, 255, 0.12);
+      .ai-icon {
+        width: 40px; height: 40px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--cobalt), #7c5cff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 800;
+        color: #fff;
+        box-shadow: 0 0 24px rgba(59, 108, 255, 0.3);
       }
 
-      .next-rule strong {
-        display: block;
-        margin-top: 16px;
-        font-size: 42px;
-        line-height: 1.12;
+      .ai-eyebrow {
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--cobalt);
       }
 
+      .ai-headline {
+        font-size: 38px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        margin-bottom: 28px;
+      }
+
+      .rec {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 16px;
+        margin-bottom: 12px;
+        border-radius: 14px;
+        border: 1px solid var(--border-subtle);
+        background: rgba(16, 26, 58, 0.4);
+        color: var(--label);
+        font-size: 17px;
+        line-height: 1.4;
+      }
+
+      .rec-num {
+        flex-shrink: 0;
+        width: 26px; height: 26px;
+        border-radius: 8px;
+        background: var(--cobalt-tint);
+        color: var(--cobalt);
+        font-size: 13px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Next rule card */
+      .rule-card {
+        width: 440px;
+        border-radius: 24px;
+        border: 1px solid var(--cobalt);
+        background: var(--glass);
+        padding: 32px;
+        box-shadow: 0 0 40px rgba(59, 108, 255, 0.12), 0 32px 80px rgba(0,0,0,0.4);
+      }
+
+      .rule-eyebrow {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--cobalt);
+        margin-bottom: 18px;
+      }
+
+      .rule-text {
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+      }
+
+      .rule-tag-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 20px;
+      }
+
+      .rule-tag {
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: var(--cobalt-tint);
+        border: 1px solid var(--border);
+        color: var(--cobalt);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      /* ── Beat 5 — CTA ───────────────────────────────── */
       .scene-five {
         align-items: center;
         justify-content: center;
         text-align: center;
+        flex-direction: column;
       }
 
-      .final-card {
-        width: min(980px, 82vw);
-        border-radius: 34px;
-        padding: 72px;
+      .cta-card {
+        max-width: 900px;
+        padding: 80px;
+        border-radius: 32px;
+        border: 1px solid var(--border);
+        background: var(--glass);
+        box-shadow: 0 40px 100px rgba(0,0,0,0.5);
       }
 
-      .final-card h1 {
-        margin: 0;
-        font-size: 96px;
+      .cta-brand {
+        font-size: 88px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
         line-height: 1;
-        letter-spacing: 0;
       }
 
-      .cta {
+      .cta-brand .highlight { color: var(--cobalt); }
+
+      .cta-promise {
+        margin-top: 20px;
+        color: var(--muted);
+        font-size: 24px;
+        line-height: 1.4;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .cta-audiences {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 32px;
+      }
+
+      .cta-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        margin-top: 34px;
+        margin-top: 40px;
+        padding: 16px 32px;
         border-radius: 999px;
-        padding: 18px 28px;
         background: var(--cobalt);
-        color: #ffffff;
-        font-size: 20px;
-        font-weight: 850;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        box-shadow: 0 0 30px rgba(59, 108, 255, 0.35);
       }
 
-      .no-gsap .scene-one {
-        animation: scene-one 20s linear both;
+      /* ── Fallback CSS animations (no-GSAP) ──────────── */
+      .no-gsap .brand { animation: fadeIn 20s linear both; }
+      .no-gsap .scan-line { animation: scanMove 20s linear both; }
+      .no-gsap .scene-one { animation: sceneOne 20s linear both; }
+      .no-gsap .scene-two { animation: sceneTwo 20s linear both; }
+      .no-gsap .scene-three { animation: sceneThree 20s linear both; }
+      .no-gsap .scene-four { animation: sceneFour 20s linear both; }
+      .no-gsap .scene-five { animation: sceneFive 20s linear both; }
+
+      @keyframes fadeIn {
+        0%, 4% { opacity: 0; }
+        6%, 100% { opacity: 1; }
       }
 
-      .no-gsap .scene-two {
-        animation: scene-two 20s linear both;
+      @keyframes scanMove {
+        0% { left: -2%; opacity: 0; }
+        5% { opacity: 0.5; }
+        95% { opacity: 0.5; }
+        100% { left: 102%; opacity: 0; }
       }
 
-      .no-gsap .scene-three {
-        animation: scene-three 20s linear both;
+      @keyframes sceneOne {
+        0%, 2% { opacity: 0; }
+        4%, 18% { opacity: 1; }
+        22%, 100% { opacity: 0; }
       }
 
-      .no-gsap .scene-four {
-        animation: scene-four 20s linear both;
+      @keyframes sceneTwo {
+        0%, 20% { opacity: 0; }
+        24%, 38% { opacity: 1; }
+        42%, 100% { opacity: 0; }
       }
 
-      .no-gsap .scene-five {
-        animation: scene-five 20s linear both;
+      @keyframes sceneThree {
+        0%, 40% { opacity: 0; }
+        44%, 58% { opacity: 1; }
+        62%, 100% { opacity: 0; }
       }
 
-      .no-gsap .scan-line {
-        animation: scan 20s linear both;
+      @keyframes sceneFour {
+        0%, 60% { opacity: 0; }
+        64%, 78% { opacity: 1; }
+        82%, 100% { opacity: 0; }
       }
 
-      @keyframes scene-one {
-        0%,
-        18% {
-          opacity: 1;
-        }
-        22%,
-        100% {
-          opacity: 0;
-        }
-      }
-
-      @keyframes scene-two {
-        0%,
-        18% {
-          opacity: 0;
-        }
-        22%,
-        38% {
-          opacity: 1;
-        }
-        42%,
-        100% {
-          opacity: 0;
-        }
-      }
-
-      @keyframes scene-three {
-        0%,
-        38% {
-          opacity: 0;
-        }
-        42%,
-        58% {
-          opacity: 1;
-        }
-        62%,
-        100% {
-          opacity: 0;
-        }
-      }
-
-      @keyframes scene-four {
-        0%,
-        58% {
-          opacity: 0;
-        }
-        62%,
-        78% {
-          opacity: 1;
-        }
-        82%,
-        100% {
-          opacity: 0;
-        }
-      }
-
-      @keyframes scene-five {
-        0%,
-        78% {
-          opacity: 0;
-        }
-        82%,
-        100% {
-          opacity: 1;
-        }
-      }
-
-      @keyframes scan {
-        0% {
-          transform: translateX(-320px);
-        }
-        100% {
-          transform: translateX(1420px);
-        }
+      @keyframes sceneFive {
+        0%, 80% { opacity: 0; }
+        84%, 100% { opacity: 1; }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .scene,
-        .scan-line {
-          animation: none !important;
-        }
-
-        .scene-one {
-          opacity: 1;
-        }
-
-        .scene-two,
-        .scene-three,
-        .scene-four,
-        .scene-five {
-          opacity: 0;
-        }
+        .scene, .scan-line, .brand { animation: none !important; }
+        .scene-one { opacity: 1; }
+        .scene-two, .scene-three, .scene-four, .scene-five { opacity: 0; }
+        .brand { opacity: 1; }
       }
     </style>
   </head>
@@ -596,197 +742,321 @@
       data-width="1920"
       data-height="1080"
     >
-      <div class="grid"></div>
+      <!-- Background layers -->
+      <div class="bg-grid"></div>
+      <div class="bg-glow"></div>
       <div class="scan-line"></div>
+
+      <!-- Brand mark -->
       <div class="brand">
-        <span class="brand-mark"></span>
-        <span>Qunt Edge</span>
+        <div class="brand-icon"></div>
+        <span class="brand-text">Qunt Edge</span>
       </div>
 
+      <!-- ═══ Beat 1 — Cold Open ═══ -->
       <section class="scene scene-one">
-        <div class="headline-stack">
+        <div class="hero-stack">
           <p class="eyebrow">Trading review software</p>
-          <h2 class="mega">Your PnL tells you what happened.</h2>
-          <p class="subcopy">Qunt Edge shows whether the process behind it can repeat.</p>
+          <h1 class="hero-headline">Your PnL tells you<br/>what <span class="accent">happened.</span></h1>
+          <p class="hero-sub">Qunt Edge shows whether the process behind it can repeat.</p>
         </div>
         <div class="pnl-card">
-          <p class="eyebrow">Session result</p>
+          <p class="pnl-label">Session result</p>
           <div class="pnl-value">+$4,820</div>
           <div class="chip-row">
-            <span class="chip">Outcome known</span>
-            <span class="chip">Risk unknown</span>
-            <span class="chip">Rules unclear</span>
+            <span class="chip"><span class="chip-dot green"></span>Outcome known</span>
+            <span class="chip"><span class="chip-dot amber"></span>Risk unknown</span>
+            <span class="chip"><span class="chip-dot red"></span>Rules unclear</span>
           </div>
         </div>
       </section>
 
+      <!-- ═══ Beat 2 — Product Reveal ═══ -->
       <section class="scene scene-two">
         <div class="product-shell">
           <div class="chrome">
             <div class="dots">
-              <span class="dot red"></span>
-              <span class="dot yellow"></span>
-              <span class="dot green"></span>
+              <span class="dot r"></span>
+              <span class="dot y"></span>
+              <span class="dot g"></span>
             </div>
-            <div class="status-pill">Workflow preview</div>
-            <div class="status-pill">Live audit</div>
+            <span class="chrome-url">app.quntedge.com/dashboard</span>
+            <span class="chrome-status">Live audit</span>
           </div>
-          <div class="dashboard">
-            <div class="chart-panel">
-              <div class="metrics">
-                <div class="metric"><label>Plan</label><strong>86%</strong></div>
-                <div class="metric"><label>Risk drift</label><strong>12%</strong></div>
-                <div class="metric"><label>Review SLA</label><strong>4m</strong></div>
+          <div class="dash">
+            <div class="dash-left">
+              <div class="metrics-grid">
+                <div class="metric-card">
+                  <span class="metric-label">Plan adherence</span>
+                  <div class="metric-value positive">86%</div>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-label">Risk drift</span>
+                  <div class="metric-value warning">12%</div>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-label">Review SLA</span>
+                  <div class="metric-value cobalt">4m</div>
+                </div>
               </div>
-              <div class="chart">
-                <svg viewBox="0 0 820 360" aria-hidden="true">
-                  <path
-                    d="M30 290 C120 240 160 260 230 210 C310 150 360 190 430 128 C520 58 612 116 790 64"
-                    fill="none"
-                    stroke="#3B6CFF"
-                    stroke-width="10"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M30 306 C120 252 160 276 230 224 C310 168 360 206 430 144 C520 76 612 132 790 78"
-                    fill="none"
-                    stroke="#42D98B"
-                    stroke-width="4"
-                    stroke-linecap="round"
-                    opacity="0.75"
-                  />
-                </svg>
+              <div class="chart-card">
+                <span class="chart-title">Equity curve</span>
+                <div class="chart-area">
+                  <svg viewBox="0 0 800 300" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="eqFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#3b6cff" stop-opacity="0.25"/>
+                        <stop offset="100%" stop-color="#3b6cff" stop-opacity="0"/>
+                      </linearGradient>
+                    </defs>
+                    <path class="eq-area"
+                      d="M20 260 C80 230 130 250 200 200 C280 140 340 175 420 115 C510 55 600 100 780 48 L780 300 L20 300 Z"
+                      fill="url(#eqFill)"
+                    />
+                    <path class="eq-line"
+                      d="M20 260 C80 230 130 250 200 200 C280 140 340 175 420 115 C510 55 600 100 780 48"
+                      fill="none" stroke="#3b6cff" stroke-width="3" stroke-linecap="round"
+                    />
+                    <path class="eq-line-2"
+                      d="M20 270 C80 245 130 262 200 216 C280 158 340 192 420 130 C510 72 600 112 780 60"
+                      fill="none" stroke="#42d98b" stroke-width="1.5" stroke-linecap="round" opacity="0.6"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
-            <div class="rail-panel">
-              <div class="rail-item"><span>Execution quality</span><strong>Clean</strong></div>
-              <div class="rail-item"><span>Behavior drift</span><strong>Watch</strong></div>
-              <div class="rail-item"><span>AI debrief</span><strong>Ready</strong></div>
-              <div class="rail-item"><span>Next rule</span><strong>1</strong></div>
+            <div class="dash-right">
+              <div class="rail-card">
+                <span class="rail-label">Execution quality</span>
+                <span class="rail-value clean">Clean</span>
+              </div>
+              <div class="rail-card">
+                <div style="flex:1">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span class="rail-label">Plan score</span>
+                    <span class="rail-value cobalt">86%</span>
+                  </div>
+                  <div class="rail-bar"><div class="rail-bar-fill cobalt" data-width="86"></div></div>
+                </div>
+              </div>
+              <div class="rail-card">
+                <div style="flex:1">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span class="rail-label">Behavior drift</span>
+                    <span class="rail-value watch">Watch</span>
+                  </div>
+                  <div class="rail-bar"><div class="rail-bar-fill amber" data-width="34"></div></div>
+                </div>
+              </div>
+              <div class="rail-card">
+                <div style="flex:1">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span class="rail-label">Review SLA</span>
+                    <span class="rail-value clean">On track</span>
+                  </div>
+                  <div class="rail-bar"><div class="rail-bar-fill" data-width="72"></div></div>
+                </div>
+              </div>
+              <div class="rail-card">
+                <span class="rail-label">AI debrief</span>
+                <span class="rail-value cobalt">Ready</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
+      <!-- ═══ Beat 3 — Audit Loop ═══ -->
       <section class="scene scene-three">
-        <div class="trade-table">
-          <p class="eyebrow">Execution audit</p>
-          <div class="table-row">
-            <strong>ES long</strong><span>09:42</span><span>2.1R</span><span class="status">Clean setup</span>
+        <div class="audit-shell">
+          <div class="audit-header">
+            <span class="audit-title">Execution audit</span>
+            <span class="audit-badge">14 trades synced</span>
           </div>
-          <div class="table-row">
-            <strong>NQ short</strong><span>10:18</span><span>-0.6R</span><span class="status warning">Late entry</span>
+          <div class="trade-row" style="opacity:0.5;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;border-bottom:1px solid var(--border)">
+            <span>Instrument</span><span>Time</span><span>Result</span><span>R-Multiple</span><span>Verdict</span>
           </div>
-          <div class="table-row">
-            <strong>CL long</strong><span>11:06</span><span>-1.4R</span><span class="status negative">Rule break</span>
+          <div class="trade-row">
+            <span class="symbol">ES long</span><span>09:42</span><span class="result pos">+$1,240</span><span>2.1R</span>
+            <span class="status-badge clean"><span class="indicator"></span>Clean setup</span>
           </div>
-          <div class="table-row">
-            <strong>ES short</strong><span>13:21</span><span>1.3R</span><span class="status">Plan match</span>
+          <div class="trade-row">
+            <span class="symbol">NQ short</span><span>10:18</span><span class="result neg">-$380</span><span>-0.6R</span>
+            <span class="status-badge warn"><span class="indicator"></span>Late entry</span>
           </div>
-          <div class="signal-bar">
-            <span style="background: var(--positive)"></span>
-            <span style="background: var(--warning)"></span>
-            <span style="background: var(--negative)"></span>
+          <div class="trade-row">
+            <span class="symbol">CL long</span><span>11:06</span><span class="result neg">-$920</span><span>-1.4R</span>
+            <span class="status-badge bad"><span class="indicator"></span>Rule break</span>
+          </div>
+          <div class="trade-row">
+            <span class="symbol">ES short</span><span>13:21</span><span class="result pos">+$860</span><span>1.3R</span>
+            <span class="status-badge clean"><span class="indicator"></span>Plan match</span>
+          </div>
+          <div class="trade-row">
+            <span class="symbol">NQ long</span><span>14:08</span><span class="result pos">+$4,020</span><span>3.4R</span>
+            <span class="status-badge clean"><span class="indicator"></span>Textbook</span>
+          </div>
+          <div class="signal-rail">
+            <span class="signal-segment green" data-width="52"></span>
+            <span class="signal-segment amber" data-width="26"></span>
+            <span class="signal-segment red" data-width="22"></span>
           </div>
         </div>
       </section>
 
+      <!-- ═══ Beat 4 — AI Debrief ═══ -->
       <section class="scene scene-four">
         <div class="ai-panel">
-          <p class="eyebrow">AI debrief</p>
-          <h2 class="mega" style="font-size: 58px">Turn drift into one next action.</h2>
-          <div class="recommendation">Reduce size after two consecutive losses.</div>
-          <div class="recommendation">Wait for confirmation before second entry.</div>
-          <div class="recommendation">Export this review for coach feedback.</div>
+          <div class="ai-header">
+            <div class="ai-icon">AI</div>
+            <span class="ai-eyebrow">Session debrief</span>
+          </div>
+          <h2 class="ai-headline">Turn drift into<br/>one next action.</h2>
+          <div class="rec"><span class="rec-num">1</span>Reduce size after two consecutive losses.</div>
+          <div class="rec"><span class="rec-num">2</span>Wait for confirmation before second entry.</div>
+          <div class="rec"><span class="rec-num">3</span>Export this review for coach feedback.</div>
         </div>
-        <div class="next-rule">
-          <p class="eyebrow">Next session rule</p>
-          <strong>One setup. Fixed size. Review in four minutes.</strong>
+        <div class="rule-card">
+          <p class="rule-eyebrow">Next session rule</p>
+          <p class="rule-text">One setup.<br/>Fixed size.<br/>Review in four minutes.</p>
+          <div class="rule-tag-row">
+            <span class="rule-tag">Discipline</span>
+            <span class="rule-tag">Size control</span>
+            <span class="rule-tag">SLA</span>
+          </div>
         </div>
       </section>
 
+      <!-- ═══ Beat 5 — CTA ═══ -->
       <section class="scene scene-five">
-        <div class="final-card">
-          <p class="eyebrow">For funded traders, coaches, and futures traders</p>
-          <h1>Qunt Edge</h1>
-          <p class="subcopy" style="margin-left: auto; margin-right: auto">
-            Review stops being scattered. Every session becomes a cleaner plan.
-          </p>
-          <div class="audience-row" style="justify-content: center; margin-top: 28px">
-            <span class="chip">Funded accounts</span>
-            <span class="chip">Coaching desks</span>
-            <span class="chip">Serious futures traders</span>
+        <div class="cta-card">
+          <p class="eyebrow">For funded traders, coaches, and serious futures traders</p>
+          <h1 class="cta-brand">Qunt <span class="highlight">Edge</span></h1>
+          <p class="cta-promise">Review stops being scattered. Every session becomes a cleaner plan.</p>
+          <div class="cta-audiences">
+            <span class="chip"><span class="chip-dot green"></span>Funded accounts</span>
+            <span class="chip"><span class="chip-dot green"></span>Coaching desks</span>
+            <span class="chip"><span class="chip-dot green"></span>Serious futures traders</span>
           </div>
-          <div class="cta">Start free audit</div>
+          <div class="cta-btn">Start free audit</div>
         </div>
       </section>
     </div>
 
+    <!-- GSAP animation engine -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <script>
       (function () {
         var root = document.getElementById("root");
+        if (!root) return;
+
+        // ── Responsive scaling ────────────────────────
         function fitStage() {
-          if (!root) return;
           var scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
           root.style.setProperty("--stage-scale", String(scale));
         }
         fitStage();
         window.addEventListener("resize", fitStage);
 
+        // ── Timeline registry ─────────────────────────
         window.__timelines = window.__timelines || {};
 
         if (!window.gsap || !window.gsap.timeline) {
+          // No-GSAP fallback: CSS animations handle it
           window.__timelines["qunt-edge-product-promo"] = {
-            duration: function () {
-              return 20;
-            },
-            pause: function () {
-              return this;
-            },
-            progress: function () {
-              return this;
-            },
-            seek: function () {
-              return this;
-            },
+            duration: function () { return 20; },
+            pause: function () { return this; },
+            progress: function () { return this; },
+            seek: function () { return this; },
           };
           return;
         }
 
         document.documentElement.classList.remove("no-gsap");
+
+        // ── Build master timeline ─────────────────────
         var tl = gsap.timeline({ paused: true });
+
+        // Shared: brand + scan line
         tl.set(".scene", { opacity: 0 }, 0);
+        tl.to(".brand", { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.3);
+        tl.to(".scan-line", { left: "102%", opacity: 0.4, duration: 20, ease: "none" }, 0);
+
+        // ─── Beat 1: Cold Open (0s–4s) ────────────────
         tl.set(".scene-one", { opacity: 1 }, 0);
-        tl.from(".scene-one .mega", { y: 52, opacity: 0, duration: 0.7, ease: "power3.out" }, 0.15);
-        tl.from(".pnl-card", { x: 70, opacity: 0, duration: 0.7, ease: "power3.out" }, 0.45);
-        tl.to(".scan-line", { x: 1420, duration: 20, ease: "none" }, 0);
-        tl.to(".scene-one", { y: -52, opacity: 0, duration: 0.45, ease: "power2.in" }, 3.55);
+        tl.from(".scene-one .eyebrow", { y: 16, opacity: 0, duration: 0.5, ease: "power2.out" }, 0.2);
+        tl.from(".scene-one .hero-headline", { y: 40, opacity: 0, duration: 0.7, ease: "power3.out" }, 0.35);
+        tl.from(".scene-one .hero-sub", { y: 20, opacity: 0, duration: 0.5, ease: "power2.out" }, 0.8);
+        tl.from(".pnl-card", { x: 60, opacity: 0, duration: 0.7, ease: "power3.out" }, 0.5);
+        tl.from(".pnl-value", { textContent: 0, duration: 1.2, ease: "power1.out", snap: { textContent: 1 },
+          onUpdate: function() {
+            var v = Math.round(gsap.getProperty(".pnl-value", "textContent"));
+            document.querySelector(".pnl-value").textContent = "+$" + v.toLocaleString();
+          }
+        }, 0.7);
+        tl.from(".pnl-card .chip", { y: 12, opacity: 0, stagger: 0.08, duration: 0.35, ease: "power2.out" }, 1.4);
+        tl.to(".scene-one", { y: -30, opacity: 0, duration: 0.5, ease: "power2.in" }, 3.5);
 
-        tl.set(".scene-two", { y: 40, opacity: 0 }, 3.95);
-        tl.to(".scene-two", { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 4);
-        tl.from(".scene-two .metric", { y: 22, opacity: 0, duration: 0.45, stagger: 0.08, ease: "power2.out" }, 4.35);
-        tl.from(".scene-two svg path", { strokeDasharray: 900, strokeDashoffset: 900, duration: 1.4, stagger: 0.12, ease: "power2.out" }, 4.65);
-        tl.to(".scene-two", { x: -60, opacity: 0, duration: 0.45, ease: "power2.in" }, 7.55);
+        // ─── Beat 2: Product Reveal (4s–8s) ───────────
+        tl.set(".scene-two", { y: 30, opacity: 0 }, 3.9);
+        tl.to(".scene-two", { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 4);
+        tl.from(".product-shell", { scale: 0.96, opacity: 0, duration: 0.7, ease: "power3.out" }, 4.1);
+        tl.from(".metric-card", { y: 18, opacity: 0, stagger: 0.06, duration: 0.4, ease: "power2.out" }, 4.5);
+        tl.from(".metric-value", { textContent: 0, duration: 0.8, ease: "power1.out", stagger: 0.1,
+          snap: { textContent: 1 }
+        }, 4.7);
+        tl.from(".eq-line, .eq-line-2", { strokeDasharray: 1200, strokeDashoffset: 1200, duration: 1.6, stagger: 0.15, ease: "power2.inOut" }, 5);
+        tl.from(".eq-area", { opacity: 0, duration: 1.2, ease: "power2.out" }, 5.2);
+        tl.from(".rail-card", { x: 24, opacity: 0, stagger: 0.08, duration: 0.4, ease: "power2.out" }, 5.4);
+        tl.from(".rail-bar-fill", { scaleX: 0, transformOrigin: "left center", stagger: 0.08, duration: 0.6, ease: "power2.out",
+          onStart: function() {
+            document.querySelectorAll(".rail-bar-fill").forEach(function(el) {
+              var w = el.getAttribute("data-width") || "0";
+              gsap.to(el, { width: w + "%", duration: 0.6, ease: "power2.out" });
+            });
+          }
+        }, 5.8);
+        tl.to(".scene-two", { x: -40, opacity: 0, duration: 0.5, ease: "power2.in" }, 7.5);
 
-        tl.set(".scene-three", { x: 80, opacity: 0 }, 7.95);
-        tl.to(".scene-three", { x: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 8);
-        tl.from(".table-row", { y: 32, opacity: 0, duration: 0.42, stagger: 0.12, ease: "power2.out" }, 8.35);
-        tl.from(".signal-bar span", { scaleX: 0.12, opacity: 0.3, transformOrigin: "left center", duration: 0.7, stagger: 0.08, ease: "power2.out" }, 9.1);
-        tl.to(".scene-three", { scale: 0.97, opacity: 0, duration: 0.45, ease: "power2.in" }, 11.55);
+        // ─── Beat 3: Audit Loop (8s–12s) ──────────────
+        tl.set(".scene-three", { x: 40, opacity: 0 }, 7.9);
+        tl.to(".scene-three", { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 8);
+        tl.from(".audit-shell", { scale: 0.97, opacity: 0, duration: 0.5, ease: "power3.out" }, 8.1);
+        tl.from(".audit-header", { y: 12, opacity: 0, duration: 0.4, ease: "power2.out" }, 8.3);
+        tl.from(".trade-row", { y: 24, opacity: 0, stagger: 0.1, duration: 0.4, ease: "power2.out" }, 8.5);
+        tl.from(".status-badge", { scale: 0.8, opacity: 0, stagger: 0.08, duration: 0.3, ease: "back.out(1.4)" }, 9.2);
+        tl.from(".signal-segment", { scaleX: 0, transformOrigin: "left center", stagger: 0.06, duration: 0.5, ease: "power2.out",
+          onStart: function() {
+            document.querySelectorAll(".signal-segment").forEach(function(el) {
+              var w = el.getAttribute("data-width") || "0";
+              gsap.to(el, { width: w + "%", duration: 0.6, ease: "power2.out" });
+            });
+          }
+        }, 10);
+        tl.to(".scene-three", { scale: 0.96, opacity: 0, duration: 0.5, ease: "power2.in" }, 11.5);
 
-        tl.set(".scene-four", { y: 56, opacity: 0 }, 11.95);
-        tl.to(".scene-four", { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 12);
-        tl.from(".recommendation", { x: -28, opacity: 0, duration: 0.42, stagger: 0.14, ease: "power2.out" }, 12.55);
-        tl.from(".next-rule", { x: 60, opacity: 0, duration: 0.55, ease: "power3.out" }, 13.05);
-        tl.to(".scene-four", { y: -42, opacity: 0, duration: 0.45, ease: "power2.in" }, 15.55);
+        // ─── Beat 4: AI Debrief (12s–16s) ─────────────
+        tl.set(".scene-four", { y: 30, opacity: 0 }, 11.9);
+        tl.to(".scene-four", { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 12);
+        tl.from(".ai-icon", { scale: 0, rotation: -20, duration: 0.5, ease: "back.out(2)" }, 12.3);
+        tl.from(".ai-headline", { y: 24, opacity: 0, duration: 0.5, ease: "power2.out" }, 12.5);
+        tl.from(".rec", { x: -20, opacity: 0, stagger: 0.12, duration: 0.4, ease: "power2.out" }, 13);
+        tl.from(".rec-num", { scale: 0, stagger: 0.12, duration: 0.3, ease: "back.out(1.6)" }, 13.1);
+        tl.from(".rule-card", { x: 40, opacity: 0, duration: 0.6, ease: "power3.out" }, 13.5);
+        tl.from(".rule-text", { y: 16, opacity: 0, duration: 0.5, ease: "power2.out" }, 13.8);
+        tl.from(".rule-tag", { y: 8, opacity: 0, stagger: 0.06, duration: 0.3, ease: "power2.out" }, 14.2);
+        tl.to(".scene-four", { y: -24, opacity: 0, duration: 0.5, ease: "power2.in" }, 15.5);
 
-        tl.set(".scene-five", { y: 42, opacity: 0 }, 15.95);
-        tl.to(".scene-five", { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 16);
-        tl.from(".audience-row .chip", { y: 18, opacity: 0, duration: 0.34, stagger: 0.08, ease: "power2.out" }, 16.65);
-        tl.from(".cta", { scale: 0.92, opacity: 0, duration: 0.45, ease: "power3.out" }, 17.05);
-        tl.to(".cta", { scale: 1.03, duration: 0.32, yoyo: true, repeat: 1, ease: "power1.inOut" }, 18.8);
+        // ─── Beat 5: CTA (16s–20s) ────────────────────
+        tl.set(".scene-five", { y: 24, opacity: 0 }, 15.9);
+        tl.to(".scene-five", { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 16);
+        tl.from(".cta-brand", { y: 32, opacity: 0, duration: 0.7, ease: "power3.out" }, 16.2);
+        tl.from(".cta-promise", { y: 16, opacity: 0, duration: 0.5, ease: "power2.out" }, 16.7);
+        tl.from(".cta-audiences .chip", { y: 12, opacity: 0, stagger: 0.08, duration: 0.35, ease: "power2.out" }, 17);
+        tl.from(".cta-btn", { scale: 0.9, opacity: 0, duration: 0.5, ease: "power3.out" }, 17.5);
+        tl.to(".cta-btn", { scale: 1.04, duration: 0.35, yoyo: true, repeat: 1, ease: "power1.inOut" }, 18.8);
 
+        // ── Register & play ───────────────────────────
         window.__timelines["qunt-edge-product-promo"] = tl;
         tl.play(0);
       })();

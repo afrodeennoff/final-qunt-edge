@@ -227,6 +227,11 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
  // Close position
  const pnl = calculatePnL(openPosition.entryOrders, openPosition.exitOrders, contractSpec, openPosition.side)
 
+ const entryDate = parseDate(openPosition.entryDate)
+ const closeDate = parseDate(timestamp)
+ const entryDateStr = !isNaN(entryDate.getTime()) ? entryDate.toISOString() : new Date().toISOString()
+ const closeDateStr = !isNaN(closeDate.getTime()) ? closeDate.toISOString() : new Date().toISOString()
+
  const trade: Partial<Trade> = {
  id: `${openPosition.entryOrders.map(o => o.orderId).join('-')}-${openPosition.exitOrders.map(o => o.orderId).join('-')}`,
  accountNumber: account,
@@ -235,12 +240,12 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
  closeId: openPosition.exitOrders.map(o => o.orderId).join('-'),
  instrument: symbol,
  entryPrice: parseFloat(openPosition.averageEntryPrice.toFixed(5)),
- closePrice: parseFloat((openPosition.exitOrders.reduce((sum, o) => sum + o.price * o.quantity, 0) / 
+ closePrice: parseFloat((openPosition.exitOrders.reduce((sum, o) => sum + o.price * o.quantity, 0) /
  openPosition.exitOrders.reduce((sum, o) => sum + o.quantity, 0)).toFixed(5)),
- entryDate: parseDate(openPosition.entryDate).toISOString(),
- closeDate: parseDate(timestamp).toISOString(),
+ entryDate: entryDateStr,
+ closeDate: closeDateStr,
  pnl: pnl,
- timeInPosition: (parseDate(timestamp).getTime() - parseDate(openPosition.entryDate).getTime()) / 1000,
+ timeInPosition: !isNaN(entryDate.getTime()) && !isNaN(closeDate.getTime()) ? (closeDate.getTime() - entryDate.getTime()) / 1000 : 0,
  userId: openPosition.userId,
  side: openPosition.side,
  commission: openPosition.totalCommission,

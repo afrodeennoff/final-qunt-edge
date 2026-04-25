@@ -10,10 +10,12 @@
 
 | Asset | Type | Assign to Beat | Role |
 | --- | --- | --- | --- |
-| Code-native Qunt Edge logo text | Text lockup | Beat 1, Beat 5 | Brand opener and closer |
-| Recreated dashboard frame | HTML/CSS UI | Beat 2, Beat 3 | Signature product visual |
-| Signal rail and metric cards | HTML/CSS UI | Beat 3, Beat 4 | Execution audit proof |
-| AI debrief panel | HTML/CSS UI | Beat 4 | Product intelligence moment |
+| Brand mark (icon + text) | HTML/CSS | Beat 1, persistent | Brand presence throughout |
+| PnL result card | HTML/CSS UI | Beat 1 | Session result with status chips |
+| Browser shell + dashboard | HTML/CSS UI | Beat 2 | Full product frame with metrics, equity chart, rail |
+| Execution audit table | HTML/CSS UI | Beat 3 | Trade rows with verdict badges and signal rail |
+| AI debrief + rule card | HTML/CSS UI | Beat 4 | Recommendations panel and next-session rule |
+| CTA lockup | HTML/CSS UI | Beat 5 | Brand, promise, audience chips, action button |
 
 ## Beat 1 - Cold Open (0:00-0:04)
 
@@ -21,11 +23,11 @@
 
 **Concept:** The viewer starts inside a dark trading terminal. A large result number appears, but the surrounding UI questions whether the outcome is enough.
 
-**Visual description:** Void canvas. Product logo sits in the upper left. A large PnL figure occupies the left side. Thin cobalt grid lines and tiny execution ticks slide behind it. Three small status chips surface beside the number: result, risk, rule quality.
+**Visual description:** Void canvas with subtle cobalt grid and ambient glow. Brand mark in upper left. Left side: hero headline with cobalt accent. Right side: PnL card showing +$4,820 in green with three status chips (outcome known, risk unknown, rules unclear), each with a colored dot indicator.
 
-**Animation choreography:** Logo fades in. PnL counts upward. Status chips cascade from the right. A thin scan line travels across the frame.
+**Animation choreography:** Brand mark fades in. Eyebrow and headline stagger from below. PnL card slides in from right. Value counts up from $0 to $4,820. Chips cascade in. Scan line travels across the frame.
 
-**Transition:** The PnL frame slides upward as the dashboard shell rises into view.
+**Transition:** Scene slides upward and fades.
 
 ## Beat 2 - Product Reveal (0:04-0:08)
 
@@ -33,11 +35,11 @@
 
 **Concept:** The answer is the product. A dashboard frame expands into the center and turns raw results into structured review.
 
-**Visual description:** Browser-shell product frame fills the center. Four metric cards snap into an aligned grid. A mini equity curve draws across the main chart. The right rail shows plan adherence, risk drift, and review SLA.
+**Visual description:** Browser-shell product frame with traffic-light dots, URL bar (app.quntedge.com/dashboard), and "Live audit" status. Dashboard has a two-column grid: left side has three metric cards (plan adherence 86%, risk drift 12%, review SLA 4m) and an equity chart with gradient fill; right side has rail cards showing execution quality, plan score with progress bar, behavior drift with amber bar, review SLA with green bar, and AI debrief status.
 
-**Animation choreography:** Shell scales from 0.96 to 1. Cards slide in sequence. Chart line draws left to right. Metric values count up.
+**Animation choreography:** Shell scales from 0.96 to 1. Metric cards stagger in from below with counting values. Equity line draws left to right with gradient fill fade-in. Rail cards slide in from right. Progress bars grow to their target widths.
 
-**Transition:** Chart line becomes a horizontal motion path that pulls the next beat forward.
+**Transition:** Scene slides left and fades.
 
 ## Beat 3 - Audit Loop (0:08-0:12)
 
@@ -45,11 +47,11 @@
 
 **Concept:** The product shifts from dashboard to workflow. Imported fills become visible decisions, not just rows.
 
-**Visual description:** A trade table moves through the center. Each row receives a status: clean setup, late entry, oversized risk, rule break. A signal rail underneath groups those states by color.
+**Visual description:** Audit table panel with header ("Execution audit") and badge ("14 trades synced"). Five trade rows with instrument, time, result (color-coded positive/negative), R-multiple, and verdict badges (clean setup, late entry, rule break, plan match, textbook). Signal rail at bottom with green/amber/red segments.
 
-**Animation choreography:** Rows cascade upward. Status dots fill in. Warning markers pulse once. Signal rail segments grow to their final width.
+**Animation choreography:** Panel scales in. Header fades in. Trade rows cascade in with stagger. Verdict badges pop in with back-ease. Signal rail segments grow to their target widths.
 
-**Transition:** The warning marker expands into the AI debrief panel.
+**Transition:** Scene scales down and fades.
 
 ## Beat 4 - AI Debrief (0:12-0:16)
 
@@ -57,11 +59,11 @@
 
 **Concept:** AI acts like a structured desk review. The interface turns behavior drift into one practical next action.
 
-**Visual description:** A dark command panel appears on the right with three recommendations. The dashboard remains visible behind it as context. A "Next session rule" card locks into the foreground.
+**Visual description:** Split layout. Left: AI panel with gradient icon, "Session debrief" label, headline "Turn drift into one next action," and three numbered recommendations. Right: Rule card with cobalt border glow, "Next session rule" label, rule text ("One setup. Fixed size. Review in four minutes."), and tags (Discipline, Size control, SLA).
 
-**Animation choreography:** Recommendations type on. Tags slide into place. The foreground rule card settles with a cobalt border highlight.
+**Animation choreography:** AI icon pops in with rotation. Headline slides up. Recommendations stagger in from left with numbered badges popping. Rule card slides in from right. Tags cascade in.
 
-**Transition:** The product UI compresses into the final brand lockup.
+**Transition:** Scene slides upward and fades.
 
 ## Beat 5 - CTA (0:16-0:20)
 
@@ -69,9 +71,9 @@
 
 **Concept:** End clean and decisive. The product name owns the frame and the CTA is simple.
 
-**Visual description:** Qunt Edge appears large on the left. The promise sits underneath. Three audience labels sit in a compact row: funded traders, coaches, futures traders. A cobalt CTA button anchors the final frame.
+**Visual description:** Centered card with "Qunt Edge" brand name (Edge in cobalt), promise text, three audience chips with green dots, and a cobalt CTA button with glow shadow. Glass panel background.
 
-**Animation choreography:** Product name rises into place. Audience labels tick on one by one. CTA button receives a restrained cobalt highlight.
+**Animation choreography:** Card fades in. Brand name rises into place. Promise text follows. Audience chips stagger in. CTA button scales in and pulses once.
 
 **Transition:** Hold on final frame.
 

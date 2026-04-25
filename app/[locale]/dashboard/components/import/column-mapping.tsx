@@ -89,7 +89,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
  const requestAIMapping = useCallback(async () => {
  setIsLoading(true)
  try {
- const sampleData = csvData.slice(1, 6).map(row => {
+ const sampleData = csvData.slice(0, 5).map(row => {
  const rowObj: Record<string, string> = {};
  headers.forEach((header, index) => {
  rowObj[header] = row[index] || '';
@@ -250,14 +250,14 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
  <TableRow key={uniqueId}>
  <TableCell>{displayName}</TableCell>
  <TableCell>
- {csvData.slice(1, 4).map((row, i) => (
+ {csvData.slice(0, 3).map((row, i) => (
  <span key={i} className="mr-2">{row[index] ?? ''}</span>
  ))}
  </TableCell>
  <TableCell>
  <Select 
  onValueChange={(value) => handleMapping(uniqueId, value)} 
- value={mappings[uniqueId] ||""}
+ value={mappings[uniqueId] || undefined}
  >
  <SelectTrigger>
  <SelectValue placeholder="Select one" />

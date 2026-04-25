@@ -15,7 +15,11 @@ export default function HeaderSelection({ rawCsvData, setCsvData, setHeaders, se
  const [selectedHeaderIndex, setSelectedHeaderIndex] = useState<number>(0)
 
  const processHeaderSelection = useCallback((index: number, data: string[][]) => {
- const newHeaders = data[index].filter(header => header && header.trim() !== '')
+ // Preserve all columns including empty headers to maintain index alignment with data rows.
+ // Replace empty headers with positional labels so column mapping works correctly.
+ const newHeaders = data[index].map((header, i) =>
+   header && header.trim() !== '' ? header : `Column ${i + 1}`
+ )
  setHeaders(newHeaders)
  setCsvData(data.slice(index + 1))
  setError(null)
