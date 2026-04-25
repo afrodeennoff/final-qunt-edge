@@ -1152,6 +1152,11 @@ export default {
   'share.manageLayouts': 'Gérer les layouts partagés',
   'share.backToShare': 'Retour au partage',
   'share.shareAllAccounts': 'Partager pour tous les comptes',
+  'share.traderProfile.button': 'Partager le profil',
+  'share.traderProfile.title': 'Partagez Votre Profil de Trading',
+  'share.traderProfile.description': 'Partagez votre profil de trading public avec d\'autres. Seules les statistiques agrégées sont visibles.',
+  'share.traderProfile.shareAction': 'Partager le profil',
+  'share.traderProfile.privacyNote': 'Seules les statistiques agrégées (PnL total et nombre de trades) sont partagées. Aucun détail de trade individuel, numéro de compte ou information personnelle n\'est visible.',
   widgets: {
     types: {
       equityChart: 'Graphique du capital',

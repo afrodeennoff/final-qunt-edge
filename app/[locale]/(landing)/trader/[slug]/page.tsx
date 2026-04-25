@@ -114,11 +114,19 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>
 }): Promise<Metadata> {
   const { locale, slug } = await params
+  const snapshot = await getTraderSnapshot(slug)
+
+  const username = snapshot?.username ?? slug
+  const title = `${username} — Trading Performance | Qunt Edge`
+  const description = snapshot
+    ? `View ${username}'s trading performance: ${snapshot.totalTrades} trades with ${formatCurrency(snapshot.totalPnl)} total PnL. Public trading profile on Qunt Edge.`
+    : `View ${username}'s trading performance, statistics, and public profile on Qunt Edge.`
+
   return buildPublicMetadata({
     locale,
     path: `/trader/${slug}`,
-    title: `${slug} — Trader Profile | Qunt Edge`,
-    description: `View ${slug}'s trading performance, statistics, and public profile on Qunt Edge.`,
+    title,
+    description,
   })
 }
 
@@ -191,19 +199,18 @@ export default async function TraderProfilePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }}
       />
-      <div className="mx-auto grid max-w-[1120px] gap-8 xl:grid-cols-[1.35fr_1fr]">
-        <section className="space-y-6">
-          {/* Header */}
-          <div className={`rounded-2xl border ${FB} bg-black p-6 sm:p-8`} style={FR}>
+      <div className="mx-auto max-w-[1120px]">
+        <div className={`rounded-2xl border ${FB} bg-black p-6 sm:p-8 lg:p-10`} style={FR}>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex items-start gap-6">
-              <Avatar className={`h-20 w-20 border ${FB} ${FS}`} style={FR}>
+              <Avatar className={`h-20 w-20 border ${FB} ${FS} shrink-0`} style={FR}>
                 <AvatarFallback className={`${FS} text-lg font-semibold text-foreground`}>
                   {snapshot.username.slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-foreground">{snapshot.username}</p>
-                <p className="mt-1 text-[13px] text-muted-foreground">Public profile</p>
+                <p className="mt-1 text-[13px] text-muted-foreground">Public trading profile</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <span className={`inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-primary`}>
                     <Zap className="h-3 w-3" />
@@ -216,32 +223,29 @@ export default async function TraderProfilePage({
               </div>
             </div>
 
-            {/* Stats row */}
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-3 lg:flex lg:flex-col lg:gap-4">
               <StatCell label="Total Trades" value={snapshot.totalTrades.toLocaleString()} />
               <StatCell label="Total PnL" value={formatSigned(snapshot.totalPnl)} accent={positive ? 'green' : negative ? 'red' : undefined} />
-              <StatCell label="Profile Type" value="Live" />
+              <StatCell label="Status" value="Live" />
             </div>
           </div>
 
-          {/* Profit + Trades cards */}
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
-              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Profit</p>
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total PnL</p>
               <p className={`mt-2 text-2xl font-semibold tracking-[-0.02em] ${positive ? 'text-success' : negative ? 'text-destructive' : 'text-foreground'}`}>
                 {formatCurrency(snapshot.totalPnl)}
               </p>
-              <p className="mt-2 text-[12px] text-muted-foreground">Current public performance snapshot</p>
+              <p className="mt-2 text-[12px] text-muted-foreground">Cumulative trading performance</p>
             </div>
             <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Trades</p>
               <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-foreground">{snapshot.totalTrades.toLocaleString()}</p>
-              <p className="mt-2 text-[12px] text-muted-foreground">Visible public trades</p>
+              <p className="mt-2 text-[12px] text-muted-foreground">Public trade history</p>
             </div>
           </div>
 
-          {/* Nav links */}
-          <div className="flex flex-wrap gap-2">
+          <div className="mt-8 flex flex-wrap gap-2">
             <Link
               href={`/${locale}/leaderboard`}
               className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-5 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-accent/55`}
@@ -253,13 +257,12 @@ export default async function TraderProfilePage({
               href={`/${locale}/dashboard/trader-profile`}
               className="inline-flex items-center rounded-full bg-foreground px-5 py-1.5 text-[13px] font-semibold text-background transition-opacity hover:opacity-90"
             >
-              Manage profile
+              Manage your profile
             </Link>
           </div>
-        </section>
+        </div>
 
-        {/* Right aside */}
-        <aside className="space-y-4">
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
           <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
             <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Capital</p>
             <p className="mt-2 text-3xl font-semibold text-foreground">{formatCapitalCompact(snapshot.totalPnl)}</p>
@@ -267,7 +270,7 @@ export default async function TraderProfilePage({
 
           <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
             <div className="flex items-center justify-between">
-              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Trades</p>
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Trade Activity</p>
               <span className={`inline-flex items-center rounded-full border ${FB} ${FS} px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground`}>
                 {snapshot.totalTrades > 100 ? 'Active' : 'Growing'}
               </span>
@@ -280,17 +283,17 @@ export default async function TraderProfilePage({
 
           <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
             <div className="flex items-center justify-between">
-              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Profile Status</p>
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Profile</p>
               <span className={`inline-flex items-center gap-1.5 rounded-full border ${FB} ${FS} px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground`}>
                 <Lock className="h-3 w-3" />
                 Public
               </span>
             </div>
             <p className="mt-3 text-[13px] leading-[1.5] text-muted-foreground">
-              Live trading profile with explicitly shared performance data.
+              Trading profile with explicitly shared performance data on Qunt Edge.
             </p>
           </div>
-        </aside>
+        </div>
       </div>
     </div>
   )

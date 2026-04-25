@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
+import { TraderProfileShareButton } from './components/trader-profile-share-button'
 import {
   Pagination,
   PaginationContent,
@@ -876,6 +877,7 @@ export default function TraderProfilePageClient() {
                         <Sparkles className="h-3.5 w-3.5" />
                         Trader Profile
                       </Badge>
+                      {isOwnProfile && <TraderProfileShareButton />}
                     </div>
 
                     <div className="space-y-2">
