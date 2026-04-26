@@ -155,7 +155,20 @@ export function TiptapEditor({
     },
     onError: (error) => {
       console.error("Completion error:", error);
-      toast.error(t("editor.ai.minCharsError"));
+      const errorMessage = error?.message || String(error);
+
+      if (errorMessage.includes("API key") || errorMessage.includes("OPENROUTER_API_KEY") || errorMessage.includes("AI_BASE_URL")) {
+        toast.error("AI service is not configured. Please contact support.");
+      } else if (errorMessage.includes("subscription") || errorMessage.includes("plan") || errorMessage.includes("FORBIDDEN")) {
+        toast.error("AI features require an active subscription.");
+      } else if (errorMessage.includes("rate limit") || errorMessage.includes("too many")) {
+        toast.error("Too many AI requests. Please wait a moment.");
+      } else if (errorMessage.includes("timeout") || errorMessage.includes("timed out")) {
+        toast.error("AI request timed out. Please try again.");
+      } else {
+        toast.error(t("editor.ai.minCharsError"));
+      }
+
       if (editorRef.current) {
         editorRef.current.commands.finishAICompletion();
       }

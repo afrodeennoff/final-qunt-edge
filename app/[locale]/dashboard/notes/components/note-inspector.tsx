@@ -14,10 +14,14 @@ import {
   CheckSquare,
   ChevronDown,
   ChevronRight,
+  Loader2,
+  AlertCircle,
 } from "lucide-react"
 import { useI18n } from "@/locales/client"
 import { TradingNote, ChecklistItem } from "../lib/use-notes"
 import { NOTE_TEMPLATES, NoteTemplate } from "../lib/templates"
+import { useCompletion } from "@ai-sdk/react"
+import { toast } from "sonner"
 
 interface NoteInspectorProps {
   note: TradingNote | null
@@ -36,6 +40,40 @@ export function NoteInspector({
 }: NoteInspectorProps) {
   const t = useI18n()
   const [expandedSections, setExpandedSections] = React.useState<Set<string>>(new Set(['templates']))
+  const [aiSummary, setAiSummary] = React.useState<string | null>(null)
+
+  const { completion, complete, isLoading } = useCompletion({
+    api: "/api/ai/summarize",
+    onFinish: (_, { completion }) => {
+      setAiSummary(completion)
+    },
+    onError: (error) => {
+      console.error("AI Summary error:", error)
+      const errorMessage = error?.message || String(error)
+
+      if (errorMessage.includes("API key") || errorMessage.includes("OPENROUTER_API_KEY")) {
+        toast.error("AI service is not configured. Please contact support.")
+      } else if (errorMessage.includes("subscription") || errorMessage.includes("plan") || errorMessage.includes("FORBIDDEN")) {
+        toast.error("AI features require an active subscription.")
+      } else if (errorMessage.includes("rate limit") || errorMessage.includes("too many")) {
+        toast.error("Too many AI requests. Please wait a moment.")
+      } else {
+        toast.error("Failed to generate summary. Please try again.")
+      }
+
+      setAiSummary(null)
+    },
+  })
+
+  const handleAiSummary = async () => {
+    if (!note || !note.content || note.content.trim().length < 10) {
+      toast.error("Note content is too short to summarize")
+      return
+    }
+
+    setAiSummary(null)
+    complete(note.content)
+  }
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => {
@@ -128,10 +166,15 @@ export function NoteInspector({
             variant="outline"
             size="sm"
             className="flex-1"
-            title="AI Summary (coming soon)"
-            disabled
+            title="Generate AI Summary"
+            onClick={handleAiSummary}
+            disabled={isLoading || !note.content || note.content.trim().length < 10}
           >
-            <Sparkles className="h-3 w-3 mr-1" />
+            {isLoading ? (
+              <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+            ) : (
+              <Sparkles className="h-3 w-3 mr-1" />
+            )}
             AI Summary
           </Button>
         </div>
@@ -139,6 +182,28 @@ export function NoteInspector({
 
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-4">
+          {/* AI Summary Section */}
+          {(aiSummary || completion || isLoading) && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <Sparkles className="h-4 w-4 text-primary" />
+                AI Summary
+              </div>
+              <div className="ml-6 p-3 rounded-lg bg-primary/5 border border-primary/20">
+                {isLoading && !completion ? (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Generating summary...
+                  </div>
+                ) : (
+                  <div className="text-sm whitespace-pre-wrap">
+                    {completion || aiSummary}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Templates Section */}
           <div className="space-y-2">
             <button

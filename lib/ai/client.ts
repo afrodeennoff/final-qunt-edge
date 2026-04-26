@@ -10,9 +10,33 @@ const aiApiKey = process.env.OPENROUTER_API_KEY;
 let hasWarnedMissingApiKey = false;
 let hasWarnedMissingBaseUrl = false;
 
+function validateAiConfig() {
+  const errors = [];
+
+  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
+    errors.push("OPENROUTER_API_KEY is not configured. Set a valid API key in environment variables.");
+  }
+
+  if (!baseURL || baseURL.trim() === "") {
+    errors.push("AI_BASE_URL is not configured. Using default: https://openrouter.ai/api/v1");
+  }
+
+  if (errors.length > 0 && !hasWarnedMissingApiKey) {
+    console.warn("[AI] Configuration issues detected:");
+    errors.forEach(err => console.warn(`  - ${err}`));
+    console.warn("[AI] AI features will not work until these are fixed.");
+    hasWarnedMissingApiKey = true;
+  }
+
+  return {
+    isValid: aiApiKey && aiApiKey.trim() !== "" && !aiApiKey.includes("your_"),
+    errors,
+  };
+}
+
 const aiClient = createOpenAI({
   baseURL,
-  apiKey: aiApiKey,
+  apiKey: aiApiKey || "dummy-key-for-validation",
   headers: {
     "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "https://quntedge.com",
     "X-Title": "Qunt Edge",
@@ -33,9 +57,14 @@ function normalizeModelForOpenRouter(model: string): string {
 
 // Enhanced AI language model with caching (only for non-streaming generations)
 export function getAiLanguageModel(feature: AiFeature) {
-  if (!aiApiKey && !hasWarnedMissingApiKey) {
-    console.warn("[AI] OPENROUTER_API_KEY is missing. AI routes will fail until it is configured.");
-    hasWarnedMissingApiKey = true;
+  const config = validateAiConfig();
+
+  if (!config.isValid) {
+    if (!hasWarnedMissingApiKey) {
+      console.warn("[AI] OPENROUTER_API_KEY is missing or invalid. AI routes will fail.");
+      console.warn("[AI] To fix: Add a valid OPENROUTER_API_KEY to your environment variables.");
+      hasWarnedMissingApiKey = true;
+    }
   }
 
   if (!process.env.AI_BASE_URL && !hasWarnedMissingBaseUrl) {
