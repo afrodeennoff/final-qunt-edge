@@ -1,3 +1,4 @@
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, ChevronDown, MessageSquare, Loader2, AlertCircle } from "lucide-react";
@@ -275,7 +276,7 @@ const ToolCallMessage = ({
     };
 
 // Error message helper
-function getErrorMessage(error: Error, t: (key: string) => string): { title: string; detail?: string } {
+function getErrorMessage(error: Error, t: any): { title: string; detail?: string } {
      const message = error.message || "";
 
      if (message.includes("API key") || message.includes("OPENROUTER_API_KEY") || message.includes("AI_BASE_URL")) {
@@ -478,6 +479,7 @@ export default function ChatWidget({ size ="large" }: ChatWidgetProps) {
      }, [setMessages, setStoredMessages, setIsStarted]);
 
      const errorDetails = error ? getErrorMessage(error, t) : null;
+     const retryText = "Retry";
 
      return (
      <Card className="h-full flex flex-col bg-background border-none shadow-none relative overflow-clip">
@@ -533,7 +535,7 @@ export default function ChatWidget({ size ="large" }: ChatWidgetProps) {
      className="flex-shrink-0"
      >
      <RotateCcw className="h-3 w-3 mr-1" />
-     {t("chat.error.retry") || "Retry"}
+     {retryText}
      </Button>
      </div>
      </motion.div>

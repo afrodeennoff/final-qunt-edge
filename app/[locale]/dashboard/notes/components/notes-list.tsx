@@ -121,9 +121,8 @@ export function NotesList({
         {/* Filter Tabs */}
         <SegmentedControl
           value={filter}
-          onValueChange={onFilterChange}
+          onChange={onFilterChange}
           options={filters.map(f => ({ label: f.label, value: f.value }))}
-          size="sm"
         />
       </div>
 

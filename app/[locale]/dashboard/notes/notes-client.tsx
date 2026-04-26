@@ -4,10 +4,10 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { ResizableGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable"
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { useI18n } from "@/locales/client"
-import { useNotes, TradingNote } from "./lib/use-notes"
+import { useNotes, TradingNote, NoteFilter } from "./lib/use-notes"
 import { NotesList } from "./components/notes-list"
 import { NoteEditor } from "./components/note-editor"
 import { NoteInspector } from "./components/note-inspector"
@@ -77,6 +77,10 @@ export default function NotesPageClient() {
     }
   }
 
+  const handleFilterChange = (value: string) => {
+    setFilter(value as NoteFilter)
+  }
+
   const handleNoteSelect = (noteId: string) => {
     setActiveNoteId(noteId)
     if (isMobile) {
@@ -132,7 +136,7 @@ export default function NotesPageClient() {
   if (!isMobile && !isTablet) {
     return (
       <div className="h-full flex">
-        <ResizableGroup direction="horizontal" className="flex-1">
+        <ResizablePanelGroup direction="horizontal" className="flex-1">
           {/* Left Pane - Notes List */}
           <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
             <NotesList
@@ -142,7 +146,7 @@ export default function NotesPageClient() {
               searchQuery={searchQuery}
               onNoteSelect={handleNoteSelect}
               onNewNote={handleNewNote}
-              onFilterChange={setFilter}
+              onFilterChange={handleFilterChange}
               onSearchChange={setSearchQuery}
               isLoading={isLoading}
             />
@@ -174,7 +178,7 @@ export default function NotesPageClient() {
               onAddChecklistItem={handleAddChecklistItem}
             />
           </ResizablePanel>
-        </ResizableGroup>
+        </ResizablePanelGroup>
       </div>
     )
   }
@@ -183,7 +187,7 @@ export default function NotesPageClient() {
   if (isTablet) {
     return (
       <div className="h-full flex">
-        <ResizableGroup direction="horizontal" className="flex-1">
+        <ResizablePanelGroup direction="horizontal" className="flex-1">
           {/* Left Pane - Notes List */}
           <ResizablePanel defaultSize={30} minSize={25} maxSize={40}>
             <NotesList
@@ -193,7 +197,7 @@ export default function NotesPageClient() {
               searchQuery={searchQuery}
               onNoteSelect={handleNoteSelect}
               onNewNote={handleNewNote}
-              onFilterChange={setFilter}
+              onFilterChange={handleFilterChange}
               onSearchChange={setSearchQuery}
               isLoading={isLoading}
             />
@@ -230,7 +234,7 @@ export default function NotesPageClient() {
               />
             </div>
           </ResizablePanel>
-        </ResizableGroup>
+        </ResizablePanelGroup>
 
         {/* Inspector Sheet */}
         <Sheet open={showInspector} onOpenChange={setShowInspector}>
@@ -259,7 +263,7 @@ export default function NotesPageClient() {
           searchQuery={searchQuery}
           onNoteSelect={handleNoteSelect}
           onNewNote={handleNewNote}
-          onFilterChange={setFilter}
+          onFilterChange={handleFilterChange}
           onSearchChange={setSearchQuery}
           isLoading={isLoading}
         />

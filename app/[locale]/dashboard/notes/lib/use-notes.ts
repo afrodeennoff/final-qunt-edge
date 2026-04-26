@@ -26,7 +26,7 @@ export interface TradingNote {
   updatedAt: Date
 }
 
-type NoteFilter = 'all' | 'pinned' | 'recent' | 'archived' | 'templates'
+export type NoteFilter = 'all' | 'pinned' | 'recent' | 'archived' | 'templates'
 
 // Note: This is a local mock implementation.
 // The existing Mood model in Prisma doesn't fully support the TradingNote structure.

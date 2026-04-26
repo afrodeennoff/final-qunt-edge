@@ -44,8 +44,11 @@ export function NoteInspector({
 
   const { completion, complete, isLoading } = useCompletion({
     api: "/api/ai/summarize",
-    onFinish: (_, { completion }) => {
-      setAiSummary(completion)
+    onFinish: (_prompt, _options) => {
+      // The completion is already available in the completion variable
+      if (completion) {
+        setAiSummary(completion as string)
+      }
     },
     onError: (error) => {
       console.error("AI Summary error:", error)
@@ -64,6 +67,8 @@ export function NoteInspector({
       setAiSummary(null)
     },
   })
+
+  const completionText = typeof completion === 'string' ? completion : ''
 
   const handleAiSummary = async () => {
     if (!note || !note.content || note.content.trim().length < 10) {
@@ -183,21 +188,21 @@ export function NoteInspector({
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-4">
           {/* AI Summary Section */}
-          {(aiSummary || completion || isLoading) && (
+          {(aiSummary || completionText || isLoading) && (
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm font-medium">
                 <Sparkles className="h-4 w-4 text-primary" />
                 AI Summary
               </div>
               <div className="ml-6 p-3 rounded-lg bg-primary/5 border border-primary/20">
-                {isLoading && !completion ? (
+                {isLoading && !completionText ? (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Loader2 className="h-4 w-4 animate-spin" />
                     Generating summary...
                   </div>
                 ) : (
                   <div className="text-sm whitespace-pre-wrap">
-                    {completion || aiSummary}
+                    {completionText || aiSummary}
                   </div>
                 )}
               </div>
