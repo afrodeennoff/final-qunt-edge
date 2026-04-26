@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar'
 import {
   unifiedInsetPanelClassName,
@@ -48,11 +48,9 @@ export function DashboardHeader() {
   const { isPlusUser } = useDashboardActions()
   const { accountNumbers, instruments, dateRange, pnlRange, tagFilter, weekdayFilter } =
     useDashboardFilters()
-  const searchParams = useSearchParams()
-  const activeTab = searchParams.get('tab') || 'widgets'
   const normalizedPathname = pathname.replace(/\/+$/, '') || '/'
   const isDashboardRoot = /^\/(?:[a-z]{2}(?:-[A-Za-z]{2})?)?\/dashboard$/i.test(normalizedPathname)
-  const isWidgetsTab = activeTab === 'widgets'
+  const isWidgetsTab = isDashboardRoot
   const isSidebarCollapsed = !isMobile && sidebarState === 'collapsed'
   const localeMatch = pathname.match(/^\/([a-z]{2}(?:-[A-Za-z]{2})?)(?=\/|$)/i)
   const billingHref = localeMatch?.[1]
@@ -60,12 +58,10 @@ export function DashboardHeader() {
     : '/dashboard/billing'
 
   const getTitle = () => {
-    if (isDashboardRoot) {
-      if (activeTab === 'table') return 'Journal'
-      if (activeTab === 'accounts') return 'Accounts'
-      if (activeTab === 'chart') return 'Scenario Lab'
-      return 'Home'
-    }
+    if (isDashboardRoot) return 'Home'
+    if (pathname.includes('/dashboard/trades')) return 'Journal'
+    if (pathname.includes('/dashboard/accounts')) return 'Accounts'
+    if (pathname.includes('/dashboard/analytics')) return 'Scenario Lab'
     if (pathname.includes('strategies')) return 'Playbook'
     if (pathname.includes('reports')) return 'Analytics'
     if (pathname.includes('behavior')) return 'Coaching'

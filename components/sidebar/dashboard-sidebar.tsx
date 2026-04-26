@@ -57,7 +57,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             exact: true
         },
         {
-            href: `/${locale}/dashboard?tab=table`,
+            href: `/${locale}/dashboard/trades`,
             icon: <BookOpen className={NAV_ICON_SIZE} />,
             label: "Journal",
             group: "Overview"
@@ -69,7 +69,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             group: "Overview"
         },
         {
-            href: `/${locale}/dashboard?tab=accounts`,
+            href: `/${locale}/dashboard/accounts`,
             icon: <Activity className={NAV_ICON_SIZE} />,
             label: "Accounts",
             group: "Overview"
@@ -77,7 +77,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
 
         // ── Analysis ──
         {
-            href: `/${locale}/dashboard?tab=chart`,
+            href: `/${locale}/dashboard/analytics`,
             icon: <Sparkles className={NAV_ICON_SIZE} />,
             label: "Scenario Lab",
             group: "Analysis"

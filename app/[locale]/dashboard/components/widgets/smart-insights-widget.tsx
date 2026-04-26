@@ -72,7 +72,7 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
 
  const allowedTargets = React.useMemo<ReadonlySet<InsightActionTarget>>(
  () =>
- new Set<InsightActionTarget>(["/dashboard","/dashboard?tab=table","/dashboard?tab=accounts","/dashboard/reports","/dashboard/behavior","/dashboard/trader-profile","/dashboard/settings","/dashboard/import","/dashboard/data",
+ new Set<InsightActionTarget>(["/dashboard","/dashboard/trades","/dashboard/accounts","/dashboard/reports","/dashboard/behavior","/dashboard/trader-profile","/dashboard/settings","/dashboard/import","/dashboard/data",
  ]),
  []
  );

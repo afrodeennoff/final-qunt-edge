@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { Activity, LayoutDashboard, Settings, Sparkles, TrendingUp } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -14,7 +14,6 @@ export interface MobileNavItem {
   icon: React.ElementType
   label: string
   exact?: boolean
-  tab?: string
   disabled?: boolean
 }
 
@@ -26,26 +25,22 @@ function useNavItems(): MobileNavItem[] {
         href: `/${locale}/dashboard`,
         icon: LayoutDashboard,
         label: 'Home',
-        tab: 'widgets',
         exact: true,
       },
       {
-        href: `/${locale}/dashboard?tab=table`,
+        href: `/${locale}/dashboard/trades`,
         icon: TrendingUp,
         label: 'Journal',
-        tab: 'table',
       },
       {
-        href: `/${locale}/dashboard?tab=chart`,
+        href: `/${locale}/dashboard/analytics`,
         icon: Sparkles,
         label: 'Lab',
-        tab: 'chart',
       },
       {
-        href: `/${locale}/dashboard?tab=accounts`,
+        href: `/${locale}/dashboard/accounts`,
         icon: Activity,
         label: 'Accounts',
-        tab: 'accounts',
       },
       {
         href: `/${locale}/dashboard/settings`,
@@ -59,24 +54,12 @@ function useNavItems(): MobileNavItem[] {
 
 function useIsActive(item: MobileNavItem): boolean {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
-
-  // Derive basePath from item's href (strip query params)
-  const basePath = item.href.split('?')[0]
-
-  // Check if we're on the base path of this item
-  const isOnBasePath = pathname === basePath
-
-  if (item.tab) {
-    const activeTab = searchParams.get('tab') || 'widgets'
-    return isOnBasePath && activeTab === item.tab
-  }
 
   if (item.exact) {
-    return isOnBasePath && (!searchParams.get('tab') || searchParams.get('tab') === 'widgets')
+    return pathname === item.href
   }
 
-  // For items without tab/exact, match exact pathname
+  // For items without exact, match exact pathname
   return pathname === item.href
 }
 
