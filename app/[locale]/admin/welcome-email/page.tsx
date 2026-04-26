@@ -1,9 +1,21 @@
+import { redirect } from "next/navigation"
 import { WelcomeEmailProvider } from "../components/welcome-email/welcome-email-context"
 import { WelcomeEmailPreview } from "../components/welcome-email/welcome-email-preview"
+import { assertAdminAccess } from "@/server/authz"
 
+export default async function WelcomeEmailPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
 
+  try {
+    await assertAdminAccess();
+  } catch {
+    redirect(`/${locale}/authentication`);
+  }
 
-export default function WelcomeEmailPage() {
   return (
     <WelcomeEmailProvider>
       <div className="space-y-6">

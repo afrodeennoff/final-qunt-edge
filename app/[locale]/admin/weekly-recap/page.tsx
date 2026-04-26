@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { WeeklyRecapProvider } from "../components/weekly-stats/weekly-recap-context";
 import { WeeklyRecapPreview } from "../components/weekly-stats/weekly-recap-preview";
 import { getSiteOrigin } from "@/lib/site-url";
+import { assertAdminAccess } from "@/server/authz";
 const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/admin/weekly-recap";
 
@@ -39,7 +41,19 @@ export async function generateMetadata({
   };
 }
 
-export default function WeeklyRecapPage() {
+export default async function WeeklyRecapPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
+  try {
+    await assertAdminAccess();
+  } catch {
+    redirect(`/${locale}/authentication`);
+  }
+
   return (
     <WeeklyRecapProvider>
       <div className="space-y-6">

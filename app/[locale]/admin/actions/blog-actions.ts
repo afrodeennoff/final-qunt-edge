@@ -19,8 +19,8 @@ async function requireAdminActor() {
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) throw new Error('Unauthorized')
+  await assertAdminAccess()
   const databaseUserId = await getDatabaseUserId()
-  await assertAdminAccess(databaseUserId)
   return { authUser: user, databaseUserId }
 }
 
