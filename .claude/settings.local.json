@@ -13,7 +13,17 @@
       "WebSearch",
       "mcp__duckduckgo-search__duckduckgo_web_search",
       "mcp__web-search__search",
-      "mcp__web-search__fetchGithubReadme"
+      "mcp__web-search__fetchGithubReadme",
+      "Bash(curl -I https://github.com/heygen-com/hyperframes)",
+      "Bash(brew install *)",
+      "Bash(curl -fsSL https://bun.sh/install)",
+      "Bash(bash)",
+      "Bash(export BUN_INSTALL=\"$HOME/.bun\")",
+      "Bash(export PATH=\"$BUN_INSTALL/bin:$PATH\")",
+      "Bash(curl -I http://localhost:5190/)",
+      "Bash(lsof -ti:5190)",
+      "Bash(kill -9 1515)",
+      "Bash(TaskStop bnzoxwovh *)"
     ]
   },
   "model": "sonnet",

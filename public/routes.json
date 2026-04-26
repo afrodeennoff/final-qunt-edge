@@ -15,6 +15,7 @@
   "/[locale]/dashboard/billing",
   "/[locale]/dashboard/data",
   "/[locale]/dashboard/import",
+  "/[locale]/dashboard/notes",
   "/[locale]/dashboard/reports",
   "/[locale]/dashboard/settings",
   "/[locale]/dashboard/strategies",
