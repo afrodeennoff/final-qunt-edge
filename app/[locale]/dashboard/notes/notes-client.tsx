@@ -3,7 +3,6 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { useI18n } from "@/locales/client"
@@ -12,9 +11,9 @@ import { NotesList } from "./components/notes-list"
 import { NoteEditor } from "./components/note-editor"
 import { NoteInspector } from "./components/note-inspector"
 import { NOTE_TEMPLATES } from "./lib/templates"
-import { ArrowLeft, PanelLeftClose, PanelRightClose } from "lucide-react"
+import { ArrowLeft, PanelRight } from "lucide-react"
 
-type ViewMode = 'list' | 'editor' | 'inspector'
+type ViewMode = 'list' | 'editor'
 
 export default function NotesPageClient() {
   const t = useI18n()
@@ -59,7 +58,6 @@ export default function NotesPageClient() {
   // Handle keyboard shortcuts
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Cmd+N / Ctrl+N for new note
       if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
         e.preventDefault()
         handleNewNote()
@@ -71,7 +69,7 @@ export default function NotesPageClient() {
   }, [])
 
   const handleNewNote = () => {
-    const newNote = createNote()
+    createNote()
     if (isMobile) {
       setViewMode('editor')
     }
@@ -132,13 +130,37 @@ export default function NotesPageClient() {
     })
   }
 
+  // Shared inspector sheet for tablet and mobile
+  const inspectorSheet = (
+    <Sheet open={showInspector} onOpenChange={setShowInspector}>
+      <SheetContent
+        side="right"
+        className="w-72 p-0"
+        style={{ background: 'oklch(0.028 0.005 260)' }}
+      >
+        <NoteInspector
+          note={activeNote}
+          onApplyTemplate={handleApplyTemplate}
+          onToggleChecklistItem={handleToggleChecklistItem}
+          onAddChecklistItem={handleAddChecklistItem}
+          className="border-0"
+        />
+      </SheetContent>
+    </Sheet>
+  )
+
   // Desktop layout (3-pane)
   if (!isMobile && !isTablet) {
     return (
       <div className="h-full flex">
         <ResizablePanelGroup direction="horizontal" className="flex-1">
-          {/* Left Pane - Notes List */}
-          <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
+          {/* Left Pane - Notes List (220px default) */}
+          <ResizablePanel
+            defaultSize={22}
+            minSize={15}
+            maxSize={35}
+            style={{ borderRight: '1px solid oklch(0.5 0.01 260 / 0.1)' }}
+          >
             <NotesList
               notes={notes}
               activeNoteId={activeNoteId}
@@ -152,10 +174,12 @@ export default function NotesPageClient() {
             />
           </ResizablePanel>
 
-          <ResizableHandle />
+          <ResizableHandle
+            style={{ background: 'oklch(0.5 0.01 260 / 0.08)' }}
+          />
 
-          {/* Middle Pane - Editor */}
-          <ResizablePanel defaultSize={50} minSize={30}>
+          {/* Middle Pane - Editor (flexible) */}
+          <ResizablePanel defaultSize={53} minSize={30}>
             <NoteEditor
               note={activeNote}
               onNoteUpdate={updateNote}
@@ -167,10 +191,17 @@ export default function NotesPageClient() {
             />
           </ResizablePanel>
 
-          <ResizableHandle />
+          <ResizableHandle
+            style={{ background: 'oklch(0.5 0.01 260 / 0.08)' }}
+          />
 
-          {/* Right Pane - Inspector */}
-          <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
+          {/* Right Pane - Inspector (240px default) */}
+          <ResizablePanel
+            defaultSize={25}
+            minSize={18}
+            maxSize={35}
+            style={{ borderLeft: '1px solid oklch(0.5 0.01 260 / 0.1)' }}
+          >
             <NoteInspector
               note={activeNote}
               onApplyTemplate={handleApplyTemplate}
@@ -188,8 +219,13 @@ export default function NotesPageClient() {
     return (
       <div className="h-full flex">
         <ResizablePanelGroup direction="horizontal" className="flex-1">
-          {/* Left Pane - Notes List */}
-          <ResizablePanel defaultSize={30} minSize={25} maxSize={40}>
+          {/* Left Pane - Notes List (280px) */}
+          <ResizablePanel
+            defaultSize={28}
+            minSize={20}
+            maxSize={40}
+            style={{ borderRight: '1px solid oklch(0.5 0.01 260 / 0.1)' }}
+          >
             <NotesList
               notes={notes}
               activeNoteId={activeNoteId}
@@ -203,23 +239,23 @@ export default function NotesPageClient() {
             />
           </ResizablePanel>
 
-          <ResizableHandle />
+          <ResizableHandle
+            style={{ background: 'oklch(0.5 0.01 260 / 0.08)' }}
+          />
 
           {/* Right Pane - Editor */}
-          <ResizablePanel defaultSize={70}>
-            <div className="h-full flex flex-col">
-              {/* Inspector Toggle Button */}
-              <div className="absolute top-4 right-4 z-10">
+          <ResizablePanel defaultSize={72}>
+            <div className="h-full flex flex-col relative">
+              {/* Inspector Toggle */}
+              <div className="absolute top-2.5 right-3 z-10">
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
+                  className="h-7 w-7 p-0 rounded"
                   onClick={() => setShowInspector(!showInspector)}
+                  style={{ color: 'oklch(0.45 0.02 260)' }}
                 >
-                  {showInspector ? (
-                    <PanelRightClose className="h-4 w-4" />
-                  ) : (
-                    <PanelLeftClose className="h-4 w-4" />
-                  )}
+                  <PanelRight className="h-4 w-4" />
                 </Button>
               </div>
 
@@ -236,26 +272,15 @@ export default function NotesPageClient() {
           </ResizablePanel>
         </ResizablePanelGroup>
 
-        {/* Inspector Sheet */}
-        <Sheet open={showInspector} onOpenChange={setShowInspector}>
-          <SheetContent side="right" className="w-80">
-            <NoteInspector
-              note={activeNote}
-              onApplyTemplate={handleApplyTemplate}
-              onToggleChecklistItem={handleToggleChecklistItem}
-              onAddChecklistItem={handleAddChecklistItem}
-              className="border-0"
-            />
-          </SheetContent>
-        </Sheet>
+        {inspectorSheet}
       </div>
     )
   }
 
-  // Mobile layout (1-pane with navigation)
+  // Mobile layout (single pane with navigation)
   return (
-    <div className="h-full flex flex-col">
-      {viewMode === 'list' && (
+    <div className="h-full flex flex-col" style={{ background: 'oklch(0.032 0.005 260)' }}>
+      {viewMode === 'list' ? (
         <NotesList
           notes={notes}
           activeNoteId={activeNoteId}
@@ -267,60 +292,50 @@ export default function NotesPageClient() {
           onSearchChange={setSearchQuery}
           isLoading={isLoading}
         />
-      )}
-
-      {viewMode === 'editor' && (
-        <div className="h-full flex flex-col">
+      ) : (
+        <div className="h-full flex flex-col relative">
           {/* Back Button */}
-          <div className="p-2 border-b bg-background">
+          <div
+            className="flex items-center justify-between px-2 py-1.5"
+            style={{ borderBottom: '1px solid oklch(0.5 0.01 260 / 0.1)' }}
+          >
             <Button
               variant="ghost"
               size="sm"
               onClick={handleBackToList}
-              className="gap-2"
+              className="gap-1.5 h-7 text-xs rounded"
+              style={{ color: 'oklch(0.65 0.22 260)' }}
             >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Notes
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Notes
             </Button>
-          </div>
 
-          {/* Inspector Toggle */}
-          {activeNote && (
-            <div className="absolute top-14 right-2 z-10">
+            {activeNote && (
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
-                onClick={() => setShowInspector(!showInspector)}
+                className="h-7 w-7 p-0 rounded"
+                onClick={() => setShowInspector(true)}
+                style={{ color: 'oklch(0.45 0.02 260)' }}
               >
-                Inspector
+                <PanelRight className="h-4 w-4" />
               </Button>
-            </div>
-          )}
+            )}
+          </div>
 
           <NoteEditor
             note={activeNote}
             onNoteUpdate={updateNote}
             onTogglePin={togglePin}
-              onToggleArchive={toggleArchive}
-              onDeleteNote={deleteNote}
-              onAddTag={addTag}
-              onRemoveTag={removeTag}
-            />
-          </div>
-        )}
+            onToggleArchive={toggleArchive}
+            onDeleteNote={deleteNote}
+            onAddTag={addTag}
+            onRemoveTag={removeTag}
+          />
+        </div>
+      )}
 
-        {/* Inspector Sheet for Mobile */}
-        <Sheet open={showInspector} onOpenChange={setShowInspector}>
-          <SheetContent side="right" className="w-80">
-            <NoteInspector
-              note={activeNote}
-              onApplyTemplate={handleApplyTemplate}
-              onToggleChecklistItem={handleToggleChecklistItem}
-              onAddChecklistItem={handleAddChecklistItem}
-              className="border-0"
-            />
-          </SheetContent>
-        </Sheet>
-      </div>
-    )
-  }
+      {inspectorSheet}
+    </div>
+  )
+}

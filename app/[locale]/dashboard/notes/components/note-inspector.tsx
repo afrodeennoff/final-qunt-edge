@@ -3,19 +3,21 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
 import {
   FileText,
   Sparkles,
   Download,
-  Link2,
   CheckSquare,
   ChevronDown,
   ChevronRight,
   Loader2,
-  AlertCircle,
+  Calendar,
+  Type,
+  Plus,
+  X,
 } from "lucide-react"
 import { useI18n } from "@/locales/client"
 import { TradingNote, ChecklistItem } from "../lib/use-notes"
@@ -39,13 +41,16 @@ export function NoteInspector({
   className,
 }: NoteInspectorProps) {
   const t = useI18n()
-  const [expandedSections, setExpandedSections] = React.useState<Set<string>>(new Set(['templates']))
+  const [expandedSections, setExpandedSections] = React.useState<Set<string>>(
+    new Set(['templates', 'checklist', 'metadata'])
+  )
   const [aiSummary, setAiSummary] = React.useState<string | null>(null)
+  const [checklistInput, setChecklistInput] = React.useState('')
+  const checklistInputRef = React.useRef<HTMLInputElement>(null)
 
   const { completion, complete, isLoading } = useCompletion({
     api: "/api/ai/summarize",
     onFinish: (_prompt, _options) => {
-      // The completion is already available in the completion variable
       if (completion) {
         setAiSummary(completion as string)
       }
@@ -98,18 +103,22 @@ export function NoteInspector({
     }
   }
 
-  const handleAddChecklistItem = () => {
-    if (!note) return
-    const text = prompt('Enter checklist item:')
-    if (text && text.trim()) {
-      onAddChecklistItem(note.id, text.trim())
+  const handleChecklistSubmit = () => {
+    if (!note || !checklistInput.trim()) return
+    onAddChecklistItem(note.id, checklistInput.trim())
+    setChecklistInput('')
+  }
+
+  const handleChecklistKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleChecklistSubmit()
     }
   }
 
   const handleExportNote = () => {
     if (!note) return
 
-    // Create a simple text export
     let content = `# ${note.title}\n\n`
     content += `Created: ${new Date(note.createdAt).toLocaleString()}\n`
     content += `Updated: ${new Date(note.updatedAt).toLocaleString()}\n`
@@ -118,12 +127,10 @@ export function NoteInspector({
     }
     content += '\n---\n\n'
 
-    // Strip HTML from content
     const tmp = document.createElement('div')
     tmp.innerHTML = note.content
     content += tmp.textContent || tmp.innerText || ''
 
-    // Download
     const blob = new Blob([content], { type: 'text/markdown' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -133,13 +140,36 @@ export function NoteInspector({
     URL.revokeObjectURL(url)
   }
 
+  // Count words
+  const getWordCount = (content: string) => {
+    const tmp = document.createElement('div')
+    tmp.innerHTML = content
+    const text = tmp.textContent || tmp.innerText || ''
+    if (!text.trim()) return 0
+    return text.trim().split(/\s+/).length
+  }
+
   if (!note) {
     return (
-      <div className={cn("h-full bg-muted/30 border-l", className)}>
-        <div className="p-4 border-b">
-          <h3 className="font-semibold text-sm">Inspector</h3>
+      <div
+        className={cn("h-full flex flex-col", className)}
+        style={{ background: 'oklch(0.028 0.005 260)' }}
+      >
+        <div
+          className="p-4"
+          style={{ borderBottom: '1px solid oklch(0.5 0.01 260 / 0.1)' }}
+        >
+          <h3
+            className="font-semibold text-xs uppercase tracking-wider"
+            style={{ color: 'oklch(0.45 0.02 260)' }}
+          >
+            Inspector
+          </h3>
         </div>
-        <div className="p-8 text-center text-muted-foreground text-sm">
+        <div
+          className="p-8 text-center text-xs"
+          style={{ color: 'oklch(0.45 0.02 260)' }}
+        >
           Select a note to view details
         </div>
       </div>
@@ -151,18 +181,33 @@ export function NoteInspector({
   const checklistProgress = totalItems > 0 ? (completedItems / totalItems) * 100 : 0
 
   return (
-    <div className={cn("h-full bg-muted/30 border-l flex flex-col", className)}>
+    <div
+      className={cn("h-full flex flex-col", className)}
+      style={{ background: 'oklch(0.028 0.005 260)' }}
+    >
       {/* Header */}
-      <div className="p-4 border-b space-y-3">
-        <h3 className="font-semibold text-sm">Inspector</h3>
+      <div
+        className="p-3 space-y-3"
+        style={{ borderBottom: '1px solid oklch(0.5 0.01 260 / 0.1)' }}
+      >
+        <h3
+          className="font-semibold text-xs uppercase tracking-wider"
+          style={{ color: 'oklch(0.45 0.02 260)' }}
+        >
+          Inspector
+        </h3>
 
         {/* Quick Actions */}
-        <div className="flex gap-2">
+        <div className="flex gap-1.5">
           <Button
             variant="outline"
             size="sm"
-            className="flex-1"
+            className="flex-1 h-7 text-[11px] rounded"
             onClick={handleExportNote}
+            style={{
+              borderColor: 'oklch(0.5 0.01 260 / 0.12)',
+              color: 'oklch(0.65 0.02 260)',
+            }}
           >
             <Download className="h-3 w-3 mr-1" />
             Export
@@ -170,10 +215,14 @@ export function NoteInspector({
           <Button
             variant="outline"
             size="sm"
-            className="flex-1"
+            className="flex-1 h-7 text-[11px] rounded"
             title="Generate AI Summary"
             onClick={handleAiSummary}
             disabled={isLoading || !note.content || note.content.trim().length < 10}
+            style={{
+              borderColor: 'oklch(0.5 0.01 260 / 0.12)',
+              color: 'oklch(0.65 0.02 260)',
+            }}
           >
             {isLoading ? (
               <Loader2 className="h-3 w-3 mr-1 animate-spin" />
@@ -186,22 +235,28 @@ export function NoteInspector({
       </div>
 
       <ScrollArea className="flex-1">
-        <div className="p-4 space-y-4">
+        <div className="p-3 space-y-3">
           {/* AI Summary Section */}
           {(aiSummary || completionText || isLoading) && (
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Sparkles className="h-4 w-4 text-primary" />
-                AI Summary
-              </div>
-              <div className="ml-6 p-3 rounded-lg bg-primary/5 border border-primary/20">
+              <SectionHeader
+                icon={<Sparkles className="h-3.5 w-3.5" style={{ color: 'oklch(0.65 0.22 260)' }} />}
+                title="AI Summary"
+                isExpanded={true}
+                onToggle={() => {}}
+              />
+              <div className="ml-5 p-2.5 rounded text-xs leading-relaxed" style={{
+                background: 'oklch(0.65 0.22 260 / 0.06)',
+                border: '1px solid oklch(0.65 0.22 260 / 0.12)',
+                color: 'oklch(0.75 0.02 260)',
+              }}>
                 {isLoading && !completionText ? (
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                  <div className="flex items-center gap-2" style={{ color: 'oklch(0.45 0.02 260)' }}>
+                    <Loader2 className="h-3 w-3 animate-spin" />
                     Generating summary...
                   </div>
                 ) : (
-                  <div className="text-sm whitespace-pre-wrap">
+                  <div className="whitespace-pre-wrap">
                     {completionText || aiSummary}
                   </div>
                 )}
@@ -210,30 +265,35 @@ export function NoteInspector({
           )}
 
           {/* Templates Section */}
-          <div className="space-y-2">
-            <button
-              onClick={() => toggleSection('templates')}
-              className="flex items-center gap-2 w-full text-left font-medium text-sm hover:text-foreground"
-            >
-              {expandedSections.has('templates') ? (
-                <ChevronDown className="h-4 w-4" />
-              ) : (
-                <ChevronRight className="h-4 w-4" />
-              )}
-              <FileText className="h-4 w-4" />
-              Templates
-            </button>
+          <div className="space-y-1">
+            <SectionHeader
+              icon={<FileText className="h-3.5 w-3.5" style={{ color: 'oklch(0.45 0.02 260)' }} />}
+              title="Templates"
+              isExpanded={expandedSections.has('templates')}
+              onToggle={() => toggleSection('templates')}
+              count={NOTE_TEMPLATES.length}
+            />
 
             {expandedSections.has('templates') && (
-              <div className="ml-6 space-y-1">
+              <div className="ml-5 space-y-0.5">
                 {NOTE_TEMPLATES.map((template) => (
                   <button
                     key={template.id}
                     onClick={() => handleApplyTemplate(template)}
-                    className="w-full text-left p-2 rounded-md hover:bg-muted transition-colors"
+                    className="w-full text-left p-2 rounded transition-colors text-xs"
+                    style={{ color: 'oklch(0.75 0.02 260)' }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'oklch(0.04 0.005 260 / 0.5)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'transparent'
+                    }}
                   >
-                    <div className="text-xs font-medium">{template.name}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                    <div className="font-medium">{template.name}</div>
+                    <div
+                      className="mt-0.5 line-clamp-1"
+                      style={{ color: 'oklch(0.45 0.02 260)' }}
+                    >
                       {template.description}
                     </div>
                   </button>
@@ -242,59 +302,64 @@ export function NoteInspector({
             )}
           </div>
 
-          <Separator />
+          {/* Divider */}
+          <div style={{ height: '1px', background: 'oklch(0.5 0.01 260 / 0.08)' }} />
 
           {/* Checklist Section */}
-          <div className="space-y-2">
-            <button
-              onClick={() => toggleSection('checklist')}
-              className="flex items-center gap-2 w-full text-left font-medium text-sm hover:text-foreground"
-            >
-              {expandedSections.has('checklist') ? (
-                <ChevronDown className="h-4 w-4" />
-              ) : (
-                <ChevronRight className="h-4 w-4" />
-              )}
-              <CheckSquare className="h-4 w-4" />
-              Checklist
-              {totalItems > 0 && (
-                <Badge variant="secondary" className="ml-auto text-xs">
-                  {completedItems}/{totalItems}
-                </Badge>
-              )}
-            </button>
+          <div className="space-y-1">
+            <SectionHeader
+              icon={<CheckSquare className="h-3.5 w-3.5" style={{ color: 'oklch(0.45 0.02 260)' }} />}
+              title="Checklist"
+              isExpanded={expandedSections.has('checklist')}
+              onToggle={() => toggleSection('checklist')}
+              count={totalItems > 0 ? `${completedItems}/${totalItems}` : undefined}
+            />
 
             {expandedSections.has('checklist') && (
-              <div className="ml-6 space-y-2">
+              <div className="ml-5 space-y-1.5">
                 {/* Progress Bar */}
                 {totalItems > 0 && (
-                  <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                  <div
+                    className="w-full rounded-full h-1.5 overflow-hidden"
+                    style={{ background: 'oklch(0.04 0.005 260)' }}
+                  >
                     <div
-                      className="bg-primary h-full transition-all duration-300"
-                      style={{ width: `${checklistProgress}%` }}
+                      className="h-full transition-all duration-300 rounded-full"
+                      style={{
+                        width: `${checklistProgress}%`,
+                        background: 'oklch(0.65 0.22 260)',
+                      }}
                     />
                   </div>
                 )}
 
                 {/* Checklist Items */}
                 {note.checklistItems && note.checklistItems.length > 0 ? (
-                  <div className="space-y-1">
+                  <div className="space-y-0.5">
                     {note.checklistItems.map((item) => (
                       <button
                         key={item.id}
                         onClick={() => onToggleChecklistItem(note.id, item.id)}
-                        className="w-full flex items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors text-left"
+                        className="w-full flex items-center gap-2 p-1.5 rounded transition-colors text-left text-xs"
+                        style={{ color: 'oklch(0.75 0.02 260)' }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'oklch(0.04 0.005 260 / 0.5)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'transparent'
+                        }}
                       >
                         <div
                           className={cn(
-                            "h-4 w-4 rounded border flex items-center justify-center flex-shrink-0",
-                            item.completed
-                              ? "bg-primary border-primary text-primary-foreground"
-                              : "border-muted-foreground"
+                            "h-3.5 w-3.5 rounded flex items-center justify-center flex-shrink-0 border",
                           )}
+                          style={{
+                            background: item.completed ? 'oklch(0.65 0.22 260)' : 'transparent',
+                            borderColor: item.completed ? 'oklch(0.65 0.22 260)' : 'oklch(0.3 0.01 260)',
+                          }}
                         >
                           {item.completed && (
-                            <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                            <svg className="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 20 20" style={{ color: 'oklch(0.02 0.005 260)' }}>
                               <path
                                 fillRule="evenodd"
                                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -304,10 +369,8 @@ export function NoteInspector({
                           )}
                         </div>
                         <span
-                          className={cn(
-                            "text-xs flex-1",
-                            item.completed && "text-muted-foreground line-through"
-                          )}
+                          className={cn("flex-1", item.completed && "line-through")}
+                          style={{ color: item.completed ? 'oklch(0.45 0.02 260)' : 'oklch(0.75 0.02 260)' }}
                         >
                           {item.text}
                         </span>
@@ -315,113 +378,80 @@ export function NoteInspector({
                     ))}
                   </div>
                 ) : (
-                  <div className="text-xs text-muted-foreground py-2">
+                  <div
+                    className="py-2 text-[11px]"
+                    style={{ color: 'oklch(0.45 0.02 260)' }}
+                  >
                     No checklist items yet
                   </div>
                 )}
 
-                {/* Add Item Button */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full justify-start h-7 text-xs"
-                  onClick={handleAddChecklistItem}
-                >
-                  + Add item
-                </Button>
+                {/* Add Checklist Item */}
+                <div className="flex items-center gap-1.5">
+                  <Plus className="h-3 w-3 flex-shrink-0" style={{ color: 'oklch(0.45 0.02 260)' }} />
+                  <input
+                    ref={checklistInputRef}
+                    type="text"
+                    value={checklistInput}
+                    onChange={(e) => setChecklistInput(e.target.value)}
+                    onKeyDown={handleChecklistKeyDown}
+                    placeholder="Add item..."
+                    className="flex-1 h-6 px-1.5 text-[11px] bg-transparent border-none outline-none rounded"
+                    style={{
+                      color: 'oklch(0.75 0.02 260)',
+                      caretColor: 'oklch(0.65 0.22 260)',
+                    }}
+                  />
+                  {checklistInput.trim() && (
+                    <button
+                      onClick={handleChecklistSubmit}
+                      className="text-[11px] px-1.5 py-0.5 rounded transition-colors"
+                      style={{ color: 'oklch(0.65 0.22 260)' }}
+                    >
+                      Add
+                    </button>
+                  )}
+                </div>
               </div>
             )}
           </div>
 
-          <Separator />
-
-          {/* Linked Trades Section */}
-          <div className="space-y-2">
-            <button
-              onClick={() => toggleSection('trades')}
-              className="flex items-center gap-2 w-full text-left font-medium text-sm hover:text-foreground"
-            >
-              {expandedSections.has('trades') ? (
-                <ChevronDown className="h-4 w-4" />
-              ) : (
-                <ChevronRight className="h-4 w-4" />
-              )}
-              <Link2 className="h-4 w-4" />
-              Linked Trades
-              {note.tradeIds.length > 0 && (
-                <Badge variant="secondary" className="ml-auto text-xs">
-                  {note.tradeIds.length}
-                </Badge>
-              )}
-            </button>
-
-            {expandedSections.has('trades') && (
-              <div className="ml-6">
-                {note.tradeIds.length > 0 ? (
-                  <div className="space-y-1">
-                    {note.tradeIds.map((tradeId) => (
-                      <div
-                        key={tradeId}
-                        className="p-2 rounded-md bg-muted/50 text-xs"
-                      >
-                        Trade: {tradeId.slice(0, 8)}...
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-xs text-muted-foreground py-2">
-                    No linked trades. Link trades to connect them to this note.
-                  </div>
-                )}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full justify-start h-7 text-xs mt-2"
-                  disabled
-                  title="Coming soon"
-                >
-                  + Link trade
-                </Button>
-              </div>
-            )}
-          </div>
-
-          <Separator />
+          {/* Divider */}
+          <div style={{ height: '1px', background: 'oklch(0.5 0.01 260 / 0.08)' }} />
 
           {/* Metadata */}
-          <div className="space-y-2">
-            <button
-              onClick={() => toggleSection('metadata')}
-              className="flex items-center gap-2 w-full text-left font-medium text-sm hover:text-foreground"
-            >
-              {expandedSections.has('metadata') ? (
-                <ChevronDown className="h-4 w-4" />
-              ) : (
-                <ChevronRight className="h-4 w-4" />
-              )}
-              Metadata
-            </button>
+          <div className="space-y-1">
+            <SectionHeader
+              icon={<Calendar className="h-3.5 w-3.5" style={{ color: 'oklch(0.45 0.02 260)' }} />}
+              title="Details"
+              isExpanded={expandedSections.has('metadata')}
+              onToggle={() => toggleSection('metadata')}
+            />
 
             {expandedSections.has('metadata') && (
-              <div className="ml-6 space-y-2 text-xs">
-                <div>
-                  <span className="text-muted-foreground">Created:</span>{' '}
-                  {new Date(note.createdAt).toLocaleString()}
+              <div className="ml-5 space-y-2 text-[11px]" style={{ color: 'oklch(0.55 0.02 260)' }}>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-3 w-3" style={{ color: 'oklch(0.45 0.02 260)' }} />
+                  <span>Created: {new Date(note.createdAt).toLocaleDateString()}</span>
                 </div>
-                <div>
-                  <span className="text-muted-foreground">Updated:</span>{' '}
-                  {new Date(note.updatedAt).toLocaleString()}
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-3 w-3" style={{ color: 'oklch(0.45 0.02 260)' }} />
+                  <span>Updated: {new Date(note.updatedAt).toLocaleString()}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Type className="h-3 w-3" style={{ color: 'oklch(0.45 0.02 260)' }} />
+                  <span>{getWordCount(note.content)} words</span>
                 </div>
                 {note.symbol && (
-                  <div>
-                    <span className="text-muted-foreground">Symbol:</span>{' '}
-                    {note.symbol}
+                  <div className="flex items-center gap-2">
+                    <span style={{ color: 'oklch(0.45 0.02 260)' }}>Symbol:</span>
+                    <span style={{ color: 'oklch(0.65 0.22 260)' }}>{note.symbol}</span>
                   </div>
                 )}
                 {note.sessionId && (
-                  <div>
-                    <span className="text-muted-foreground">Session:</span>{' '}
-                    {note.sessionId}
+                  <div className="flex items-center gap-2">
+                    <span style={{ color: 'oklch(0.45 0.02 260)' }}>Session:</span>
+                    <span>{note.sessionId}</span>
                   </div>
                 )}
               </div>
@@ -430,5 +460,44 @@ export function NoteInspector({
         </div>
       </ScrollArea>
     </div>
+  )
+}
+
+// Reusable section header component
+function SectionHeader({
+  icon,
+  title,
+  isExpanded,
+  onToggle,
+  count,
+}: {
+  icon: React.ReactNode
+  title: string
+  isExpanded: boolean
+  onToggle: () => void
+  count?: string | number
+}) {
+  return (
+    <button
+      onClick={onToggle}
+      className="flex items-center gap-2 w-full text-left text-xs font-semibold uppercase tracking-wider group"
+      style={{ color: 'oklch(0.55 0.02 260)' }}
+    >
+      {isExpanded ? (
+        <ChevronDown className="h-3 w-3 flex-shrink-0" />
+      ) : (
+        <ChevronRight className="h-3 w-3 flex-shrink-0" />
+      )}
+      {icon}
+      <span className="flex-1">{title}</span>
+      {count !== undefined && (
+        <span
+          className="text-[10px] font-normal px-1.5 py-0.5 rounded"
+          style={{ background: 'oklch(0.5 0.01 260 / 0.08)' }}
+        >
+          {count}
+        </span>
+      )}
+    </button>
   )
 }

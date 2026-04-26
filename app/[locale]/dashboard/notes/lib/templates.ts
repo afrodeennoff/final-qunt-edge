@@ -3,50 +3,101 @@ export interface NoteTemplate {
   name: string
   description: string
   content: string
-  category: 'pre-market' | 'post-market' | 'analysis' | 'planning' | 'review'
+  category: 'pre-market' | 'post-market' | 'analysis' | 'planning' | 'review' | 'execution' | 'psychology'
 }
 
 export const NOTE_TEMPLATES: NoteTemplate[] = [
   {
-    id: 'pre-market-checklist',
-    name: 'Pre-Market Checklist',
-    description: 'Prepare your trading day with this comprehensive checklist',
+    id: 'pre-market-analysis',
+    name: 'Pre-Market Analysis',
+    description: 'Prepare your trading day with market analysis and checklist',
     category: 'pre-market',
-    content: `<h2>Pre-Market Checklist</h2>
-<h3>Market Analysis</h3>
+    content: `<h2>Pre-Market Analysis</h2>
+<h3>Market Overview</h3>
 <ul>
-<li>Review overnight market movements</li>
-<li>Check key support and resistance levels</li>
-<li>Identify potential trading setups</li>
-<li>Review economic calendar for today</li>
+<li>Overnight market movements:</li>
+<li>Futures direction:</li>
+<li>Key economic events today:</li>
 </ul>
-<h3>Risk Management</h3>
+<h3>Key Levels</h3>
 <ul>
-<li>Set daily loss limit: $________</li>
-<li>Set daily profit target: $________</li>
-<li>Max position size: ________ lots/shares</li>
+<li>Resistance levels: _____________</li>
+<li>Support levels: _____________</li>
+<li>Pivot points: _____________</li>
+</ul>
+<h3>Watchlist</h3>
+<ul>
+<li>Primary symbols: _____________</li>
+<li>Correlation check: _____________</li>
+<li>Sector strength: _____________</li>
+</ul>
+<h3>Setup Identification</h3>
+<ul>
+<li>Potential setups:</li>
+<li>Entry triggers:</li>
+<li>Invalidation points:</li>
+</ul>
+<h3>Risk Parameters</h3>
+<ul>
+<li>Daily loss limit: $________</li>
+<li>Daily profit target: $________</li>
+<li>Max position size: ________</li>
 <li>Max trades per day: ________</li>
-</ul>
-<h3>Trading Plan</h3>
-<ul>
-<li>Primary symbols to watch: _____________</li>
-<li>Session focus: (London / US / Asia)</li>
-<li>Strategy focus: _____________</li>
 </ul>
 <h3>Mindset Check</h3>
 <ul>
 <li>Am I well-rested? (Yes/No)</li>
 <li>Am I emotionally balanced? (Yes/No)</li>
-<li>Am I following my rules? (Yes/No)</li>
-</ul>
-<p><em>Notes: </em></p>`
+<li>Am I prepared to follow my plan? (Yes/No)</li>
+</ul>`
   },
   {
-    id: 'post-market-review',
-    name: 'Post-Market Review',
+    id: 'trade-execution',
+    name: 'Trade Execution',
+    description: 'Document your trade entry, management, and exit in real-time',
+    category: 'execution',
+    content: `<h2>Trade Execution Log</h2>
+<h3>Setup</h3>
+<ul>
+<li>Symbol: _____________</li>
+<li>Direction: (Long / Short)</li>
+<li>Strategy: _____________</li>
+</ul>
+<h3>Entry</h3>
+<ul>
+<li>Entry price: $________</li>
+<li>Stop loss: $________</li>
+<li>Take profit: $________</li>
+<li>Risk/Reward ratio: ________</li>
+<li>Position size: _____________</li>
+</ul>
+<h3>Reasoning</h3>
+<p>Why am I taking this trade?</p>
+<p><br></p>
+<h3>Trade Management</h3>
+<ul>
+<li>Move stop to breakeven at: $________</li>
+<li>Scale out plan: _____________</li>
+<li>Early exit conditions: _____________</li>
+</ul>
+<h3>Exit</h3>
+<ul>
+<li>Exit price: $________</li>
+<li>Actual R:R: ________</li>
+<li>Profit/Loss: $________</li>
+</ul>
+<h3>Post-Trade Notes</h3>
+<p>What went well?</p>
+<p><br></p>
+<p>What could be improved?</p>
+<p><br></p>`
+  },
+  {
+    id: 'post-trade-review',
+    name: 'Post-Trade Review',
     description: 'Reflect on your trading performance and lessons learned',
     category: 'post-market',
-    content: `<h2>Post-Market Review</h2>
+    content: `<h2>Post-Trade Review</h2>
 <h3>Trading Summary</h3>
 <ul>
 <li>Total trades: ________</li>
@@ -78,98 +129,50 @@ export const NOTE_TEMPLATES: NoteTemplate[] = [
 </ul>`
   },
   {
-    id: 'trade-thesis',
-    name: 'Trade Thesis',
-    description: 'Document your reasoning before entering a trade',
-    category: 'analysis',
-    content: `<h2>Trade Thesis</h2>
-<h3>Setup Information</h3>
+    id: 'weekly-review',
+    name: 'Weekly Review',
+    description: 'Review your trading performance over the week',
+    category: 'review',
+    content: `<h2>Weekly Review</h2>
+<h3>Week Overview</h3>
 <ul>
-<li>Symbol: _____________</li>
-<li>Direction: (Long / Short)</li>
-<li>Entry price: $________</li>
-<li>Stop loss: $________</li>
-<li>Take profit: $________</li>
-<li>Risk/Reward ratio: ________</li>
+<li>Week of: _____________</li>
+<li>Total trades: ________</li>
+<li>Winning trades: ________</li>
+<li>Losing trades: ________</li>
+<li>Net P&L: $________</li>
+<li>Win rate: ________%</li>
 </ul>
-<h3>Market Context</h3>
-<p>Why is this setup valid now?</p>
-<p><br></p>
-<h3>Technical Analysis</h3>
-<ul>
-<li>Key levels: _____________</li>
-<li>Trend: (Uptrend / Downtrend / Range)</li>
-<li>Pattern: _____________</li>
-<li>Indicators: _____________</li>
-</ul>
-<h3>Fundamental Factors</h3>
-<p><br></p>
-<h3>Risk Assessment</h3>
-<p>What could go wrong with this trade?</p>
-<p><br></p>
-<h3>Trade Management</h3>
-<ul>
-<li>Will I move stop to breakeven? (Yes/No)</li>
-<li>Will I scale out? (Yes/No)</li>
-<li>Under what conditions will I exit early?</li>
-</ul>
-<p><br></p>`
-  },
-  {
-    id: 'scalping-notes',
-    name: 'Scalping Notes',
-    description: 'Quick notes for scalping sessions',
-    category: 'analysis',
-    content: `<h2>Scalping Session Notes</h2>
-<h3>Session Details</h3>
-<ul>
-<li>Date: _____________</li>
-<li>Session: (London / US / Asia)</li>
-<li>Symbols: _____________</li>
-</ul>
-<h3>Scalping Strategy</h3>
-<p>Strategy focus: _____________</p>
-<p><br></p>
-<h3>Key Observations</h3>
-<ul>
-<li>Market volatility: (High / Medium / Low)</li>
-<li>Spread conditions: _____________</li>
-<li>Best time window: _____________</li>
-</ul>
-<h3>Quick Wins</h3>
-<p>What worked well today?</p>
-<p><br></p>
-<h3>Mistakes to Avoid</h3>
-<p>What should I stop doing?</p>
-<p><br></p>
-<h3>Quick Trades</h3>
+<h3>Daily Breakdown</h3>
 <table>
-<tr>
-<th>Time</th>
-<th>Symbol</th>
-<th>Result</th>
-<th>Notes</th>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</table>`
+<tr><th>Day</th><th>Trades</th><th>Win Rate</th><th>P&L</th><th>Notes</th></tr>
+<tr><td>Monday</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Tuesday</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Wednesday</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Thursday</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Friday</td><td></td><td></td><td></td><td></td></tr>
+</table>
+<h3>Best Day</h3>
+<p>What was my best day and why?</p>
+<p><br></p>
+<h3>Worst Day</h3>
+<p>What was my worst day and why?</p>
+<p><br></p>
+<h3>Patterns Identified</h3>
+<p><br></p>
+<h3>Goals for Next Week</h3>
+<ul>
+<li></li>
+<li></li>
+<li></li>
+</ul>`
   },
   {
-    id: 'risk-plan',
-    name: 'Risk Plan',
-    description: 'Define your risk management approach',
+    id: 'risk-assessment',
+    name: 'Risk Assessment',
+    description: 'Define your risk management approach and parameters',
     category: 'planning',
-    content: `<h2>Risk Management Plan</h2>
+    content: `<h2>Risk Assessment</h2>
 <h3>Account Risk</h3>
 <ul>
 <li>Account size: $________</li>
@@ -195,7 +198,7 @@ export const NOTE_TEMPLATES: NoteTemplate[] = [
 <p><br></p>
 <p>How will I recover from a losing streak?</p>
 <p><br></p>
-<h3>Rules Checklist</h3>
+<h3>Risk Rules Checklist</h3>
 <ul>
 <li>Never risk more than _____% on one trade</li>
 <li>Always use a stop loss</li>
@@ -204,118 +207,85 @@ export const NOTE_TEMPLATES: NoteTemplate[] = [
 </ul>`
   },
   {
-    id: 'lessons-learned',
-    name: 'Lessons Learned',
-    description: 'Document valuable lessons from your trading journey',
-    category: 'review',
-    content: `<h2>Lessons Learned</h2>
-<h3>What I Did Well</h3>
-<p>Recent wins and what I can replicate:</p>
+    id: 'strategy-notes',
+    name: 'Strategy Notes',
+    description: 'Document and refine your trading strategies',
+    category: 'analysis',
+    content: `<h2>Strategy Notes</h2>
+<h3>Strategy Name</h3>
+<p>_____________</p>
+<h3>Market Conditions</h3>
 <ul>
-<li></li>
-<li></li>
-<li></li>
+<li>Best suited for: (Trending / Ranging / Volatile / Calm)</li>
+<li>Timeframes: _____________</li>
+<li>Session: (London / US / Asia / All)</li>
 </ul>
-<h3>What I Need to Improve</h3>
-<p>Areas that need work:</p>
+<h3>Entry Rules</h3>
 <ul>
-<li></li>
-<li></li>
-<li></li>
+<li>Primary signal: _____________</li>
+<li>Confirmation: _____________</li>
+<li>Filter: _____________</li>
 </ul>
-<h3>Mistakes to Avoid</h3>
-<p>Patterns that lead to losses:</p>
+<h3>Exit Rules</h3>
 <ul>
-<li></li>
-<li></li>
-<li></li>
+<li>Take profit method: _____________</li>
+<li>Stop loss placement: _____________</li>
+<li>Trailing stop rules: _____________</li>
 </ul>
-<h3>Key Insights</h3>
-<p>Aha moments and breakthroughs:</p>
+<h3>Risk Management</h3>
 <ul>
-<li></li>
-<li></li>
-<li></li>
+<li>Position sizing method: _____________</li>
+<li>Max risk per trade: _____%</li>
+<li>Max open positions: ________</li>
 </ul>
-<h3>Action Plan</h3>
-<p>What will I do differently starting tomorrow?</p>
+<h3>Performance Tracking</h3>
 <ul>
-<li></li>
-<li></li>
-<li></li>
+<li>Backtest win rate: ________%</li>
+<li>Average R:R: ________</li>
+<li>Expectancy: ________</li>
+<li>Max drawdown: ________%</li>
 </ul>
-<h3>Quotes to Remember</h3>
-<p><em>"</em></p>`
+<h3>Notes & Adjustments</h3>
+<p><br></p>`
   },
   {
-    id: 'weekly-summary',
-    name: 'Weekly Summary',
-    description: 'Review your trading performance over the week',
-    category: 'review',
-    content: `<h2>Weekly Trading Summary</h2>
-<h3>Week Overview</h3>
+    id: 'trading-psychology',
+    name: 'Trading Psychology',
+    description: 'Journal your emotional state and mental performance',
+    category: 'psychology',
+    content: `<h2>Trading Psychology Journal</h2>
+<h3>Pre-Session State</h3>
 <ul>
-<li>Week of: _____________</li>
-<li>Total trades: ________</li>
-<li>Winning trades: ________</li>
-<li>Losing trades: ________</li>
-<li>Net P&L: $________</li>
-<li>Win rate: ________%</li>
+<li>Energy level: ___/10</li>
+<li>Confidence level: ___/10</li>
+<li>Stress level: ___/10</li>
+<li>Focus level: ___/10</li>
 </ul>
-<h3>Daily Breakdown</h3>
-<table>
-<tr>
-<th>Day</th>
-<th>Trades</th>
-<th>Win Rate</th>
-<th>P&L</th>
-<th>Notes</th>
-</tr>
-<tr>
-<td>Monday</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Tuesday</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Wednesday</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Thursday</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Friday</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</table>
-<h3>Best Day</h3>
-<p>What was my best day and why?</p>
+<h3>Emotional Check-In</h3>
+<p>How am I feeling right now?</p>
 <p><br></p>
-<h3>Worst Day</h3>
-<p>What was my worst day and why?</p>
+<p>Is anything distracting me?</p>
 <p><br></p>
-<h3>Patterns Identified</h3>
+<h3>Mental Triggers</h3>
+<ul>
+<li>FOMO present? (Yes/No)</li>
+<li>Revenge trading urge? (Yes/No)</li>
+<li>Overconfidence? (Yes/No)</li>
+<li>Fear of loss? (Yes/No)</li>
+</ul>
+<h3>Coping Strategies Used</h3>
+<ul>
+<li></li>
+<li></li>
+<li></li>
+</ul>
+<h3>Session Reflection</h3>
+<p>Did I stay disciplined?</p>
 <p><br></p>
-<h3>Goals for Next Week</h3>
+<p>What would I tell myself before the next session?</p>
+<p><br></p>
+<h3>Gratitude</h3>
+<p>Three things I am grateful for today:</p>
 <ul>
 <li></li>
 <li></li>
@@ -323,42 +293,38 @@ export const NOTE_TEMPLATES: NoteTemplate[] = [
 </ul>`
   },
   {
-    id: 'daily-summary',
-    name: 'Daily Summary',
-    description: 'Quick daily recap of your trading activities',
+    id: 'lesson-learned',
+    name: 'Lesson Learned',
+    description: 'Document valuable lessons from your trading journey',
     category: 'review',
-    content: `<h2>Daily Trading Summary</h2>
+    content: `<h2>Lesson Learned</h2>
 <h3>Date</h3>
 <p>_____________</p>
-<h3>Performance Metrics</h3>
-<ul>
-<li>Total trades: ________</li>
-<li>Winning trades: ________</li>
-<li>Losing trades: ________</li>
-<li>Net P&L: $________</li>
-<li>Win rate: ________%</li>
-</ul>
-<h3>Best Trade</h3>
+<h3>What Happened</h3>
+<p>Describe the situation:</p>
 <p><br></p>
-<h3>Worst Trade</h3>
+<h3>What I Did Well</h3>
+<ul>
+<li></li>
+<li></li>
+</ul>
+<h3>What I Need to Improve</h3>
+<ul>
+<li></li>
+<li></li>
+</ul>
+<h3>Key Insight</h3>
+<p>The main takeaway from this experience:</p>
 <p><br></p>
-<h3>What Went Well</h3>
+<h3>Action Plan</h3>
+<p>What will I do differently starting now?</p>
 <ul>
 <li></li>
 <li></li>
-</ul>
-<h3>What Needs Improvement</h3>
-<ul>
-<li></li>
 <li></li>
 </ul>
-<h3>Tomorrow's Plan</h3>
-<ul>
-<li></li>
-<li></li>
-</ul>
-<h3>Mood / Energy Level</h3>
-<p>______/10</p>`
+<h3>Quote to Remember</h3>
+<p><em>"</em></p>`
   }
 ]
 

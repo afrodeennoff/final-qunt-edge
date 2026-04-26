@@ -4,9 +4,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { SegmentedControl } from "@/components/ui/segmented-control"
 import {
   Plus,
   Search,
@@ -30,6 +28,13 @@ interface NotesListProps {
   onSearchChange: (query: string) => void
   isLoading?: boolean
 }
+
+const filterOptions = [
+  { label: 'All', value: 'all' },
+  { label: 'Active', value: 'recent' },
+  { label: 'Pinned', value: 'pinned' },
+  { label: 'Archived', value: 'archived' },
+]
 
 export function NotesList({
   notes,
@@ -58,14 +63,6 @@ export function NotesList({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
-  const filters = [
-    { label: 'All', value: 'all' },
-    { label: 'Pinned', value: 'pinned' },
-    { label: 'Recent', value: 'recent' },
-    { label: 'Templates', value: 'templates' },
-    { label: 'Archived', value: 'archived' },
-  ]
-
   // Get preview text from content (strip HTML)
   const getPreviewText = (content: string, maxLength = 80) => {
     const tmp = document.createElement('div')
@@ -92,126 +89,200 @@ export function NotesList({
   }
 
   return (
-    <div className="flex flex-col h-full bg-muted/30 border-r">
+    <div
+      className="flex flex-col h-full"
+      style={{ background: 'oklch(0.028 0.005 260)' }}
+    >
       {/* Header */}
-      <div className="p-4 border-b space-y-3">
+      <div className="p-3 space-y-3">
         {/* New Note Button */}
         <Button
           onClick={onNewNote}
-          className="w-full justify-start"
-          size="default"
+          variant="outline"
+          className="w-full justify-start h-8 text-xs font-medium rounded"
+          style={{
+            borderColor: 'oklch(0.5 0.01 260 / 0.12)',
+            color: 'oklch(0.92 0.01 260)',
+            background: 'oklch(0.04 0.005 260)',
+          }}
         >
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus className="mr-2 h-3.5 w-3.5" />
           New Note
         </Button>
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search
+            className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5"
+            style={{ color: 'oklch(0.45 0.02 260)' }}
+          />
           <Input
             ref={searchInputRef}
             type="text"
             placeholder="Search notes..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-9 h-9"
+            className="pl-8 h-8 text-xs rounded"
+            style={{
+              background: 'oklch(0.04 0.005 260)',
+              borderColor: 'oklch(0.5 0.01 260 / 0.1)',
+              color: 'oklch(0.92 0.01 260)',
+            }}
           />
         </div>
 
-        {/* Filter Tabs */}
-        <SegmentedControl
-          value={filter}
-          onChange={onFilterChange}
-          options={filters.map(f => ({ label: f.label, value: f.value }))}
-        />
+        {/* Filter Buttons */}
+        <div className="flex gap-1">
+          {filterOptions.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => onFilterChange(opt.value)}
+              className={cn(
+                "px-2 py-1 text-[11px] font-medium rounded transition-colors",
+              )}
+              style={{
+                background: filter === opt.value
+                  ? 'oklch(0.65 0.22 260 / 0.15)'
+                  : 'transparent',
+                color: filter === opt.value
+                  ? 'oklch(0.75 0.15 260)'
+                  : 'oklch(0.45 0.02 260)',
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
       </div>
+
+      {/* Divider */}
+      <div
+        className="h-px"
+        style={{ background: 'oklch(0.5 0.01 260 / 0.1)' }}
+      />
 
       {/* Notes List */}
       <ScrollArea className="flex-1">
         {isLoading ? (
-          <div className="p-4 space-y-2">
+          <div className="p-3 space-y-2">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-24 bg-muted rounded-lg animate-pulse"
+                className="h-20 rounded animate-pulse"
+                style={{ background: 'oklch(0.04 0.005 260)' }}
               />
             ))}
           </div>
         ) : notes.length === 0 ? (
-          <div className="p-8 text-center text-muted-foreground">
-            <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
-            <p className="text-sm font-medium">No notes found</p>
-            <p className="text-xs mt-1">
+          <div className="p-8 text-center" style={{ color: 'oklch(0.45 0.02 260)' }}>
+            <FileText className="h-10 w-10 mx-auto mb-3 opacity-40" />
+            <p className="text-xs font-medium">No notes found</p>
+            <p className="text-[11px] mt-1">
               {searchQuery
                 ? 'Try a different search term'
                 : 'Create your first note to get started'}
             </p>
           </div>
         ) : (
-          <div className="p-2 space-y-1">
-            {notes.map((note) => (
-              <button
-                key={note.id}
-                onClick={() => onNoteSelect(note.id)}
-                className={cn(
-                  "w-full text-left p-3 rounded-lg transition-all duration-150",
-                  "hover:bg-muted/50",
-                  "focus:outline-none focus:ring-2 focus:ring-ring",
-                  activeNoteId === note.id
-                    ? "bg-accent text-accent-foreground shadow-sm"
-                    : "text-foreground opacity-90 hover:opacity-100"
-                )}
-              >
-                <div className="flex items-start gap-2">
-                  {/* Pin Icon */}
-                  {note.pinned && (
-                    <Pin className="h-3 w-3 mt-1 text-muted-foreground flex-shrink-0" />
+          <div className="p-1.5 space-y-0.5">
+            {notes.map((note) => {
+              const isActive = activeNoteId === note.id
+              return (
+                <button
+                  key={note.id}
+                  onClick={() => onNoteSelect(note.id)}
+                  className={cn(
+                    "w-full text-left p-3 rounded transition-all duration-150",
+                    "focus:outline-none",
                   )}
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    {/* Title */}
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-medium text-sm truncate">
-                        {note.title || 'Untitled Note'}
-                      </h3>
-                      {note.template && (
-                        <LayoutGrid className="h-3 w-3 text-muted-foreground flex-shrink-0" />
-                      )}
-                    </div>
-
-                    {/* Preview */}
-                    {note.content && (
-                      <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
-                        {getPreviewText(note.content)}
-                      </p>
+                  style={{
+                    background: isActive
+                      ? 'oklch(0.04 0.01 260 / 0.8)'
+                      : 'transparent',
+                    borderLeft: isActive
+                      ? '3px solid oklch(0.65 0.22 260 / 0.5)'
+                      : '3px solid transparent',
+                    color: isActive
+                      ? 'oklch(0.92 0.01 260)'
+                      : 'oklch(0.75 0.01 260)',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = 'oklch(0.04 0.005 260 / 0.5)'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = 'transparent'
+                    }
+                  }}
+                >
+                  <div className="flex items-start gap-2">
+                    {/* Pin Icon */}
+                    {note.pinned && (
+                      <Pin
+                        className="h-3 w-3 mt-0.5 flex-shrink-0"
+                        style={{ color: 'oklch(0.65 0.22 260 / 0.7)' }}
+                      />
                     )}
 
-                    {/* Footer */}
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Clock className="h-3 w-3" />
-                      <span>{formatDate(new Date(note.updatedAt))}</span>
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      {/* Title */}
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <h3 className="font-medium text-sm truncate">
+                          {note.title || 'Untitled Note'}
+                        </h3>
+                        {note.template && (
+                          <LayoutGrid
+                            className="h-3 w-3 flex-shrink-0"
+                            style={{ color: 'oklch(0.45 0.02 260)' }}
+                          />
+                        )}
+                      </div>
 
-                      {note.archived && (
-                        <>
-                          <span>•</span>
-                          <Archive className="h-3 w-3" />
-                        </>
+                      {/* Preview */}
+                      {note.content && (
+                        <p
+                          className="text-xs line-clamp-2 mb-1.5 leading-relaxed"
+                          style={{ color: 'oklch(0.55 0.02 260)' }}
+                        >
+                          {getPreviewText(note.content)}
+                        </p>
                       )}
 
-                      {note.tags.length > 0 && (
-                        <>
-                          <span>•</span>
-                          <Badge variant="secondary" className="h-4 px-1 text-xs">
-                            {note.tags.length}
-                          </Badge>
-                        </>
-                      )}
+                      {/* Footer */}
+                      <div
+                        className="flex items-center gap-1.5 text-[11px]"
+                        style={{ color: 'oklch(0.45 0.02 260)' }}
+                      >
+                        <Clock className="h-2.5 w-2.5" />
+                        <span>{formatDate(new Date(note.updatedAt))}</span>
+
+                        {note.archived && (
+                          <>
+                            <span className="opacity-50">·</span>
+                            <Archive className="h-2.5 w-2.5" />
+                          </>
+                        )}
+
+                        {note.tags.length > 0 && (
+                          <>
+                            <span className="opacity-50">·</span>
+                            <span
+                              className="px-1 py-0.5 rounded text-[10px]"
+                              style={{ background: 'oklch(0.5 0.01 260 / 0.1)' }}
+                            >
+                              {note.tags.length}
+                            </span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </button>
-            ))}
+                </button>
+              )
+            })}
           </div>
         )}
       </ScrollArea>
