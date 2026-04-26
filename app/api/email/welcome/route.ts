@@ -8,6 +8,7 @@ import { buildUnsubscribeUrl } from "@/lib/unsubscribe-url"
 import { z } from "zod"
 import { parseJson, toValidationErrorResponse } from "@/app/api/_utils/validate"
 import { logger, withLogContext } from "@/lib/logger"
+import { withRateLimited } from '@/lib/api/with-api-route'
 
 const welcomeWebhookSchema = z.object({
   type: z.string(),
@@ -36,7 +37,7 @@ function isAuthorizedWebhook(request: Request): boolean {
   }
 }
 
-export async function POST(req: Request) {
+async function handlePost(req: Request) {
   await connection()
 
   const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID()
@@ -49,12 +50,12 @@ export async function POST(req: Request) {
     },
     async () => {
       if (!isAuthorizedWebhook(req)) {
-        logger.warn("[WelcomeWebhook] Unauthorized webhook request")
+        logger.warn("[WelcomeWebhook] Unauthorized webhook request", { requestId })
         return NextResponse.json({ error: 'Unauthorized webhook request' }, { status: 401 })
       }
 
       if (!process.env.RESEND_API_KEY) {
-        logger.error("[WelcomeWebhook] RESEND_API_KEY is missing")
+        logger.error("[WelcomeWebhook] RESEND_API_KEY is missing", { requestId })
         return NextResponse.json({ error: 'Missing API key' }, { status: 500 })
       }
       const resend = new Resend(process.env.RESEND_API_KEY)
@@ -123,14 +124,14 @@ export async function POST(req: Request) {
         })
 
         if (error) {
-          logger.error("[WelcomeWebhook] Failed to send email", { error })
+          logger.error("[WelcomeWebhook] Failed to send email", { error, requestId })
           return NextResponse.json(
             { error: 'Failed to send welcome email' },
             { status: 500 }
           )
         }
 
-        logger.info("[WelcomeWebhook] Welcome email scheduled", { emailDomain })
+        logger.info("[WelcomeWebhook] Welcome email scheduled", { emailDomain, requestId })
         return NextResponse.json(
           { message: 'Successfully processed webhook and sent welcome email', data },
           { status: 200 }
@@ -141,10 +142,17 @@ export async function POST(req: Request) {
         logger.error("[WelcomeWebhook] Request handling failed", {
           errorName,
           errorMessage,
-          // Do NOT log full error object — could leak webhook payload
+          requestId,
         })
         return toValidationErrorResponse(error)
       }
     }
   )
 }
+
+export const POST = withRateLimited(handlePost, {
+  rateLimitId: 'welcome-webhook',
+  rateLimitMax: 10,
+  rateLimitWindow: 60_000,
+  routeName: 'welcome-webhook',
+})
