@@ -113,7 +113,7 @@ export default async function DashboardLayout({
             >
               <div
                 className={cn(
-                  'mx-auto flex min-h-full w-full flex-col pb-[calc(theme(spacing.16)+env(safe-area-inset-bottom))] md:pb-safe',
+                  'mx-auto flex w-full flex-col',
                   WORKSPACE_SHELL_WIDTH,
                 )}
               >

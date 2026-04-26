@@ -4,7 +4,6 @@ import * as React from 'react'
 import { SidebarInset } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
 import { BackgroundGlow } from '@/components/ui/background-glow'
-import { MotionSection } from '@/components/animation/enhanced-motion'
 
 interface SidebarLayoutShellProps {
   sidebar: React.ReactNode
@@ -43,9 +42,9 @@ export function SidebarLayoutShell({
               contain: 'content',
             }}
           >
-            <MotionSection className="w-full" delay={0.02}>
+            <div className="w-full">
               {children}
-            </MotionSection>
+            </div>
           </div>
         </div>
         {mobileNav}
