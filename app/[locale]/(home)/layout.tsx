@@ -44,9 +44,10 @@ export default function HomeLayout({
         topSpacingClassName=""
         contentSpacingClassName="pb-safe"
         shellVariant="black"
+        fullWidth
       >
         <Suspense fallback={<HomeLayoutFallback />}>
-          <div className="flex flex-1 flex-col pb-safe">{children}</div>
+          {children}
         </Suspense>
       </MarketingLayoutShell>
     </PublicRootProviders>

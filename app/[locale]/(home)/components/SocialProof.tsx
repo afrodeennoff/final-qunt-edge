@@ -67,8 +67,8 @@ export default function SocialProof() {
   }))
 
   return (
-    <section className="bg-muted/30 px-4 py-12 sm:py-16 lg:py-20 md:px-6 lg:px-8">
-      <div className="mx-auto max-w-[1360px]">
+    <section className="bg-muted/30 overflow-x-hidden px-4 py-12 sm:py-16 lg:py-20 md:px-6 lg:px-8">
+      <div className="mx-auto min-w-0 max-w-[1360px]">
         <motion.div
           className="mb-8 grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-end"
           initial={{ opacity: 0, y: 14 }}
@@ -83,7 +83,7 @@ export default function SocialProof() {
             >
               {t('landing.home.social.badge')}
             </Badge>
-            <h2 className="type-h2 mt-5 text-balance text-foreground lg:text-h1">
+            <h2 className="type-h2 mt-5 text-balance text-foreground lg:text-4xl xl:text-5xl">
               {t('landing.home.social.title')}
             </h2>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
@@ -91,7 +91,7 @@ export default function SocialProof() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid min-w-0 grid-cols-2 gap-4">
             {stats.map((stat, index) => {
               const Icon = stat.icon
               return (

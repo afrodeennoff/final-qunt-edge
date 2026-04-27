@@ -89,7 +89,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
     <div className="relative min-w-0 overflow-x-hidden bg-black selection:bg-primary/30 selection:text-foreground">
       <main className="relative z-10 flex min-w-0 flex-col">
         {/* Hero */}
-        <MarketingSection className="pt-20 sm:pt-24 lg:pt-32" innerClassName="max-w-[1400px]">
+        <MarketingSection className="pt-20 sm:pt-24 lg:pt-32">
           <div className="mx-auto max-w-2xl space-y-8 text-center">
             <div className="space-y-6">
               <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80">
@@ -150,7 +150,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
             }
             description={t('landing.home.features.description')}
           />
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid min-w-0 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
               <MarketingFeatureCard
                 key={String(feature.title)}

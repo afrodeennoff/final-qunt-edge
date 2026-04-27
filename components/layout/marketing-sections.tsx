@@ -251,7 +251,7 @@ export function MarketingHyperframe({
           {status}
         </div>
       </div>
-      <div className="relative overflow-hidden">{children}</div>
+      <div className="relative aspect-video overflow-hidden">{children}</div>
     </Card>
   )
 }

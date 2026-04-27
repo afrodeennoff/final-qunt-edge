@@ -13,6 +13,7 @@ type MarketingLayoutShellProps = Readonly<{
   topSpacingClassName?: string
   contentSpacingClassName?: string
   shellVariant?: 'accent' | 'black'
+  fullWidth?: boolean
 }>
 
 const MiniMaxNavbarWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
@@ -27,6 +28,7 @@ export default function MarketingLayoutShell({
   topSpacingClassName = 'pt-16 sm:pt-[4.5rem] lg:pt-[5.25rem]',
   contentSpacingClassName = 'space-y-6 pb-16 pt-5 sm:space-y-7 sm:pt-6 lg:space-y-8 lg:pt-7',
   shellVariant = 'black',
+  fullWidth = false,
 }: MarketingLayoutShellProps) {
   return (
     <div
@@ -55,9 +57,9 @@ export default function MarketingLayoutShell({
             <div
               className={cn(
                 'relative flex flex-1 flex-col min-w-0',
-                CONTENT_PADDING,
+                !fullWidth && CONTENT_PADDING,
                 'mx-auto w-full',
-                MARKETING_SHELL_WIDTH,
+                !fullWidth && MARKETING_SHELL_WIDTH,
                 contentSpacingClassName,
                 contentClassName,
               )}

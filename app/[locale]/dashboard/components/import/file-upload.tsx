@@ -20,7 +20,7 @@ interface FileUploadProps {
  setHeaders: React.Dispatch<React.SetStateAction<string[]>>
  setStep: React.Dispatch<React.SetStateAction<Step>>
  setError: React.Dispatch<React.SetStateAction<string | null>>
- error: string | null
+ error?: string | null
 }
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
