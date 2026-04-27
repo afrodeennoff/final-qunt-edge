@@ -57,7 +57,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-border/22 bg-black py-12 sm:py-16"
+      className="border-t border-border/22 bg-background py-12 sm:py-16"
     >
       <h2 id="footer-heading" className="sr-only">
         {t('footer.heading')}

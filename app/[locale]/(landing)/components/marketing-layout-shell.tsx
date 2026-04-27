@@ -33,7 +33,7 @@ export default function MarketingLayoutShell({
   return (
     <div
       className={cn(
-        'marketing-shell qe-v2-app-shell min-h-screen w-full overflow-x-hidden bg-black',
+        'marketing-shell qe-v2-app-shell min-h-screen w-full overflow-x-hidden bg-background',
         className,
       )}
     >
