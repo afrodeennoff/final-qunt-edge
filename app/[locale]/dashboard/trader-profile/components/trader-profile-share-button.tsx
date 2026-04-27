@@ -49,7 +49,7 @@ export function TraderProfileShareButton() {
           text: t('share.traderProfile.description'),
           url: shareUrl,
         }
-        await (navigator as any).share(shareData)
+        await navigator.share(shareData)
         setOpen(false)
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {

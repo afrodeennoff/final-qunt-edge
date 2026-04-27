@@ -42,6 +42,13 @@ export default function NotesPageClient() {
   const [isMobile, setIsMobile] = React.useState(false)
   const [isTablet, setIsTablet] = React.useState(false)
 
+  const handleNewNote = React.useCallback(() => {
+    createNote()
+    if (isMobile) {
+      setViewMode('editor')
+    }
+  }, [createNote, isMobile])
+
   // Check screen size
   React.useEffect(() => {
     const checkScreenSize = () => {
@@ -66,14 +73,7 @@ export default function NotesPageClient() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
-
-  const handleNewNote = () => {
-    createNote()
-    if (isMobile) {
-      setViewMode('editor')
-    }
-  }
+  }, [handleNewNote])
 
   const handleFilterChange = (value: string) => {
     setFilter(value as NoteFilter)

@@ -28,6 +28,31 @@ export interface TradingNote {
 
 export type NoteFilter = 'all' | 'pinned' | 'recent' | 'archived' | 'templates'
 
+type StoredTradingNote = Omit<TradingNote, 'createdAt' | 'updatedAt'> & {
+  createdAt: string
+  updatedAt: string
+}
+
+function isStoredTradingNote(value: unknown): value is StoredTradingNote {
+  if (!value || typeof value !== 'object') return false
+
+  const note = value as Record<string, unknown>
+  return (
+    typeof note.id === 'string' &&
+    typeof note.userId === 'string' &&
+    typeof note.title === 'string' &&
+    typeof note.content === 'string' &&
+    typeof note.pinned === 'boolean' &&
+    typeof note.archived === 'boolean' &&
+    Array.isArray(note.tags) &&
+    note.tags.every(tag => typeof tag === 'string') &&
+    Array.isArray(note.tradeIds) &&
+    note.tradeIds.every(tradeId => typeof tradeId === 'string') &&
+    typeof note.createdAt === 'string' &&
+    typeof note.updatedAt === 'string'
+  )
+}
+
 // Note: This is a local mock implementation.
 // The existing Mood model in Prisma doesn't fully support the TradingNote structure.
 // We'll work with local state for now and note the schema limitation.
@@ -45,8 +70,9 @@ export function useNotes() {
       try {
         const storedNotes = localStorage.getItem('trading-notes')
         if (storedNotes) {
-          const parsed = JSON.parse(storedNotes)
-          const notesWithDates = parsed.map((note: any) => ({
+          const parsed: unknown = JSON.parse(storedNotes)
+          const storedTradingNotes = Array.isArray(parsed) ? parsed.filter(isStoredTradingNote) : []
+          const notesWithDates = storedTradingNotes.map(note => ({
             ...note,
             createdAt: new Date(note.createdAt),
             updatedAt: new Date(note.updatedAt)

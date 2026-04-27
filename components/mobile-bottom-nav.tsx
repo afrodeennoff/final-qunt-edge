@@ -24,13 +24,13 @@ function useNavItems(): MobileNavItem[] {
       {
         href: `/${locale}/dashboard`,
         icon: LayoutDashboard,
-        label: 'Home',
+        label: 'Overview',
         exact: true,
       },
       {
         href: `/${locale}/dashboard/trades`,
         icon: TrendingUp,
-        label: 'Journal',
+        label: 'Trades',
       },
       {
         href: `/${locale}/dashboard/analytics`,

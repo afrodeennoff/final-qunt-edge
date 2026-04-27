@@ -275,40 +275,42 @@ const ToolCallMessage = ({
      );
     };
 
+type ChatTranslator = ReturnType<typeof useI18n>;
+
 // Error message helper
-function getErrorMessage(error: Error, t: any): { title: string; detail?: string } {
+function getErrorMessage(error: Error): { title: string; detail?: string } {
      const message = error.message || "";
 
      if (message.includes("API key") || message.includes("OPENROUTER_API_KEY") || message.includes("AI_BASE_URL")) {
      return {
-         title: t("chat.error.apiKeyMissing") || "AI service not configured",
+         title: "AI service not configured",
          detail: "Please contact support to enable AI features.",
      };
      }
 
      if (message.includes("subscription") || message.includes("plan") || message.includes("FORBIDDEN")) {
      return {
-         title: t("chat.error.subscriptionRequired") || "Active subscription required",
+         title: "Active subscription required",
          detail: "AI features require an active subscription.",
      };
      }
 
      if (message.includes("rate limit") || message.includes("too many") || message.includes("RATE_LIMITED")) {
      return {
-         title: t("chat.error.rateLimited") || "Too many requests",
+         title: "Too many requests",
          detail: "Please wait a moment before trying again.",
      };
      }
 
      if (message.includes("timeout") || message.includes("timed out")) {
      return {
-         title: t("chat.error.timeout") || "Request timed out",
+         title: "Request timed out",
          detail: "The AI service took too long to respond. Please try again.",
      };
      }
 
      return {
-     title: t("chat.error.generic") || "An error occurred",
+     title: "An error occurred",
      detail: message,
      };
     }
@@ -478,7 +480,7 @@ export default function ChatWidget({ size ="large" }: ChatWidgetProps) {
      setIsStarted(false);
      }, [setMessages, setStoredMessages, setIsStarted]);
 
-     const errorDetails = error ? getErrorMessage(error, t) : null;
+     const errorDetails = error ? getErrorMessage(error) : null;
      const retryText = "Retry";
 
      return (

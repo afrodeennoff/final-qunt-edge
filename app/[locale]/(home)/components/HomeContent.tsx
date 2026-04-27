@@ -1,18 +1,12 @@
 import Link from 'next/link'
 import {
-  Activity,
   ArrowRight,
-  AlertTriangle,
   BarChart3,
   Brain,
   Download,
   FileText,
-  Gauge,
-  Link2,
   Play,
   Shield,
-  Target,
-  TrendingUp,
   Users,
 } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/v2'
@@ -22,7 +16,6 @@ import {
   MarketingSection,
   MarketingSectionHeader,
   MarketingStatBlock,
-  MarketingStepCard,
   marketingBodyClassName,
   marketingHeroTitleClassName,
   marketingSectionTitleClassName,
@@ -31,6 +24,7 @@ import { MarketingPricingSection } from '@/components/layout/marketing-pricing-s
 import { getI18n } from '@/locales/server'
 import { cn } from '@/lib/utils'
 import ProductDemoPlayer from './ProductDemoPlayer'
+import SocialProof from './SocialProof'
 
 interface HomeContentProps {
   locale: string
@@ -91,145 +85,60 @@ export default async function HomeContent({ locale }: HomeContentProps) {
     },
   ]
 
-  const capabilities = [
-    {
-      title: t('landing.home.hero.capability1Title'),
-      description: t('landing.home.hero.capability1Description'),
-    },
-    {
-      title: t('landing.home.hero.capability2Title'),
-      description: t('landing.home.hero.capability2Description'),
-    },
-    {
-      title: t('landing.home.hero.capability3Title'),
-      description: t('landing.home.hero.capability3Description'),
-    },
-  ]
-
-  const problemCards = [
-    {
-      icon: <AlertTriangle className="h-5 w-5" />,
-      title: t('landing.home.problem.card1Title'),
-      description: t('landing.home.problem.card1Description'),
-    },
-    {
-      icon: <Activity className="h-5 w-5" />,
-      title: t('landing.home.problem.card2Title'),
-      description: t('landing.home.problem.card2Description'),
-    },
-    {
-      icon: <Target className="h-5 w-5" />,
-      title: t('landing.home.problem.card3Title'),
-      description: t('landing.home.problem.card3Description'),
-    },
-  ]
-
-  const steps = [
-    {
-      icon: <Link2 className="h-5 w-5" />,
-      title: t('landing.home.workflow.step1Name'),
-      description: t('landing.home.workflow.step1Description'),
-    },
-    {
-      icon: <BarChart3 className="h-5 w-5" />,
-      title: t('landing.home.workflow.step2Name'),
-      description: t('landing.home.workflow.step2Description'),
-    },
-    {
-      icon: <TrendingUp className="h-5 w-5" />,
-      title: t('landing.home.workflow.step3Name'),
-      description: t('landing.home.workflow.step3Description'),
-    },
-  ]
-
   return (
     <div className="relative min-w-0 overflow-x-hidden bg-black selection:bg-primary/30 selection:text-foreground">
       <main className="relative z-10 flex min-w-0 flex-col">
+        {/* Hero */}
         <MarketingSection className="pt-20 sm:pt-24 lg:pt-32" innerClassName="max-w-[1400px]">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(560px,1.1fr)] lg:items-center">
-            <div className="max-w-2xl space-y-8">
-              <div className="space-y-6">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80">
-                  {t('landing.hero.badge')}
-                </p>
-                <h1 className={`${marketingHeroTitleClassName} leading-[1.05]`}>
-                  {t('landing.hero.headline')}
-                </h1>
-                <p className={`${marketingBodyClassName} max-w-lg text-lg leading-relaxed`}>
-                  {t('landing.hero.subheadline')}
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
-                <Link
-                  href={`/${locale}/authentication?next=dashboard`}
-                  className={cn(buttonVariants({ size: 'lg' }), 'w-full sm:w-auto')}
-                >
-                  <span>{t('landing.hero.ctaPrimary')}</span>
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-                <a
-                  href="#product-walkthrough"
-                  className={cn(
-                    buttonVariants({ variant: 'outline', size: 'lg' }),
-                    'w-full sm:w-auto',
-                  )}
-                >
-                  <Play className="h-4 w-4" />
-                  <span>{t('landing.hero.ctaSecondary')}</span>
-                </a>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 pt-4">
-                {stats.map((stat) => (
-                  <MarketingStatBlock
-                    key={String(stat.label)}
-                    value={stat.value}
-                    label={stat.label}
-                    className="min-w-0 p-4 text-left sm:text-left"
-                  />
-                ))}
-              </div>
-            </div>
-
-            <MarketingHyperframe
-              id="product-walkthrough"
-              label={t('landing.home.demo.frameLabel')}
-              status="Live audit"
-              className="shadow-[0_32px_80px_-48px_oklch(0.65_0.22_260_/_0.48)]"
-            >
-              <ProductDemoPlayer />
-            </MarketingHyperframe>
-          </div>
-        </MarketingSection>
-
-        <MarketingSection className="py-14 lg:py-16">
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] lg:items-end">
-            <div>
+          <div className="mx-auto max-w-2xl space-y-8 text-center">
+            <div className="space-y-6">
               <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80">
-                {t('landing.home.problem.eyebrow')}
+                {t('landing.hero.badge')}
               </p>
-              <h2 className={`${marketingSectionTitleClassName} mt-3 max-w-2xl`}>
-                {t('landing.home.problem.title')}{' '}
-                <span className="text-primary">{t('landing.home.problem.accent')}</span>
-              </h2>
+              <h1 className={`${marketingHeroTitleClassName} leading-[1.05]`}>
+                {t('landing.hero.headline')}
+              </h1>
+              <p className={`${marketingBodyClassName} mx-auto max-w-lg text-lg leading-relaxed`}>
+                {t('landing.hero.subheadline')}
+              </p>
             </div>
-            <p className={`${marketingBodyClassName} max-w-xl lg:ml-auto`}>
-              {t('landing.home.problem.description')}
-            </p>
-          </div>
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {problemCards.map((card) => (
-              <MarketingFeatureCard
-                key={String(card.title)}
-                icon={card.icon}
-                title={card.title}
-                description={card.description}
-              />
-            ))}
+
+            <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
+              <Link
+                href={`/${locale}/authentication?next=dashboard`}
+                className={cn(buttonVariants({ size: 'lg' }))}
+              >
+                <span>{t('landing.hero.ctaPrimary')}</span>
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+              <a
+                href="#product-walkthrough"
+                className={cn(
+                  buttonVariants({ variant: 'outline', size: 'lg' }),
+                )}
+              >
+                <Play className="h-4 w-4" />
+                <span>{t('landing.hero.ctaSecondary')}</span>
+              </a>
+            </div>
+
+            <div className="mx-auto grid max-w-md grid-cols-2 gap-3 pt-4">
+              {stats.map((stat) => (
+                <MarketingStatBlock
+                  key={String(stat.label)}
+                  value={stat.value}
+                  label={stat.label}
+                  className="min-w-0 p-4 text-left sm:text-left"
+                />
+              ))}
+            </div>
           </div>
         </MarketingSection>
 
+        {/* Social Proof */}
+        <SocialProof />
+
+        {/* Features */}
         <MarketingSection id="features" className="py-14 lg:py-16">
           <MarketingSectionHeader
             eyebrow={t('landing.home.features.eyebrow')}
@@ -253,55 +162,28 @@ export default async function HomeContent({ locale }: HomeContentProps) {
           </div>
         </MarketingSection>
 
-        <MarketingSection className="py-14 lg:py-16">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] lg:items-start">
-            <MarketingSectionHeader
-              eyebrow={t('landing.home.workflow.eyebrow')}
-              title={t('landing.home.workflow.title')}
-              description={t('landing.home.workflow.description')}
-              align="left"
-              className="m-0"
-            />
-            <div className="grid gap-5">
-              {steps.map((step, index) => (
-                <MarketingStepCard
-                  key={String(step.title)}
-                  step={`0${index + 1}`}
-                  icon={step.icon}
-                  title={step.title}
-                  description={step.description}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.035)] p-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.65_0.22_260_/_0.08)] text-primary">
-                <Gauge className="h-5 w-5" />
-              </div>
-              <h3 className="mt-4 text-base font-semibold text-foreground">
-                {t('landing.home.workflow.signalTitle')}
-              </h3>
-              <p className={`${marketingBodyClassName} mt-2 text-sm`}>
-                {t('landing.home.workflow.signalDescription')}
-              </p>
-            </div>
-            <div className="rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.035)] p-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[oklch(0.76_0.2_145_/_0.18)] bg-[oklch(0.76_0.2_145_/_0.08)] text-[oklch(0.76_0.2_145)]">
-                <Activity className="h-5 w-5" />
-              </div>
-              <h3 className="mt-4 text-base font-semibold text-foreground">
-                {t('landing.home.workflow.cadenceTitle')}
-              </h3>
-              <p className={`${marketingBodyClassName} mt-2 text-sm`}>
-                {t('landing.home.workflow.cadenceDescription')}
-              </p>
-            </div>
+        {/* Demo */}
+        <MarketingSection id="product-walkthrough" className="py-14 lg:py-16">
+          <MarketingSectionHeader
+            eyebrow={t('landing.home.demo.frameLabel')}
+            title="See it in action"
+            description="Watch how Qunt Edge helps you track, analyze, and improve your trading performance."
+          />
+          <div className="mx-auto mt-10 max-w-4xl">
+            <MarketingHyperframe
+              label={t('landing.home.demo.frameLabel')}
+              status="Live audit"
+              className="shadow-[0_32px_80px_-48px_oklch(0.65_0.22_260_/_0.48)]"
+            >
+              <ProductDemoPlayer />
+            </MarketingHyperframe>
           </div>
         </MarketingSection>
 
+        {/* Pricing */}
         <MarketingPricingSection locale={locale} />
 
+        {/* Final CTA */}
         <MarketingSection className="pb-24 pt-16 text-center lg:pb-28">
           <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80">
             {t('landing.home.finalCta.eyebrow')}
