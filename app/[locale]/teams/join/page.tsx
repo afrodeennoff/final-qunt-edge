@@ -48,16 +48,7 @@ export default function TeamJoinPage() {
   // Get invitation token from URL
   const invitationToken = searchParams.get('invitation')
 
-  useEffect(() => {
-    if (invitationToken) {
-      loadInvitationDetails()
-    } else {
-      setError('No invitation token provided')
-      setIsLoading(false)
-    }
-  }, [invitationToken])
-
-  const loadInvitationDetails = async () => {
+  async function loadInvitationDetails() {
     if (!invitationToken) return
 
     setIsLoading(true)
@@ -77,6 +68,15 @@ export default function TeamJoinPage() {
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (invitationToken) {
+      loadInvitationDetails()
+    } else {
+      setError('No invitation token provided')
+      setIsLoading(false)
+    }
+  }, [invitationToken])
 
   const handleJoinTeam = async () => {
     if (!invitationToken || !invitation) return

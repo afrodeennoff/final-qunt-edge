@@ -2,6 +2,7 @@
 import type { ImportTradeDraft } from '@/lib/trade-types'
 import { ThorSync } from '../thor/thor-sync'
 import { TradovateSync } from '../tradovate/tradovate-sync'
+import { DxFeedSync } from '../dxfeed/sync/dxfeed-sync'
 import { ImportType } from '../import-type-selection'
 import { RithmicSyncWrapper } from '../rithmic/sync/rithmic-sync-connection'
 import type { ComponentType } from 'react'
@@ -156,6 +157,7 @@ type StepComponent =
  | typeof RithmicSyncWrapper
  | typeof ThorSync
  | typeof TradovateSync
+ | typeof DxFeedSync
  | typeof PdfUpload
  | typeof PdfProcessing
  | typeof AtasFileUpload
@@ -284,7 +286,6 @@ export const platforms: PlatformConfig[] = [
  path: '/logos/rithmic.png',
  alt: 'Rithmic Logo'
  },
- isDisabled: true,
  isRithmic: true,
  customComponent: RithmicSyncWrapper,
  steps: [
@@ -694,6 +695,35 @@ export const platforms: PlatformConfig[] = [
  title: 'import.steps.connectAccount',
  description: 'import.steps.connectAccountDescription',
  component: TradovateSync,
+ isLastStep: true
+ }
+ ]
+ },
+ {
+ platformName: 'dxfeed-sync',
+ type: 'dxfeed-sync',
+ name: 'import.type.dxfeedSync.name',
+ description: 'import.type.dxfeedSync.description',
+ category: 'Direct Account Sync',
+ videoUrl: '',
+ details: 'import.type.dxfeedSync.details',
+ logo: {
+ path: '/logos/dxfeed.png',
+ alt: 'DxFeed Logo'
+ },
+ customComponent: DxFeedSync,
+ steps: [
+ {
+ id: 'select-import-type',
+ title: 'import.steps.selectPlatform',
+ description: 'import.steps.selectPlatformDescription',
+ component: ImportTypeSelection
+ },
+ {
+ id: 'complete',
+ title: 'import.steps.connectAccount',
+ description: 'import.steps.connectAccountDescription',
+ component: DxFeedSync,
  isLastStep: true
  }
  ]

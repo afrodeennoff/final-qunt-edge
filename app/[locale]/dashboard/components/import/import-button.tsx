@@ -114,6 +114,19 @@ export default function ImportButton() {
  const { refreshTradesOnly, refreshUserDataOnly } = useDashboardActions();
  const t = useI18n();
 
+ const resetImportState = useCallback(() => {
+ setImportType("");
+ setStep("select-import-type");
+ setRawCsvData([]);
+ setCsvData([]);
+ setHeaders([]);
+ setMappings({});
+ setAccountNumbers([]);
+ setNewAccountNumber("");
+ setProcessedTrades([]);
+ setError(null);
+ }, []);
+
  const handleSave = useCallback(async () => {
  // Accept either hydrated app user or Supabase auth user.
  // Requiring both blocks valid sessions during partial hydration.
@@ -296,23 +309,11 @@ export default function ImportButton() {
  trades,
  t,
  refreshTradesOnly,
- refreshUserDataOnly,
- ]);
+	 refreshUserDataOnly,
+	 resetImportState,
+	 ]);
 
- const resetImportState = () => {
- setImportType("");
- setStep("select-import-type");
- setRawCsvData([]);
- setCsvData([]);
- setHeaders([]);
- setMappings({});
- setAccountNumbers([]);
- setNewAccountNumber("");
- setProcessedTrades([]);
- setError(null);
- };
-
- const handleNextStep = useCallback(async () => {
+	 const handleNextStep = useCallback(async () => {
  const platform =
  platforms.find((p) => p.type === importType) ||
  platforms.find((p) => p.platformName ==="csv-ai");

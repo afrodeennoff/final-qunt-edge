@@ -65,7 +65,7 @@ export function LinkedAccounts() {
     }
   }, [])
 
-  const loadIdentities = async () => {
+  async function loadIdentities() {
     try {
       setLoading(true)
       const userIdentities = await getUserIdentities()
@@ -279,4 +279,4 @@ export function LinkedAccounts() {
       </CardContent>
     </Card>
   )
-} 
+}

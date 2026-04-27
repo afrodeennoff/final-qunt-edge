@@ -137,12 +137,11 @@ function NotFoundContent() {
   }, [allRoutes, locale])
 
   const filteredRoutes = useMemo(() => {
-    const q = debouncedQuery.trim().toLowerCase()
-    if (!q) {
-      const suggestions = concreteRoutesForLocale
-      if (selectedIndex >= suggestions.length) setSelectedIndex(0)
-      return suggestions
-    }
+	  const q = debouncedQuery.trim().toLowerCase()
+	  if (!q) {
+	    const suggestions = concreteRoutesForLocale
+	    return suggestions
+	  }
     // Lightweight fuzzy scoring: sequential character matching with bonuses
     const score = (target: string, queryStr: string): number => {
       if (target.startsWith(queryStr)) return 1000 + queryStr.length // big boost for prefix
@@ -174,12 +173,15 @@ function NotFoundContent() {
     }
     const scored = concreteRoutesForLocale.map(r => ({ r, s: score(r, q) }))
       .filter(o => o.s > 0)
-      .sort((a, b) => b.s - a.s)
-      .slice(0, 50) // More results available, user can scroll
-      .map(o => o.r)
-    if (selectedIndex >= scored.length) setSelectedIndex(0)
-    return scored
-  }, [concreteRoutesForLocale, debouncedQuery, selectedIndex])
+	    .sort((a, b) => b.s - a.s)
+	    .slice(0, 50) // More results available, user can scroll
+	    .map(o => o.r)
+	    return scored
+	  }, [concreteRoutesForLocale, debouncedQuery])
+
+	  useEffect(() => {
+	    if (selectedIndex >= filteredRoutes.length) setSelectedIndex(0)
+	  }, [filteredRoutes.length, selectedIndex])
 
   const t = translations[locale]
 

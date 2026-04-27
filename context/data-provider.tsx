@@ -1288,11 +1288,10 @@ export const DataProvider: React.FC<{
     accounts,
     instruments,
     accountNumbers,
-    dateRange?.from,
-    dateRange?.to,
+    dateRange,
     pnlRange.min,
     pnlRange.max,
-    tickFilter?.value,
+    tickFilter,
     tickDetails,
     timeRange.range,
     weekdayFilter.days,
@@ -2151,7 +2150,7 @@ export const DataProvider: React.FC<{
         throw error
       }
     },
-    [supabaseUser?.id, setDashboardLayout],
+    [supabaseUser, setDashboardLayout],
   )
 
   const dataStateValue = useMemo<DashboardDataState>(

@@ -347,10 +347,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  return
  }
 
- toast.success(t('success'), { description: t('auth.signIn') })
- if (typeof window !== 'undefined') {
- window.location.href = result.next || (nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)
- }
+	 toast.success(t('success'), { description: t('auth.signIn') })
+	 if (typeof window !== 'undefined') {
+	 window.location.assign(result.next || (nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`))
+	 }
  setLastAuthPreference('password')
  } catch (error) {
  const parsedError = parseAuthError(error)
@@ -391,12 +391,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  return
  }
 
- toast.success("Successfully verified. Redirecting...", {
- description:"Successfully verified. Redirecting...",
- })
- if (typeof window !== 'undefined') {
- window.location.href = nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`
- }
+	 toast.success("Successfully verified. Redirecting...", {
+	 description:"Successfully verified. Redirecting...",
+	 })
+	 if (typeof window !== 'undefined') {
+	 window.location.assign(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)
+	 }
  } catch (error) {
  toast.error("Error", {
  description: error instanceof Error ? error.message :"Failed to verify code",

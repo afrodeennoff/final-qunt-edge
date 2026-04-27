@@ -524,7 +524,7 @@ export default function TraderProfilePageClient() {
       if (to && entry > to) return false
       return true
     })
-  }, [activeDateRange?.from, activeDateRange?.to, formattedTrades])
+  }, [activeDateRange, formattedTrades])
 
   const dateFilterLabel = useMemo(() => {
     if (dateFilterPreset !== 'custom') return null
@@ -535,7 +535,7 @@ export default function TraderProfilePageClient() {
       return format(customDateRange.from, 'MMM d, yyyy')
     }
     return 'Pick date range'
-  }, [customDateRange?.from, customDateRange?.to, dateFilterPreset])
+  }, [customDateRange, dateFilterPreset])
 
   const metrics = useMemo<TraderMetrics>(() => {
     const trades = filteredTrades || []
@@ -749,7 +749,7 @@ export default function TraderProfilePageClient() {
     }
     if (activeDateRange?.from) return format(activeDateRange.from, 'MMM d, yyyy')
     return 'All available trades'
-  }, [activeDateRange?.from, activeDateRange?.to])
+  }, [activeDateRange])
 
   const tradeFeedSummary = useMemo(() => {
     if (closedTrades.length === 0) return '0 of 0'

@@ -193,7 +193,7 @@ export function TeamManagement({
  loadTeamData()
  }, [])
 
- const loadTeamData = async () => {
+ async function loadTeamData() {
  setIsLoading(true)
  try {
  // Load owned and joined teams

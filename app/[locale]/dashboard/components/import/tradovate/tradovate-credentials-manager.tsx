@@ -35,6 +35,7 @@ import { useTradovateSyncStore } from "@/store/tradovate-sync-store";
 import { useSyncContext } from "@/context/sync-context";
 
 export function TradovateCredentialsManager() {
+ const [currentTime] = useState(() => Date.now());
  const { tradovate } = useSyncContext();
  const {
  performSyncForAccount,
@@ -293,11 +294,11 @@ export function TradovateCredentialsManager() {
  </TableHeader>
  <TableBody>
  {accounts.map((account) => {
- const isExpired =
- !account.token ||
- (account.tokenExpiresAt
- ? new Date(account.tokenExpiresAt).getTime() <= Date.now()
- : false);
+	 const isExpired =
+	 !account.token ||
+	 (account.tokenExpiresAt
+	 ? new Date(account.tokenExpiresAt).getTime() <= currentTime
+	 : false);
 
  return (
  <TableRow key={account.accountId}>

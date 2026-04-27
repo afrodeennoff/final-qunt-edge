@@ -23,6 +23,79 @@ import { useI18n } from "@/locales/client";
 
 const days = [0, 1, 2, 3, 4, 5, 6]; // Sunday=0
 
+type WeekdayTooltipPayload = {
+  value: number;
+  name: string;
+  payload: { day: number; pnl: number; tradeCount: number };
+};
+
+function WeekdayTooltip({
+  active,
+  payload,
+  label,
+  onActiveDayChange,
+  dayAbbreviations,
+  dayLabel,
+  averagePnlLabel,
+  tradesLabel,
+}: {
+  active?: boolean;
+  payload?: WeekdayTooltipPayload[];
+  label?: number;
+  onActiveDayChange: (day: number | null) => void;
+  dayAbbreviations: string[];
+  dayLabel: string;
+  averagePnlLabel: string;
+  tradesLabel: string;
+}) {
+  React.useEffect(() => {
+    if (active && payload && payload.length) {
+      onActiveDayChange(payload[0].payload.day);
+    } else {
+      onActiveDayChange(null);
+    }
+  }, [active, onActiveDayChange, payload]);
+
+  if (!active || !payload || payload.length === 0) return null;
+
+  const data = payload[0].payload;
+  return (
+    <div
+      className="rounded-lg border bg-background p-2 shadow-xs"
+      style={{
+        background: "hsl(var(--embed-tooltip-bg, var(--background)))",
+        borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
+        borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
+      }}
+    >
+      <div className="grid gap-2">
+        <div className="flex flex-col">
+          <span className="text-[0.70rem] uppercase text-muted-foreground">
+            {dayLabel}
+          </span>
+          <span className="font-bold text-muted-foreground">
+            {dayAbbreviations[label ?? 0]}
+          </span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-[0.70rem] uppercase text-muted-foreground">
+            {averagePnlLabel}
+          </span>
+          <span className="font-bold">${data.pnl.toFixed(2)}</span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-[0.70rem] uppercase text-muted-foreground">
+            {tradesLabel}
+          </span>
+          <span className="font-bold text-muted-foreground">
+            {data.tradeCount}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function WeekdayPnLChartEmbed({
   trades,
 }: {
@@ -79,54 +152,6 @@ export default function WeekdayPnLChartEmbed({
     return `hsl(var(${base}) / ${intensity})`;
   };
 
-  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string; payload: { day: number; pnl: number; tradeCount: number } }>; label?: number }) => {
-    React.useEffect(() => {
-      if (active && payload && payload.length)
-        setActiveDay(payload[0].payload.day);
-      else setActiveDay(null);
-    }, [active, payload]);
-
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div
-          className="rounded-lg border bg-background p-2 shadow-xs"
-          style={{
-            background: "hsl(var(--embed-tooltip-bg, var(--background)))",
-            borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
-            borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
-          }}
-        >
-          <div className="grid gap-2">
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.weekdayPnl.tooltip.day")}
-              </span>
-              <span className="font-bold text-muted-foreground">
-                {dayAbbreviations[label ?? 0]}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.weekdayPnl.tooltip.averagePnl")}
-              </span>
-              <span className="font-bold">${data.pnl.toFixed(2)}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.weekdayPnl.tooltip.trades")}
-              </span>
-              <span className="font-bold text-muted-foreground">
-                {data.tradeCount}
-              </span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
-
   return (
     <Card data-chart-surface="modern" className="h-[500px] flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-[56px]">
@@ -174,7 +199,15 @@ export default function WeekdayPnLChartEmbed({
                 tick={{ fontSize: 11, fill: "currentColor" }}
               />
               <Tooltip
-                content={<CustomTooltip />}
+                content={
+                  <WeekdayTooltip
+                    onActiveDayChange={setActiveDay}
+                    dayAbbreviations={dayAbbreviations}
+                    dayLabel={t("embed.weekdayPnl.tooltip.day")}
+                    averagePnlLabel={t("embed.weekdayPnl.tooltip.averagePnl")}
+                    tradesLabel={t("embed.weekdayPnl.tooltip.trades")}
+                  />
+                }
                 wrapperStyle={{ fontSize: "12px", zIndex: 1000 }}
               />
               <Bar

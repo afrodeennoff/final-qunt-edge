@@ -30,6 +30,61 @@ import {
 } from "@/components/ui/select";
 import { useI18n } from "@/locales/client";
 
+type TickTooltipPayload = {
+  value: number;
+  payload: { ticks: string; count: number };
+};
+
+function TickTooltip({
+  active,
+  payload,
+  onActiveTickChange,
+}: {
+  active?: boolean;
+  payload?: TickTooltipPayload[];
+  label?: string;
+  onActiveTickChange: (tick: string | null) => void;
+}) {
+  React.useEffect(() => {
+    if (active && payload && payload.length) {
+      onActiveTickChange(payload[0].payload.ticks);
+    } else {
+      onActiveTickChange(null);
+    }
+  }, [active, onActiveTickChange, payload]);
+
+  if (!active || !payload || payload.length === 0) return null;
+
+  const data = payload[0].payload;
+  return (
+    <div
+      className="rounded-lg border bg-background p-2 shadow-xs"
+      style={{
+        background: "hsl(var(--embed-tooltip-bg, var(--background)))",
+        borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
+        borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
+      }}
+    >
+      <div className="grid gap-2">
+        <div className="flex flex-col">
+          <span className="text-[0.70rem] uppercase text-muted-foreground">
+            Ticks
+          </span>
+          <span className="font-bold text-muted-foreground">
+            {data.ticks}
+          </span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-[0.70rem] uppercase text-muted-foreground">
+            Trades
+          </span>
+          <span className="font-bold">{data.count}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function TickDistributionChartEmbed({
   trades,
 }: {
@@ -146,46 +201,6 @@ export default function TickDistributionChartEmbed({
     return `hsl(var(--chart-2) / ${intensity})`;
   };
 
-  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; payload: { ticks: string; count: number } }>; label?: string }) => {
-    React.useEffect(() => {
-      if (active && payload && payload.length)
-        setActiveTick(payload[0].payload.ticks);
-      else setActiveTick(null);
-    }, [active, payload]);
-
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div
-          className="rounded-lg border bg-background p-2 shadow-xs"
-          style={{
-            background: "hsl(var(--embed-tooltip-bg, var(--background)))",
-            borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
-            borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
-          }}
-        >
-          <div className="grid gap-2">
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                Ticks
-              </span>
-              <span className="font-bold text-muted-foreground">
-                {data.ticks}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                Trades
-              </span>
-              <span className="font-bold">{data.count}</span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
-
   return (
     <Card data-chart-surface="modern" className="h-[500px] flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-14">
@@ -287,7 +302,7 @@ export default function TickDistributionChartEmbed({
                   tick={{ fontSize: 11, fill: "currentColor" }}
                 />
                 <Tooltip
-                  content={<CustomTooltip />}
+                  content={<TickTooltip onActiveTickChange={setActiveTick} />}
                   wrapperStyle={{ fontSize: "12px", zIndex: 1000 }}
                   contentStyle={{
                     background:

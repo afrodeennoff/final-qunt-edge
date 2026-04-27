@@ -26,6 +26,77 @@ type TradeLike = {
   entryDate?: string | Date;
 };
 
+type TimeOfDayTooltipPayload = {
+  value: number;
+  name: string;
+  payload: { hour: number; avgPnl: number; tradeCount: number };
+};
+
+function TimeOfDayTooltip({
+  active,
+  payload,
+  label,
+  onActiveHourChange,
+  timeLabel,
+  averagePnlLabel,
+  tradesLabel,
+}: {
+  active?: boolean;
+  payload?: TimeOfDayTooltipPayload[];
+  label?: number;
+  onActiveHourChange: (hour: number | null) => void;
+  timeLabel: string;
+  averagePnlLabel: string;
+  tradesLabel: string;
+}) {
+  React.useEffect(() => {
+    if (active && payload && payload.length) {
+      onActiveHourChange(payload[0].payload.hour);
+    } else {
+      onActiveHourChange(null);
+    }
+  }, [active, onActiveHourChange, payload]);
+
+  if (!active || !payload || payload.length === 0) return null;
+
+  const data = payload[0].payload;
+  return (
+    <div
+      className="rounded-lg border bg-background p-2 shadow-xs"
+      style={{
+        background: "hsl(var(--embed-tooltip-bg, var(--background)))",
+        borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
+        borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
+      }}
+    >
+      <div className="grid gap-2">
+        <div className="flex flex-col">
+          <span className="text-[0.70rem] uppercase text-muted-foreground">
+            {timeLabel}
+          </span>
+          <span className="font-bold text-muted-foreground">
+            {label != null ? `${label}:00 - ${(label + 1) % 24}:00` : ""}
+          </span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-[0.70rem] uppercase text-muted-foreground">
+            {averagePnlLabel}
+          </span>
+          <span className="font-bold">${data.avgPnl.toFixed(2)}</span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-[0.70rem] uppercase text-muted-foreground">
+            {tradesLabel}
+          </span>
+          <span className="font-bold text-muted-foreground">
+            {data.tradeCount}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function TimeOfDayPerformanceChart({
   trades,
 }: {
@@ -68,52 +139,6 @@ export default function TimeOfDayPerformanceChart({
   const getColor = (count: number) => {
     const intensity = Math.max(0.2, count / maxTradeCount);
     return `hsl(var(--chart-4) / ${intensity})`;
-  };
-
-  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string; payload: { hour: number; avgPnl: number; tradeCount: number } }>; label?: number }) => {
-    React.useEffect(() => {
-      if (active && payload && payload.length)
-        setActiveHour(payload[0].payload.hour);
-      else setActiveHour(null);
-    }, [active, payload]);
-
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div
-          className="rounded-lg border bg-background p-2 shadow-xs"
-          style={{
-            background: "hsl(var(--embed-tooltip-bg, var(--background)))",
-            borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
-            borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
-          }}
-        >
-          <div className="grid gap-2">
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.pnlTime.tooltip.time")}
-              </span>
-              <span className="font-bold text-muted-foreground">{label != null ? `${label}:00 - ${(label + 1) % 24}:00` : ''}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.pnlTime.tooltip.averagePnl")}
-              </span>
-              <span className="font-bold">${data.avgPnl.toFixed(2)}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.pnlTime.tooltip.trades")}
-              </span>
-              <span className="font-bold text-muted-foreground">
-                {data.tradeCount}
-              </span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
   };
 
   return (
@@ -164,7 +189,14 @@ export default function TimeOfDayPerformanceChart({
                 tick={{ fontSize: 11, fill: "currentColor" }}
               />
               <Tooltip
-                content={<CustomTooltip />}
+                content={
+                  <TimeOfDayTooltip
+                    onActiveHourChange={setActiveHour}
+                    timeLabel={t("embed.pnlTime.tooltip.time")}
+                    averagePnlLabel={t("embed.pnlTime.tooltip.averagePnl")}
+                    tradesLabel={t("embed.pnlTime.tooltip.trades")}
+                  />
+                }
                 wrapperStyle={{ fontSize: "12px", zIndex: 1000 }}
               />
               <Bar

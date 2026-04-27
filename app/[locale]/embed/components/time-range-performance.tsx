@@ -49,6 +49,94 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+type TimeRangeTooltipPayload = {
+  value: number;
+  payload: {
+    range: string;
+    avgPnl: number;
+    color: string;
+    winRate: number;
+    trades: number;
+  };
+};
+
+function TimeRangeTooltip({
+  active,
+  payload,
+  label,
+  onActiveRangeChange,
+  getTimeRangeLabel,
+  timeRangeLabel,
+  avgPnlLabel,
+  winRateLabel,
+  getTradesLabel,
+}: {
+  active?: boolean;
+  payload?: TimeRangeTooltipPayload[];
+  label?: string;
+  onActiveRangeChange: (range: string | null) => void;
+  getTimeRangeLabel: (range: string) => string;
+  timeRangeLabel: string;
+  avgPnlLabel: string;
+  winRateLabel: string;
+  getTradesLabel: (count: number) => string;
+}) {
+  React.useEffect(() => {
+    if (active && payload && payload.length) {
+      onActiveRangeChange(payload[0].payload.range);
+    } else {
+      onActiveRangeChange(null);
+    }
+  }, [active, onActiveRangeChange, payload]);
+
+  if (!active || !payload || payload.length === 0) return null;
+
+  const data = payload[0].payload;
+  return (
+    <div
+      className="rounded-lg border bg-background p-2 shadow-xs"
+      style={{
+        background: "hsl(var(--embed-tooltip-bg, var(--background)))",
+        borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
+        borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
+      }}
+    >
+      <div className="grid gap-2">
+        <div className="flex flex-col">
+          <span className="text-[0.70rem] uppercase text-muted-foreground">
+            {timeRangeLabel}
+          </span>
+          <span className="font-bold text-muted-foreground">
+            {getTimeRangeLabel(label ?? "")}
+          </span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-[0.70rem] uppercase text-muted-foreground">
+            {avgPnlLabel}
+          </span>
+          <span className="font-bold">${data.avgPnl.toFixed(2)}</span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-[0.70rem] uppercase text-muted-foreground">
+            {winRateLabel}
+          </span>
+          <span className="font-bold" style={{ color: data.color }}>
+            {data.winRate.toFixed(1)}%
+          </span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-[0.70rem] uppercase text-muted-foreground">
+            {getTradesLabel(data.trades)}
+          </span>
+          <span className="font-bold text-muted-foreground">
+            {data.trades}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function TimeRangePerformanceChart({
   trades,
   theme,
@@ -57,7 +145,7 @@ export default function TimeRangePerformanceChart({
   theme?: EmbedThemeVars;
 }) {
   const t = useI18n();
-  const [activeRange, setActiveRange] = React.useState<string | null>(null);
+  const [, setActiveRange] = React.useState<string | null>(null);
 
   const getTimeRangeLabel = React.useCallback(
     (range: string): string => {
@@ -75,6 +163,10 @@ export default function TimeRangePerformanceChart({
       };
       return rangeLabels[range] || range;
     },
+    [t],
+  );
+  const getTradesLabel = React.useCallback(
+    (count: number) => t("embed.timeRangePerformance.tooltip.trades", { count }),
     [t],
   );
 
@@ -122,66 +214,6 @@ export default function TimeRangePerformanceChart({
       };
     });
   }, [trades]);
-
-  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; payload: { range: string; avgPnl: number; color: string; winRate: number; trades: number } }>; label?: string }) => {
-    React.useEffect(() => {
-      if (active && payload && payload.length) {
-        setActiveRange(payload[0].payload.range);
-      } else {
-        setActiveRange(null);
-      }
-    }, [active, payload]);
-
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div
-          className="rounded-lg border bg-background p-2 shadow-xs"
-          style={{
-            background: "hsl(var(--embed-tooltip-bg, var(--background)))",
-            borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
-            borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
-          }}
-        >
-          <div className="grid gap-2">
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.timeRangePerformance.tooltip.timeRange")}
-              </span>
-              <span className="font-bold text-muted-foreground">
-                {getTimeRangeLabel(label ?? '')}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.timeRangePerformance.tooltip.avgPnl")}
-              </span>
-              <span className="font-bold">${data.avgPnl.toFixed(2)}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.timeRangePerformance.tooltip.winRate")}
-              </span>
-              <span className="font-bold" style={{ color: data.color }}>
-                {data.winRate.toFixed(1)}%
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.timeRangePerformance.tooltip.trades", {
-                  count: data.trades,
-                })}
-              </span>
-              <span className="font-bold text-muted-foreground">
-                {data.trades}
-              </span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <Card data-chart-surface="modern" className="h-[500px] flex flex-col" style={themeVarsToStyle(theme)}>
@@ -251,7 +283,16 @@ export default function TimeRangePerformanceChart({
                 }}
               />
               <Tooltip
-                content={<CustomTooltip />}
+                content={
+                  <TimeRangeTooltip
+                    onActiveRangeChange={setActiveRange}
+                    getTimeRangeLabel={getTimeRangeLabel}
+                    timeRangeLabel={t("embed.timeRangePerformance.tooltip.timeRange")}
+                    avgPnlLabel={t("embed.timeRangePerformance.tooltip.avgPnl")}
+                    winRateLabel={t("embed.timeRangePerformance.tooltip.winRate")}
+                    getTradesLabel={getTradesLabel}
+                  />
+                }
                 wrapperStyle={{
                   fontSize: "12px",
                   zIndex: 1000,

@@ -15,9 +15,10 @@ import {
   isRegisteredWidgetType,
 } from '@/lib/widget-layout'
 
+const ResponsiveGridLayout = WidthProvider(Responsive)
+
 export function SharedWidgetCanvas() {
   const { isMobile, sharedParams } = useData()
-  const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
   const activeLayout = isMobile ? 'mobile' : 'desktop'
   const layoutMode = isMobile ? 'mobile' : 'desktop'

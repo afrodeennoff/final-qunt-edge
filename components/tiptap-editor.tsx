@@ -264,7 +264,7 @@ export function TiptapEditor({
         throw error;
       }
     },
-    [user?.auth_user_id, user?.id, t],
+    [user, t],
   );
 
   // Handle AI dropdown actions

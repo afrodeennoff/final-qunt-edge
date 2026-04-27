@@ -208,11 +208,11 @@ export function RithmicCredentialsManager({
  syncingId,
  authenticateAndGetAccounts,
  connect,
- getWebSocketUrl,
- t,
- user?.id,
- ]
- );
+	 getWebSocketUrl,
+	 t,
+	 user,
+	 ]
+	 );
 
  const handleDeleteSynchronization = useCallback(
  async (accountId: string | undefined) => {
