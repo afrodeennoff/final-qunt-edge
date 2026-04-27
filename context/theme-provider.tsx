@@ -10,7 +10,7 @@ type ThemeContextType = {
   toggleTheme: () => void
 }
 
-const DEFAULT_THEME: DashboardTheme = 'blue'
+const DEFAULT_THEME: DashboardTheme = 'purple'
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: DEFAULT_THEME,
@@ -48,7 +48,7 @@ export function ThemeProvider({
   initialTheme,
 }: {
   children: React.ReactNode
-  scope?: 'dashboard' | 'fixed-blue'
+  scope?: 'dashboard' | 'fixed-purple'
   initialTheme?: DashboardTheme | string
 }) {
   const resolved = resolveTheme(initialTheme)

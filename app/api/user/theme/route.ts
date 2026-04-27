@@ -19,7 +19,7 @@ async function handleGet(request: NextRequest) {
     }
 
     const theme = await getUserDashboardTheme()
-    return NextResponse.json({ theme: theme || 'blue' }, {
+    return NextResponse.json({ theme: theme || 'purple' }, {
       headers: {
         'Cache-Control': 'no-store, max-age=0',
       },

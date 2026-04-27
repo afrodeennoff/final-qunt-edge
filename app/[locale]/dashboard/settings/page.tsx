@@ -480,15 +480,15 @@ export default function SettingsPage() {
                           className={`h-8 w-8 rounded-full transition-[opacity,background-color,border-color] ${theme === t ? 'ring-2 ring-offset-2 ring-offset-background ring-primary scale-110' : 'hover:scale-105'}`}
                           style={{
                             backgroundColor:
-                              t === 'blue'
-                                ? 'oklch(0.55 0.22 264)'
+                              t === 'purple'
+                                ? 'oklch(0.6083 0.2172 297.1153)'
                                 : t === 'violet'
-                                  ? 'oklch(0.60 0.22 290)'
-                                  : t === 'emerald'
-                                    ? 'oklch(0.55 0.20 160)'
-                                    : t === 'amber'
-                                      ? 'oklch(0.60 0.20 70)'
-                                      : 'oklch(0.58 0.22 10)',
+                                  ? 'oklch(0.58 0.23 290)'
+                                  : t === 'indigo'
+                                    ? 'oklch(0.55 0.22 285)'
+                                    : t === 'lavender'
+                                      ? 'oklch(0.65 0.18 305)'
+                                      : 'oklch(0.56 0.22 310)',
                           }}
                         />
                         <span

@@ -34,11 +34,11 @@ function shouldRecoverFromChunkError(reason: unknown): boolean {
 
 export function RootProviders({
     children,
-    themeScope = "fixed-blue",
+    themeScope = "fixed-purple",
     initialTheme,
 }: {
     children: React.ReactNode
-    themeScope?: "dashboard" | "fixed-blue"
+    themeScope?: "dashboard" | "fixed-purple"
     initialTheme?: DashboardTheme
 }) {
     useEffect(() => {
@@ -174,7 +174,7 @@ export function PublicRootProviders({
     children: React.ReactNode
 }) {
     return (
-        <RootProviders themeScope="fixed-blue">
+        <RootProviders themeScope="fixed-purple">
             {children}
         </RootProviders>
     );

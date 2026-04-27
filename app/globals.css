@@ -159,13 +159,13 @@
   :focus-visible {
     outline: none;
     box-shadow:
-      0 0 0 2px oklch(0.045 0.008 260),
-      0 0 0 4px oklch(0.65 0.22 260 / 0.42);
+      0 0 0 2px oklch(0.045 0.008 297.1153),
+      0 0 0 4px oklch(0.6083 0.2172 297.1153 / 0.42);
     transition: box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   ::selection {
-    background: oklch(0.65 0.22 260 / 0.24);
+    background: oklch(0.6083 0.2172 297.1153 / 0.24);
     color: oklch(0.9838 0.0035 247.8583);
   }
 
@@ -179,7 +179,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.65 0.22 260 / 0.3);
+    background: oklch(0.6083 0.2172 297.1153 / 0.3);
     border-radius: 4px;
     border: 2px solid transparent;
     background-clip: content-box;
@@ -187,7 +187,7 @@
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.65 0.22 260 / 0.42);
+    background: oklch(0.6083 0.2172 297.1153 / 0.42);
     border: 2px solid transparent;
     background-clip: content-box;
   }
@@ -199,7 +199,7 @@
   /* Premium scrollbar — macOS native pill style */
   * {
     scrollbar-width: thin;
-    scrollbar-color: oklch(0.65 0.22 260 / 0.3) transparent;
+    scrollbar-color: oklch(0.6083 0.2172 297.1153 / 0.3) transparent;
   }
 
   *::-webkit-scrollbar {
@@ -212,7 +212,7 @@
   }
 
   *::-webkit-scrollbar-thumb {
-    background: oklch(0.65 0.22 260 / 0.22);
+    background: oklch(0.6083 0.2172 297.1153 / 0.22);
     border-radius: 4px;
     border: 2px solid transparent;
     background-clip: content-box;
@@ -220,7 +220,7 @@
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.65 0.22 260 / 0.3);
+    background: oklch(0.6083 0.2172 297.1153 / 0.3);
     border: 2px solid transparent;
     background-clip: content-box;
   }
@@ -469,7 +469,7 @@
   /* ── PREMIUM TEXT CONTRAST (WCAG AAA 7:1+ on dark surfaces) ── */
   --text-heading: oklch(0.9838 0.0035 247.8583); /* Headings: highest contrast */
   --text-body: oklch(0.94 0.005 250); /* Body: strong readability */
-  --text-caption: oklch(0.64 0.006 260); /* Captions: sufficient */
+  --text-caption: oklch(0.64 0.006 297); /* Captions: sufficient */
 
   /* ── IMPACT SYSTEM (Trading Semantic) ── */
   --impact-profit: oklch(0.82 0.185 155);
@@ -542,11 +542,11 @@
 }
 
 .dark {
-  --background: oklch(0.06 0.01 260);
+  --background: oklch(0.06 0.01 301);
   --foreground: oklch(0.9838 0.0035 247.8583);
-  --card: oklch(0.085 0.014 260);
+  --card: oklch(0.085 0.014 301);
   --card-foreground: oklch(0.9838 0.0035 247.8583);
-  --popover: oklch(0.07 0.012 260);
+  --popover: oklch(0.07 0.012 301);
   --popover-foreground: oklch(0.9838 0.0035 247.8583);
   --primary: oklch(0.6083 0.2172 297.1153);
   --primary-foreground: oklch(0.9838 0.0035 247.8583);
@@ -3234,36 +3234,36 @@ img[loading='lazy'] {
   .qe-v2-app-shell {
     position: relative;
     background:
-      radial-gradient(1180px 720px at 10% -8%, oklch(0.65 0.22 260 / 0.055), transparent 56%),
+      radial-gradient(1180px 720px at 10% -8%, oklch(0.6083 0.2172 297.1153 / 0.055), transparent 56%),
       radial-gradient(920px 640px at 90% 108%, oklch(0.56 0.12 235 / 0.035), transparent 58%),
       linear-gradient(
         180deg,
-        oklch(0.05 0.008 260) 0%,
-        oklch(0.043 0.007 260) 46%,
-        oklch(0.04 0.006 260) 100%
+        oklch(0.05 0.008 297) 0%,
+        oklch(0.043 0.007 297) 46%,
+        oklch(0.04 0.006 297) 100%
       );
   }
 
   .qe-v2-card {
     background: linear-gradient(
       180deg,
-      oklch(0.068 0.011 260 / 0.95) 0%,
-      oklch(0.056 0.01 260 / 0.9) 100%
+      oklch(0.068 0.011 297 / 0.95) 0%,
+      oklch(0.056 0.01 297 / 0.9) 100%
     );
-    border: 1px solid oklch(0.65 0.22 260 / 0.08);
+    border: 1px solid oklch(0.6083 0.2172 297.1153 / 0.08);
     box-shadow:
-      inset 0 1px 0 oklch(0.65 0.22 260 / 0.05),
+      inset 0 1px 0 oklch(0.6083 0.2172 297.1153 / 0.05),
       0 28px 70px -42px rgba(4, 10, 24, 0.88);
   }
 
   .qe-v2-hairline {
-    background: linear-gradient(90deg, transparent, oklch(0.65 0.22 260 / 0.12), transparent);
+    background: linear-gradient(90deg, transparent, oklch(0.6083 0.2172 297.1153 / 0.12), transparent);
   }
 
   .qe-v2-grid {
     background-image:
-      linear-gradient(oklch(0.65 0.22 260 / 0.035) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(0.65 0.22 260 / 0.035) 1px, transparent 1px);
+      linear-gradient(oklch(0.6083 0.2172 297.1153 / 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.6083 0.2172 297.1153 / 0.035) 1px, transparent 1px);
     background-size: 52px 52px;
   }
 }
@@ -3299,7 +3299,7 @@ img[loading='lazy'] {
     padding: 1px;
     background: linear-gradient(
       135deg,
-      oklch(0.55 0.22 264 / 0.6),
+      oklch(0.6083 0.2172 297.1153 / 0.6),
       oklch(0.45 0.18 290 / 0.4),
       oklch(0.55 0.15 210 / 0.3)
     );
@@ -3336,7 +3336,7 @@ img[loading='lazy'] {
 @layer utilities {
   /* Gradient text utilities */
   .text-gradient-primary {
-    background: linear-gradient(135deg, oklch(0.55 0.22 264), oklch(0.45 0.18 290));
+    background: linear-gradient(135deg, oklch(0.6083 0.2172 297.1153), oklch(0.45 0.18 290));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -3375,8 +3375,8 @@ img[loading='lazy'] {
   /* Drop shadow text utilities */
   .text-shadow-premium {
     text-shadow:
-      0 0 40px oklch(0.55 0.22 264 / 0.3),
-      0 0 80px oklch(0.55 0.22 264 / 0.15);
+      0 0 40px oklch(0.6083 0.2172 297.1153 / 0.3),
+      0 0 80px oklch(0.6083 0.2172 297.1153 / 0.15);
   }
 
   .text-shadow-subtle {
@@ -3384,7 +3384,7 @@ img[loading='lazy'] {
   }
 
   .text-shadow-glow-primary {
-    text-shadow: 0 0 20px oklch(0.55 0.22 264 / 0.5);
+    text-shadow: 0 0 20px oklch(0.6083 0.2172 297.1153 / 0.5);
   }
 }
 
@@ -3526,13 +3526,13 @@ img[loading='lazy'] {
   .inner-glow-subtle {
     box-shadow:
       inset 0 1px 2px oklch(1 0 0 / 0.08),
-      inset 0 0 20px oklch(0.55 0.22 264 / 0.05);
+      inset 0 0 20px oklch(0.6083 0.2172 297.1153 / 0.05);
   }
 
   .inner-glow-accent {
     box-shadow:
       inset 0 1px 3px oklch(1 0 0 / 0.1),
-      inset 0 0 30px oklch(0.55 0.22 264 / 0.1);
+      inset 0 0 30px oklch(0.6083 0.2172 297.1153 / 0.1);
   }
 
   .inner-glow-success {
@@ -3546,14 +3546,14 @@ img[loading='lazy'] {
     box-shadow:
       0 0 0 1px oklch(0.14 0 0 / 0.5),
       0 4px 12px -2px oklch(0 0 0 / 0.4),
-      0 0 40px -10px oklch(0.55 0.22 264 / 0.08);
+      0 0 40px -10px oklch(0.6083 0.2172 297.1153 / 0.08);
   }
 
   .ambient-glow-card-active {
     box-shadow:
-      0 0 0 1px oklch(0.55 0.22 264 / 0.3),
+      0 0 0 1px oklch(0.6083 0.2172 297.1153 / 0.3),
       0 8px 20px -4px oklch(0 0 0 / 0.5),
-      0 0 60px -15px oklch(0.55 0.22 264 / 0.15);
+      0 0 60px -15px oklch(0.6083 0.2172 297.1153 / 0.15);
   }
 }
 
@@ -3567,7 +3567,7 @@ img[loading='lazy'] {
       linear-gradient(145deg, oklch(0.09 0 0 / 0.85), oklch(0.06 0 0 / 0.95)) padding-box,
       linear-gradient(
           135deg,
-          oklch(0.55 0.22 264 / 0.2),
+          oklch(0.6083 0.2172 297.1153 / 0.2),
           oklch(0.45 0.18 290 / 0.12),
           oklch(0.55 0.15 210 / 0.08)
         )
@@ -3584,7 +3584,7 @@ img[loading='lazy'] {
       linear-gradient(145deg, oklch(0.1 0 0 / 0.9), oklch(0.07 0 0 / 0.98)) padding-box,
       linear-gradient(
           135deg,
-          oklch(0.55 0.22 264 / 0.25),
+          oklch(0.6083 0.2172 297.1153 / 0.25),
           oklch(0.45 0.18 290 / 0.15),
           oklch(0.55 0.15 210 / 0.1)
         )
@@ -3592,7 +3592,7 @@ img[loading='lazy'] {
     box-shadow:
       inset 0 1px 0 oklch(1 0 0 / 0.1),
       inset 0 -1px 0 oklch(1 0 0 / 0.05),
-      0 0 0 1px oklch(0.55 0.22 264 / 0.1),
+      0 0 0 1px oklch(0.6083 0.2172 297.1153 / 0.1),
       0 24px 48px -24px oklch(0 0 0 / 0.65);
   }
 
@@ -3601,11 +3601,11 @@ img[loading='lazy'] {
     position: relative;
     border: 1px solid oklch(0.14 0 0 / 0.6);
     background:
-      radial-gradient(ellipse at top, oklch(0.55 0.22 264 / 0.04), transparent 70%),
+      radial-gradient(ellipse at top, oklch(0.6083 0.2172 297.1153 / 0.04), transparent 70%),
       linear-gradient(180deg, oklch(0.08 0 0), oklch(0.06 0 0));
     box-shadow:
       inset 0 1px 0 oklch(1 0 0 / 0.06),
-      inset 0 0 0 1px oklch(0.55 0.22 264 / 0.03),
+      inset 0 0 0 1px oklch(0.6083 0.2172 297.1153 / 0.03),
       0 8px 24px -12px oklch(0 0 0 / 0.5);
   }
 
@@ -3613,7 +3613,7 @@ img[loading='lazy'] {
     border-color: oklch(0.14 0 0 / 0.7);
     box-shadow:
       inset 0 1px 0 oklch(1 0 0 / 0.08),
-      inset 0 0 0 1px oklch(0.55 0.22 264 / 0.05),
+      inset 0 0 0 1px oklch(0.6083 0.2172 297.1153 / 0.05),
       0 12px 32px -16px oklch(0 0 0 / 0.55);
   }
 
@@ -3642,10 +3642,10 @@ img[loading='lazy'] {
 
   .glass-card-accent {
     background: oklch(0.07 0 0 / 0.6);
-    border: 1px solid oklch(0.55 0.22 264 / 0.25);
+    border: 1px solid oklch(0.6083 0.2172 297.1153 / 0.25);
     box-shadow:
       inset 0 1px 0 oklch(1 0 0 / 0.08),
-      0 0 0 1px oklch(0.55 0.22 264 / 0.1),
+      0 0 0 1px oklch(0.6083 0.2172 297.1153 / 0.1),
       0 16px 48px -16px oklch(0 0 0 / 0.55);
   }
 }
@@ -4175,12 +4175,12 @@ img[loading='lazy'] {
 }
 
 .glow-number {
-  text-shadow: 0 0 20px oklch(0.55 0.22 264 / 0.4);
+  text-shadow: 0 0 20px oklch(0.6083 0.2172 297.1153 / 0.4);
 }
 
 .terminal-accent {
   font-family: var(--font-mono);
-  color: oklch(0.55 0.22 264);
+  color: oklch(0.6083 0.2172 297.1153);
 }
 
 .glass-accent-border {
@@ -4193,7 +4193,7 @@ img[loading='lazy'] {
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, oklch(0.55 0.22 264), oklch(0.45 0.18 290));
+  background: linear-gradient(135deg, oklch(0.6083 0.2172 297.1153), oklch(0.45 0.18 290));
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -4218,7 +4218,7 @@ img[loading='lazy'] {
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    oklch(0.55 0.22 264 / 0.03) 50%,
+    oklch(0.6083 0.2172 297.1153 / 0.03) 50%,
     transparent 100%
   );
   height: 4px;

@@ -58,8 +58,8 @@ describe('ThemeProvider', () => {
     const theme = container.querySelector('[data-testid="theme"]')
     const effectiveTheme = container.querySelector('[data-testid="effectiveTheme"]')
 
-    expect(theme?.textContent).toBe('blue')
-    expect(effectiveTheme?.textContent).toBe('blue')
+    expect(theme?.textContent).toBe('purple')
+    expect(effectiveTheme?.textContent).toBe('purple')
   })
 
   it('uses initialTheme when provided', async () => {
@@ -93,6 +93,6 @@ describe('ThemeProvider', () => {
     })
 
     const theme = container.querySelector('[data-testid="theme"]')
-    expect(theme?.textContent).toBe('blue')
+    expect(theme?.textContent).toBe('purple')
   })
 })
