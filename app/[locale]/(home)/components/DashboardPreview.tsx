@@ -43,7 +43,7 @@ export default function DashboardPreview() {
       role="img"
       aria-label={String(t('landing.home.preview.ariaLabel'))}
     >
-      <div className="flex h-full min-h-[560px] flex-col overflow-hidden rounded-2xl border border-border/35 bg-black/80 p-4 sm:p-5">
+      <div className="flex h-full min-h-[560px] flex-col overflow-hidden rounded-2xl border border-border/35 bg-background/80 p-4 sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/30 pb-4">
           <div className="flex items-center gap-2">
             <div className="flex gap-1.5">

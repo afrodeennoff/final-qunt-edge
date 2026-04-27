@@ -133,9 +133,9 @@ export async function generateMetadata({
 /* ─── Not found state ─── */
 function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
   return (
-    <div className="min-h-[calc(100vh-72px)] bg-black px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+    <div className="min-h-[calc(100vh-72px)] bg-background px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <div className="mx-auto max-w-[1120px]">
-        <div className={`rounded-2xl border ${FB} bg-black p-8`} style={FR}>
+        <div className={`rounded-2xl border ${FB} bg-card p-8`} style={FR}>
           <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">Trader profile</p>
           <h1 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-foreground">{slug}</h1>
           <p className="mt-3 max-w-xl text-[14px] leading-[1.6] text-muted-foreground">
@@ -194,13 +194,13 @@ export default async function TraderProfilePage({
   const negative = snapshot.totalPnl < 0
 
   return (
-    <div className="min-h-[calc(100vh-72px)] bg-black px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+    <div className="min-h-[calc(100vh-72px)] bg-background px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }}
       />
       <div className="mx-auto max-w-[1120px]">
-        <div className={`rounded-2xl border ${FB} bg-black p-6 sm:p-8 lg:p-10`} style={FR}>
+        <div className={`rounded-2xl border ${FB} bg-card p-6 sm:p-8 lg:p-10`} style={FR}>
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex items-start gap-6">
               <Avatar className={`h-20 w-20 border ${FB} ${FS} shrink-0`} style={FR}>
@@ -231,14 +231,14 @@ export default async function TraderProfilePage({
           </div>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+            <div className={`rounded-xl border ${FB} bg-card p-5`} style={FR}>
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total PnL</p>
               <p className={`mt-2 text-2xl font-semibold tracking-[-0.02em] ${positive ? 'text-success' : negative ? 'text-destructive' : 'text-foreground'}`}>
                 {formatCurrency(snapshot.totalPnl)}
               </p>
               <p className="mt-2 text-[12px] text-muted-foreground">Cumulative trading performance</p>
             </div>
-            <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+            <div className={`rounded-xl border ${FB} bg-card p-5`} style={FR}>
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Trades</p>
               <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-foreground">{snapshot.totalTrades.toLocaleString()}</p>
               <p className="mt-2 text-[12px] text-muted-foreground">Public trade history</p>
@@ -263,12 +263,12 @@ export default async function TraderProfilePage({
         </div>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
-          <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+          <div className={`rounded-xl border ${FB} bg-card p-5`} style={FR}>
             <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Capital</p>
             <p className="mt-2 text-3xl font-semibold text-foreground">{formatCapitalCompact(snapshot.totalPnl)}</p>
           </div>
 
-          <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+          <div className={`rounded-xl border ${FB} bg-card p-5`} style={FR}>
             <div className="flex items-center justify-between">
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Trade Activity</p>
               <span className={`inline-flex items-center rounded-full border ${FB} ${FS} px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground`}>
@@ -281,7 +281,7 @@ export default async function TraderProfilePage({
             </div>
           </div>
 
-          <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+          <div className={`rounded-xl border ${FB} bg-card p-5`} style={FR}>
             <div className="flex items-center justify-between">
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Profile</p>
               <span className={`inline-flex items-center gap-1.5 rounded-full border ${FB} ${FS} px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground`}>

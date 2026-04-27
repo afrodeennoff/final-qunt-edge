@@ -86,7 +86,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
   ]
 
   return (
-    <div className="relative min-w-0 overflow-x-hidden bg-black selection:bg-primary/30 selection:text-foreground">
+    <div className="relative min-w-0 overflow-x-hidden bg-background selection:bg-primary/30 selection:text-foreground">
       <main className="relative z-10 flex min-w-0 flex-col">
         {/* Hero */}
         <MarketingSection className="pt-20 sm:pt-24 lg:pt-32">

@@ -23,7 +23,7 @@ export async function generateMetadata(props: {
 
 function HomeLayoutFallback() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-4 bg-black pb-safe">
+    <div className="flex flex-1 flex-col items-center justify-center gap-4 bg-background pb-safe">
       <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-foreground" />
       <p className="text-sm text-muted-foreground">Loading&hellip;</p>
     </div>
