@@ -13,6 +13,9 @@ import { useAccountOrderStore } from "@/store/account-order-store";
 import { useAccountsGroupExpansionStore } from "@/store/accounts-group-expansion-store";
 import { useDailyTickTargetStore } from "@/store/daily-tick-target-store";
 import { useSubscriptionStore } from "@/store/subscription-store";
+import { useMoodStore } from "@/store/mood-store";
+import { useChatStore } from "@/store/chat-store";
+import { usePdfProcessingStore } from "@/store/pdf-processing-store";
 
 // Re-export Widget types for use in other modules
 export type { Widget };
@@ -64,6 +67,9 @@ function resetSessionScopedStores() {
   useTableConfigStore.getState().resetAllConfigs()
   useAccountsGroupExpansionStore.getState().resetExpanded()
   useSubscriptionStore.getState().clearSubscription()
+  useMoodStore.getState().resetMoods()
+  useChatStore.getState().clearMessages()
+  usePdfProcessingStore.getState().clearPdfProcessingData()
   clearSensitiveClientStorage()
 }
 

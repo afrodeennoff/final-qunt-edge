@@ -1,3 +1,5 @@
+'use client'
+
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DialogDescription } from "@/components/ui/dialog";
 import { DialogContent } from "@/components/ui/dialog";

@@ -244,13 +244,17 @@ const processRithmicPerformance = (data: string[][]): ProcessedData => {
 
 const processRithmicOrders = (data: string[][]): ProcessedData => {
  const headerRowIndex = data.findIndex(row => row[0] === 'Completed Orders') + 1
- const headers = data[headerRowIndex].filter(header => header && header.trim() !== '')
+ const headers = data[headerRowIndex].map((header, i) =>
+   header && header.trim() !== '' ? header : `Column ${i + 1}`
+ )
  const processedData = data.slice(headerRowIndex + 1)
  return { headers, processedData };
 };
 
 const processQuantower = (data: string[][]): ProcessedData => {
- const headers = data[0].filter(header => header && header.trim() !== '')
+ const headers = data[0].map((header, i) =>
+   header && header.trim() !== '' ? header : `Column ${i + 1}`
+ )
  const processedData = data.slice(1)
  return { headers, processedData };
 };
@@ -259,7 +263,11 @@ const processStandardCsv = (data: string[][]): ProcessedData => {
  if (data.length === 0) {
  throw new Error("The CSV file appears to be empty or invalid.")
  }
- const headers = data[0].filter(header => header && header.trim() !== '')
+ // Replace empty headers with positional labels to preserve index alignment
+ // with data rows. Filtering would shift indices and break column mapping.
+ const headers = data[0].map((header, i) =>
+   header && header.trim() !== '' ? header : `Column ${i + 1}`
+ )
  return { headers, processedData: data.slice(1) };
 };
 

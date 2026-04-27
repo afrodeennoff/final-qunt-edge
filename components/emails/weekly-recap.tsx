@@ -345,7 +345,7 @@ export default function TraderStatsEmail({
 
   // Calculate win rate percentage
   const totalTrades = winLossStats.wins + winLossStats.losses;
-  const winRate = ((winLossStats.wins / totalTrades) * 100).toFixed(1);
+  const winRate = totalTrades > 0 ? ((winLossStats.wins / totalTrades) * 100).toFixed(1) : '0.0';
 
   // Calculate overall PnL
   const overallPnL = dailyPnL.reduce((sum, day) => sum + day.pnl, 0);

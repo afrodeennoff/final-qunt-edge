@@ -56,7 +56,6 @@ async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<st
       500,
       {
         requestId,
-        message: error instanceof Error ? error.message : undefined,
       },
       {
         'Cache-Control': 'no-store, max-age=0',

@@ -388,6 +388,12 @@ export async function signUpWithPasswordAction(
     if (error instanceof PostAuthSetupError) {
       throw error
     }
+    await recordAuthFailure({
+      email,
+      ip: requestIp,
+      actionType: 'password_login',
+      userId: null,
+    })
     handleAuthError(error)
   }
 }
@@ -429,7 +435,7 @@ export async function verifyOtp(email: string, token: string, type: 'email' = 'e
 
     if (data.user && data.session) {
       try {
-        const locale = email.includes('.fr') || email.startsWith('fr@') ? 'fr' : 'en'
+        const locale = 'en'
         await ensureUserInDatabase(data.user, locale)
       } catch (setupError) {
         logger.error('[verifyOtp] ensureUserInDatabase failed', { error: setupError })

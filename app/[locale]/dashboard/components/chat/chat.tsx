@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { Button } from "@/components/ui/button";

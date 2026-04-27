@@ -1,10 +1,15 @@
 import { NextRequest } from 'next/server'
+import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { createRouteClient } from '@/lib/supabase/route-client'
 import { MemberRole } from '@/prisma/generated/prisma'
 import { ensureTeamMembership, resolveTeamUserId } from '@/server/team-membership'
 import { apiError } from '@/lib/api-response'
 import { apiSuccess, withRateLimited } from '@/lib/api/with-api-route'
+
+const acceptInvitationSchema = z.object({
+  invitationId: z.string().min(1),
+})
 
 async function handlePost(request: NextRequest, _ctx: { params: Promise<Record<string, string>> }) {
   const requestId = crypto.randomUUID()
@@ -17,11 +22,12 @@ async function handlePost(request: NextRequest, _ctx: { params: Promise<Record<s
       return apiError('UNAUTHORIZED', 'Unauthorized', 401, { requestId })
     }
 
-    const { invitationId } = await request.json()
-
-    if (!invitationId) {
-      return apiError('BAD_REQUEST', 'Invitation ID is required', 400, { requestId })
+    const body = await request.json()
+    const parsed = acceptInvitationSchema.safeParse(body)
+    if (!parsed.success) {
+      return apiError('VALIDATION_FAILED', 'Invalid request body', 400, { requestId, issues: parsed.error.issues })
     }
+    const { invitationId } = parsed.data
 
     // Find the invitation
     const invitation = await prisma.teamInvitation.findUnique({

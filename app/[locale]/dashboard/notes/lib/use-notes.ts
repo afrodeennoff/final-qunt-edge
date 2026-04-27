@@ -92,7 +92,11 @@ export function useNotes() {
   // Save notes to localStorage whenever they change
   useEffect(() => {
     if (notes.length > 0 || !isLoading) {
-      localStorage.setItem('trading-notes', JSON.stringify(notes))
+      try {
+        localStorage.setItem('trading-notes', JSON.stringify(notes))
+      } catch {
+        // localStorage may be full or unavailable (e.g. private browsing)
+      }
     }
   }, [notes, isLoading])
 

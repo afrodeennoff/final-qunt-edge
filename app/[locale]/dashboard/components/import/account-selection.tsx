@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useCallback, useEffect } from 'react'
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"

@@ -244,6 +244,17 @@ export default function ImportButton() {
  }),
  });
 
+ // Show warning if some trades were skipped during validation
+ if (result.warnings && result.warnings.length > 0) {
+ const skippedCount = result.warnings.length;
+ setTimeout(() => {
+ toast.warning(` ${skippedCount} trade${skippedCount > 1 ? 's were' : ' was'} skipped due to validation issues`, {
+ description: result.warnings!.slice(0, 3).join('; ') + (skippedCount > 3 ? ` ...and ${skippedCount - 3} more` : ''),
+ duration: 8000,
+ });
+ }, 500);
+ }
+
  // Close dialog immediately to prevent UI freezing
  setIsOpen(false);
  
@@ -542,6 +553,10 @@ export default function ImportButton() {
  accountNumbers.length === 0 &&
  !newAccountNumber
  )
+ return true;
+
+ // FormatPreview step - require at least some processed trades
+ if (currentStep.component === FormatPreview && processedTrades.length === 0)
  return true;
 
  return false;

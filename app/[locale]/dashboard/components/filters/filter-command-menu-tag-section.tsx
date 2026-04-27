@@ -33,7 +33,7 @@ const DEFAULT_TAG_COLOR = 'hsl(var(--muted-foreground))'
 
 export function TagSection({ searchValue }: TagSectionProps) {
  const { tagFilter, setTagFilter } = useDashboardFilters()
- const { updateTrades } = useDashboardActions()
+ const { updateTrades, refreshTrades } = useDashboardActions()
  const tags = useUserStore(state => state.tags)
  const setTags = useUserStore(state => state.setTags)
  const trades = useTradingDomainStore(state => state.trades)
@@ -139,24 +139,20 @@ export function TagSection({ searchValue }: TagSectionProps) {
 
  const confirmDelete = async () => {
  if (!tagToDelete) return
- 
+
  setIsLoading(true)
  try {
  await deleteTagAction(tagToDelete.id)
- 
- // Update local tags state and cache
+
+ // Update local tags state
  setTags(tags.filter(tag => tag.id !== tagToDelete.id))
- 
- // Remove the tag from all trades 
- trades.forEach((trade: Trade) => {
- if (trade.tags.includes(tagToDelete.name)) {
- trade.tags = trade.tags.filter(tag => tag !== tagToDelete.name)
- updateTrades([trade.id], {
- tags: trade.tags
- })
- }
- })
- 
+
+ // The server action already removes the tag from all trades.
+ // Refresh trades to get the authoritative state from the server.
+ // The server action already removes the tag from all trades.
+ // Refresh trades to get the authoritative state from the server.
+ await refreshTrades()
+
  // Also remove from tag filter if it's selected
  if (tagFilter.tags.includes(tagToDelete.name)) {
  setTagFilter(prev => ({

@@ -29,7 +29,7 @@ async function handleGet(request: NextRequest) {
       'INTERNAL_ERROR',
       'Failed to fetch theme',
       500,
-      error instanceof Error ? error.message : undefined,
+      undefined,
       {
         'Cache-Control': 'no-store, max-age=0',
       },
@@ -88,7 +88,7 @@ export async function PUT(request: Request) {
       'INTERNAL_ERROR',
       'Failed to update theme',
       500,
-      error instanceof Error ? error.message : undefined,
+      undefined,
       {
         'Cache-Control': 'no-store, max-age=0',
       },

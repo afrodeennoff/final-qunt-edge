@@ -859,9 +859,10 @@ export class WebhookService {
           }
         })
       } else {
-        // Prefer userId lookup over email
+        // Prefer userId lookup over email — use updateMany since userId/email
+        // may not be unique in the Subscription table
         const lookupWhere = userId ? { userId } : { email }
-        await prisma.subscription.update({
+        await prisma.subscription.updateMany({
           where: lookupWhere,
           data: {
             plan: planName.toUpperCase(),
@@ -932,8 +933,9 @@ export class WebhookService {
           }
         })
       } else {
+        // Use updateMany since userId/email may not be unique in the Subscription table
         const lookupWhere = userId ? { userId } : { email }
-        await prisma.subscription.update({
+        await prisma.subscription.updateMany({
           where: lookupWhere,
           data: {
             status: 'PENDING',
