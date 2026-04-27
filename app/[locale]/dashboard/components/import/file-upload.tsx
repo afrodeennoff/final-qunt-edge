@@ -20,13 +20,16 @@ interface FileUploadProps {
  setHeaders: React.Dispatch<React.SetStateAction<string[]>>
  setStep: React.Dispatch<React.SetStateAction<Step>>
  setError: React.Dispatch<React.SetStateAction<string | null>>
+ error: string | null
 }
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 const ALLOWED_TYPES = [
  'text/csv',
+ 'text/plain',
  'application/vnd.ms-excel',
- 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+ 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+ 'application/octet-stream',
 ]
 const ALLOWED_EXTENSIONS = ['.csv', '.xls', '.xlsx']
 const VALIDATION_PREVIEW_BYTES = 256 * 1024
@@ -75,7 +78,8 @@ export default function FileUpload({
  setCsvData,
  setHeaders,
  setStep,
- setError
+ setError,
+ error
 }: FileUploadProps) {
  const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
  const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({})
@@ -99,20 +103,21 @@ export default function FileUpload({
  }
  }
 
- // Check file type
- if (!ALLOWED_TYPES.includes(file.type)) {
- return {
- valid: false,
- error: `Invalid file type: ${file.type}. Only CSV and Excel files are allowed.`
- }
- }
-
- // Check file extension
+ // Check file extension first (more reliable than MIME type across browsers)
  const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase()
  if (!ALLOWED_EXTENSIONS.includes(fileExtension)) {
  return {
  valid: false,
  error: `Invalid file extension: ${fileExtension}. Only .csv, .xls, and .xlsx files are allowed.`
+ }
+ }
+
+ // Check file type - accept if extension is valid, even if MIME is empty/mismatched
+ // Browsers inconsistently report CSV MIME types (text/csv, text/plain, empty, etc.)
+ if (file.type && !ALLOWED_TYPES.includes(file.type)) {
+ return {
+ valid: false,
+ error: `Invalid file type: ${file.type}. Only CSV and Excel files are allowed.`
  }
  }
 
@@ -213,19 +218,24 @@ export default function FileUpload({
  }, [setError, validateFile])
 
  const onDrop = useCallback((acceptedFiles: File[]) => {
- setUploadedFiles(prevFiles => [...prevFiles, ...acceptedFiles])
- acceptedFiles.forEach((file, index) => {
- const totalIndex = uploadedFilesRef.current.length + index
- setUploadProgress(prev => ({ ...prev, [file.name]: 0 }))
- 
- // Security: Validate file before processing
+ // Validate all files before adding any to the list to prevent stuck state
+ const validFiles: File[] = []
+ for (const file of acceptedFiles) {
  const validation = validateFile(file)
  if (!validation.valid) {
  setError(validation.error ?? 'Validation failed')
- setUploadProgress(prev => ({ ...prev, [file.name]: 0 }))
- return
+ continue
  }
- 
+ validFiles.push(file)
+ }
+
+ if (validFiles.length === 0) return
+
+ setUploadedFiles(prevFiles => [...prevFiles, ...validFiles])
+ validFiles.forEach((file, index) => {
+ const totalIndex = uploadedFilesRef.current.length + index
+ setUploadProgress(prev => ({ ...prev, [file.name]: 0 }))
+
  processFile(file, totalIndex)
  .then(() => {
  setUploadProgress(prev => ({ ...prev, [file.name]: 100 }))
@@ -262,7 +272,7 @@ export default function FileUpload({
  if (parsedFiles.length === 0) return
 
  try {
- const platform = platforms.find(p => p.type === importType)
+ const platform = platforms.find(p => p.type === importType) || platforms.find(p => p.platformName === 'csv-ai')
  if (!platform) {
  throw new Error("Invalid import type")
  }
@@ -314,7 +324,14 @@ export default function FileUpload({
 
  return (
  <div className="space-y-4 w-full h-full p-8 flex flex-col items-center justify-center">
- <div 
+ {error && (
+ <Alert variant="destructive" className="w-full max-w-2xl animate-in fade-in slide-in-from-top-2">
+ <AlertCircle className="h-4 w-4" />
+ <AlertTitle>Upload Error</AlertTitle>
+ <AlertDescription>{error}</AlertDescription>
+ </Alert>
+ )}
+ <div
  {...getRootProps()} 
  className={cn("h-80 w-full max-w-2xl border-2 border-dashed rounded-lg p-12 text-center transition-[opacity,background-color,border-color] duration-300 ease-in-out","hover:border-primary/50 group relative",
  isDragActive 

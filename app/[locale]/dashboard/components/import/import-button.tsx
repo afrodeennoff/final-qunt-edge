@@ -401,6 +401,7 @@ export default function ImportButton() {
  setHeaders={setHeaders}
  setStep={setStep}
  setError={setError}
+ error={error}
  />
  );
  }
