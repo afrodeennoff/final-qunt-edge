@@ -346,10 +346,6 @@ export function TiptapEditor({
       }),
       ResizableImageExtension.configure({
         inline: true,
-        allowBase64: false,
-        HTMLAttributes: {
-          class: "rounded-lg",
-        },
       }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
