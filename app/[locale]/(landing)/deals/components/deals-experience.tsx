@@ -1092,7 +1092,7 @@ function DealsContentSections({
       />
 
       {hadFetchError ? (
-        <p className="text-sm leading-relaxed text-amber-500">
+        <p className="text-sm leading-relaxed text-warning">
           Some deal data could not be refreshed fully. The page is showing the best available
           snapshot.
         </p>

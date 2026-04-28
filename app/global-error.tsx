@@ -17,9 +17,9 @@ export default function GlobalError({
     <html lang="en" className="dark">
       <body className="min-h-screen bg-black text-white antialiased">
         <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-red-500/20 bg-red-500/10">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-destructive/20 bg-destructive/10">
             <svg
-              className="h-6 w-6 text-red-400"
+              className="h-6 w-6 text-destructive"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
