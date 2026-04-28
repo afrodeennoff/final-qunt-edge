@@ -216,7 +216,7 @@ function CouponBadges({
         </Badge>
       ) : null}
       {scheduled ? (
-        <Badge variant="outline" className="border-sky-500/40 text-sky-300">
+        <Badge variant="outline" className="border-purple-500/40 text-purple-300">
           Scheduled
         </Badge>
       ) : null}

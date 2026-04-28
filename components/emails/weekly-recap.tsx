@@ -156,13 +156,13 @@ function findMostActiveDay(dailyPnL: TraderStatsEmailProps['dailyPnL']) {
 
 // Trading activity cell component like GitHub contribution graph
 const TradingActivityCell = ({ level }: { level: number }) => {
-  // Level 0-4 representing trading activity intensity with blue color scheme
+  // Level 0-4 representing trading activity intensity with purple color scheme
   const colors = [
     'bg-[#ebedf0]', // No activity
-    'bg-[#c6d7f9]', // Low activity
-    'bg-[#8badf3]', // Moderate activity
-    'bg-[#5a8bec]', // High activity
-    'bg-[#3469DF]', // Very high activity - main blue color
+    'bg-[#e9d5ff]', // Low activity
+    'bg-[#c4b5fd]', // Moderate activity
+    'bg-[#a78bfa]', // High activity
+    'bg-[#7c3aed]', // Very high activity - main purple color
   ];
 
   return (
@@ -287,7 +287,7 @@ const ActionButtons = ({ t }: { t: typeof translations.fr }) => (
       <tbody>
         <tr>
           <td className="w-[50%] pr-[8px]">
-            <div className="bg-[#3469DF] rounded-[6px] text-center py-[12px] px-[16px] box-border">
+            <div className="bg-[#7c3aed] rounded-[6px] text-center py-[12px] px-[16px] box-border">
               <Link
                 href="https://cal.com/hugo-demenez/qunt-edge-discussion"
                 className="text-white font-medium no-underline text-[14px]"
@@ -297,10 +297,10 @@ const ActionButtons = ({ t }: { t: typeof translations.fr }) => (
             </div>
           </td>
           <td className="w-[50%] pl-[8px]">
-            <div className="bg-white border border-[#3469DF] rounded-[6px] text-center py-[12px] px-[16px] box-border">
+            <div className="bg-white border border-[#7c3aed] rounded-[6px] text-center py-[12px] px-[16px] box-border">
               <Link
                 href="https://qunt-edge.vercel.app/dashboard"
-                className="text-[#3469DF] font-medium no-underline text-[14px]"
+                className="text-[#7c3aed] font-medium no-underline text-[14px]"
               >
                 {t.visitDashboard}
               </Link>
@@ -506,10 +506,10 @@ export default function TraderStatsEmail({
                       <div className="flex flex-row mt-[8px] items-center justify-center">
                         <Text className="text-[12px] text-[#57606a] mr-[4px] m-0">{t.less}</Text>
                         <div className="bg-[#ebedf0] w-[14px] h-[14px] rounded-[2px] mx-px" />
-                        <div className="bg-[#c6d7f9] w-[14px] h-[14px] rounded-[2px] mx-px" />
-                        <div className="bg-[#8badf3] w-[14px] h-[14px] rounded-[2px] mx-px" />
-                        <div className="bg-[#5a8bec] w-[14px] h-[14px] rounded-[2px] mx-px" />
-                        <div className="bg-[#3469DF] w-[14px] h-[14px] rounded-[2px] mx-px" />
+                        <div className="bg-[#e9d5ff] w-[14px] h-[14px] rounded-[2px] mx-px" />
+                        <div className="bg-[#c4b5fd] w-[14px] h-[14px] rounded-[2px] mx-px" />
+                        <div className="bg-[#a78bfa] w-[14px] h-[14px] rounded-[2px] mx-px" />
+                        <div className="bg-[#7c3aed] w-[14px] h-[14px] rounded-[2px] mx-px" />
                         <Text className="text-[12px] text-[#57606a] ml-[4px] m-0">{t.more}</Text>
                       </div>
                       <Text className="text-[12px] text-[#57606a] mt-[4px] m-0">

@@ -90,7 +90,7 @@ export async function GET(req: NextRequest) {
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
 
-  // Blue light in bottom-left corner
+  // Purple light in bottom-left corner
   const bottomLeftGradient = ctx.createRadialGradient(
     0,
     height,
@@ -99,8 +99,8 @@ export async function GET(req: NextRequest) {
     height,
     Math.max(width, height) * 0.3
   );
-  bottomLeftGradient.addColorStop(0, '#3b82f6');
-  bottomLeftGradient.addColorStop(0.5, '#2563eb');
+  bottomLeftGradient.addColorStop(0, '#8b5cf6');
+  bottomLeftGradient.addColorStop(0.5, '#7c3aed');
   bottomLeftGradient.addColorStop(1, 'rgba(15, 15, 15, 0)');
   ctx.fillStyle = bottomLeftGradient;
   ctx.fillRect(0, 0, width, height);
