@@ -189,7 +189,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
 
  {/* Grid Content */}
  <ScrollArea className="flex-1 p-4 md:p-6">
- <div className="grid auto-rows-fr gap-4 pb-20 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+ <div className="grid auto-rows-fr gap-3 pb-20 [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]">
  {filteredPlatforms.length > 0 ? (
  filteredPlatforms.map((platform) => (
  <div key={platform.type} className="h-full">
@@ -245,11 +245,17 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  <Button
  variant="default"
  size="sm"
- onClick={() => setIsCompareMode(true)}
+ onClick={() => {
+   setIsCompareMode(false)
+   if (selectedPlatforms[0]) {
+     setSelectedType(selectedPlatforms[0] as ImportType)
+     setLastSelectedType(selectedPlatforms[0] as ImportType)
+   }
+   setSelectedPlatforms([])
+ }}
  className="bg-v2-accent text-v2-bg-base hover:bg-v2-accent/90 gap-2"
  >
- <GitCompare className="h-4 w-4" />
- Compare
+ Import
  </Button>
  </div>
  </div>

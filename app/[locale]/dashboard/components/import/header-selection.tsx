@@ -37,8 +37,8 @@ export default function HeaderSelection({ rawCsvData, setCsvData, setHeaders, se
  }
 
  return (
- <div className="space-y-4">
- <div className="max-h-[calc(80vh-200px)] overflow-auto">
+ <div className="h-full flex flex-col gap-4">
+ <div className="flex-1 min-h-0 overflow-auto">
  <Table>
  <TableHeader>
  <TableRow>

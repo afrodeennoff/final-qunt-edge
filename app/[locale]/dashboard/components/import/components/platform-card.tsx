@@ -70,7 +70,7 @@ function PlatformCardInner({
  hover={isInteractive}
  size="sm"
  onClick={isInteractive ? handleSelect : undefined}
- className={cn("group relative flex h-full min-h-[13.5rem] flex-col items-start gap-3 rounded-xl border-border/70 bg-card/75 text-left transition-[opacity,background-color,border-color] duration-300",
+ className={cn("group relative flex h-full min-h-[10.5rem] flex-col items-start gap-3 rounded-xl border-border/70 bg-card/75 text-left transition-[opacity,background-color,border-color] duration-300",
  isSelected &&"border-v2-accent shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] shadow-v2-accent/20",
  (platform.isDisabled || platform.isComingSoon) &&"cursor-not-allowed opacity-60 grayscale-[0.5]"
  )}
@@ -124,10 +124,10 @@ function PlatformCardInner({
  </CardHeader>
 
  <CardContent size="sm" className="p-0 flex flex-col gap-2 flex-1">
- <CardTitle size="sm" className="min-h-[2.75rem] leading-snug">
+ <CardTitle size="sm" className="min-h-[2rem] leading-snug">
  {t(String(platform.name), { count: 1 })}
  </CardTitle>
- <p className="min-h-[3rem] text-xs text-muted-foreground line-clamp-2">
+ <p className="min-h-[2.5rem] text-xs text-muted-foreground line-clamp-2">
  {t(String(platform.description), { count: 1 })}
  </p>
  </CardContent>
