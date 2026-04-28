@@ -13,7 +13,12 @@ import { Badge } from '@/components/ui/badge'
 import { useUserStore } from '../../../../store/user-store'
 import { useTradovateSyncStore } from '../../../../store/tradovate-sync-store'
 import { useTheme } from '@/context/theme-provider'
-import { THEME_LABELS, THEME_PALETTES, VALID_DASHBOARD_THEMES } from '@/lib/constants/dashboard-themes'
+import {
+  THEME_LABELS,
+  THEME_PALETTES,
+  VALID_DASHBOARD_THEMES,
+  getThemeSwatches,
+} from '@/lib/constants/dashboard-themes'
 import {
   User,
   Settings,
@@ -29,6 +34,7 @@ import {
   Eye,
   EyeOff,
   Palette,
+  Check,
 } from 'lucide-react'
 import { signOut, setPasswordAction } from '@/server/auth'
 import Link from 'next/link'
@@ -463,32 +469,57 @@ export default function SettingsPage() {
               </Label>
               <div className="mt-2">
                 <div className="rounded-md border border-border/20 bg-background/30 p-3">
-                  <p className="mb-3 text-sm text-muted-foreground">
-                    Choose one of the approved tweakcn dashboard themes
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    Pick one approved tweakcn theme. It applies across the dashboard and is saved
+                    to your backend profile.
                   </p>
-                  <div className="flex gap-3">
-                    {VALID_DASHBOARD_THEMES.map((t) => (
+                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                    {VALID_DASHBOARD_THEMES.map((t) => {
+                      const selected = theme === t
+                      const swatches = getThemeSwatches(t)
+
+                      return (
                       <button
                         key={t}
                         type="button"
                         onClick={() => setTheme(t)}
-                        className="relative flex flex-col items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-lg p-1"
+                        className={`relative rounded-xl border p-3 text-left transition-[opacity,background-color,border-color] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${selected ? 'border-primary/70 bg-primary/10' : 'border-border/35 bg-background/35 hover:border-primary/35 hover:bg-accent/20'}`}
                         aria-label={`Set dashboard theme to ${THEME_LABELS[t]}`}
-                        aria-pressed={theme === t}
+                        aria-pressed={selected}
                       >
-                        <span
-                          className={`h-8 w-8 rounded-full transition-[opacity,background-color,border-color] ${theme === t ? 'ring-2 ring-offset-2 ring-offset-background ring-primary scale-110' : 'hover:scale-105'}`}
-                          style={{
-                            backgroundColor: THEME_PALETTES[t]['--primary'],
-                          }}
-                        />
-                        <span
-                          className={`text-xs capitalize ${theme === t ? 'text-primary font-medium' : 'text-muted-foreground'}`}
-                        >
-                          {THEME_LABELS[t]}
+                        <span className="flex items-center justify-between gap-3">
+                          <span className="flex items-center gap-3">
+                            <span
+                              className="h-9 w-9 rounded-full border border-border/45 shadow-sm"
+                              style={{ backgroundColor: THEME_PALETTES[t]['--primary'] }}
+                            />
+                            <span>
+                              <span className="block text-sm font-semibold text-foreground">
+                                {THEME_LABELS[t]}
+                              </span>
+                              <span className="block text-xs text-muted-foreground">
+                                {THEME_PALETTES[t]['--primary']}
+                              </span>
+                            </span>
+                          </span>
+                          {selected && (
+                            <span className="inline-flex size-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                              <Check className="size-3.5" />
+                            </span>
+                          )}
+                        </span>
+                        <span className="mt-3 flex overflow-hidden rounded-full border border-border/30">
+                          {swatches.map((color) => (
+                            <span
+                              key={color}
+                              className="h-2.5 flex-1"
+                              style={{ backgroundColor: color }}
+                            />
+                          ))}
                         </span>
                       </button>
-                    ))}
+                      )
+                    })}
                   </div>
                 </div>
               </div>

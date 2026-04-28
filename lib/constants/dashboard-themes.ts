@@ -26,6 +26,14 @@ export const THEME_LABELS: Record<DashboardTheme, string> = {
   cmkjubmo7000604jpa4iidt1u: 'Black',
 }
 
+const THEME_SWATCH_KEYS = [
+  '--primary',
+  '--chart-2',
+  '--chart-3',
+  '--chart-4',
+  '--chart-5',
+] as const
+
 const LEGACY_DASHBOARD_THEME_ALIASES: Record<string, DashboardTheme> = {
   purple: 'cmlh0x713000104jrgmds6vcd',
   plum: 'cmlh0x713000104jrgmds6vcd',
@@ -65,6 +73,11 @@ export function normalizeDashboardTheme(theme?: string | null): DashboardTheme {
     return theme as DashboardTheme
   }
   return LEGACY_DASHBOARD_THEME_ALIASES[theme] ?? DEFAULT_DASHBOARD_THEME
+}
+
+export function getThemeSwatches(theme: DashboardTheme | string | null | undefined): string[] {
+  const palette = THEME_PALETTES[normalizeDashboardTheme(theme)]
+  return THEME_SWATCH_KEYS.map((key) => palette[key]).filter(Boolean)
 }
 
 /**
