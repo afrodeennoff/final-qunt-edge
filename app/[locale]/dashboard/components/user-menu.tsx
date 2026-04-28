@@ -40,7 +40,12 @@ import { SubscriptionBadge } from '@/components/subscription-badge'
 import { signOut } from '@/server/auth'
 import { cn } from '@/lib/utils'
 import { useTheme } from '@/context/theme-provider'
-import { THEME_LABELS, VALID_DASHBOARD_THEMES, type DashboardTheme } from '@/lib/constants/dashboard-themes'
+import {
+ THEME_LABELS,
+ VALID_DASHBOARD_THEMES,
+ getThemeSwatches,
+ type DashboardTheme,
+} from '@/lib/constants/dashboard-themes'
 
 type Locale = 'en' | 'fr'
 type MenuVariant = 'navbar' | 'sidebar'
@@ -282,21 +287,32 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: MenuVarian
  </DropdownMenuSubTrigger>
  <DropdownMenuPortal>
  <DropdownMenuSubContent>
- <ScrollArea className="h-[128px]">
+ <ScrollArea className="h-[300px]">
  <DropdownMenuRadioGroup
  value={theme}
  onValueChange={(val) => setTheme(val as DashboardTheme)}
  aria-label="Theme selection"
  >
- {VALID_DASHBOARD_THEMES.map((t_name) => (
+ {VALID_DASHBOARD_THEMES.map((t_name) => {
+ const swatches = getThemeSwatches(t_name)
+
+ return (
  <DropdownMenuRadioItem
  key={t_name}
  value={t_name}
- className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background capitalize"
+ className="gap-3 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
  >
- {THEME_LABELS[t_name]}
- </DropdownMenuRadioItem>
+ <span className="grid min-w-0 gap-1">
+ <span className="truncate text-sm font-medium">{THEME_LABELS[t_name]}</span>
+ <span className="flex w-28 overflow-hidden rounded-full border border-border/40">
+ {swatches.map((color) => (
+ <span key={color} className="h-2 flex-1" style={{ backgroundColor: color }} />
  ))}
+ </span>
+ </span>
+ </DropdownMenuRadioItem>
+ )
+ })}
  </DropdownMenuRadioGroup>
  </ScrollArea>
  </DropdownMenuSubContent>
