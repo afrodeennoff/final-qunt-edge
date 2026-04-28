@@ -1,4 +1,3 @@
-import { Suspense } from 'react'
 import MarketingLayoutShell from '../(landing)/components/marketing-layout-shell'
 import { PublicRootProviders } from '@/components/providers/root-providers'
 
@@ -21,15 +20,6 @@ export async function generateMetadata(props: {
   }
 }
 
-function HomeLayoutFallback() {
-  return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-4 bg-background pb-safe">
-      <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-foreground" />
-      <p className="text-sm text-muted-foreground">Loading&hellip;</p>
-    </div>
-  )
-}
-
 export default function HomeLayout({
   children,
 }: Readonly<{
@@ -47,9 +37,7 @@ export default function HomeLayout({
         fullWidth
         showSidebar={false}
       >
-        <Suspense fallback={<HomeLayoutFallback />}>
-          {children}
-        </Suspense>
+        {children}
       </MarketingLayoutShell>
     </PublicRootProviders>
   )
