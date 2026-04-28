@@ -80,24 +80,12 @@ interface SidebarNavGroupProps {
 
 // Ordered flat list — group property controls sort order only, no visual headers
 const GROUP_ORDER = [
-  'Overview',
-  'Analysis',
-  'Profile & Social',
+  'Workspace',
+  'Review',
+  'Tools',
+  'Profile',
   'Resources',
   'System',
-  'Workspace',
-  'Performance',
-  'Network',
-  'Control',
-  'Main',
-  'Inventory',
-  'Trading',
-  'Team Overview',
-  'Team Management',
-  'Admin Panel',
-  'Settings',
-  'Support',
-  'Admin',
 ]
 
 function computeFlatOrderedItems(items: UnifiedSidebarItem[]): {

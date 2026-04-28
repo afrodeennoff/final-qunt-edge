@@ -43,44 +43,38 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
     }, [resetUser])
 
     const navItems: UnifiedSidebarItem[] = React.useMemo(() => [
-        // ── Trade Desk ──
+        // ── Workspace ──
         {
             href: `/${locale}/dashboard`,
             icon: <LayoutDashboard className={NAV_ICON_SIZE} />,
             label: "Overview",
-            group: "Trade Desk",
+            group: "Workspace",
             exact: true
-        },
-        {
-            href: `/${locale}/dashboard/import`,
-            icon: <FileUp className={NAV_ICON_SIZE} />,
-            label: "Import Trades",
-            group: "Trade Desk"
-        },
-        {
-            href: `/${locale}/dashboard/notes`,
-            icon: <FileText className={NAV_ICON_SIZE} />,
-            label: "Trader Notes",
-            group: "Trade Desk"
         },
         {
             href: `/${locale}/dashboard/trades`,
             icon: <BookOpen className={NAV_ICON_SIZE} />,
-            label: "Trade Log",
-            group: "Trade Desk"
+            label: "Trades",
+            group: "Workspace"
+        },
+        {
+            href: `/${locale}/dashboard/notes`,
+            icon: <FileText className={NAV_ICON_SIZE} />,
+            label: "Notes",
+            group: "Workspace"
         },
         {
             href: `/${locale}/dashboard/accounts`,
             icon: <Activity className={NAV_ICON_SIZE} />,
             label: "Accounts",
-            group: "Trade Desk"
+            group: "Workspace"
         },
 
         // ── Review ──
         {
-            href: `/${locale}/dashboard/behavior`,
-            icon: <Sparkles className={NAV_ICON_SIZE} />,
-            label: "Behavior",
+            href: `/${locale}/dashboard/analytics`,
+            icon: <Compass className={NAV_ICON_SIZE} />,
+            label: "Analytics",
             group: "Review"
         },
         {
@@ -90,71 +84,79 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             group: "Review"
         },
         {
-            href: `/${locale}/dashboard/trader-profile`,
-            icon: <TrendingUp className={NAV_ICON_SIZE} />,
-            label: "Trader Profile",
-            group: "Review"
-        },
-
-        // ── Edge Lab ──
-        {
-            href: `/${locale}/dashboard/analytics`,
-            icon: <Compass className={NAV_ICON_SIZE} />,
-            label: "Analytics Lab",
-            group: "Edge Lab"
-        },
-        {
             href: `/${locale}/dashboard/strategies`,
             icon: <BookOpen className={NAV_ICON_SIZE} />,
             label: "Playbook",
-            group: "Edge Lab"
+            group: "Review"
+        },
+
+        // ── Tools ──
+        {
+            href: `/${locale}/dashboard/import`,
+            icon: <FileUp className={NAV_ICON_SIZE} />,
+            label: "Import",
+            group: "Tools"
+        },
+        {
+            href: `/${locale}/dashboard/behavior`,
+            icon: <Sparkles className={NAV_ICON_SIZE} />,
+            label: "AI Assistant",
+            group: "Tools"
         },
         {
             href: `/${locale}/dashboard/data`,
             icon: <Database className={NAV_ICON_SIZE} />,
             label: "Data",
-            group: "Edge Lab"
-        },
-
-        // ── Growth ──
-        {
-            href: `/${locale}/teams/dashboard`,
-            icon: <Users className={NAV_ICON_SIZE} />,
-            label: "Teams",
-            group: "Growth"
-        },
-        {
-            href: `/${locale}/propfirms`,
-            icon: <Building2 className={NAV_ICON_SIZE} />,
-            label: "Prop Firms",
-            group: "Growth"
-        },
-        {
-            href: `/${locale}/deals`,
-            icon: <DollarSign className={NAV_ICON_SIZE} />,
-            label: "Deals",
-            group: "Growth"
-        },
-
-        // ── System ──
-        {
-            href: `/${locale}/dashboard/settings`,
-            icon: <Settings className={NAV_ICON_SIZE} />,
-            label: "Settings",
-            group: "System"
-        },
-        {
-            href: `/${locale}/dashboard/billing`,
-            icon: <CreditCard className={NAV_ICON_SIZE} />,
-            label: "Billing",
-            group: "System"
+            group: "Tools"
         },
         {
             label: "Sync",
             icon: <RefreshCw className={NAV_ICON_SIZE} />,
             action: () => refreshAllData({ force: true }),
-            group: "System"
+            group: "Tools"
         },
+
+        // ── Profile ──
+        {
+            href: `/${locale}/dashboard/trader-profile`,
+            icon: <TrendingUp className={NAV_ICON_SIZE} />,
+            label: "Profile",
+            group: "Profile"
+        },
+        {
+            href: `/${locale}/teams/dashboard`,
+            icon: <Users className={NAV_ICON_SIZE} />,
+            label: "Teams",
+            group: "Profile"
+        },
+        {
+            href: `/${locale}/dashboard/billing`,
+            icon: <CreditCard className={NAV_ICON_SIZE} />,
+            label: "Billing",
+            group: "Profile"
+        },
+        {
+            href: `/${locale}/dashboard/settings`,
+            icon: <Settings className={NAV_ICON_SIZE} />,
+            label: "Settings",
+            group: "Profile"
+        },
+
+        // ── Resources ──
+        {
+            href: `/${locale}/propfirms`,
+            icon: <Building2 className={NAV_ICON_SIZE} />,
+            label: "Prop Firms",
+            group: "Resources"
+        },
+        {
+            href: `/${locale}/deals`,
+            icon: <DollarSign className={NAV_ICON_SIZE} />,
+            label: "Deals",
+            group: "Resources"
+        },
+
+        // ── System ──
         ...(isAdmin ? [{
             href: `/${locale}/admin`,
             icon: <Shield className={NAV_ICON_SIZE} />,

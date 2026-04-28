@@ -306,7 +306,7 @@ export const platforms: PlatformConfig[] = [
  },
  {
  platformName: 'csv-ai',
- type: '',
+ type: 'csv-ai',
  name: 'import.type.csvAi.name',
  description: 'import.type.csvAi.description',
  category: 'Intelligent Import',

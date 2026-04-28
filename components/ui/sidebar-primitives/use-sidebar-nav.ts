@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation'
 import { NAVIGATION_TIMEOUT_MS } from '@/lib/constants/sidebar'
 
 export const NAVIGATION_STALL_TIMEOUT_MS = NAVIGATION_TIMEOUT_MS
-export const DEFAULT_OPEN_GROUPS = new Set(['Overview', 'Trading', 'Analytics', 'System'])
+export const DEFAULT_OPEN_GROUPS = new Set(['Workspace', 'Review', 'Tools'])
 
 export function stripLocalePrefix(pathname: string) {
   if (!pathname) return '/'
