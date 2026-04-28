@@ -148,7 +148,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
               label="Ranked traders"
               value={initialEntries.length.toString()}
               icon={Trophy}
-              accent="orange"
+              accent="purple"
               className="animate-scale-reveal animate-scale-reveal-d1"
             />
             <SummaryCard
@@ -162,14 +162,14 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
               label="Average win rate"
               value={`${summary.avgWinRate}%`}
               icon={Activity}
-              accent="blue"
+              accent="violet"
               className="animate-scale-reveal animate-scale-reveal-d2"
             />
             <SummaryCard
               label="Trades logged"
               value={summary.totalTrades.toLocaleString()}
               icon={Shield}
-              accent="orange"
+              accent="purple"
               className="animate-scale-reveal animate-scale-reveal-d3"
             />
             <div
@@ -215,19 +215,19 @@ function formatCurrency(value: number): string {
 }
 
 const ACCENT = {
-  orange: {
-    icon: 'text-orange-400',
-    badge: 'border-orange-500/22 bg-orange-500/10',
-    text: 'text-orange-400',
+  purple: {
+    icon: 'text-primary',
+    badge: 'border-primary/22 bg-primary/10',
+    text: 'text-primary',
   },
   green: {
     icon: 'text-success',
     badge: 'border-emerald-500/18 bg-success/8',
     text: 'text-success',
   },
-  blue: {
+  violet: {
     icon: 'text-primary',
-    badge: 'border-blue-500/20 bg-blue-500/10',
+    badge: 'border-primary/20 bg-primary/10',
     text: 'text-primary',
   },
 } as const

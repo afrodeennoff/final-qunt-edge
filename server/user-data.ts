@@ -514,7 +514,7 @@ export async function setUserDashboardTheme(theme: string): Promise<DashboardThe
 
   const hasDashboardThemeColumn = await isPrismaColumnAvailable(USER_TABLE_NAME, DASHBOARD_THEME_COLUMN)
   if (!hasDashboardThemeColumn) {
-    return 'blue'
+    return 'purple'
   }
 
   try {
@@ -530,7 +530,7 @@ export async function setUserDashboardTheme(theme: string): Promise<DashboardThe
   } catch (error) {
     if (isPrismaSchemaMismatchError(error)) {
       markPrismaColumnUnavailable(USER_TABLE_NAME, DASHBOARD_THEME_COLUMN)
-      return 'blue'
+      return 'purple'
     }
     logger.error('[setUserDashboardTheme] Error updating user theme', { error, userId, theme })
     throw new Error('Failed to update theme')
