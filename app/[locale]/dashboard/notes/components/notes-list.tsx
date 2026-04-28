@@ -12,12 +12,15 @@ import {
   FileText,
   Clock,
   Archive,
+  UserRound,
   LayoutGrid,
 } from "lucide-react"
 import { useI18n } from "@/locales/client"
 import { TradingNote } from "../lib/use-notes"
 
 interface NotesListProps {
+  traders: string[]
+  selectedTrader: string | null
   notes: TradingNote[]
   activeNoteId: string | null
   filter: string
@@ -26,6 +29,7 @@ interface NotesListProps {
   onNewNote: () => void
   onFilterChange: (filter: string) => void
   onSearchChange: (query: string) => void
+  onTraderSelect: (trader: string | null) => void
   isLoading?: boolean
 }
 
@@ -37,6 +41,8 @@ const filterOptions = [
 ]
 
 export function NotesList({
+  traders,
+  selectedTrader,
   notes,
   activeNoteId,
   filter,
@@ -45,6 +51,7 @@ export function NotesList({
   onNewNote,
   onFilterChange,
   onSearchChange,
+  onTraderSelect,
   isLoading = false,
 }: NotesListProps) {
   const t = useI18n()
@@ -163,6 +170,49 @@ export function NotesList({
 
       {/* Notes List */}
       <ScrollArea className="flex-1">
+        <div className="px-2 pt-2 pb-1">
+          <p
+            className="px-2 pb-1 text-[10px] font-semibold uppercase tracking-wider"
+            style={{ color: 'oklch(0.52 0.03 297)' }}
+          >
+            Traders
+          </p>
+          <div className="space-y-0.5">
+            <button
+              type="button"
+              onClick={() => onTraderSelect(null)}
+              className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-xs transition-[opacity,background-color,border-color]"
+              style={{
+                background: selectedTrader === null ? 'oklch(0.60 0.22 297 / 0.14)' : 'transparent',
+                color: selectedTrader === null ? 'oklch(0.72 0.16 297)' : 'oklch(0.62 0.03 297)',
+              }}
+            >
+              <UserRound className="h-3.5 w-3.5" />
+              <span>All Traders</span>
+            </button>
+            {traders.map((trader) => {
+              const isActiveTrader = selectedTrader === trader
+              return (
+                <button
+                  key={trader}
+                  type="button"
+                  onClick={() => onTraderSelect(trader)}
+                  className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-xs transition-[opacity,background-color,border-color]"
+                  style={{
+                    background: isActiveTrader ? 'oklch(0.60 0.22 297 / 0.14)' : 'transparent',
+                    color: isActiveTrader ? 'oklch(0.72 0.16 297)' : 'oklch(0.62 0.03 297)',
+                  }}
+                >
+                  <UserRound className="h-3.5 w-3.5" />
+                  <span className="truncate">{trader}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="mx-2 my-2 h-px" style={{ background: 'oklch(0.50 0.02 297 / 0.1)' }} />
+
         {isLoading ? (
           <div className="p-3 space-y-2">
             {[1, 2, 3].map((i) => (

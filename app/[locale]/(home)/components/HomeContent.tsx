@@ -5,6 +5,9 @@ import {
   Brain,
   Download,
   FileText,
+  LineChart,
+  NotebookTabs,
+  Target,
   Play,
   Shield,
   Users,
@@ -85,6 +88,33 @@ export default async function HomeContent({ locale }: HomeContentProps) {
     },
   ]
 
+  const processSteps = [
+    {
+      id: '01',
+      title: 'Import your trades',
+      body: 'Connect broker sync or upload statements in minutes. No manual spreadsheet cleanup.',
+      icon: Download,
+    },
+    {
+      id: '02',
+      title: 'See your true edge',
+      body: 'Track win rate, expectancy, drawdown, and behavior patterns across sessions and setups.',
+      icon: LineChart,
+    },
+    {
+      id: '03',
+      title: 'Journal and review',
+      body: 'Capture execution notes, mistakes, and playbook updates directly beside each trade.',
+      icon: NotebookTabs,
+    },
+    {
+      id: '04',
+      title: 'Improve with intent',
+      body: 'Turn insights into action plans and tighten risk decisions before the next session.',
+      icon: Target,
+    },
+  ]
+
   return (
     <div className="relative min-w-0 overflow-x-hidden bg-background selection:bg-primary/30 selection:text-foreground">
       <main className="relative z-10 flex min-w-0 flex-col">
@@ -162,6 +192,37 @@ export default async function HomeContent({ locale }: HomeContentProps) {
           </div>
         </MarketingSection>
 
+        {/* Workflow */}
+        <MarketingSection id="how-it-works" className="py-8 lg:py-10">
+          <MarketingSectionHeader
+            eyebrow="Simple Process, Serious Results"
+            title="Log. Analyze. Journal. Improve."
+            description="A practical workflow built for traders who want measurable progress, not dashboard noise."
+          />
+          <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {processSteps.map((step) => {
+              const Icon = step.icon
+              return (
+                <article
+                  key={step.id}
+                  className="rounded-xl border border-border/35 bg-card/40 p-5 transition-[opacity,background-color,border-color] hover:border-primary/30 hover:bg-card/60"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold tracking-[0.14em] text-primary/80">
+                      {step.id}
+                    </span>
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border/45 bg-background/70 text-foreground/85">
+                      <Icon className="h-4 w-4" />
+                    </span>
+                  </div>
+                  <h3 className="mt-4 text-base font-semibold text-foreground">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.body}</p>
+                </article>
+              )
+            })}
+          </div>
+        </MarketingSection>
+
         {/* Demo */}
         <MarketingSection id="product-walkthrough" className="py-14 lg:py-16">
           <MarketingSectionHeader
@@ -173,7 +234,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
             <MarketingHyperframe
               label={t('landing.home.demo.frameLabel')}
               status="Live audit"
-              className="shadow-[0_32px_80px_-48px_oklch(0.65_0.22_260_/_0.48)]"
+              className="shadow-[0_32px_80px_-48px_hsl(var(--primary)/0.5)]"
             >
               <ProductDemoPlayer />
             </MarketingHyperframe>

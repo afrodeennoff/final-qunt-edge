@@ -1,7 +1,7 @@
 'use client'
 import type { ImportTradeDraft } from '@/lib/trade-types'
 import { ThorSync } from '../thor/thor-sync'
-import { TradovateSync } from '../tradovate/tradovate-sync'
+import { TradovateSync } from '../tradovate/sync/tradovate-sync'
 import { DxFeedSync } from '../dxfeed/sync/dxfeed-sync'
 import { ImportType } from '../import-type-selection'
 import { RithmicSyncWrapper } from '../rithmic/sync/rithmic-sync-connection'

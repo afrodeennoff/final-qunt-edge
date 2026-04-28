@@ -58,6 +58,12 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             group: "Trade Desk"
         },
         {
+            href: `/${locale}/dashboard/notes`,
+            icon: <FileText className={NAV_ICON_SIZE} />,
+            label: "Trader Notes",
+            group: "Trade Desk"
+        },
+        {
             href: `/${locale}/dashboard/trades`,
             icon: <BookOpen className={NAV_ICON_SIZE} />,
             label: "Trade Log",
@@ -71,12 +77,6 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
         },
 
         // ── Review ──
-        {
-            href: `/${locale}/dashboard/notes`,
-            icon: <FileText className={NAV_ICON_SIZE} />,
-            label: "Notes",
-            group: "Review"
-        },
         {
             href: `/${locale}/dashboard/behavior`,
             icon: <Sparkles className={NAV_ICON_SIZE} />,
@@ -100,7 +100,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
         {
             href: `/${locale}/dashboard/analytics`,
             icon: <Compass className={NAV_ICON_SIZE} />,
-            label: "Scenario Lab",
+            label: "Analytics Lab",
             group: "Edge Lab"
         },
         {

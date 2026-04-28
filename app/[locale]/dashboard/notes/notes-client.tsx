@@ -12,6 +12,8 @@ import { NoteEditor } from "./components/note-editor"
 import { NoteInspector } from "./components/note-inspector"
 import { NOTE_TEMPLATES } from "./lib/templates"
 import { ArrowLeft, PanelRight } from "lucide-react"
+import { useTradingDomainStore } from "@/store/trading-domain-store"
+import { useUserStore } from "@/store/user-store"
 
 type ViewMode = 'list' | 'editor'
 
@@ -41,13 +43,40 @@ export default function NotesPageClient() {
   const [showInspector, setShowInspector] = React.useState(false)
   const [isMobile, setIsMobile] = React.useState(false)
   const [isTablet, setIsTablet] = React.useState(false)
+  const [selectedTrader, setSelectedTrader] = React.useState<string | null>(null)
+  const trades = useTradingDomainStore((state) => state.trades)
+  const accounts = useUserStore((state) => state.accounts)
+
+  const traders = React.useMemo(() => {
+    const fromAccounts = accounts
+      .map((account) => account.number || '')
+      .filter(Boolean)
+    const fromTrades = Array.from(
+      new Set(
+        trades
+          .map((trade) => trade.accountNumber || '')
+          .filter(Boolean),
+      ),
+    )
+    return Array.from(new Set([...fromAccounts, ...fromTrades])).sort((a, b) =>
+      a.localeCompare(b),
+    )
+  }, [accounts, trades])
+
+  const visibleNotes = React.useMemo(() => {
+    if (!selectedTrader) return notes
+    return notes.filter((note) => note.symbol === selectedTrader)
+  }, [notes, selectedTrader])
 
   const handleNewNote = React.useCallback(() => {
-    createNote()
+    const createdNote = createNote()
+    if (createdNote && selectedTrader) {
+      updateNote(createdNote.id, { symbol: selectedTrader })
+    }
     if (isMobile) {
       setViewMode('editor')
     }
-  }, [createNote, isMobile])
+  }, [createNote, isMobile, selectedTrader, updateNote])
 
   // Check screen size
   React.useEffect(() => {
@@ -81,6 +110,10 @@ export default function NotesPageClient() {
 
   const handleNoteSelect = (noteId: string) => {
     setActiveNoteId(noteId)
+    const selected = notes.find((note) => note.id === noteId)
+    if (selected?.symbol) {
+      setSelectedTrader(selected.symbol)
+    }
     if (isMobile) {
       setViewMode('editor')
     }
@@ -162,7 +195,9 @@ export default function NotesPageClient() {
             style={{ borderRight: '1px solid oklch(0.50 0.02 297 / 0.1)' }}
           >
             <NotesList
-              notes={notes}
+              traders={traders}
+              selectedTrader={selectedTrader}
+              notes={visibleNotes}
               activeNoteId={activeNoteId}
               filter={filter}
               searchQuery={searchQuery}
@@ -170,6 +205,7 @@ export default function NotesPageClient() {
               onNewNote={handleNewNote}
               onFilterChange={handleFilterChange}
               onSearchChange={setSearchQuery}
+              onTraderSelect={setSelectedTrader}
               isLoading={isLoading}
             />
           </ResizablePanel>
@@ -227,7 +263,9 @@ export default function NotesPageClient() {
             style={{ borderRight: '1px solid oklch(0.50 0.02 297 / 0.1)' }}
           >
             <NotesList
-              notes={notes}
+              traders={traders}
+              selectedTrader={selectedTrader}
+              notes={visibleNotes}
               activeNoteId={activeNoteId}
               filter={filter}
               searchQuery={searchQuery}
@@ -235,6 +273,7 @@ export default function NotesPageClient() {
               onNewNote={handleNewNote}
               onFilterChange={handleFilterChange}
               onSearchChange={setSearchQuery}
+              onTraderSelect={setSelectedTrader}
               isLoading={isLoading}
             />
           </ResizablePanel>
@@ -281,17 +320,20 @@ export default function NotesPageClient() {
   return (
     <div className="h-full flex flex-col" style={{ background: 'oklch(0.035 0.01 297)' }}>
       {viewMode === 'list' ? (
-        <NotesList
-          notes={notes}
-          activeNoteId={activeNoteId}
-          filter={filter}
-          searchQuery={searchQuery}
-          onNoteSelect={handleNoteSelect}
-          onNewNote={handleNewNote}
-          onFilterChange={handleFilterChange}
-          onSearchChange={setSearchQuery}
-          isLoading={isLoading}
-        />
+          <NotesList
+            traders={traders}
+            selectedTrader={selectedTrader}
+            notes={visibleNotes}
+            activeNoteId={activeNoteId}
+            filter={filter}
+            searchQuery={searchQuery}
+            onNoteSelect={handleNoteSelect}
+            onNewNote={handleNewNote}
+            onFilterChange={handleFilterChange}
+            onSearchChange={setSearchQuery}
+            onTraderSelect={setSelectedTrader}
+            isLoading={isLoading}
+          />
       ) : (
         <div className="h-full flex flex-col relative">
           {/* Back Button */}
