@@ -40,7 +40,7 @@ import { SubscriptionBadge } from '@/components/subscription-badge'
 import { signOut } from '@/server/auth'
 import { cn } from '@/lib/utils'
 import { useTheme } from '@/context/theme-provider'
-import { VALID_DASHBOARD_THEMES, type DashboardTheme } from '@/lib/constants/dashboard-themes'
+import { THEME_LABELS, VALID_DASHBOARD_THEMES, type DashboardTheme } from '@/lib/constants/dashboard-themes'
 
 type Locale = 'en' | 'fr'
 type MenuVariant = 'navbar' | 'sidebar'
@@ -294,7 +294,7 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: MenuVarian
  value={t_name}
  className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background capitalize"
  >
- {t_name}
+ {THEME_LABELS[t_name]}
  </DropdownMenuRadioItem>
  ))}
  </DropdownMenuRadioGroup>

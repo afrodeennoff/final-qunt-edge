@@ -79,9 +79,9 @@ const config = {
         'gradient-obsidian':
           'linear-gradient(180deg, oklch(0.06 0.01 297) 0%, oklch(0.03 0.005 297) 100%)',
         'gradient-cinematic':
-          'radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.6083 0.2172 297.1153 / 0.12) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 100%, color(display-p3 0.20 0.45 0.98 / 0.06) 0%, transparent 60%)',
+          'radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.60 0.22 297 / 0.12) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 100%, color(display-p3 0.20 0.45 0.98 / 0.06) 0%, transparent 60%)',
         'gradient-depth':
-          'radial-gradient(ellipse 1200px 800px at 20% 0%, oklch(0.6083 0.2172 297.1153 / 0.08) 0%, transparent 50%), radial-gradient(ellipse 900px 600px at 80% 100%, oklch(0.4865 0.2423 291.8661 / 0.05) 0%, transparent 50%), radial-gradient(ellipse 600px 400px at 50% 50%, oklch(0.7001 0.1882 313.2907 / 0.03) 0%, transparent 50%)',
+          'radial-gradient(ellipse 1200px 800px at 20% 0%, oklch(0.60 0.22 297 / 0.08) 0%, transparent 50%), radial-gradient(ellipse 900px 600px at 80% 100%, oklch(0.4865 0.2423 291.8661 / 0.05) 0%, transparent 50%), radial-gradient(ellipse 600px 400px at 50% 50%, oklch(0.7001 0.1882 313.2907 / 0.03) 0%, transparent 50%)',
       },
       backgroundSize: {
         '300': '300%',
@@ -234,7 +234,7 @@ const config = {
         'obsidian-hover': '0 8px 32px -10px rgba(0,0,0,0.90), 0 0 0 0.5px rgba(180,210,255,0.11)',
         'obsidian-elevated':
           '0 16px 52px -16px rgba(0,0,0,0.92), 0 0 0 0.5px rgba(180,210,255,0.10)',
-        'glow-cobalt': '0 0 24px oklch(0.6083 0.2172 297.1153 / 0.32), 0 0 8px oklch(0.6083 0.2172 297.1153 / 0.20)',
+        'glow-cobalt': '0 0 24px oklch(0.60 0.22 297 / 0.32), 0 0 8px oklch(0.60 0.22 297 / 0.20)',
         'glow-emerald': '0 0 20px oklch(0.82 0.185 155 / 0.28)',
         'glow-crimson': '0 0 20px oklch(0.64 0.255 22 / 0.28)',
         navbar: '0 0 0 0.5px rgba(180,210,255,0.08), 0 8px 40px -8px rgba(0,0,0,0.75)',
@@ -377,17 +377,17 @@ const config = {
           yellow: 'color(display-p3 0.98 0.95 0.15)',
         },
         cobalt: {
-          DEFAULT: 'oklch(0.6083 0.2172 297.1153)',
-          50: 'oklch(0.95 0.05 297)',
-          100: 'oklch(0.90 0.09 297)',
-          200: 'oklch(0.82 0.14 297)',
-          300: 'oklch(0.74 0.18 297)',
-          400: 'oklch(0.68 0.20 297)',
-          500: 'oklch(0.6083 0.2172 297.1153)',
-          600: 'oklch(0.58 0.22 297)',
-          700: 'oklch(0.50 0.20 297)',
-          800: 'oklch(0.38 0.16 297)',
-          900: 'oklch(0.24 0.12 297)',
+          DEFAULT: 'oklch(0.60 0.22 297)',
+          50: 'oklch(0.92 0.08 297)',
+          100: 'oklch(0.86 0.12 297)',
+          200: 'oklch(0.78 0.18 297)',
+          300: 'oklch(0.70 0.20 297)',
+          400: 'oklch(0.65 0.21 297)',
+          500: 'oklch(0.60 0.22 297)',
+          600: 'oklch(0.55 0.22 297)',
+          700: 'oklch(0.45 0.20 297)',
+          800: 'oklch(0.32 0.16 297)',
+          900: 'oklch(0.20 0.10 297)',
         },
         void: {
           DEFAULT: 'oklch(0 0 0)',
@@ -818,11 +818,11 @@ const config = {
         'depth-breathe': {
           '0%, 100%': {
             transform: 'scale(1)',
-            boxShadow: '0 0 32px oklch(0.6083 0.2172 297.1153 / 0.12)',
+            boxShadow: '0 0 32px oklch(0.60 0.22 297 / 0.12)',
           },
           '50%': {
             transform: 'scale(1.01)',
-            boxShadow: '0 0 48px oklch(0.6083 0.2172 297.1153 / 0.20)',
+            boxShadow: '0 0 48px oklch(0.60 0.22 297 / 0.20)',
           },
         },
         'iridescent': {

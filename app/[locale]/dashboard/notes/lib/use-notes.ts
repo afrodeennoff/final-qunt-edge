@@ -1,7 +1,8 @@
-"use client"
+'use client'
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import { useUserStore } from '@/store/user-store'
 
 export interface ChecklistItem {
   id: string
@@ -53,9 +54,13 @@ function isStoredTradingNote(value: unknown): value is StoredTradingNote {
   )
 }
 
-// Note: This is a local mock implementation.
-// The existing Mood model in Prisma doesn't fully support the TradingNote structure.
-// We'll work with local state for now and note the schema limitation.
+function createNoteId() {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    return `note-${crypto.randomUUID()}`
+  }
+  return `note-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`
+}
+
 export function useNotes() {
   const [notes, setNotes] = useState<TradingNote[]>([])
   const [activeNoteId, setActiveNoteId] = useState<string | null>(null)
@@ -63,12 +68,26 @@ export function useNotes() {
   const [searchQuery, setSearchQuery] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const autosaveTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const appUser = useUserStore((state) => state.user)
+  const supabaseUser = useUserStore((state) => state.supabaseUser)
+  const noteOwnerId = appUser?.id || supabaseUser?.id || null
+  const storageKey = useMemo(
+    () => (noteOwnerId ? `trading-notes:${noteOwnerId}` : null),
+    [noteOwnerId],
+  )
 
-  // Load notes from localStorage on mount
   useEffect(() => {
+    if (!storageKey) {
+      setNotes([])
+      setActiveNoteId(null)
+      setIsLoading(false)
+      return
+    }
+
     const loadNotes = () => {
       try {
-        const storedNotes = localStorage.getItem('trading-notes')
+        setIsLoading(true)
+        const storedNotes = localStorage.getItem(storageKey)
         if (storedNotes) {
           const parsed: unknown = JSON.parse(storedNotes)
           const storedTradingNotes = Array.isArray(parsed) ? parsed.filter(isStoredTradingNote) : []
@@ -78,27 +97,37 @@ export function useNotes() {
             updatedAt: new Date(note.updatedAt)
           }))
           setNotes(notesWithDates)
+        } else {
+          setNotes([])
         }
       } catch (error) {
-        console.error('Failed to load notes:', error)
+        console.warn('Failed to load notes:', error)
+        setNotes([])
       } finally {
         setIsLoading(false)
       }
     }
 
     loadNotes()
-  }, [])
+  }, [storageKey])
 
-  // Save notes to localStorage whenever they change
   useEffect(() => {
+    if (!storageKey || isLoading) return
+
     if (notes.length > 0 || !isLoading) {
       try {
-        localStorage.setItem('trading-notes', JSON.stringify(notes))
+        localStorage.setItem(storageKey, JSON.stringify(notes))
       } catch {
         // localStorage may be full or unavailable (e.g. private browsing)
       }
     }
-  }, [notes, isLoading])
+  }, [notes, isLoading, storageKey])
+
+  useEffect(() => {
+    if (activeNoteId && !notes.some(note => note.id === activeNoteId)) {
+      setActiveNoteId(null)
+    }
+  }, [activeNoteId, notes])
 
   // Autosave debounced
   const scheduleAutosave = useCallback(() => {
@@ -113,9 +142,14 @@ export function useNotes() {
 
   // Create a new note
   const createNote = useCallback((templateId?: string) => {
+    if (!noteOwnerId) {
+      toast.error('Sign in required to create notes')
+      return null
+    }
+
     const newNote: TradingNote = {
-      id: `note-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      userId: 'current-user', // Would come from auth in production
+      id: createNoteId(),
+      userId: noteOwnerId,
       title: templateId ? '' : 'Untitled Note',
       content: '',
       template: templateId,
@@ -131,7 +165,7 @@ export function useNotes() {
     setNotes(prev => [newNote, ...prev])
     setActiveNoteId(newNote.id)
     return newNote
-  }, [])
+  }, [noteOwnerId])
 
   // Update a note
   const updateNote = useCallback((noteId: string, updates: Partial<TradingNote>) => {

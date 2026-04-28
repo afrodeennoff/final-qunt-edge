@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { useUserStore } from '../../../../store/user-store'
 import { useTradovateSyncStore } from '../../../../store/tradovate-sync-store'
 import { useTheme } from '@/context/theme-provider'
-import { VALID_DASHBOARD_THEMES } from '@/lib/constants/dashboard-themes'
+import { THEME_LABELS, THEME_PALETTES, VALID_DASHBOARD_THEMES } from '@/lib/constants/dashboard-themes'
 import {
   User,
   Settings,
@@ -464,7 +464,7 @@ export default function SettingsPage() {
               <div className="mt-2">
                 <div className="rounded-md border border-border/20 bg-background/30 p-3">
                   <p className="mb-3 text-sm text-muted-foreground">
-                    Choose your dashboard accent color
+                    Choose one of the approved tweakcn dashboard themes
                   </p>
                   <div className="flex gap-3">
                     {VALID_DASHBOARD_THEMES.map((t) => (
@@ -473,28 +473,19 @@ export default function SettingsPage() {
                         type="button"
                         onClick={() => setTheme(t)}
                         className="relative flex flex-col items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-lg p-1"
-                        aria-label={`Set accent color to ${t}`}
+                        aria-label={`Set dashboard theme to ${THEME_LABELS[t]}`}
                         aria-pressed={theme === t}
                       >
                         <span
                           className={`h-8 w-8 rounded-full transition-[opacity,background-color,border-color] ${theme === t ? 'ring-2 ring-offset-2 ring-offset-background ring-primary scale-110' : 'hover:scale-105'}`}
                           style={{
-                            backgroundColor:
-                              t === 'purple'
-                                ? 'oklch(0.6083 0.2172 297.1153)'
-                                : t === 'violet'
-                                  ? 'oklch(0.58 0.23 290)'
-                                  : t === 'indigo'
-                                    ? 'oklch(0.55 0.22 285)'
-                                    : t === 'lavender'
-                                      ? 'oklch(0.65 0.18 305)'
-                                      : 'oklch(0.56 0.22 310)',
+                            backgroundColor: THEME_PALETTES[t]['--primary'],
                           }}
                         />
                         <span
                           className={`text-xs capitalize ${theme === t ? 'text-primary font-medium' : 'text-muted-foreground'}`}
                         >
-                          {t}
+                          {THEME_LABELS[t]}
                         </span>
                       </button>
                     ))}

@@ -179,7 +179,7 @@ export const TradeTableScene: React.FC = () => {
                       width: 30,
                       height: 30,
                       borderRadius: 8,
-                      backgroundColor: 'oklch(0.65 0.22 260 / 0.08)',
+                      backgroundColor: 'hsl(263 85% 65% / 0.08)',
                       border: `1px solid ${BORDER_SUBTLE}`,
                       display: 'flex',
                       alignItems: 'center',
@@ -214,7 +214,7 @@ export const TradeTableScene: React.FC = () => {
                       borderRadius: 6,
                       backgroundColor: isShort
                         ? 'oklch(0.64 0.255 22 / 0.15)'
-                        : 'oklch(0.65 0.22 260 / 0.15)',
+                        : 'hsl(263 85% 65% / 0.15)',
                       color: isShort ? ERROR : PRIMARY,
                     }}
                   >

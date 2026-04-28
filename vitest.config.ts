@@ -21,6 +21,7 @@ export default defineConfig({
       "out",
       ".opencode/**",
       ".worktrees/**",
+      ".claude/worktrees/**",
       "components/sidebar/__tests__/**",
       "tests/performance/performance-regression.test.ts",
     ],

@@ -3,7 +3,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getUserDashboardTheme, setUserDashboardTheme } from '@/server/user-data'
 import { apiError } from '@/lib/api-response'
 import { createRouteClient } from '@/lib/supabase/route-client'
-import { VALID_DASHBOARD_THEMES, type DashboardTheme } from '@/lib/constants/dashboard-themes'
+import {
+  DEFAULT_DASHBOARD_THEME,
+  VALID_DASHBOARD_THEMES,
+  isDashboardThemeInput,
+  normalizeDashboardTheme,
+} from '@/lib/constants/dashboard-themes'
 
 async function handleGet(request: NextRequest) {
   try {
@@ -19,7 +24,7 @@ async function handleGet(request: NextRequest) {
     }
 
     const theme = await getUserDashboardTheme()
-    return NextResponse.json({ theme: theme || 'purple' }, {
+    return NextResponse.json({ theme: theme || DEFAULT_DASHBOARD_THEME }, {
       headers: {
         'Cache-Control': 'no-store, max-age=0',
       },
@@ -71,13 +76,14 @@ export async function PUT(request: Request) {
       })
     }
 
-    if (!(VALID_DASHBOARD_THEMES as readonly DashboardTheme[]).includes(theme as DashboardTheme)) {
+    if (!isDashboardThemeInput(theme)) {
       return apiError('VALIDATION_FAILED', `Invalid theme. Must be one of: ${VALID_DASHBOARD_THEMES.join(', ')}`, 400, undefined, {
         'Cache-Control': 'no-store, max-age=0',
       })
     }
 
-    const updatedTheme = await setUserDashboardTheme(theme)
+    const normalizedTheme = normalizeDashboardTheme(theme)
+    const updatedTheme = await setUserDashboardTheme(normalizedTheme)
     return NextResponse.json({ theme: updatedTheme }, {
       headers: {
         'Cache-Control': 'no-store, max-age=0',

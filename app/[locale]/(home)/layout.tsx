@@ -45,6 +45,7 @@ export default function HomeLayout({
         contentSpacingClassName="pb-safe"
         shellVariant="black"
         fullWidth
+        showSidebar={false}
       >
         <Suspense fallback={<HomeLayoutFallback />}>
           {children}

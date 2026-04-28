@@ -26,7 +26,7 @@ const TiptapEditor = dynamic(() => import("@/components/tiptap-editor").then(mod
     <div className="h-full flex items-center justify-center">
       <div
         className="animate-pulse text-sm"
-        style={{ color: 'oklch(0.45 0.02 260)' }}
+        style={{ color: 'oklch(0.52 0.03 297)' }}
       >
         Loading editor...
       </div>
@@ -79,19 +79,19 @@ export function NoteEditor({
     return (
       <div
         className="h-full flex flex-col items-center justify-center p-8"
-        style={{ background: 'oklch(0.032 0.005 260)' }}
+        style={{ background: 'oklch(0.035 0.01 297)' }}
       >
         <div className="text-center space-y-3 max-w-md">
           <div
             className="h-14 w-14 rounded-full mx-auto flex items-center justify-center"
-            style={{ background: 'oklch(0.04 0.005 260)' }}
+            style={{ background: 'oklch(0.05 0.01 297)' }}
           >
             <svg
               className="h-6 w-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              style={{ color: 'oklch(0.45 0.02 260)' }}
+              style={{ color: 'oklch(0.52 0.03 297)' }}
             >
               <path
                 strokeLinecap="round"
@@ -103,13 +103,13 @@ export function NoteEditor({
           </div>
           <h3
             className="text-sm font-medium"
-            style={{ color: 'oklch(0.65 0.02 260)' }}
+            style={{ color: 'oklch(0.70 0.03 297)' }}
           >
             Select a note to edit
           </h3>
           <p
             className="text-xs leading-relaxed"
-            style={{ color: 'oklch(0.45 0.02 260)' }}
+            style={{ color: 'oklch(0.52 0.03 297)' }}
           >
             Choose a note from the sidebar or create a new one to get started.
           </p>
@@ -173,12 +173,12 @@ export function NoteEditor({
   return (
     <div
       className="flex flex-col h-full"
-      style={{ background: 'oklch(0.032 0.005 260)' }}
+      style={{ background: 'oklch(0.035 0.01 297)' }}
     >
       {/* Toolbar */}
       <div
         className="flex items-center justify-between px-4 py-2.5"
-        style={{ borderBottom: '1px solid oklch(0.5 0.01 260 / 0.1)' }}
+        style={{ borderBottom: '1px solid oklch(0.50 0.02 297 / 0.1)' }}
       >
         <div className="flex items-center gap-1">
           <Button
@@ -191,12 +191,12 @@ export function NoteEditor({
             {note.pinned ? (
               <Pin
                 className="h-3.5 w-3.5"
-                style={{ color: 'oklch(0.65 0.22 260)' }}
+                style={{ color: 'oklch(0.60 0.22 297)' }}
               />
             ) : (
               <PinOff
                 className="h-3.5 w-3.5"
-                style={{ color: 'oklch(0.45 0.02 260)' }}
+                style={{ color: 'oklch(0.52 0.03 297)' }}
               />
             )}
           </Button>
@@ -211,12 +211,12 @@ export function NoteEditor({
             {note.archived ? (
               <ArchiveRestore
                 className="h-3.5 w-3.5"
-                style={{ color: 'oklch(0.65 0.22 260)' }}
+                style={{ color: 'oklch(0.60 0.22 297)' }}
               />
             ) : (
               <Archive
                 className="h-3.5 w-3.5"
-                style={{ color: 'oklch(0.45 0.02 260)' }}
+                style={{ color: 'oklch(0.52 0.03 297)' }}
               />
             )}
           </Button>
@@ -238,7 +238,7 @@ export function NoteEditor({
         {/* Save indicator */}
         <div
           className="text-[11px]"
-          style={{ color: 'oklch(0.45 0.02 260)' }}
+          style={{ color: 'oklch(0.52 0.03 297)' }}
         >
           {saveIndicator === 'saving' && 'Saving...'}
           {saveIndicator === 'saved' && 'Saved'}
@@ -256,9 +256,9 @@ export function NoteEditor({
           placeholder="Note title..."
           className="text-lg font-semibold border-none shadow-none focus-visible:ring-0 px-0 h-auto rounded-none"
           style={{
-            color: 'oklch(0.92 0.01 260)',
+            color: 'oklch(0.94 0.02 297)',
             background: 'transparent',
-            caretColor: 'oklch(0.65 0.22 260)',
+            caretColor: 'oklch(0.60 0.22 297)',
           }}
         />
       </div>
@@ -267,15 +267,15 @@ export function NoteEditor({
       <div className="px-6 py-2 flex items-center gap-1.5 flex-wrap">
         <Tag
           className="h-3.5 w-3.5 flex-shrink-0"
-          style={{ color: 'oklch(0.45 0.02 260)' }}
+          style={{ color: 'oklch(0.52 0.03 297)' }}
         />
         {note.tags.map((tag) => (
           <span
             key={tag}
             className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium cursor-pointer group"
             style={{
-              background: 'oklch(0.65 0.22 260 / 0.1)',
-              color: 'oklch(0.75 0.15 260)',
+              background: 'oklch(0.60 0.22 297 / 0.1)',
+              color: 'oklch(0.72 0.16 297)',
             }}
           >
             {tag}
@@ -299,22 +299,22 @@ export function NoteEditor({
             autoFocus
             className="h-5 px-1.5 text-[11px] rounded border-none outline-none"
             style={{
-              background: 'oklch(0.04 0.005 260)',
-              color: 'oklch(0.92 0.01 260)',
-              caretColor: 'oklch(0.65 0.22 260)',
+              background: 'oklch(0.05 0.01 297)',
+              color: 'oklch(0.94 0.02 297)',
+              caretColor: 'oklch(0.60 0.22 297)',
             }}
           />
         ) : (
           <button
             onClick={() => setShowTagInput(true)}
             className="text-[11px] px-1.5 py-0.5 rounded transition-colors"
-            style={{ color: 'oklch(0.45 0.02 260)' }}
+            style={{ color: 'oklch(0.52 0.03 297)' }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'oklch(0.65 0.02 260)'
-              e.currentTarget.style.background = 'oklch(0.65 0.22 260 / 0.08)'
+              e.currentTarget.style.color = 'oklch(0.70 0.03 297)'
+              e.currentTarget.style.background = 'oklch(0.60 0.22 297 / 0.08)'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'oklch(0.45 0.02 260)'
+              e.currentTarget.style.color = 'oklch(0.52 0.03 297)'
               e.currentTarget.style.background = 'transparent'
             }}
           >
@@ -340,8 +340,8 @@ export function NoteEditor({
       <div
         className="px-6 py-1.5 flex items-center justify-between text-[11px]"
         style={{
-          borderTop: '1px solid oklch(0.5 0.01 260 / 0.1)',
-          color: 'oklch(0.45 0.02 260)',
+          borderTop: '1px solid oklch(0.50 0.02 297 / 0.1)',
+          color: 'oklch(0.52 0.03 297)',
         }}
       >
         <span>{getWordCount(note.content)} words</span>

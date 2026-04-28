@@ -58,8 +58,8 @@ describe('ThemeProvider', () => {
     const theme = container.querySelector('[data-testid="theme"]')
     const effectiveTheme = container.querySelector('[data-testid="effectiveTheme"]')
 
-    expect(theme?.textContent).toBe('deep-purple')
-    expect(effectiveTheme?.textContent).toBe('deep-purple')
+    expect(theme?.textContent).toBe('cmlh0x713000104jrgmds6vcd')
+    expect(effectiveTheme?.textContent).toBe('cmlh0x713000104jrgmds6vcd')
   })
 
   it('uses initialTheme when provided', async () => {
@@ -69,14 +69,14 @@ describe('ThemeProvider', () => {
 
     await act(async () => {
       root!.render(
-        <ThemeProvider initialTheme="emerald">
+        <ThemeProvider initialTheme="cmo6ofmje000104jub1yg4bos">
           <ThemeProbe />
         </ThemeProvider>,
       )
     })
 
     const theme = container.querySelector('[data-testid="theme"]')
-    expect(theme?.textContent).toBe('emerald')
+    expect(theme?.textContent).toBe('cmo6ofmje000104jub1yg4bos')
   })
 
   it('rejects invalid initialTheme', async () => {
@@ -93,6 +93,6 @@ describe('ThemeProvider', () => {
     })
 
     const theme = container.querySelector('[data-testid="theme"]')
-    expect(theme?.textContent).toBe('deep-purple')
+    expect(theme?.textContent).toBe('cmlh0x713000104jrgmds6vcd')
   })
 })

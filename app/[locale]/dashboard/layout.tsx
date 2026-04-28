@@ -10,7 +10,11 @@ import { DashboardSidebar } from '@/components/sidebar/dashboard-sidebar'
 import dynamic from 'next/dynamic'
 import { isAdminUser } from '@/server/authz'
 import { getUserDashboardTheme } from '@/server/user-data'
-import { serializeThemeVars } from '@/lib/constants/dashboard-themes'
+import {
+  DEFAULT_DASHBOARD_THEME,
+  normalizeDashboardTheme,
+  serializeThemeVars,
+} from '@/lib/constants/dashboard-themes'
 import { cookies } from 'next/headers'
 import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from '@/lib/sidebar-state'
 import { SidebarLayoutShell } from '@/components/ui/sidebar-layout-shell'
@@ -78,8 +82,8 @@ export default async function DashboardLayout({
     }
   }
 
-  const userTheme = (await getUserDashboardTheme()) ?? undefined
-  const themeScript = serializeThemeVars(userTheme ?? 'purple')
+  const userTheme = normalizeDashboardTheme(await getUserDashboardTheme())
+  const themeScript = serializeThemeVars(userTheme)
   const cookieStore = await cookies()
   const defaultSidebarOpen = parseSidebarStateCookieValue(
     cookieStore.get(SIDEBAR_STATE_COOKIE_NAME)?.value,
@@ -91,7 +95,7 @@ export default async function DashboardLayout({
         id="init-dashboard-theme"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
-          __html: `(function(){try{var root=document.documentElement;${themeScript};root.setAttribute('data-theme','${userTheme ?? 'purple'}')}catch(e){console.error('[Theme] Bootstrap failed',e)}})()`,
+          __html: `(function(){try{var root=document.documentElement;${themeScript};root.setAttribute('data-theme','${userTheme ?? DEFAULT_DASHBOARD_THEME}')}catch(e){console.error('[Theme] Bootstrap failed',e)}})()`,
         }}
       />
       <SidebarRootProviders

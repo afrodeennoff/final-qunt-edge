@@ -31,7 +31,7 @@ export const QuntEdgeDemo: React.FC = () => {
           borderRadius: 26,
           overflow: 'hidden',
           backgroundColor: BG_ELEVATED,
-          boxShadow: 'inset 0 1px 0 oklch(0.65 0.22 260 / 0.08), 0 28px 60px -36px rgba(0,0,0,0.9)',
+          boxShadow: 'inset 0 1px 0 hsl(263 85% 65% / 0.08), 0 28px 60px -36px rgba(0,0,0,0.9)',
         }}
       >
         <div
@@ -42,7 +42,7 @@ export const QuntEdgeDemo: React.FC = () => {
             justifyContent: 'space-between',
             borderBottom: `1px solid ${BORDER_SUBTLE}`,
             padding: '0 18px',
-            backgroundColor: 'oklch(0.052 0.01 260 / 0.92)',
+            backgroundColor: 'hsl(260 25% 3% / 0.92)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

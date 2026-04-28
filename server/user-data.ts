@@ -16,7 +16,12 @@ import {
   markPrismaColumnUnavailable,
   withPrismaSchemaMismatchFallback
 } from '@/lib/prisma-guard'
-import { VALID_DASHBOARD_THEMES, type DashboardTheme } from '@/lib/constants/dashboard-themes'
+import {
+  DEFAULT_DASHBOARD_THEME,
+  isDashboardThemeInput,
+  normalizeDashboardTheme,
+  type DashboardTheme,
+} from '@/lib/constants/dashboard-themes'
 import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
 import { readStoredChatConversation } from '@/lib/chat-retention'
 import type { SharedParams } from './shared'
@@ -119,7 +124,7 @@ function toCompatUser(record: CoreUserCompatRecord, authUserId: string): User {
     isFirstConnection: record.isFirstConnection ?? true,
     isBeta: record.isBeta ?? false,
     language: record.language ?? 'en',
-    dashboardTheme: 'blue',
+    dashboardTheme: DEFAULT_DASHBOARD_THEME,
     showOnLeaderboard: false,
     etpToken: null,
     etpTokenHash: null,
@@ -492,8 +497,8 @@ export async function getUserDashboardTheme(): Promise<DashboardTheme | null> {
       where: { id: userId },
       select: { dashboardTheme: true }
     })
-    if (user?.dashboardTheme && VALID_DASHBOARD_THEMES.includes(user.dashboardTheme as DashboardTheme)) {
-      return user.dashboardTheme as DashboardTheme
+    if (user?.dashboardTheme) {
+      return normalizeDashboardTheme(user.dashboardTheme)
     }
     return null
   } catch (error) {
@@ -508,31 +513,32 @@ export async function getUserDashboardTheme(): Promise<DashboardTheme | null> {
 export async function setUserDashboardTheme(theme: string): Promise<DashboardTheme> {
   const userId = await getDatabaseUserId()
   if (!userId) throw new Error('Unauthorized')
-  if (!VALID_DASHBOARD_THEMES.includes(theme as DashboardTheme)) {
+  if (!isDashboardThemeInput(theme)) {
     throw new Error(`Invalid theme: ${theme}`)
   }
 
+  const normalizedTheme = normalizeDashboardTheme(theme)
   const hasDashboardThemeColumn = await isPrismaColumnAvailable(USER_TABLE_NAME, DASHBOARD_THEME_COLUMN)
   if (!hasDashboardThemeColumn) {
-    return 'purple'
+    return DEFAULT_DASHBOARD_THEME
   }
 
   try {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: { dashboardTheme: theme },
+      data: { dashboardTheme: normalizedTheme },
       select: { dashboardTheme: true }
     })
     await updateTag(`user-data-core-${userId}`)
     await updateTag(`user-data-supplemental-${userId}`)
-    logger.info('[setUserDashboardTheme] Theme updated', { userId, theme })
-    return updatedUser.dashboardTheme as DashboardTheme
+    logger.info('[setUserDashboardTheme] Theme updated', { userId, theme: normalizedTheme })
+    return normalizeDashboardTheme(updatedUser.dashboardTheme)
   } catch (error) {
     if (isPrismaSchemaMismatchError(error)) {
       markPrismaColumnUnavailable(USER_TABLE_NAME, DASHBOARD_THEME_COLUMN)
-      return 'purple'
+      return DEFAULT_DASHBOARD_THEME
     }
-    logger.error('[setUserDashboardTheme] Error updating user theme', { error, userId, theme })
+    logger.error('[setUserDashboardTheme] Error updating user theme', { error, userId, theme: normalizedTheme })
     throw new Error('Failed to update theme')
   }
 }

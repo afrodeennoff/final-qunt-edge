@@ -5,9 +5,9 @@ export const HEADER_HEIGHT = 'h-[4.5rem]'
 
 export const HEADER_Z_INDEX = 'z-50'
 
-export const HEADER_BORDER = 'border-b border-[oklch(0.65_0.22_260_/_0.07)]'
+export const HEADER_BORDER = 'border-b border-[oklch(0.60_0.22_297_/_0.07)]'
 
-export const HEADER_BG = 'bg-[oklch(0.05_0.01_260_/_0.94)]'
+export const HEADER_BG = 'bg-[oklch(0.05_0.01_297_/_0.94)]'
 
 // Content padding constants
 export const CONTENT_PADDING = 'px-4 sm:px-6 lg:px-8 xl:px-10'

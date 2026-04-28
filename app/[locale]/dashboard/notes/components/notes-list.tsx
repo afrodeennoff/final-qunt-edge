@@ -68,7 +68,7 @@ export function NotesList({
     const tmp = document.createElement('div')
     tmp.innerHTML = content
     const text = tmp.textContent || tmp.innerText || ''
-    return text.length > maxLength ? text.substr(0, maxLength) + '...' : text
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text
   }
 
   // Format date for display
@@ -91,7 +91,7 @@ export function NotesList({
   return (
     <div
       className="flex flex-col h-full"
-      style={{ background: 'oklch(0.028 0.005 260)' }}
+      style={{ background: 'oklch(0.03 0.01 297)' }}
     >
       {/* Header */}
       <div className="p-3 space-y-3">
@@ -101,9 +101,9 @@ export function NotesList({
           variant="outline"
           className="w-full justify-start h-8 text-xs font-medium rounded"
           style={{
-            borderColor: 'oklch(0.5 0.01 260 / 0.12)',
-            color: 'oklch(0.92 0.01 260)',
-            background: 'oklch(0.04 0.005 260)',
+            borderColor: 'oklch(0.50 0.02 297 / 0.12)',
+            color: 'oklch(0.94 0.02 297)',
+            background: 'oklch(0.05 0.01 297)',
           }}
         >
           <Plus className="mr-2 h-3.5 w-3.5" />
@@ -114,7 +114,7 @@ export function NotesList({
         <div className="relative">
           <Search
             className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5"
-            style={{ color: 'oklch(0.45 0.02 260)' }}
+            style={{ color: 'oklch(0.52 0.03 297)' }}
           />
           <Input
             ref={searchInputRef}
@@ -124,9 +124,9 @@ export function NotesList({
             onChange={(e) => onSearchChange(e.target.value)}
             className="pl-8 h-8 text-xs rounded"
             style={{
-              background: 'oklch(0.04 0.005 260)',
-              borderColor: 'oklch(0.5 0.01 260 / 0.1)',
-              color: 'oklch(0.92 0.01 260)',
+              background: 'oklch(0.05 0.01 297)',
+              borderColor: 'oklch(0.50 0.02 297 / 0.1)',
+              color: 'oklch(0.94 0.02 297)',
             }}
           />
         </div>
@@ -142,11 +142,11 @@ export function NotesList({
               )}
               style={{
                 background: filter === opt.value
-                  ? 'oklch(0.65 0.22 260 / 0.15)'
+                  ? 'oklch(0.60 0.22 297 / 0.15)'
                   : 'transparent',
                 color: filter === opt.value
-                  ? 'oklch(0.75 0.15 260)'
-                  : 'oklch(0.45 0.02 260)',
+                  ? 'oklch(0.72 0.16 297)'
+                  : 'oklch(0.52 0.03 297)',
               }}
             >
               {opt.label}
@@ -158,7 +158,7 @@ export function NotesList({
       {/* Divider */}
       <div
         className="h-px"
-        style={{ background: 'oklch(0.5 0.01 260 / 0.1)' }}
+        style={{ background: 'oklch(0.50 0.02 297 / 0.1)' }}
       />
 
       {/* Notes List */}
@@ -169,12 +169,12 @@ export function NotesList({
               <div
                 key={i}
                 className="h-20 rounded animate-pulse"
-                style={{ background: 'oklch(0.04 0.005 260)' }}
+                style={{ background: 'oklch(0.05 0.01 297)' }}
               />
             ))}
           </div>
         ) : notes.length === 0 ? (
-          <div className="p-8 text-center" style={{ color: 'oklch(0.45 0.02 260)' }}>
+          <div className="p-8 text-center" style={{ color: 'oklch(0.52 0.03 297)' }}>
             <FileText className="h-10 w-10 mx-auto mb-3 opacity-40" />
             <p className="text-xs font-medium">No notes found</p>
             <p className="text-[11px] mt-1">
@@ -192,23 +192,23 @@ export function NotesList({
                   key={note.id}
                   onClick={() => onNoteSelect(note.id)}
                   className={cn(
-                    "w-full text-left p-3 rounded transition-all duration-150",
+                    "w-full text-left p-3 rounded transition-[opacity,background-color,border-color] duration-150",
                     "focus:outline-none",
                   )}
                   style={{
                     background: isActive
-                      ? 'oklch(0.04 0.01 260 / 0.8)'
+                      ? 'oklch(0.05 0.01 297 / 0.8)'
                       : 'transparent',
                     borderLeft: isActive
-                      ? '3px solid oklch(0.65 0.22 260 / 0.5)'
+                      ? '3px solid oklch(0.60 0.22 297 / 0.5)'
                       : '3px solid transparent',
                     color: isActive
-                      ? 'oklch(0.92 0.01 260)'
-                      : 'oklch(0.75 0.01 260)',
+                      ? 'oklch(0.94 0.02 297)'
+                      : 'oklch(0.78 0.03 297)',
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {
-                      e.currentTarget.style.background = 'oklch(0.04 0.005 260 / 0.5)'
+                      e.currentTarget.style.background = 'oklch(0.05 0.01 297 / 0.5)'
                     }
                   }}
                   onMouseLeave={(e) => {
@@ -222,7 +222,7 @@ export function NotesList({
                     {note.pinned && (
                       <Pin
                         className="h-3 w-3 mt-0.5 flex-shrink-0"
-                        style={{ color: 'oklch(0.65 0.22 260 / 0.7)' }}
+                        style={{ color: 'oklch(0.60 0.22 297 / 0.7)' }}
                       />
                     )}
 
@@ -236,7 +236,7 @@ export function NotesList({
                         {note.template && (
                           <LayoutGrid
                             className="h-3 w-3 flex-shrink-0"
-                            style={{ color: 'oklch(0.45 0.02 260)' }}
+                            style={{ color: 'oklch(0.52 0.03 297)' }}
                           />
                         )}
                       </div>
@@ -245,7 +245,7 @@ export function NotesList({
                       {note.content && (
                         <p
                           className="text-xs line-clamp-2 mb-1.5 leading-relaxed"
-                          style={{ color: 'oklch(0.55 0.02 260)' }}
+                          style={{ color: 'oklch(0.62 0.03 297)' }}
                         >
                           {getPreviewText(note.content)}
                         </p>
@@ -254,7 +254,7 @@ export function NotesList({
                       {/* Footer */}
                       <div
                         className="flex items-center gap-1.5 text-[11px]"
-                        style={{ color: 'oklch(0.45 0.02 260)' }}
+                        style={{ color: 'oklch(0.52 0.03 297)' }}
                       >
                         <Clock className="h-2.5 w-2.5" />
                         <span>{formatDate(new Date(note.updatedAt))}</span>
@@ -271,7 +271,7 @@ export function NotesList({
                             <span className="opacity-50">·</span>
                             <span
                               className="px-1 py-0.5 rounded text-[10px]"
-                              style={{ background: 'oklch(0.5 0.01 260 / 0.1)' }}
+                              style={{ background: 'oklch(0.50 0.02 297 / 0.1)' }}
                             >
                               {note.tags.length}
                             </span>
