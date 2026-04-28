@@ -10,6 +10,7 @@ import { AuthTimeout } from "@/components/auth/auth-timeout";
 
 const CHUNK_RECOVERY_SESSION_KEY = "chunk-reload-attempted";
 const SERVICE_WORKER_CLEANUP_KEY = "sw-cleanup-v1";
+let chunkRecoveryInProgress = false;
 
 function shouldRecoverFromChunkError(reason: unknown): boolean {
     const message =
@@ -51,6 +52,10 @@ export function RootProviders({
                 return;
             }
 
+            if (chunkRecoveryInProgress) {
+                return;
+            }
+
             let alreadyAttempted = false;
             try {
                 alreadyAttempted = sessionStorage.getItem(CHUNK_RECOVERY_SESSION_KEY) === "1";
@@ -62,13 +67,17 @@ export function RootProviders({
                 return;
             }
 
+            chunkRecoveryInProgress = true;
+
             try {
                 sessionStorage.setItem(CHUNK_RECOVERY_SESSION_KEY, "1");
             } catch {
                 // Ignore storage errors; still attempt reload once per page instance.
             }
 
-            window.location.reload();
+            setTimeout(() => {
+                window.location.reload();
+            }, 200);
         };
 
         const handleUnhandledRejection = (event: PromiseRejectionEvent) => {

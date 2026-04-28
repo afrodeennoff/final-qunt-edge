@@ -7,7 +7,7 @@ export default function ProductDemoPlayer() {
         title="Qunt Edge product promo"
         src={PROMO_SRC}
         className="absolute inset-0 h-full w-full border-0"
-        loading="eager"
+        loading="lazy"
         sandbox="allow-scripts allow-same-origin"
       />
     </div>

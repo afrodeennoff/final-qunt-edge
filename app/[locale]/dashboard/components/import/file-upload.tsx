@@ -277,17 +277,15 @@ export default function FileUpload({
  throw new Error("Invalid import type")
  }
 
- // If platform doesn't have processFile (e.g., Rithmic Sync), skip processing
  if (!platform.processFile) {
- return
+ throw new Error(`This platform (${platform.platformName}) does not support file upload. Please select a different import type.`)
  }
 
- const processedFiles = parsedFiles.map((file) => {
- if (!platform.processFile) {
- throw new Error(`No processFile function defined for platform: ${platform.platformName}`)
+ const processedFiles = parsedFiles.map((file, i) => {
+ if (!file) {
+ throw new Error(`File ${i + 1} failed to parse. Remove it and try again.`)
  }
-
- return platform.processFile(file)
+ return platform.processFile!(file)
  })
 
  const [{ headers }, ...remainingFiles] = processedFiles
@@ -305,9 +303,10 @@ export default function FileUpload({
  if (currentStepIndex !== -1 && currentStepIndex < platform.steps.length - 1) {
  setStep(platform.steps[currentStepIndex + 1].id)
  }
- 
+
  setError(null)
  } catch (error) {
+ isConcatenatingRef.current = false
  setError((error as Error).message)
  }
  }, [importType, parsedFiles, setRawCsvData, setCsvData, setHeaders, setStep, setError])
@@ -319,6 +318,7 @@ export default function FileUpload({
 
  isConcatenatingRef.current = true
  concatenateFiles()
+ // Reset ref on next effect run so retries work after errors
  return () => { isConcatenatingRef.current = false }
  }, [concatenateFiles, parsedFiles.length, uploadProgress, uploadedFiles.length])
 

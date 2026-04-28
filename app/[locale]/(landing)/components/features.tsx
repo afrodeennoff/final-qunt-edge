@@ -88,6 +88,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
  className="h-full w-full rounded-md object-contain"
  width={800}
  height={400}
+ priority
  />
  ) : (
  feature.image

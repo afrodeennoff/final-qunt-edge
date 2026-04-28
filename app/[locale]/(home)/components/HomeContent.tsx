@@ -7,9 +7,9 @@ import {
   FileText,
   LineChart,
   NotebookTabs,
-  Target,
   Play,
   Shield,
+  Target,
   Users,
 } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/v2'
@@ -19,6 +19,7 @@ import {
   MarketingSection,
   MarketingSectionHeader,
   MarketingStatBlock,
+  MarketingStepCard,
   marketingBodyClassName,
   marketingHeroTitleClassName,
   marketingSectionTitleClassName,
@@ -69,49 +70,30 @@ export default async function HomeContent({ locale }: HomeContentProps) {
     },
   ]
 
-  const stats = [
+  const workflowSteps = [
     {
-      value: '35+',
-      label: t('landing.home.liveStats.stat1Label'),
+      step: '01',
+      icon: <Download className="h-5 w-5" />,
+      title: t('landing.home.workflow.step1Name'),
+      description: t('landing.home.workflow.step1Description'),
     },
     {
-      value: '6',
-      label: t('landing.home.liveStats.stat2Label'),
+      step: '02',
+      icon: <LineChart className="h-5 w-5" />,
+      title: t('landing.home.workflow.step2Name'),
+      description: t('landing.home.workflow.step2Description'),
     },
     {
-      value: '17',
-      label: t('landing.home.liveStats.stat3Label'),
+      step: '03',
+      icon: <NotebookTabs className="h-5 w-5" />,
+      title: t('landing.home.workflow.step3Name'),
+      description: t('landing.home.workflow.step3Description'),
     },
     {
-      value: 'Daily',
-      label: t('landing.home.liveStats.stat4Label'),
-    },
-  ]
-
-  const processSteps = [
-    {
-      id: '01',
-      title: 'Import your trades',
-      body: 'Connect broker sync or upload statements in minutes. No manual spreadsheet cleanup.',
-      icon: Download,
-    },
-    {
-      id: '02',
-      title: 'See your true edge',
-      body: 'Track win rate, expectancy, drawdown, and behavior patterns across sessions and setups.',
-      icon: LineChart,
-    },
-    {
-      id: '03',
-      title: 'Journal and review',
-      body: 'Capture execution notes, mistakes, and playbook updates directly beside each trade.',
-      icon: NotebookTabs,
-    },
-    {
-      id: '04',
-      title: 'Improve with intent',
-      body: 'Turn insights into action plans and tighten risk decisions before the next session.',
-      icon: Target,
+      step: '04',
+      icon: <Target className="h-5 w-5" />,
+      title: t('landing.home.workflow.step4Name'),
+      description: t('landing.home.workflow.step4Description'),
     },
   ]
 
@@ -119,13 +101,13 @@ export default async function HomeContent({ locale }: HomeContentProps) {
     <div className="relative min-w-0 overflow-x-hidden bg-background selection:bg-primary/30 selection:text-foreground">
       <main className="relative z-10 flex min-w-0 flex-col">
         {/* Hero */}
-        <MarketingSection className="pt-20 sm:pt-24 lg:pt-32">
-          <div className="mx-auto max-w-2xl space-y-8 text-center">
+        <MarketingSection className="pt-24 sm:pt-32 lg:pt-40">
+          <div className="mx-auto max-w-3xl space-y-8 text-center">
             <div className="space-y-6">
               <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80">
                 {t('landing.hero.badge')}
               </p>
-              <h1 className={`${marketingHeroTitleClassName} leading-[1.05]`}>
+              <h1 className={`${marketingHeroTitleClassName} leading-[1.02]`}>
                 {t('landing.hero.headline')}
               </h1>
               <p className={`${marketingBodyClassName} mx-auto max-w-lg text-lg leading-relaxed`}>
@@ -143,24 +125,11 @@ export default async function HomeContent({ locale }: HomeContentProps) {
               </Link>
               <a
                 href="#product-walkthrough"
-                className={cn(
-                  buttonVariants({ variant: 'outline', size: 'lg' }),
-                )}
+                className={cn(buttonVariants({ variant: 'outline', size: 'lg' }))}
               >
                 <Play className="h-4 w-4" />
                 <span>{t('landing.hero.ctaSecondary')}</span>
               </a>
-            </div>
-
-            <div className="mx-auto grid max-w-md grid-cols-2 gap-3 pt-4">
-              {stats.map((stat) => (
-                <MarketingStatBlock
-                  key={String(stat.label)}
-                  value={stat.value}
-                  label={stat.label}
-                  className="min-w-0 p-4 text-left sm:text-left"
-                />
-              ))}
             </div>
           </div>
         </MarketingSection>
@@ -193,42 +162,31 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         </MarketingSection>
 
         {/* Workflow */}
-        <MarketingSection id="how-it-works" className="py-8 lg:py-10">
+        <MarketingSection id="how-it-works" className="py-14 lg:py-16">
           <MarketingSectionHeader
-            eyebrow="Simple Process, Serious Results"
-            title="Log. Analyze. Journal. Improve."
-            description="A practical workflow built for traders who want measurable progress, not dashboard noise."
+            eyebrow={t('landing.home.workflow.eyebrow')}
+            title={t('landing.home.workflow.title')}
+            description={t('landing.home.workflow.description')}
           />
-          <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {processSteps.map((step) => {
-              const Icon = step.icon
-              return (
-                <article
-                  key={step.id}
-                  className="rounded-xl border border-border/35 bg-card/40 p-5 transition-[opacity,background-color,border-color] hover:border-primary/30 hover:bg-card/60"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold tracking-[0.14em] text-primary/80">
-                      {step.id}
-                    </span>
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border/45 bg-background/70 text-foreground/85">
-                      <Icon className="h-4 w-4" />
-                    </span>
-                  </div>
-                  <h3 className="mt-4 text-base font-semibold text-foreground">{step.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.body}</p>
-                </article>
-              )
-            })}
+          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {workflowSteps.map((step) => (
+              <MarketingStepCard
+                key={step.step}
+                step={step.step}
+                icon={step.icon}
+                title={step.title}
+                description={step.description}
+              />
+            ))}
           </div>
         </MarketingSection>
 
         {/* Demo */}
         <MarketingSection id="product-walkthrough" className="py-14 lg:py-16">
           <MarketingSectionHeader
-            eyebrow={t('landing.home.demo.frameLabel')}
-            title="See it in action"
-            description="Watch how Qunt Edge helps you track, analyze, and improve your trading performance."
+            eyebrow={t('landing.home.demo.eyebrow')}
+            title={t('landing.home.demo.title')}
+            description={t('landing.home.demo.description')}
           />
           <div className="mx-auto mt-10 max-w-4xl">
             <MarketingHyperframe
