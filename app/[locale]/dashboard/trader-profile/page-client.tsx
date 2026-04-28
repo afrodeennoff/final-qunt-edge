@@ -1,17 +1,31 @@
 'use client'
 
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { endOfDay, format, startOfDay, subDays, subMonths, subYears } from 'date-fns'
 import type { DateRange } from 'react-day-picker'
-import { CalendarIcon, CircleDot, Globe, Lock, Sparkles, TrendingUp, Wallet } from 'lucide-react'
+import {
+  Calendar as CalendarIcon,
+  CircleDot,
+  Globe,
+  Lock,
+  Share2,
+  Twitter,
+  Instagram,
+  Link as LinkIcon,
+  Linkedin,
+  Youtube,
+  Discord,
+  Sparkles,
+  TrendingUp,
+  Wallet,
+} from 'lucide-react'
 
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { TraderProfileShareButton } from './components/trader-profile-share-button'
 import {
   Pagination,
   PaginationContent,
@@ -20,7 +34,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -38,12 +51,13 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
 import { getLeaderboardVisibility, toggleLeaderboardVisibility } from '@/server/user-profile'
 import { useUserStore } from '@/store/user-store'
+import { toast } from 'sonner'
 
 import { MetricsSkeleton, TableSkeleton, CalendarSkeleton } from './components/Skeletons'
 
 const RadarChartCard = dynamic(() => import('./components/RadarChartCard'), {
   loading: () => (
-    <div className="rounded-2xl border border-border/35 bg-background/55 p-3">
+    <div className="rounded-xl border border-border/30 bg-card/40 p-3">
       <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
     </div>
   ),
@@ -85,7 +99,7 @@ type DateFilterPreset =
 type StatTone = 'default' | 'positive' | 'negative'
 
 const insetPanelClassName =
-  'rounded-2xl border border-border/35 bg-background/55 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
+  'rounded-xl border border-border/30 bg-card/40 shadow-none'
 
 function clamp(value: number, min = 0, max = 100) {
   return Math.min(max, Math.max(min, value))
@@ -142,6 +156,139 @@ function getTradeDay(dateValue: string | Date) {
   return date.toISOString().slice(0, 10)
 }
 
+function formatSocialUrl(url: string | null | undefined) {
+  if (!url) return null
+  const trimmed = url.trim()
+  if (!trimmed) return null
+  if (!trimmed.startsWith('http')) return `https://${trimmed}`
+  return trimmed
+}
+
+function SocialLinks({ user }: { user: { id: string } }) {
+  const userStore = useUserStore()
+  const supabaseUser = userStore.supabaseUser
+
+  const socialData = useMemo(() => {
+    return {
+      twitter: formatSocialUrl(supabaseUser?.user_metadata?.twitter_url),
+      instagram: formatSocialUrl(supabaseUser?.user_metadata?.instagram_url),
+      discord: formatSocialUrl(supabaseUser?.user_metadata?.discord_url),
+      youtube: formatSocialUrl(supabaseUser?.user_metadata?.youtube_url),
+    }
+  }, [supabaseUser?.user_metadata])
+
+  const hasAnySocial = Object.values(socialData).some(Boolean)
+
+  if (!hasAnySocial) return null
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {socialData.twitter && (
+        <a
+          href={socialData.twitter}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"
+        >
+          <Twitter className="h-3.5 w-3.5" />
+          <span>Twitter</span>
+        </a>
+      )}
+      {socialData.instagram && (
+        <a
+          href={socialData.instagram}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"
+        >
+          <Instagram className="h-3.5 w-3.5" />
+          <span>Instagram</span>
+        </a>
+      )}
+      {socialData.discord && (
+        <a
+          href={socialData.discord}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"
+        >
+          <Discord className="h-3.5 w-3.5" />
+          <span>Discord</span>
+        </a>
+      )}
+      {socialData.youtube && (
+        <a
+          href={socialData.youtube}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"
+        >
+          <Youtube className="h-3.5 w-3.5" />
+          <span>YouTube</span>
+        </a>
+      )}
+    </div>
+  )
+}
+
+function CopyProfileLink({ userId }: { userId: string }) {
+  const [copied, setCopied] = useState(false)
+
+  const shareUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}/trader/${userId}`
+    : ''
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setCopied(true)
+      toast.success('Profile link copied to clipboard')
+      setTimeout(() => setCopied(false), 2000)
+    } catch (error) {
+      console.error('Error copying URL:', error)
+      toast.error('Failed to copy link')
+    }
+  }
+
+  return (
+    <Button
+      variant="outline"
+      size="sm"
+      className="gap-2"
+      onClick={handleCopy}
+    >
+      {copied ? (
+        <>
+          <CheckIcon className="h-4 w-4 text-semantic-success" />
+          <span>Copied</span>
+        </>
+      ) : (
+        <>
+          <Share2 className="h-4 w-4" />
+          <span>Copy Profile Link</span>
+        </>
+      )}
+    </Button>
+  )
+}
+
+function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  )
+}
+
 function getWinningStreak(values: number[]) {
   let count = 0
   for (let index = values.length - 1; index >= 0; index -= 1) {
@@ -184,11 +331,11 @@ function StatTile({
   className?: string
 }) {
   return (
-    <div className={cn(insetPanelClassName, 'p-4', className)}>
-      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+    <div className={cn(insetPanelClassName, 'px-4 py-3.5', className)}>
+      <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
       <p
         className={cn(
-          'mt-2 text-2xl font-semibold tracking-tight text-foreground',
+          'mt-1.5 text-xl font-semibold tabular-nums tracking-tight text-foreground',
           tone === 'positive' && 'text-semantic-success',
           tone === 'negative' && 'text-semantic-error',
         )}
@@ -212,15 +359,15 @@ function MeterRow({
   fillClassName?: string
 }) {
   return (
-    <div className={cn(insetPanelClassName, 'p-4')}>
+    <div className={cn(insetPanelClassName, 'px-4 py-3')}>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <p className="text-sm font-semibold text-foreground">{value}</p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
+        <p className="text-sm font-semibold tabular-nums text-foreground">{value}</p>
       </div>
-      <div className="mt-3 h-2 rounded-full bg-background/80">
+      <div className="mt-2.5 h-1.5 rounded-full bg-border/25">
         <div
           className={cn(
-            'h-full rounded-full bg-primary/55 transition-[width,background-color] duration-300',
+            'h-full rounded-full bg-primary/50 transition-[width] duration-300',
             fillClassName,
           )}
           style={{ width: `${progress}%` }}
@@ -242,11 +389,11 @@ function SignalTile({
   tone?: StatTone
 }) {
   return (
-    <div className={cn(insetPanelClassName, 'p-3.5')}>
-      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+    <div className={cn(insetPanelClassName, 'px-4 py-3')}>
+      <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
       <p
         className={cn(
-          'mt-2 text-lg font-semibold tracking-tight text-foreground',
+          'mt-1.5 text-lg font-semibold tabular-nums tracking-tight text-foreground',
           tone === 'positive' && 'text-semantic-success',
           tone === 'negative' && 'text-semantic-error',
         )}
@@ -274,12 +421,12 @@ function StripMetric({
   className?: string
 }) {
   return (
-    <div className={cn(insetPanelClassName, 'p-3.5', className)}>
-      <p className="text-[9px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+    <div className={cn(insetPanelClassName, 'px-4 py-3.5', className)}>
+      <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
       <p
         className={cn(
-          'mt-1.5 font-semibold tracking-tight text-foreground',
-          emphasis ? 'text-base sm:text-lg' : 'text-sm',
+          'mt-1 font-semibold tabular-nums tracking-tight text-foreground',
+          emphasis ? 'text-lg sm:text-xl' : 'text-sm',
           tone === 'positive' && 'text-semantic-success',
           tone === 'negative' && 'text-semantic-error',
         )}
@@ -306,12 +453,12 @@ function ProfileVisibilityPanel({
     <div
       className={cn(
         insetPanelClassName,
-        'w-full rounded-xl p-3.5 sm:w-auto sm:min-w-[18rem] lg:min-w-[19rem]',
+        'w-full rounded-xl px-4 py-3 sm:w-auto sm:min-w-[18rem] lg:min-w-[19rem]',
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="space-y-1">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
             Public visibility
           </p>
           <Badge
@@ -367,9 +514,6 @@ export default function TraderProfilePageClient() {
   const [tradeFeedPage, setTradeFeedPage] = useState(1)
   const [showOnLeaderboard, setShowOnLeaderboard] = useState(false)
   const [isTogglingVisibility, setIsTogglingVisibility] = useState(false)
-
-  const leftPanelRef = useRef<HTMLElement>(null)
-  const rightPanelRef = useRef<HTMLElement>(null)
 
   const isOwnProfile = Boolean(supabaseUser)
 
@@ -817,294 +961,262 @@ export default function TraderProfilePageClient() {
     setTradeFeedPage(1)
   }, [dateFilterPreset, customDateRange?.from, customDateRange?.to, closedTrades.length])
 
-  // Safety net: ensure both panels remain visible together on xl+ viewports.
-  // Uses IntersectionObserver to detect if the right panel is clipped out of
-  // view while the left panel is still visible — nudges scroll to bring it back.
-  useEffect(() => {
-    const left = leftPanelRef.current
-    const right = rightPanelRef.current
-    if (!left || !right) return
-
-    // Only active on xl+ screens where the two-column layout applies
-    const mql = window.matchMedia('(min-width: 1280px)')
-    if (!mql.matches) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          // If the right panel has left the viewport while the left is still
-          // partially visible, scroll the right panel into view gently.
-          if (entry.target === right && !entry.isIntersecting) {
-            const leftRect = left.getBoundingClientRect()
-            const leftVisible = leftRect.top < window.innerHeight && leftRect.bottom > 0
-            if (leftVisible) {
-              right.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-            }
-          }
-        }
-      },
-      { threshold: 0, rootMargin: '0px' },
-    )
-
-    observer.observe(right)
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
-
   return (
-    <UnifiedPageShell density="compact" widthClassName="max-w-[1800px]">
-      <div className="animate-page-enter space-y-4 sm:space-y-5 overflow-x-hidden">
-        <div className="grid gap-3.5 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.92fr)] xl:gap-5">
-          <section ref={leftPanelRef} className="min-w-0 space-y-3.5 sm:space-y-4">
-            <UnifiedSurface
-              variant="elevated"
-              className="animate-fade-up-smooth overflow-hidden p-5 sm:p-6 lg:p-[1.75rem]"
-            >
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start">
-                  <Avatar className="h-20 w-20 shrink-0 rounded-3xl border border-border/40 bg-background/70 sm:h-24 sm:w-24">
-                    <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
-                    <AvatarFallback className="bg-background text-lg font-semibold text-foreground">
-                      {profileInitials}
-                    </AvatarFallback>
-                  </Avatar>
+    <UnifiedPageShell density="compact" widthClassName="max-w-[1400px]">
+      <div className="animate-page-enter space-y-6 overflow-x-hidden">
+        {/* ---- Header / Identity Block ---- */}
+        <UnifiedSurface
+          variant="elevated"
+          className="animate-fade-up-smooth overflow-hidden p-6 sm:p-8"
+        >
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-center">
+              <Avatar className="h-18 w-18 shrink-0 rounded-2xl border border-border/30 bg-card/50 sm:h-20 sm:w-20">
+                <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
+                <AvatarFallback className="bg-card text-base font-semibold text-foreground">
+                  {profileInitials}
+                </AvatarFallback>
+              </Avatar>
 
-                  <div className="min-w-0 flex-1 space-y-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="secondary" className="gap-1.5">
-                        <Sparkles className="h-3.5 w-3.5" />
-                        Trader Profile
-                      </Badge>
-                      {isOwnProfile && <TraderProfileShareButton />}
-                    </div>
-
-                    <div className="space-y-2">
-                      <h2 className="truncate text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                        {profileName}
-                      </h2>
-
-                      <p className="max-w-2xl text-sm text-muted-foreground sm:text-[0.95rem]">
-                        Performance board for reviewing consistency, session rhythm, and active
-                        account health in one place.
-                      </p>
-                    </div>
-                  </div>
+              <div className="min-w-0 flex-1 space-y-2">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <h2 className="truncate text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                    {profileName}
+                  </h2>
+                  <Badge variant="secondary" className="gap-1.5 text-[11px]">
+                    <Sparkles className="h-3 w-3" />
+                    Trader Profile
+                  </Badge>
+                  {isOwnProfile && <TraderProfileShareButton />}
                 </div>
 
-                <ProfileVisibilityPanel
-                  isOwnProfile={isOwnProfile}
-                  showOnLeaderboard={showOnLeaderboard}
-                  isTogglingVisibility={isTogglingVisibility}
-                  onToggle={handleToggleLeaderboard}
-                />
+                <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+                  Performance board for reviewing consistency, session rhythm, and active
+                  account health in one place.
+                </p>
               </div>
-            </UnifiedSurface>
+            </div>
 
-            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-4 sm:p-5">
-              <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.9fr)]">
-                <div className="space-y-3">
-                  <div className="grid gap-3 md:grid-cols-3">
-                    {primaryStripMetrics.map((metric) => (
-                      <StripMetric
-                        key={metric.label}
-                        label={metric.label}
-                        value={metric.value}
-                        tone={metric.tone}
-                        emphasis
-                        className="h-full"
-                      />
-                    ))}
+            <ProfileVisibilityPanel
+              isOwnProfile={isOwnProfile}
+              showOnLeaderboard={showOnLeaderboard}
+              isTogglingVisibility={isTogglingVisibility}
+              onToggle={handleToggleLeaderboard}
+            />
+          </div>
+        </UnifiedSurface>
+
+        {/* ---- Performance Snapshot ---- */}
+        <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+            Performance snapshot
+          </p>
+
+          <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.9fr)]">
+            <div className="space-y-3">
+              <div className="grid gap-3 md:grid-cols-3">
+                {primaryStripMetrics.map((metric) => (
+                  <StripMetric
+                    key={metric.label}
+                    label={metric.label}
+                    value={metric.value}
+                    tone={metric.tone}
+                    emphasis
+                    className="h-full"
+                  />
+                ))}
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {secondaryStripMetrics.map((metric) => (
+                  <StripMetric
+                    key={metric.label}
+                    label={metric.label}
+                    value={metric.value}
+                    tone={metric.tone}
+                    className="h-full"
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className={cn(insetPanelClassName, 'p-4')}>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="space-y-1">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                      Review window
+                    </p>
+                    <p className="text-sm font-semibold tabular-nums text-foreground">
+                      {reviewWindowSummary}
+                    </p>
                   </div>
-
-                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                    {secondaryStripMetrics.map((metric) => (
-                      <StripMetric
-                        key={metric.label}
-                        label={metric.label}
-                        value={metric.value}
-                        tone={metric.tone}
-                        className="h-full"
-                      />
-                    ))}
+                  <div className={cn(insetPanelClassName, 'px-3 py-2')}>
+                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                      Active session
+                    </p>
+                    <p className="mt-1 text-sm font-semibold tabular-nums text-foreground">
+                      {selectedDayLabel}
+                    </p>
                   </div>
                 </div>
 
-                <div className={cn(insetPanelClassName, 'p-4 sm:p-4')}>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="space-y-1">
-                        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                          Review controls
-                        </p>
-                        <p className="text-sm font-semibold text-foreground">
-                          {reviewWindowSummary}
-                        </p>
-                      </div>
-                      <div className="rounded-2xl border border-border/20 bg-background/45 p-3.5">
-                        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                          Active session
-                        </p>
-                        <p className="mt-2 text-sm font-semibold text-foreground">
-                          {selectedDayLabel}
-                        </p>
-                      </div>
-                    </div>
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                  <Select
+                    value={dateFilterPreset}
+                    onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
+                  >
+                    <SelectTrigger className="h-10 w-full border-border/30 bg-card/40 text-sm text-foreground">
+                      <SelectValue placeholder="Select range" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="last_week">Last Week</SelectItem>
+                      <SelectItem value="last_month">Last Month</SelectItem>
+                      <SelectItem value="last_3_months">Last 3 Months</SelectItem>
+                      <SelectItem value="last_6_months">Last 6 Months</SelectItem>
+                      <SelectItem value="last_year">Last Year</SelectItem>
+                      <SelectItem value="custom">Custom</SelectItem>
+                    </SelectContent>
+                  </Select>
 
-                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-                      <Select
-                        value={dateFilterPreset}
-                        onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="h-10 justify-start border-border/30 bg-card/40 text-sm text-foreground hover:bg-card/60"
                       >
-                        <SelectTrigger className="h-10 w-full border-border/35 bg-background/70 text-sm text-foreground">
-                          <SelectValue placeholder="Select range" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="last_week">Last Week</SelectItem>
-                          <SelectItem value="last_month">Last Month</SelectItem>
-                          <SelectItem value="last_3_months">Last 3 Months</SelectItem>
-                          <SelectItem value="last_6_months">Last 6 Months</SelectItem>
-                          <SelectItem value="last_year">Last Year</SelectItem>
-                          <SelectItem value="custom">Custom</SelectItem>
-                        </SelectContent>
-                      </Select>
-
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            className="h-10 justify-start border-border/35 bg-background/70 text-sm text-foreground hover:bg-background/85"
-                          >
-                            <CalendarIcon className="h-4 w-4" />
-                            {dateFilterLabel ?? 'Custom Range'}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-2" align="start">
-                          <Calendar
-                            mode="range"
-                            selected={customDateRange}
-                            onSelect={setCustomDateRange}
-                            numberOfMonths={isMobile ? 1 : 2}
-                            className="p-0"
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                  </div>
+                        <CalendarIcon className="h-4 w-4" />
+                        {dateFilterLabel ?? 'Custom Range'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-2" align="start">
+                      <Calendar
+                        mode="range"
+                        selected={customDateRange}
+                        onSelect={setCustomDateRange}
+                        numberOfMonths={isMobile ? 1 : 2}
+                        className="p-0"
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
-            </UnifiedSurface>
+            </div>
+          </div>
+        </UnifiedSurface>
 
-            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    Active accounts
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Linked accounts contributing to the selected review window.
-                  </p>
+        {/* ---- Accounts & Capital ---- */}
+        <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1">
+              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                Active accounts
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Linked accounts contributing to the selected review window.
+              </p>
+            </div>
+            <Badge variant="secondary">{activeAccountsCount} active</Badge>
+          </div>
+
+          <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.92fr)]">
+            <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
+              {activeAccountLabels.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {activeAccountLabels.map((accountLabel) => (
+                    <span
+                      key={accountLabel}
+                      className="rounded-full border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium tabular-nums text-foreground"
+                    >
+                      {accountLabel}
+                    </span>
+                  ))}
                 </div>
-                <Badge variant="secondary">{activeAccountsCount} active</Badge>
-              </div>
-
-              <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.92fr)]">
-                <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
-                  {activeAccountLabels.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {activeAccountLabels.map((accountLabel) => (
-                        <span
-                          key={accountLabel}
-                          className="rounded-full border border-border/35 bg-background/70 px-3 py-1.5 text-xs font-medium text-foreground"
-                        >
-                          {accountLabel}
-                        </span>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className={cn(insetPanelClassName, 'p-4 text-sm text-muted-foreground')}>
-                      No linked accounts yet.
-                    </div>
-                  )}
+              ) : (
+                <div className={cn(insetPanelClassName, 'p-4 text-sm text-muted-foreground')}>
+                  No linked accounts yet.
                 </div>
+              )}
+            </div>
 
-                <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 2xl:grid-cols-3">
-                  <SignalTile
-                    label="Total capital"
-                    value={formatCapitalCompact(totalCapitalAllAccounts)}
-                    tone={totalCapitalAllAccounts >= 0 ? 'positive' : 'negative'}
-                  />
-                  <SignalTile
-                    label="Total withdraw"
-                    value={formatCapitalCompact(totalWithdrawAllAccounts)}
-                  />
-                  <SignalTile
-                    label="Active days"
-                    value={String(tradeCalendarDays.length)}
-                    tone={tradeCalendarDays.length > 0 ? 'positive' : 'default'}
-                  />
-                </div>
-              </div>
-            </UnifiedSurface>
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 2xl:grid-cols-3">
+              <SignalTile
+                label="Total capital"
+                value={formatCapitalCompact(totalCapitalAllAccounts)}
+                tone={totalCapitalAllAccounts >= 0 ? 'positive' : 'negative'}
+              />
+              <SignalTile
+                label="Total withdraw"
+                value={formatCapitalCompact(totalWithdrawAllAccounts)}
+              />
+              <SignalTile
+                label="Active days"
+                value={String(tradeCalendarDays.length)}
+                tone={tradeCalendarDays.length > 0 ? 'positive' : 'default'}
+              />
+            </div>
+          </div>
+        </UnifiedSurface>
 
-            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 overflow-hidden p-5 sm:p-6">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    Daily session pattern
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Review day-by-day trading rhythm and the currently selected session result.
-                  </p>
-                </div>
+        {/* ---- Calendar / Session Pattern ---- */}
+        <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 overflow-hidden p-5 sm:p-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="space-y-1">
+              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                Daily session pattern
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Review day-by-day trading rhythm and the currently selected session result.
+              </p>
+            </div>
 
-                <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px]">
-                  <StatTile label="Selected day" value={selectedDayLabel} className="p-3" />
-                  <StatTile
-                    label="Selected PnL"
-                    value={formatSigned(selectedPnl)}
-                    tone={selectedPnl >= 0 ? 'positive' : 'negative'}
-                    className="p-3"
-                  />
-                </div>
-              </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px]">
+              <StatTile label="Selected day" value={selectedDayLabel} className="px-3 py-2.5" />
+              <StatTile
+                label="Selected PnL"
+                value={formatSigned(selectedPnl)}
+                tone={selectedPnl >= 0 ? 'positive' : 'negative'}
+                className="px-3 py-2.5"
+              />
+            </div>
+          </div>
 
-              <div
-                className={cn(
-                  insetPanelClassName,
-                  'mt-4 min-h-[30rem] overflow-x-auto p-2 sm:p-3 lg:min-h-[36rem]',
-                )}
-              >
-                <CalendarWidget
-                  selectedDay={selectedCalendarDay}
-                  latestTradeDay={latestTradeDay}
-                  onSelectDay={setSelectedCalendarDay}
-                  positivePnlDays={positivePnlDays}
-                  negativePnlDays={negativePnlDays}
-                  tradePnlByDay={tradePnlByDay}
-                />
+          <div
+            className={cn(
+              insetPanelClassName,
+              'mt-4 min-h-[30rem] overflow-x-auto p-2 sm:p-3 lg:min-h-[36rem]',
+            )}
+          >
+            <CalendarWidget
+              selectedDay={selectedCalendarDay}
+              latestTradeDay={latestTradeDay}
+              onSelectDay={setSelectedCalendarDay}
+              positivePnlDays={positivePnlDays}
+              negativePnlDays={negativePnlDays}
+              tradePnlByDay={tradePnlByDay}
+            />
 
-                <div className="mt-4 flex flex-wrap items-center gap-3 px-1 text-[11px] text-muted-foreground">
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-semantic-success-bg/50" />
-                    Profit day
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-semantic-error-border" />
-                    Loss day
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-primary/30" />
-                    No trades
-                  </span>
-                </div>
-              </div>
-            </UnifiedSurface>
-          </section>
+            <div className="mt-4 flex flex-wrap items-center gap-4 px-1 text-[11px] text-muted-foreground">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-semantic-success/40" />
+                Profit day
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-semantic-error/40" />
+                Loss day
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-muted-foreground/20" />
+                No trades
+              </span>
+            </div>
+          </div>
+        </UnifiedSurface>
 
-          <aside ref={rightPanelRef} className="space-y-4">
+        {/* ---- Benchmark & Metrics ---- */}
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(340px,1fr)]">
+          <div className="space-y-6">
             <Suspense
               fallback={
                 <UnifiedSurface variant="elevated" className="p-5 sm:p-6">
@@ -1112,7 +1224,7 @@ export default function TraderProfilePageClient() {
                     <div className="h-3 w-20 animate-pulse rounded-lg bg-muted/30" />
                     <div className="h-5 w-14 animate-pulse rounded-md bg-muted/30" />
                   </div>
-                  <div className="mt-5 rounded-2xl border border-border/35 bg-background/55 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+                  <div className={cn(insetPanelClassName, 'mt-5 p-3')}>
                     <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
                   </div>
                   <div className="mt-3 h-3 w-36 animate-pulse rounded bg-muted/30" />
@@ -1135,7 +1247,7 @@ export default function TraderProfilePageClient() {
               <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
                 <div className="flex items-center gap-2">
                   <Wallet className="h-4 w-4 text-muted-foreground" />
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
                     Capital snapshot
                   </p>
                 </div>
@@ -1178,7 +1290,7 @@ export default function TraderProfilePageClient() {
               <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 p-5 sm:p-6">
                 <div className="flex items-center gap-2">
                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
                     Execution quality
                   </p>
                 </div>
@@ -1226,44 +1338,45 @@ export default function TraderProfilePageClient() {
                 </div>
               </UnifiedSurface>
             </Suspense>
-          </aside>
+          </div>
         </div>
 
+        {/* ---- Trade History ---- */}
         <Suspense fallback={<TableSkeleton />}>
           <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d5 p-5 sm:p-6">
             <div className="flex items-center justify-between gap-2">
-              <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
                 Trade history
               </p>
               <Badge variant="secondary">{tradeFeedSummary}</Badge>
             </div>
 
             {isLoading ? (
-              <div className="mt-5 space-y-3">
+              <div className="mt-5 space-y-2">
                 {[1, 2, 3].map((index) => (
                   <div
                     key={index}
                     className={cn(
                       insetPanelClassName,
-                      'flex items-center justify-between gap-3 p-4 animate-pulse',
+                      'flex items-center justify-between gap-3 px-4 py-3 animate-pulse',
                     )}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="h-3.5 w-3.5 rounded-full bg-primary/15" />
-                      <div className="space-y-2">
-                        <div className="h-3 w-24 rounded bg-primary/15" />
-                        <div className="h-2.5 w-36 rounded bg-primary/10" />
+                      <div className="h-3 w-3 rounded-full bg-muted/30" />
+                      <div className="space-y-1.5">
+                        <div className="h-3 w-24 rounded bg-muted/30" />
+                        <div className="h-2.5 w-36 rounded bg-muted/20" />
                       </div>
                     </div>
-                    <div className="h-3 w-14 rounded bg-primary/15" />
+                    <div className="h-3 w-14 rounded bg-muted/30" />
                   </div>
                 ))}
               </div>
             ) : null}
 
-            <div className="mt-5 space-y-3">
+            <div className="mt-5 space-y-2">
               {paginatedClosedTrades.length === 0 ? (
-                <div className={cn(insetPanelClassName, 'p-5 text-sm text-muted-foreground')}>
+                <div className={cn(insetPanelClassName, 'px-4 py-5 text-sm text-muted-foreground')}>
                   No closed trades in the current range yet.
                 </div>
               ) : (
@@ -1276,18 +1389,18 @@ export default function TraderProfilePageClient() {
                       key={trade.id}
                       className={cn(
                         insetPanelClassName,
-                        'flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between',
+                        'flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3',
                       )}
                     >
-                      <div className="flex min-w-0 items-start gap-3">
+                      <div className="flex min-w-0 items-center gap-3">
                         <CircleDot
                           className={cn(
-                            'mt-0.5 h-4 w-4 shrink-0',
+                            'h-3.5 w-3.5 shrink-0',
                             pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error',
                           )}
                         />
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold text-foreground">
+                          <p className="truncate text-sm font-medium text-foreground">
                             {trade.instrument || 'Unknown instrument'}
                           </p>
                           <p className="text-xs text-muted-foreground">
@@ -1298,7 +1411,7 @@ export default function TraderProfilePageClient() {
 
                       <p
                         className={cn(
-                          'shrink-0 text-sm font-semibold',
+                          'shrink-0 text-sm font-semibold tabular-nums',
                           pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error',
                         )}
                       >
@@ -1311,7 +1424,7 @@ export default function TraderProfilePageClient() {
             </div>
 
             {closedTrades.length > tradesPerPage ? (
-              <div className={cn(insetPanelClassName, 'mt-4 px-2 py-1.5')}>
+              <div className={cn(insetPanelClassName, 'mt-4 px-3 py-2')}>
                 <Pagination className="justify-end">
                   <PaginationContent>
                     <PaginationItem>

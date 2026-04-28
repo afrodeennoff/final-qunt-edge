@@ -4,7 +4,7 @@ import { UnifiedSurface } from '@/components/layout/unified-page-shell'
 import { cn } from '@/lib/utils'
 
 const insetPanelClassName =
-  'rounded-2xl border border-border/35 bg-background/55 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
+  'rounded-xl border border-border/30 bg-card/40 shadow-none'
 
 export function MetricsSkeleton() {
   return (

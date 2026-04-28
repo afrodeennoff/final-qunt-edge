@@ -168,8 +168,7 @@ export default function NotesPageClient() {
     <Sheet open={showInspector} onOpenChange={setShowInspector}>
       <SheetContent
         side="right"
-        className="w-72 p-0"
-        style={{ background: 'oklch(0.03 0.01 297)' }}
+        className="w-72 p-0 bg-background border-l border-border/20"
       >
         <NoteInspector
           note={activeNote}
@@ -187,12 +186,12 @@ export default function NotesPageClient() {
     return (
       <div className="h-full flex">
         <ResizablePanelGroup direction="horizontal" className="flex-1">
-          {/* Left Pane - Notes List (220px default) */}
+          {/* Left Pane - Notes List (22% default) */}
           <ResizablePanel
             defaultSize={22}
             minSize={15}
             maxSize={35}
-            style={{ borderRight: '1px solid oklch(0.50 0.02 297 / 0.1)' }}
+            className="border-r border-border/15"
           >
             <NotesList
               traders={traders}
@@ -210,9 +209,7 @@ export default function NotesPageClient() {
             />
           </ResizablePanel>
 
-          <ResizableHandle
-            style={{ background: 'oklch(0.50 0.02 297 / 0.08)' }}
-          />
+          <ResizableHandle className="bg-border/10" />
 
           {/* Middle Pane - Editor (flexible) */}
           <ResizablePanel defaultSize={53} minSize={30}>
@@ -227,16 +224,14 @@ export default function NotesPageClient() {
             />
           </ResizablePanel>
 
-          <ResizableHandle
-            style={{ background: 'oklch(0.50 0.02 297 / 0.08)' }}
-          />
+          <ResizableHandle className="bg-border/10" />
 
-          {/* Right Pane - Inspector (240px default) */}
+          {/* Right Pane - Inspector (25% default) */}
           <ResizablePanel
             defaultSize={25}
             minSize={18}
             maxSize={35}
-            style={{ borderLeft: '1px solid oklch(0.50 0.02 297 / 0.1)' }}
+            className="border-l border-border/15"
           >
             <NoteInspector
               note={activeNote}
@@ -260,7 +255,7 @@ export default function NotesPageClient() {
             defaultSize={28}
             minSize={20}
             maxSize={40}
-            style={{ borderRight: '1px solid oklch(0.50 0.02 297 / 0.1)' }}
+            className="border-r border-border/15"
           >
             <NotesList
               traders={traders}
@@ -278,9 +273,7 @@ export default function NotesPageClient() {
             />
           </ResizablePanel>
 
-          <ResizableHandle
-            style={{ background: 'oklch(0.50 0.02 297 / 0.08)' }}
-          />
+          <ResizableHandle className="bg-border/10" />
 
           {/* Right Pane - Editor */}
           <ResizablePanel defaultSize={72}>
@@ -290,9 +283,8 @@ export default function NotesPageClient() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-7 w-7 p-0 rounded"
+                  className="h-7 w-7 p-0 rounded-md text-muted-foreground hover:text-foreground"
                   onClick={() => setShowInspector(!showInspector)}
-                  style={{ color: 'oklch(0.52 0.03 297)' }}
                 >
                   <PanelRight className="h-4 w-4" />
                 </Button>
@@ -318,7 +310,7 @@ export default function NotesPageClient() {
 
   // Mobile layout (single pane with navigation)
   return (
-    <div className="h-full flex flex-col" style={{ background: 'oklch(0.035 0.01 297)' }}>
+    <div className="h-full flex flex-col bg-background">
       {viewMode === 'list' ? (
           <NotesList
             traders={traders}
@@ -337,16 +329,12 @@ export default function NotesPageClient() {
       ) : (
         <div className="h-full flex flex-col relative">
           {/* Back Button */}
-          <div
-            className="flex items-center justify-between px-2 py-1.5"
-            style={{ borderBottom: '1px solid oklch(0.50 0.02 297 / 0.1)' }}
-          >
+          <div className="flex items-center justify-between px-2 py-1.5 border-b border-border/15">
             <Button
               variant="ghost"
               size="sm"
               onClick={handleBackToList}
-              className="gap-1.5 h-7 text-xs rounded"
-              style={{ color: 'oklch(0.60 0.22 297)' }}
+              className="gap-1.5 h-7 text-xs rounded-md text-primary"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Notes
@@ -356,9 +344,8 @@ export default function NotesPageClient() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 w-7 p-0 rounded"
+                className="h-7 w-7 p-0 rounded-md text-muted-foreground hover:text-foreground"
                 onClick={() => setShowInspector(true)}
-                style={{ color: 'oklch(0.52 0.03 297)' }}
               >
                 <PanelRight className="h-4 w-4" />
               </Button>

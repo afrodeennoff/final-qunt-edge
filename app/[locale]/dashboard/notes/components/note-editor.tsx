@@ -4,7 +4,6 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Pin,
@@ -24,10 +23,7 @@ const TiptapEditor = dynamic(() => import("@/components/tiptap-editor").then(mod
   ssr: false,
   loading: () => (
     <div className="h-full flex items-center justify-center">
-      <div
-        className="animate-pulse text-sm"
-        style={{ color: 'oklch(0.52 0.03 297)' }}
-      >
+      <div className="animate-pulse text-sm text-muted-foreground">
         Loading editor...
       </div>
     </div>
@@ -77,21 +73,14 @@ export function NoteEditor({
 
   if (!note) {
     return (
-      <div
-        className="h-full flex flex-col items-center justify-center p-8"
-        style={{ background: 'oklch(0.035 0.01 297)' }}
-      >
-        <div className="text-center space-y-3 max-w-md">
-          <div
-            className="h-14 w-14 rounded-full mx-auto flex items-center justify-center"
-            style={{ background: 'oklch(0.05 0.01 297)' }}
-          >
+      <div className="h-full flex flex-col items-center justify-center p-8 bg-background/40">
+        <div className="text-center space-y-3 max-w-sm">
+          <div className="h-14 w-14 rounded-2xl mx-auto flex items-center justify-center bg-card/50 border border-border/20">
             <svg
-              className="h-6 w-6"
+              className="h-6 w-6 text-muted-foreground/50"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              style={{ color: 'oklch(0.52 0.03 297)' }}
             >
               <path
                 strokeLinecap="round"
@@ -101,16 +90,10 @@ export function NoteEditor({
               />
             </svg>
           </div>
-          <h3
-            className="text-sm font-medium"
-            style={{ color: 'oklch(0.70 0.03 297)' }}
-          >
+          <h3 className="text-sm font-medium text-foreground/70">
             Select a note to edit
           </h3>
-          <p
-            className="text-xs leading-relaxed"
-            style={{ color: 'oklch(0.52 0.03 297)' }}
-          >
+          <p className="text-xs leading-relaxed text-muted-foreground/60">
             Choose a note from the sidebar or create a new one to get started.
           </p>
         </div>
@@ -171,77 +154,55 @@ export function NoteEditor({
   }
 
   return (
-    <div
-      className="flex flex-col h-full"
-      style={{ background: 'oklch(0.035 0.01 297)' }}
-    >
+    <div className="flex flex-col h-full bg-background/30">
       {/* Toolbar */}
-      <div
-        className="flex items-center justify-between px-4 py-2.5"
-        style={{ borderBottom: '1px solid oklch(0.50 0.02 297 / 0.1)' }}
-      >
-        <div className="flex items-center gap-1">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-border/15">
+        <div className="flex items-center gap-0.5">
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 w-7 p-0 rounded"
+            className="h-7 w-7 p-0 rounded-md text-muted-foreground hover:text-foreground"
             onClick={() => onTogglePin(note.id)}
             title={note.pinned ? 'Unpin note' : 'Pin note'}
           >
             {note.pinned ? (
-              <Pin
-                className="h-3.5 w-3.5"
-                style={{ color: 'oklch(0.60 0.22 297)' }}
-              />
+              <Pin className="h-3.5 w-3.5 text-primary" />
             ) : (
-              <PinOff
-                className="h-3.5 w-3.5"
-                style={{ color: 'oklch(0.52 0.03 297)' }}
-              />
+              <PinOff className="h-3.5 w-3.5" />
             )}
           </Button>
 
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 w-7 p-0 rounded"
+            className="h-7 w-7 p-0 rounded-md text-muted-foreground hover:text-foreground"
             onClick={() => onToggleArchive(note.id)}
             title={note.archived ? 'Unarchive note' : 'Archive note'}
           >
             {note.archived ? (
-              <ArchiveRestore
-                className="h-3.5 w-3.5"
-                style={{ color: 'oklch(0.60 0.22 297)' }}
-              />
+              <ArchiveRestore className="h-3.5 w-3.5 text-primary" />
             ) : (
-              <Archive
-                className="h-3.5 w-3.5"
-                style={{ color: 'oklch(0.52 0.03 297)' }}
-              />
+              <Archive className="h-3.5 w-3.5" />
             )}
           </Button>
 
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 w-7 p-0 rounded"
+            className="h-7 w-7 p-0 rounded-md text-muted-foreground hover:text-destructive"
             onClick={handleDelete}
             title="Delete note"
           >
-            <Trash2
-              className="h-3.5 w-3.5"
-              style={{ color: 'oklch(0.55 0.15 25)' }}
-            />
+            <Trash2 className="h-3.5 w-3.5" />
           </Button>
         </div>
 
         {/* Save indicator */}
-        <div
-          className="text-[11px]"
-          style={{ color: 'oklch(0.52 0.03 297)' }}
-        >
+        <div className="text-[11px] text-muted-foreground/60">
           {saveIndicator === 'saving' && 'Saving...'}
-          {saveIndicator === 'saved' && 'Saved'}
+          {saveIndicator === 'saved' && (
+            <span className="text-primary/70">Saved</span>
+          )}
           {saveIndicator === 'idle' && formatDate(note.updatedAt)}
         </div>
       </div>
@@ -254,29 +215,17 @@ export function NoteEditor({
           value={note.title}
           onChange={handleTitleChange}
           placeholder="Note title..."
-          className="text-lg font-semibold border-none shadow-none focus-visible:ring-0 px-0 h-auto rounded-none"
-          style={{
-            color: 'oklch(0.94 0.02 297)',
-            background: 'transparent',
-            caretColor: 'oklch(0.60 0.22 297)',
-          }}
+          className="text-lg font-semibold border-none shadow-none focus-visible:ring-0 px-0 h-auto rounded-none bg-transparent text-foreground placeholder:text-muted-foreground/40 caret-primary"
         />
       </div>
 
       {/* Tags */}
       <div className="px-6 py-2 flex items-center gap-1.5 flex-wrap">
-        <Tag
-          className="h-3.5 w-3.5 flex-shrink-0"
-          style={{ color: 'oklch(0.52 0.03 297)' }}
-        />
+        <Tag className="h-3.5 w-3.5 flex-shrink-0 text-muted-foreground/50" />
         {note.tags.map((tag) => (
           <span
             key={tag}
-            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium cursor-pointer group"
-            style={{
-              background: 'oklch(0.60 0.22 297 / 0.1)',
-              color: 'oklch(0.72 0.16 297)',
-            }}
+            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium cursor-pointer group bg-primary/10 text-primary/80 hover:bg-primary/15"
           >
             {tag}
             <button
@@ -297,26 +246,12 @@ export function NoteEditor({
             onBlur={handleTagSubmit}
             placeholder="Tag name..."
             autoFocus
-            className="h-5 px-1.5 text-[11px] rounded border-none outline-none"
-            style={{
-              background: 'oklch(0.05 0.01 297)',
-              color: 'oklch(0.94 0.02 297)',
-              caretColor: 'oklch(0.60 0.22 297)',
-            }}
+            className="h-5 px-1.5 text-[11px] rounded-md border-none outline-none bg-card/40 text-foreground caret-primary"
           />
         ) : (
           <button
             onClick={() => setShowTagInput(true)}
-            className="text-[11px] px-1.5 py-0.5 rounded transition-colors"
-            style={{ color: 'oklch(0.52 0.03 297)' }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'oklch(0.70 0.03 297)'
-              e.currentTarget.style.background = 'oklch(0.60 0.22 297 / 0.08)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'oklch(0.52 0.03 297)'
-              e.currentTarget.style.background = 'transparent'
-            }}
+            className="text-[11px] px-1.5 py-0.5 rounded-md transition-colors duration-150 text-muted-foreground/60 hover:text-foreground/70 hover:bg-card/30"
           >
             + tag
           </button>
@@ -337,13 +272,7 @@ export function NoteEditor({
       </ScrollArea>
 
       {/* Footer with word count */}
-      <div
-        className="px-6 py-1.5 flex items-center justify-between text-[11px]"
-        style={{
-          borderTop: '1px solid oklch(0.50 0.02 297 / 0.1)',
-          color: 'oklch(0.52 0.03 297)',
-        }}
-      >
+      <div className="px-6 py-1.5 flex items-center justify-between text-[11px] border-t border-border/15 text-muted-foreground/50">
         <span>{getWordCount(note.content)} words</span>
         <span>{formatDate(note.createdAt)}</span>
       </div>

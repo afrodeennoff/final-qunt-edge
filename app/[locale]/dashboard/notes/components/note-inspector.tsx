@@ -4,7 +4,6 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   FileText,
@@ -151,25 +150,13 @@ export function NoteInspector({
 
   if (!note) {
     return (
-      <div
-        className={cn("h-full flex flex-col", className)}
-        style={{ background: 'oklch(0.03 0.01 297)' }}
-      >
-        <div
-          className="p-4"
-          style={{ borderBottom: '1px solid oklch(0.50 0.02 297 / 0.1)' }}
-        >
-          <h3
-            className="font-semibold text-xs uppercase tracking-wider"
-            style={{ color: 'oklch(0.52 0.03 297)' }}
-          >
+      <div className={cn("h-full flex flex-col bg-background/40", className)}>
+        <div className="p-4 border-b border-border/15">
+          <h3 className="font-semibold text-[11px] uppercase tracking-wider text-muted-foreground/60">
             Inspector
           </h3>
         </div>
-        <div
-          className="p-8 text-center text-xs"
-          style={{ color: 'oklch(0.52 0.03 297)' }}
-        >
+        <div className="p-8 text-center text-xs text-muted-foreground/50">
           Select a note to view details
         </div>
       </div>
@@ -181,19 +168,10 @@ export function NoteInspector({
   const checklistProgress = totalItems > 0 ? (completedItems / totalItems) * 100 : 0
 
   return (
-    <div
-      className={cn("h-full flex flex-col", className)}
-      style={{ background: 'oklch(0.03 0.01 297)' }}
-    >
+    <div className={cn("h-full flex flex-col bg-background/40", className)}>
       {/* Header */}
-      <div
-        className="p-3 space-y-3"
-        style={{ borderBottom: '1px solid oklch(0.50 0.02 297 / 0.1)' }}
-      >
-        <h3
-          className="font-semibold text-xs uppercase tracking-wider"
-          style={{ color: 'oklch(0.52 0.03 297)' }}
-        >
+      <div className="p-3 space-y-3 border-b border-border/15">
+        <h3 className="font-semibold text-[11px] uppercase tracking-wider text-muted-foreground/60">
           Inspector
         </h3>
 
@@ -202,12 +180,8 @@ export function NoteInspector({
           <Button
             variant="outline"
             size="sm"
-            className="flex-1 h-7 text-[11px] rounded"
+            className="flex-1 h-7 text-[11px] rounded-md border-border/25 bg-card/30 text-foreground/70 hover:bg-card/50 hover:text-foreground"
             onClick={handleExportNote}
-            style={{
-              borderColor: 'oklch(0.50 0.02 297 / 0.12)',
-              color: 'oklch(0.70 0.03 297)',
-            }}
           >
             <Download className="h-3 w-3 mr-1" />
             Export
@@ -215,19 +189,15 @@ export function NoteInspector({
           <Button
             variant="outline"
             size="sm"
-            className="flex-1 h-7 text-[11px] rounded"
+            className="flex-1 h-7 text-[11px] rounded-md border-border/25 bg-card/30 text-foreground/70 hover:bg-card/50 hover:text-foreground"
             title="Generate AI Summary"
             onClick={handleAiSummary}
             disabled={isLoading || !note.content || note.content.trim().length < 10}
-            style={{
-              borderColor: 'oklch(0.50 0.02 297 / 0.12)',
-              color: 'oklch(0.70 0.03 297)',
-            }}
           >
             {isLoading ? (
               <Loader2 className="h-3 w-3 mr-1 animate-spin" />
             ) : (
-              <Sparkles className="h-3 w-3 mr-1" />
+              <Sparkles className="h-3 w-3 mr-1 text-primary/70" />
             )}
             AI Summary
           </Button>
@@ -240,18 +210,14 @@ export function NoteInspector({
           {(aiSummary || completionText || isLoading) && (
             <div className="space-y-2">
               <SectionHeader
-                icon={<Sparkles className="h-3.5 w-3.5" style={{ color: 'oklch(0.60 0.22 297)' }} />}
+                icon={<Sparkles className="h-3.5 w-3.5 text-primary/60" />}
                 title="AI Summary"
                 isExpanded={true}
                 onToggle={() => {}}
               />
-              <div className="ml-5 p-2.5 rounded text-xs leading-relaxed" style={{
-                background: 'oklch(0.60 0.22 297 / 0.06)',
-                border: '1px solid oklch(0.60 0.22 297 / 0.12)',
-                color: 'oklch(0.78 0.03 297)',
-              }}>
+              <div className="ml-5 p-2.5 rounded-md text-xs leading-relaxed bg-primary/5 border border-primary/10 text-foreground/70">
                 {isLoading && !completionText ? (
-                  <div className="flex items-center gap-2" style={{ color: 'oklch(0.52 0.03 297)' }}>
+                  <div className="flex items-center gap-2 text-muted-foreground">
                     <Loader2 className="h-3 w-3 animate-spin" />
                     Generating summary...
                   </div>
@@ -267,7 +233,7 @@ export function NoteInspector({
           {/* Templates Section */}
           <div className="space-y-1">
             <SectionHeader
-              icon={<FileText className="h-3.5 w-3.5" style={{ color: 'oklch(0.52 0.03 297)' }} />}
+              icon={<FileText className="h-3.5 w-3.5 text-muted-foreground/50" />}
               title="Templates"
               isExpanded={expandedSections.has('templates')}
               onToggle={() => toggleSection('templates')}
@@ -280,20 +246,10 @@ export function NoteInspector({
                   <button
                     key={template.id}
                     onClick={() => handleApplyTemplate(template)}
-                    className="w-full text-left p-2 rounded transition-colors text-xs"
-                    style={{ color: 'oklch(0.78 0.03 297)' }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'oklch(0.05 0.01 297 / 0.5)'
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'transparent'
-                    }}
+                    className="w-full text-left p-2 rounded-md transition-colors duration-150 text-xs text-foreground/70 hover:bg-card/30"
                   >
                     <div className="font-medium">{template.name}</div>
-                    <div
-                      className="mt-0.5 line-clamp-1"
-                      style={{ color: 'oklch(0.52 0.03 297)' }}
-                    >
+                    <div className="mt-0.5 line-clamp-1 text-muted-foreground/60">
                       {template.description}
                     </div>
                   </button>
@@ -303,12 +259,12 @@ export function NoteInspector({
           </div>
 
           {/* Divider */}
-          <div style={{ height: '1px', background: 'oklch(0.50 0.02 297 / 0.08)' }} />
+          <div className="h-px bg-border/15" />
 
           {/* Checklist Section */}
           <div className="space-y-1">
             <SectionHeader
-              icon={<CheckSquare className="h-3.5 w-3.5" style={{ color: 'oklch(0.52 0.03 297)' }} />}
+              icon={<CheckSquare className="h-3.5 w-3.5 text-muted-foreground/50" />}
               title="Checklist"
               isExpanded={expandedSections.has('checklist')}
               onToggle={() => toggleSection('checklist')}
@@ -319,16 +275,10 @@ export function NoteInspector({
               <div className="ml-5 space-y-1.5">
                 {/* Progress Bar */}
                 {totalItems > 0 && (
-                  <div
-                    className="w-full rounded-full h-1.5 overflow-hidden"
-                    style={{ background: 'oklch(0.05 0.01 297)' }}
-                  >
+                  <div className="w-full rounded-full h-1.5 overflow-hidden bg-card/40">
                     <div
-                      className="h-full transition-[width,background-color] duration-300 rounded-full"
-                      style={{
-                        width: `${checklistProgress}%`,
-                        background: 'oklch(0.60 0.22 297)',
-                      }}
+                      className="h-full transition-[width] duration-300 rounded-full bg-primary/60"
+                      style={{ width: `${checklistProgress}%` }}
                     />
                   </div>
                 )}
@@ -340,26 +290,18 @@ export function NoteInspector({
                       <button
                         key={item.id}
                         onClick={() => onToggleChecklistItem(note.id, item.id)}
-                        className="w-full flex items-center gap-2 p-1.5 rounded transition-colors text-left text-xs"
-                        style={{ color: 'oklch(0.78 0.03 297)' }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'oklch(0.05 0.01 297 / 0.5)'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'transparent'
-                        }}
+                        className="w-full flex items-center gap-2 p-1.5 rounded-md transition-colors duration-150 text-left text-xs text-foreground/70 hover:bg-card/30"
                       >
                         <div
                           className={cn(
                             "h-3.5 w-3.5 rounded flex items-center justify-center flex-shrink-0 border",
+                            item.completed
+                              ? "bg-primary/70 border-primary/70"
+                              : "bg-transparent border-border/40"
                           )}
-                          style={{
-                            background: item.completed ? 'oklch(0.60 0.22 297)' : 'transparent',
-                            borderColor: item.completed ? 'oklch(0.60 0.22 297)' : 'oklch(0.32 0.02 297)',
-                          }}
                         >
                           {item.completed && (
-                            <svg className="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 20 20" style={{ color: 'oklch(0.11 0.01 302)' }}>
+                            <svg className="h-2.5 w-2.5 text-primary-foreground" fill="currentColor" viewBox="0 0 20 20">
                               <path
                                 fillRule="evenodd"
                                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -369,8 +311,10 @@ export function NoteInspector({
                           )}
                         </div>
                         <span
-                          className={cn("flex-1", item.completed && "line-through")}
-                          style={{ color: item.completed ? 'oklch(0.52 0.03 297)' : 'oklch(0.78 0.03 297)' }}
+                          className={cn(
+                            "flex-1",
+                            item.completed && "line-through text-muted-foreground/50"
+                          )}
                         >
                           {item.text}
                         </span>
@@ -378,17 +322,14 @@ export function NoteInspector({
                     ))}
                   </div>
                 ) : (
-                  <div
-                    className="py-2 text-[11px]"
-                    style={{ color: 'oklch(0.52 0.03 297)' }}
-                  >
+                  <div className="py-2 text-[11px] text-muted-foreground/50">
                     No checklist items yet
                   </div>
                 )}
 
                 {/* Add Checklist Item */}
                 <div className="flex items-center gap-1.5">
-                  <Plus className="h-3 w-3 flex-shrink-0" style={{ color: 'oklch(0.52 0.03 297)' }} />
+                  <Plus className="h-3 w-3 flex-shrink-0 text-muted-foreground/40" />
                   <input
                     ref={checklistInputRef}
                     type="text"
@@ -396,17 +337,12 @@ export function NoteInspector({
                     onChange={(e) => setChecklistInput(e.target.value)}
                     onKeyDown={handleChecklistKeyDown}
                     placeholder="Add item..."
-                    className="flex-1 h-6 px-1.5 text-[11px] bg-transparent border-none outline-none rounded"
-                    style={{
-                      color: 'oklch(0.78 0.03 297)',
-                      caretColor: 'oklch(0.60 0.22 297)',
-                    }}
+                    className="flex-1 h-6 px-1.5 text-[11px] bg-transparent border-none outline-none rounded-md text-foreground/70 placeholder:text-muted-foreground/40 caret-primary"
                   />
                   {checklistInput.trim() && (
                     <button
                       onClick={handleChecklistSubmit}
-                      className="text-[11px] px-1.5 py-0.5 rounded transition-colors"
-                      style={{ color: 'oklch(0.60 0.22 297)' }}
+                      className="text-[11px] px-1.5 py-0.5 rounded-md text-primary/70 hover:text-primary transition-colors duration-150"
                     >
                       Add
                     </button>
@@ -417,40 +353,40 @@ export function NoteInspector({
           </div>
 
           {/* Divider */}
-          <div style={{ height: '1px', background: 'oklch(0.50 0.02 297 / 0.08)' }} />
+          <div className="h-px bg-border/15" />
 
           {/* Metadata */}
           <div className="space-y-1">
             <SectionHeader
-              icon={<Calendar className="h-3.5 w-3.5" style={{ color: 'oklch(0.52 0.03 297)' }} />}
+              icon={<Calendar className="h-3.5 w-3.5 text-muted-foreground/50" />}
               title="Details"
               isExpanded={expandedSections.has('metadata')}
               onToggle={() => toggleSection('metadata')}
             />
 
             {expandedSections.has('metadata') && (
-              <div className="ml-5 space-y-2 text-[11px]" style={{ color: 'oklch(0.62 0.03 297)' }}>
+              <div className="ml-5 space-y-2 text-[11px] text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-3 w-3" style={{ color: 'oklch(0.52 0.03 297)' }} />
+                  <Calendar className="h-3 w-3 text-muted-foreground/50" />
                   <span>Created: {new Date(note.createdAt).toLocaleDateString()}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-3 w-3" style={{ color: 'oklch(0.52 0.03 297)' }} />
+                  <Calendar className="h-3 w-3 text-muted-foreground/50" />
                   <span>Updated: {new Date(note.updatedAt).toLocaleString()}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Type className="h-3 w-3" style={{ color: 'oklch(0.52 0.03 297)' }} />
+                  <Type className="h-3 w-3 text-muted-foreground/50" />
                   <span>{getWordCount(note.content)} words</span>
                 </div>
                 {note.symbol && (
                   <div className="flex items-center gap-2">
-                    <span style={{ color: 'oklch(0.52 0.03 297)' }}>Symbol:</span>
-                    <span style={{ color: 'oklch(0.60 0.22 297)' }}>{note.symbol}</span>
+                    <span className="text-muted-foreground/50">Symbol:</span>
+                    <span className="text-primary/80">{note.symbol}</span>
                   </div>
                 )}
                 {note.sessionId && (
                   <div className="flex items-center gap-2">
-                    <span style={{ color: 'oklch(0.52 0.03 297)' }}>Session:</span>
+                    <span className="text-muted-foreground/50">Session:</span>
                     <span>{note.sessionId}</span>
                   </div>
                 )}
@@ -480,8 +416,7 @@ function SectionHeader({
   return (
     <button
       onClick={onToggle}
-      className="flex items-center gap-2 w-full text-left text-xs font-semibold uppercase tracking-wider group"
-      style={{ color: 'oklch(0.62 0.03 297)' }}
+      className="flex items-center gap-2 w-full text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 hover:text-foreground/70 transition-colors duration-150"
     >
       {isExpanded ? (
         <ChevronDown className="h-3 w-3 flex-shrink-0" />
@@ -491,10 +426,7 @@ function SectionHeader({
       {icon}
       <span className="flex-1">{title}</span>
       {count !== undefined && (
-        <span
-          className="text-[10px] font-normal px-1.5 py-0.5 rounded"
-          style={{ background: 'oklch(0.50 0.02 297 / 0.08)' }}
-        >
+        <span className="text-[10px] font-normal px-1.5 py-0.5 rounded-md bg-card/30 text-muted-foreground/50">
           {count}
         </span>
       )}
