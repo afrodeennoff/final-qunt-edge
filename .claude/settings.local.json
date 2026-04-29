@@ -24,7 +24,16 @@
       "Bash(lsof -ti:5190)",
       "Bash(kill -9 1515)",
       "Bash(TaskStop bnzoxwovh *)",
-      "Bash(vercel --version)"
+      "Bash(vercel --version)",
+      "Bash(vercel --prod --yes)",
+      "Bash(node -e ' *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(lsof -ti:3000)",
+      "Bash(xargs kill *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{redirect_url}\" https://qunt-edge.vercel.app/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{size_download}\" -L https://qunt-edge.vercel.app/)",
+      "Bash(curl -v -s -o /dev/null https://qunt-edge.vercel.app/en)",
+      "Bash(curl -s -w \"\\\\n%{http_code} time_total: %{time_total}s\\\\n\" -o /dev/null https://qunt-edge.vercel.app/en)"
     ]
   },
   "model": "sonnet",

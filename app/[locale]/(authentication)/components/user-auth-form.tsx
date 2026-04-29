@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 import { z } from 'zod';
-import { PASSWORD_MIN_LENGTH } from '@/lib/security/password-validation'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import {
@@ -36,12 +35,7 @@ import { useCurrentLocale } from "@/locales/client"
 
 const formSchema = z.object({
  email: z.string().email(),
- password: z.union([
- z.string()
- .min(PASSWORD_MIN_LENGTH, `Password must be at least ${PASSWORD_MIN_LENGTH} characters`)
- .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, 'Password must contain uppercase, lowercase, and a number'),
- z.literal('')
- ]).optional(),
+ password: z.string().optional(),
 })
 
 const otpFormSchema = z.object({
@@ -333,6 +327,13 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  }
 
  async function onSubmitPassword(values: z.infer<typeof formSchema>) {
+ if (!values.password) {
+	 form.setError('password', {
+	 type: 'manual',
+	 message: 'Password is required'
+	 })
+	 return
+ }
  setIsLoading(true)
  setAuthMethod('email')
  try {
@@ -340,14 +341,17 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  const result = await signInWithPasswordAction(values.email, values.password || '', next, locale)
 
  if (!result.success) {
- const parsedError = parseAuthError(new Error(result.error || 'Authentication failed'))
- toast.error(t('error'), { description: parsedError.message })
+ toast.error(t('error'), { description: result.error || t('auth.errors.signInFailed') })
  setAuthMethod(null)
  setIsLoading(false)
  return
  }
 
+	 if ('warning' in result && result.warning === 'account_setup_partial') {
+	 toast.warning('Account setup incomplete', { description: 'Signed in successfully, but some features may be temporarily unavailable.' })
+	 } else {
 	 toast.success(t('success'), { description: t('auth.signIn') })
+	 }
 	 if (typeof window !== 'undefined') {
 	 window.location.assign(result.next || (nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`))
 	 }

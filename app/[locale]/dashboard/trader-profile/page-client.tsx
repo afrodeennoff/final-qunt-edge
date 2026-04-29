@@ -1053,51 +1053,84 @@ export default function TraderProfilePageClient() {
         {/* ---- Accounts & Capital ---- */}
         <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Wallet className="h-4 w-4 text-muted-foreground" />
               <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                Active accounts
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Linked accounts contributing to the selected review window.
+                Accounts & Capital
               </p>
             </div>
             <Badge variant="secondary">{activeAccountsCount} active</Badge>
           </div>
 
           <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.92fr)]">
-            <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
-              {activeAccountLabels.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {activeAccountLabels.map((accountLabel) => (
-                    <span
-                      key={accountLabel}
-                      className="rounded-full border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium tabular-nums text-foreground"
-                    >
-                      {accountLabel}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <div className={cn(insetPanelClassName, 'p-4 text-sm text-muted-foreground')}>
-                  No linked accounts yet.
-                </div>
-              )}
+            <div className="space-y-4">
+              <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
+                {activeAccountLabels.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {activeAccountLabels.map((accountLabel) => (
+                      <span
+                        key={accountLabel}
+                        className="rounded-full border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium tabular-nums text-foreground"
+                      >
+                        {accountLabel}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-sm text-muted-foreground">
+                    No linked accounts yet.
+                  </div>
+                )}
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <StatTile
+                  label="Total capital"
+                  value={formatCapitalCompact(totalCapitalAllAccounts)}
+                  tone={totalCapitalAllAccounts >= 0 ? 'positive' : 'negative'}
+                />
+                <StatTile
+                  label="Total withdraw"
+                  value={formatCapitalCompact(totalWithdrawAllAccounts)}
+                />
+                <StatTile
+                  label="Avg net / trade"
+                  value={formatSigned(metrics.avgReturn)}
+                  tone={
+                    metrics.avgReturn > 0
+                      ? 'positive'
+                      : metrics.avgReturn < 0
+                        ? 'negative'
+                        : 'default'
+                  }
+                />
+                <StatTile label="Risk reward" value={formatValue(metrics.riskReward)} />
+              </div>
+
+              <div>
+                <MeterRow
+                  label="Consistency"
+                  value={`${formatValue(metrics.consistencyRate)}%`}
+                  progress={Math.min(100, Math.max(10, metrics.consistencyRate))}
+                  fillClassName="bg-semantic-success/60"
+                />
+              </div>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 2xl:grid-cols-3">
               <SignalTile
-                label="Total capital"
-                value={formatCapitalCompact(totalCapitalAllAccounts)}
-                tone={totalCapitalAllAccounts >= 0 ? 'positive' : 'negative'}
-              />
-              <SignalTile
-                label="Total withdraw"
-                value={formatCapitalCompact(totalWithdrawAllAccounts)}
-              />
-              <SignalTile
                 label="Active days"
                 value={String(tradeCalendarDays.length)}
                 tone={tradeCalendarDays.length > 0 ? 'positive' : 'default'}
+              />
+              <SignalTile
+                label="Win rate"
+                value={`${formatValue(metrics.winRate)}%`}
+                tone={metrics.winRate >= 50 ? 'positive' : 'default'}
+              />
+              <SignalTile
+                label="Break-even rate"
+                value={`${formatValue(metrics.breakEvenRate)}%`}
               />
             </div>
           </div>
@@ -1183,49 +1216,6 @@ export default function TraderProfilePageClient() {
                   isBenchmarkLoading={isBenchmarkLoading}
                   benchmarkSampleSize={benchmark?.sampleSize}
                 />
-              </UnifiedSurface>
-            </Suspense>
-
-            <Suspense fallback={<MetricsSkeleton />}>
-              <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
-                <div className="flex items-center gap-2">
-                  <Wallet className="h-4 w-4 text-muted-foreground" />
-                  <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                    Capital snapshot
-                  </p>
-                </div>
-
-                <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  <StatTile
-                    label="Total capital"
-                    value={formatCapitalCompact(totalCapitalAllAccounts)}
-                  />
-                  <StatTile
-                    label="Total withdraw"
-                    value={formatCapitalCompact(totalWithdrawAllAccounts)}
-                  />
-                  <StatTile
-                    label="Avg net / trade"
-                    value={formatSigned(metrics.avgReturn)}
-                    tone={
-                      metrics.avgReturn > 0
-                        ? 'positive'
-                        : metrics.avgReturn < 0
-                          ? 'negative'
-                          : 'default'
-                    }
-                  />
-                  <StatTile label="Risk reward" value={formatValue(metrics.riskReward)} />
-                </div>
-
-                <div className="mt-4">
-                  <MeterRow
-                    label="Consistency"
-                    value={`${formatValue(metrics.consistencyRate)}%`}
-                    progress={Math.min(100, Math.max(10, metrics.consistencyRate))}
-                    fillClassName="bg-semantic-success/60"
-                  />
-                </div>
               </UnifiedSurface>
             </Suspense>
 

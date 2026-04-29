@@ -139,15 +139,22 @@ function CalendarGrid({ dayPnl }: { dayPnl: Map<string, number> }) {
   const start = subDays(startOfDay(new Date()), 83)
   const days = Array.from({ length: 84 }, (_, idx) => addDays(start, idx))
   return (
-    <div className="grid grid-cols-7 gap-2">
+    <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+      {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
+        <div key={d} className="pb-1 text-center text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">{d}</div>
+      ))}
       {days.map((day) => {
         const key = day.toISOString().slice(0, 10)
         const value = dayPnl.get(key) ?? 0
-        const tone = value > 0 ? 'bg-semantic-success/20 border-semantic-success/40' : value < 0 ? 'bg-semantic-error/20 border-semantic-error/40' : 'bg-card/40 border-border/30'
+        const tone = value > 0
+          ? 'bg-semantic-success/15 border-semantic-success/30 text-semantic-success'
+          : value < 0
+            ? 'bg-semantic-error/15 border-semantic-error/30 text-semantic-error'
+            : 'bg-muted/30 border-border/20 text-muted-foreground'
         return (
-          <div key={key} className={`rounded-md border p-2 ${tone}`}>
-            <p className="text-[10px] text-muted-foreground">{format(day, 'MMM d')}</p>
-            <p className="text-xs font-semibold">{value === 0 ? '-' : `${value > 0 ? '+' : ''}${Math.round(value)}`}</p>
+          <div key={key} className={`rounded-md border px-2 py-1.5 ${tone}`}>
+            <p className="text-[10px] leading-none text-muted-foreground/70">{format(day, 'd')}</p>
+            <p className="mt-1 text-[11px] font-semibold tabular-nums leading-none">{value === 0 ? '\u2013' : `${value > 0 ? '+' : ''}${Math.round(value)}`}</p>
           </div>
         )
       })}
@@ -158,13 +165,17 @@ function CalendarGrid({ dayPnl }: { dayPnl: Map<string, number> }) {
 function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">
-      <div className="rounded-xl border border-border/30 bg-card/50 p-8">
-        <h1 className="text-2xl font-semibold">{slug}</h1>
-        <p className="mt-3 text-muted-foreground">This public trader profile is unavailable.</p>
-        <Link href={`/${locale}/leaderboard`} className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary">
-          <ArrowLeft className="h-4 w-4" />
-          Back to leaderboard
-        </Link>
+      <Link
+        href={`/${locale}/leaderboard`}
+        className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <ArrowLeft className="h-3.5 w-3.5" />
+        Leaderboard
+      </Link>
+      <div className="rounded-2xl border border-border/30 bg-card/50 p-8 sm:p-12 text-center">
+        <p className="text-4xl font-semibold text-muted-foreground/40">404</p>
+        <h1 className="mt-3 text-xl font-semibold text-foreground">{slug}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">This public trader profile is unavailable or has been set to private.</p>
       </div>
     </div>
   )
@@ -179,67 +190,130 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
   const personSchema = { '@context': 'https://schema.org', '@type': 'Person', name: snapshot.username, url: getCanonicalUrl(locale, `/trader/${slug}`) }
   const breadcrumbSchema = buildBreadcrumbSchema(locale, [{ name: 'Leaderboard', path: '/leaderboard' }, { name: snapshot.username, path: `/trader/${slug}` }])
 
+  const pnlTone = snapshot.totalPnl > 0 ? 'text-semantic-success' : snapshot.totalPnl < 0 ? 'text-semantic-error' : ''
+  const winTone = snapshot.winRate >= 50 ? 'text-semantic-success' : ''
+  const avgTone = snapshot.avgPnl > 0 ? 'text-semantic-success' : snapshot.avgPnl < 0 ? 'text-semantic-error' : ''
+
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 sm:py-14">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }} />
 
-      <section className="rounded-xl border border-border/30 bg-card/50 p-6 sm:p-8">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex items-start gap-4">
-            <Avatar className="h-16 w-16 border border-border/30 bg-card/50">
-              <AvatarFallback>{snapshot.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+      {/* Back link */}
+      <Link
+        href={`/${locale}/leaderboard`}
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <ArrowLeft className="h-3.5 w-3.5" />
+        Leaderboard
+      </Link>
+
+      {/* ---- Profile Header ---- */}
+      <section className="rounded-2xl border border-border/30 bg-card/50 p-6 sm:p-8">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-5">
+            <Avatar className="h-20 w-20 shrink-0 rounded-2xl border border-border/30 bg-card/60 text-lg">
+              <AvatarFallback className="rounded-2xl text-lg font-semibold">
+                {snapshot.username.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
             </Avatar>
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight">{snapshot.username}</h1>
-              <p className="mt-1 text-sm text-muted-foreground">Public Trading CV</p>
+            <div className="min-w-0">
+              <h1 className="truncate text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                {snapshot.username}
+              </h1>
+              <p className="mt-1 text-sm text-muted-foreground">Public Trading Profile</p>
               <div className="mt-3 flex flex-wrap gap-2">
-                <Badge variant="outline">Professional Profile</Badge>
-                <Badge variant="outline">{snapshot.totalTrades} Trades</Badge>
+                <Badge variant="outline" className="rounded-full">{snapshot.totalTrades.toLocaleString()} trades</Badge>
+                <Badge variant="outline" className="rounded-full">{snapshot.winRate.toFixed(1)}% win rate</Badge>
               </div>
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {social.x ? <a href={social.x} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs"><Twitter className="h-3.5 w-3.5" />X</a> : null}
-            {social.instagram ? <a href={social.instagram} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs"><Instagram className="h-3.5 w-3.5" />Instagram</a> : null}
-            {social.discord ? <a href={social.discord} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs"><MessageCircle className="h-3.5 w-3.5" />Discord</a> : null}
-            {social.youtube ? <a href={social.youtube} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs"><Youtube className="h-3.5 w-3.5" />YouTube</a> : null}
-          </div>
+
+          {Object.values(social).some(Boolean) && (
+            <div className="flex flex-wrap gap-2">
+              {social.x ? <a href={social.x} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-card/70"><Twitter className="h-3.5 w-3.5" />X</a> : null}
+              {social.instagram ? <a href={social.instagram} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-card/70"><Instagram className="h-3.5 w-3.5" />Instagram</a> : null}
+              {social.discord ? <a href={social.discord} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-card/70"><MessageCircle className="h-3.5 w-3.5" />Discord</a> : null}
+              {social.youtube ? <a href={social.youtube} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-card/70"><Youtube className="h-3.5 w-3.5" />YouTube</a> : null}
+            </div>
+          )}
         </div>
       </section>
 
-      <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-xl border border-border/30 bg-card/50 p-4"><p className="text-xs text-muted-foreground">Net PnL</p><p className="mt-1 text-xl font-semibold">{formatCurrency(snapshot.totalPnl)}</p></div>
-        <div className="rounded-xl border border-border/30 bg-card/50 p-4"><p className="text-xs text-muted-foreground">Win Rate</p><p className="mt-1 text-xl font-semibold">{snapshot.winRate.toFixed(1)}%</p></div>
-        <div className="rounded-xl border border-border/30 bg-card/50 p-4"><p className="text-xs text-muted-foreground">Average Trade</p><p className="mt-1 text-xl font-semibold">{formatCurrency(snapshot.avgPnl)}</p></div>
-        <div className="rounded-xl border border-border/30 bg-card/50 p-4"><p className="text-xs text-muted-foreground">Total Trades</p><p className="mt-1 text-xl font-semibold">{snapshot.totalTrades.toLocaleString()}</p></div>
+      {/* ---- Key Metrics ---- */}
+      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-border/30 bg-card/50 px-5 py-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Net PnL</p>
+          <p className={`mt-2 text-2xl font-semibold tabular-nums tracking-tight ${pnlTone}`}>{formatCurrency(snapshot.totalPnl)}</p>
+        </div>
+        <div className="rounded-xl border border-border/30 bg-card/50 px-5 py-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Win Rate</p>
+          <p className={`mt-2 text-2xl font-semibold tabular-nums tracking-tight ${winTone}`}>{snapshot.winRate.toFixed(1)}%</p>
+        </div>
+        <div className="rounded-xl border border-border/30 bg-card/50 px-5 py-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Avg. Trade</p>
+          <p className={`mt-2 text-2xl font-semibold tabular-nums tracking-tight ${avgTone}`}>{formatCurrency(snapshot.avgPnl)}</p>
+        </div>
+        <div className="rounded-xl border border-border/30 bg-card/50 px-5 py-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Total Trades</p>
+          <p className="mt-2 text-2xl font-semibold tabular-nums tracking-tight">{snapshot.totalTrades.toLocaleString()}</p>
+        </div>
       </section>
 
-      <section className="mt-6 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <article className="rounded-xl border border-border/30 bg-card/50 p-5">
-          <div className="mb-3 flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" /><h2 className="text-sm font-semibold uppercase tracking-[0.12em]">Performance Calendar</h2></div>
+      {/* ---- Calendar + Recent Trades ---- */}
+      <section className="grid gap-6 lg:grid-cols-[1.35fr_1fr]">
+        <article className="rounded-2xl border border-border/30 bg-card/50 p-5 sm:p-6">
+          <div className="mb-4 flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-primary" />
+            <h2 className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Performance Calendar</h2>
+          </div>
           <CalendarGrid dayPnl={snapshot.dayPnl} />
         </article>
-        <article className="rounded-xl border border-border/30 bg-card/50 p-5">
-          <div className="mb-3 flex items-center gap-2"><TrendingUp className="h-4 w-4 text-primary" /><h2 className="text-sm font-semibold uppercase tracking-[0.12em]">Recent Trades</h2></div>
+        <article className="rounded-2xl border border-border/30 bg-card/50 p-5 sm:p-6">
+          <div className="mb-4 flex items-center gap-2">
+            <TrendingUp className="h-4 w-4 text-primary" />
+            <h2 className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Recent Trades</h2>
+          </div>
           <div className="space-y-2">
             {snapshot.recentTrades.map((trade) => (
-              <div key={trade.id} className="flex items-center justify-between rounded-lg border border-border/30 bg-card/40 px-3 py-2">
-                <div><p className="text-sm font-medium">{trade.symbol}</p><p className="text-[11px] text-muted-foreground">{format(trade.closeTime, 'MMM d, yyyy')}</p></div>
-                <p className={`text-sm font-semibold ${trade.pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error'}`}>{trade.pnl >= 0 ? '+' : ''}{trade.pnl.toFixed(2)}</p>
+              <div key={trade.id} className="flex items-center justify-between rounded-lg border border-border/20 bg-background/40 px-3.5 py-2.5 transition-colors hover:bg-background/60">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-foreground">{trade.symbol}</p>
+                  <p className="text-[11px] text-muted-foreground">{format(trade.closeTime, 'MMM d, yyyy')}</p>
+                </div>
+                <p className={`shrink-0 text-sm font-semibold tabular-nums ${trade.pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error'}`}>
+                  {trade.pnl >= 0 ? '+' : ''}{trade.pnl.toFixed(2)}
+                </p>
               </div>
             ))}
           </div>
         </article>
       </section>
 
-      <section className="mt-6 rounded-xl border border-border/30 bg-card/50 p-5">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.12em]">Trading Summary</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Public snapshot of this trader’s activity and consistency. Shared intentionally for transparent performance review.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Link href={`/${locale}/leaderboard`} className="inline-flex items-center gap-2 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs"><ArrowLeft className="h-3.5 w-3.5" />Leaderboard</Link>
-          <Link href={`/${locale}/dashboard/trader-profile`} className="inline-flex items-center gap-2 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs"><Globe className="h-3.5 w-3.5" />Create your profile</Link>
+      {/* ---- Footer CTA ---- */}
+      <section className="rounded-2xl border border-border/30 bg-card/50 p-6 sm:p-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1.5">
+            <h2 className="text-sm font-semibold text-foreground">Trading Summary</h2>
+            <p className="max-w-lg text-sm leading-relaxed text-muted-foreground">
+              Public snapshot of this trader&apos;s activity and consistency. Shared intentionally for transparent performance review.
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-wrap gap-2">
+            <Link
+              href={`/${locale}/leaderboard`}
+              className="inline-flex items-center gap-2 rounded-lg border border-border/30 bg-card/40 px-3.5 py-2 text-xs font-medium text-foreground transition-colors hover:bg-card/70"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Leaderboard
+            </Link>
+            <Link
+              href={`/${locale}/dashboard/trader-profile`}
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-3.5 py-2 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            >
+              <Globe className="h-3.5 w-3.5" />
+              Create your profile
+            </Link>
+          </div>
         </div>
       </section>
     </div>
