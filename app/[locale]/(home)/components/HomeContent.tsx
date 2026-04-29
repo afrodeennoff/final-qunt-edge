@@ -25,12 +25,11 @@ import {
   marketingSectionTitleClassName,
 } from '@/components/layout/marketing-sections'
 import { MarketingPricingSection } from '@/components/layout/marketing-pricing-section'
+import { Suspense } from 'react'
 import { getI18n } from '@/locales/server'
 import { cn } from '@/lib/utils'
 import ProductDemoPlayer from './ProductDemoPlayer'
-import SocialProof from './SocialProof'
-import FAQSection from './FAQSection'
-import TrustAndProof from './TrustAndProof'
+import { SocialProofLazy, FAQSectionLazy, TrustAndProofLazy } from './LazySections'
 
 interface HomeContentProps {
   locale: string
@@ -155,7 +154,9 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         </MarketingSection>
 
         {/* Social Proof */}
-        <SocialProof />
+        <Suspense fallback={null}>
+          <SocialProofLazy />
+        </Suspense>
 
         {/* Features */}
         <MarketingSection id="features" className="py-14 lg:py-16">
@@ -245,10 +246,12 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         <MarketingPricingSection locale={locale} />
 
         {/* Secondary Value */}
-        <TrustAndProof />
+        <TrustAndProofLazy />
 
         {/* FAQ */}
-        <FAQSection />
+        <Suspense fallback={null}>
+          <FAQSectionLazy />
+        </Suspense>
 
         {/* Final CTA */}
         <MarketingSection className="pb-24 pt-16 text-center lg:pb-28">

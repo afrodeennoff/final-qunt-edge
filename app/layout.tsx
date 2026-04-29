@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import {
-  Cormorant_Garamond,
-  Geist,
-  IBM_Plex_Mono,
   DM_Sans,
 } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
@@ -17,38 +14,12 @@ const siteOrigin = getSiteOrigin()
 const ROOT_DESCRIPTION =
   'Qunt Edge is a trading journal and analytics platform for discretionary traders, with structured post-session review, performance breakdowns, and team workflows.'
 
-const fontSans = Geist({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  display: 'swap',
-  preload: true,
-  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-})
-
-const fontSerif = Cormorant_Garamond({
-  subsets: ['latin'],
-  variable: '--font-serif',
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-  preload: false,
-  fallback: ['Georgia', 'serif'],
-})
-
-const fontMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-  preload: true,
-  fallback: ['Menlo', 'monospace'],
-})
-
 const fontDmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-dm-sans',
   weight: ['400', '500', '600', '700'],
   display: 'swap',
-  preload: false,
+  preload: true,
   fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
 })
 
@@ -162,7 +133,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
-      className={`${darkRootClass} ${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} ${fontDmSans.variable} bg-background`}
+      className={`${darkRootClass} ${fontDmSans.variable} bg-background`}
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning
@@ -170,6 +141,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         {/* Resource Hinting for Performance */}
         <link rel="dns-prefetch" href={siteOrigin} />
+        {process.env.NEXT_PUBLIC_SUPABASE_URL && (
+          <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
+        )}
 
         {/* Mobile-First Meta Tags */}
         <meta name="theme-color" content="oklch(0.06 0.01 260)" />

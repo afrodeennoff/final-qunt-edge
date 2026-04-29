@@ -966,13 +966,21 @@ export const DataProvider: React.FC<{
       if (isSharedView && initialSharedData) {
         return
       }
-      if (bootstrapSnapshot) {
-        await loadData({ withLoading: false })
-      } else {
-        await loadData()
+
+      const dataPromise = bootstrapSnapshot
+        ? loadData({ withLoading: false })
+        : loadData()
+
+      if (isSharedView) {
+        await dataPromise
+        return
       }
-      if (isSharedView) return
-      await loadSubscriptionData()
+
+      // Run data and subscription loads in parallel — they're independent
+      await Promise.all([
+        dataPromise,
+        loadSubscriptionData(),
+      ])
     }
 
     void loadDataIfMounted()

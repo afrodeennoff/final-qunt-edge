@@ -1,4 +1,5 @@
 [
+  "/",
   "/[locale]",
   "/[locale]/[...not-found]",
   "/[locale]/_updates",

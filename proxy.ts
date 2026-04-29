@@ -326,7 +326,7 @@ function applyPrivateNoStoreHeaders(response: NextResponse) {
 }
 
 function applyPublicRevalidateHeaders(response: NextResponse) {
-  response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate')
+  response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=60, stale-while-revalidate=300')
   response.headers.set('x-dashboard-cache-policy', 'public-revalidate')
 }
 

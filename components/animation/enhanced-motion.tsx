@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
+import { useRef, useEffect, useState, useMemo } from "react"
 import { motion, useReducedMotion, useInView, useSpring, Variants } from "motion/react"
 import { cn } from "@/lib/utils"
 
@@ -317,31 +317,30 @@ export function AnimatedCounter({
  const spring = useSpring(0, { stiffness: 100, damping: 30 })
  const [displayValue, setDisplayValue] = useState("0")
 
+ const formatter = useMemo(
+   () => new Intl.NumberFormat("en-US", {
+     minimumFractionDigits: decimals,
+     maximumFractionDigits: decimals,
+     ...formatOptions,
+   }),
+   [decimals, formatOptions]
+ )
+
  useEffect(() => {
  if (!isInView || prefersReducedMotion) return
 
  spring.set(target)
 
  const unsubscribe = spring.on("change", (latest) => {
- const formatted = new Intl.NumberFormat("en-US", {
- minimumFractionDigits: decimals,
- maximumFractionDigits: decimals,
- ...formatOptions,
- }).format(latest)
-
- setDisplayValue(formatted)
+ setDisplayValue(formatter.format(latest))
  })
 
  return () => {
  unsubscribe()
  }
- }, [target, decimals, formatOptions, isInView, spring, prefersReducedMotion])
+ }, [target, isInView, spring, prefersReducedMotion, formatter])
 
- const formatted = new Intl.NumberFormat("en-US", {
- minimumFractionDigits: decimals,
- maximumFractionDigits: decimals,
- ...formatOptions,
- }).format(prefersReducedMotion || !isInView ? target : target)
+ const formatted = formatter.format(target)
 
  return (
  <span ref={ref} className={className}>

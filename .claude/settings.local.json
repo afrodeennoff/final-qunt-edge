@@ -33,7 +33,12 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code} %{redirect_url}\" https://qunt-edge.vercel.app/)",
       "Bash(curl -s -o /dev/null -w \"%{http_code} %{size_download}\" -L https://qunt-edge.vercel.app/)",
       "Bash(curl -v -s -o /dev/null https://qunt-edge.vercel.app/en)",
-      "Bash(curl -s -w \"\\\\n%{http_code} time_total: %{time_total}s\\\\n\" -o /dev/null https://qunt-edge.vercel.app/en)"
+      "Bash(curl -s -w \"\\\\n%{http_code} time_total: %{time_total}s\\\\n\" -o /dev/null https://qunt-edge.vercel.app/en)",
+      "Bash(paseo daemon *)",
+      "Bash(paseo loop *)",
+      "Bash(curl -s http://127.0.0.1:6767/api/health)",
+      "Bash(paseo ls *)",
+      "Bash(curl -s http://127.0.0.1:6767/api/agents)"
     ]
   },
   "model": "sonnet",
