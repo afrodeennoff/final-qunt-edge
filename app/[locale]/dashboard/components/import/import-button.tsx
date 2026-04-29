@@ -125,6 +125,11 @@ export default function ImportButton() {
  setNewAccountNumber("");
  setProcessedTrades([]);
  setError(null);
+	setIsLoading(false);
+	setIsSaving(false);
+	setText("");
+	setSelectedAccountNumbers([]);
+	setFiles([]);
  }, []);
 
  const handleSave = useCallback(async () => {

@@ -1926,6 +1926,7 @@ export default {
       accountsReloaded: 'Accounts reloaded successfully',
       reloadError: 'Failed to reload accounts',
       dailySyncTimeLocal: 'Daily sync time (Local)',
+      environmentLive: 'Live',
       environmentDemo: 'Demo',
       dailySyncTimeTitle: 'Set daily sync time',
       dailySyncTimeDescription:

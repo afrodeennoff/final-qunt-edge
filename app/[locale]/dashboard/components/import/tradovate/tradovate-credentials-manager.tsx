@@ -35,7 +35,7 @@ import { useTradovateSyncStore } from "@/store/tradovate-sync-store";
 import { useSyncContext } from "@/context/sync-context";
 
 export function TradovateCredentialsManager() {
- const [currentTime] = useState(() => Date.now());
+ const [currentTime, setCurrentTime] = useState(() => Date.now());
  const { tradovate } = useSyncContext();
  const {
  performSyncForAccount,
@@ -56,6 +56,12 @@ export function TradovateCredentialsManager() {
  const [isSavingTime, setIsSavingTime] = useState(false);
  const t = useI18n();
  const tradovateStore = useTradovateSyncStore();
+
+ // Keep currentTime fresh so token expiration badges update in real time
+ useEffect(() => {
+   const interval = setInterval(() => setCurrentTime(Date.now()), 60_000);
+   return () => clearInterval(interval);
+ }, []);
 
  const handleDelete = useCallback(
  async (accountId: string) => {
@@ -308,12 +314,15 @@ export function TradovateCredentialsManager() {
  <TableCell>
  <span
  className={`px-2 py-1 rounded text-xs ${
- false
- ?"bg-semantic-error-bg text-semantic-error dark:bg-semantic-error-bg dark:text-semantic-error"
+ (account as any).environment === 'live'
+ ?"bg-semantic-success-bg text-semantic-success dark:bg-semantic-success-bg dark:text-semantic-success"
  :"bg-semantic-info-bg text-semantic-info dark:bg-semantic-info-bg dark:text-semantic-info"
  }`}
  >
- {t("tradovateSync.multiAccount.environmentDemo")}
+	 {(account as any).environment === 'live'
+	   ? t("tradovateSync.multiAccount.environmentLive")
+	   : t("tradovateSync.multiAccount.environmentDemo")
+	 }
  </span>
  </TableCell>
  <TableCell>{formatDate(account.lastSyncedAt.toISOString())}</TableCell>

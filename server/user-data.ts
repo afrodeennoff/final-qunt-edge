@@ -7,7 +7,7 @@ import { GroupWithAccounts } from './groups'
 import { getCurrentLocale } from '@/locales/server'
 import { prisma } from '@/lib/prisma'
 import { getDatabaseUserId, getUserId } from './auth'
-import { cacheLife, cacheTag, updateTag } from 'next/cache'
+import { cacheLife, cacheTag, revalidateTag } from 'next/cache'
 import { logger } from '@/lib/logger'
 import { FEATURE_FLAGS } from '@/lib/feature-flags'
 import {
@@ -480,7 +480,7 @@ export async function updateIsFirstConnectionAction(isFirstConnection: boolean) 
     where: { id: userId },
     data: { isFirstConnection }
   })
-  updateTag(`user-data-${userId}`)
+  revalidateTag(`user-data-${userId}`, CACHE_LIFETIMES.coreUserData)
 }
 
 export async function getUserDashboardTheme(): Promise<DashboardTheme | null> {
@@ -529,8 +529,8 @@ export async function setUserDashboardTheme(theme: string): Promise<DashboardThe
       data: { dashboardTheme: normalizedTheme },
       select: { dashboardTheme: true }
     })
-    await updateTag(`user-data-core-${userId}`)
-    await updateTag(`user-data-supplemental-${userId}`)
+    revalidateTag(`user-data-core-${userId}`, CACHE_LIFETIMES.coreUserData)
+    revalidateTag(`user-data-supplemental-${userId}`, CACHE_LIFETIMES.supplementalUserData)
     logger.info('[setUserDashboardTheme] Theme updated', { userId, theme: normalizedTheme })
     return normalizeDashboardTheme(updatedUser.dashboardTheme)
   } catch (error) {

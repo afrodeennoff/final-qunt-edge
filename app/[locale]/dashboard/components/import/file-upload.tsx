@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { useDropzone } from 'react-dropzone'
 import Papa from 'papaparse'
 import { ImportType } from './import-type-selection'
@@ -8,8 +8,8 @@ import { Progress } from "@/components/ui/progress"
 import { XIcon, FileIcon, AlertCircle, ArrowUpCircle } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
-import { useI18n } from "@/locales/client"
+import { cn } from '@/lib/utils'
+import { useI18n } from '@/locales/client'
 import { platforms } from './config/platforms'
 import { Step } from './import-button'
 
@@ -36,6 +36,10 @@ export default function FileUpload({
   const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({})
   const [parsedFiles, setParsedFiles] = useState<string[][][]>([])
   const t = useI18n()
+  // Track next available index via ref to avoid stale closure bugs in onDrop
+  const nextFileIndexRef = useRef(0)
+  // Guard against duplicate concatenateFiles calls
+  const hasConcatenatedRef = useRef(false)
 
   const processFile = useCallback((file: File, index: number) => {
     return new Promise<void>((resolve, reject) => {
@@ -72,9 +76,20 @@ export default function FileUpload({
   }, [setError])
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    setUploadedFiles(prevFiles => [...prevFiles, ...acceptedFiles])
+    if (acceptedFiles.length === 0) return
+
+    // Use ref-based index to avoid stale closure on uploadedFiles.length
+    const startIndex = nextFileIndexRef.current
+
+    setUploadedFiles(prevFiles => {
+      const newFiles = [...prevFiles, ...acceptedFiles]
+      // Update ref for future drops
+      nextFileIndexRef.current = newFiles.length
+      return newFiles
+    })
+
     acceptedFiles.forEach((file, index) => {
-      const totalIndex = uploadedFiles.length + index
+      const totalIndex = startIndex + index
       setUploadProgress(prev => ({ ...prev, [file.name]: 0 }))
       processFile(file, totalIndex)
         .then(() => {
@@ -85,7 +100,7 @@ export default function FileUpload({
           setUploadProgress(prev => ({ ...prev, [file.name]: 0 }))
         })
     })
-  }, [processFile, setError, uploadedFiles.length])
+  }, [processFile, setError])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
@@ -99,17 +114,19 @@ export default function FileUpload({
     })
   }
 
-  const concatenateFiles = useCallback(() => {
+  const doConcatenateAndAdvance = useCallback(() => {
+    if (hasConcatenatedRef.current) return
+
     if (parsedFiles.length === 0) return
 
     try {
       const platform = platforms.find(p => p.type === importType)
       if (!platform) {
-        throw new Error("Invalid import type")
+        throw new Error(`Invalid import type: ${importType}`)
       }
 
       if (!platform.processFile) {
-        return
+        throw new Error(`Platform "${platform.platformName}" does not support file processing.`)
       }
 
       let concatenatedData: string[][] = []
@@ -124,6 +141,8 @@ export default function FileUpload({
           concatenatedData = [...concatenatedData, ...processedData]
         }
       })
+
+      hasConcatenatedRef.current = true
 
       setRawCsvData([headers, ...concatenatedData])
       setCsvData(concatenatedData)
@@ -140,11 +159,28 @@ export default function FileUpload({
     }
   }, [importType, parsedFiles, setRawCsvData, setCsvData, setHeaders, setStep, setError])
 
+  // Reset concatenation guard when files change or component re-mounts for a fresh upload
   useEffect(() => {
-    if (parsedFiles.length > 0 && parsedFiles.length === uploadedFiles.length && Object.values(uploadProgress).every(progress => progress === 100)) {
-      concatenateFiles()
+    hasConcatenatedRef.current = false
+    nextFileIndexRef.current = 0
+  }, [importType])
+
+  // Primary effect: when all files are parsed and show 100% progress, concatenate and advance
+  useEffect(() => {
+    const totalFiles = uploadedFiles.length
+    if (totalFiles === 0 || parsedFiles.length === 0) return
+
+    const progressEntries = Object.values(uploadProgress)
+    const allProgressComplete = progressEntries.length === totalFiles &&
+      progressEntries.every(progress => progress === 100)
+
+    // Check that we have parse results for every uploaded file
+    const parsedCount = parsedFiles.filter(f => f && f.length > 0).length
+
+    if (allProgressComplete && parsedCount >= totalFiles) {
+      doConcatenateAndAdvance()
     }
-  }, [parsedFiles, uploadProgress, concatenateFiles, uploadedFiles.length])
+  }, [parsedFiles, uploadProgress, doConcatenateAndAdvance, uploadedFiles.length])
 
   return (
     <div className="space-y-4 w-full h-full p-8 flex flex-col items-center justify-center">
