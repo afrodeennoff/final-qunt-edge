@@ -1,14 +1,14 @@
+import { use } from 'react'
 import { setStaticParamsLocale } from "next-international/server";
 import { I18nProviderClient } from "@/locales/client";
 import ConsentBannerLazy from "@/components/lazy/consent-banner-lazy";
 import { LOCALE_SOFT_BORDER_STYLE } from "@/lib/constants/layout";
 
-export default async function LocaleLayoutContent(props: {
+export default function LocaleLayoutContent(props: {
   params: Promise<{ locale: string }>;
   children: React.ReactNode;
 }) {
-  const params = await props.params;
-  const { locale } = params;
+  const { locale } = use(props.params);
   const { children } = props;
   setStaticParamsLocale(locale);
 
