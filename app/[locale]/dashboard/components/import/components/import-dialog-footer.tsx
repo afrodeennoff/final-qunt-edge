@@ -40,7 +40,7 @@ export function ImportDialogFooter({
  const isSyncFirstStep = isFirstStep && isSyncPlatform
 
  return (
- <div className="flex-none border-t border-border bg-card/95 px-6 py-4 supports-backdrop-filter:bg-card/60">
+ <div className="flex-none border-t border-border bg-card/95 px-6 py-4">
  <div className="flex items-center justify-between">
  <span className="text-xs text-muted-foreground tabular-nums">
  {currentStepIndex + 1} / {platform.steps.length}

@@ -81,8 +81,8 @@ export function PlatformTutorial({
  )}
  </div>
  {selectedPlatform.videoUrl ? (
- <div className="aspect-video rounded-lg overflow-hidden bg-background/0.06 transition-transform duration-300 hover:scale-[1.02]">
- <div className="aspect-video rounded-lg overflow-hidden bg-background/0.06">
+ <div className="aspect-video rounded-lg overflow-hidden bg-muted/10 transition-transform duration-300 hover:scale-[1.02]">
+ <div className="aspect-video rounded-lg overflow-hidden bg-muted/10">
  <video
  ref={videoRef}
  height="600"

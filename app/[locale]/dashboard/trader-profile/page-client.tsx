@@ -12,10 +12,8 @@ import {
   Share2,
   Twitter,
   Instagram,
-  Link as LinkIcon,
-  Linkedin,
   Youtube,
-  Discord,
+  MessageCircle,
   Sparkles,
   TrendingUp,
   Wallet,
@@ -42,6 +40,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   useDashboardAccountsList,
   useDashboardIsLoading,
@@ -54,6 +53,7 @@ import { useUserStore } from '@/store/user-store'
 import { toast } from 'sonner'
 
 import { MetricsSkeleton, TableSkeleton, CalendarSkeleton } from './components/Skeletons'
+import { TraderProfileShareButton } from './components/trader-profile-share-button'
 
 const RadarChartCard = dynamic(() => import('./components/RadarChartCard'), {
   loading: () => (
@@ -212,7 +212,7 @@ function SocialLinks({ user }: { user: { id: string } }) {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"
         >
-          <Discord className="h-3.5 w-3.5" />
+          <MessageCircle className="h-3.5 w-3.5" />
           <span>Discord</span>
         </a>
       )}
@@ -228,64 +228,6 @@ function SocialLinks({ user }: { user: { id: string } }) {
         </a>
       )}
     </div>
-  )
-}
-
-function CopyProfileLink({ userId }: { userId: string }) {
-  const [copied, setCopied] = useState(false)
-
-  const shareUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}/trader/${userId}`
-    : ''
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl)
-      setCopied(true)
-      toast.success('Profile link copied to clipboard')
-      setTimeout(() => setCopied(false), 2000)
-    } catch (error) {
-      console.error('Error copying URL:', error)
-      toast.error('Failed to copy link')
-    }
-  }
-
-  return (
-    <Button
-      variant="outline"
-      size="sm"
-      className="gap-2"
-      onClick={handleCopy}
-    >
-      {copied ? (
-        <>
-          <CheckIcon className="h-4 w-4 text-semantic-success" />
-          <span>Copied</span>
-        </>
-      ) : (
-        <>
-          <Share2 className="h-4 w-4" />
-          <span>Copy Profile Link</span>
-        </>
-      )}
-    </Button>
-  )
-}
-
-function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 6 9 17l-5-5" />
-    </svg>
   )
 }
 
@@ -994,6 +936,8 @@ export default function TraderProfilePageClient() {
                   Performance board for reviewing consistency, session rhythm, and active
                   account health in one place.
                 </p>
+
+                <SocialLinks user={{ id: user?.id ?? '' }} />
               </div>
             </div>
 
@@ -1215,8 +1159,7 @@ export default function TraderProfilePageClient() {
         </UnifiedSurface>
 
         {/* ---- Benchmark & Metrics ---- */}
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(340px,1fr)]">
-          <div className="space-y-6">
+        <div className="space-y-6">
             <Suspense
               fallback={
                 <UnifiedSurface variant="elevated" className="p-5 sm:p-6">
@@ -1338,7 +1281,6 @@ export default function TraderProfilePageClient() {
                 </div>
               </UnifiedSurface>
             </Suspense>
-          </div>
         </div>
 
         {/* ---- Trade History ---- */}

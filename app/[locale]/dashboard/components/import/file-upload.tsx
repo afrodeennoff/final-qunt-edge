@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useState, useEffect, useRef } from 'react'
+import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react'
 import { useDropzone } from 'react-dropzone'
 import Papa from 'papaparse'
 import { ImportType } from './import-type-selection'
@@ -169,7 +169,10 @@ export default function FileUpload({
  return
  }
 
- window.requestAnimationFrame(() => {
+ // Parse directly without requestAnimationFrame — the rAF wrapper
+ // was the root cause of the "stuck on Upload File" bug because
+ // animation frames are suppressed when the tab is backgrounded
+ // or the browser is under heavy load.
  Papa.parse(file, {
  delimiter,
  skipEmptyLines: true,
@@ -210,7 +213,6 @@ export default function FileUpload({
  }
  })
  })
- })
  .catch(() => {
  reject(new Error("Error reading file"))
  })
@@ -231,9 +233,19 @@ export default function FileUpload({
 
  if (validFiles.length === 0) return
 
- setUploadedFiles(prevFiles => [...prevFiles, ...validFiles])
+ // Calculate starting index from the CURRENT uploaded files count BEFORE
+ // updating state. We use the updater form of setUploadedFiles to get the
+ // true current length, and pass the same baseIndex to all processFile calls.
+ let baseIndex = 0
+ setUploadedFiles(prevFiles => {
+ baseIndex = prevFiles.length
+ return [...prevFiles, ...validFiles]
+ })
+
+ // Because setUploadedFiles updater runs synchronously during batching,
+ // baseIndex is populated before this forEach runs.
  validFiles.forEach((file, index) => {
- const totalIndex = uploadedFilesRef.current.length + index
+ const totalIndex = baseIndex + index
  setUploadProgress(prev => ({ ...prev, [file.name]: 0 }))
 
  processFile(file, totalIndex)
@@ -267,6 +279,18 @@ export default function FileUpload({
  return newProgress
  })
  }
+
+ // Whether all currently-uploaded files have finished parsing.
+ // Exposed so the parent (import-button) can unblock the Next button
+ // even if the auto-advance effect fails to fire.
+ const allParsed = useMemo(() => {
+ if (uploadedFiles.length === 0) return false
+ return (
+ parsedFiles.length === uploadedFiles.length &&
+ parsedFiles.every(f => f != null && f.length > 0) &&
+ Object.values(uploadProgress).every(p => p === 100)
+ )
+ }, [uploadedFiles.length, parsedFiles, uploadProgress])
 
  const concatenateFiles = useCallback(() => {
  if (parsedFiles.length === 0) return
@@ -311,16 +335,16 @@ export default function FileUpload({
  }
  }, [importType, parsedFiles, setRawCsvData, setCsvData, setHeaders, setStep, setError])
 
+ // Auto-advance: fire concatenateFiles once all files parse successfully.
+ // Uses allParsed memo as a single stable gate to prevent partial fires.
  useEffect(() => {
- if (parsedFiles.length === 0 || isConcatenatingRef.current) return
- if (parsedFiles.length !== uploadedFiles.length) return
- if (!Object.values(uploadProgress).every(progress => progress === 100)) return
+ if (!allParsed || isConcatenatingRef.current) return
 
  isConcatenatingRef.current = true
  concatenateFiles()
  // Reset ref on next effect run so retries work after errors
  return () => { isConcatenatingRef.current = false }
- }, [concatenateFiles, parsedFiles.length, uploadProgress, uploadedFiles.length])
+ }, [allParsed, concatenateFiles])
 
  return (
  <div className="space-y-4 w-full h-full p-8 flex flex-col items-center justify-center">
@@ -336,7 +360,7 @@ export default function FileUpload({
  className={cn("h-80 w-full max-w-2xl border-2 border-dashed rounded-lg p-12 text-center transition-[opacity,background-color,border-color] duration-300 ease-in-out","hover:border-primary/50 group relative",
  isDragActive 
  ?"border-primary bg-primary/5 scale-[0.99]" 
- :"border-border hover:bg-background/80","cursor-pointer flex items-center justify-center"
+ :"border-border hover:bg-muted/50","cursor-pointer flex items-center justify-center"
  )}
  >
  <input {...getInputProps()} />
@@ -376,7 +400,7 @@ export default function FileUpload({
  {uploadedFiles.map((file, index) => (
  <div 
  key={index} 
- className={cn("flex items-center justify-between","bg-background rounded-lg","p-3 hover:bg-background/80","transition-[opacity,background-color,border-color] duration-200 ease-in-out","animate-in slide-in-from-bottom fade-in","group"
+ className={cn("flex items-center justify-between","bg-muted/30 rounded-lg","p-3 hover:bg-muted/50","transition-[opacity,background-color,border-color] duration-200 ease-in-out","animate-in slide-in-from-bottom fade-in","group"
  )}
  style={{ animationDelay: `${index * 100}ms` }}
  >
