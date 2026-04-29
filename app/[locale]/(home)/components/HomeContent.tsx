@@ -29,6 +29,8 @@ import { getI18n } from '@/locales/server'
 import { cn } from '@/lib/utils'
 import ProductDemoPlayer from './ProductDemoPlayer'
 import SocialProof from './SocialProof'
+import FAQSection from './FAQSection'
+import TrustAndProof from './TrustAndProof'
 
 interface HomeContentProps {
   locale: string
@@ -94,6 +96,24 @@ export default async function HomeContent({ locale }: HomeContentProps) {
       icon: <Target className="h-5 w-5" />,
       title: t('landing.home.workflow.step4Name'),
       description: t('landing.home.workflow.step4Description'),
+    },
+  ]
+
+  const testimonials = [
+    {
+      name: 'Futures Trader',
+      quote:
+        'Qunt Edge gave me a cleaner review loop. I stopped guessing and started improving session by session.',
+    },
+    {
+      name: 'Prop Team Lead',
+      quote:
+        'The import and review flow is fast enough for daily use, and strict enough for serious team accountability.',
+    },
+    {
+      name: 'Discretionary Scalper',
+      quote:
+        'The journal feels like a real workspace, not a marketing dashboard. That changed my consistency.',
     },
   ]
 
@@ -199,8 +219,36 @@ export default async function HomeContent({ locale }: HomeContentProps) {
           </div>
         </MarketingSection>
 
+        {/* Testimonials */}
+        <MarketingSection id="testimonials" className="py-14 lg:py-16">
+          <MarketingSectionHeader
+            eyebrow="Trader feedback"
+            title="Trusted by serious traders"
+            description="Built for disciplined review, repeatable execution, and long-term consistency."
+          />
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {testimonials.map((item) => (
+              <article
+                key={item.name}
+                className="rounded-xl border border-border/30 bg-card/50 p-5 text-left"
+              >
+                <p className="text-sm leading-relaxed text-foreground/90">{item.quote}</p>
+                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-primary/80">
+                  {item.name}
+                </p>
+              </article>
+            ))}
+          </div>
+        </MarketingSection>
+
         {/* Pricing */}
         <MarketingPricingSection locale={locale} />
+
+        {/* Secondary Value */}
+        <TrustAndProof />
+
+        {/* FAQ */}
+        <FAQSection />
 
         {/* Final CTA */}
         <MarketingSection className="pb-24 pt-16 text-center lg:pb-28">

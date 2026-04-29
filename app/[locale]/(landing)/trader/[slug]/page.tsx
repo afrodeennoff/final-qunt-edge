@@ -1,41 +1,35 @@
 import Link from 'next/link'
-import React from 'react'
 import type { Metadata } from 'next'
+import { addDays, format, startOfDay, subDays } from 'date-fns'
+import { createClient } from '@supabase/supabase-js'
+import { ArrowLeft, Calendar, Globe, Instagram, MessageCircle, TrendingUp, Twitter, Youtube } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { buildBreadcrumbSchema, buildPublicMetadata, getCanonicalUrl } from '@/lib/seo'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
-import { Zap, Lock, ArrowLeft } from 'lucide-react'
-import { buildPublicMetadata, buildBreadcrumbSchema, getCanonicalUrl } from '@/lib/seo'
 import { isPrismaColumnAvailable, isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 
+type SocialLinks = { x: string | null; instagram: string | null; discord: string | null; youtube: string | null }
 type TraderSnapshot = {
+  id: string
   username: string
   totalPnl: number
   totalTrades: number
+  winRate: number
+  avgPnl: number
+  authUserId: string
+  recentTrades: Array<{ id: string; symbol: string; pnl: number; closeTime: Date }>
+  dayPnl: Map<string, number>
 }
 
-const FB = 'border-[hsl(var(--border)/0.36)]'
-const FS = 'bg-[hsl(var(--card)/0.34)]'
-const FM = 'bg-[hsl(var(--border)/0.12)]'
-const FR = { boxShadow: '0 24px 48px -32px rgba(0, 0, 0, 0.72)' }
 const USER_TABLE_CANDIDATES = ['User', 'user'] as const
 const LEADERBOARD_VISIBILITY_COLUMN = 'showOnLeaderboard'
 
-function formatSigned(value: number, digits = 2): string {
-  if (!Number.isFinite(value)) return "0.00"
-  return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}`
-}
-
-function formatCapitalCompact(value: number): string {
-  if (!Number.isFinite(value)) return "0"
-  const sign = value < 0 ? "-" : ""
-  const abs = Math.abs(value)
-  if (abs >= 1_000_000) return `${sign}${(abs / 1_000_000).toFixed(abs >= 10_000_000 ? 0 : 1)}m`
-  if (abs >= 1_000) return `${sign}${(abs / 1_000).toFixed(abs >= 100_000 ? 0 : 1)}k`
-  return `${sign}${abs.toFixed(0)}`
-}
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value)
+function formatSocialUrl(url: string | null | undefined) {
+  if (!url) return null
+  const trimmed = url.trim()
+  if (!trimmed) return null
+  return trimmed.startsWith('http') ? trimmed : `https://${trimmed}`
 }
 
 function toUsername(email: string | null | undefined, fallbackId: string): string {
@@ -43,270 +37,211 @@ function toUsername(email: string | null | undefined, fallbackId: string): strin
   return base || `Trader ${fallbackId.slice(0, 8)}`
 }
 
+function formatCurrency(value: number): string {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value)
+}
+
 async function hasLeaderboardVisibilityColumn(): Promise<boolean> {
   for (const tableName of USER_TABLE_CANDIDATES) {
-    if (await isPrismaColumnAvailable(tableName, LEADERBOARD_VISIBILITY_COLUMN)) {
-      return true
-    }
+    if (await isPrismaColumnAvailable(tableName, LEADERBOARD_VISIBILITY_COLUMN)) return true
   }
-
   return false
 }
 
+async function getPublicSocialLinks(authUserId: string): Promise<SocialLinks> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!supabaseUrl || !serviceKey) {
+    return { x: null, instagram: null, discord: null, youtube: null }
+  }
+
+  const supabase = createClient(supabaseUrl, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } })
+  const { data } = await supabase.auth.admin.getUserById(authUserId)
+  const metadata = data.user?.user_metadata
+
+  return {
+    x: formatSocialUrl(metadata?.twitter_url),
+    instagram: formatSocialUrl(metadata?.instagram_url),
+    discord: formatSocialUrl(metadata?.discord_url),
+    youtube: formatSocialUrl(metadata?.youtube_url),
+  }
+}
+
 async function getTraderSnapshot(slug: string): Promise<TraderSnapshot | null> {
-  if (!hasConfiguredDatabaseConnection) {
-    return null
-  }
+  if (!hasConfiguredDatabaseConnection) return null
+  if (!(await hasLeaderboardVisibilityColumn())) return null
 
-  if (!(await hasLeaderboardVisibilityColumn())) {
-    return null
-  }
-
-  let publicUser: { id: string; email: string | null; showOnLeaderboard: boolean } | null = null
-
+  let publicUser: { id: string; email: string | null; showOnLeaderboard: boolean; auth_user_id: string } | null = null
   try {
     publicUser = await prisma.user.findUnique({
       where: { id: slug },
-      select: {
-        id: true,
-        email: true,
-        showOnLeaderboard: true,
-      },
+      select: { id: true, email: true, auth_user_id: true, showOnLeaderboard: true },
     })
   } catch (error) {
-    if (isPrismaSchemaMismatchError(error)) {
-      return null
-    }
-
+    if (isPrismaSchemaMismatchError(error)) return null
     throw error
   }
+  if (!publicUser?.showOnLeaderboard) return null
 
-  if (!publicUser?.showOnLeaderboard) {
-    return null
-  }
+  const trades = await prisma.trade.findMany({
+    where: { userId: publicUser.id },
+    select: { id: true, instrument: true, pnl: true, closeDate: true },
+    orderBy: { closeDate: 'desc' },
+    take: 3000,
+  })
 
-  let traderStats: { _sum: { pnl: unknown }; _count: { id: number } }
+  const recentTrades = trades.slice(0, 10).map((trade) => ({
+    id: trade.id,
+    symbol: trade.instrument || 'Unknown',
+    pnl: Number(trade.pnl ?? 0),
+    closeTime: trade.closeDate,
+  }))
 
-  try {
-    traderStats = await prisma.trade.aggregate({
-      where: { userId: publicUser.id },
-      _sum: { pnl: true },
-      _count: { id: true },
-    })
-  } catch (error) {
-    if (isPrismaSchemaMismatchError(error)) {
-      return null
-    }
+  const totalTrades = trades.length
+  const totalPnl = trades.reduce((sum, trade) => sum + Number(trade.pnl ?? 0), 0)
+  const wins = trades.filter((trade) => Number(trade.pnl ?? 0) > 0).length
+  const winRate = totalTrades > 0 ? (wins / totalTrades) * 100 : 0
+  const avgPnl = totalTrades > 0 ? totalPnl / totalTrades : 0
 
-    throw error
+  const dayPnl = new Map<string, number>()
+  for (const trade of trades) {
+    const key = startOfDay(trade.closeDate).toISOString().slice(0, 10)
+    dayPnl.set(key, (dayPnl.get(key) ?? 0) + Number(trade.pnl ?? 0))
   }
 
   return {
+    id: publicUser.id,
     username: toUsername(publicUser.email, publicUser.id),
-    totalPnl: Number(traderStats._sum.pnl ?? 0),
-    totalTrades: traderStats._count.id,
+    totalPnl,
+    totalTrades,
+    winRate,
+    avgPnl,
+    authUserId: publicUser.auth_user_id,
+    recentTrades,
+    dayPnl,
   }
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string; slug: string }>
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
   const { locale, slug } = await params
   const snapshot = await getTraderSnapshot(slug)
-
-  const username = snapshot?.username ?? slug
-  const title = `${username} — Trading Performance | Qunt Edge`
-  const description = snapshot
-    ? `View ${username}'s trading performance: ${snapshot.totalTrades} trades with ${formatCurrency(snapshot.totalPnl)} total PnL. Public trading profile on Qunt Edge.`
-    : `View ${username}'s trading performance, statistics, and public profile on Qunt Edge.`
-
   return buildPublicMetadata({
     locale,
     path: `/trader/${slug}`,
-    title,
-    description,
+    title: `${snapshot?.username ?? slug} — Trader Profile | Qunt Edge`,
+    description: snapshot
+      ? `${snapshot.username}: ${snapshot.totalTrades} trades, ${formatCurrency(snapshot.totalPnl)} net PnL, ${snapshot.winRate.toFixed(1)}% win rate.`
+      : `Public trader profile for ${slug} on Qunt Edge.`,
   })
 }
 
-/* ─── Not found state ─── */
+function CalendarGrid({ dayPnl }: { dayPnl: Map<string, number> }) {
+  const start = subDays(startOfDay(new Date()), 83)
+  const days = Array.from({ length: 84 }, (_, idx) => addDays(start, idx))
+  return (
+    <div className="grid grid-cols-7 gap-2">
+      {days.map((day) => {
+        const key = day.toISOString().slice(0, 10)
+        const value = dayPnl.get(key) ?? 0
+        const tone = value > 0 ? 'bg-semantic-success/20 border-semantic-success/40' : value < 0 ? 'bg-semantic-error/20 border-semantic-error/40' : 'bg-card/40 border-border/30'
+        return (
+          <div key={key} className={`rounded-md border p-2 ${tone}`}>
+            <p className="text-[10px] text-muted-foreground">{format(day, 'MMM d')}</p>
+            <p className="text-xs font-semibold">{value === 0 ? '-' : `${value > 0 ? '+' : ''}${Math.round(value)}`}</p>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
   return (
-    <div className="min-h-[calc(100vh-72px)] bg-background px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-      <div className="mx-auto max-w-[1120px]">
-        <div className={`rounded-2xl border ${FB} bg-card p-8`} style={FR}>
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">Trader profile</p>
-          <h1 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-foreground">{slug}</h1>
-          <p className="mt-3 max-w-xl text-[14px] leading-[1.6] text-muted-foreground">
-            This profile is not available yet. Once the trader has public stats or the database is connected, it will appear here.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-2">
-            <Link
-              href={`/${locale}/leaderboard`}
-              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-4 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-accent/55`}
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Back to leaderboard
-            </Link>
-            <Link
-              href={`/${locale}/dashboard/trader-profile`}
-              className="inline-flex items-center rounded-full bg-foreground px-4 py-1.5 text-[13px] font-semibold text-background transition-opacity hover:opacity-90"
-            >
-              Manage profile
-            </Link>
-          </div>
-        </div>
+    <div className="mx-auto max-w-5xl px-4 py-16">
+      <div className="rounded-xl border border-border/30 bg-card/50 p-8">
+        <h1 className="text-2xl font-semibold">{slug}</h1>
+        <p className="mt-3 text-muted-foreground">This public trader profile is unavailable.</p>
+        <Link href={`/${locale}/leaderboard`} className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary">
+          <ArrowLeft className="h-4 w-4" />
+          Back to leaderboard
+        </Link>
       </div>
     </div>
   )
 }
 
-/* ─── Main page ─── */
-export default async function TraderProfilePage({
-  params,
-}: {
-  params: Promise<{ locale: string; slug: string }>
-}) {
+export default async function TraderProfilePage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params
   const snapshot = await getTraderSnapshot(slug)
+  if (!snapshot) return <NotFoundState slug={slug} locale={locale} />
 
-  const personSchema = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: snapshot?.username ?? slug,
-    url: getCanonicalUrl(locale, `/trader/${slug}`),
-  }
-  const breadcrumbSchema = buildBreadcrumbSchema(locale, [
-    { name: "Leaderboard", path: "/leaderboard" },
-    { name: slug, path: `/trader/${slug}` },
-  ])
-
-  if (!snapshot) {
-    return (
-      <>
-        <NotFoundState slug={slug} locale={locale} />
-      </>
-    )
-  }
-
-  const positive = snapshot.totalPnl > 0
-  const negative = snapshot.totalPnl < 0
+  const social = await getPublicSocialLinks(snapshot.authUserId)
+  const personSchema = { '@context': 'https://schema.org', '@type': 'Person', name: snapshot.username, url: getCanonicalUrl(locale, `/trader/${slug}`) }
+  const breadcrumbSchema = buildBreadcrumbSchema(locale, [{ name: 'Leaderboard', path: '/leaderboard' }, { name: snapshot.username, path: `/trader/${slug}` }])
 
   return (
-    <div className="min-h-[calc(100vh-72px)] bg-background px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }}
-      />
-      <div className="mx-auto max-w-[1120px]">
-        <div className={`rounded-2xl border ${FB} bg-card p-6 sm:p-8 lg:p-10`} style={FR}>
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex items-start gap-6">
-              <Avatar className={`h-20 w-20 border ${FB} ${FS} shrink-0`} style={FR}>
-                <AvatarFallback className={`${FS} text-lg font-semibold text-foreground`}>
-                  {snapshot.username.slice(0, 2).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-foreground">{snapshot.username}</p>
-                <p className="mt-1 text-[13px] text-muted-foreground">Public trading profile</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <span className={`inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-primary`}>
-                    <Zap className="h-3 w-3" />
-                    Trader Profile
-                  </span>
-                  <span className={`inline-flex items-center rounded-full border ${FB} ${FS} px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground`}>
-                    {snapshot.totalTrades} Trades
-                  </span>
-                </div>
+    <div className="mx-auto max-w-6xl px-4 py-10">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }} />
+
+      <section className="rounded-xl border border-border/30 bg-card/50 p-6 sm:p-8">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex items-start gap-4">
+            <Avatar className="h-16 w-16 border border-border/30 bg-card/50">
+              <AvatarFallback>{snapshot.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight">{snapshot.username}</h1>
+              <p className="mt-1 text-sm text-muted-foreground">Public Trading CV</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Badge variant="outline">Professional Profile</Badge>
+                <Badge variant="outline">{snapshot.totalTrades} Trades</Badge>
               </div>
             </div>
-
-            <div className="grid gap-3 sm:grid-cols-3 lg:flex lg:flex-col lg:gap-4">
-              <StatCell label="Total Trades" value={snapshot.totalTrades.toLocaleString()} />
-              <StatCell label="Total PnL" value={formatSigned(snapshot.totalPnl)} accent={positive ? 'green' : negative ? 'red' : undefined} />
-              <StatCell label="Status" value="Live" />
-            </div>
           </div>
-
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className={`rounded-xl border ${FB} bg-card p-5`} style={FR}>
-              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total PnL</p>
-              <p className={`mt-2 text-2xl font-semibold tracking-[-0.02em] ${positive ? 'text-success' : negative ? 'text-destructive' : 'text-foreground'}`}>
-                {formatCurrency(snapshot.totalPnl)}
-              </p>
-              <p className="mt-2 text-[12px] text-muted-foreground">Cumulative trading performance</p>
-            </div>
-            <div className={`rounded-xl border ${FB} bg-card p-5`} style={FR}>
-              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Trades</p>
-              <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-foreground">{snapshot.totalTrades.toLocaleString()}</p>
-              <p className="mt-2 text-[12px] text-muted-foreground">Public trade history</p>
-            </div>
-          </div>
-
-          <div className="mt-8 flex flex-wrap gap-2">
-            <Link
-              href={`/${locale}/leaderboard`}
-              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-5 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-accent/55`}
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Back to leaderboard
-            </Link>
-            <Link
-              href={`/${locale}/dashboard/trader-profile`}
-              className="inline-flex items-center rounded-full bg-foreground px-5 py-1.5 text-[13px] font-semibold text-background transition-opacity hover:opacity-90"
-            >
-              Manage your profile
-            </Link>
+          <div className="flex flex-wrap gap-2">
+            {social.x ? <a href={social.x} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs"><Twitter className="h-3.5 w-3.5" />X</a> : null}
+            {social.instagram ? <a href={social.instagram} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs"><Instagram className="h-3.5 w-3.5" />Instagram</a> : null}
+            {social.discord ? <a href={social.discord} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs"><MessageCircle className="h-3.5 w-3.5" />Discord</a> : null}
+            {social.youtube ? <a href={social.youtube} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs"><Youtube className="h-3.5 w-3.5" />YouTube</a> : null}
           </div>
         </div>
+      </section>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-3">
-          <div className={`rounded-xl border ${FB} bg-card p-5`} style={FR}>
-            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Capital</p>
-            <p className="mt-2 text-3xl font-semibold text-foreground">{formatCapitalCompact(snapshot.totalPnl)}</p>
-          </div>
+      <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-border/30 bg-card/50 p-4"><p className="text-xs text-muted-foreground">Net PnL</p><p className="mt-1 text-xl font-semibold">{formatCurrency(snapshot.totalPnl)}</p></div>
+        <div className="rounded-xl border border-border/30 bg-card/50 p-4"><p className="text-xs text-muted-foreground">Win Rate</p><p className="mt-1 text-xl font-semibold">{snapshot.winRate.toFixed(1)}%</p></div>
+        <div className="rounded-xl border border-border/30 bg-card/50 p-4"><p className="text-xs text-muted-foreground">Average Trade</p><p className="mt-1 text-xl font-semibold">{formatCurrency(snapshot.avgPnl)}</p></div>
+        <div className="rounded-xl border border-border/30 bg-card/50 p-4"><p className="text-xs text-muted-foreground">Total Trades</p><p className="mt-1 text-xl font-semibold">{snapshot.totalTrades.toLocaleString()}</p></div>
+      </section>
 
-          <div className={`rounded-xl border ${FB} bg-card p-5`} style={FR}>
-            <div className="flex items-center justify-between">
-              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Trade Activity</p>
-              <span className={`inline-flex items-center rounded-full border ${FB} ${FS} px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground`}>
-                {snapshot.totalTrades > 100 ? 'Active' : 'Growing'}
-              </span>
-            </div>
-            <p className="mt-2 text-4xl font-semibold text-foreground">{snapshot.totalTrades}</p>
-            <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
-              <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, snapshot.totalTrades))}%` }} />
-            </div>
+      <section className="mt-6 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+        <article className="rounded-xl border border-border/30 bg-card/50 p-5">
+          <div className="mb-3 flex items-center gap-2"><Calendar className="h-4 w-4 text-primary" /><h2 className="text-sm font-semibold uppercase tracking-[0.12em]">Performance Calendar</h2></div>
+          <CalendarGrid dayPnl={snapshot.dayPnl} />
+        </article>
+        <article className="rounded-xl border border-border/30 bg-card/50 p-5">
+          <div className="mb-3 flex items-center gap-2"><TrendingUp className="h-4 w-4 text-primary" /><h2 className="text-sm font-semibold uppercase tracking-[0.12em]">Recent Trades</h2></div>
+          <div className="space-y-2">
+            {snapshot.recentTrades.map((trade) => (
+              <div key={trade.id} className="flex items-center justify-between rounded-lg border border-border/30 bg-card/40 px-3 py-2">
+                <div><p className="text-sm font-medium">{trade.symbol}</p><p className="text-[11px] text-muted-foreground">{format(trade.closeTime, 'MMM d, yyyy')}</p></div>
+                <p className={`text-sm font-semibold ${trade.pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error'}`}>{trade.pnl >= 0 ? '+' : ''}{trade.pnl.toFixed(2)}</p>
+              </div>
+            ))}
           </div>
+        </article>
+      </section>
 
-          <div className={`rounded-xl border ${FB} bg-card p-5`} style={FR}>
-            <div className="flex items-center justify-between">
-              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Profile</p>
-              <span className={`inline-flex items-center gap-1.5 rounded-full border ${FB} ${FS} px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground`}>
-                <Lock className="h-3 w-3" />
-                Public
-              </span>
-            </div>
-            <p className="mt-3 text-[13px] leading-[1.5] text-muted-foreground">
-              Trading profile with explicitly shared performance data on Qunt Edge.
-            </p>
-          </div>
+      <section className="mt-6 rounded-xl border border-border/30 bg-card/50 p-5">
+        <h2 className="text-sm font-semibold uppercase tracking-[0.12em]">Trading Summary</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Public snapshot of this trader’s activity and consistency. Shared intentionally for transparent performance review.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link href={`/${locale}/leaderboard`} className="inline-flex items-center gap-2 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs"><ArrowLeft className="h-3.5 w-3.5" />Leaderboard</Link>
+          <Link href={`/${locale}/dashboard/trader-profile`} className="inline-flex items-center gap-2 rounded-lg border border-border/30 bg-card/40 px-3 py-1.5 text-xs"><Globe className="h-3.5 w-3.5" />Create your profile</Link>
         </div>
-      </div>
-    </div>
-  )
-}
-
-/* ─── Shared stat cell ─── */
-
-function StatCell({ label, value, accent }: { label: string; value: string; accent?: 'green' | 'red' }) {
-  const color = accent === 'green' ? 'text-success' : accent === 'red' ? 'text-destructive' : 'text-foreground'
-  return (
-    <div className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
-      <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
-      <p className={`mt-2 text-xl font-semibold ${color}`}>{value}</p>
+      </section>
     </div>
   )
 }
