@@ -1019,38 +1019,16 @@ export default function TraderProfilePageClient() {
 
         {/* ---- Accounts & Capital ---- */}
         <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2">
-              <Wallet className="h-4 w-4 text-muted-foreground" />
-              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                Accounts & Capital
-              </p>
-            </div>
-            <Badge variant="secondary">{activeAccountsCount} active</Badge>
+          <div className="flex items-center gap-2">
+            <Wallet className="h-4 w-4 text-muted-foreground" />
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+              Accounts & Capital
+            </p>
           </div>
 
-          <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.92fr)]">
-            <div className="space-y-4">
-              <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
-                {activeAccountLabels.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {activeAccountLabels.map((accountLabel) => (
-                      <span
-                        key={accountLabel}
-                        className="rounded-full border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium tabular-nums text-foreground"
-                      >
-                        {accountLabel}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-sm text-muted-foreground">
-                    No linked accounts yet.
-                  </div>
-                )}
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
+          <div className="mt-4 grid gap-4 lg:grid-cols-3">
+            <div className="lg:col-span-2 space-y-4">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <StatTile
                   label="Total capital"
                   value={formatCapitalCompact(totalCapitalAllAccounts)}
@@ -1074,6 +1052,25 @@ export default function TraderProfilePageClient() {
                 <StatTile label="Risk reward" value={formatValue(metrics.riskReward)} />
               </div>
 
+              <div className={cn(insetPanelClassName, 'p-4')}>
+                {activeAccountLabels.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {activeAccountLabels.map((accountLabel) => (
+                      <span
+                        key={accountLabel}
+                        className="rounded-full border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium tabular-nums text-foreground"
+                      >
+                        {accountLabel}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-sm text-muted-foreground">
+                    No linked accounts yet.
+                  </div>
+                )}
+              </div>
+
               <div>
                 <MeterRow
                   label="Consistency"
@@ -1084,7 +1081,7 @@ export default function TraderProfilePageClient() {
               </div>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 2xl:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-3">
               <SignalTile
                 label="Active days"
                 value={String(tradeCalendarDays.length)}
