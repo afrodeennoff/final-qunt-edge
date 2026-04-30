@@ -54,7 +54,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   let locale: Locale = 'en'
 
   try {
-    locale = await params
+    const resolvedParams = await params
+    locale = resolvedParams.locale
     setStaticParamsLocale(locale)
   } catch {
     locale = 'en'

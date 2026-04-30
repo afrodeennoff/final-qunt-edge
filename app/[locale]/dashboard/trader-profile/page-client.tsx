@@ -941,12 +941,47 @@ export default function TraderProfilePageClient() {
               </div>
             </div>
 
-            <ProfileVisibilityPanel
-              isOwnProfile={isOwnProfile}
-              showOnLeaderboard={showOnLeaderboard}
-              isTogglingVisibility={isTogglingVisibility}
-              onToggle={handleToggleLeaderboard}
-            />
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <ProfileVisibilityPanel
+                isOwnProfile={isOwnProfile}
+                showOnLeaderboard={showOnLeaderboard}
+                isTogglingVisibility={isTogglingVisibility}
+                onToggle={handleToggleLeaderboard}
+              />
+
+              {benchmark && !isBenchmarkLoading && (
+                <div
+                  className={cn(
+                    insetPanelClassName,
+                    'w-full rounded-xl px-4 py-3 sm:w-auto sm:min-w-[18rem] lg:min-w-[19rem]',
+                  )}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                        Benchmark
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge
+                          variant={metrics.winRate >= 50 ? 'success' : 'outline'}
+                          className="gap-1.5"
+                        >
+                          Win rate: <span className="tabular-nums">{formatValue(metrics.winRate)}%</span>
+                        </Badge>
+                        <Badge
+                          variant={metrics.drawdown <= 0 ? 'success' : 'outline'}
+                          className="gap-1.5"
+                        >
+                          Drawdown: <span className="tabular-nums">{formatValue(metrics.drawdown)}%</span>
+                        </Badge>
+                      </div>
+                    </div>
+
+                    <TrendingUp className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </UnifiedSurface>
 
@@ -956,97 +991,29 @@ export default function TraderProfilePageClient() {
             Performance snapshot
           </p>
 
-          <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.9fr)]">
-            <div className="space-y-3">
-              <div className="grid gap-3 md:grid-cols-3">
-                {primaryStripMetrics.map((metric) => (
-                  <StripMetric
-                    key={metric.label}
-                    label={metric.label}
-                    value={metric.value}
-                    tone={metric.tone}
-                    emphasis
-                    className="h-full"
-                  />
-                ))}
-              </div>
+          <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+            {primaryStripMetrics.map((metric) => (
+              <StripMetric
+                key={metric.label}
+                label={metric.label}
+                value={metric.value}
+                tone={metric.tone}
+                emphasis
+                className="h-full"
+              />
+            ))}
+          </div>
 
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                {secondaryStripMetrics.map((metric) => (
-                  <StripMetric
-                    key={metric.label}
-                    label={metric.label}
-                    value={metric.value}
-                    tone={metric.tone}
-                    className="h-full"
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div className={cn(insetPanelClassName, 'p-4')}>
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="space-y-1">
-                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                      Review window
-                    </p>
-                    <p className="text-sm font-semibold tabular-nums text-foreground">
-                      {reviewWindowSummary}
-                    </p>
-                  </div>
-                  <div className={cn(insetPanelClassName, 'px-3 py-2')}>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                      Active session
-                    </p>
-                    <p className="mt-1 text-sm font-semibold tabular-nums text-foreground">
-                      {selectedDayLabel}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-                  <Select
-                    value={dateFilterPreset}
-                    onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
-                  >
-                    <SelectTrigger className="h-10 w-full border-border/30 bg-card/40 text-sm text-foreground">
-                      <SelectValue placeholder="Select range" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="last_week">Last Week</SelectItem>
-                      <SelectItem value="last_month">Last Month</SelectItem>
-                      <SelectItem value="last_3_months">Last 3 Months</SelectItem>
-                      <SelectItem value="last_6_months">Last 6 Months</SelectItem>
-                      <SelectItem value="last_year">Last Year</SelectItem>
-                      <SelectItem value="custom">Custom</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="h-10 justify-start border-border/30 bg-card/40 text-sm text-foreground hover:bg-card/60"
-                      >
-                        <CalendarIcon className="h-4 w-4" />
-                        {dateFilterLabel ?? 'Custom Range'}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-2" align="start">
-                      <Calendar
-                        mode="range"
-                        selected={customDateRange}
-                        onSelect={setCustomDateRange}
-                        numberOfMonths={isMobile ? 1 : 2}
-                        className="p-0"
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </div>
-            </div>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {secondaryStripMetrics.map((metric) => (
+              <StripMetric
+                key={metric.label}
+                label={metric.label}
+                value={metric.value}
+                tone={metric.tone}
+                className="h-full"
+              />
+            ))}
           </div>
         </UnifiedSurface>
 
@@ -1136,7 +1103,7 @@ export default function TraderProfilePageClient() {
           </div>
         </UnifiedSurface>
 
-        {/* ---- Calendar / Session Pattern ---- */}
+        {/* ---- Daily Session Pattern ---- */}
         <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 overflow-hidden p-5 sm:p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-1">
@@ -1144,18 +1111,74 @@ export default function TraderProfilePageClient() {
                 Daily session pattern
               </p>
               <p className="text-sm text-muted-foreground">
-                Review day-by-day trading rhythm and the currently selected session result.
+                Review day-by-day trading rhythm and session results.
               </p>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px]">
-              <StatTile label="Selected day" value={selectedDayLabel} className="px-3 py-2.5" />
-              <StatTile
-                label="Selected PnL"
-                value={formatSigned(selectedPnl)}
-                tone={selectedPnl >= 0 ? 'positive' : 'negative'}
-                className="px-3 py-2.5"
-              />
+            <div className="flex gap-3">
+              <div
+                className={cn(
+                  insetPanelClassName,
+                  'rounded-xl px-4 py-3',
+                  metrics.netPnl >= 0 ? 'border-semantic-success/30 bg-semantic-success/5' : 'border-semantic-error/30 bg-semantic-error/5',
+                )}
+              >
+                <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                  Selected day
+                </p>
+                <p className="mt-1 text-lg font-semibold tabular-nums text-foreground">
+                  {selectedDayLabel}
+                </p>
+              </div>
+
+              <div
+                className={cn(
+                  insetPanelClassName,
+                  'rounded-xl px-4 py-3',
+                  selectedPnl >= 0 ? 'border-semantic-success/30 bg-semantic-success/5' : 'border-semantic-error/30 bg-semantic-error/5',
+                )}
+              >
+                <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                  Selected PnL
+                </p>
+                <p className="mt-1 text-lg font-semibold tabular-nums text-foreground">
+                  {formatSigned(selectedPnl)}
+                </p>
+              </div>
+
+              <div
+                className={cn(
+                  insetPanelClassName,
+                  'rounded-xl px-4 py-3',
+                  totalWithdrawAllAccounts >= 0 ? 'border-semantic-success/30 bg-semantic-success/5' : 'border-semantic-error/30 bg-semantic-error/5',
+                )}
+              >
+                <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                  Session PnL
+                </p>
+                <p className="mt-1 text-lg font-semibold tabular-nums text-foreground">
+                  {formatSigned(totalWithdrawAllAccounts)}
+                </p>
+              </div>
+
+              <div className={cn(insetPanelClassName, 'rounded-xl px-3 py-3')}>
+                <Select
+                  value={dateFilterPreset}
+                  onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
+                >
+                  <SelectTrigger className="h-full w-[140px] border-border/30 bg-card/40 text-xs text-foreground">
+                    <SelectValue placeholder="Range" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="last_week">Last Week</SelectItem>
+                    <SelectItem value="last_month">Last Month</SelectItem>
+                    <SelectItem value="last_3_months">Last 3 Months</SelectItem>
+                    <SelectItem value="last_6_months">Last 6 Months</SelectItem>
+                    <SelectItem value="last_year">Last Year</SelectItem>
+                    <SelectItem value="custom">Custom</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
