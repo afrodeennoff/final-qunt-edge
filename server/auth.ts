@@ -126,8 +126,7 @@ export async function signInWithDiscord(next: string | null = null, locale?: str
     throw new Error('Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.')
   }
 
-  const supabase = await createClient()
-  const websiteURL = await getWebsiteURL()
+  const [supabase, websiteURL] = await Promise.all([createClient(), getWebsiteURL()])
   const callbackParams = new URLSearchParams()
   if (next) callbackParams.set('next', next)
   if (locale) callbackParams.set('locale', locale)
@@ -149,8 +148,7 @@ export async function signInWithGoogle(next: string | null = null, locale?: stri
     throw new Error('Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.')
   }
 
-  const supabase = await createClient()
-  const websiteURL = await getWebsiteURL()
+  const [supabase, websiteURL] = await Promise.all([createClient(), getWebsiteURL()])
   const callbackParams = new URLSearchParams()
   if (next) callbackParams.set('next', next)
   if (locale) callbackParams.set('locale', locale)

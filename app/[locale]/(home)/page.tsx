@@ -51,8 +51,14 @@ export async function generateMetadata({
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
-  const { locale } = await params
-  setStaticParamsLocale(locale)
+  let locale: Locale = 'en'
+
+  try {
+    locale = await params
+    setStaticParamsLocale(locale)
+  } catch {
+    locale = 'en'
+  }
 
   const softwareSchema = buildSoftwareApplicationSchema(locale, '/')
   const organizationSchema = buildOrganizationSchema()

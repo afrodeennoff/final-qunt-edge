@@ -624,6 +624,35 @@
     border: 1px solid rgba(145, 108, 255, 0.12);
   }
 
+  /* ── FROST TOKEN UTILITY CLASSES (oklch 260 hue) ── */
+  .frost-border-3 { border-color: oklch(0.65 0.22 260 / 0.03); }
+  .frost-border-5 { border-color: oklch(0.65 0.22 260 / 0.05); }
+  .frost-border-7 { border-color: oklch(0.65 0.22 260 / 0.07); }
+  .frost-border-9 { border-color: oklch(0.65 0.22 260 / 0.09); }
+  .frost-border-10 { border-color: oklch(0.65 0.22 260 / 0.10); }
+  .frost-border-11 { border-color: oklch(0.65 0.22 260 / 0.11); }
+  .frost-border-12 { border-color: oklch(0.65 0.22 260 / 0.12); }
+  .frost-border-14 { border-color: oklch(0.65 0.22 260 / 0.14); }
+  .frost-border-18 { border-color: oklch(0.65 0.22 260 / 0.18); }
+  .frost-border-24 { border-color: oklch(0.65 0.22 260 / 0.24); }
+  .frost-bg { background-color: oklch(0.052 0.009 260 / 0.7); }
+  .frost-bg-hover { background-color: oklch(0.056 0.009 260 / 0.78); }
+  .frost-bg-dim { background-color: oklch(0.058 0.012 260 / 0.6); }
+  .frost-bg-ghost { background-color: oklch(0.062 0.012 260 / 0.5); }
+  .frost-bg-raised { background-color: oklch(0.065 0.012 260 / 0.88); }
+  .frost-bg-elevated { background-color: oklch(0.068 0.012 260 / 0.92); }
+  .frost-bg-muted { background-color: oklch(0.08 0.015 260 / 0.5); }
+  .frost-bg-prominent { background-color: oklch(0.12 0.04 260 / 0.25); }
+  .frost-bg-input { background-color: oklch(0.04 0.005 260 / 0.9); }
+  .frost-bg-deep { background-color: oklch(0.048 0.008 260 / 0.95); }
+  .frost-gradient-card { background-image: linear-gradient(180deg, oklch(0.062 0.012 260 / 0.82) 0%, oklch(0.054 0.01 260 / 0.76) 100%); }
+  .frost-gradient-elevated { background-image: linear-gradient(180deg, oklch(0.068 0.012 260 / 0.92) 0%, oklch(0.062 0.012 260 / 0.82) 100%); }
+  .frost-gradient-panel { background-image: linear-gradient(180deg, oklch(0.058 0.012 260 / 0.6) 0%, oklch(0.048 0.008 260 / 0.5) 100%); }
+  .frost-shadow-inset { box-shadow: inset 0 1px 0 oklch(0.65 0.22 260 / 0.05); }
+  .frost-shadow-inset-sm { box-shadow: inset 0 1px 0 oklch(0.65 0.22 260 / 0.04); }
+  .frost-shadow-card { box-shadow: 0 16px 32px -26px rgba(0,0,0,0.62); }
+  .frost-shadow-card-lg { box-shadow: 0 24px 48px -32px rgba(0,0,0,0.75); }
+
   .text-gradient-white {
     background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.65) 100%);
     -webkit-background-clip: text;

@@ -340,8 +340,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, teamName, locale)
  const result = await signInWithPasswordAction(values.email, values.password || '', next, locale)
 
- if (!result.success) {
- toast.error(t('error'), { description: result.error || t('auth.errors.signInFailed') })
+ if (!result || !result.success) {
+ toast.error(t('error'), { description: result?.error || t('auth.errors.signInFailed') })
  setAuthMethod(null)
  setIsLoading(false)
  return

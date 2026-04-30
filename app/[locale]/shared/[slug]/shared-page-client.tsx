@@ -90,8 +90,8 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
             className={cn(
               'flex items-center rounded-xl border px-2 py-2 transition-[opacity,background-color,border-color,transform] duration-200 hover:-translate-y-0.5',
               accountNumbers.includes(account)
-                ? 'border-[oklch(0.65_0.22_260_/_0.1)] bg-[oklch(0.65_0.22_260_/_0.12)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_18px_36px_-26px_rgba(0,0,0,0.72)]'
-                : 'border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] text-muted-foreground hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.056_0.009_260_/_0.76)]',
+                ? 'frost-border-10 frost-bg-prominent text-foreground frost-shadow-inset-sm shadow-[0_18px_36px_-26px_rgba(0,0,0,0.72)]'
+                : 'frost-border-7 frost-bg-dim text-muted-foreground hover:frost-border-10 hover:frost-bg-hover',
             )}
           >
             <div
@@ -119,7 +119,7 @@ export function SharedPageClient() {
   if (isLoading) {
     return (
       <div className="qe-v2-app-shell flex flex-col items-center justify-center px-4 pt-28 sm:pt-32">
-        <div className="flex w-full max-w-lg flex-col items-center gap-3 rounded-2xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.064_0.011_260_/_0.88)_0%,oklch(0.052_0.009_260_/_0.82)_100%)] px-6 py-8 text-center shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_18px_44px_-30px_rgba(0,0,0,0.9)]">
+        <div className="flex w-full max-w-lg flex-col items-center gap-3 rounded-2xl border frost-border-7 frost-gradient-card px-6 py-8 text-center frost-shadow-inset shadow-[0_18px_44px_-30px_rgba(0,0,0,0.9)]">
           <Loader2 className="h-8 w-8 animate-spin text-foreground/60" />
           <p className="text-sm text-muted-foreground">{t('shared.loading')}</p>
         </div>

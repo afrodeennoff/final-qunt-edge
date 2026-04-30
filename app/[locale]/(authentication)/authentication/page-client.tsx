@@ -57,7 +57,7 @@ export default function AuthenticationPageClient() {
       <div className="relative mx-auto flex min-h-screen w-full items-center justify-center px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <div className={cn(unifiedHeroPanelClassName, 'w-full', MARKETING_SHELL_WIDTH)}>
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.06fr)_minmax(460px,0.94fr)]">
-            <section className="relative overflow-hidden p-6 sm:p-8 lg:border-r lg:border-[oklch(0.65_0.22_260_/_0.07)] lg:p-10 xl:p-12">
+            <section className="relative overflow-hidden p-6 sm:p-8 lg:border-r lg:frost-border-7 lg:p-10 xl:p-12">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/20 to-transparent" />
 
               <div className="flex items-center justify-between gap-3">
@@ -76,7 +76,7 @@ export default function AuthenticationPageClient() {
 
               <div className="auth-entrance-1 mt-10 max-w-[39rem] lg:mt-14">
                 <span className={unifiedSectionEyebrowClassName}>Qunt Edge</span>
-                <div className="mt-4 inline-flex items-center gap-3 rounded-xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] px-4 py-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]">
+                <div className="mt-4 inline-flex items-center gap-3 rounded-xl border frost-border-7 frost-bg-dim px-4 py-3 frost-shadow-inset-sm">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary/16 bg-primary/10 text-primary">
                     <Logo className="h-4.5 w-4.5 fill-current" />
                   </div>

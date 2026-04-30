@@ -183,7 +183,7 @@ export default async function Page({ params }: PageProps) {
         {/* Back link */}
         <Link
           href={`/${locale}/updates`}
-          className="mb-6 inline-flex items-center gap-2 rounded-lg border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.62)] px-3 py-1.5 text-xs font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.056_0.009_260_/_0.72)] hover:text-foreground"
+          className="mb-6 inline-flex items-center gap-2 rounded-lg border frost-border-7 bg-[oklch(0.052_0.009_260_/_0.62)] px-3 py-1.5 text-xs font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:frost-border-12 hover:bg-[oklch(0.056_0.009_260_/_0.72)] hover:text-foreground"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           All Updates

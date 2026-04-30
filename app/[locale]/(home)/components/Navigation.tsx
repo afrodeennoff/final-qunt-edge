@@ -17,7 +17,7 @@ export default function Navigation({ locale }: NavigationProps) {
 
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 px-4 py-3 sm:px-6">
-      <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between rounded-2xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.048_0.008_260_/_0.9)] px-4 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_24px_70px_-40px_rgba(0,0,0,0.92)] sm:px-5">
+      <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between rounded-2xl frost-border-7 frost-bg-deep px-4 frost-shadow-inset-sm shadow-[0_24px_70px_-40px_rgba(0,0,0,0.92)] sm:px-5">
         <Link href={`/${locale}`} className="flex items-center gap-2.5 group">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-sm transition-shadow duration-300 group-hover:shadow-sm">
             <span className="text-primary-foreground font-bold text-sm">Q</span>
@@ -30,7 +30,7 @@ export default function Navigation({ locale }: NavigationProps) {
           </div>
         </Link>
 
-        <div className="hidden rounded-full border border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.052_0.009_260_/_0.62)] p-1 md:flex md:items-center md:gap-1">
+        <div className="hidden rounded-full border frost-border-5 frost-bg-dim p-1 md:flex md:items-center md:gap-1">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -47,7 +47,7 @@ export default function Navigation({ locale }: NavigationProps) {
             variant="ghost"
             size="sm"
             asChild
-            className="rounded-full px-4 text-foreground/60 hover:bg-[oklch(0.052_0.009_260_/_0.7)] hover:text-foreground"
+            className="rounded-full px-4 text-foreground/60 hover:frost-bg hover:text-foreground"
           >
             <Link href={`/${locale}/authentication`}>Login</Link>
           </Button>
@@ -64,7 +64,7 @@ export default function Navigation({ locale }: NavigationProps) {
                 variant="outline"
                 size="lg"
                 asChild
-                className="w-full rounded-full border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.68)]"
+                className="w-full rounded-full frost-border-7 frost-bg-dim"
               >
                 <Link href={`/${locale}/authentication`}>Login</Link>
               </Button>
