@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
+import { connection } from 'next/server'
 import {
   getActiveDeals,
   getDealsOverview,
@@ -38,6 +39,7 @@ export default async function DealsPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
+  await connection()
   const organizationSchema = buildOrganizationSchema()
   const breadcrumbSchema = buildBreadcrumbSchema(locale, [
     { name: "Home", path: "/" },
