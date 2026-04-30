@@ -154,9 +154,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         </MarketingSection>
 
         {/* Social Proof */}
-        <Suspense fallback={null}>
-          <SocialProofLazy />
-        </Suspense>
+        <SocialProofLazy />
 
         {/* Features */}
         <MarketingSection id="features" className="py-14 lg:py-16">
@@ -249,9 +247,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         <TrustAndProofLazy />
 
         {/* FAQ */}
-        <Suspense fallback={null}>
-          <FAQSectionLazy />
-        </Suspense>
+        <FAQSectionLazy />
 
         {/* Final CTA */}
         <MarketingSection className="pb-24 pt-16 text-center lg:pb-28">
