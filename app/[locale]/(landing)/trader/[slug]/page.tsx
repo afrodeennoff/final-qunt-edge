@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { connection } from 'next/server'
 import { format, startOfDay } from 'date-fns'
 import { createClient } from '@supabase/supabase-js'
 import { ArrowLeft, Calendar, Globe, Instagram, MessageCircle, TrendingUp, Twitter, Youtube } from 'lucide-react'
@@ -160,6 +161,7 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
 
 export default async function TraderProfilePage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params
+  await connection()
   const snapshot = await getTraderSnapshot(slug)
   if (!snapshot) return <NotFoundState slug={slug} locale={locale} />
 

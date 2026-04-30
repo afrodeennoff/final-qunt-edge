@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { connection } from 'next/server'
 import { setStaticParamsLocale } from 'next-international/server'
 import { getI18n } from '@/locales/server'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
@@ -92,6 +93,7 @@ export default async function PropFirmsPage({
 }) {
   const { locale } = await params
   setStaticParamsLocale(locale)
+  await connection()
   const t = await getI18n()
   const [catalogue, unifiedFirms] = await Promise.all([
     getPropfirmCatalogueData('allTime'),
