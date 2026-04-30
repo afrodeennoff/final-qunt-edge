@@ -94,12 +94,12 @@ export default async function FAQPage({ params }: { params: Promise<{ locale: st
             <AccordionItem
               key={faq.question}
               value={`item-${index}`}
-              className="mb-3 rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.035)] px-4"
+              className="mb-3 rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] px-5 py-1 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)] transition-[background-color,border-color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)]"
             >
               <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline">
                 {faq.question}
               </AccordionTrigger>
-              <AccordionContent className="pb-6 pt-2 leading-relaxed text-muted-foreground">
+              <AccordionContent className="pb-6 pt-2 text-[15px] leading-relaxed text-muted-foreground">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>

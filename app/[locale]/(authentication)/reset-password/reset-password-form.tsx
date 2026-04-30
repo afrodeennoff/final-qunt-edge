@@ -48,11 +48,11 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  if (isSuccess) {
  return (
  <div className="flex flex-col items-center gap-4 text-center">
- <h2 className="text-2xl font-semibold">Password updated!</h2>
- <p className="text-muted-foreground">
+ <h2 className="text-2xl font-semibold tracking-tight text-foreground">Password updated!</h2>
+ <p className="text-sm text-muted-foreground">
  Your password has been successfully updated. Redirecting to dashboard...
  </p>
- <Link href={`/${locale}/dashboard`} className="text-sm text-primary underline-offset-4 hover:underline">
+ <Link href={`/${locale}/dashboard`} className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline">
  Go to dashboard
  </Link>
  </div>
@@ -62,7 +62,7 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  return (
  <div className="flex flex-col gap-6">
  <div className="text-center">
- <h2 className="text-2xl font-semibold">Set new password</h2>
+ <h2 className="text-2xl font-semibold tracking-tight text-foreground">Set new password</h2>
  <p className="text-sm text-muted-foreground mt-2">
  Enter your new password below.
  </p>
@@ -79,11 +79,12 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  autoComplete="new-password"
  data-testid="reset-password"
  disabled={isLoading}
+ className="h-11 rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-4 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20"
  />
  <button
  type="button"
  onClick={() => setShowPassword(!showPassword)}
- className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+ className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors duration-200 hover:text-foreground"
  tabIndex={-1}
  >
  {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
@@ -99,33 +100,38 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  autoComplete="new-password"
  data-testid="reset-password-confirm"
  disabled={isLoading}
+ className="h-11 rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20"
  />
 
- <div className="space-y-1">
+ <div className="space-y-1.5 rounded-xl border border-[oklch(0.65_0.22_260_/_0.075)] bg-[oklch(0.056_0.01_260_/_0.74)] p-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]">
  {requirements.map((req) => (
  <div
  key={req.key}
- className={`text-xs flex items-center gap-1.5 ${
+ className={`text-xs flex items-center gap-2 ${
  req.met ? 'text-success' : 'text-muted-foreground'
  }`}
  >
- <span>{req.met ? '✓' : '○'}</span>
+ <span className="text-[10px]">{req.met ? '✓' : '○'}</span>
  <span>{req.label}</span>
  </div>
  ))}
  {password.length > 0 && (
- <div className={`text-xs flex items-center gap-1.5 ${passwordsMatch ? 'text-success' : 'text-muted-foreground'}`}>
- <span>{passwordsMatch ? '✓' : '○'}</span>
+ <div className={`text-xs flex items-center gap-2 ${passwordsMatch ? 'text-success' : 'text-muted-foreground'}`}>
+ <span className="text-[10px]">{passwordsMatch ? '✓' : '○'}</span>
  <span>Passwords match</span>
  </div>
  )}
  </div>
 
  {error && (
- <p className="text-sm text-destructive">{error}</p>
+ <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
  )}
 
- <Button type="submit" disabled={isLoading || !allMet}>
+ <Button
+ type="submit"
+ disabled={isLoading || !allMet}
+ className="h-11 rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
+ >
  {isLoading ? 'Updating...' : 'Update password'}
  </Button>
  </form>

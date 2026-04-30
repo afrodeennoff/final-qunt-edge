@@ -60,7 +60,7 @@ export function MarketingSectionHeader({
       )}
     >
       {eyebrow ? (
-        <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
           {eyebrow}
         </p>
       ) : null}

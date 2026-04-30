@@ -29,13 +29,13 @@ export default function ForgotPasswordForm({ locale }: { locale: string }) {
  if (isSubmitted) {
  return (
  <div className="flex flex-col items-center gap-4 text-center">
- <h2 className="text-2xl font-semibold">Check your email</h2>
- <p className="text-muted-foreground max-w-sm">
- If an account exists with <strong>{email}</strong>, you will receive a password reset link shortly.
+ <h2 className="text-2xl font-semibold tracking-tight text-foreground">Check your email</h2>
+ <p className="text-sm text-muted-foreground max-w-sm">
+ If an account exists with <strong className="text-foreground">{email}</strong>, you will receive a password reset link shortly.
  </p>
  <Link
  href={`/${locale}/authentication`}
- className="text-sm text-primary underline-offset-4 hover:underline"
+ className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
  >
  Back to sign in
  </Link>
@@ -46,7 +46,7 @@ export default function ForgotPasswordForm({ locale }: { locale: string }) {
  return (
  <div className="flex flex-col gap-6">
  <div className="text-center">
- <h2 className="text-2xl font-semibold">Forgot your password?</h2>
+ <h2 className="text-2xl font-semibold tracking-tight text-foreground">Forgot your password?</h2>
  <p className="text-sm text-muted-foreground mt-2">
  Enter your email and we&apos;ll send you a reset link.
  </p>
@@ -62,15 +62,20 @@ export default function ForgotPasswordForm({ locale }: { locale: string }) {
  autoComplete="email"
  data-testid="forgot-password-email"
  disabled={isLoading}
+ className="h-11 rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20"
  />
- <Button type="submit" disabled={isLoading || !email.trim()}>
+ <Button
+ type="submit"
+ disabled={isLoading || !email.trim()}
+ className="h-11 rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
+ >
  {isLoading ? 'Sending...' : 'Send reset link'}
  </Button>
  </form>
 
  <Link
  href={`/${locale}/authentication`}
- className="text-sm text-primary underline-offset-4 hover:underline text-center"
+ className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline text-center"
  >
  Back to sign in
  </Link>

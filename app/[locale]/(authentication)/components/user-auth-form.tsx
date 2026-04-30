@@ -494,7 +494,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  return (
  <div className={cn("grid gap-6", className)} {...props}>
  {alreadySignedIn && (
- <div className="flex items-center justify-between gap-3 rounded-xl border border-success/30 bg-success/10 px-4 py-3">
+ <div className="flex items-center justify-between gap-3 rounded-2xl border border-success/30 bg-success/10 px-4 py-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.03)]">
  <div className="flex items-center gap-3">
  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-success/15">
  <svg className="h-4 w-4 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -508,7 +508,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </div>
  <Button
  size="sm"
- className="shrink-0 border-success/30 bg-success/20 text-success hover:bg-success/30"
+ className="shrink-0 rounded-[0.95rem] border-success/30 bg-success/20 text-success hover:bg-success/30"
  onClick={() => router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)}
  >
  Go to Dashboard
@@ -516,21 +516,21 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </div>
  )}
  <Tabs value={tab} onValueChange={(v) => { setTab(v as 'magic' | 'password'); setLastAuthPreference(v as 'magic' | 'password'); }}>
- <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/0.04 bg-background/0.08 p-1">
+ <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-[oklch(0.65_0.22_260_/_0.085)] bg-[oklch(0.056_0.01_260_/_0.72)] p-1 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]">
  <TabsTrigger
  value="magic"
- className="h-9 rounded-lg text-xs font-semibold text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+ className="h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_1px_2px_rgba(0,0,0,0.14)]"
  >
  <span className="truncate">{t('auth.tabs.magic')}</span>
  </TabsTrigger>
  <TabsTrigger
  value="password"
- className="relative h-9 rounded-lg text-xs font-semibold text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+ className="relative h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_1px_2px_rgba(0,0,0,0.14)]"
  >
  <span className="truncate">{t('auth.tabs.password')}</span>
  <Badge
  variant="secondary"
- className="absolute -right-1.5 -top-1.5 border border-border/0.04 bg-accent/70 px-1 py-0 text-[8px] text-foreground"
+ className="absolute -right-1.5 -top-1.5 border border-[oklch(0.65_0.22_260_/_0.11)] bg-primary/15 px-1 py-0 text-[8px] font-semibold text-primary"
  >
  {t('auth.new')}
  </Badge>
@@ -555,7 +555,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  autoComplete="email"
  autoCorrect="off"
  disabled={isLoading || (isEmailSent || authMethod === 'discord' || authMethod === 'google')}
- className="h-11 rounded-xl border-border/0.06 bg-background/0.08 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+ className="h-11 rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20 focus-visible:ring-offset-0"
  {...field}
  />
  </FormControl>
@@ -567,7 +567,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <Button
  disabled={isLoading || countdown > 0 || authMethod === 'discord' || authMethod === 'google'}
  type="submit"
- className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:bg-primary/90"
+ className="h-11 rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
  >
  {isLoading && authMethod === 'email' && (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -576,20 +576,20 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </Button>
  ) : (
  <div className="space-y-2">
- <Button 
+ <Button
  type="button"
  variant="outline"
- className="h-11 w-full rounded-xl border-border/0.06 bg-background/0.08 text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/70 hover:text-foreground"
+ className="h-11 w-full rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.06_0.011_260_/_0.9)] hover:text-foreground"
  onClick={openMailClient}
  disabled={authMethod === 'discord' || authMethod === 'google'}
  >
  <Icons.envelope className="mr-2 h-4 w-4" />
  {t('auth.openMailbox')}
  </Button>
- <Button 
+ <Button
  type="submit"
  variant="ghost"
- className="h-10 w-full rounded-xl text-muted-foreground hover:bg-accent/60 hover:text-foreground"
+ className="h-10 w-full rounded-xl text-muted-foreground transition-[background-color,color] duration-200 hover:bg-[oklch(0.06_0.011_260_/_0.82)] hover:text-foreground"
  disabled={countdown > 0 || authMethod === 'discord' || authMethod === 'google'}
  >
  {countdown > 0 ? (
@@ -604,13 +604,13 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </Form>
  {showOtpInput && (
  <Form {...otpForm}>
- <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-xl border border-border/0.04 bg-background/0.06 p-4">
+ <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-2xl border border-[oklch(0.65_0.22_260_/_0.085)] bg-[linear-gradient(180deg,oklch(0.07_0.012_260_/_0.9)_0%,oklch(0.056_0.01_260_/_0.84)_100%)] p-5 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_14px_28px_-24px_rgba(0,0,0,0.64)]">
  <FormField
  control={otpForm.control}
  name="otp"
  render={({ field }) => (
  <FormItem className="space-y-2">
- <FormLabel className="block text-center text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+ <FormLabel className="block text-center text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
  {t('auth.verificationCode')}
  </FormLabel>
  <FormControl>
@@ -639,9 +639,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </FormItem>
  )}
  />
- <Button 
+ <Button
  type="submit"
- className="h-11 w-full rounded-xl bg-primary font-semibold text-primary-foreground hover:bg-primary/90"
+ className="h-11 w-full rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
  disabled={isLoading}
  >
  {isLoading ? (
@@ -672,7 +672,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  autoComplete="email"
  autoCorrect="off"
  disabled={isLoading}
- className="h-11 rounded-xl border-border/0.06 bg-background/0.08 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+ className="h-11 rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20 focus-visible:ring-offset-0"
  {...field}
  />
  </FormControl>
@@ -693,7 +693,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  type="password"
  autoComplete="current-password"
  disabled={isLoading}
- className="h-11 rounded-xl border-border/0.06 bg-background/0.08 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+ className="h-11 rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20 focus-visible:ring-offset-0"
  {...field}
  />
  </FormControl>
@@ -703,14 +703,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  />
  <Link
  href={withLocalePrefix("/authentication/forgot-password", locale)}
- className="text-sm text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
+ className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
  >
  Forgot your password?
  </Link>
- <Button 
+ <Button
  disabled={isLoading}
  type="submit"
- className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:bg-primary/90"
+ className="h-11 rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
  >
  {isLoading && authMethod === 'email' && (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -724,21 +724,21 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
  <div className="relative py-1">
  <div className="absolute inset-0 flex items-center">
- <span className="w-full border-t border-border/0.04" />
+ <span className="w-full border-t border-[oklch(0.65_0.22_260_/_0.085)]" />
  </div>
- <div className="relative flex justify-center text-[10px] uppercase tracking-[0.14em]">
- <span className="bg-primary/[0.03] px-2 text-muted-foreground">
+ <div className="relative flex justify-center text-[11px] uppercase tracking-[0.1em]">
+ <span className="bg-[oklch(0.058_0.011_260_/_0.82)] px-3 text-muted-foreground">
  {t('auth.continueWith')}
  </span>
  </div>
  </div>
 
- <Button 
+ <Button
  variant="outline"
  type="button"
  disabled={isLoading || authMethod === 'email'}
  onClick={onSubmitDiscord}
- className="h-11 rounded-xl border-border/0.06 bg-background/0.08 text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/70 hover:text-foreground"
+ className="h-11 rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.06_0.011_260_/_0.9)] hover:text-foreground"
  >
  {isLoading && authMethod === 'discord' ? (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -752,7 +752,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  type="button"
  disabled={isLoading || authMethod === 'email'}
  onClick={onSubmitGoogle}
- className="h-11 rounded-xl border-border/0.06 bg-background/0.08 text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/70 hover:text-foreground"
+ className="h-11 rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.06_0.011_260_/_0.9)] hover:text-foreground"
  >
  {isLoading && authMethod === 'google' ? (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

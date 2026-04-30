@@ -3,16 +3,25 @@ import type { Metadata } from 'next'
 import { connection } from 'next/server'
 import { format, startOfDay } from 'date-fns'
 import { createClient } from '@supabase/supabase-js'
-import { ArrowLeft, Calendar, Globe, Instagram, MessageCircle, TrendingUp, Twitter, Youtube } from 'lucide-react'
+import {
+  ArrowLeft,
+  BarChart3,
+  Calendar,
+  DollarSign,
+  Globe,
+  Instagram,
+  MessageCircle,
+  Target,
+  TrendingUp,
+  Twitter,
+  Youtube,
+} from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { buildBreadcrumbSchema, buildPublicMetadata, getCanonicalUrl } from '@/lib/seo'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { isPrismaColumnAvailable, isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 import { CalendarGrid } from './calendar-grid'
-
-const insetPanelClassName = 'rounded-xl border border-border/30 bg-card/40 shadow-none'
 
 type SocialLinks = { x: string | null; instagram: string | null; discord: string | null; youtube: string | null }
 type TraderSnapshot = {
@@ -150,7 +159,7 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
         <ArrowLeft className="h-3.5 w-3.5" />
         Leaderboard
       </Link>
-      <div className="rounded-2xl border border-border/30 bg-card/50 p-8 sm:p-12 text-center">
+      <div className="rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] p-8 text-center shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
         <p className="text-4xl font-semibold text-muted-foreground/40">404</p>
         <h1 className="mt-3 text-xl font-semibold text-foreground">{slug}</h1>
         <p className="mt-2 text-sm text-muted-foreground">This public trader profile is unavailable or has been set to private.</p>
@@ -158,6 +167,13 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
     </div>
   )
 }
+
+const socialItems = [
+  { key: 'x' as const, icon: Twitter, label: 'X' },
+  { key: 'instagram' as const, icon: Instagram, label: 'Instagram' },
+  { key: 'discord' as const, icon: MessageCircle, label: 'Discord' },
+  { key: 'youtube' as const, icon: Youtube, label: 'YouTube' },
+]
 
 export default async function TraderProfilePage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params
@@ -169,109 +185,154 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
   const personSchema = { '@context': 'https://schema.org', '@type': 'Person', name: snapshot.username, url: getCanonicalUrl(locale, `/trader/${slug}`) }
   const breadcrumbSchema = buildBreadcrumbSchema(locale, [{ name: 'Leaderboard', path: '/leaderboard' }, { name: snapshot.username, path: `/trader/${slug}` }])
 
-  const pnlTone = snapshot.totalPnl > 0 ? 'text-semantic-success' : snapshot.totalPnl < 0 ? 'text-semantic-error' : ''
-  const winTone = snapshot.winRate >= 50 ? 'text-semantic-success' : ''
-  const avgTone = snapshot.avgPnl > 0 ? 'text-semantic-success' : snapshot.avgPnl < 0 ? 'text-semantic-error' : ''
+  const pnlColor = snapshot.totalPnl > 0 ? 'text-semantic-success' : snapshot.totalPnl < 0 ? 'text-semantic-error' : 'text-foreground'
+  const pnlBg = snapshot.totalPnl > 0
+    ? 'bg-semantic-success/8 border-semantic-success/15'
+    : snapshot.totalPnl < 0
+      ? 'bg-semantic-error/8 border-semantic-error/15'
+      : 'bg-muted/20 border-[oklch(0.65_0.22_260_/_0.09)]'
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 sm:py-14">
+    <div className="mx-auto max-w-6xl space-y-8 px-4 py-10 sm:py-14 lg:py-16">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }} />
 
-      {/* Back link */}
-      <Link
-        href={`/${locale}/leaderboard`}
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        Leaderboard
-      </Link>
+      {/* Navigation */}
+      <nav>
+        <Link
+          href={`/${locale}/leaderboard`}
+          className="group inline-flex items-center gap-2 rounded-[0.95rem] px-3 py-1.5 text-sm font-medium text-muted-foreground transition-[color,background-color] duration-200 hover:bg-[oklch(0.052_0.009_260_/_0.56)] hover:text-foreground"
+        >
+          <ArrowLeft className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
+          Leaderboard
+        </Link>
+      </nav>
 
       {/* ---- Profile Header ---- */}
-      <section className={insetPanelClassName}>
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex min-w-0 items-center gap-5">
-            <Avatar className="h-18 w-18 shrink-0 rounded-2xl border border-border/30 bg-card/50 sm:h-20 sm:w-20">
-              <AvatarFallback className="rounded-2xl text-lg font-semibold">
-                {snapshot.username.slice(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 space-y-2">
-              <h1 className="truncate text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                {snapshot.username}
-              </h1>
-              <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
-                Public Trading Profile
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary" className="gap-1.5 text-[11px]">
-                  <TrendingUp className="h-3 w-3" />
-                  {snapshot.totalTrades.toLocaleString()} trades
-                </Badge>
-                <Badge variant="secondary" className="gap-1.5 text-[11px]">
-                  <TrendingUp className="h-3 w-3" />
-                  {snapshot.winRate.toFixed(1)}% win rate
-                </Badge>
+      <section className="relative overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-primary/[0.04] to-transparent" />
+        <div className="relative p-6 sm:p-8">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex min-w-0 items-center gap-5">
+              <div className="relative">
+                <Avatar className="h-18 w-18 shrink-0 rounded-2xl border-2 border-primary/20 bg-[oklch(0.058_0.011_260_/_0.82)] sm:h-20 sm:w-20">
+                  <AvatarFallback className="rounded-2xl bg-primary/10 text-base font-semibold text-primary sm:text-lg">
+                    {snapshot.username.slice(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[oklch(0.054_0.01_260)] bg-semantic-success text-[10px] font-bold text-white">
+                  W
+                </div>
+              </div>
+              <div className="min-w-0 space-y-2">
+                <h1 className="truncate text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                  {snapshot.username}
+                </h1>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  Public Trading Profile
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.058_0.011_260_/_0.8)] px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                    <TrendingUp className="h-3 w-3" />
+                    {snapshot.totalTrades.toLocaleString()} trades
+                  </span>
+                  <span className={cn(
+                    'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em]',
+                    snapshot.winRate >= 50
+                      ? 'border border-semantic-success/20 bg-semantic-success/8 text-semantic-success'
+                      : 'border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.058_0.011_260_/_0.8)] text-muted-foreground'
+                  )}>
+                    <Target className="h-3 w-3" />
+                    {snapshot.winRate.toFixed(1)}% win rate
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {Object.values(social).some(Boolean) && (
-            <div className="flex flex-wrap gap-2">
-              {social.x ? <a href={social.x} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"><Twitter className="h-3.5 w-3.5" />X</a> : null}
-              {social.instagram ? <a href={social.instagram} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"><Instagram className="h-3.5 w-3.5" />Instagram</a> : null}
-              {social.discord ? <a href={social.discord} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"><MessageCircle className="h-3.5 w-3.5" />Discord</a> : null}
-              {social.youtube ? <a href={social.youtube} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"><Youtube className="h-3.5 w-3.5" />YouTube</a> : null}
-            </div>
-          )}
+            {Object.values(social).some(Boolean) && (
+              <div className="flex flex-wrap gap-2">
+                {socialItems.map(({ key, icon: Icon, label }) => {
+                  const url = social[key]
+                  if (!url) return null
+                  return (
+                    <a
+                      key={key}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-3 py-1.5 text-xs font-medium text-foreground transition-[background-color,border-color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.068_0.012_260_/_0.92)]"
+                    >
+                      <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+                      {label}
+                    </a>
+                  )
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
       {/* ---- Key Metrics ---- */}
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className={cn(insetPanelClassName, 'px-4 py-3.5')}>
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Net PnL</p>
-          <p className={`mt-1.5 text-xl font-semibold tabular-nums tracking-tight ${pnlTone}`}>{formatCurrency(snapshot.totalPnl)}</p>
-        </div>
-        <div className={cn(insetPanelClassName, 'px-4 py-3.5')}>
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Win Rate</p>
-          <p className={`mt-1.5 text-xl font-semibold tabular-nums tracking-tight ${winTone}`}>{snapshot.winRate.toFixed(1)}%</p>
-        </div>
-        <div className={cn(insetPanelClassName, 'px-4 py-3.5')}>
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Avg. Trade</p>
-          <p className={`mt-1.5 text-xl font-semibold tabular-nums tracking-tight ${avgTone}`}>{formatCurrency(snapshot.avgPnl)}</p>
-        </div>
-        <div className={cn(insetPanelClassName, 'px-4 py-3.5')}>
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Total Trades</p>
-          <p className="mt-1.5 text-xl font-semibold tabular-nums tracking-tight">{snapshot.totalTrades.toLocaleString()}</p>
-        </div>
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <MetricCard
+          icon={<DollarSign className="h-4 w-4" />}
+          label="Net PnL"
+          value={formatCurrency(snapshot.totalPnl)}
+          className={pnlColor}
+          accentClassName={pnlBg}
+        />
+        <MetricCard
+          icon={<Target className="h-4 w-4" />}
+          label="Win Rate"
+          value={`${snapshot.winRate.toFixed(1)}%`}
+          className={snapshot.winRate >= 50 ? 'text-semantic-success' : 'text-foreground'}
+          accentClassName={snapshot.winRate >= 50 ? 'bg-semantic-success/8 border-semantic-success/15' : 'bg-muted/20 border-[oklch(0.65_0.22_260_/_0.09)]'}
+        />
+        <MetricCard
+          icon={<BarChart3 className="h-4 w-4" />}
+          label="Avg. Trade"
+          value={formatCurrency(snapshot.avgPnl)}
+          className={snapshot.avgPnl > 0 ? 'text-semantic-success' : snapshot.avgPnl < 0 ? 'text-semantic-error' : 'text-foreground'}
+          accentClassName={snapshot.avgPnl > 0 ? 'bg-semantic-success/8 border-semantic-success/15' : snapshot.avgPnl < 0 ? 'bg-semantic-error/8 border-semantic-error/15' : 'bg-muted/20 border-[oklch(0.65_0.22_260_/_0.09)]'}
+        />
+        <MetricCard
+          icon={<TrendingUp className="h-4 w-4" />}
+          label="Total Trades"
+          value={snapshot.totalTrades.toLocaleString()}
+          className="text-foreground"
+          accentClassName="bg-muted/20 border-[oklch(0.65_0.22_260_/_0.09)]"
+        />
       </section>
 
       {/* ---- Calendar + Recent Trades ---- */}
       <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <article className={insetPanelClassName}>
-          <div className="mb-4 flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <h2 className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Performance Calendar</h2>
+        <article className="overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
+          <div className="flex items-center gap-2 border-b border-[oklch(0.65_0.22_260_/_0.08)] px-5 py-3.5">
+            <Calendar className="h-4 w-4 text-primary" />
+            <h2 className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Performance Calendar</h2>
           </div>
-          <CalendarGrid dayPnl={snapshot.dayPnl} />
+          <div className="p-5">
+            <CalendarGrid dayPnl={snapshot.dayPnl} />
+          </div>
         </article>
-        <article className={insetPanelClassName}>
-          <div className="mb-4 flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            <h2 className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Recent Trades</h2>
+        <article className="overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
+          <div className="flex items-center gap-2 border-b border-[oklch(0.65_0.22_260_/_0.08)] px-5 py-3.5">
+            <TrendingUp className="h-4 w-4 text-primary" />
+            <h2 className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Recent Trades</h2>
           </div>
-          <div className="space-y-2">
+          <div className="divide-y divide-[oklch(0.65_0.22_260_/_0.06)]">
             {snapshot.recentTrades.map((trade) => (
-              <div key={trade.id} className="flex flex-col gap-1 rounded-lg border border-border/30 bg-card/50 px-3.5 py-2.5 transition-colors hover:bg-card/80">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-foreground">{trade.symbol}</p>
-                    <p className="text-[11px] text-muted-foreground">{format(trade.closeTime, 'MMM d, yyyy')}</p>
-                  </div>
-                  <p className={`shrink-0 text-sm font-semibold tabular-nums ${trade.pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error'}`}>
-                    {trade.pnl >= 0 ? '+' : ''}{trade.pnl.toFixed(2)}
-                  </p>
+              <div key={trade.id} className="flex items-center justify-between gap-3 px-5 py-3 transition-[background-color] duration-150 hover:bg-[oklch(0.068_0.012_260_/_0.5)]">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold tracking-tight text-foreground">{trade.symbol}</p>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground">{format(trade.closeTime, 'MMM d, yyyy')}</p>
                 </div>
+                <p className={cn(
+                  'shrink-0 text-sm font-semibold tabular-nums tracking-tight',
+                  trade.pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error'
+                )}>
+                  {trade.pnl >= 0 ? '+' : ''}{trade.pnl.toFixed(2)}
+                </p>
               </div>
             ))}
           </div>
@@ -279,25 +340,28 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
       </section>
 
       {/* ---- Footer CTA ---- */}
-      <section className={insetPanelClassName}>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-1.5">
-            <h2 className="text-sm font-semibold text-foreground">Trading Summary</h2>
+      <section className="relative overflow-hidden rounded-2xl border border-primary/15 bg-[linear-gradient(135deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.058_0.014_260_/_0.9)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_18px_32px_-24px_rgba(0,0,0,0.64)]">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-primary/[0.03] to-transparent" />
+        <div className="relative flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+          <div className="space-y-2">
+            <h2 className="text-base font-semibold tracking-tight text-foreground">
+              Start Tracking Your Performance
+            </h2>
             <p className="max-w-lg text-sm leading-relaxed text-muted-foreground">
-              Public snapshot of this trader&apos;s activity and consistency. Shared intentionally for transparent performance review.
+              Join {snapshot.username} and other serious traders using Qunt Edge for transparent performance review.
             </p>
           </div>
-          <div className="flex shrink-0 flex-wrap gap-2">
+          <div className="flex shrink-0 flex-wrap gap-3">
             <Link
               href={`/${locale}/leaderboard`}
-              className="inline-flex items-center gap-2 rounded-lg border border-border/30 bg-card/50 px-3.5 py-2 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"
+              className="inline-flex items-center gap-2 rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-4 py-2.5 text-sm font-medium text-foreground transition-[background-color,border-color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.068_0.012_260_/_0.92)]"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Leaderboard
             </Link>
             <Link
               href={`/${locale}/dashboard/trader-profile`}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-3.5 py-2 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center gap-2 rounded-[0.95rem] border border-primary/18 bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] transition-[background-color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:bg-primary/92 hover:shadow-[0_12px_28px_-22px_rgba(0,0,0,0.48)] active:scale-[0.985]"
             >
               <Globe className="h-3.5 w-3.5" />
               Create your profile
@@ -305,6 +369,34 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
           </div>
         </div>
       </section>
+    </div>
+  )
+}
+
+function MetricCard({
+  icon,
+  label,
+  value,
+  className,
+  accentClassName,
+}: {
+  icon: React.ReactNode
+  label: string
+  value: string
+  className: string
+  accentClassName: string
+}) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
+      <div className="flex items-start justify-between p-5">
+        <div className="space-y-2">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
+          <p className={cn('text-2xl font-semibold tabular-nums tracking-tight', className)}>{value}</p>
+        </div>
+        <div className={cn('flex h-9 w-9 items-center justify-center rounded-xl border', accentClassName)}>
+          <div className={className}>{icon}</div>
+        </div>
+      </div>
     </div>
   )
 }

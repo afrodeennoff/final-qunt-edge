@@ -122,7 +122,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         <MarketingSection className="pt-24 sm:pt-32 lg:pt-40">
           <div className="mx-auto max-w-3xl space-y-8 text-center">
             <div className="space-y-6">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
                 {t('landing.hero.badge')}
               </p>
               <h1 className={`${marketingHeroTitleClassName} leading-[1.02]`}>
@@ -156,7 +156,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         <SocialProofLazy />
 
         {/* Features */}
-        <MarketingSection id="features" className="py-14 lg:py-16">
+        <MarketingSection id="features" className="py-16 lg:py-20">
           <MarketingSectionHeader
             eyebrow={t('landing.home.features.eyebrow')}
             title={
@@ -167,7 +167,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
             }
             description={t('landing.home.features.description')}
           />
-          <div className="mt-10 grid min-w-0 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid min-w-0 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
               <MarketingFeatureCard
                 key={String(feature.title)}
@@ -180,13 +180,13 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         </MarketingSection>
 
         {/* Workflow */}
-        <MarketingSection id="how-it-works" className="py-14 lg:py-16">
+        <MarketingSection id="how-it-works" className="py-16 lg:py-20">
           <MarketingSectionHeader
             eyebrow={t('landing.home.workflow.eyebrow')}
             title={t('landing.home.workflow.title')}
             description={t('landing.home.workflow.description')}
           />
-          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
             {workflowSteps.map((step) => (
               <MarketingStepCard
                 key={step.step}
@@ -200,13 +200,13 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         </MarketingSection>
 
         {/* Demo */}
-        <MarketingSection id="product-walkthrough" className="py-14 lg:py-16">
+        <MarketingSection id="product-walkthrough" className="py-16 lg:py-20">
           <MarketingSectionHeader
             eyebrow={t('landing.home.demo.eyebrow')}
             title={t('landing.home.demo.title')}
             description={t('landing.home.demo.description')}
           />
-          <div className="mx-auto mt-10 max-w-4xl">
+          <div className="mx-auto mt-12 max-w-4xl">
             <MarketingHyperframe
               label={t('landing.home.demo.frameLabel')}
               status="Live audit"
@@ -218,22 +218,24 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         </MarketingSection>
 
         {/* Testimonials */}
-        <MarketingSection id="testimonials" className="py-14 lg:py-16">
+        <MarketingSection id="testimonials" className="py-16 lg:py-20">
           <MarketingSectionHeader
             eyebrow="Trader feedback"
             title="Trusted by serious traders"
             description="Built for disciplined review, repeatable execution, and long-term consistency."
           />
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
             {testimonials.map((item) => (
               <article
                 key={item.name}
-                className="rounded-xl border border-border/30 bg-card/50 p-5 text-left"
+                className="group rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] p-6 text-left shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)] transition-[border-color,background-color] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.068_0.012_260_/_0.92)]"
               >
-                <p className="text-sm leading-relaxed text-foreground/90">{item.quote}</p>
-                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-primary/80">
-                  {item.name}
-                </p>
+                <p className="text-[15px] leading-[1.65] text-foreground/80 italic">{item.quote}</p>
+                <div className="mt-5 border-t border-[oklch(0.65_0.22_260_/_0.06)] pt-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
+                    {item.name}
+                  </p>
+                </div>
               </article>
             ))}
           </div>
@@ -250,7 +252,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
 
         {/* Final CTA */}
         <MarketingSection className="pb-24 pt-16 text-center lg:pb-28">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
             {t('landing.home.finalCta.eyebrow')}
           </p>
           <h2 className={`${marketingSectionTitleClassName} mx-auto mt-3 max-w-2xl`}>

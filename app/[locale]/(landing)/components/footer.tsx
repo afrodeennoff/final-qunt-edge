@@ -6,9 +6,7 @@ import { motion } from 'motion/react'
 import { Github, MessageCircle, Youtube } from 'lucide-react'
 import {
   unifiedGhostActionClassName,
-  unifiedInsetPanelClassName,
   unifiedPrimaryActionClassName,
-  unifiedSectionPanelClassName,
 } from '@/components/layout/unified-page-recipes'
 import { MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 import { Logo } from '@/components/logo'
@@ -57,7 +55,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-border/22 bg-background py-12 sm:py-16"
+      className="border-t border-[oklch(0.65_0.22_260_/_0.08)] bg-background py-14 sm:py-20"
     >
       <h2 id="footer-heading" className="sr-only">
         {t('footer.heading')}
@@ -68,17 +66,17 @@ export default function Footer() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-        className={cn('mx-auto w-full px-4 sm:px-6 lg:px-8', MARKETING_SHELL_WIDTH)}
+        className={cn('mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-10', MARKETING_SHELL_WIDTH)}
       >
         <div
           className={cn(
-            unifiedSectionPanelClassName,
-            'grid gap-8 p-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)] lg:p-9',
+            'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]',
+            'grid gap-8 p-7 sm:p-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)] lg:p-10',
           )}
         >
-          <div className="space-y-5">
+          <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-border/18 bg-background/26 text-muted-foreground">
+              <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] text-muted-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05)]">
                 <Logo className="h-5 w-5 fill-current" />
               </div>
               <div className="leading-none">
@@ -91,11 +89,11 @@ export default function Footer() {
               </div>
             </div>
 
-            <p className="max-w-md text-sm leading-7 text-muted-foreground">
+            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground/80">
               {t('landing.footerNew.tagline')}
             </p>
 
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3">
               <Link
                 href={`/${locale}/support`}
                 prefetch={false}
@@ -112,9 +110,9 @@ export default function Footer() {
               </Link>
             </div>
 
-            <div className="h-px w-full max-w-md bg-border/24" />
+            <div className="h-px w-full max-w-sm bg-[oklch(0.65_0.22_260_/_0.09)]" />
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               {socialLinks.map((item, index) => (
                 <motion.a
                   key={item.name}
@@ -127,28 +125,27 @@ export default function Footer() {
                   viewport={{ once: true }}
                   transition={{ delay: 0.08 + index * 0.05, duration: 0.35 }}
                   className={cn(
-                    unifiedInsetPanelClassName,
-                    'flex h-9 w-9 items-center justify-center rounded-full p-0 text-muted-foreground hover:text-primary',
+                    'flex h-9 w-9 items-center justify-center rounded-full border border-[oklch(0.65_0.22_260_/_0.075)] bg-[oklch(0.056_0.01_260_/_0.74)] text-muted-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.06_0.011_260_/_0.82)] hover:text-primary',
                   )}
                 >
-                  <item.icon className="size-5" />
+                  <item.icon className="size-[18px]" />
                 </motion.a>
               ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
             <FooterColumn title={String(t('landing.footerNew.product'))} links={productLinks} />
             <FooterColumn title={String(t('landing.footerNew.support'))} links={supportLinks} />
             <FooterColumn title={String(t('landing.footerNew.legal'))} links={legalLinks} />
           </div>
         </div>
 
-        <div className="mt-8 border-t border-border/22 pt-5">
-          <p className="text-xs tracking-[-0.005em] text-muted-foreground">
+        <div className="mt-8 border-t border-[oklch(0.65_0.22_260_/_0.08)] pt-6">
+          <p className="text-xs tracking-[-0.005em] text-muted-foreground/70">
             {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
-          <p className="mt-2 text-xs leading-6 text-muted-foreground/70">
+          <p className="mt-2 text-xs leading-relaxed text-muted-foreground/50">
             {t('disclaimer.risk.content')}
           </p>
         </div>
@@ -162,10 +159,10 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
 
   return (
     <div>
-      <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-foreground/70">
+      <h3 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/60">
         {title}
       </h3>
-      <ul className="space-y-3">
+      <ul className="space-y-2.5">
         {links.map((item, index) => (
           <motion.li
             key={item.name}
@@ -177,7 +174,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
             <Link
               href={`/${locale}${item.href}`}
               prefetch={false}
-              className="inline-flex rounded-full px-2 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="inline-flex rounded-lg px-2 py-1 text-sm text-muted-foreground/80 transition-[color,background-color] duration-200 hover:bg-[oklch(0.65_0.22_260_/_0.04)] hover:text-foreground"
             >
               {item.name}
             </Link>
