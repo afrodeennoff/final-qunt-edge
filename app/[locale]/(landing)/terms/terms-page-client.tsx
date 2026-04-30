@@ -7,9 +7,9 @@ import { MarketingSectionHeader } from '@/components/layout/marketing-sections'
 
 function LegalSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="space-y-3">
+    <section className="space-y-4">
       <h2 className="text-2xl font-semibold text-fg-primary">{title}</h2>
-      <div className="space-y-2 text-fg-muted">{children}</div>
+      <div className="space-y-3 text-[15px] leading-relaxed text-fg-muted">{children}</div>
     </section>
   )
 }
@@ -19,7 +19,7 @@ export function TermsPageClient() {
 
   return (
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-20 lg:py-24">
-      <UnifiedSurface className="space-y-8">
+      <UnifiedSurface className="space-y-10">
         <MarketingSectionHeader
           eyebrow="Legal"
           title="Terms of Service"
@@ -34,7 +34,7 @@ export function TermsPageClient() {
             {t('terms.sections.companyInfo.contact')}
             <a
               href="mailto:contact@qunt-edge.com"
-              className="text-fg-primary underline underline-offset-4"
+              className="text-primary underline underline-offset-4 transition-colors duration-200 hover:text-primary/80"
             >
               contact@qunt-edge.com
             </a>
@@ -59,7 +59,7 @@ export function TermsPageClient() {
             {t('terms.sections.subscriptionPayments.lifetimePlan.title')}
           </h3>
           <p>{t('terms.sections.subscriptionPayments.lifetimePlan.description')}</p>
-          <ul className="list-disc pl-5">
+          <ul className="list-disc pl-6 space-y-1.5">
             <li>{t('terms.sections.subscriptionPayments.lifetimePlan.condition1')}</li>
             <li>{t('terms.sections.subscriptionPayments.lifetimePlan.condition2')}</li>
             <li>{t('terms.sections.subscriptionPayments.lifetimePlan.condition3')}</li>
@@ -88,7 +88,7 @@ export function TermsPageClient() {
 
         <LegalSection title={t('terms.sections.serviceAvailability.title')}>
           <p>{t('terms.sections.serviceAvailability.description')}</p>
-          <ul className="list-disc pl-5">
+          <ul className="list-disc pl-6 space-y-1.5">
             <li>{t('terms.sections.serviceAvailability.condition1')}</li>
             <li>{t('terms.sections.serviceAvailability.condition2')}</li>
             <li>{t('terms.sections.serviceAvailability.condition3')}</li>
@@ -104,7 +104,7 @@ export function TermsPageClient() {
           <p>{t('terms.sections.changesTerms.content')}</p>
         </LegalSection>
 
-        <p className="border-t border-border/30 pt-5 text-xs uppercase tracking-[0.12em] text-fg-muted">
+        <p className="border-t border-[oklch(0.65_0.22_260_/_0.14)] pt-6 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
           {t('terms.lastUpdated')}
           {new Date().toISOString().split('T')[0]}
         </p>

@@ -145,11 +145,11 @@ const ChatBotDemo = () => {
   return (
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-20 lg:py-24">
       <UnifiedSurface className="flex h-[calc(100vh-220px)] min-h-[680px] flex-col">
-        <header className="mb-4">
+        <header className="mb-6">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             Qunt Edge Support
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">
             Get technical help, account guidance, and workflow support from the Qunt Edge team.
           </p>
         </header>
@@ -158,7 +158,7 @@ const ChatBotDemo = () => {
           href={process.env.NEXT_PUBLIC_DISCORD_INVITATION || '#'}
           target="_blank"
           rel="noreferrer"
-          className="mb-6 block cursor-pointer rounded-xl frost-border-7 frost-bg-ghost p-4 transition-colors duration-150 hover:frost-border-11 hover:bg-primary/[0.03] group"
+          className="mb-6 block cursor-pointer rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] p-5 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)] transition-[background-color,border-color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-primary/[0.03] group"
         >
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex-1">

@@ -68,7 +68,7 @@ export async function MarketingPricingSection({
           />
         ) : null}
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-7 lg:grid-cols-3">
           {plans.map((plan) => (
             <MarketingPricingCard
               key={String(plan.name)}

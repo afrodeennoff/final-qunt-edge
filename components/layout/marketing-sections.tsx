@@ -181,8 +181,9 @@ export function MarketingPricingCard({
   return (
     <Card
       variant={highlighted ? 'elevated' : 'glass'}
+      hover
       className={cn(
-        'relative flex h-full flex-col p-6',
+        'relative flex h-full flex-col p-7',
         highlighted && 'border-primary/22',
         className,
       )}
@@ -203,7 +204,7 @@ export function MarketingPricingCard({
         {period ? <span className="pb-1 text-sm text-muted-foreground">{period}</span> : null}
       </div>
       {billingNote ? <p className="mt-2 text-xs text-muted-foreground">{billingNote}</p> : null}
-      <ul className="mt-8 grid flex-1 gap-3">
+      <ul className="mt-8 grid flex-1 gap-3.5">
         {features.map((feature, index) => (
           <li
             key={index}
@@ -216,7 +217,7 @@ export function MarketingPricingCard({
           </li>
         ))}
       </ul>
-      <Button asChild variant={highlighted ? 'solid' : 'outline'} size="lg" className="mt-8 w-full">
+      <Button asChild variant={highlighted ? 'solid' : 'outline'} size="lg" className={cn('mt-8 w-full', highlighted && 'rounded-[0.95rem] border border-primary/18 bg-primary text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92')}>
         <Link href={href}>{cta}</Link>
       </Button>
     </Card>
