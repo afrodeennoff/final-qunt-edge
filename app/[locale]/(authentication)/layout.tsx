@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import AuthenticationLayoutShell from "./layout-shell";
 
@@ -13,5 +14,9 @@ export default function AuthenticationLayout({
 }: {
  children: React.ReactNode;
 }) {
- return <AuthenticationLayoutShell>{children}</AuthenticationLayoutShell>;
+ return (
+  <Suspense>
+   <AuthenticationLayoutShell>{children}</AuthenticationLayoutShell>
+  </Suspense>
+ );
 }
