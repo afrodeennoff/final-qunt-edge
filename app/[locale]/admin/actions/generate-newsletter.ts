@@ -5,9 +5,9 @@ import { z } from 'zod';
 import { assertAdminAccess } from "@/server/authz"
 
 const newsletterSchema = z.object({
-  subject: z.string().describe("Un titre accrocheur en français de maximum 4 mots"),
-  introMessage: z.string().describe("Un message d'introduction court et amical en français"),
-  features: z.array(z.string()).describe("Une liste de points clés techniques en français"),
+  subject: z.string().describe("A catchy title, maximum 4 words"),
+  introMessage: z.string().describe("A short and friendly introduction message"),
+  features: z.array(z.string()).describe("A list of key technical points"),
 })
 
 export type NewsletterContent = z.infer<typeof newsletterSchema>
@@ -23,33 +23,33 @@ export async function generateNewsletterContent({ description }: GenerateNewslet
     const { output } = await generateText({
       model: 'openai/gpt-5-mini',
       output: Output.object({ schema: newsletterSchema }),
-      prompt: `Bonjour, tu vas écrire la newsletter technique pour Qunt Edge sur notre dernière mise à jour : ${description}.
+      prompt: `Hello, you will write the technical newsletter for Qunt Edge about our latest update: ${description}.
 
-Qunt Edge est une plateforme web pour day traders de futures, avec une interface intuitive et personnalisable. Conçue à partir de mon expérience personnelle en tant que day trader de futures, utilisant des stratégies de scalping, elle propose des fonctionnalités comme la gestion de multiple compte, le suivi des challenges propfirms, et des tableaux de bord personnalisables. Notre but est de fournir aux traders des analyses approfondies sur leurs habitudes de trading pour optimiser leurs stratégies et améliorer leur prise de décision.
+Qunt Edge is a web platform for futures day traders, with an intuitive and customizable interface. Built from personal experience as a futures day trader using scalping strategies, it offers features like multi-account management, prop firm challenge tracking, and customizable dashboards. Our goal is to provide traders with deep analytics on their trading habits to optimize strategies and improve decision-making.
 
-Voici les consignes pour la newsletter :
+Here are the instructions for the newsletter:
 
-1. Le sujet doit être court, 2 à 4 mots, accrocheur et minimaliste, avec un ton moderne et direct. Par exemple, "Qunt Edge - Mise à jour".
+1. The subject should be short, 2 to 4 words, catchy and minimalist, with a modern and direct tone. For example, "Qunt Edge - Update".
 
-2. L’introduction doit être de deux phrases courtes, amicales et professionnelles, présentant la nouveauté et encourageant à regarder la vidéo. Pas besoin de salutations.
+2. The introduction should be two short sentences, friendly and professional, introducing the new feature and encouraging readers to watch the video. No greetings needed.
 
-3. Pour les fonctionnalités, jusqu'à trois points basés sur ${description}, chaque point commençant par un emoji pertinent, suivi d'une description technique accessible et d'un avantage concret pour le day trader.
+3. For features, up to three points based on ${description}, each point starting with a relevant emoji, followed by an accessible technical description and a concrete benefit for the day trader.
 
-Instructions générales :
+General instructions:
 
-- Sois factuel et précis.
+- Be factual and precise.
 
-- Ne pas extrapoler au-delà de ${description}.
+- Do not extrapolate beyond ${description}.
 
-- Ton : professionnel mais approachable.
+- Tone: professional but approachable.
 
-- Utilise "tu".
+- Use direct address ("you").
 
-- Phrases courtes et directes.
+- Short and direct sentences.
 
-- Terminologie spécifique au trading de futures.
+- Terminology specific to futures trading.
 
-Merci de respecter ces consignes.`,
+Please follow these instructions.`,
       temperature: 0.7,
     })
 
@@ -64,4 +64,4 @@ Merci de respecter ces consignes.`,
       error: "Failed to generate newsletter content"
     }
   }
-} 
+}

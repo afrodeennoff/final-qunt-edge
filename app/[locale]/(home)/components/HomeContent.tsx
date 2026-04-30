@@ -25,7 +25,6 @@ import {
   marketingSectionTitleClassName,
 } from '@/components/layout/marketing-sections'
 import { MarketingPricingSection } from '@/components/layout/marketing-pricing-section'
-import { Suspense } from 'react'
 import { getI18n } from '@/locales/server'
 import { cn } from '@/lib/utils'
 import ProductDemoPlayer from './ProductDemoPlayer'
