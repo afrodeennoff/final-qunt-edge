@@ -1,5 +1,3 @@
-import { Suspense } from 'react'
-import HomeContentLoading from './HomeContentLoading'
 import Hero from './Hero'
 import LiveStatsStrip from './LiveStatsStrip'
 import FeaturesBento from './FeaturesBento'
@@ -20,28 +18,26 @@ interface HomeContentProps {
 
 export default function HomeContent({ locale }: HomeContentProps) {
   return (
-    <Suspense fallback={<HomeContentLoading />}>
-      <div className="home-borderless relative min-w-0 overflow-x-hidden bg-transparent selection:bg-primary/30 selection:text-foreground">
-        <div className="pointer-events-none absolute inset-x-4 top-0 h-48 rounded-b-[2.5rem] border border-border/40 bg-background/40 sm:inset-x-6 lg:inset-x-10" />
-        <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-5 lg:block" />
-        <div className="pointer-events-none absolute inset-x-0 top-[22%] h-px bg-border/50" />
+    <div className="home-borderless relative min-w-0 overflow-x-hidden bg-transparent selection:bg-primary/30 selection:text-foreground">
+      <div className="pointer-events-none absolute inset-x-4 top-0 h-48 rounded-b-[2.5rem] border border-border/40 bg-background/40 sm:inset-x-6 lg:inset-x-10" />
+      <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-5 lg:block" />
+      <div className="pointer-events-none absolute inset-x-0 top-[22%] h-px bg-border/50" />
 
-        <main className="relative z-10 mx-auto w-full max-w-[1400px] min-w-0 px-4 sm:px-6 lg:px-8">
-          <Hero locale={locale} />
-          <LiveStatsStrip />
-          <SocialProof />
-          <ProblemStatement />
-          <FeaturesBento />
-          <AIFeatures />
-          <HowItWorks />
-          <AnalysisDemo />
-          <AudienceSegmentation />
-          <PropFirmsExplorer locale={locale} />
-          <PricingSection locale={locale} />
-          <FAQSection />
-          <FinalCTA locale={locale} />
-        </main>
-      </div>
-    </Suspense>
+      <main className="relative z-10 mx-auto w-full max-w-[1400px] min-w-0 px-4 sm:px-6 lg:px-8">
+        <Hero locale={locale} />
+        <LiveStatsStrip />
+        <SocialProof />
+        <ProblemStatement />
+        <FeaturesBento />
+        <AIFeatures />
+        <HowItWorks />
+        <AnalysisDemo />
+        <AudienceSegmentation />
+        <PropFirmsExplorer locale={locale} />
+        <PricingSection locale={locale} />
+        <FAQSection />
+        <FinalCTA locale={locale} />
+      </main>
+    </div>
   )
 }
