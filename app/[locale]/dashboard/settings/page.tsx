@@ -41,7 +41,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { leaveTeam, getUserTeams } from './actions'
+import { leaveTeam, getUserTeams, updateUsernameAction } from './actions'
 import { toast } from 'sonner'
 import {
   AlertDialog,
@@ -310,6 +310,8 @@ export default function SettingsPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const [userTeams, setUserTeams] = useState<UserTeamsState>({ ownedTeams: [], joinedTeams: [] })
+  const [username, setUsername] = useState(user?.username || '')
+  const [isUpdatingUsername, setIsUpdatingUsername] = useState(false)
 
   const languages: { value: Locale; label: string }[] = [
     { value: 'en', label: 'English' },
@@ -352,6 +354,27 @@ export default function SettingsPage() {
       await refreshTeams()
     } else {
       toast.error(result.error || t('dashboard.teams.error'))
+    }
+  }
+
+  const handleUpdateUsername = async () => {
+    setIsUpdatingUsername(true)
+    try {
+      const result = await updateUsernameAction(username)
+      if (result.success) {
+        toast.success('Username updated successfully')
+        // Update the user store with the new username
+        useUserStore.getState().setSupabaseUser({
+          ...user,
+          username
+        })
+      } else {
+        toast.error(result.error || 'Failed to update username')
+      }
+    } catch (error) {
+      toast.error('Failed to update username')
+    } finally {
+      setIsUpdatingUsername(false)
     }
   }
 
@@ -422,6 +445,29 @@ export default function SettingsPage() {
               <div>
                 <Label htmlFor="email">Email</Label>
                 <Input id="email" type="email" value={user?.email || ''} disabled />
+              </div>
+              <div>
+                <Label htmlFor="username">Username</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter username"
+                    className="flex-1"
+                  />
+                  <Button
+                    onClick={handleUpdateUsername}
+                    disabled={isUpdatingUsername || !username.trim()}
+                    size="sm"
+                  >
+                    {isUpdatingUsername ? 'Updating...' : 'Update'}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Unique username for your profile (3-30 characters, letters, numbers, underscores)
+                </p>
               </div>
               <Button>Update Profile</Button>
             </div>
