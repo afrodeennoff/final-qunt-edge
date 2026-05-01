@@ -15,7 +15,8 @@ import {
   ContractQuantityChartEmbed,
   TimeRangePerformanceChart,
 } from './index'
-import { toast, Toaster } from 'sonner'
+import { toast } from 'sonner'
+import { Toaster } from '@/components/ui/sonner'
 import { useSearchParams } from 'next/navigation'
 import { applyEmbedTheme, THEME_PRESETS, getOverridesFromSearchParams } from './theme'
 import Script from 'next/script'

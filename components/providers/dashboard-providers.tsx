@@ -7,12 +7,10 @@ import { DataActionsProvider } from "@/context/providers/data-actions-provider";
 import { DashboardBootstrapProvider } from "@/context/providers/bootstrap-provider";
 import { SyncContextProvider } from "@/context/sync-context";
 import type { DashboardBootstrapPayload } from "@/lib/types/bootstrap";
-import { Toaster } from "@/components/ui/sonner";
 
 function DashboardProvidersInner({ children }: { children: React.ReactNode }) {
   return (
     <SyncContextProvider>
-      <Toaster />
       {children}
     </SyncContextProvider>
   );
