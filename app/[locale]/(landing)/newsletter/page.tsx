@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { CheckCircle2 } from 'lucide-react'
 import { getScopedI18n } from '@/locales/server'
-import { CardV2 as Card, CardContent, CardHeader, CardTitle } from '@/components/ui/v2'
+import { CardV2 as Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/v2'
 import { MarketingSection, MarketingSectionHeader } from '@/components/layout/marketing-sections'
 import { buildPublicMetadata } from '@/lib/seo'
 
