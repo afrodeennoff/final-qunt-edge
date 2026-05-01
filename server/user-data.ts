@@ -108,6 +108,8 @@ const DASHBOARD_THEME_COLUMN = 'dashboardTheme'
 type CoreUserCompatRecord = {
   id: string
   email: string
+  username?: string | null
+  usernameHash?: string | null
   auth_user_id?: string | null
   isFirstConnection?: boolean | null
   isBeta?: boolean | null
