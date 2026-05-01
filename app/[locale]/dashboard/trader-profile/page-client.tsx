@@ -549,6 +549,7 @@ export default function TraderProfilePageClient() {
     return (
       supabaseUser?.user_metadata?.full_name ||
       supabaseUser?.user_metadata?.name ||
+      user?.username ||
       user?.email?.split('@')[0] ||
       supabaseUser?.email?.split('@')[0] ||
       'Trader'
@@ -557,6 +558,7 @@ export default function TraderProfilePageClient() {
     supabaseUser?.email,
     supabaseUser?.user_metadata?.full_name,
     supabaseUser?.user_metadata?.name,
+    user?.username,
     user?.email,
   ])
 
