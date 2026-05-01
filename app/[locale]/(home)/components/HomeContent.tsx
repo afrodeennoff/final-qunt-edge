@@ -11,6 +11,7 @@ import AIFeatures from './AIFeatures'
 import SocialProof from './SocialProof'
 import PricingSection from './PricingSection'
 import FAQSection from './FAQSection'
+import { ErrorBoundary } from '@/components/ui/error-boundary'
 
 interface HomeContentProps {
   locale: string
@@ -18,7 +19,8 @@ interface HomeContentProps {
 
 export default function HomeContent({ locale }: HomeContentProps) {
   return (
-    <div className="home-borderless relative min-w-0 overflow-x-hidden bg-transparent selection:bg-primary/30 selection:text-foreground">
+    <ErrorBoundary fallback={<div className="min-h-screen flex items-center justify-center p-4"><div className="text-center">Loading content...</div></div>}>
+      <div className="home-borderless relative min-w-0 overflow-x-hidden bg-transparent selection:bg-primary/30 selection:text-foreground">
       <div className="pointer-events-none absolute inset-x-4 top-0 h-48 rounded-b-[2.5rem] border border-border/40 bg-background/40 sm:inset-x-6 lg:inset-x-10" />
       <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-5 lg:block" />
       <div className="pointer-events-none absolute inset-x-0 top-[22%] h-px bg-border/50" />
@@ -39,5 +41,6 @@ export default function HomeContent({ locale }: HomeContentProps) {
         <FinalCTA locale={locale} />
       </main>
     </div>
+    </ErrorBoundary>
   )
 }
