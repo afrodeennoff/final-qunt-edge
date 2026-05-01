@@ -1,11 +1,11 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
-import { motion, useReducedMotion, useInView, useSpring, Variants } from "framer-motion"
+import { useRef, useEffect, useState, useMemo } from "react"
+import { motion, useReducedMotion, useInView, useSpring, Variants } from "motion/react"
 import { cn } from "@/lib/utils"
 
-export const SPRING_GENTLE = { type:"spring" as const, stiffness: 300, damping: 20 }
-export const SPRING_BOUNCY = { type:"spring" as const, stiffness: 400, damping: 15 }
+export const SPRING_GENTLE = { type:"spring" as const, stiffness: 280, damping: 26, mass: 0.9 }
+export const SPRING_BOUNCY = { type:"spring" as const, stiffness: 340, damping: 24, mass: 0.9 }
 
 // ============================================================================
 // StyleSeed motion tokens
@@ -14,7 +14,7 @@ export const SPRING_BOUNCY = { type:"spring" as const, stiffness: 400, damping: 
 export const MOTION_DURATION = {
  fast: 100, // --duration-fast: hover, color changes
  normal: 200, // --duration-normal: enter animations, expand
- slow: 350, // --duration-slow: page transitions, spring
+ slow: 300, // --duration-slow: page transitions, spring
 } as const
 
 export const MOTION_EASE = {
@@ -40,25 +40,25 @@ export function getStagedRevealClassName(stage = 0) {
 // ============================================================================
 
 const BLUR_ENTRANCE: Variants = {
- hidden: { opacity: 0, y: 24 },
+ hidden: { opacity: 0, y: 12 },
  show: {
  opacity: 1,
  y: 0,
- transition: { duration: 0.9, ease: MOTION_EASE.spring }
+ transition: { duration: 0.55, ease: MOTION_EASE.spring }
  }
 }
 
 export const blurIn: Variants = {
  hidden: {
  opacity: 0,
- scale: 0.95,
+ scale: 0.98,
  },
  visible: {
  opacity: 1,
  scale: 1,
  transition: {
- duration: 0.5,
- ease: MOTION_EASE.entrance as unknown as number[],
+ duration: 0.36,
+ ease: [...MOTION_EASE.entrance] as [number, number, number, number],
  },
  },
 }
@@ -111,7 +111,7 @@ export function MotionSection({
  initial={false}
  animate={isInView ? { opacity: 1, y: 0 } : undefined}
  transition={{
- duration: 0.5,
+ duration: 0.42,
  delay,
  ease: [0.22, 1, 0.36, 1],
  ...spring,
@@ -196,13 +196,13 @@ export function MotionStaggerItem({ children, className, blur = false }: MotionS
  blur
  ? BLUR_ENTRANCE
  : {
- hidden: { opacity: 0, y: 10, scale: 0.99 },
+ hidden: { opacity: 0, y: 8, scale: 0.995 },
  visible: {
  opacity: 1,
  y: 0,
  scale: 1,
  transition: {
- duration: 0.45,
+ duration: 0.38,
  ease: [0.22, 1, 0.36, 1],
  },
  },
@@ -317,31 +317,30 @@ export function AnimatedCounter({
  const spring = useSpring(0, { stiffness: 100, damping: 30 })
  const [displayValue, setDisplayValue] = useState("0")
 
+ const formatter = useMemo(
+   () => new Intl.NumberFormat("en-US", {
+     minimumFractionDigits: decimals,
+     maximumFractionDigits: decimals,
+     ...formatOptions,
+   }),
+   [decimals, formatOptions]
+ )
+
  useEffect(() => {
  if (!isInView || prefersReducedMotion) return
 
  spring.set(target)
 
  const unsubscribe = spring.on("change", (latest) => {
- const formatted = new Intl.NumberFormat("en-US", {
- minimumFractionDigits: decimals,
- maximumFractionDigits: decimals,
- ...formatOptions,
- }).format(latest)
-
- setDisplayValue(formatted)
+ setDisplayValue(formatter.format(latest))
  })
 
  return () => {
  unsubscribe()
  }
- }, [target, decimals, formatOptions, isInView, spring, prefersReducedMotion])
+ }, [target, isInView, spring, prefersReducedMotion, formatter])
 
- const formatted = new Intl.NumberFormat("en-US", {
- minimumFractionDigits: decimals,
- maximumFractionDigits: decimals,
- ...formatOptions,
- }).format(prefersReducedMotion || !isInView ? target : target)
+ const formatted = formatter.format(target)
 
  return (
  <span ref={ref} className={className}>
@@ -367,11 +366,11 @@ interface OrbConfig {
 }
 
 const DEFAULT_ORBS: OrbConfig[] = [
- { size: 300, x:"10%", y:"20%", duration: 20, delay: 0, opacity: 0.15, color:"from-blue-500/30 to-purple-500/30" },
- { size: 400, x:"70%", y:"10%", duration: 25, delay: 5, opacity: 0.12, color:"from-cyan-500/20 to-teal-500/20" },
+ { size: 300, x:"10%", y:"20%", duration: 20, delay: 0, opacity: 0.15, color:"from-purple-500/30 to-violet-500/30" },
+ { size: 400, x:"70%", y:"10%", duration: 25, delay: 5, opacity: 0.12, color:"from-violet-500/20 to-purple-500/20" },
  { size: 250, x:"30%", y:"60%", duration: 18, delay: 2, opacity: 0.18, color:"from-indigo-500/25 to-violet-500/25" },
- { size: 350, x:"80%", y:"50%", duration: 22, delay: 8, opacity: 0.1, color:"from-emerald-500/20 to-green-500/20" },
- { size: 200, x:"50%", y:"80%", duration: 16, delay: 3, opacity: 0.14, color:"from-orange-500/25 to-amber-500/25" },
+ { size: 350, x:"80%", y:"50%", duration: 22, delay: 8, opacity: 0.1, color:"from-purple-400/20 to-violet-600/20" },
+ { size: 200, x:"50%", y:"80%", duration: 16, delay: 3, opacity: 0.14, color:"from-fuchsia-500/25 to-purple-500/25" },
 ]
 
 interface FloatingOrbsProps {

@@ -33,35 +33,43 @@ const translations = {
 }
 
 function getLocaleFromGeolocation(): 'en' | 'fr' {
-  if (typeof window === 'undefined') return 'fr' // Default for SSR
+  if (typeof window === 'undefined') return 'fr'
 
-  // Get country from cookie set by middleware
-  const cookies = document.cookie.split(';')
-  const countryCookie = cookies.find(cookie => cookie.trim().startsWith('user-country='))
-  const country = countryCookie?.split('=')[1]?.trim()
+  try {
+    const cookies = document.cookie.split(';')
+    const countryCookie = cookies.find(cookie => cookie.trim().startsWith('user-country='))
+    const country = countryCookie?.split('=')[1]?.trim()
 
-  // Use French for France and French-speaking countries, English for others
-  const frenchCountries = ['FR', 'CA', 'BE', 'CH', 'LU', 'MC']
-  return frenchCountries.includes(country || '') ? 'fr' : 'en'
+    const frenchCountries = ['FR', 'CA', 'BE', 'CH', 'LU', 'MC']
+    return frenchCountries.includes(country || '') ? 'fr' : 'en'
+  } catch {
+    return 'en'
+  }
 }
 
 
 function detectLocaleFromBrowser(): 'en' | 'fr' {
   if (typeof window === 'undefined') return 'fr'
 
-  // First try geolocation from middleware
-  const geoLocale = getLocaleFromGeolocation()
+  try {
+    const geoLocale = getLocaleFromGeolocation()
 
-  // If no country detected, fall back to browser language
-  const cookies = document.cookie.split(';')
-  const countryCookie = cookies.find(cookie => cookie.trim().startsWith('user-country='))
+    try {
+      const cookies = document.cookie.split(';')
+      const countryCookie = cookies.find(cookie => cookie.trim().startsWith('user-country='))
 
-  if (!countryCookie) {
-    const browserLang = navigator.language.toLowerCase()
-    return browserLang.startsWith('en') ? 'en' : 'fr'
+      if (!countryCookie) {
+        const browserLang = navigator.language.toLowerCase()
+        return browserLang.startsWith('en') ? 'en' : 'fr'
+      }
+    } catch {
+      return geoLocale
+    }
+
+    return geoLocale
+  } catch {
+    return 'en'
   }
-
-  return geoLocale
 }
 
 function NotFoundContent() {
@@ -82,9 +90,13 @@ function NotFoundContent() {
     const detectedLocale = detectLocaleFromBrowser()
     setLocale(detectedLocale)
 
-    // Set page title
-    document.title = 'Qunt Edge | ' + translations[detectedLocale].title
-
+    if (typeof window !== 'undefined') {
+      try {
+        document.title = 'Qunt Edge | ' + translations[detectedLocale].title
+      } catch {
+        // Ignore document.title errors
+      }
+    }
   }, [])
 
   // Fetch routes from public/routes.json (generated at build time)
@@ -125,12 +137,11 @@ function NotFoundContent() {
   }, [allRoutes, locale])
 
   const filteredRoutes = useMemo(() => {
-    const q = debouncedQuery.trim().toLowerCase()
-    if (!q) {
-      const suggestions = concreteRoutesForLocale
-      if (selectedIndex >= suggestions.length) setSelectedIndex(0)
-      return suggestions
-    }
+	  const q = debouncedQuery.trim().toLowerCase()
+	  if (!q) {
+	    const suggestions = concreteRoutesForLocale
+	    return suggestions
+	  }
     // Lightweight fuzzy scoring: sequential character matching with bonuses
     const score = (target: string, queryStr: string): number => {
       if (target.startsWith(queryStr)) return 1000 + queryStr.length // big boost for prefix
@@ -162,12 +173,15 @@ function NotFoundContent() {
     }
     const scored = concreteRoutesForLocale.map(r => ({ r, s: score(r, q) }))
       .filter(o => o.s > 0)
-      .sort((a, b) => b.s - a.s)
-      .slice(0, 50) // More results available, user can scroll
-      .map(o => o.r)
-    if (selectedIndex >= scored.length) setSelectedIndex(0)
-    return scored
-  }, [concreteRoutesForLocale, debouncedQuery, selectedIndex])
+	    .sort((a, b) => b.s - a.s)
+	    .slice(0, 50) // More results available, user can scroll
+	    .map(o => o.r)
+	    return scored
+	  }, [concreteRoutesForLocale, debouncedQuery])
+
+	  useEffect(() => {
+	    if (selectedIndex >= filteredRoutes.length) setSelectedIndex(0)
+	  }, [filteredRoutes.length, selectedIndex])
 
   const t = translations[locale]
 
@@ -208,6 +222,7 @@ function NotFoundContent() {
   }
 
   const onBlurSearch = () => {
+    if (typeof window === 'undefined') return
     // Delay to allow click on results without instantly closing
     if (blurTimeout.current) window.clearTimeout(blurTimeout.current)
     blurTimeout.current = window.setTimeout(() => setShowResults(false), 100)

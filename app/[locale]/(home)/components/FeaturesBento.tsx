@@ -1,41 +1,20 @@
-'use client'
-
-import { ArrowRight, BarChart3, Brain, Download, FileText, Shield, Users } from 'lucide-react'
+import { BarChart3, Brain, Download, FileText, Shield, Users } from 'lucide-react'
 import {
-  MotionSection,
-  MotionStagger,
-  MotionStaggerItem,
-} from '@/components/animation/enhanced-motion'
-import {
-  unifiedBodyCopyClassName,
-  unifiedChipClassName,
-  unifiedInsetPanelClassName,
-  unifiedSectionEyebrowClassName,
-  unifiedSectionPanelClassName,
-} from '@/components/layout/unified-page-recipes'
-import { cn } from '@/lib/utils'
-import { useTypedI18n } from '@/locales/client'
+  MarketingFeatureCard,
+  MarketingSection,
+  MarketingSectionHeader,
+} from '@/components/layout/marketing-sections'
+import { getTypedI18n } from '@/locales/server'
 
-const issueIcons = [BarChart3, Brain, Users]
-const featureIcons = [BarChart3, Brain, Users, Download, FileText, Shield]
+const featureIcons = [Download, BarChart3, Users, Shield, FileText, Brain]
 
-export default function FeaturesBento() {
-  const t = useTypedI18n()
-
-  const issues = [1, 2, 3].map((index) => ({
-    badge: t(`landing.home.features.issue${index}Badge`),
-    title: t(`landing.home.features.issue${index}Title`),
-    description: t(`landing.home.features.issue${index}Description`),
-    solution: t(`landing.home.features.issue${index}Solution`),
-    icon: issueIcons[index - 1],
-  }))
+export default async function FeaturesBento() {
+  const t = await getTypedI18n()
 
   const features = [1, 2, 3, 4, 5, 6].map((index) => ({
     title: t(`landing.home.features.feature${index}Title`),
     description: t(`landing.home.features.feature${index}Description`),
     icon: featureIcons[index - 1],
-    highlighted: index === 2,
-    colSpan: index === 4 ? 'lg:col-span-2' : index <= 2 || index >= 5 ? 'lg:col-span-1' : '',
   }))
 
   return (
@@ -118,8 +97,8 @@ export default function FeaturesBento() {
               </MotionStaggerItem>
             )
           })}
-        </MotionStagger>
+        </div>
       </div>
-    </MotionSection>
+    </MarketingSection>
   )
 }

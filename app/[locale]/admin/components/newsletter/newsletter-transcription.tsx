@@ -37,8 +37,8 @@ interface TranscriptionComponentProps {
 
 function createErrorResult(segment: AudioSegment): TranscriptionResult {
  return {
- text: 'Erreur de transcription',
- language: 'fr',
+ text: 'Transcription error',
+ language: 'en',
  duration: 0,
  segmentIndex: segment.index
  }
@@ -65,8 +65,8 @@ async function transcribeSegment(segment: AudioSegment): Promise<TranscriptionRe
  const duration = segment.buffer.byteLength / (16000 * 2)
 
  return {
- text: validatedData.transcription || 'Transcription non disponible',
- language: validatedData.language || 'fr',
+ text: validatedData.transcription || 'No transcription available',
+ language: validatedData.language || 'en',
  duration,
  segmentIndex: segment.index
  }
@@ -133,15 +133,15 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  })
 
  setTranscriptionResults(results)
- 
+
  if (onTranscriptionComplete) {
  onTranscriptionComplete(results)
  }
 
- toast.success(`Transcription terminée: ${results.length} segments traités`)
+ toast.success(`Transcription completed: ${results.length} segments processed`)
  } catch (error) {
  console.error('Transcription failed:', error)
- toast.error('Échec de la transcription')
+ toast.error('Transcription failed')
  } finally {
  setIsTranscribing(false)
  setCurrentSegment(null)
@@ -152,13 +152,13 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  try {
  await navigator.clipboard.writeText(text)
  setCopiedIndex(index)
- toast.success('Texte copié dans le presse-papiers')
- 
+ toast.success('Text copied to clipboard')
+
  // Reset copied state after 2 seconds
  setTimeout(() => setCopiedIndex(null), 2000)
  } catch (error) {
  console.error('Failed to copy text:', error)
- toast.error('Échec de la copie')
+ toast.error('Copy failed')
  }
  }
 
@@ -177,7 +177,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  <CardContent className="p-6 text-center">
  <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
  <p className="text-muted-foreground">
- Aucun segment audio disponible pour la transcription
+ No audio segments available for transcription
  </p>
  </CardContent>
  </Card>
@@ -189,7 +189,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  <CardHeader>
  <CardTitle className="flex items-center gap-2 text-foreground">
  <Mic className="w-5 h-5" />
- Transcription Audio (Français)
+ Audio Transcription
  </CardTitle>
  </CardHeader>
  <CardContent className="space-y-4">
@@ -197,14 +197,14 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Badge variant="default">
- Prêt
+ Ready
  </Badge>
  <span className="text-sm text-muted-foreground">
- {segments.length} segments disponibles
+ {segments.length} segments available
  </span>
  </div>
- 
- <Button 
+
+ <Button
  onClick={handleTranscribeAllSegments}
  disabled={isTranscribing}
  className="bg-semantic-info-bg hover:bg-semantic-info-bg dark:bg-semantic-info-bg dark:hover:bg-semantic-info-bg text-foreground"
@@ -212,12 +212,12 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  {isTranscribing ? (
  <>
  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
- Transcription...
+ Transcribing...
  </>
  ) : (
  <>
  <Mic className="w-4 h-4 mr-2" />
- Transcrire tous les segments
+ Transcribe all segments
  </>
  )}
  </Button>
@@ -228,7 +228,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  <div className="space-y-2">
  <div className="flex items-center justify-between text-sm">
  <span className="text-muted-foreground">
- {currentSegment ? `Segment ${currentSegment}/${segments.length}` : 'Préparation...'}
+ {currentSegment ? `Segment ${currentSegment}/${segments.length}` : 'Preparing...'}
  </span>
  <span className="text-muted-foreground">
  {Math.round(progress)}%
@@ -249,14 +249,14 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  <Badge variant="outline">
  {getTotalDuration().toFixed(1)}s total
  </Badge>
- <Button 
+ <Button
  onClick={downloadTranscription}
  variant="outline"
  size="sm"
  className="text-foreground border-border/0.56 hover:bg-accent/70"
  >
  <Download className="w-4 h-4 mr-2" />
- Télécharger
+ Download
  </Button>
  </div>
  </div>
@@ -283,7 +283,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  {result.text ||"Aucune transcription disponible"}
  </p>
  </div>
- <Button 
+ <Button
  onClick={() => copyToClipboard(result.text, result.segmentIndex)}
  variant="ghost"
  size="sm"

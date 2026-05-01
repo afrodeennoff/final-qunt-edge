@@ -38,7 +38,7 @@ export default async function LeaderboardPage({
   const entries = await getLeaderboardData(sortKey)
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[1320px]" className="py-12 sm:py-16">
+    <UnifiedPageShell widthClassName="max-w-[1360px]" className="py-12 sm:py-16">
       <Suspense fallback={<LeaderboardTableSkeleton />}>
         <LeaderboardContent initialEntries={entries} locale={locale} />
       </Suspense>

@@ -67,11 +67,7 @@ function generateRequestId(): string {
 /**
  * Create a standardized success response.
  */
-export function apiSuccess<T>(
-  data: T,
-  status = 200,
-  options?: ApiSuccessOptions
-): NextResponse {
+export function apiSuccess<T>(data: T, status = 200, options?: ApiSuccessOptions): NextResponse {
   const headers = new Headers(options?.headers)
   if (!headers.has('Cache-Control')) {
     headers.set('Cache-Control', 'no-store, max-age=0')
@@ -93,7 +89,7 @@ export function apiErrorWithId(
   message: string,
   status: number,
   details?: unknown,
-  headers?: HeadersInit
+  headers?: HeadersInit,
 ): NextResponse {
   const response = apiError(code, message, status, details, headers)
   response.headers.set('X-Request-Id', requestId)
@@ -120,7 +116,7 @@ export function apiErrorWithId(
  */
 export function withApiRoute(
   handler: (ctx: ApiRouteContext) => Promise<NextResponse>,
-  config: ApiRouteConfig = {}
+  config: ApiRouteConfig = {},
 ): (request: NextRequest) => Promise<NextResponse> {
   const {
     rateLimitId,
@@ -174,7 +170,7 @@ export function withApiRoute(
             requestId,
             'PAYLOAD_TOO_LARGE',
             `Request body exceeds maximum size of ${maxBodySize} bytes`,
-            413
+            413,
           )
         }
 
@@ -189,7 +185,9 @@ export function withApiRoute(
         const response = await handler(ctx)
 
         // Add standard headers
-        response.headers.set('X-Request-Id', requestId)
+        if (!response.headers.has('X-Request-Id')) {
+          response.headers.set('X-Request-Id', requestId)
+        }
 
         // Log timing
         const durationMs = Date.now() - startTime
@@ -210,12 +208,7 @@ export function withApiRoute(
           error: error instanceof Error ? error.message : String(error),
         })
 
-        return apiErrorWithId(
-          requestId,
-          'INTERNAL_ERROR',
-          'An unexpected error occurred',
-          500
-        )
+        return apiErrorWithId(requestId, 'INTERNAL_ERROR', 'An unexpected error occurred', 500)
       }
     })
   }
@@ -225,6 +218,16 @@ export function withApiRoute(
  * Wrap an API route handler with rate limiting only (lighter wrapper).
  * Useful for routes that already have auth/error handling but need rate limiting + request ID.
  */
+export function withRateLimited(
+  handler: (request: NextRequest) => Promise<NextResponse | Response>,
+  config: {
+    rateLimitId: string
+    rateLimitMax?: number
+    rateLimitWindow?: number
+    routeName?: string
+  },
+): (request: NextRequest) => Promise<NextResponse | Response>
+
 export function withRateLimited<TCtx>(
   handler: (request: NextRequest, ctx: TCtx) => Promise<NextResponse | Response>,
   config: {
@@ -232,11 +235,30 @@ export function withRateLimited<TCtx>(
     rateLimitMax?: number
     rateLimitWindow?: number
     routeName?: string
-  }
-): (request: NextRequest, ctx: TCtx) => Promise<NextResponse | Response> {
-  const { rateLimitId, rateLimitMax = 120, rateLimitWindow = 60_000, routeName = config.rateLimitId } = config
+  },
+): (request: NextRequest, ctx: TCtx) => Promise<NextResponse | Response>
 
-  return async (request: NextRequest, ctx: TCtx): Promise<NextResponse | Response> => {
+export function withRateLimited<TCtx>(
+  handler:
+    | ((request: NextRequest) => Promise<NextResponse | Response>)
+    | ((request: NextRequest, ctx: TCtx) => Promise<NextResponse | Response>),
+  config: {
+    rateLimitId: string
+    rateLimitMax?: number
+    rateLimitWindow?: number
+    routeName?: string
+  },
+):
+  | ((request: NextRequest) => Promise<NextResponse | Response>)
+  | ((request: NextRequest, ctx: TCtx) => Promise<NextResponse | Response>) {
+  const {
+    rateLimitId,
+    rateLimitMax = 120,
+    rateLimitWindow = 60_000,
+    routeName = config.rateLimitId,
+  } = config
+
+  return async (request: NextRequest, ctx?: TCtx): Promise<NextResponse | Response> => {
     const requestId = generateRequestId()
 
     // Rate limiting
@@ -259,9 +281,16 @@ export function withRateLimited<TCtx>(
 
     const startTime = Date.now()
     try {
-      const response = await handler(request, ctx)
+      const response =
+        ctx === undefined
+          ? await (handler as (request: NextRequest) => Promise<NextResponse | Response>)(request)
+          : await (
+              handler as (request: NextRequest, ctx: TCtx) => Promise<NextResponse | Response>
+            )(request, ctx)
       if ('headers' in response && response.headers instanceof Headers) {
-        (response as NextResponse).headers.set('X-Request-Id', requestId)
+        if (!(response as NextResponse).headers.has('X-Request-Id')) {
+          ;(response as NextResponse).headers.set('X-Request-Id', requestId)
+        }
       }
       return response
     } catch (error) {

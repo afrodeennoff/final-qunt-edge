@@ -91,7 +91,7 @@ const BlackFridayEmail = (props: { firstName: string; locale?: Locale }) => {
                 </Text>
                 <Text className="text-[36px] font-bold mb-[4px] m-0">
                   <span className="line-through text-gray-400 mr-[12px]">300€</span>
-                  <span className="text-[#007BFF]">250€</span>
+                  <span className="text-[#8b5cf6]">250€</span>
                 </Text>
                 <Text className="text-[14px] text-gray-600 m-0">
                   {content.highlightDeadline}
@@ -108,7 +108,7 @@ const BlackFridayEmail = (props: { firstName: string; locale?: Locale }) => {
 
               <Section className="text-center mb-[32px]">
                 <Button 
-                  className="bg-[#007BFF] text-white text-[16px] px-[24px] py-[12px] rounded-[6px] font-medium box-border"
+                  className="bg-[#7c3aed] text-white text-[16px] px-[24px] py-[12px] rounded-[6px] font-medium box-border"
                   href="https://qunt-edge.vercel.app/pricing"
                 >
                   {content.cta}

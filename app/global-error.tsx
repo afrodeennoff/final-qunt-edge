@@ -11,7 +11,6 @@ export default function GlobalError({
   reset: () => void
 }) {
   useEffect(() => {
-    // Keep the console error for observability; avoid crashing the page.
     console.error(error)
   }, [error])
 

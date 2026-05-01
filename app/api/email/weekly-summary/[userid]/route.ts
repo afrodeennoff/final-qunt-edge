@@ -1,5 +1,4 @@
-import { NextResponse } from "next/server"
-import { headers } from 'next/headers'
+import { NextResponse, connection } from "next/server"
 import TraderStatsEmail from "@/components/emails/weekly-recap"
 import MissingYouEmail from "@/components/emails/missing-data"
 import { render } from "@react-email/render"
@@ -24,11 +23,12 @@ const maskValue = (value?: string) => value ? `${value.slice(0, 8)}…` : 'unkno
 const userIdSchema = z.string().uuid()
 
 export async function POST(req: Request, props: { params: Promise<{ userid: string }> }) {
+  await connection()
+
   const params = await props.params;
   try {
     // Verify that this is a legitimate request with the correct secret
-    const headersList = await headers()
-    requireServiceAuth(headersList.get('authorization'), { serviceName: 'email-weekly-summary' })
+    requireServiceAuth(req.headers.get('authorization'), { serviceName: 'email-weekly-summary' })
 
     const userIdResult = userIdSchema.safeParse(params.userid)
     if (!userIdResult.success) {

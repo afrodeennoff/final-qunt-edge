@@ -1,33 +1,64 @@
-import type { Metadata } from "next"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { BookOpen, Code, LineChart, GraduationCap } from "lucide-react"
-import { UnifiedPageShell } from "@/components/layout/unified-page-shell"
-import Link from "next/link"
-import { buildPublicMetadata } from "@/lib/seo"
+import type { Metadata } from 'next'
+import { BookOpen, Code, GraduationCap, LineChart } from 'lucide-react'
+import { ButtonV2 as Button, BadgeV2 as Badge } from '@/components/ui/v2'
+import {
+  MarketingFeatureCard,
+  MarketingSection,
+  MarketingSectionHeader,
+  marketingBodyClassName,
+  marketingHeroTitleClassName,
+} from '@/components/layout/marketing-sections'
+import { buildPublicMetadata } from '@/lib/seo'
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: string }>
 }): Promise<Metadata> {
-  const { locale } = await params;
+  const { locale } = await params
   return buildPublicMetadata({
-    title: "About Qunt Edge | Trading Performance Intelligence",
+    title: 'About Qunt Edge | Trading Performance Intelligence',
     description:
-      "Learn how Qunt Edge helps discretionary traders improve execution quality, risk discipline, and decision consistency.",
-    path: "/about",
+      'Learn how Qunt Edge helps discretionary traders improve execution quality, risk discipline, and decision consistency.',
+    path: '/about',
     locale,
-  });
+  })
 }
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   const founderSkills = [
-    { name: "Order Book Trading", icon: <BookOpen className="w-4 h-4" /> },
-    { name: "Volume Profile", icon: <LineChart className="w-4 h-4" /> },
-    { name: "Computer Science", icon: <Code className="w-4 h-4" /> },
-    { name: "Quantitative Finance", icon: <GraduationCap className="w-4 h-4" /> },
+    { name: 'Order Book Trading', icon: <BookOpen className="w-4 h-4" /> },
+    { name: 'Volume Profile', icon: <LineChart className="w-4 h-4" /> },
+    { name: 'Computer Science', icon: <Code className="w-4 h-4" /> },
+    { name: 'Quantitative Finance', icon: <GraduationCap className="w-4 h-4" /> },
+  ]
+
+  const storyCards = [
+    {
+      icon: <LineChart className="h-5 w-5" />,
+      title: 'Our mission',
+      description:
+        'Help discretionary traders improve execution quality, risk discipline, and review consistency.',
+    },
+    {
+      icon: <BookOpen className="h-5 w-5" />,
+      title: 'Built by a trader',
+      description:
+        'Timon shaped Qunt Edge around clarity, repeatable review, and fewer distractions after the session.',
+    },
+    {
+      icon: <Code className="h-5 w-5" />,
+      title: 'Structured analytics',
+      description:
+        'The platform turns real trade history into practical patterns across setups, timing, and behavior.',
+    },
+    {
+      icon: <GraduationCap className="h-5 w-5" />,
+      title: 'Coach-ready workflow',
+      description:
+        'Teams and solo traders can review decisions with the same clean, consistent operating rhythm.',
+    },
   ]
 
   return (

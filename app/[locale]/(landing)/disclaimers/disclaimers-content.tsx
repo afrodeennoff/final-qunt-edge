@@ -1,8 +1,8 @@
 'use client'
 
 import { useI18n } from '@/locales/client'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
+import { CardV2 as Card, CardContent, CardHeader, CardTitle } from '@/components/ui/v2'
+import { MarketingSection, MarketingSectionHeader } from '@/components/layout/marketing-sections'
 
 export function DisclaimersContent() {
   const t = useI18n()
@@ -11,7 +11,13 @@ export function DisclaimersContent() {
 DISCLAIMER: Futures and forex trading contain substantial risk and is not for every investor. An investor could potentially lose all or more than the initial investment. Risk capital is money that can be lost without jeopardizing ones' financial security or lifestyle. Only risk capital should be used for trading, and only those with sufficient risk capital should consider trading. Past performance is not necessarily indicative of future results.`
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+    <MarketingSection className="pt-24 lg:pt-32">
+      <MarketingSectionHeader
+        eyebrow="Legal"
+        title="Disclaimers"
+        titleAs="h1"
+        description="Risk disclosures and legal notices for Qunt Edge trading analytics."
+      />
       <div className="space-y-6">
         <Card className="border-border/30 bg-background/0.14">
           <CardHeader>
@@ -44,6 +50,6 @@ DISCLAIMER: Futures and forex trading contain substantial risk and is not for ev
           </CardContent>
         </Card>
       </div>
-    </UnifiedPageShell>
+    </MarketingSection>
   )
 }

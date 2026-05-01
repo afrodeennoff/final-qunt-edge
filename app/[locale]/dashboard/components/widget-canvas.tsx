@@ -25,7 +25,7 @@ import { toast } from "sonner"
 import { defaultLayouts } from "@/lib/default-layouts"
 import type { DashboardLayout } from "@/prisma/generated/prisma"
 import { useDashboard } from '../dashboard-context'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'motion/react'
 import { WidgetShell } from "@/components/ui/widget-shell"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { isUiV2Enabled } from "@/lib/ui-v2"
@@ -39,6 +39,9 @@ import {
  normalizeWidgetSize,
  sizeToGrid,
 } from "@/lib/widget-layout"
+
+const ResponsiveGridLayout = WidthProvider(Responsive)
+
 // Helper function to convert internal layout to Prisma type
 const toPrismaLayout = (layout: DashboardLayoutWithWidgets): DashboardLayout => {
  return {
@@ -346,8 +349,6 @@ export default function WidgetCanvas() {
  // Add this state to track if the layout change is from user interaction
  const activeLayout = useMemo(() => isMobile ? 'mobile' : 'desktop', [isMobile])
 
- // Move all memoized values up, out of conditional rendering paths
- const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), [])
  const activeWidgets = useMemo(
  () => (Array.isArray(layouts?.[activeLayout]) ? layouts[activeLayout] : []),
  [layouts, activeLayout]

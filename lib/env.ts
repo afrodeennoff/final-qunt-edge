@@ -18,11 +18,10 @@ const optionalMinString = (minLength: number) =>
     z.string().min(minLength).optional()
   );
 
-const MODEL_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:+/-]*$/;
 const optionalModelId = () =>
   z.preprocess(
     (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
-    z.string().regex(MODEL_ID_PATTERN, "Invalid model identifier format").optional()
+    z.string().optional()
   );
 
 const envSchema = z.object({

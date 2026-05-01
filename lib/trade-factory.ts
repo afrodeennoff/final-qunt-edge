@@ -21,7 +21,7 @@ export function createTradeWithDefaults(input: Partial<ImportTradeDraft>): Impor
     entryPrice: normalized.entryPrice ?? 0,
     closePrice: normalized.closePrice ?? 0,
     entryDate: normalized.entryDate || new Date().toISOString(),
-    closeDate: normalized.closeDate || new Date().toISOString(),
+    closeDate: normalized.closeDate || null,
     pnl: normalized.pnl ?? 0,
     commission: normalized.commission ?? 0,
     timeInPosition: normalized.timeInPosition ?? 0,

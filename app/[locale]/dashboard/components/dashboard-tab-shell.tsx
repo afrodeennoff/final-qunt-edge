@@ -6,6 +6,8 @@ import { clearReferralCode } from '@/lib/referral-storage'
 import { DashboardSkeleton } from './skeletons/dashboard-skeleton'
 import { FEATURE_FLAGS } from '@/lib/feature-flags'
 import { Spinner } from '@/components/ui/skeleton'
+import { WORKSPACE_SHELL_WIDTH } from '@/lib/constants/layout'
+import { cn } from '@/lib/utils'
 
 type DashboardTab = 'widgets' | 'table' | 'accounts' | 'chart'
 

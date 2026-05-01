@@ -350,8 +350,9 @@ function parseDateTime(dateTimeStr: string): string {
  }
  }
  
- // If neither format matches, throw an error
- throw new Error(`Invalid date format: ${dateTimeStr}`);
+ // If neither format matches, log warning and return current time as fallback
+ console.warn(`[Quantower] Unable to parse date "${dateTimeStr}", using current time as fallback`);
+ return new Date().toISOString();
 }
 
 interface QuantowerOrderProcessorProps {

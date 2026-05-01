@@ -10,6 +10,7 @@ import { AuthTimeout } from "@/components/auth/auth-timeout";
 
 const CHUNK_RECOVERY_SESSION_KEY = "chunk-reload-attempted";
 const SERVICE_WORKER_CLEANUP_KEY = "sw-cleanup-v1";
+let chunkRecoveryInProgress = false;
 
 function shouldRecoverFromChunkError(reason: unknown): boolean {
     const message =
@@ -34,11 +35,11 @@ function shouldRecoverFromChunkError(reason: unknown): boolean {
 
 export function RootProviders({
     children,
-    themeScope = "fixed-blue",
+    themeScope = "fixed-purple",
     initialTheme,
 }: {
     children: React.ReactNode
-    themeScope?: "dashboard" | "fixed-blue"
+    themeScope?: "dashboard" | "fixed-purple"
     initialTheme?: DashboardTheme
 }) {
     useEffect(() => {
@@ -48,6 +49,10 @@ export function RootProviders({
 
         const recoverFromChunkError = (reason: unknown) => {
             if (!shouldRecoverFromChunkError(reason)) {
+                return;
+            }
+
+            if (chunkRecoveryInProgress) {
                 return;
             }
 
@@ -62,13 +67,17 @@ export function RootProviders({
                 return;
             }
 
+            chunkRecoveryInProgress = true;
+
             try {
                 sessionStorage.setItem(CHUNK_RECOVERY_SESSION_KEY, "1");
             } catch {
                 // Ignore storage errors; still attempt reload once per page instance.
             }
 
-            window.location.reload();
+            setTimeout(() => {
+                window.location.reload();
+            }, 200);
         };
 
         const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
@@ -174,7 +183,7 @@ export function PublicRootProviders({
     children: React.ReactNode
 }) {
     return (
-        <RootProviders themeScope="fixed-blue">
+        <RootProviders themeScope="fixed-purple">
             {children}
         </RootProviders>
     );

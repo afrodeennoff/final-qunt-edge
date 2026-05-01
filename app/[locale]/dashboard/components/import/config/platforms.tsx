@@ -1,7 +1,8 @@
 'use client'
 import type { ImportTradeDraft } from '@/lib/trade-types'
 import { ThorSync } from '../thor/thor-sync'
-import { TradovateSync } from '../tradovate/tradovate-sync'
+import { TradovateSync } from '../tradovate/sync/tradovate-sync'
+import { DxFeedSync } from '../dxfeed/sync/dxfeed-sync'
 import { ImportType } from '../import-type-selection'
 import { RithmicSyncWrapper } from '../rithmic/sync/rithmic-sync-connection'
 import type { ComponentType } from 'react'
@@ -156,6 +157,7 @@ type StepComponent =
  | typeof RithmicSyncWrapper
  | typeof ThorSync
  | typeof TradovateSync
+ | typeof DxFeedSync
  | typeof PdfUpload
  | typeof PdfProcessing
  | typeof AtasFileUpload
@@ -244,13 +246,17 @@ const processRithmicPerformance = (data: string[][]): ProcessedData => {
 
 const processRithmicOrders = (data: string[][]): ProcessedData => {
  const headerRowIndex = data.findIndex(row => row[0] === 'Completed Orders') + 1
- const headers = data[headerRowIndex].filter(header => header && header.trim() !== '')
+ const headers = data[headerRowIndex].map((header, i) =>
+   header && header.trim() !== '' ? header : `Column ${i + 1}`
+ )
  const processedData = data.slice(headerRowIndex + 1)
  return { headers, processedData };
 };
 
 const processQuantower = (data: string[][]): ProcessedData => {
- const headers = data[0].filter(header => header && header.trim() !== '')
+ const headers = data[0].map((header, i) =>
+   header && header.trim() !== '' ? header : `Column ${i + 1}`
+ )
  const processedData = data.slice(1)
  return { headers, processedData };
 };
@@ -259,7 +265,11 @@ const processStandardCsv = (data: string[][]): ProcessedData => {
  if (data.length === 0) {
  throw new Error("The CSV file appears to be empty or invalid.")
  }
- const headers = data[0].filter(header => header && header.trim() !== '')
+ // Replace empty headers with positional labels to preserve index alignment
+ // with data rows. Filtering would shift indices and break column mapping.
+ const headers = data[0].map((header, i) =>
+   header && header.trim() !== '' ? header : `Column ${i + 1}`
+ )
  return { headers, processedData: data.slice(1) };
 };
 
@@ -276,7 +286,6 @@ export const platforms: PlatformConfig[] = [
  path: '/logos/rithmic.png',
  alt: 'Rithmic Logo'
  },
- isDisabled: true,
  isRithmic: true,
  customComponent: RithmicSyncWrapper,
  steps: [
@@ -297,7 +306,7 @@ export const platforms: PlatformConfig[] = [
  },
  {
  platformName: 'csv-ai',
- type: '',
+ type: 'csv-ai',
  name: 'import.type.csvAi.name',
  description: 'import.type.csvAi.description',
  category: 'Intelligent Import',
@@ -691,6 +700,35 @@ export const platforms: PlatformConfig[] = [
  ]
  },
  {
+ platformName: 'dxfeed-sync',
+ type: 'dxfeed-sync',
+ name: 'import.type.dxfeedSync.name',
+ description: 'import.type.dxfeedSync.description',
+ category: 'Direct Account Sync',
+ videoUrl: '',
+ details: 'import.type.dxfeedSync.details',
+ logo: {
+ path: '/logos/dxfeed.png',
+ alt: 'DxFeed Logo'
+ },
+ customComponent: DxFeedSync,
+ steps: [
+ {
+ id: 'select-import-type',
+ title: 'import.steps.selectPlatform',
+ description: 'import.steps.selectPlatformDescription',
+ component: ImportTypeSelection
+ },
+ {
+ id: 'complete',
+ title: 'import.steps.connectAccount',
+ description: 'import.steps.connectAccountDescription',
+ component: DxFeedSync,
+ isLastStep: true
+ }
+ ]
+ },
+ {
  platformName: 'ibkr-pdf-import',
  type: 'ibkr-pdf-import',
  name: 'import.type.pdfImport.name',
@@ -726,7 +764,8 @@ export const platforms: PlatformConfig[] = [
  id: 'select-account',
  title: 'import.steps.selectAccount',
  description: 'import.steps.selectAccountDescription',
- component: AccountSelection
+ component: AccountSelection,
+ isLastStep: true,
  },
  ]
  },

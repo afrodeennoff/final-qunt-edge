@@ -13,7 +13,11 @@ import { Badge } from '@/components/ui/badge'
 import { useUserStore } from '../../../../store/user-store'
 import { useTradovateSyncStore } from '../../../../store/tradovate-sync-store'
 import { useTheme } from '@/context/theme-provider'
-import { VALID_DASHBOARD_THEMES } from '@/lib/constants/dashboard-themes'
+import {
+  THEME_LABELS,
+  THEME_PALETTES,
+  VALID_DASHBOARD_THEMES,
+} from '@/lib/constants/dashboard-themes'
 import {
   User,
   Settings,
@@ -41,7 +45,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { leaveTeam, getUserTeams } from './actions'
+import { leaveTeam, getUserTeams, updateUserProfile } from './actions'
 import { toast } from 'sonner'
 import {
   AlertDialog,
@@ -308,6 +312,8 @@ export default function SettingsPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [fullName, setFullName] = useState(user?.user_metadata?.full_name || user?.user_metadata?.name || '')
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false)
 
   const [userTeams, setUserTeams] = useState<UserTeamsState>({ ownedTeams: [], joinedTeams: [] })
 
@@ -344,6 +350,21 @@ export default function SettingsPage() {
       isCancelled = true
     }
   }, [])
+
+  const handleUpdateProfile = async () => {
+    if (!fullName.trim()) {
+      toast.error('Name is required')
+      return
+    }
+    setIsUpdatingProfile(true)
+    const result = await updateUserProfile(fullName)
+    setIsUpdatingProfile(false)
+    if (result.success) {
+      toast.success('Profile updated')
+    } else {
+      toast.error(result.error || 'Failed to update profile')
+    }
+  }
 
   const handleLeaveTeam = async (teamId: string) => {
     const result = await leaveTeam(teamId)
@@ -438,51 +459,34 @@ export default function SettingsPage() {
             <CardDescription>Customize your dashboard appearance and behavior</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Accent Color Settings */}
+            {/* Theme Selection */}
             <div>
               <Label className="text-base font-medium flex items-center gap-2">
                 <Palette className="h-4 w-4" />
-                Accent Color
+                Theme
               </Label>
-              <div className="mt-2">
-                <div className="rounded-md border border-border/20 bg-background/30 p-3">
-                  <p className="mb-3 text-sm text-muted-foreground">
-                    Choose your dashboard accent color
-                  </p>
-                  <div className="flex gap-3">
-                    {VALID_DASHBOARD_THEMES.map((t) => (
-                      <button
-                        key={t}
-                        type="button"
-                        onClick={() => setTheme(t)}
-                        className="relative flex flex-col items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-lg p-1"
-                        aria-label={`Set accent color to ${t}`}
-                        aria-pressed={theme === t}
-                      >
-                        <span
-                          className={`h-8 w-8 rounded-full transition-[opacity,background-color,border-color] ${theme === t ? 'ring-2 ring-offset-2 ring-offset-background ring-primary scale-110' : 'hover:scale-105'}`}
-                          style={{
-                            backgroundColor:
-                              t === 'blue'
-                                ? 'oklch(0.55 0.22 264)'
-                                : t === 'violet'
-                                  ? 'oklch(0.60 0.22 290)'
-                                  : t === 'emerald'
-                                    ? 'oklch(0.55 0.20 160)'
-                                    : t === 'amber'
-                                      ? 'oklch(0.60 0.20 70)'
-                                      : 'oklch(0.58 0.22 10)',
-                          }}
-                        />
-                        <span
-                          className={`text-xs capitalize ${theme === t ? 'text-primary font-medium' : 'text-muted-foreground'}`}
-                        >
-                          {t}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              <div className="mt-3 flex flex-wrap gap-3">
+                {VALID_DASHBOARD_THEMES.map((t) => {
+                  const selected = theme === t
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setTheme(t)}
+                      className="group flex flex-col items-center gap-1.5 focus:outline-none"
+                      aria-label={`Set theme to ${THEME_LABELS[t]}`}
+                      aria-pressed={selected}
+                    >
+                      <span
+                        className={`h-8 w-8 rounded-full transition-all ${selected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background scale-110' : 'ring-1 ring-border/50 hover:scale-105 hover:ring-primary/40'}`}
+                        style={{ backgroundColor: THEME_PALETTES[t]['--primary'] }}
+                      />
+                      <span className={`text-[11px] leading-tight transition-colors ${selected ? 'text-foreground font-medium' : 'text-muted-foreground group-hover:text-foreground'}`}>
+                        {THEME_LABELS[t]}
+                      </span>
+                    </button>
+                  )
+                })}
               </div>
             </div>
 

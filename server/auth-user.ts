@@ -6,6 +6,8 @@ import { prisma } from '@/lib/prisma'
 import { User } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
 import { isPrismaColumnAvailable, isPrismaSchemaMismatchError, markPrismaColumnUnavailable } from '@/lib/prisma-guard'
+import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
+import { updateTag } from 'next/cache'
 
 
 const normalizeEnvValue = (value?: string): string => value?.trim() ?? ''
@@ -518,16 +520,17 @@ export async function updateUserLanguage(locale: string): Promise<{ updated: boo
     return { updated: false }
   }
 
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user?.id) {
+  let databaseUserId: string
+  try {
+    databaseUserId = await getDatabaseUserId()
+  } catch {
     return { updated: false }
   }
 
   let existing: { id: string; language: string | null } | null = null
   try {
     existing = await prisma.user.findUnique({
-      where: { id: user.id },
+      where: { id: databaseUserId },
       select: {
         id: true,
         language: true,
@@ -550,9 +553,12 @@ export async function updateUserLanguage(locale: string): Promise<{ updated: boo
 
   try {
     await prisma.user.update({
-      where: { id: user.id },
+      where: { id: databaseUserId },
       data: { language: locale },
     })
+    updateTag(CACHE_TAGS.USER_DATA(databaseUserId))
+    updateTag(CACHE_TAGS.USER_DATA_CORE(databaseUserId))
+    updateTag(CACHE_TAGS.DASHBOARD(databaseUserId))
   } catch (error) {
     if (isPrismaSchemaMismatchError(error)) {
       markPrismaColumnUnavailable(USER_TABLE_NAME, LANGUAGE_COLUMN)

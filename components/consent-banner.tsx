@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "motion/react"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { useTypedI18n } from "@/locales/client"
 

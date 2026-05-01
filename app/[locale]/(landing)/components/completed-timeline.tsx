@@ -7,23 +7,23 @@ import { format } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
 
 interface TimelineItem {
- id: string
- title: string
- description: string
- completedDate: string
- status: 'completed' | 'in-progress' | 'upcoming'
- image?: string
- youtubeVideoId?: string
+  id: string
+  title: string
+  description: string
+  completedDate: string
+  status: 'completed' | 'in-progress' | 'upcoming'
+  image?: string
+  youtubeVideoId?: string
 }
 
 export default function CompletedTimeline({ milestones, locale }: { milestones: TimelineItem[], locale: string }) {
- const dateLocale = locale === 'fr' ? fr : enUS
+  const dateLocale = locale === 'fr' ? fr : enUS
 
- const completedMilestones = useMemo(() => {
- return milestones
- .filter(milestone => milestone.status === 'completed' && milestone.completedDate)
- .sort((a, b) => new Date(b.completedDate).getTime() - new Date(a.completedDate).getTime())
- }, [milestones])
+  const completedMilestones = useMemo(() => {
+    return milestones
+      .filter(milestone => milestone.status === 'completed' && milestone.completedDate)
+      .sort((a, b) => new Date(b.completedDate).getTime() - new Date(a.completedDate).getTime())
+  }, [milestones])
 
  return (
  <div className="relative">

@@ -156,7 +156,20 @@ export function TiptapEditor({
     },
     onError: (error) => {
       console.error("Completion error:", error);
-      toast.error(t("editor.ai.minCharsError"));
+      const errorMessage = error?.message || String(error);
+
+      if (errorMessage.includes("API key") || errorMessage.includes("OPENROUTER_API_KEY") || errorMessage.includes("AI_BASE_URL")) {
+        toast.error("AI service is not configured. Please contact support.");
+      } else if (errorMessage.includes("subscription") || errorMessage.includes("plan") || errorMessage.includes("FORBIDDEN")) {
+        toast.error("AI features require an active subscription.");
+      } else if (errorMessage.includes("rate limit") || errorMessage.includes("too many")) {
+        toast.error("Too many AI requests. Please wait a moment.");
+      } else if (errorMessage.includes("timeout") || errorMessage.includes("timed out")) {
+        toast.error("AI request timed out. Please try again.");
+      } else {
+        toast.error(t("editor.ai.minCharsError"));
+      }
+
       if (editorRef.current) {
         editorRef.current.commands.finishAICompletion();
       }
@@ -252,7 +265,7 @@ export function TiptapEditor({
         throw error;
       }
     },
-    [user?.auth_user_id, user?.id, t],
+    [user, t],
   );
 
   // Handle AI dropdown actions
@@ -422,7 +435,7 @@ export function TiptapEditor({
             if (file && editor) {
               handleImageUpload(file)
                 .then((imageUrl) => {
-                  editor.chain().focus().setImage({ src: imageUrl }).run();
+                  editor.chain().focus().insertContent({ type: 'imageResize', attrs: { src: imageUrl } }).run();
                 })
                 .catch((error) => {
                   console.error("Failed to upload pasted image:", error);
@@ -441,7 +454,7 @@ export function TiptapEditor({
             event.preventDefault();
             handleImageUpload(file)
               .then((imageUrl) => {
-                editor.chain().focus().setImage({ src: imageUrl }).run();
+                editor.chain().focus().insertContent({ type: 'imageResize', attrs: { src: imageUrl } }).run();
               })
               .catch((error) => {
                 console.error("Failed to upload dropped image:", error);
@@ -541,7 +554,7 @@ export function TiptapEditor({
       if (file && file.type.startsWith("image/") && editor) {
         handleImageUpload(file)
           .then((imageUrl) => {
-            editor.chain().focus().setImage({ src: imageUrl }).run();
+            editor.chain().focus().insertContent({ type: 'imageResize', attrs: { src: imageUrl } }).run();
           })
           .catch((error) => {
             console.error("Failed to upload image:", error);

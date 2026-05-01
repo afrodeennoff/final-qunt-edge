@@ -13,6 +13,9 @@ interface IncrementResult {
 const memoryStore = new Map<string, RateLimitStore>()
 const MAX_TRACKED_KEYS = 10_000
 const CLEANUP_INTERVAL_MS = 60_000
+const RATE_LIMIT_STRICT_MODE = process.env.RATE_LIMIT_STRICT_MODE === 'true'
+let hasWarnedMissingUpstashConfig = false
+let hasWarnedUpstashFailure = false
 
 function normalizeHeaderIp(value: string | null): string | null {
   if (!value) return null
@@ -141,19 +144,44 @@ async function incrementUpstash(key: string, window: number): Promise<IncrementR
 }
 
 async function incrementCounter(key: string, window: number): Promise<IncrementResult> {
-  // In production, NEVER fall back to in-memory limiter - this creates a bypass vector
-  // where attackers can circumvent rate limits by overwhelming the distributed backend.
   if (process.env.NODE_ENV === 'production') {
-    if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
-      throw new Error('Rate limiting requires UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in production')
+    const hasUpstashConfig =
+      Boolean(process.env.UPSTASH_REDIS_REST_URL) && Boolean(process.env.UPSTASH_REDIS_REST_TOKEN)
+
+    if (!hasUpstashConfig) {
+      if (RATE_LIMIT_STRICT_MODE) {
+        throw new Error(
+          'Rate limiting requires UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in production',
+        )
+      }
+
+      if (!hasWarnedMissingUpstashConfig) {
+        hasWarnedMissingUpstashConfig = true
+        console.warn(
+          '[rate-limit] Missing Upstash config in production; using in-memory fallback. Set RATE_LIMIT_STRICT_MODE=true to fail closed.',
+        )
+      }
+
+      return incrementMemory(key, window)
     }
+
     try {
       const upstash = await incrementUpstash(key, window)
       if (upstash) return upstash
     } catch (error) {
-      // In production, fail closed - don't allow requests through if rate limiting is broken
-      console.error('[rate-limit] Upstash error in production:', error)
-      throw new Error('Rate limiting temporarily unavailable')
+      if (RATE_LIMIT_STRICT_MODE) {
+        console.error('[rate-limit] Upstash error in production (strict mode):', error)
+        throw new Error('Rate limiting temporarily unavailable')
+      }
+
+      if (!hasWarnedUpstashFailure) {
+        hasWarnedUpstashFailure = true
+        console.warn(
+          '[rate-limit] Upstash request failed in production; using in-memory fallback. Set RATE_LIMIT_STRICT_MODE=true to fail closed.',
+          error,
+        )
+      }
+      return incrementMemory(key, window)
     }
   }
 
@@ -177,7 +205,18 @@ export function rateLimit({
     const key = opts?.subject
       ? `${identifier}:${opts.subject}`
       : `${identifier}:${ip}`
-    const result = await incrementCounter(key, window)
+    let result: IncrementResult
+    try {
+      result = await incrementCounter(key, window)
+    } catch (error) {
+      console.error('[rate-limit] Failed closed due to limiter backend error:', error)
+      return {
+        success: false,
+        limit,
+        remaining: 0,
+        resetTime: Date.now() + window,
+      }
+    }
 
     if (result.count > limit) {
       return { success: false, limit, remaining: 0, resetTime: result.resetTime }

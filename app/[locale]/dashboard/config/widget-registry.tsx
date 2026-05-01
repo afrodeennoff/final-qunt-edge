@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts'
 import { useI18n } from '@/locales/client'
 import { translateWeekday } from '@/lib/translation-utils'
 
@@ -203,27 +202,21 @@ function createPropfirmPreview() {
                 <div className="h-4 w-16 bg-background/25-foreground/20 rounded" />
               </div>
               <div className="h-20 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-                    <XAxis dataKey="name" hide />
-                    <YAxis hide />
-                    <Line
-                      type="monotone"
-                      dataKey="equity"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth={2}
-                      dot={false}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="drawdown"
-                      stroke="hsl(var(--foreground) / 0.45)"
-                      strokeWidth={2}
-                      strokeDasharray="4 2"
-                      dot={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+                <svg viewBox="0 0 100 40" className="h-full w-full" preserveAspectRatio="none">
+                  <polyline
+                    points="0,35 20,25 40,28 60,18 80,14 100,8"
+                    fill="none"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth="1.5"
+                  />
+                  <polyline
+                    points="0,36 20,28 40,30 60,22 80,18 100,14"
+                    fill="none"
+                    stroke="hsl(var(--foreground) / 0.45)"
+                    strokeWidth="1.5"
+                    strokeDasharray="3 2"
+                  />
+                </svg>
               </div>
             </div>
           ))}

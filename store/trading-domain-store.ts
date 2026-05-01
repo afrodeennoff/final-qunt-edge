@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
 import { Account } from '@/prisma/generated/prisma'
 import { Trade } from '@/lib/data-types'
 import { StoreApi, UseBoundStore } from 'zustand'
@@ -29,41 +28,29 @@ interface TradingDomainState {
   addAccount: (account: Account) => void
 }
 
-const tradingDomainStoreBase = create<TradingDomainState>()(
-  persist(
-    (set) => ({
-      trades: [],
-      accounts: [],
-      setTrades: (trades) => set({ trades }),
-      setAccounts: (accounts) => set({ accounts }),
-      updateAccount: (accountNumber, updates) =>
-        set((state) => ({
-          accounts: state.accounts.map((account) =>
-            account.number === accountNumber
-              ? { ...account, ...updates }
-              : account
-          ),
-        })),
-      deleteAccount: (accountNumber) =>
-        set((state) => ({
-          accounts: state.accounts.filter(
-            (account) => account.number !== accountNumber
-          ),
-        })),
-      addAccount: (account) =>
-        set((state) => ({
-          accounts: [...state.accounts, account],
-        })),
-    }),
-    {
-      name: 'trading-domain-storage',
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
-        trades: state.trades,
-        accounts: state.accounts,
-      }),
-    },
-  ),
-)
+const tradingDomainStoreBase = create<TradingDomainState>()((set) => ({
+  trades: [],
+  accounts: [],
+  setTrades: (trades) => set({ trades }),
+  setAccounts: (accounts) => set({ accounts }),
+  updateAccount: (accountNumber, updates) =>
+    set((state) => ({
+      accounts: state.accounts.map((account) =>
+        account.number === accountNumber
+          ? { ...account, ...updates }
+          : account
+      ),
+    })),
+  deleteAccount: (accountNumber) =>
+    set((state) => ({
+      accounts: state.accounts.filter(
+        (account) => account.number !== accountNumber
+      ),
+    })),
+  addAccount: (account) =>
+    set((state) => ({
+      accounts: [...state.accounts, account],
+    })),
+}))
 
 export const useTradingDomainStore = createSelectors(tradingDomainStoreBase)

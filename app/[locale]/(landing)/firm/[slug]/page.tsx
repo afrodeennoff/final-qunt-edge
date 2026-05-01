@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+import { connection } from 'next/server'
 import { getUnifiedFirmBySlug, getUnifiedFirms } from '@/server/deals'
 import type { UnifiedFirm } from '@/server/deals'
 import { FirmDetailClient } from './page-client'
@@ -178,6 +179,7 @@ export async function generateMetadata({
 
 export default async function FirmDetailPage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
   const { slug, locale } = await params
+  await connection()
   const { firm, requestedSlug } = await resolveFirmBySlugInput(slug)
   if (!firm) {
     redirect(`/${locale}/propfirms`)

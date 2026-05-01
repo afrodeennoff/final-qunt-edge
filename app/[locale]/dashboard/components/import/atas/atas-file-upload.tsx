@@ -156,9 +156,14 @@ export default function AtasFileUpload({
 
  const onDrop = useCallback(
  (acceptedFiles: File[]) => {
- setUploadedFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
+ let baseIndex = 0;
+ setUploadedFiles((prevFiles) => {
+ baseIndex = prevFiles.length;
+ return [...prevFiles, ...acceptedFiles];
+ });
+
  acceptedFiles.forEach((file, index) => {
- const totalIndex = uploadedFiles.length + index;
+ const totalIndex = baseIndex + index;
  setUploadProgress((prev) => ({ ...prev, [file.name]: 0 }));
  processExcelFile(file, totalIndex)
  .then(() => {
@@ -170,7 +175,7 @@ export default function AtasFileUpload({
  });
  });
  },
- [processExcelFile, setError, uploadedFiles.length],
+ [processExcelFile, setError],
  );
 
  const { getRootProps, getInputProps, isDragActive } = useDropzone({

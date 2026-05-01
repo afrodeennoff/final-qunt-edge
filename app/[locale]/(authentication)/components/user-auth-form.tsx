@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 import { z } from 'zod';
-import { PASSWORD_MIN_LENGTH } from '@/lib/security/password-validation'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import {
@@ -36,12 +35,7 @@ import { useCurrentLocale } from "@/locales/client"
 
 const formSchema = z.object({
  email: z.string().email(),
- password: z.union([
- z.string()
- .min(PASSWORD_MIN_LENGTH, `Password must be at least ${PASSWORD_MIN_LENGTH} characters`)
- .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, 'Password must contain uppercase, lowercase, and a number'),
- z.literal('')
- ]).optional(),
+ password: z.string().optional(),
 })
 
 const otpFormSchema = z.object({
@@ -95,6 +89,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  const [isSubscription, setIsSubscription] = React.useState<boolean>(false)
  const [lookupKey, setLookupKey] = React.useState<string | null>(null)
  const [plan, setPlan] = React.useState<string | null>(null)
+ const [teamName, setTeamName] = React.useState<string | null>(null)
  const [referralCode, setReferralCode] = React.useState<string | null>(null)
  const [promoCode, setPromoCode] = React.useState<string | null>(null)
  const [authMethod, setAuthMethod] = React.useState<AuthMethod>(null)
@@ -109,6 +104,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  const [alreadySignedIn, setAlreadySignedIn] = React.useState(false)
 
  React.useEffect(() => {
+ if (typeof window === 'undefined') return
+
+ try {
  const urlParams = new URLSearchParams(window.location.search)
  const subscription = urlParams.get('subscription')
  const next = normalizeNextPath(urlParams.get('next'))
@@ -118,10 +116,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  const promo_code = urlParams.get('promo_code')
  const lookup_key = urlParams.get('lookup_key')
  const plan_param = urlParams.get('plan')
+ const team_name = urlParams.get('teamName')
 
  setIsSubscription(subscription === 'true')
  setLookupKey(lookup_key)
  setPlan(plan_param)
+ setTeamName(team_name)
  setNextUrl(next)
  setAlreadySignedIn(urlParams.get('already') === 'signed-in')
 
@@ -143,6 +143,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  const queryErrorMessage = getQueryErrorMessage(errorCode, authErrorCode)
  if (queryErrorMessage) {
  toast.error(t('error'), { description: queryErrorMessage })
+ }
+ } catch (error) {
+ console.warn('Failed to parse URL params:', error)
  }
  }, [t])
 
@@ -169,13 +172,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  })
 
  // Helper function to determine the next URL for redirect after authentication
- function getRedirectNextUrl(isSubscription: boolean, plan: string | null, nextUrl: string | null, lookupKey: string | null, referralCode: string | null, promoCode: string | null, locale: string): string | null {
+ function getRedirectNextUrl(isSubscription: boolean, plan: string | null, nextUrl: string | null, lookupKey: string | null, referralCode: string | null, promoCode: string | null, teamName: string | null, locale: string): string | null {
  if (isSubscription) {
  const planPath = plan === 'team' ? '/api/whop/checkout-team' : '/api/whop/checkout'
  const searchParams = new URLSearchParams()
  if (lookupKey) searchParams.set('lookup_key', lookupKey)
  if (referralCode) searchParams.set('referral', referralCode)
  if (promoCode) searchParams.set('promo_code', promoCode)
+ if (plan === 'team' && teamName) searchParams.set('teamName', teamName)
  if (locale) searchParams.set('locale', locale)
  const qs = searchParams.toString()
  return `${planPath}${qs ? `?${qs}` : ''}`
@@ -191,7 +195,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  setIsLoading(true)
  setAuthMethod('email')
  try {
- const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, locale)
+ const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, teamName, locale)
  const result = await signInWithEmail(values.email, next, locale)
 
  if (!result || !('success' in result) || !result.success) {
@@ -323,22 +327,34 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  }
 
  async function onSubmitPassword(values: z.infer<typeof formSchema>) {
+ if (!values.password) {
+	 form.setError('password', {
+	 type: 'manual',
+	 message: 'Password is required'
+	 })
+	 return
+ }
  setIsLoading(true)
  setAuthMethod('email')
  try {
- const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, locale)
+ const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, teamName, locale)
  const result = await signInWithPasswordAction(values.email, values.password || '', next, locale)
 
- if (!result.success) {
- const parsedError = parseAuthError(new Error(result.error || 'Authentication failed'))
- toast.error(t('error'), { description: parsedError.message })
+ if (!result || !result.success) {
+ toast.error(t('error'), { description: result?.error || t('auth.errors.signInFailed') })
  setAuthMethod(null)
  setIsLoading(false)
  return
  }
 
- toast.success(t('success'), { description: t('auth.signIn') })
- window.location.href = nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`
+	 if ('warning' in result && result.warning === 'account_setup_partial') {
+	 toast.warning('Account setup incomplete', { description: 'Signed in successfully, but some features may be temporarily unavailable.' })
+	 } else {
+	 toast.success(t('success'), { description: t('auth.signIn') })
+	 }
+	 if (typeof window !== 'undefined') {
+	 window.location.assign(result.next || (nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`))
+	 }
  setLastAuthPreference('password')
  } catch (error) {
  const parsedError = parseAuthError(error)
@@ -379,10 +395,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  return
  }
 
- toast.success("Successfully verified. Redirecting...", {
- description:"Successfully verified. Redirecting...",
- })
- window.location.href = nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`
+	 toast.success("Successfully verified. Redirecting...", {
+	 description:"Successfully verified. Redirecting...",
+	 })
+	 if (typeof window !== 'undefined') {
+	 window.location.assign(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)
+	 }
  } catch (error) {
  toast.error("Error", {
  description: error instanceof Error ? error.message :"Failed to verify code",
@@ -398,20 +416,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  setAuthMethod('discord')
 
  try {
- let next = nextUrl;
- if (isSubscription) {
- const planParam = plan === 'team' ? '/api/whop/checkout-team' : '/api/whop/checkout';
- const searchParams = new URLSearchParams();
- if (lookupKey) searchParams.set('lookup_key', lookupKey);
- if (referralCode) searchParams.set('referral', referralCode);
- if (promoCode) searchParams.set('promo_code', promoCode);
- if (locale) searchParams.set('locale', locale);
-
- const queryString = searchParams.toString();
- next = `${planParam}${queryString ? `?${queryString}` : ''}`;
- } else if (nextUrl) {
- next = withLocalePrefix(nextUrl, locale)
- }
+ const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, teamName, locale)
  await signInWithDiscord(next, locale)
  } catch (error) {
  const parsedError = parseAuthError(error)
@@ -427,20 +432,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  setAuthMethod('google')
 
  try {
- let next = nextUrl;
- if (isSubscription) {
- const planParam = plan === 'team' ? '/api/whop/checkout-team' : '/api/whop/checkout';
- const searchParams = new URLSearchParams();
- if (lookupKey) searchParams.set('lookup_key', lookupKey);
- if (referralCode) searchParams.set('referral', referralCode);
- if (promoCode) searchParams.set('promo_code', promoCode);
- if (locale) searchParams.set('locale', locale);
-
- const queryString = searchParams.toString();
- next = `${planParam}${queryString ? `?${queryString}` : ''}`;
- } else if (nextUrl) {
- next = withLocalePrefix(nextUrl, locale)
- }
+ const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, teamName, locale)
  await signInWithGoogle(next, locale)
  } catch (error) {
  const parsedError = parseAuthError(error)
@@ -484,6 +476,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  }
 
  function openMailClient() {
+ if (typeof window === 'undefined') return
+
  const email = form.getValues('email')
  const domain = email.split('@')[1] ?? ''
 
@@ -500,7 +494,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  return (
  <div className={cn("grid gap-6", className)} {...props}>
  {alreadySignedIn && (
- <div className="flex items-center justify-between gap-3 rounded-xl border border-success/30 bg-success/10 px-4 py-3">
+ <div className="flex items-center justify-between gap-3 rounded-2xl border border-success/30 bg-success/10 px-4 py-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.03)]">
  <div className="flex items-center gap-3">
  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-success/15">
  <svg className="h-4 w-4 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -514,7 +508,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </div>
  <Button
  size="sm"
- className="shrink-0 border-success/30 bg-success/20 text-success hover:bg-success/30"
+ className="shrink-0 rounded-[0.95rem] border-success/30 bg-success/20 text-success hover:bg-success/30"
  onClick={() => router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)}
  >
  Go to Dashboard
@@ -525,13 +519,13 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/0.04 bg-background/0.08 p-1">
  <TabsTrigger
  value="magic"
- className="h-9 rounded-lg text-xs font-semibold text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+ className="h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_1px_2px_rgba(0,0,0,0.14)]"
  >
  <span className="truncate">{t('auth.tabs.magic')}</span>
  </TabsTrigger>
  <TabsTrigger
  value="password"
- className="relative h-9 rounded-lg text-xs font-semibold text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+ className="relative h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_1px_2px_rgba(0,0,0,0.14)]"
  >
  <span className="truncate">{t('auth.tabs.password')}</span>
  <Badge
@@ -573,7 +567,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <Button
  disabled={isLoading || countdown > 0 || authMethod === 'discord' || authMethod === 'google'}
  type="submit"
- className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:bg-primary/90"
+ className="h-11 rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
  >
  {isLoading && authMethod === 'email' && (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -582,7 +576,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </Button>
  ) : (
  <div className="space-y-2">
- <Button 
+ <Button
  type="button"
  variant="outline"
  className="h-11 w-full rounded-xl border-border/0.06 bg-background/0.08 text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/70 hover:text-foreground"
@@ -592,7 +586,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <Icons.envelope className="mr-2 h-4 w-4" />
  {t('auth.openMailbox')}
  </Button>
- <Button 
+ <Button
  type="submit"
  variant="ghost"
  className="h-10 w-full rounded-xl text-muted-foreground hover:bg-accent/60 hover:text-foreground"
@@ -616,7 +610,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  name="otp"
  render={({ field }) => (
  <FormItem className="space-y-2">
- <FormLabel className="block text-center text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+ <FormLabel className="block text-center text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
  {t('auth.verificationCode')}
  </FormLabel>
  <FormControl>
@@ -645,9 +639,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </FormItem>
  )}
  />
- <Button 
+ <Button
  type="submit"
- className="h-11 w-full rounded-xl bg-primary font-semibold text-primary-foreground hover:bg-primary/90"
+ className="h-11 w-full rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
  disabled={isLoading}
  >
  {isLoading ? (
@@ -709,14 +703,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  />
  <Link
  href={withLocalePrefix("/authentication/forgot-password", locale)}
- className="text-sm text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
+ className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
  >
  Forgot your password?
  </Link>
- <Button 
+ <Button
  disabled={isLoading}
  type="submit"
- className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:bg-primary/90"
+ className="h-11 rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
  >
  {isLoading && authMethod === 'email' && (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -739,7 +733,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </div>
  </div>
 
- <Button 
+ <Button
  variant="outline"
  type="button"
  disabled={isLoading || authMethod === 'email'}

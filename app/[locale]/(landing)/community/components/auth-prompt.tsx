@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 
 interface AuthPromptProps {
   open: boolean
@@ -20,6 +20,7 @@ interface AuthPromptProps {
 export function AuthPrompt({ open, onOpenChange, action = 'perform this action' }: AuthPromptProps) {
   const t = useI18n()
   const router = useRouter()
+  const { locale } = useParams<{ locale: string }>()
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -34,7 +35,7 @@ export function AuthPrompt({ open, onOpenChange, action = 'perform this action' 
           <Button  variant="outline" onClick={() => onOpenChange(false)}>
             {t('common.cancel')}
           </Button>
-          <Button  onClick={() => router.push('/authentication?next=/community')}>
+          <Button  onClick={() => router.push(`/${locale}/authentication?next=/community`)}>
             {t('auth.signIn')}
           </Button>
         </div>

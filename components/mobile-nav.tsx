@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, LogOut, User } from 'lucide-react'
@@ -54,7 +55,7 @@ function UserSection({ onLogout }: { onLogout: () => void }) {
     <div className={cn(unifiedInsetPanelClassName, 'flex items-center gap-3 px-3 py-2.5')}>
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary/16 bg-primary/10 text-sm font-semibold text-sidebar-foreground">
         {user?.user_metadata?.avatar_url ? (
-          <img
+          <Image
             src={user.user_metadata.avatar_url}
             alt=""
             className="h-full w-full rounded-xl object-cover"
@@ -98,7 +99,7 @@ export function UnifiedMobileNav({
       const withoutHash = resolvedHref.split('#')[0]
       return pathname === withoutHash || pathname.endsWith(withoutHash)
     },
-    [pathname, locale]
+    [pathname, locale],
   )
 
   return (
@@ -116,10 +117,7 @@ export function UnifiedMobileNav({
           <Menu className="h-5 w-5" aria-hidden="true" />
         </Button>
       </SheetTrigger>
-      <SheetContent
-        side="right"
-        className="w-[88vw] max-w-[340px] border-none bg-transparent p-0"
-      >
+      <SheetContent side="right" className="w-[88vw] max-w-[340px] border-none bg-transparent p-0">
         <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
         <SheetDescription className="sr-only">
           Primary site navigation. Use links to navigate to different sections.

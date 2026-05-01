@@ -16,7 +16,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getSmartInsights, InsightActionTarget, SmartInsight } from "../../actions/get-smart-insights"
 import { useUserStore } from "@/store/user-store"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "motion/react"
 import Link from "next/link"
 import { useCurrentLocale, useI18n } from "@/locales/client"
 import { WidgetShell, WidgetShellState } from "@/components/ui/widget-shell"
@@ -72,7 +72,7 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
 
  const allowedTargets = React.useMemo<ReadonlySet<InsightActionTarget>>(
  () =>
- new Set<InsightActionTarget>(["/dashboard","/dashboard?tab=table","/dashboard?tab=accounts","/dashboard/reports","/dashboard/behavior","/dashboard/trader-profile","/dashboard/settings","/dashboard/import","/dashboard/data",
+ new Set<InsightActionTarget>(["/dashboard","/dashboard/trades","/dashboard/accounts","/dashboard/reports","/dashboard/behavior","/dashboard/trader-profile","/dashboard/settings","/dashboard/import","/dashboard/data",
  ]),
  []
  );

@@ -94,6 +94,7 @@ export function RithmicSyncContextProvider({
   const MAX_RECONNECT_ATTEMPTS = 5;
   const reconnectAttemptRef = useRef(0);
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const connectRef = useRef<RithmicSyncContextType["connect"] | null>(null);
   const pendingConnectionRef = useRef<{
     url: string;
     token: string;
@@ -546,8 +547,8 @@ export function RithmicSyncContextProvider({
 
           reconnectTimerRef.current = setTimeout(() => {
             const pending = pendingConnectionRef.current;
-            if (pending) {
-              connect(pending.url, pending.token, pending.accounts, pending.startDate);
+            if (pending && connectRef.current) {
+              connectRef.current(pending.url, pending.token, pending.accounts, pending.startDate);
             }
           }, delay);
         } else {
@@ -580,9 +581,13 @@ export function RithmicSyncContextProvider({
       setAccountsProgress,
       setCurrentAccount,
     ]
-  );
+	  );
 
-  // Extract common protocol logic
+  useEffect(() => {
+    connectRef.current = connect;
+  }, [connect]);
+
+	  // Extract common protocol logic
   const getProtocols = useCallback(() => {
     const isLocalhost =
       process.env.NEXT_PUBLIC_RITHMIC_API_URL?.includes("localhost");

@@ -327,7 +327,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  {/* Render users with proper charts */}
  {filteredUsers
  .filter(user => user.statistics.totalTrades > 0) // Only show users with trades
- .map((user, index) => {
+ .map((user) => {
  const tradedDays = getTradedDays(user.equityCurve)
  
  return (

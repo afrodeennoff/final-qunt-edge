@@ -16,7 +16,7 @@ export function NewsletterPreview() {
  const { content, setContent } = useNewsletter()
  const [emailHtml, setEmailHtml] = useState("")
  const [isEditing, setIsEditing] = useState(false)
- 
+
  // Debounce the content updates with a 500ms delay
  const debouncedContent = useDebounce(content, 500)
 
@@ -24,12 +24,12 @@ export function NewsletterPreview() {
  const updatePreview = async () => {
  const result = await renderEmailPreview({
  youtubeId: debouncedContent.youtubeId || 'p2pYl6GMGbk',
- introMessage: debouncedContent.introMessage || '*Pas encore de contenu*',
+ introMessage: debouncedContent.introMessage || '*No content yet*',
  features: debouncedContent.features.filter(f => typeof f === 'string' && f.trim()),
  firstName: debouncedContent.firstName,
  subject: debouncedContent.subject
  })
- 
+
  if (result.success && result.html) {
  setEmailHtml(result.html)
  }
@@ -47,7 +47,7 @@ export function NewsletterPreview() {
  const addFeature = () => {
  setContent((prev: NewsletterContent): NewsletterContent => ({
  ...prev,
- features: [...prev.features,""]
+ features: [...prev.features, ""]
  }))
  }
 
@@ -63,8 +63,8 @@ export function NewsletterPreview() {
  <Card className="h-full">
  <CardHeader>
  <div className="flex items-center justify-between">
- <CardTitle>Aperçu en Direct</CardTitle>
- <Button 
+ <CardTitle>Live Preview</CardTitle>
+ <Button
  variant="outline"
  size="sm"
  onClick={() => setIsEditing(!isEditing)}
@@ -72,12 +72,12 @@ export function NewsletterPreview() {
  {isEditing ? (
  <>
  <Eye className="w-4 h-4 mr-2" />
- Voir l&apos;aperçu
+ View preview
  </>
  ) : (
  <>
  <Pencil className="w-4 h-4 mr-2" />
- Modifier
+ Edit
  </>
  )}
  </Button>
@@ -87,36 +87,36 @@ export function NewsletterPreview() {
  {isEditing ? (
  <div className="space-y-6">
  <div className="space-y-2">
- <Label>Sujet</Label>
+ <Label>Subject</Label>
  <Input
  value={content.subject}
  onChange={e => setContent((prev: NewsletterContent): NewsletterContent => ({ ...prev, subject: e.target.value }))}
- placeholder="Sujet de la newsletter"
+ placeholder="Newsletter subject"
  className="font-medium"
  />
  </div>
 
  <div className="space-y-2">
- <Label>Message d&apos;introduction</Label>
+ <Label>Introduction message</Label>
  <Textarea
  value={content.introMessage}
  onChange={e => setContent((prev: NewsletterContent): NewsletterContent => ({ ...prev, introMessage: e.target.value }))}
- placeholder="Message d&apos;introduction..."
+ placeholder="Introduction message..."
  className="min-h-[100px]"
  />
  </div>
 
  <div className="space-y-4">
- <Label>Points clés</Label>
+ <Label>Key points</Label>
  {content.features.map((feature, index) => (
  <div key={index} className="flex gap-2">
  <Textarea
  value={feature}
  onChange={e => updateFeature(index, e.target.value)}
- placeholder={`Point clé ${index + 1}`}
+ placeholder={`Key point ${index + 1}`}
  className="flex-1"
  />
- <Button 
+ <Button
  type="button"
  variant="destructive"
  size="icon"
@@ -127,12 +127,12 @@ export function NewsletterPreview() {
  </Button>
  </div>
  ))}
- <Button 
+ <Button
  type="button"
  variant="outline"
  onClick={addFeature}
  >
- Ajouter un point clé
+ Add key point
  </Button>
  </div>
  </div>
@@ -142,7 +142,7 @@ export function NewsletterPreview() {
  <iframe
  srcDoc={emailHtml}
  className="w-full h-full border-0"
- title="Aperçu de l'email"
+ title="Email preview"
  sandbox="allow-same-origin"
  />
  </div>
@@ -151,4 +151,4 @@ export function NewsletterPreview() {
  </CardContent>
  </Card>
  )
-} 
+}

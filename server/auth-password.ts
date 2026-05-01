@@ -107,7 +107,7 @@ export async function resetPasswordForEmail(email: string) {
     const websiteURL = await getWebsiteURL()
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${websiteURL}authentication/reset-password`,
+      redirectTo: `${websiteURL}api/auth/callback`,
     })
     if (error) {
       throw new Error(GENERIC_AUTH_ERROR)

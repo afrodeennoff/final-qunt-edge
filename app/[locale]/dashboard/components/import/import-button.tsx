@@ -114,6 +114,24 @@ export default function ImportButton() {
  const { refreshTradesOnly, refreshUserDataOnly } = useDashboardActions();
  const t = useI18n();
 
+ const resetImportState = useCallback(() => {
+ setImportType("");
+ setStep("select-import-type");
+ setRawCsvData([]);
+ setCsvData([]);
+ setHeaders([]);
+ setMappings({});
+ setAccountNumbers([]);
+ setNewAccountNumber("");
+ setProcessedTrades([]);
+ setError(null);
+	setIsLoading(false);
+	setIsSaving(false);
+	setText("");
+	setSelectedAccountNumbers([]);
+	setFiles([]);
+ }, []);
+
  const handleSave = useCallback(async () => {
  // Accept either hydrated app user or Supabase auth user.
  // Requiring both blocks valid sessions during partial hydration.
@@ -244,6 +262,17 @@ export default function ImportButton() {
  }),
  });
 
+ // Show warning if some trades were skipped during validation
+ if (result.warnings && result.warnings.length > 0) {
+ const skippedCount = result.warnings.length;
+ setTimeout(() => {
+ toast.warning(` ${skippedCount} trade${skippedCount > 1 ? 's were' : ' was'} skipped due to validation issues`, {
+ description: result.warnings!.slice(0, 3).join('; ') + (skippedCount > 3 ? ` ...and ${skippedCount - 3} more` : ''),
+ duration: 8000,
+ });
+ }, 500);
+ }
+
  // Close dialog immediately to prevent UI freezing
  setIsOpen(false);
  
@@ -285,23 +314,11 @@ export default function ImportButton() {
  trades,
  t,
  refreshTradesOnly,
- refreshUserDataOnly,
- ]);
+	 refreshUserDataOnly,
+	 resetImportState,
+	 ]);
 
- const resetImportState = () => {
- setImportType("");
- setStep("select-import-type");
- setRawCsvData([]);
- setCsvData([]);
- setHeaders([]);
- setMappings({});
- setAccountNumbers([]);
- setNewAccountNumber("");
- setProcessedTrades([]);
- setError(null);
- };
-
- const handleNextStep = useCallback(async () => {
+	 const handleNextStep = useCallback(async () => {
  const platform =
  platforms.find((p) => p.type === importType) ||
  platforms.find((p) => p.platformName ==="csv-ai");
@@ -316,8 +333,9 @@ export default function ImportButton() {
  const currentStepIndex = platform.steps.findIndex((s) => s.id === step);
  if (currentStepIndex === -1) return;
 
- // Handle PDF upload step
- if (step ==="upload-file" && importType ==="pdf") {
+ // Handle IBKR PDF upload step — the correct importType is "ibkr-pdf-import", not "pdf".
+ // The old check `importType === "pdf"` was dead code that never matched.
+ if (step ==="upload-file" && importType ==="ibkr-pdf-import") {
  if (files.length === 0) {
  setError(t("import.errors.noFilesSelected"));
  return;
@@ -326,10 +344,9 @@ export default function ImportButton() {
  return;
  }
 
- // Handle ATAS account selection step - filtering is now done in handleSave
- // No need to filter here since state updates are async and handleSave will filter
-
- // Handle standard flow
+ // Handle standard flow — advance to the next step defined in the platform config.
+ // For file-upload steps, FileUpload/AtasFileUpload auto-advance via setStep()
+ // after successful parsing. This path handles manual Next clicks or non-upload steps.
  const nextStep = platform.steps[currentStepIndex + 1];
  if (!nextStep) {
  await handleSave();
@@ -390,6 +407,7 @@ export default function ImportButton() {
  setHeaders={setHeaders}
  setStep={setStep}
  setError={setError}
+ error={error}
  />
  );
  }
@@ -511,6 +529,7 @@ export default function ImportButton() {
 
  const isNextDisabled = () => {
  if (isLoading) return true;
+ if (isSaving) return true;
 
  const platform =
  platforms.find((p) => p.type === importType) ||
@@ -520,29 +539,43 @@ export default function ImportButton() {
  const currentStep = platform.steps.find((s) => s.id === step);
  if (!currentStep) return true;
 
- // File upload step
- if (currentStep.component === FileUpload && csvData.length === 0)
- return true;
+ // File upload step — Next is enabled only when CSV data has been parsed.
+ // FileUpload auto-advances on success, so this is a fallback for manual click.
+ // Also allow Next when rawCsvData is populated (parsing succeeded but
+ // auto-advance may not have fired due to effect timing).
+ if (currentStep.component === FileUpload) {
+ return csvData.length === 0 && rawCsvData.length === 0;
+ }
+
+ // ATAS file upload step
+ if (currentStep.component === AtasFileUpload) {
+ return csvData.length === 0 && rawCsvData.length === 0;
+ }
 
  // PDF upload step
  if (currentStep.component === PdfUpload && text.length === 0) return true;
 
- // Account selection for Tradovate
- if (
- currentStep.component === AccountSelection &&
- importType ==="tradovate" &&
- accountNumbers.length === 0 &&
- !newAccountNumber
- )
+ // Header selection step — must have headers detected
+ if (currentStep.component === HeaderSelection && headers.length === 0)
  return true;
 
- // Account selection for other platforms
- if (
- currentStep.component === AccountSelection &&
- accountNumbers.length === 0 &&
- !newAccountNumber
- )
+ // Column mapping step — require at least one mapping
+ if (currentStep.component === ColumnMapping && Object.keys(mappings).length === 0)
  return true;
+
+ // Account selection — require at least one account or a new account typed
+ if (currentStep.component === AccountSelection) {
+ return accountNumbers.length === 0 && !newAccountNumber.trim();
+ }
+
+ // FormatPreview step — require at least some processed trades
+ if (currentStep.component === FormatPreview && processedTrades.length === 0)
+ return true;
+
+ // Processor steps (platform-specific) — allow save once processing completes
+ if (currentStep.isLastStep && platform.processorComponent) {
+ return isLoading;
+ }
 
  return false;
  };

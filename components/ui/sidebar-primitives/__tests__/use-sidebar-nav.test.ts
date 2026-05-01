@@ -1,18 +1,15 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 
 const mockUsePathname = vi.fn(() => '/dashboard')
-const mockUseSearchParams = vi.fn(() => new URLSearchParams())
 
 vi.mock('next/navigation', () => ({
   usePathname: () => mockUsePathname(),
-  useSearchParams: () => mockUseSearchParams(),
 }))
 
 describe('useSidebarNav utilities', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockUsePathname.mockReturnValue('/dashboard')
-    mockUseSearchParams.mockReturnValue(new URLSearchParams())
   })
 
   describe('stripLocalePrefix', () => {
@@ -69,29 +66,18 @@ describe('useSidebarNav utilities', () => {
       expect(isActive('/teams/dashboard', true)).toBe(false)
     })
 
-    it('should handle tab-based navigation when tab matches', async () => {
-      // Test: when active tab is 'chart', /dashboard?tab=chart should be active
-      const params = new URLSearchParams()
-      params.set('tab', 'chart')
-      mockUseSearchParams.mockReturnValue(params)
+    it('should match sub-routes for dashboard children', async () => {
+      mockUsePathname.mockReturnValue('/dashboard/trades')
 
       const { useActiveLink } = await import('../use-sidebar-nav')
       const isActive = useActiveLink()
 
-      expect(isActive('/dashboard?tab=chart', false)).toBe(true)
-    })
-
-    it('should handle tab-based navigation with non-matching tab', async () => {
-      // Test: when active tab is 'chart', /dashboard?tab=widgets should NOT be active
-      const params = new URLSearchParams()
-      params.set('tab', 'chart')
-      mockUseSearchParams.mockReturnValue(params)
-
-      const { useActiveLink } = await import('../use-sidebar-nav')
-      const isActive = useActiveLink()
-
-      // Different tab should not match
-      expect(isActive('/dashboard?tab=widgets', false)).toBe(false)
+      expect(isActive('/dashboard/trades', true)).toBe(true)
+      expect(isActive('/dashboard/trades', false)).toBe(true)
+      // /dashboard should not match when on /dashboard/trades with exact
+      expect(isActive('/dashboard', true)).toBe(false)
+      // /dashboard should match as parent without exact
+      expect(isActive('/dashboard', false)).toBe(true)
     })
 
     it('should strip locale prefix from pathname', async () => {
@@ -101,27 +87,6 @@ describe('useSidebarNav utilities', () => {
       const isActive = useActiveLink()
 
       expect(isActive('/dashboard', true)).toBe(true)
-    })
-
-    it('should handle default tab for dashboard', async () => {
-      const { useActiveLink } = await import('../use-sidebar-nav')
-      const isActive = useActiveLink()
-
-      expect(isActive('/dashboard', false)).toBe(true)
-      expect(isActive('/dashboard?tab=widgets', false)).toBe(true)
-    })
-
-    it('should handle default tab for dashboard with different active tab', async () => {
-      const params = new URLSearchParams()
-      params.set('tab', 'chart')
-      mockUseSearchParams.mockReturnValue(params)
-
-      const { useActiveLink } = await import('../use-sidebar-nav')
-      const isActive = useActiveLink()
-
-      // /dashboard (no tab param) should match when active tab is 'chart'
-      // because it's treated as the default dashboard route
-      expect(isActive('/dashboard', false)).toBe(true)
     })
 
     it('should return false when pathname is empty', async () => {

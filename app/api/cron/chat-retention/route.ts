@@ -1,8 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, connection } from "next/server";
 import { requireCronAuth, toErrorResponse } from "@/server/authz";
 import { cleanupExpiredChatConversations } from "@/server/journal";
 
 export async function GET(request: NextRequest) {
+  await connection();
+
   try {
     requireCronAuth(request, { serviceName: "cron-chat-retention" });
   } catch (error) {

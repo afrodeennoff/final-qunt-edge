@@ -1,85 +1,86 @@
-import type { Metadata } from "next"
-import { createClient } from "@/server/auth"
-import { redirect } from "next/navigation"
-import { TeamsSidebar } from "../components/teams-sidebar"
-import { cookies } from "next/headers"
-import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from "@/lib/sidebar-state"
-import { SidebarRootProviders } from "@/components/providers/root-providers"
-import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
+import type { Metadata } from 'next'
+import { createClient } from '@/server/auth'
+import { redirect } from 'next/navigation'
+import { TeamsSidebar } from '../components/teams-sidebar'
+import { cookies } from 'next/headers'
+import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from '@/lib/sidebar-state'
+import { SidebarRootProviders } from '@/components/providers/root-providers'
+import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
 import {
     unifiedMetricPanelClassName,
     unifiedSectionPanelClassName,
 } from "@/components/layout/unified-page-recipes"
 import { cn } from "@/lib/utils"
 import {
-    HEADER_Z_INDEX,
-    CONTENT_PADDING,
-    CONTENT_PADDING_Y,
-    APP_SHELL_SOFT_BORDER_STYLE,
-} from "@/lib/constants/layout"
-import { DashboardProviders } from "@/components/providers/dashboard-providers"
-import { TeamsMobileBottomNav } from "../components/teams-mobile-bottom-nav"
+  HEADER_Z_INDEX,
+  CONTENT_PADDING,
+  CONTENT_PADDING_Y,
+  APP_SHELL_SOFT_BORDER_STYLE,
+  WORKSPACE_SHELL_WIDTH,
+} from '@/lib/constants/layout'
+import { DashboardProviders } from '@/components/providers/dashboard-providers'
+import { TeamsMobileBottomNav } from '../components/teams-mobile-bottom-nav'
 
 export const metadata: Metadata = {
-    robots: {
-        index: false,
-        follow: false,
-    },
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
 
 function resolveTeamPathContext(pathname: string) {
-    const segments = pathname.split("/").filter(Boolean)
-    const teamsIndex = segments.indexOf("teams")
-    const hasLocalePrefix = teamsIndex === 1
-    const localePrefix = hasLocalePrefix ? `/${segments[0]}` : ""
-    const teamsRoot = `${localePrefix}/teams`
-    const dashboardRoot = `${teamsRoot}/dashboard`
-    const slug =
-        teamsIndex !== -1 &&
-        segments[teamsIndex + 1] === "dashboard" &&
-        segments[teamsIndex + 2] &&
-        segments[teamsIndex + 2] !== "trader"
-            ? segments[teamsIndex + 2]
-            : undefined
+  const segments = pathname.split('/').filter(Boolean)
+  const teamsIndex = segments.indexOf('teams')
+  const hasLocalePrefix = teamsIndex === 1
+  const localePrefix = hasLocalePrefix ? `/${segments[0]}` : ''
+  const teamsRoot = `${localePrefix}/teams`
+  const dashboardRoot = `${teamsRoot}/dashboard`
+  const slug =
+    teamsIndex !== -1 &&
+    segments[teamsIndex + 1] === 'dashboard' &&
+    segments[teamsIndex + 2] &&
+    segments[teamsIndex + 2] !== 'trader'
+      ? segments[teamsIndex + 2]
+      : undefined
 
-    return { localePrefix, teamsRoot, dashboardRoot, slug }
+  return { localePrefix, teamsRoot, dashboardRoot, slug }
 }
 
 export default async function DashboardLayout({
-    children,
-    params,
+  children,
+  params,
 }: {
-    children: React.ReactNode
-    params: Promise<{ locale: string }>
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
 }) {
-    const { locale } = await params
-    const supabase = await createClient()
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+  const { locale } = await params
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-    if (!user?.id) {
-        const safeLocale = locale || "en"
-        const nextPath = encodeURIComponent(`/${safeLocale}/teams/dashboard`)
-        redirect(`/${safeLocale}/authentication?next=${nextPath}`)
-    }
+  if (!user?.id) {
+    const safeLocale = locale || 'en'
+    const nextPath = encodeURIComponent(`/${safeLocale}/teams/dashboard`)
+    redirect(`/${safeLocale}/authentication?next=${nextPath}`)
+  }
 
-    const cookieStore = await cookies()
-    const defaultSidebarOpen = parseSidebarStateCookieValue(
-        cookieStore.get(SIDEBAR_STATE_COOKIE_NAME)?.value
-    )
+  const cookieStore = await cookies()
+  const defaultSidebarOpen = parseSidebarStateCookieValue(
+    cookieStore.get(SIDEBAR_STATE_COOKIE_NAME)?.value,
+  )
 
-    const pathname = `/${locale}/teams/dashboard`
-    const { dashboardRoot, slug } = resolveTeamPathContext(pathname)
+  const pathname = `/${locale}/teams/dashboard`
+  const { dashboardRoot, slug } = resolveTeamPathContext(pathname)
 
-    return (
-        <SidebarRootProviders
-            defaultOpen={defaultSidebarOpen}
-            withAuthTimeout
-            style={APP_SHELL_SOFT_BORDER_STYLE}
-        >
-            <DashboardProviders>
-                <TeamsSidebar />
+  return (
+    <SidebarRootProviders
+      defaultOpen={defaultSidebarOpen}
+      withAuthTimeout
+      style={APP_SHELL_SOFT_BORDER_STYLE}
+    >
+      <DashboardProviders>
+        <TeamsSidebar />
 
                 <SidebarInset className="qe-v2-app-shell relative h-dvh overflow-hidden selection:bg-primary/20 selection:text-foreground">
                     <div className="pointer-events-none absolute inset-x-6 top-0 z-0 h-32 rounded-b-2xl border border-border/20 bg-primary/[0.02]" />
@@ -141,8 +142,41 @@ export default async function DashboardLayout({
                         slug={slug}
                         backHref={`/${locale}/dashboard`}
                     />
-                </SidebarInset>
-            </DashboardProviders>
-        </SidebarRootProviders>
-    )
+                    <div className="flex min-w-0 flex-1 flex-col">
+                      <div className="flex items-center gap-2.5">
+                        <span className={cn(unifiedToolbarBadgeClassName, 'hidden sm:inline-flex')}>
+                          Team
+                        </span>
+                        <h1 className="truncate text-[0.92rem] font-semibold tracking-[0.02em] text-foreground">
+                          Team Command
+                        </h1>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </header>
+
+            <main className="flex-1 overflow-y-auto">
+              <div
+                className={cn(
+                  'mx-auto w-full',
+                  WORKSPACE_SHELL_WIDTH,
+                  CONTENT_PADDING,
+                  CONTENT_PADDING_Y,
+                )}
+              >
+                {children}
+              </div>
+            </main>
+          </div>
+          <TeamsMobileBottomNav
+            dashboardRoot={dashboardRoot}
+            slug={slug}
+            backHref={`/${locale}/dashboard`}
+          />
+        </SidebarInset>
+      </DashboardProviders>
+    </SidebarRootProviders>
+  )
 }

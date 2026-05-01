@@ -33,6 +33,21 @@ export async function POST(req: NextRequest) {
   const policy = getAiPolicy("analysis");
   const startedAt = Date.now();
 
+  // Check if AI is properly configured
+  const aiApiKey = process.env.OPENROUTER_API_KEY;
+
+  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
+    return apiError(
+      "SERVICE_UNAVAILABLE",
+      "AI service is not configured. Please contact support.",
+      503,
+      {
+        type: "ai_not_configured",
+        message: "OPENROUTER_API_KEY is not set"
+      }
+    );
+  }
+
   // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, "analysis", accountsAnalysisRateLimit);
   if (!guard.ok) return guard.response;

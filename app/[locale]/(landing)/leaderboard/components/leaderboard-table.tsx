@@ -34,9 +34,9 @@ function profileHref(locale: string, userId: string): string {
 }
 
 function rankClasses(rank: number): string {
-  if (rank === 1) return 'border-orange-500/30 bg-orange-500/10 text-orange-400'
+  if (rank === 1) return 'border-primary/30 bg-primary/10 text-primary'
   if (rank === 2) return 'border-border/45 bg-card/60 text-muted-foreground'
-  if (rank === 3) return 'border-amber-500/28 bg-amber-500/8 text-amber-400'
+  if (rank === 3) return 'border-warning/28 bg-warning/8 text-warning'
   return 'border-border/35 bg-background/70 text-muted-foreground'
 }
 

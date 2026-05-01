@@ -10,6 +10,7 @@ import {
   unifiedPrimaryActionClassName,
 } from '@/components/layout/unified-page-recipes'
 import { Logo } from '@/components/logo'
+import { MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
 import { useCurrentLocale, useI18n } from '@/locales/client'
 
@@ -20,7 +21,7 @@ export default function Navbar() {
   const pathname = usePathname()
   const locale = useCurrentLocale()
 
-  const links: NavLink[] = [
+  const links: NavLink[] = useMemo(() => [
     { title: String(t('landing.navbar.features')), href: '/#features' },
     { title: String(t('landing.navbar.pricing')), href: '/pricing' },
     { title: String(t('landing.navbar.propFirms')), href: '/propfirms' },
@@ -29,7 +30,7 @@ export default function Navbar() {
     { title: String(t('landing.navbar.teams')), href: '/teams' },
     { title: String(t('landing.nav.blog')), href: '/blogs' },
     { title: String(t('landing.navbar.support')), href: '/support' },
-  ]
+  ], [t])
 
   const isHomePath = useMemo(() => pathname === '/' || /^\/[a-z]{2}$/.test(pathname), [pathname])
 
@@ -53,7 +54,7 @@ export default function Navbar() {
             <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/30 bg-background/40 text-muted-foreground">
               <Logo className="h-4.5 w-4.5 fill-current" />
             </div>
-            <span className="hidden text-sm font-semibold tracking-tight text-foreground sm:inline-flex">
+            <span className="hidden text-[15px] font-semibold tracking-[-0.02em] text-foreground sm:inline-flex">
               Qunt Edge
             </span>
           </Link>
@@ -75,7 +76,7 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-2.5">
             <Link
               href={`/${locale}/authentication`}
               className={cn(unifiedGhostActionClassName, 'hidden px-4 py-2 text-sm md:inline-flex')}
@@ -85,13 +86,16 @@ export default function Navbar() {
 
             <Link
               href={`/${locale}/authentication`}
-              className={cn(unifiedPrimaryActionClassName, 'hidden h-9 px-4 text-sm md:inline-flex')}
+              className={cn(
+                unifiedPrimaryActionClassName,
+                'hidden h-[38px] px-5 text-sm md:inline-flex',
+              )}
             >
               {t('landing.hero.ctaPrimary')}
             </Link>
 
             <UnifiedMobileNav
-              groups={[{ links: links.map((link) => ({ href: link.href, label: link.title })) }]}
+              groups={[{ links: links.map((link) => ({ href: `/${locale}${link.href}`, label: link.title })) }]}
               footer={
                 <Link
                   href={`/${locale}/authentication`}

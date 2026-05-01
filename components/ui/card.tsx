@@ -14,11 +14,11 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 export type CardStatusTone = 'live' | 'synced' | 'idle' | 'destructive' | 'error'
 
 const accentClassMap = {
-  primary: 'border-primary/30',
-  success: 'border-success/30',
-  warning: 'border-warning/30',
-  destructive: 'border-destructive/30',
-  info: 'border-accent/30',
+  primary: 'border-primary/22',
+  success: 'border-success/22',
+  warning: 'border-warning/22',
+  destructive: 'border-destructive/22',
+  info: 'border-accent/22',
 } satisfies Record<NonNullable<CardProps['accent']>, string>
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(

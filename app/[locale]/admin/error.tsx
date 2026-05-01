@@ -10,6 +10,9 @@ export default function AdminError({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  const params = useParams<{ locale?: string }>() as { locale?: string } | null
+  const locale = params?.locale ?? 'en'
+
   useEffect(() => {
     console.error('[Admin Error Boundary]', error)
   }, [error])

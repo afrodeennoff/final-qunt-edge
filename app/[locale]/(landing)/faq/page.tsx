@@ -1,56 +1,72 @@
-import { Metadata } from 'next';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { setStaticParamsLocale } from "next-international/server";
-import { UnifiedPageShell, UnifiedSurface } from "@/components/layout/unified-page-shell";
-import { buildBreadcrumbSchema, buildFaqPageSchema, buildOrganizationSchema, buildPublicMetadata } from '@/lib/seo';
+import { Metadata } from 'next'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import { ButtonV2 as Button } from '@/components/ui/v2'
+import { setStaticParamsLocale } from 'next-international/server'
+import { MarketingSection, MarketingSectionHeader } from '@/components/layout/marketing-sections'
+import {
+  buildBreadcrumbSchema,
+  buildFaqPageSchema,
+  buildOrganizationSchema,
+  buildPublicMetadata,
+} from '@/lib/seo'
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
-  const { locale } = await params;
+  const { locale } = await params
   return buildPublicMetadata({
     locale,
-    path: "/faq",
-    title: "Trading Journal FAQ | Qunt Edge",
+    path: '/faq',
+    title: 'Trading Journal FAQ | Qunt Edge',
     description:
-      "Frequently asked questions about Qunt Edge trading-journal workflows, broker support, security, and team analytics.",
-  });
+      'Frequently asked questions about Qunt Edge trading-journal workflows, broker support, security, and team analytics.',
+  })
 }
 
 export default async function FAQPage({ params }: { params: Promise<{ locale: string }> }) {
-    const { locale } = await params;
-    setStaticParamsLocale(locale);
+  const { locale } = await params
+  setStaticParamsLocale(locale)
 
-    const faqs = [
-        {
-            question: "What makes Qunt Edge different from traditional journals?",
-            answer: "Traditional journals focus on PnL—a lagging indicator. Qunt Edge audits your clinical execution. We help you identify the behavioral leakages that happen between the chart and the trade button."
-        },
-        {
-            question: "Which brokers and platforms do you support?",
-            answer: "We support major institutional and retail platforms including Tradovate, Rithmic, Interactive Brokers (IBKR), and CQG. We are constantly adding new connectors based on community demand."
-        },
-        {
-            question: "Is my trading data secure?",
-            answer: "Security is our primary directive. Your trading data is encrypted and stored using institutional-grade protocols. We never share your individual trade data with third parties."
-        },
-        {
-            question: "Does Qunt Edge provide trading signals?",
-            answer: "No. Qunt Edge is an intelligence layer, not a signal service. We provide the tools for you to audit your own system and psychology to become a more consistent discretionary trader."
-        },
-        {
-            question: "Can I use Qunt Edge for my trading team?",
-            answer: "Yes, our Teams feature is specifically designed for proprietary trading firms and private funds to manage multiple traders with unified risk and behavioral analytics."
-        }
-    ];
-    const faqSchema = buildFaqPageSchema(faqs);
-    const organizationSchema = buildOrganizationSchema();
-    const breadcrumbSchema = buildBreadcrumbSchema(locale, [
-      { name: "Home", path: "/" },
-      { name: "FAQ", path: "/faq" },
-    ]);
+  const faqs = [
+    {
+      question: 'What makes Qunt Edge different from traditional journals?',
+      answer:
+        'Traditional journals focus on PnL, a lagging indicator. Qunt Edge audits execution decisions and the behavior between chart read and trade entry.',
+    },
+    {
+      question: 'Which brokers and platforms do you support?',
+      answer:
+        'We support major institutional and retail platforms including Tradovate, Rithmic, Interactive Brokers, and CQG, with more connectors added by demand.',
+    },
+    {
+      question: 'Is my trading data secure?',
+      answer:
+        'Your trading data is encrypted and stored with strong platform controls. We do not share individual trade data with third parties.',
+    },
+    {
+      question: 'Does Qunt Edge provide trading signals?',
+      answer:
+        'No. Qunt Edge is an analytics and review platform, not a signal service or copy-trading product.',
+    },
+    {
+      question: 'Can I use Qunt Edge for my trading team?',
+      answer:
+        'Yes. Teams can review trader performance, behavior, and risk with shared analytics and consistent workflows.',
+    },
+  ]
+  const faqSchema = buildFaqPageSchema(faqs)
+  const organizationSchema = buildOrganizationSchema()
+  const breadcrumbSchema = buildBreadcrumbSchema(locale, [
+    { name: 'Home', path: '/' },
+    { name: 'FAQ', path: '/faq' },
+  ])
 
     return (
         <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">

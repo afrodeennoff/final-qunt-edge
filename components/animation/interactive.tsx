@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useState, useCallback } from "react"
-import { motion, useReducedMotion, useMotionValue, useTransform, PanInfo } from "framer-motion"
+import { motion, useReducedMotion, useMotionValue, useTransform, PanInfo } from "motion/react"
 import { cn } from "@/lib/utils"
 import { SPRING_PRESETS } from "./entrance-exit"
 

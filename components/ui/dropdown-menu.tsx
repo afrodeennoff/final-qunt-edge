@@ -27,7 +27,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      'type-body-sm flex cursor-default select-none items-center rounded-md px-2.5 py-2 text-foreground/80 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-accent/60 focus:text-foreground hover:bg-accent/60 hover:text-foreground data-[state=open]:bg-primary/10 data-[state=open]:text-primary',
+      'type-body-sm flex cursor-default select-none items-center rounded-lg px-2.5 py-2 text-foreground/80 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-[oklch(0.052_0.009_260_/_0.72)] focus:text-foreground hover:bg-[oklch(0.052_0.009_260_/_0.72)] hover:text-foreground data-[state=open]:bg-[oklch(0.65_0.22_260_/_0.12)] data-[state=open]:text-primary',
       inset && 'pl-8',
       className,
     )}
@@ -82,6 +82,7 @@ const DropdownMenuItem = React.forwardRef<
     ref={ref}
     className={cn(
       'type-body-sm relative flex cursor-default select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-foreground/80 outline-none transition-[background-color,border-color,color] duration-120 focus:bg-accent/60 focus:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-accent/60 hover:text-foreground',
+      'rounded-lg focus:bg-[oklch(0.052_0.009_260_/_0.72)] hover:bg-[oklch(0.052_0.009_260_/_0.72)]',
       inset && 'pl-8',
       className,
     )}
@@ -97,7 +98,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      'type-body-sm relative flex cursor-default select-none items-center rounded-md py-2 pl-8 pr-2.5 text-foreground/80 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-accent/60 focus:text-foreground hover:bg-accent/60 hover:text-foreground data-[state=checked]:bg-primary/10 data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
+      'type-body-sm relative flex cursor-default select-none items-center rounded-lg py-2 pl-8 pr-2.5 text-foreground/80 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-[oklch(0.052_0.009_260_/_0.72)] focus:text-foreground hover:bg-[oklch(0.052_0.009_260_/_0.72)] hover:text-foreground data-[state=checked]:bg-[oklch(0.65_0.22_260_/_0.12)] data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
       className,
     )}
     checked={checked}
@@ -120,7 +121,7 @@ const DropdownMenuRadioItem = React.forwardRef<
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      'type-body-sm relative flex cursor-default select-none items-center rounded-md py-2 pl-8 pr-2.5 text-foreground/80 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-accent/60 focus:text-foreground hover:bg-accent/60 hover:text-foreground data-[state=checked]:bg-primary/10 data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
+      'type-body-sm relative flex cursor-default select-none items-center rounded-lg py-2 pl-8 pr-2.5 text-foreground/80 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-[oklch(0.052_0.009_260_/_0.72)] focus:text-foreground hover:bg-[oklch(0.052_0.009_260_/_0.72)] hover:text-foreground data-[state=checked]:bg-[oklch(0.65_0.22_260_/_0.12)] data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
       className,
     )}
     {...props}
@@ -155,7 +156,7 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn('-mx-1 my-1 h-px bg-border/60', className)}
+    className={cn('-mx-1 my-1 h-px bg-[oklch(0.65_0.22_260_/_0.08)]', className)}
     {...props}
   />
 ))

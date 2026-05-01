@@ -3,12 +3,7 @@
 import * as React from 'react'
 import { SidebarInset } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
-import {
-  CONTENT_PADDING,
-  CONTENT_PADDING_Y,
-} from '@/lib/constants/layout'
 import { BackgroundGlow } from '@/components/ui/background-glow'
-import { MotionSection } from '@/components/animation/enhanced-motion'
 
 interface SidebarLayoutShellProps {
   sidebar: React.ReactNode
@@ -30,8 +25,14 @@ export function SidebarLayoutShell({
   return (
     <>
       {sidebar}
-      <SidebarInset className={cn('relative h-dvh overflow-hidden qe-v2-app-shell', className)}>
+      <SidebarInset
+        className={cn(
+          'relative h-dvh overflow-hidden qe-v2-app-shell bg-[linear-gradient(180deg,oklch(0.036_0.005_260)_0%,oklch(0.026_0.004_260)_100%)]',
+          className,
+        )}
+      >
         <BackgroundGlow variant={backgroundVariant} />
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-14 bg-gradient-to-b from-[oklch(0.65_0.22_260_/_0.028)] to-transparent" />
         <div className="relative z-0 flex h-full flex-col">
           {header}
           <div
@@ -41,9 +42,9 @@ export function SidebarLayoutShell({
               contain: 'content',
             }}
           >
-            <MotionSection className={cn('w-full', CONTENT_PADDING, CONTENT_PADDING_Y)} delay={0.02}>
+            <div className="w-full">
               {children}
-            </MotionSection>
+            </div>
           </div>
         </div>
         {mobileNav}

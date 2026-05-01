@@ -100,7 +100,7 @@ export default function TeamInvitationEmail({
 
               <Section className="text-center mb-8">
                 <Button 
-                  className="bg-[#3b82f6] text-white text-sm px-[24px] py-[10px] rounded-[4px] font-medium box-border"
+                  className="bg-[#7c3aed] text-white text-sm px-[24px] py-[10px] rounded-[4px] font-medium box-border"
                   href={joinUrl}
                 >
                   {t.joinButton}

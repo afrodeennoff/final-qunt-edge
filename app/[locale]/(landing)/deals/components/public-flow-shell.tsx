@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { ReactNode } from 'react'
+import { MarketingSectionHeader } from '@/components/layout/marketing-sections'
 import { cn } from '@/lib/utils'
 
 const FLOW_LINKS = [

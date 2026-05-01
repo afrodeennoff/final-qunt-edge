@@ -32,6 +32,12 @@ vi.mock('@/lib/prisma', () => ({
   prisma: prismaMock,
 }))
 
+vi.mock('next/cache', () => ({
+  cacheLife: vi.fn(),
+  cacheTag: vi.fn(),
+  updateTag: vi.fn(),
+}))
+
 vi.mock('@/server/auth', () => ({
   createClient: vi.fn(),
 }))
@@ -49,8 +55,8 @@ describe('teams security', () => {
   })
 
   describe('inviteMember', () => {
-    it('inviteMember currently has no authorization check - SECURITY ISSUE', async () => {
-      prismaMock.team.findFirst.mockResolvedValue(null)
+    it('blocks invite creation when caller is not authorized for the team', async () => {
+      prismaMock.team.findUnique.mockResolvedValue(null)
       prismaMock.teamInvitation.findFirst.mockResolvedValue(null)
       prismaMock.teamInvitation.create.mockResolvedValue({
         id: 'inv_1',
@@ -61,14 +67,16 @@ describe('teams security', () => {
 
       const result = await inviteMember('team_1', 'new@example.com', 'caller_1')
 
-      expect(result.success).toBe(true)
+      expect(result.success).toBe(false)
+      expect(prismaMock.teamInvitation.create).not.toHaveBeenCalled()
     })
 
     it('succeeds when caller is team admin', async () => {
-      prismaMock.team.findFirst.mockResolvedValue({
+      prismaMock.team.findUnique.mockResolvedValue({
         id: 'team_1',
         userId: 'owner_1',
-        members: [{ userId: 'admin_1', role: 'ADMIN' }],
+        members: [{ userId: 'admin_1', role: 'ADMIN', isActive: true }],
+        managers: [],
       })
       prismaMock.teamInvitation.findFirst.mockResolvedValue(null)
       prismaMock.teamInvitation.create.mockResolvedValue({
@@ -85,10 +93,11 @@ describe('teams security', () => {
     })
 
     it('succeeds when caller is team owner', async () => {
-      prismaMock.team.findFirst.mockResolvedValue({
+      prismaMock.team.findUnique.mockResolvedValue({
         id: 'team_1',
         userId: 'owner_1',
         members: [],
+        managers: [],
       })
       prismaMock.teamInvitation.findFirst.mockResolvedValue(null)
       prismaMock.teamInvitation.create.mockResolvedValue({
@@ -105,7 +114,7 @@ describe('teams security', () => {
   })
 
   describe('acceptInvitation', () => {
-    it('acceptInvitation currently does not verify email match - SECURITY ISSUE', async () => {
+    it('blocks acceptance when the authenticated user email does not match the invitation', async () => {
       prismaMock.teamInvitation.findUnique.mockResolvedValue({
         id: 'inv_1',
         teamId: 'team_1',
@@ -133,7 +142,8 @@ describe('teams security', () => {
 
       const result = await acceptInvitation('inv_1', 'user_1')
 
-      expect(result.success).toBe(true)
+      expect(result.success).toBe(false)
+      expect(prismaMock.$transaction).not.toHaveBeenCalled()
     })
 
     it('succeeds when user email matches invitation email', async () => {

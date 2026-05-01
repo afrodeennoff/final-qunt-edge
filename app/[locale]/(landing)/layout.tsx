@@ -38,10 +38,15 @@ export default async function RootLayout(
 
   return (
     <PublicRootProviders>
-      <MarketingLayoutShell contentClassName="w-full px-4 sm:px-6 lg:px-8">
-        <div className="pb-safe">
-          {children}
-        </div>
+      <MarketingLayoutShell
+        contentClassName="w-full flex-1"
+        showRollingBanner={false}
+        topSpacingClassName=""
+        contentSpacingClassName="pb-safe"
+        shellVariant="black"
+        fullWidth
+      >
+        {children}
       </MarketingLayoutShell>
     </PublicRootProviders>
   );

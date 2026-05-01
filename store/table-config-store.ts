@@ -274,6 +274,34 @@ export const useTableConfigStore = create<TableConfigState>()(
     {
       name: 'table-config-store',
       storage: createJSONStorage(() => localStorage),
+      version: 2,
+      partialize: (state) => ({
+        tables: Object.fromEntries(
+          Object.entries(state.tables).map(([tableId, config]) => [
+            tableId,
+            {
+              ...config,
+              columnFilters: [],
+            },
+          ])
+        ),
+      }),
+      migrate: (persistedState: unknown) => {
+        const state = persistedState as { tables?: Record<string, TableConfig> } | null
+        if (!state?.tables) return state
+
+        return {
+          tables: Object.fromEntries(
+            Object.entries(state.tables).map(([tableId, config]) => [
+              tableId,
+              {
+                ...config,
+                columnFilters: [],
+              },
+            ])
+          ),
+        }
+      },
     }
   )
 ) 

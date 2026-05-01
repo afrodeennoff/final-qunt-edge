@@ -1,23 +1,19 @@
-'use client'
-
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { ButtonV2 as Button } from '@/components/ui/v2'
 import {
-  unifiedBodyCopyClassName,
-  unifiedGhostActionClassName,
-  unifiedPrimaryActionClassName,
-  unifiedSectionPanelClassName,
-} from '@/components/layout/unified-page-recipes'
-import { cn } from '@/lib/utils'
-import { useI18n } from '@/locales/client'
+  MarketingSection,
+  marketingBodyClassName,
+  marketingSectionTitleClassName,
+} from '@/components/layout/marketing-sections'
+import { getI18n } from '@/locales/server'
 
 interface FinalCTAProps {
   locale: string
 }
 
-export default function FinalCTA({ locale }: FinalCTAProps) {
-  const t = useI18n()
+export default async function FinalCTA({ locale }: FinalCTAProps) {
+  const t = await getI18n()
 
   return (
     <section className="relative px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
@@ -39,26 +35,14 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
             {t('landing.home.finalCta.titleSuffix')}
           </h2>
 
-          <p className={cn(unifiedBodyCopyClassName, 'mx-auto mt-5 max-w-2xl')}>
-            {t('landing.home.finalCta.description')}
-          </p>
-
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href={`/${locale}/authentication?next=dashboard`} className={unifiedPrimaryActionClassName}>
+        <div className="mt-8">
+          <Button asChild size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
+            <Link href={`/${locale}/authentication?next=dashboard`}>
               {t('landing.home.finalCta.primary')}
-              <ArrowRight className="h-4 w-4" />
             </Link>
-
-            <Link href={`/${locale}/propfirms`} className={unifiedGhostActionClassName}>
-              {t('landing.home.finalCta.secondary')}
-            </Link>
-          </div>
-
-          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            {t('landing.home.finalCta.footnote')}
-          </p>
+          </Button>
         </div>
-      </motion.div>
-    </section>
+      </div>
+    </MarketingSection>
   )
 }

@@ -189,6 +189,33 @@ export default function TeamAnalyticsPage() {
     )
   }
 
+  if (!data || data.chartData.length === 0) {
+    return (
+      <section className="space-y-6">
+        <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <BarChart3 className="h-4 w-4 text-primary" />
+            <p className="text-[10px] font-black uppercase tracking-[0.2em]">Team Intelligence</p>
+          </div>
+          <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Analytics</h1>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            Monitor collective performance and individual consistency to improve team execution quality.
+          </p>
+        </header>
+
+        <Card className="border-border/40 bg-background/72">
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <BarChart3 className="h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No analytics data yet</h3>
+            <p className="text-sm text-muted-foreground text-center max-w-md">
+              Team analytics will appear here once team members have recorded trades.
+            </p>
+          </CardContent>
+        </Card>
+      </section>
+    )
+  }
+
   return (
     <section className="space-y-6">
       <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>

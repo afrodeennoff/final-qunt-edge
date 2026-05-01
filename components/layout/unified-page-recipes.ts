@@ -25,10 +25,10 @@ export const unifiedSectionEyebrowClassName =
 export const unifiedDisplayTitleClassName =
   'text-balance font-medium tracking-[-0.04em] text-foreground'
 
-export const unifiedBodyCopyClassName = 'text-sm leading-[1.7] text-muted-foreground sm:text-base'
+export const unifiedBodyCopyClassName = 'text-sm leading-[1.62] text-muted-foreground sm:text-base'
 
 export const unifiedInfoLabelClassName =
-  'text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground'
+  'text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground'
 
 export const unifiedInfoValueClassName =
   'text-sm font-medium tracking-[-0.01em] text-foreground sm:text-[15px]'

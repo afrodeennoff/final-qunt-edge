@@ -36,7 +36,8 @@ export function ImportDialogFooter({
 
  const isLastStep = currentStep.isLastStep
  const isFirstStep = currentStepIndex === 0
- const isSyncFirstStep = isFirstStep && (importType === 'rithmic-sync' || importType === 'tradovate-sync')
+ const isSyncPlatform = !!platform.customComponent
+ const isSyncFirstStep = isFirstStep && isSyncPlatform
 
  return (
  <div className="flex-none border-t border-border bg-card/95 px-6 py-4 supports-backdrop-filter:bg-card/60">
@@ -74,4 +75,4 @@ export function ImportDialogFooter({
  </div>
  </div>
  )
-} 
+}

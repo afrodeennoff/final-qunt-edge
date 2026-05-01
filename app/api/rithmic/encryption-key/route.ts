@@ -8,19 +8,20 @@ const KEY_DERIVATION_ITERATIONS = 100000
 const KEY_LENGTH = 256
 
 async function handleGet(request: NextRequest) {
+  const requestId = crypto.randomUUID()
   try {
     const supabase = createRouteClient(request)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { data: { session } } = await supabase.auth.getSession()
 
-    if (authError || !user) {
-      return apiError('AUTH_UNAUTHORIZED', 'Authentication required', 401)
+    if (authError || !user || !session) {
+      return apiError('AUTH_UNAUTHORIZED', 'Authentication required', 401, { requestId })
     }
 
-    const session = await supabase.auth.getSession()
-    const accessToken = session.data.session?.access_token
+    const accessToken = session.access_token
 
     if (!accessToken) {
-      return apiError('AUTH_UNAUTHORIZED', 'No active session', 401)
+      return apiError('AUTH_UNAUTHORIZED', 'No active session', 401, { requestId })
     }
 
     const salt = 'rithmic-credential-encryption-v1'
@@ -50,17 +51,17 @@ async function handleGet(request: NextRequest) {
 
     return NextResponse.json(
       { key: keyBase64, algorithm: 'AES-GCM', version: 1 },
-      { headers: { 'Cache-Control': 'no-store' } }
+      { headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate', 'Pragma': 'no-cache' } }
     )
   } catch (error) {
-    logger.error('[Rithmic] Failed to derive encryption key', { error })
-    return apiError('INTERNAL_ERROR', 'Failed to derive encryption key', 500)
+    logger.error('[Rithmic] Failed to derive encryption key', { error, requestId })
+    return apiError('INTERNAL_ERROR', 'Failed to derive encryption key', 500, { requestId })
   }
 }
 
 export const GET = withRateLimited(handleGet, {
   rateLimitId: 'rithmic-key',
-  rateLimitMax: 30,
+  rateLimitMax: 10,
   rateLimitWindow: 60_000,
   routeName: 'rithmic-key',
 })

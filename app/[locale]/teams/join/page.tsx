@@ -48,16 +48,7 @@ export default function TeamJoinPage() {
   // Get invitation token from URL
   const invitationToken = searchParams.get('invitation')
 
-  useEffect(() => {
-    if (invitationToken) {
-      loadInvitationDetails()
-    } else {
-      setError('No invitation token provided')
-      setIsLoading(false)
-    }
-  }, [invitationToken])
-
-  const loadInvitationDetails = async () => {
+  async function loadInvitationDetails() {
     if (!invitationToken) return
 
     setIsLoading(true)
@@ -78,6 +69,15 @@ export default function TeamJoinPage() {
     }
   }
 
+  useEffect(() => {
+    if (invitationToken) {
+      loadInvitationDetails()
+    } else {
+      setError('No invitation token provided')
+      setIsLoading(false)
+    }
+  }, [invitationToken])
+
   const handleJoinTeam = async () => {
     if (!invitationToken || !invitation) return
 
@@ -88,7 +88,9 @@ export default function TeamJoinPage() {
         toast.success(t('teams.join.success'))
         // Redirect to team dashboard after successful join
         setTimeout(() => {
-          window.location.href = `${dashboardRoot}/${invitation.teamId}`
+          if (typeof window !== 'undefined') {
+            window.location.href = `${dashboardRoot}/${invitation.teamId}`
+          }
         }, 1500)
       } else {
         toast.error(result.error || t('teams.join.error'))

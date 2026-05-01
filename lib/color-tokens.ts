@@ -1,7 +1,12 @@
 /**
  * Centralized Color Token System - UNIFIED (V2)
  * Provides semantic color utilities and type-safe token access
- * Values aligned with globals.css :root/.dark theme
+ *
+ * @deprecated Color values below are HSL approximations that may not match
+ * the oklch-based theme in globals.css. For styling, prefer CSS variables
+ * (--primary, --success, --destructive, etc.) or Tailwind theme tokens
+ * (text-primary, bg-success, etc.). This file is retained only for
+ * programmatic use by lib/chart-colors.ts and lib/contrast-validator.ts.
  */
 
 export type ColorToken = keyof typeof colorTokens;

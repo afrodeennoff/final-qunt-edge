@@ -1,15 +1,25 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { format } from "date-fns"
-import { useData } from "@/context/data-provider"
-import { SharedWidgetCanvas } from "./shared-widget-canvas"
-import { cn } from "@/lib/utils"
-import { useI18n } from "@/locales/client"
-import { Loader2, ChevronDown } from "lucide-react"
-import { useState } from "react"
-import { MotionSection, MotionStagger, MotionStaggerItem } from "@/components/animation/enhanced-motion"
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  unifiedChipClassName,
+  unifiedInsetPanelClassName,
+  unifiedMetricPanelClassName,
+  unifiedSectionPanelClassName,
+} from '@/components/layout/unified-page-recipes'
+import { format } from 'date-fns'
+import { useData } from '@/context/data-provider'
+import { SharedWidgetCanvas } from './shared-widget-canvas'
+import { cn } from '@/lib/utils'
+import { useI18n } from '@/locales/client'
+import { Loader2, ChevronDown } from 'lucide-react'
+import { useState } from 'react'
+import {
+  MotionSection,
+  MotionStagger,
+  MotionStaggerItem,
+} from '@/components/animation/enhanced-motion'
 
 // Create a client component for the accounts selection
 function AccountsSelector({ accounts }: { accounts: string[] }) {
@@ -41,28 +51,32 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">{t('shared.tradingAccounts')}</p>
         <div className="flex flex-wrap items-center gap-1.5 w-full xs:w-auto justify-end">
           {accounts.length > 2 && (
-            <Button 
+            <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
               className="h-7 min-w-0 gap-1 text-xs text-foreground/60 hover:text-foreground"
             >
-              {isExpanded 
+              {isExpanded
                 ? t('shared.showLessAccounts')
                 : t('shared.showMoreAccounts', { count: remainingAccounts })}
-              <ChevronDown className={cn(
-                "h-3 w-3 transition-transform shrink-0",
-                isExpanded ? "rotate-180" : ""
-              )} />
+              <ChevronDown
+                className={cn(
+                  'h-3 w-3 transition-transform shrink-0',
+                  isExpanded ? 'rotate-180' : '',
+                )}
+              />
             </Button>
           )}
-          <Button  
-            variant="ghost" 
+          <Button
+            variant="ghost"
             size="sm"
             onClick={toggleAll}
             className="h-7 min-w-0 whitespace-nowrap text-xs text-foreground/60 hover:text-foreground"
           >
-            {accountNumbers.length === accounts.length ? t('shared.deselectAll') : t('shared.selectAll')}
+            {accountNumbers.length === accounts.length
+              ? t('shared.deselectAll')
+              : t('shared.selectAll')}
           </Button>
         </div>
       </div>
@@ -78,12 +92,14 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
                 : "border-border/30 bg-background/30 text-muted-foreground hover:border-border/40 hover:bg-background/0.09"
             )}
           >
-            <div className={cn(
-              "mr-1.5 h-2.5 w-2.5 shrink-0 rounded-full xs:mr-2",
-              accountNumbers.includes(account) 
-                ? "bg-v2-accent shadow-[0_0_12px_rgba(56,189,248,0.7)]" 
-                : "bg-foreground/20"
-            )} />
+            <div
+              className={cn(
+                'mr-1.5 h-2.5 w-2.5 shrink-0 rounded-full xs:mr-2',
+                accountNumbers.includes(account)
+                  ? 'bg-v2-accent shadow-[0_0_12px_rgba(56,189,248,0.7)]'
+                  : 'bg-foreground/20',
+              )}
+            />
             <span className="text-xs xs:text-sm font-medium truncate" title={account}>
               {account}
             </span>
@@ -115,9 +131,7 @@ export function SharedPageClient() {
         <Card className="max-w-lg w-full">
           <CardHeader>
             <CardTitle>{t('shared.notFound')}</CardTitle>
-            <CardDescription>
-              {t('shared.notFoundDescription')}
-            </CardDescription>
+            <CardDescription>{t('shared.notFoundDescription')}</CardDescription>
           </CardHeader>
         </Card>
       </div>

@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { executeOptimizedQuery } from '@/lib/query-optimizer'
+import { getDatabaseUserId } from './auth'
 
 export async function getOptimizedTradesForUser(userId: string, filters?: {
   accountNumbers?: string[]
@@ -9,27 +10,33 @@ export async function getOptimizedTradesForUser(userId: string, filters?: {
   dateRange?: { from: string; to: string }
   limit?: number
 }) {
+  const authenticatedUserId = await getDatabaseUserId()
+
+  if (userId !== authenticatedUserId) {
+    throw new Error('Forbidden: Cannot access another user\'s trades')
+  }
+
   const cacheKey = `trades-${userId}-${JSON.stringify(filters)}`
-  
+
   return executeOptimizedQuery(
     'getTradesForUser',
     async () => {
       const where: Record<string, unknown> = { userId }
-      
+
       if (filters?.accountNumbers?.length) {
         where.accountNumber = { in: filters.accountNumbers }
       }
-      
+
       if (filters?.instruments?.length) {
         where.instrument = { in: filters.instruments }
       }
-      
+
       if (filters?.dateRange?.from || filters?.dateRange?.to) {
         where.entryDate = {}
         if (filters.dateRange.from) (where.entryDate as Record<string, unknown>).gte = filters.dateRange.from
         if (filters.dateRange.to) (where.entryDate as Record<string, unknown>).lte = filters.dateRange.to
       }
-      
+
       return prisma.trade.findMany({
         where,
         select: {
@@ -53,11 +60,17 @@ export async function getOptimizedTradesForUser(userId: string, filters?: {
       })
     },
     cacheKey,
-    300 // 5 minute cache
+    300
   )
 }
 
 export async function getTradesByAccountOptimized(accountNumber: string, userId: string) {
+  const authenticatedUserId = await getDatabaseUserId()
+
+  if (userId !== authenticatedUserId) {
+    throw new Error('Forbidden: Cannot access another user\'s trades')
+  }
+
   return executeOptimizedQuery(
     'getTradesByAccount',
     () => prisma.trade.findMany({
@@ -77,11 +90,17 @@ export async function getTradesByAccountOptimized(accountNumber: string, userId:
       orderBy: { entryDate: 'desc' },
     }),
     `trades-account-${accountNumber}`,
-    600 // 10 minute cache
+    600
   )
 }
 
 export async function getTradeCountByInstrument(userId: string) {
+  const authenticatedUserId = await getDatabaseUserId()
+
+  if (userId !== authenticatedUserId) {
+    throw new Error('Forbidden: Cannot access another user\'s trades')
+  }
+
   return executeOptimizedQuery(
     'getTradeCountByInstrument',
     () => prisma.trade.groupBy({
@@ -92,33 +111,45 @@ export async function getTradeCountByInstrument(userId: string) {
       orderBy: { _count: { id: 'desc' } },
     }),
     `trade-counts-${userId}`,
-    1800 // 30 minute cache
+    1800
   )
 }
 
 export async function getDailyPnLOptimized(userId: string, accountNumbers?: string[]) {
+  const authenticatedUserId = await getDatabaseUserId()
+
+  if (userId !== authenticatedUserId) {
+    throw new Error('Forbidden: Cannot access another user\'s trades')
+  }
+
   return executeOptimizedQuery(
     'getDailyPnL',
     () => prisma.$queryRaw`
-      SELECT 
+      SELECT
         DATE(entry_date) as date,
         SUM(pnl - commission) as net_pnl,
         COUNT(*) as trade_count
       FROM "Trade"
       WHERE user_id = ${userId}
-        ${accountNumbers && accountNumbers.length > 0 
-          ? prisma.$queryRaw`AND account_number = ANY(${accountNumbers})` 
+        ${accountNumbers && accountNumbers.length > 0
+          ? prisma.$queryRaw`AND account_number = ANY(${accountNumbers})`
           : prisma.$queryRaw``}
       GROUP BY DATE(entry_date)
       ORDER BY date DESC
       LIMIT 365
     `,
     `daily-pnl-${userId}`,
-    300 // 5 minute cache
+    300
   )
 }
 
 export async function getAccountSummaryOptimized(userId: string) {
+  const authenticatedUserId = await getDatabaseUserId()
+
+  if (userId !== authenticatedUserId) {
+    throw new Error('Forbidden: Cannot access another user\'s data')
+  }
+
   return executeOptimizedQuery(
     'getAccountSummary',
     async () => {
@@ -132,9 +163,9 @@ export async function getAccountSummaryOptimized(userId: string) {
           payoutCount: true,
         },
       })
-      
+
       const accountNumbers = accounts.map(a => a.number)
-      
+
       const tradeStats = await prisma.trade.groupBy({
         by: ['accountNumber'],
         where: {
@@ -144,7 +175,7 @@ export async function getAccountSummaryOptimized(userId: string) {
         _count: { id: true },
         _sum: { pnl: true, commission: true },
       })
-      
+
       return accounts.map(account => {
         const stats = tradeStats.find(s => s.accountNumber === account.number)
         return {
@@ -156,7 +187,7 @@ export async function getAccountSummaryOptimized(userId: string) {
       })
     },
     `account-summary-${userId}`,
-    600 // 10 minute cache
+    600
   )
 }
 
@@ -164,6 +195,12 @@ export async function batchUpdateTradesOptimized(
   userId: string,
   updates: Array<{ id: string; data: Record<string, unknown> }>
 ) {
+  const authenticatedUserId = await getDatabaseUserId()
+
+  if (userId !== authenticatedUserId) {
+    throw new Error('Forbidden: Cannot modify another user\'s trades')
+  }
+
   return prisma.$transaction(
     updates.map(update =>
       prisma.trade.updateMany({
@@ -179,8 +216,14 @@ export async function getRecentTradesWithPagination(
   page: number = 1,
   pageSize: number = 50
 ) {
+  const authenticatedUserId = await getDatabaseUserId()
+
+  if (userId !== authenticatedUserId) {
+    throw new Error('Forbidden: Cannot access another user\'s trades')
+  }
+
   const skip = (page - 1) * pageSize
-  
+
   return executeOptimizedQuery(
     'getRecentTradesPaginated',
     async () => {
@@ -202,7 +245,7 @@ export async function getRecentTradesWithPagination(
         }),
         prisma.trade.count({ where: { userId } }),
       ])
-      
+
       return {
         trades,
         pagination: {
@@ -214,6 +257,6 @@ export async function getRecentTradesWithPagination(
       }
     },
     `trades-page-${userId}-${page}`,
-    120 // 2 minute cache
+    120
   )
 }

@@ -1,9 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const {
-  getUserMock,
-  removeTradovateTokenMock,
-} = vi.hoisted(() => ({
+const { getUserMock, removeTradovateTokenMock } = vi.hoisted(() => ({
   getUserMock: vi.fn(),
   removeTradovateTokenMock: vi.fn(),
 }))
@@ -22,7 +19,9 @@ vi.mock('@/server/imports/tradovate-actions', () => ({
 }))
 
 vi.mock('@/lib/rate-limit', () => ({
-  rateLimit: vi.fn(() => vi.fn(async () => ({ success: true, limit: 20, remaining: 19, resetTime: 0 }))),
+  rateLimit: vi.fn(() =>
+    vi.fn(async () => ({ success: true, limit: 20, remaining: 19, resetTime: 0 })),
+  ),
   createRateLimitResponse: vi.fn(),
 }))
 
@@ -43,7 +42,7 @@ describe('DELETE /api/tradovate/synchronizations', () => {
       },
       body: JSON.stringify({ accountId: 'ACC-1' }),
     }) as never
-    const response = await DELETE(request, { params: Promise.resolve({}) })
+    const response = await DELETE(request)
 
     expect(response.status).toBe(200)
     expect(removeTradovateTokenMock).toHaveBeenCalledWith('ACC-1')
@@ -60,7 +59,7 @@ describe('DELETE /api/tradovate/synchronizations', () => {
       },
       body: JSON.stringify({ accountId: 'ACC-1' }),
     }) as never
-    const response = await DELETE(request, { params: Promise.resolve({}) })
+    const response = await DELETE(request)
 
     expect(response.status).toBe(404)
     await expect(response.json()).resolves.toMatchObject({
@@ -82,7 +81,7 @@ describe('DELETE /api/tradovate/synchronizations', () => {
       },
       body: JSON.stringify({ accountId: 'ACC-1' }),
     }) as never
-    const response = await DELETE(request, { params: Promise.resolve({}) })
+    const response = await DELETE(request)
 
     expect(response.status).toBe(401)
     await expect(response.json()).resolves.toMatchObject({

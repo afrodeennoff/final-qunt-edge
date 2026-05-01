@@ -124,7 +124,7 @@ function PlatformCardInner({
  </CardHeader>
 
  <CardContent size="sm" className="p-0 flex flex-col gap-2 flex-1">
- <CardTitle size="sm" className="min-h-[2.75rem] leading-snug">
+ <CardTitle size="sm" className="min-h-[2rem] leading-snug">
  {t(String(platform.name), { count: 1 })}
  </CardTitle>
  <p className="min-h-[3rem] text-xs text-muted-foreground line-clamp-2">

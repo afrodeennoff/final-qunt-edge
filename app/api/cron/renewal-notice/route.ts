@@ -36,7 +36,11 @@ export async function GET(req: Request) {
 
   try {
     requireCronAuth(req, { serviceName: 'cron-renewal-notice' })
+  } catch (error) {
+    return toErrorResponse(error)
+  }
 
+  try {
     const today = startOfDay(new Date())
 
     // Find all accounts with auto-renewal enabled and valid payment dates

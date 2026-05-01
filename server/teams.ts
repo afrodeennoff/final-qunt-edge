@@ -1,3 +1,5 @@
+'use server'
+
 import { prisma } from '@/lib/prisma'
 import { getDatabaseUserId } from '@/server/auth'
 import { MemberRole, Prisma } from '@/prisma/generated/prisma'
@@ -181,10 +183,47 @@ export async function deleteTeam(teamId: string, userId?: string) {
 
 export async function inviteMember(teamId: string, email: string, invitedBy: string, role: 'TRADER' | 'ANALYST' | 'VIEWER' = 'TRADER') {
   try {
+    const normalizedEmail = email.trim().toLowerCase()
+    const team = await prisma.team.findUnique({
+      where: { id: teamId },
+      select: {
+        id: true,
+        userId: true,
+        members: {
+          select: {
+            userId: true,
+            role: true,
+            isActive: true,
+          },
+        },
+        managers: {
+          select: {
+            managerId: true,
+            access: true,
+          },
+        },
+      },
+    })
+
+    if (!team) {
+      throw new Error('Team not found')
+    }
+
+    const isOwner = team.userId === invitedBy
+    const isAdminMember = team.members.some(
+      (member) => member.userId === invitedBy && member.isActive && member.role === MemberRole.ADMIN,
+    )
+    const isAdminManager = team.managers.some(
+      (manager) => manager.managerId === invitedBy && manager.access === 'admin',
+    )
+    if (!isOwner && !isAdminMember && !isAdminManager) {
+      throw new Error('Unauthorized')
+    }
+
     const existingInvitation = await prisma.teamInvitation.findFirst({
       where: {
         teamId,
-        email,
+        email: normalizedEmail,
         status: 'PENDING'
       }
     })
@@ -196,7 +235,7 @@ export async function inviteMember(teamId: string, email: string, invitedBy: str
     const invitation = await prisma.teamInvitation.create({
       data: {
         teamId,
-        email: email.toLowerCase(),
+        email: normalizedEmail,
         invitedBy,
         status: 'PENDING',
         role,
@@ -214,7 +253,15 @@ export async function inviteMember(teamId: string, email: string, invitedBy: str
 export async function acceptInvitation(invitationId: string, userId: string) {
   try {
     const invitation = await prisma.teamInvitation.findUnique({
-      where: { id: invitationId }
+      where: { id: invitationId },
+      select: {
+        id: true,
+        teamId: true,
+        email: true,
+        status: true,
+        expiresAt: true,
+        role: true,
+      },
     })
 
     if (!invitation) {
@@ -230,11 +277,16 @@ export async function acceptInvitation(invitationId: string, userId: string) {
     }
 
     const user = await prisma.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
+      select: { id: true, email: true },
     })
 
     if (!user) {
       throw new Error('User not found')
+    }
+
+    if (!user.email || user.email.toLowerCase() !== invitation.email.toLowerCase()) {
+      throw new Error('This invitation was sent to a different email address')
     }
 
     await prisma.$transaction(async (tx) => {
@@ -343,8 +395,25 @@ export async function removeMember(teamId: string, userId: string, requesterUser
   }
 }
 
-export async function getTeamAnalytics(teamId: string, period: 'daily' | 'weekly' | 'monthly' = 'monthly') {
+export async function getTeamAnalytics(teamId: string, period: 'daily' | 'weekly' | 'monthly' = 'monthly', requestingUserId?: string) {
   try {
+    const userId = requestingUserId || await getDatabaseUserId()
+
+    const team = await prisma.team.findFirst({
+      where: {
+        id: teamId,
+        OR: [
+          { userId },
+          { members: { some: { userId } } },
+        ],
+      },
+      select: { id: true }
+    })
+
+    if (!team) {
+      throw new Error('Team not found or unauthorized')
+    }
+
     const analytics = await prisma.teamAnalytics.findFirst({
       where: {
         teamId,

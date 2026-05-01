@@ -4,6 +4,18 @@ import { User, Subscription, Tag } from "@/prisma/generated/prisma";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { Group, Account } from "@/lib/data-types";
 import { Widget } from "@/app/[locale]/dashboard/types/dashboard";
+import { useAnalysisStore } from "@/store/analysis-store";
+import { useTradingDomainStore } from "@/store/trading-domain-store";
+import { useTradovateSyncStore } from "@/store/tradovate-sync-store";
+import { useEquityChartStore } from "@/store/equity-chart-store";
+import { useTableConfigStore } from "@/store/table-config-store";
+import { useAccountOrderStore } from "@/store/account-order-store";
+import { useAccountsGroupExpansionStore } from "@/store/accounts-group-expansion-store";
+import { useDailyTickTargetStore } from "@/store/daily-tick-target-store";
+import { useSubscriptionStore } from "@/store/subscription-store";
+import { useMoodStore } from "@/store/mood-store";
+import { useChatStore } from "@/store/chat-store";
+import { usePdfProcessingStore } from "@/store/pdf-processing-store";
 
 // Re-export Widget types for use in other modules
 export type { Widget };
@@ -14,6 +26,52 @@ import {
   saveGroupAction,
   updateGroupAction,
 } from "@/server/groups";
+
+const SENSITIVE_CLIENT_STORAGE_KEYS = [
+  "trading-domain-storage",
+  "qunt-edge-analysis-store",
+  "account-order-store",
+  "accounts-group-expansion-store",
+  "daily-tick-target-store",
+  "equity-chart-store",
+  "table-config-store",
+  "tradovate-sync-storage",
+  "rithmic_sync_data",
+  "rithmic_credential_encryption_key",
+]
+
+const SENSITIVE_SESSION_STORAGE_KEYS = [
+  "tradovate_access_token",
+  "tradovate_token_expiration",
+  "tradovate_environment",
+  "tradovate_oauth_state",
+]
+
+function clearSensitiveClientStorage() {
+  if (typeof window === "undefined") return
+
+  SENSITIVE_CLIENT_STORAGE_KEYS.forEach((key) => {
+    window.localStorage.removeItem(key)
+  })
+  SENSITIVE_SESSION_STORAGE_KEYS.forEach((key) => {
+    window.sessionStorage.removeItem(key)
+  })
+}
+
+function resetSessionScopedStores() {
+  useTradingDomainStore.getState().setTrades([])
+  useTradingDomainStore.getState().setAccounts([])
+  useAnalysisStore.getState().clearAnalysis()
+  useTradovateSyncStore.getState().clearAll()
+  useEquityChartStore.getState().resetConfig()
+  useTableConfigStore.getState().resetAllConfigs()
+  useAccountsGroupExpansionStore.getState().resetExpanded()
+  useSubscriptionStore.getState().clearSubscription()
+  useMoodStore.getState().resetMoods()
+  useChatStore.getState().clearMessages()
+  usePdfProcessingStore.getState().clearPdfProcessingData()
+  clearSensitiveClientStorage()
+}
 
 type SubscriptionData = {
   id: string;
@@ -195,7 +253,8 @@ export const useUserStore = create<UserStore>()(
       setIsLoading: (value) => set({ isLoading: value }),
       setIsMobile: (value) => set({ isMobile: value }),
       setIsSharedView: (value) => set({ isSharedView: value }),
-      resetUser: () =>
+      resetUser: () => {
+        resetSessionScopedStores()
         set({
           user: null,
           supabaseUser: null,
@@ -204,7 +263,8 @@ export const useUserStore = create<UserStore>()(
           accounts: [],
           groups: [],
           dashboardLayout: null,
-        }),
+        })
+      },
     }),
     {
       name: "qunt-edge-user-store",

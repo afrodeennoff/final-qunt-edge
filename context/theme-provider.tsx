@@ -1,7 +1,13 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { VALID_DASHBOARD_THEMES, applyTheme, type DashboardTheme } from '@/lib/constants/dashboard-themes'
+import {
+  DEFAULT_DASHBOARD_THEME,
+  VALID_DASHBOARD_THEMES,
+  applyTheme,
+  normalizeDashboardTheme,
+  type DashboardTheme,
+} from '@/lib/constants/dashboard-themes'
 
 type ThemeContextType = {
   theme: DashboardTheme
@@ -10,7 +16,7 @@ type ThemeContextType = {
   toggleTheme: () => void
 }
 
-const DEFAULT_THEME: DashboardTheme = 'violet'
+const DEFAULT_THEME: DashboardTheme = DEFAULT_DASHBOARD_THEME
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: DEFAULT_THEME,
@@ -37,9 +43,7 @@ async function saveThemeToApi(theme: DashboardTheme): Promise<void> {
 }
 
 function resolveTheme(initialTheme?: DashboardTheme | string): DashboardTheme {
-  return VALID_DASHBOARD_THEMES.includes(initialTheme as DashboardTheme)
-    ? (initialTheme as DashboardTheme)
-    : DEFAULT_THEME
+  return normalizeDashboardTheme(initialTheme)
 }
 
 export function ThemeProvider({
@@ -48,7 +52,7 @@ export function ThemeProvider({
   initialTheme,
 }: {
   children: React.ReactNode
-  scope?: 'dashboard' | 'fixed-blue'
+  scope?: 'dashboard' | 'fixed-purple'
   initialTheme?: DashboardTheme | string
 }) {
   const resolved = resolveTheme(initialTheme)

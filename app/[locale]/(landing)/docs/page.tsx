@@ -1,25 +1,54 @@
-import { Metadata } from 'next';
-import { setStaticParamsLocale } from "next-international/server";
-import Link from "next/link";
-import { buildPublicMetadata } from "@/lib/seo";
+import { Metadata } from 'next'
+import { setStaticParamsLocale } from 'next-international/server'
+import Link from 'next/link'
+import { BookOpen, Brain, Cable, Code2 } from 'lucide-react'
+import {
+  MarketingFeatureCard,
+  MarketingSection,
+  MarketingSectionHeader,
+} from '@/components/layout/marketing-sections'
+import { buildPublicMetadata } from '@/lib/seo'
 
 export async function generateMetadata({
-    params,
+  params,
 }: {
-    params: Promise<{ locale: string }>;
+  params: Promise<{ locale: string }>
 }): Promise<Metadata> {
-    const { locale } = await params;
-    return buildPublicMetadata({
-      locale,
-      path: "/docs",
-      title: "Documentation | Qunt Edge",
-      description: "Guides and references for Qunt Edge trading journal, analytics workflows, and integrations.",
-    });
+  const { locale } = await params
+  return buildPublicMetadata({
+    locale,
+    path: '/docs',
+    title: 'Documentation | Qunt Edge',
+    description:
+      'Guides and references for Qunt Edge trading journal, analytics workflows, and integrations.',
+  })
 }
 
 export default async function DocsPage({ params }: { params: Promise<{ locale: string }> }) {
-    const { locale } = await params;
-    setStaticParamsLocale(locale);
+  const { locale } = await params
+  setStaticParamsLocale(locale)
+  const cards = [
+    {
+      icon: <BookOpen className="h-5 w-5" />,
+      title: 'Getting Started',
+      description: 'Set up your dashboard and first review workflow.',
+    },
+    {
+      icon: <Cable className="h-5 w-5" />,
+      title: 'Data Connectors',
+      description: 'Connect Tradovate, Rithmic, IBKR, and more.',
+    },
+    {
+      icon: <Brain className="h-5 w-5" />,
+      title: 'AI Journaling',
+      description: 'Use debriefs to turn patterns into next actions.',
+    },
+    {
+      icon: <Code2 className="h-5 w-5" />,
+      title: 'API Reference',
+      description: 'Plan custom workflows and institutional integrations.',
+    },
+  ]
 
     return (
         <div className="w-full py-12 px-4 sm:px-6 sm:py-16 lg:px-8">
@@ -58,5 +87,21 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
                 <p className="text-muted-foreground text-sm">Need immediate help? Visit our <Link href={`/${locale}/support`} className="text-foreground hover:underline">Support Center</Link> or join our <a href="https://discord.gg/efHDc43M" className="text-foreground hover:underline">Discord</a>.</p>
             </footer>
         </div>
-    );
+      </MarketingSection>
+
+      <MarketingSection className="pb-28 text-center">
+        <p className="text-sm text-muted-foreground">
+          Need immediate help? Visit{' '}
+          <Link href={`/${locale}/support`} className="text-foreground hover:underline">
+            Support
+          </Link>{' '}
+          or join{' '}
+          <a href="https://discord.gg/efHDc43M" className="text-foreground hover:underline">
+            Discord
+          </a>
+          .
+        </p>
+      </MarketingSection>
+    </>
+  )
 }

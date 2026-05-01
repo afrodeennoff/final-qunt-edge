@@ -20,8 +20,8 @@ function ThemeProbe() {
       <button data-testid="toggleTheme" onClick={toggleTheme} type="button">
         toggle
       </button>
-      <button data-testid="setViolet" onClick={() => setTheme('violet')} type="button">
-        violet
+      <button data-testid="setPurple" onClick={() => setTheme('cmlh0x713000104jrgmds6vcd')} type="button">
+        purple
       </button>
     </div>
   )
@@ -42,7 +42,7 @@ describe('ThemeProvider', () => {
     root = null
   })
 
-  it('defaults to blue theme', async () => {
+  it('defaults to the trader workspace theme', async () => {
     container = document.createElement('div')
     document.body.appendChild(container)
     root = createRoot(container)
@@ -58,8 +58,8 @@ describe('ThemeProvider', () => {
     const theme = container.querySelector('[data-testid="theme"]')
     const effectiveTheme = container.querySelector('[data-testid="effectiveTheme"]')
 
-    expect(theme?.textContent).toBe('blue')
-    expect(effectiveTheme?.textContent).toBe('blue')
+    expect(theme?.textContent).toBe('cmlh0x713000104jrgmds6vcd')
+    expect(effectiveTheme?.textContent).toBe('cmlh0x713000104jrgmds6vcd')
   })
 
   it('uses initialTheme when provided', async () => {
@@ -69,14 +69,14 @@ describe('ThemeProvider', () => {
 
     await act(async () => {
       root!.render(
-        <ThemeProvider initialTheme="emerald">
+        <ThemeProvider initialTheme="cmo6ofmje000104jub1yg4bos">
           <ThemeProbe />
         </ThemeProvider>,
       )
     })
 
     const theme = container.querySelector('[data-testid="theme"]')
-    expect(theme?.textContent).toBe('emerald')
+    expect(theme?.textContent).toBe('cmo6ofmje000104jub1yg4bos')
   })
 
   it('rejects invalid initialTheme', async () => {
@@ -93,6 +93,6 @@ describe('ThemeProvider', () => {
     })
 
     const theme = container.querySelector('[data-testid="theme"]')
-    expect(theme?.textContent).toBe('blue')
+    expect(theme?.textContent).toBe('cmlh0x713000104jrgmds6vcd')
   })
 })

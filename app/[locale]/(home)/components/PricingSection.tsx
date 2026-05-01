@@ -1,4 +1,4 @@
-'use client'
+import { MarketingPricingSection } from '@/components/layout/marketing-pricing-section'
 
 import Link from 'next/link'
 import { useState } from 'react'

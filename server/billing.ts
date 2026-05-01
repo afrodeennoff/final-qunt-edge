@@ -120,7 +120,11 @@ export async function getSubscriptionData() {
       return null
     }
 
-    const companyId = process.env.WHOP_COMPANY_ID || "biz_jh37YZGpH5dWIY";
+    const companyId = process.env.WHOP_COMPANY_ID;
+    if (!companyId) {
+      logger.warn('[getSubscriptionData] WHOP_COMPANY_ID missing, skipping Whop API lookup')
+      return null
+    }
     const whop = getWhop()
 
     // 2. Fetch active memberships from Whop for real-time verification (Fallback)

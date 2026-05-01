@@ -14,7 +14,7 @@ export default function Loading() {
           <div className="h-72 animate-pulse rounded-[calc(var(--radius)+0.45rem)] border border-border/45 bg-card/55" />
         </div>
       </div>
-      <div className="h-96 animate-pulse rounded-[calc(var(--radius)+0.45rem)] border border-border/45 bg-card/55" />
+      <div className="h-96 animate-pulse rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.72)]" />
     </div>
   )
 }

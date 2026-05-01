@@ -1,5 +1,6 @@
-import MarketingLayoutShell from "../../(landing)/components/marketing-layout-shell"
-import { PublicRootProviders } from "@/components/providers/root-providers"
+import MarketingLayoutShell from '../../(landing)/components/marketing-layout-shell'
+import { PublicRootProviders } from '@/components/providers/root-providers'
+import { WORKSPACE_SHELL_WIDTH } from '@/lib/constants/layout'
 
 export default function SharedSlugLayout({
   children,
@@ -8,9 +9,9 @@ export default function SharedSlugLayout({
 }>) {
   return (
     <PublicRootProviders>
-      <MarketingLayoutShell contentClassName="mx-auto w-full max-w-[1800px] px-4 sm:px-6 lg:px-8">
+      <MarketingLayoutShell contentClassName={`mx-auto w-full ${WORKSPACE_SHELL_WIDTH}`}>
         {children}
       </MarketingLayoutShell>
     </PublicRootProviders>
-  );
+  )
 }

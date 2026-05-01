@@ -59,6 +59,7 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
       // Optimize package imports for better tree shaking
       // Each package below gets optimized module resolution + dead code elimination
       optimizePackageImports: [
+        'd3',
         'recharts',
         '@tanstack/react-table',
         '@tanstack/react-query',
@@ -66,6 +67,7 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
         'date-fns-tz',
         'lucide-react',
         'framer-motion',
+        'motion',
         'decimal.js',
         // Form state — used in auth, admin, community pages
         'react-hook-form',
@@ -109,8 +111,6 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
         'html2canvas',
         // State management — Zustand stores
         'zustand',
-        // Visualization — D3 charts and data visualization
-        'd3',
       ],
     },
     turbopack: {

@@ -1,6 +1,20 @@
+import { redirect } from "next/navigation"
 import { SendEmailPageClient } from "../components/send-email/send-email-page-client"
+import { assertAdminAccess } from "@/server/authz"
 
-export default function SendEmailPage() {
+export default async function SendEmailPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
+  try {
+    await assertAdminAccess();
+  } catch {
+    redirect(`/${locale}/authentication`);
+  }
+
   return (
     <div className="space-y-6">
       <div>

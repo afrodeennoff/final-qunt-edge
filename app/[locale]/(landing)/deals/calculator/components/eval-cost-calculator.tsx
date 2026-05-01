@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Badge } from "@/components/ui/badge"
+import { Badge } from '@/components/ui/badge'
 
 function toNumber(value: string, fallback: number): number {
   const parsed = Number(value)
@@ -24,7 +24,8 @@ export function EvalCostCalculator() {
 
     const expectedTotalCost = fee + resets * resetUnitCost + platform
     const netTargetAfterCosts = Math.max(0, payoutGoal - expectedTotalCost)
-    const minReturnNeeded = expectedTotalCost === 0 ? 0 : (expectedTotalCost / Math.max(payoutGoal, 1)) * 100
+    const minReturnNeeded =
+      expectedTotalCost === 0 ? 0 : (expectedTotalCost / Math.max(payoutGoal, 1)) * 100
 
     const riskBand = minReturnNeeded > 40 ? 'high' : minReturnNeeded > 25 ? 'mid' : 'low'
 
@@ -116,6 +117,23 @@ export function EvalCostCalculator() {
               {values.riskBand === 'high' ? 'High pressure band' : values.riskBand === 'mid' ? 'Manageable band' : 'Healthy planning range'}
             </Badge>
           </p>
+          <div className="mt-2">
+            <Badge
+              variant={
+                values.riskBand === 'high'
+                  ? 'destructive'
+                  : values.riskBand === 'mid'
+                    ? 'default'
+                    : 'secondary'
+              }
+            >
+              {values.riskBand === 'high'
+                ? 'High pressure band'
+                : values.riskBand === 'mid'
+                  ? 'Manageable band'
+                  : 'Healthy planning range'}
+            </Badge>
+          </div>
           <p className="mt-1 text-xs text-muted-foreground">
             {values.riskBand === 'high'
               ? 'Reduce costs or increase expected payout buffer before starting.'

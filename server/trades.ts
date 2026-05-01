@@ -36,7 +36,8 @@ const importTradeSchema = z.object({
       return z.NEVER
     }
   }),
-  closeDate: z.string().transform((value, ctx) => {
+  closeDate: z.string().nullable().optional().transform((value, ctx) => {
+    if (!value) return null
     try {
       return normalizeToUtcTimestamp(value)
     } catch {
@@ -50,7 +51,11 @@ const importTradeSchema = z.object({
   comment: z.string().optional(),
   tags: z.array(z.string()).optional(),
   groupId: z.string().nullish(),
-}).refine((trade) => isChronologicalRange(trade.entryDate, trade.closeDate), {
+}).refine((trade) => {
+  // Skip chronological check when closeDate is null (open position)
+  if (!trade.closeDate) return true
+  return isChronologicalRange(trade.entryDate, trade.closeDate)
+}, {
   path: ['closeDate'],
   message: 'Close date must be equal to or later than entry date',
 })
@@ -65,6 +70,7 @@ interface TradeResponse {
   error: TradeError | false
   numberOfTradesAdded: number
   details?: unknown
+  warnings?: string[]
 }
 
 export type SerializedTrade = Omit<PrismaTrade, 'entryPrice' | 'closePrice' | 'pnl' | 'commission' | 'quantity' | 'timeInPosition' | 'entryDate' | 'closeDate'> & {
@@ -100,13 +106,14 @@ type SerializableTrade = Partial<PrismaTrade> & {
 }
 
 function serializeTrade(trade: SerializableTrade): SerializedTrade {
-  const entryDate = trade.entryDate
-    ? (trade.entryDate instanceof Date ? trade.entryDate.toISOString() : new Date(trade.entryDate).toISOString())
-    : new Date(0).toISOString()
+  const parseDateSafe = (value: Date | string | undefined, fallback: string | null): string | null => {
+    if (!value) return fallback
+    const d = value instanceof Date ? value : new Date(value)
+    return Number.isNaN(d.getTime()) ? fallback : d.toISOString()
+  }
 
-  const closeDate = trade.closeDate
-    ? (trade.closeDate instanceof Date ? trade.closeDate.toISOString() : new Date(trade.closeDate).toISOString())
-    : null
+  const entryDate = parseDateSafe(trade.entryDate, new Date(0).toISOString())!
+  const closeDate = parseDateSafe(trade.closeDate, null)
 
   return {
     ...trade,
@@ -272,7 +279,8 @@ async function saveTradesForResolvedUser(
         validationErrors.push(`Trade ${trade.instrument} has a future entry date`)
         continue
       }
-      if (isAfter(new Date(trade.closeDate), now)) {
+      // Skip future close date check when closeDate is null (open position)
+      if (trade.closeDate && isAfter(new Date(trade.closeDate), now)) {
         validationErrors.push(`Trade ${trade.instrument} has a future close date`)
         continue
       }
@@ -294,7 +302,8 @@ async function saveTradesForResolvedUser(
         quantity: new Prisma.Decimal(trade.quantity),
         timeInPosition: new Prisma.Decimal(trade.timeInPosition || '0'),
         entryDate: new Date(trade.entryDate),
-        closeDate: new Date(trade.closeDate),
+        // DB requires non-null closeDate; default to entryDate for open positions
+        closeDate: trade.closeDate ? new Date(trade.closeDate) : new Date(trade.entryDate),
         id: generateTradeUUID({ ...trade, userId: userId }),
       })
     }
@@ -363,7 +372,11 @@ async function saveTradesForResolvedUser(
       }
     }
 
-    return { error: false, numberOfTradesAdded: result.count }
+    return {
+      error: false,
+      numberOfTradesAdded: result.count,
+      warnings: validationErrors.length > 0 ? validationErrors : undefined,
+    }
   } catch (error) {
     logger.error('[saveTrades] Database error', { error })
     return {

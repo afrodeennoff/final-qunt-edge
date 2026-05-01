@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
+import { connection } from 'next/server'
 import {
   getActiveDeals,
   getDealsOverview,
@@ -7,6 +9,7 @@ import {
   getUnifiedFirms,
 } from '@/server/deals'
 import { DealsExperience } from './components/deals-experience'
+import { RouteLoadingScreen } from '@/components/ui/route-state'
 import {
   buildBreadcrumbSchema,
   buildFaqPageSchema,
@@ -36,6 +39,7 @@ export default async function DealsPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
+  await connection()
   const organizationSchema = buildOrganizationSchema()
   const breadcrumbSchema = buildBreadcrumbSchema(locale, [
     { name: "Home", path: "/" },
@@ -93,16 +97,18 @@ export default async function DealsPage({
       {faqSchema ? (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       ) : null}
-      <DealsExperience
-        locale={locale}
-        deals={deals}
-        firms={firms}
-        overview={overview}
-        spotlights={spotlights}
-        faqs={faqs}
-        hadFetchError={hadFetchError}
-        lastUpdated={hadFetchError ? null : new Date().toISOString().split('T')[0]}
-      />
+      <Suspense fallback={<RouteLoadingScreen eyebrow="Deals" title="Loading deals" description="Gathering the latest firm perks and promotional details." fullScreen={false} />}>
+        <DealsExperience
+          locale={locale}
+          deals={deals}
+          firms={firms}
+          overview={overview}
+          spotlights={spotlights}
+          faqs={faqs}
+          hadFetchError={hadFetchError}
+          lastUpdated={hadFetchError ? null : new Date().toISOString().split('T')[0]}
+        />
+      </Suspense>
     </>
   )
 }

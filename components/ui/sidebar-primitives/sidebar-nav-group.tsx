@@ -80,24 +80,12 @@ interface SidebarNavGroupProps {
 
 // Ordered flat list — group property controls sort order only, no visual headers
 const GROUP_ORDER = [
-  'Overview',
-  'Analysis',
-  'Profile & Social',
+  'Workspace',
+  'Review',
+  'Tools',
+  'Profile',
   'Resources',
   'System',
-  'Workspace',
-  'Performance',
-  'Network',
-  'Control',
-  'Main',
-  'Inventory',
-  'Trading',
-  'Team Overview',
-  'Team Management',
-  'Admin Panel',
-  'Settings',
-  'Support',
-  'Admin',
 ]
 
 function computeFlatOrderedItems(items: UnifiedSidebarItem[]): {
@@ -162,7 +150,7 @@ const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
   )
 
   return (
-    <SidebarGroup className="px-0 py-1.5">
+    <SidebarGroup className="px-0 py-2">
       <SidebarGroupContent>
         <SidebarMenu>
           {flatItems.map((item, index) => {
@@ -183,7 +171,7 @@ const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
                 {showSeparator && <div className="mx-3 my-2 h-px bg-sidebar-border/22" />}
                 <SidebarMenuItem className="relative">
                   {itemIsActive && (
-                    <div className="absolute left-0 top-1/2 h-8 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary/85" />
+                    <div className="absolute left-0 top-1/2 h-9 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary/85" />
                   )}
                   {href ? (
                     <SidebarMenuButton

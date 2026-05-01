@@ -27,7 +27,7 @@ import ExportButton from '@/components/export-button'
 import { useI18n } from "@/locales/client"
 import { useUserStore } from '@/store/user-store'
 import { useTradingDomainStore } from '@/store/trading-domain-store'
-import { clearTradesCache } from '@/lib/indexeddb/trades-cache'
+import { clearAllCache } from '@/lib/indexeddb/trades-cache'
 
 type GroupedTrades = Record<string, Record<string, Trade[]>>
 
@@ -94,12 +94,12 @@ export function DataManagementCard() {
       // Optimistically drop trades and accounts locally
       const remainingTrades = trades.filter(trade => !accountsToDelete.includes(trade.accountNumber))
       setTradesStore(remainingTrades)
-      await clearTradesCache(user.id)
+      await clearAllCache(user.id)
       if (accounts && setAccounts) {
         setAccounts(accounts.filter((acc) => !accountsToDelete.includes(acc.number)))
       }
-      // Lightweight server cache update
-      await refreshTradesOnly({ force: false })
+      // Force a server refresh so development IndexedDB cannot replay deleted trades.
+      await refreshTradesOnly({ force: true })
       setSelectedAccounts([])
       toast.success(accountsToDelete.length > 1 ? t('dataManagement.toast.accountsDeleted') : t('dataManagement.toast.accountDeleted'))
     } catch (error) {
@@ -115,6 +115,7 @@ export function DataManagementCard() {
   }, [user, deleteMode, groupedTrades, selectedAccounts, trades, setTradesStore, accounts, setAccounts, refreshTradesOnly, t])
 
   const handleDeleteInstrument = useCallback(async (accountNumber: string, instrumentGroup: string) => {
+    if (!user) return
     try {
       await deleteInstrumentGroupAction(accountNumber, instrumentGroup)
       // Optimistically drop matching trades locally
@@ -124,10 +125,11 @@ export function DataManagementCard() {
             !(
               trade.accountNumber === accountNumber &&
               trade.instrument.startsWith(instrumentGroup)
-            )
+          )
         )
       )
-      await refreshTradesOnly({ force: false })
+      await clearAllCache(user.id)
+      await refreshTradesOnly({ force: true })
       toast.success(t('dataManagement.toast.instrumentDeleted'))
     } catch (error) {
       console.error("Failed to delete instrument group:", error)
@@ -136,7 +138,7 @@ export function DataManagementCard() {
         description: t('dataManagement.toast.deleteErrorDesc'),
       })
     }
-  }, [trades, refreshTradesOnly, setTradesStore, t])
+  }, [trades, refreshTradesOnly, setTradesStore, t, user])
 
   const [commissionLoading, setCommissionLoading] = useState<Record<string, boolean>>({})
   const [pendingCommissionUpdates, setPendingCommissionUpdates] = useState<Record<string, { accountNumber: string; instrumentGroup: string; newCommission: number }>>({})
@@ -167,6 +169,7 @@ export function DataManagementCard() {
   }, [groupedTrades])
 
   const handleValidateCommission = useCallback(async (accountNumber: string, instrumentGroup: string) => {
+    if (!user) return
     const updateKey = `${accountNumber}-${instrumentGroup}`
     const pendingUpdate = pendingCommissionUpdates[updateKey]
 
@@ -186,7 +189,8 @@ export function DataManagementCard() {
           : trade
       )
       setTradesStore(updatedTrades)
-      await refreshTradesOnly({ force: false })
+      await clearAllCache(user.id)
+      await refreshTradesOnly({ force: true })
 
       // Clear pending update
       setPendingCommissionUpdates(prev => {
@@ -205,7 +209,7 @@ export function DataManagementCard() {
     } finally {
       setCommissionLoading(prev => ({ ...prev, [updateKey]: false }))
     }
-  }, [pendingCommissionUpdates, refreshTradesOnly, setTradesStore, t, trades])
+  }, [pendingCommissionUpdates, refreshTradesOnly, setTradesStore, t, trades, user])
 
   const toggleAccountExpansion = useCallback((accountNumber: string) => {
     setExpandedAccounts(prev => ({
@@ -228,7 +232,8 @@ export function DataManagementCard() {
             : trade
         )
       )
-      await refreshTradesOnly({ force: false })
+      await clearAllCache(user.id)
+      await refreshTradesOnly({ force: true })
       toast.success(t('dataManagement.toast.instrumentRenamed'))
       setRenameInstrumentDialogOpen(false)
       setInstrumentToRename({ accountNumber: "", currentName: "" })
@@ -273,7 +278,8 @@ export function DataManagementCard() {
           )
         )
       }
-      await refreshTradesOnly({ force: false })
+      await clearAllCache(user.id)
+      await refreshTradesOnly({ force: true })
       toast.success(t('dataManagement.toast.accountRenamed'))
       setRenameAccountDialogOpen(false)
       setAccountToRename("")

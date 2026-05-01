@@ -141,6 +141,21 @@ export const useDailyTickTargetStore = create<DailyTickTargetStore>()(
     {
       name: 'daily-tick-target-store',
       storage: createJSONStorage(() => localStorage),
+      version: 2,
+      // Targets are user/session trading data; only the display preference belongs in localStorage.
+      partialize: (state) => ({
+        targets: [],
+        isLoading: false,
+        displayMode: state.displayMode,
+      }),
+      migrate: (persistedState: unknown) => {
+        const state = persistedState as Partial<DailyTickTargetStore> | null
+        return {
+          targets: [],
+          isLoading: false,
+          displayMode: state?.displayMode === 'points' ? 'points' : 'ticks',
+        }
+      },
     }
   )
 ) 

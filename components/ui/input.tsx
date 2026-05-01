@@ -37,7 +37,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               'type-body-sm flex h-10 w-full rounded-xl border border-border/40 bg-background/60 px-3.5 py-2 text-foreground transition-[border-color,background-color] duration-200 ring-offset-background placeholder:text-muted-foreground/50 focus-visible:border-border/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
               leftIcon && 'pl-10',
               rightIcon && 'pr-10',
-              error && 'border-destructive/50 focus-visible:ring-destructive/40',
+              error &&
+                'border-destructive/50 focus-visible:border-destructive/60 focus-visible:ring-destructive/25',
               label && 'peer',
               className,
             )}

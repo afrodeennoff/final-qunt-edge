@@ -17,13 +17,13 @@ export default {
     },
 
     hero: {
-      badge: 'Télémétrie des Décisions en Direct',
-      headline: 'Construisez un avantage reproductible.',
-      headlineAccent: 'Éliminez la dérive émotionnelle.',
+      badge: 'Logiciel de revue trading',
+      headline: 'Auditez chaque décision de trade.',
+      headlineAccent: '',
       subheadline:
-        "Qunt Edge isole la qualité d'exécution, la dérive comportementale et la discipline de risque dans une surface de revue unique. Chaque session reçoit un diagnostic précis.",
-      ctaPrimary: 'Commencer un Audit Gratuit',
-      ctaSecondary: 'Voir la Démo',
+        'Synchronisez vos trades, révisez votre comportement et transformez chaque session en plan plus clair.',
+      ctaPrimary: 'Commencer gratuitement',
+      ctaSecondary: 'Voir le walkthrough',
       noCreditCard: 'Pas de carte bancaire requise',
       firstAudit: 'Premier audit en quelques minutes',
     },
@@ -74,9 +74,11 @@ export default {
     },
 
     pricingNew: {
-      headline: 'Tarification {highlight} simple et transparente',
+      eyebrow: 'Tarifs',
+      headline: 'Des plans simples pour une revue sérieuse.',
       highlight: 'tarification',
-      subheadline: 'Commencez gratuitement. Évoluez selon vos besoins.',
+      subheadline:
+        "Commencez avec le journal essentiel, puis ajoutez l'IA quand le workflow est prêt.",
       monthly: 'Mensuel',
       annual: 'Annuel',
       annualDiscount: '-20%',
@@ -85,13 +87,13 @@ export default {
         price: '0€',
         annualPrice: '0€',
         period: '/mois',
-        description: 'Parfait pour commencer',
+        description: 'Une base claire pour journaliser et revoir vos trades.',
         cta: 'Commencer',
         features: [
-          '100 trades/mois',
-          '1 connexion broker',
-          'Analyses basiques',
-          'Rétention 7 jours',
+          'Journal manuel',
+          'Widgets essentiels',
+          'Revue de performance simple',
+          'Upgrade quand nécessaire',
         ],
       },
       pro: {
@@ -99,31 +101,28 @@ export default {
         price: '49€',
         annualPrice: '39€',
         period: '/mois',
-        description: 'Pour les traders sérieux',
-        cta: 'Essai Gratuit',
-        badge: 'Plus Populaire',
+        description: "Débriefs IA, imports et analyses d'exécution plus profondes.",
+        cta: 'Démarrer Pro',
+        badge: 'Recommandé',
         features: [
           'Trades illimités',
-          'Toutes connexions broker',
-          'Insights IA',
-          'Rétention illimitée',
-          'Support prioritaire',
-          'Exports prêts pour coach',
+          'Imports broker et CSV',
+          'Débriefs IA de session',
+          'Rapports prêts pour coach',
         ],
       },
       enterprise: {
-        name: 'Entreprise',
+        name: 'Desk',
         price: 'Sur mesure',
         annualPrice: 'Sur mesure',
         period: '',
-        description: 'Pour équipes et firmes',
-        cta: 'Contactez-nous',
+        description: 'Workflows de revue partagés pour coachs, desks et équipes.',
+        cta: 'Contacter le support',
         features: [
           'Tout de Pro',
-          "Gestion d'équipe",
-          'Intégration SSO',
-          'SLAs personnalisés',
-          'Support dédié',
+          "Espaces d'équipe",
+          'Contexte coaching partagé',
+          'Configuration accompagnée',
         ],
       },
       annualNote: 'Facturé annuellement',
@@ -160,13 +159,14 @@ export default {
         integration5: 'NinjaTrader',
       },
       liveStats: {
-        heading: 'Pulse du Desk',
+        heading: 'Profondeur produit',
+        title: 'Conçu pour une revue trading répétable.',
         description:
-          'Un aperçu en direct des traders, équipes et revues qui transitent sur la plateforme.',
-        stat1Label: 'Traders',
-        stat2Label: 'Financés',
-        stat3Label: 'Couverture',
-        stat4Label: 'Support',
+          "La plateforme couvre tout le workflow sans devenir trop lourde pour l'usage quotidien.",
+        stat1Label: 'Widgets dashboard',
+        stat2Label: "Chemins d'import",
+        stat3Label: 'Outils IA',
+        stat4Label: 'Workflows revue',
       },
       problem: {
         eyebrow: 'Le Problème',
@@ -189,10 +189,9 @@ export default {
       },
       workflow: {
         eyebrow: 'Comment Ça Marche',
-        title:
-          'Une boucle de précision pour les traders qui veulent progresser de manière reproductible.',
+        title: 'Une boucle simple pour une exécution plus propre.',
         description:
-          'Qunt Edge transforme journaux de trades, hindsight émotionnel et bruit broker en un seul rythme opératoire.',
+          'Connectez les données, révisez la session, puis transformez la dérive comportementale en action concrète.',
         signalTitle: 'Signal',
         signalDescription:
           'Chaque session devient visible sous forme de règles, de dérive et de conformité.',
@@ -200,15 +199,15 @@ export default {
         cadenceDescription:
           'Le workflow reste assez léger pour être exécuté chaque jour, pas seulement après les drawdowns.',
         stage: 'Étape',
-        step1Name: 'Synchroniser les Données',
+        step1Name: 'Connecter les données',
         step1Description:
-          'Regroupez fills broker, historique de compte et contexte journal dans une seule timeline.',
-        step2Name: 'Définir les Règles',
+          'Regroupez fills broker, historique de compte et notes dans une seule timeline.',
+        step2Name: 'Revoir la session',
         step2Description:
-          'Capturez vos critères de setup, contraintes de risque et standards de comportement attendus.',
-        step3Name: 'Revoir la Session',
+          "Séparez l'exécution propre des entrées tardives, du risque excessif et des règles manquées.",
+        step3Name: 'Agir sur la dérive',
         step3Description:
-          "Comparez l'intention prévue à l'exécution réelle pour exposer les écarts de qualité décisionnelle.",
+          'Convertissez la revue en règle, rapport ou action coaching pour la prochaine session.',
         step4Name: 'Détecter la Dérive',
         step4Description:
           "Signalez la dérive émotionnelle, de taille et de discipline avant qu'elle ne s'aggrave.",
@@ -217,11 +216,11 @@ export default {
           'Transformez les constats en interventions claires et mesurez la progression de conformité.',
       },
       features: {
-        eyebrow: 'Capacités de la Plateforme',
-        title: "Tout ce qu'il vous faut pour",
-        highlight: 'trader plus intelligemment',
+        eyebrow: 'Fonctionnalités',
+        title: 'Un workspace pour',
+        highlight: "resserrer l'exécution",
         description:
-          "Protégez vos comptes financés, affûtez votre edge personnel et gardez données broker, revues et contexte d'équipe dans une seule couche opératoire structurée.",
+          'Des modules simples pour synchroniser les trades, trouver les écarts de process et installer une habitude de revue.',
         listLabel: 'Fonctionnalités',
         issue1Badge: 'Données Fragmentées',
         issue1Title: 'Où sont vraiment vos trades ?',
@@ -238,24 +237,32 @@ export default {
         issue3Description:
           "Des données en silos rendent les écarts de performance invisibles jusqu'à ce qu'ils coûtent cher.",
         issue3Solution: "Sync d'Équipe",
-        feature1Title: 'Analyses Avancées',
+        feature1Title: 'Sync trades',
         feature1Description:
-          'Analyse par déciles, heatmaps et métriques personnalisées qui révèlent ce que le PnL masque.',
-        feature2Title: 'Insights IA',
+          'Importez fills broker et historique CSV dans une seule timeline de performance.',
+        feature2Title: "Analyse d'exécution",
         feature2Description:
-          'Reconnaissance de patterns, analyse comportementale et IA explicable qui transforment les trades bruts en système de coaching.',
+          'Revoyez win rate, risque, timing, drawdown et qualité de setup sans bruit spreadsheet.',
         feature2Badge: 'Propulsé par IA',
-        feature3Title: "Sync d'Équipe",
+        feature3Title: "Coaching d'équipe",
         feature3Description:
-          "Partagez des layouts, comparez les performances et accélérez l'amélioration ensemble.",
-        feature4Title: 'Import Multi-Broker',
+          'Partagez layouts, rapports et contexte de revue avec un coach ou un desk.',
+        feature4Title: 'Revue comportementale',
         feature4Description:
-          'Connectez Tradovate, Rithmic, IBKR ou importez un CSV. Vos données, votre méthode.',
-        feature5Title: 'Exports Prêts pour Coach',
-        feature5Description: 'Des briefs PDF pour des sessions de mentorat structurées.',
-        feature6Title: 'Sécurité Entreprise',
+          "Repérez tilt, revenge trading, règles cassées et dérive de qualité avant qu'ils ne s'accumulent.",
+        feature5Title: 'Rapports exportables',
+        feature5Description:
+          'Générez des briefs propres pour mentorat, auto-revue et réunions de desk.',
+        feature6Title: 'Débriefs IA',
         feature6Description:
-          'Un chiffrement de niveau bancaire et des workflows de revue renforcés protègent chaque trade importé.',
+          'Transformez une session brute en prochaines étapes concises ancrées dans les trades.',
+      },
+      demo: {
+        eyebrow: 'Walkthrough produit',
+        title: 'Voyez la boucle de revue en mouvement.',
+        description:
+          "Un passage rapide par l'import, le dashboard, les signaux comportementaux et les débriefs IA.",
+        frameLabel: 'Aperçu workflow',
       },
       analysis: {
         eyebrow: 'Intelligence du Journal de Trading',
@@ -457,14 +464,16 @@ export default {
         answersLabel: '{count} réponses',
       },
       finalCta: {
+        eyebrow: 'Commencez une revue propre',
+        title: 'Construisez une boucle de trading plus claire.',
         titlePrefix: 'Prêt à',
         titleStrike: 'arrêter de deviner',
         titleBridge: 'et',
         titleHighlight: 'commencer à savoir',
         titleSuffix: '?',
         description:
-          "Rejoignez les traders qui suivent leurs performances avec Qunt Edge. Commencez votre audit gratuit dès aujourd'hui.",
-        primary: 'Commencer Votre Audit Gratuit',
+          "Démarrez avec un compte, un rythme de revue et une cible d'amélioration claire.",
+        primary: 'Commencer gratuitement',
         secondary: 'Parcourir les Prop Firms',
         footnote:
           'Pas de carte bancaire requise · Configuration en 2 minutes · Résiliation à tout moment',

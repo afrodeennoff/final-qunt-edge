@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import { getI18n, getStaticParams } from '@/locales/server'
 import { ErrorBoundary } from '@/components/error-boundary'
 import HomeContent from './components/HomeContent'
+import { ErrorBoundary } from '@/components/error-boundary'
 import {
   buildBreadcrumbSchema,
   buildOrganizationSchema,
@@ -11,6 +12,25 @@ import {
 } from '@/lib/seo'
 
 type Locale = 'en' | 'fr'
+
+const HOME_METADATA: Record<
+  Locale,
+  {
+    title: string
+    description: string
+  }
+> = {
+  en: {
+    title: 'Qunt Edge | Professional Trading Journal & Analytics Platform',
+    description:
+      'The professional trading journal for serious traders. Track every trade, review your behavior, and understand your execution cadence.',
+  },
+  fr: {
+    title: 'Qunt Edge | Journal de trading professionnel et plateforme d analyse',
+    description:
+      'Le journal de trading professionnel pour les traders serieux. Suivez chaque trade, analysez votre comportement et comprenez votre cadence d execution.',
+  },
+}
 
 export function generateStaticParams() {
   return getStaticParams()
@@ -22,19 +42,26 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const t = await getI18n()
+  const metadata = HOME_METADATA[locale] ?? HOME_METADATA.en
 
   return buildPublicMetadata({
     locale,
     path: '/',
-    title: String(t('landing.home.metadata.title')),
-    description: String(t('landing.home.metadata.description')),
+    title: metadata.title,
+    description: metadata.description,
   })
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
-  const { locale } = await params
-  setStaticParamsLocale(locale)
+  let locale: Locale = 'en'
+
+  try {
+    const resolvedParams = await params
+    locale = resolvedParams.locale
+    setStaticParamsLocale(locale)
+  } catch {
+    locale = 'en'
+  }
 
   const softwareSchema = buildSoftwareApplicationSchema(locale, '/')
   const organizationSchema = buildOrganizationSchema()

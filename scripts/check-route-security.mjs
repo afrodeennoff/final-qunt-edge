@@ -55,7 +55,7 @@ const AUTH_PATTERNS = [
   /authenticateRequest\(/,
 ];
 
-const RATE_PATTERNS = [/rateLimit\(/, /createRateLimitResponse\(/];
+const RATE_PATTERNS = [/rateLimit\(/, /createRateLimitResponse\(/, /withRateLimited\(/, /withApiRoute\(/];
 const VALIDATION_PATTERNS = [/parseJson\(/, /parseQuery\(/];
 const RAW_DETAIL_PATTERNS = [
   /details\s*:\s*error\s+instanceof\s+Error\s*\?\s*error\.message/i,

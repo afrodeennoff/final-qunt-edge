@@ -1,93 +1,154 @@
 import Link from 'next/link'
-import React from 'react'
 import type { Metadata } from 'next'
+import { connection } from 'next/server'
+import { format, startOfDay } from 'date-fns'
+import { createClient } from '@supabase/supabase-js'
+import {
+  ArrowLeft,
+  BarChart3,
+  Calendar,
+  DollarSign,
+  Globe,
+  Instagram,
+  MessageCircle,
+  Target,
+  TrendingUp,
+  Twitter,
+  Youtube,
+} from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { cn } from '@/lib/utils'
+import { buildBreadcrumbSchema, buildPublicMetadata, getCanonicalUrl } from '@/lib/seo'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
-import { getFallbackLeaderboardEntryByUserId } from '../../leaderboard/data/leaderboard-query'
-import { Zap, Lock, ArrowLeft } from 'lucide-react'
-import { buildPublicMetadata, buildBreadcrumbSchema, getCanonicalUrl } from '@/lib/seo'
+import { isPrismaColumnAvailable, isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
+import { CalendarGrid } from './calendar-grid'
 
+type SocialLinks = { x: string | null; instagram: string | null; discord: string | null; youtube: string | null }
 type TraderSnapshot = {
+  id: string
   username: string
   totalPnl: number
   totalTrades: number
-  winRate?: number
-  returnPct?: number
-  topInstrument?: string | null
-  avgDurationMinutes?: number
-  demo: boolean
+  winRate: number
+  avgPnl: number
+  authUserId: string
+  recentTrades: Array<{ id: string; symbol: string; pnl: number; closeTime: Date }>
+  dayPnl: Map<string, number>
 }
 
-const FB = 'border-[hsl(var(--border)/0.36)]'
-const FS = 'bg-[hsl(var(--card)/0.34)]'
-const FM = 'bg-[hsl(var(--border)/0.12)]'
-const FR = { boxShadow: '0 24px 48px -32px rgba(0, 0, 0, 0.72)' }
+const USER_TABLE_CANDIDATES = ['User', 'user'] as const
+const LEADERBOARD_VISIBILITY_COLUMN = 'showOnLeaderboard'
 
-function formatSigned(value: number, digits = 2): string {
-  if (!Number.isFinite(value)) return "0.00"
-  return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}`
+function formatSocialUrl(url: string | null | undefined) {
+  if (!url) return null
+  const trimmed = url.trim()
+  if (!trimmed) return null
+  return trimmed.startsWith('http') ? trimmed : `https://${trimmed}`
 }
 
-function formatCapitalCompact(value: number): string {
-  if (!Number.isFinite(value)) return "0"
-  const sign = value < 0 ? "-" : ""
-  const abs = Math.abs(value)
-  if (abs >= 1_000_000) return `${sign}${(abs / 1_000_000).toFixed(abs >= 10_000_000 ? 0 : 1)}m`
-  if (abs >= 1_000) return `${sign}${(abs / 1_000).toFixed(abs >= 100_000 ? 0 : 1)}k`
-  return `${sign}${abs.toFixed(0)}`
+function toUsername(email: string | null | undefined, fallbackId: string): string {
+  const base = email?.split('@')[0]?.trim()
+  return base || `Trader ${fallbackId.slice(0, 8)}`
 }
 
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value)
 }
 
-function formatValue(value: number, digits = 2): string {
-  return Number.isFinite(value) ? value.toFixed(digits) : "0.00"
+async function hasLeaderboardVisibilityColumn(): Promise<boolean> {
+  for (const tableName of USER_TABLE_CANDIDATES) {
+    if (await isPrismaColumnAvailable(tableName, LEADERBOARD_VISIBILITY_COLUMN)) return true
+  }
+  return false
+}
+
+async function getPublicSocialLinks(authUserId: string): Promise<SocialLinks> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!supabaseUrl || !serviceKey) {
+    return { x: null, instagram: null, discord: null, youtube: null }
+  }
+
+  const supabase = createClient(supabaseUrl, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } })
+  const { data } = await supabase.auth.admin.getUserById(authUserId)
+  const metadata = data.user?.user_metadata
+
+  return {
+    x: formatSocialUrl(metadata?.twitter_url),
+    instagram: formatSocialUrl(metadata?.instagram_url),
+    discord: formatSocialUrl(metadata?.discord_url),
+    youtube: formatSocialUrl(metadata?.youtube_url),
+  }
 }
 
 async function getTraderSnapshot(slug: string): Promise<TraderSnapshot | null> {
-  if (!hasConfiguredDatabaseConnection) {
-    const fallbackEntry = await getFallbackLeaderboardEntryByUserId(slug)
-    if (!fallbackEntry) return null
-    return {
-      username: fallbackEntry.username,
-      totalPnl: fallbackEntry.monthlyPnl,
-      totalTrades: fallbackEntry.totalTrades,
-      winRate: fallbackEntry.winRate,
-      returnPct: fallbackEntry.returnPct,
-      topInstrument: fallbackEntry.topInstrument,
-      avgDurationMinutes: fallbackEntry.avgDurationMinutes,
-      demo: true,
-    }
+  if (!hasConfiguredDatabaseConnection) return null
+  if (!(await hasLeaderboardVisibilityColumn())) return null
+
+  let publicUser: { id: string; email: string | null; showOnLeaderboard: boolean; auth_user_id: string } | null = null
+  try {
+    publicUser = await prisma.user.findUnique({
+      where: { id: slug },
+      select: { id: true, email: true, auth_user_id: true, showOnLeaderboard: true },
+    })
+  } catch (error) {
+    if (isPrismaSchemaMismatchError(error)) return null
+    throw error
   }
-  const traderStats = await prisma.trade.aggregate({
-    where: { userId: slug },
-    _sum: { pnl: true },
-    _count: { id: true },
+  if (!publicUser?.showOnLeaderboard) return null
+
+  const trades = await prisma.trade.findMany({
+    where: { userId: publicUser.id },
+    select: { id: true, instrument: true, pnl: true, closeDate: true },
+    orderBy: { closeDate: 'desc' },
+    take: 3000,
   })
+
+  const recentTrades = trades.slice(0, 10).map((trade) => ({
+    id: trade.id,
+    symbol: trade.instrument || 'Unknown',
+    pnl: Number(trade.pnl ?? 0),
+    closeTime: trade.closeDate,
+  }))
+
+  const totalTrades = trades.length
+  const totalPnl = trades.reduce((sum, trade) => sum + Number(trade.pnl ?? 0), 0)
+  const wins = trades.filter((trade) => Number(trade.pnl ?? 0) > 0).length
+  const winRate = totalTrades > 0 ? (wins / totalTrades) * 100 : 0
+  const avgPnl = totalTrades > 0 ? totalPnl / totalTrades : 0
+
+  const dayPnl = new Map<string, number>()
+  for (const trade of trades) {
+    const key = startOfDay(trade.closeDate).toISOString().slice(0, 10)
+    dayPnl.set(key, (dayPnl.get(key) ?? 0) + Number(trade.pnl ?? 0))
+  }
+
   return {
-    username: slug,
-    totalPnl: Number(traderStats._sum.pnl ?? 0),
-    totalTrades: traderStats._count.id,
-    demo: false,
+    id: publicUser.id,
+    username: toUsername(publicUser.email, publicUser.id),
+    totalPnl,
+    totalTrades,
+    winRate,
+    avgPnl,
+    authUserId: publicUser.auth_user_id,
+    recentTrades,
+    dayPnl,
   }
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string; slug: string }>
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
   const { locale, slug } = await params
+  const snapshot = await getTraderSnapshot(slug)
   return buildPublicMetadata({
     locale,
     path: `/trader/${slug}`,
-    title: `${slug} — Trader Profile | Qunt Edge`,
-    description: `View ${slug}'s trading performance, statistics, and public profile on Qunt Edge.`,
+    title: `${snapshot?.username ?? slug} — Trader Profile | Qunt Edge`,
+    description: snapshot
+      ? `${snapshot.username}: ${snapshot.totalTrades} trades, ${formatCurrency(snapshot.totalPnl)} net PnL, ${snapshot.winRate.toFixed(1)}% win rate.`
+      : `Public trader profile for ${slug} on Qunt Edge.`,
   })
 }
 
-/* ─── Not found state ─── */
 function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
   return (
     <div className="min-h-[calc(100vh-72px)] bg-black px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
@@ -104,15 +165,44 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
               className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-4 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-accent/55`}
             >
               <ArrowLeft className="h-3.5 w-3.5" />
-              Back to leaderboard
+              Leaderboard
             </Link>
             <Link
               href={`/${locale}/dashboard/trader-profile`}
               className="inline-flex items-center rounded-full bg-foreground px-4 py-1.5 text-[13px] font-semibold text-background transition-opacity hover:opacity-90"
             >
-              Manage profile
+              <Globe className="h-3.5 w-3.5" />
+              Create your profile
             </Link>
           </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MetricCard({
+  icon,
+  label,
+  value,
+  className,
+  accentClassName,
+}: {
+  icon: React.ReactNode
+  label: string
+  value: string
+  className: string
+  accentClassName: string
+}) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
+      <div className="flex items-start justify-between p-5">
+        <div className="space-y-2">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
+          <p className={cn('text-2xl font-semibold tabular-nums tracking-tight', className)}>{value}</p>
+        </div>
+        <div className={cn('flex h-9 w-9 items-center justify-center rounded-xl border', accentClassName)}>
+          <div className={className}>{icon}</div>
         </div>
       </div>
     </div>

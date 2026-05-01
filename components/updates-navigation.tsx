@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 
 interface UpdatesNavigationProps {
   previous: { slug: string; title: string } | null
@@ -24,41 +23,42 @@ export function UpdatesNavigation({ previous, next, locale, position = 'bottom' 
   const t = labels[locale as keyof typeof labels] || labels.en
 
   return (
-    <nav className={`flex items-center justify-between gap-4 ${position === 'top' ? 'mb-8 pb-8 border-b' : 'mt-12 pt-8 border-t'} border-border`} aria-label="Update navigation">
-      <div className="flex-1 min-w-0">
+    <nav
+      className={`grid grid-cols-2 gap-4 ${position === 'top' ? 'mb-8' : 'mt-8'}`}
+      aria-label="Update navigation"
+    >
+      <div className="min-w-0">
         {next ? (
-          <Link href={`/${locale}/updates/${next.slug}`} className="group block">
-            <Button  variant="ghost" className="h-auto p-4 w-full justify-start text-left">
-              <div className="flex items-center gap-3 min-w-0">
-                <ChevronLeft className="h-5 w-5 flex-shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
-                <div className="min-w-0">
-                  <span className="text-xs text-muted-foreground block">{t.newer}</span>
-                  <span className="text-sm font-medium text-foreground truncate block">
-                    {next.title}
-                  </span>
-                </div>
-              </div>
-            </Button>
+          <Link
+            href={`/${locale}/updates/${next.slug}`}
+            className="group flex flex-col gap-1.5 rounded-xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.84)_0%,oklch(0.052_0.009_260_/_0.78)_100%)] p-4 transition-[background-color,border-color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[linear-gradient(180deg,oklch(0.066_0.01_260_/_0.88)_0%,oklch(0.054_0.009_260_/_0.82)_100%)]"
+          >
+            <span className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+              <ChevronLeft className="h-3.5 w-3.5" />
+              {t.newer}
+            </span>
+            <span className="text-sm font-medium text-foreground line-clamp-1 transition-[color] duration-200 group-hover:text-foreground">
+              {next.title}
+            </span>
           </Link>
         ) : (
           <div />
         )}
       </div>
 
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0">
         {previous ? (
-          <Link href={`/${locale}/updates/${previous.slug}`} className="group block">
-            <Button  variant="ghost" className="h-auto p-4 w-full justify-end text-right">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="min-w-0">
-                  <span className="text-xs text-muted-foreground block">{t.older}</span>
-                  <span className="text-sm font-medium text-foreground truncate block">
-                    {previous.title}
-                  </span>
-                </div>
-                <ChevronRight className="h-5 w-5 flex-shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
-              </div>
-            </Button>
+          <Link
+            href={`/${locale}/updates/${previous.slug}`}
+            className="group flex flex-col items-end gap-1.5 rounded-xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.84)_0%,oklch(0.052_0.009_260_/_0.78)_100%)] p-4 transition-[background-color,border-color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[linear-gradient(180deg,oklch(0.066_0.01_260_/_0.88)_0%,oklch(0.054_0.009_260_/_0.82)_100%)]"
+          >
+            <span className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+              {t.older}
+              <ChevronRight className="h-3.5 w-3.5" />
+            </span>
+            <span className="text-sm font-medium text-foreground line-clamp-1 text-right transition-[color] duration-200 group-hover:text-foreground">
+              {previous.title}
+            </span>
           </Link>
         ) : (
           <div />

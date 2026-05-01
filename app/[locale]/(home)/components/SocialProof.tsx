@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import {
   Clock,
   Globe,
@@ -83,7 +83,7 @@ export default function SocialProof() {
             >
               {t('landing.home.social.badge')}
             </Badge>
-            <h2 className="type-h2 mt-5 text-balance text-foreground lg:text-h1">
+            <h2 className="type-h2 mt-5 text-balance text-foreground lg:text-4xl xl:text-5xl">
               {t('landing.home.social.title')}
             </h2>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
@@ -91,7 +91,7 @@ export default function SocialProof() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid min-w-0 grid-cols-2 gap-4">
             {stats.map((stat, index) => {
               const Icon = stat.icon
               return (

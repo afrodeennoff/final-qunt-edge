@@ -16,11 +16,15 @@ function getFeatureFlags() {
 
     // Server Dashboard Bootstrap
     SERVER_DASHBOARD_BOOTSTRAP: process.env.NEXT_PUBLIC_SERVER_DASHBOARD_BOOTSTRAP === 'true',
-    SERVER_DASHBOARD_ROLLOUT_PCT: Number(process.env.NEXT_PUBLIC_SERVER_DASHBOARD_BOOTSTRAP_PCT) || 0,
+    SERVER_DASHBOARD_ROLLOUT_PCT:
+      Number(process.env.NEXT_PUBLIC_SERVER_DASHBOARD_BOOTSTRAP_PCT) || 0,
 
     // Theme rollout
     DARK_ONLY_SURFACE_ENFORCEMENT:
       process.env.NEXT_PUBLIC_DARK_ONLY_SURFACE_ENFORCEMENT !== 'false',
+
+    // Development-only data fallbacks must be explicit opt-ins.
+    ENABLE_DEV_MOCK_TRADES: process.env.NEXT_PUBLIC_ENABLE_DEV_MOCK_TRADES === 'true',
 
     // Safety
     ENABLE_EMERGENCY_ROLLBACK: process.env.NEXT_PUBLIC_EMERGENCY_ROLLBACK === 'true',
@@ -38,7 +42,7 @@ export type FeatureFlag = keyof typeof FEATURE_FLAGS
 function hashCode(str: string): number {
   let hash = 0
   for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) - hash) + str.charCodeAt(i)
+    hash = (hash << 5) - hash + str.charCodeAt(i)
     hash |= 0 // Convert to 32-bit integer
   }
   return Math.abs(hash)
@@ -57,7 +61,7 @@ export function shouldShowOptimizations(userId?: string): boolean {
   if (pct <= 0) return false
   if (userId) {
     const hash = hashCode(userId)
-    return (hash % 100) < pct
+    return hash % 100 < pct
   }
   return Math.random() * 100 < pct
 }
@@ -73,7 +77,7 @@ export function shouldUseServerBootstrap(userId?: string): boolean {
   if (pct <= 0) return false
   if (userId) {
     const hash = hashCode(userId)
-    return (hash % 100) < pct
+    return hash % 100 < pct
   }
   return false
 }
@@ -83,6 +87,14 @@ export function shouldUseServerBootstrap(userId?: string): boolean {
  */
 export function shouldEnforceDarkOnlySurfaces(): boolean {
   return FEATURE_FLAGS.DARK_ONLY_SURFACE_ENFORCEMENT
+}
+
+/***
+ * Development-only mock trade hydration must be explicitly enabled.
+ * This prevents silent fake-data fallbacks from masking real backend issues.
+ */
+export function shouldUseDevMockTrades(): boolean {
+  return FEATURE_FLAGS.ENABLE_DEV_MOCK_TRADES
 }
 
 /***

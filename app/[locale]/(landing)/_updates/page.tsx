@@ -4,6 +4,7 @@ import CompletedTimeline from '../components/completed-timeline'
 import { getAllPosts } from '@/lib/posts'
 import { getLatestVideoFromPlaylist } from '@/app/[locale]/admin/actions/youtube'
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
+import { MarketingSectionHeader } from '@/components/layout/marketing-sections'
 import type { Metadata } from 'next'
 import { buildPublicMetadata } from '@/lib/seo'
 
@@ -13,41 +14,39 @@ interface PageProps {
   }>
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const { locale } = await params;
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params
   return buildPublicMetadata({
     locale,
-    path: "/updates",
-    title: "Product Updates & Release Notes | Qunt Edge",
+    path: '/updates',
+    title: 'Product Updates & Release Notes | Qunt Edge',
     description:
-      "Track completed Qunt Edge releases, platform improvements, and workflow updates for trading analytics.",
-  });
+      'Track completed Qunt Edge releases, platform improvements, and workflow updates for trading analytics.',
+  })
 }
 
 export default async function UpdatesPage(props: PageProps) {
-  const params = await props.params;
-
-  const {
-    locale
-  } = params;
-
+  const params = await props.params
+  const { locale } = params
   const t = await getI18n()
   const posts = await getAllPosts(locale)
+  const completedPosts = posts.filter((post) => post.meta.status === 'completed')
 
-  // Only show completed posts as per requirement
-  const completedPosts = posts.filter(post => post.meta.status === 'completed')
-
-  // Get the latest video for French locale
   let latestVideoId: string | null = null
   if (locale === 'fr') {
     latestVideoId = await getLatestVideoFromPlaylist()
   }
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
-      {/* Display latest weekly video for French locale */}
+    <UnifiedPageShell widthClassName="max-w-[1080px]" className="py-20 lg:py-24">
+      <MarketingSectionHeader
+        eyebrow={t('updates.title')}
+        title={t('updates.completed')}
+        titleAs="h1"
+        align="left"
+        className="m-0"
+      />
+
       {locale === 'fr' && latestVideoId && (
         <UnifiedSurface className="mb-8">
           <h2 className="mb-6 text-2xl font-semibold text-fg-primary">
@@ -68,16 +67,18 @@ export default async function UpdatesPage(props: PageProps) {
       )}
 
       <UnifiedSurface>
-        <h2 className="mb-6 text-2xl font-semibold text-fg-primary">{t('updates.completed')}</h2>
-        <CompletedTimeline milestones={completedPosts.map(post => ({
-          id: post.meta.slug,
-          title: post.meta.title,
-          description: post.meta.description,
-          status: 'completed',
-          completedDate: post.meta.completedDate || post.meta.date,
-          image: post.meta.image,
-          youtubeVideoId: post.meta.youtubeVideoId
-        }))} locale={locale} />
+        <CompletedTimeline
+          milestones={completedPosts.map((post) => ({
+            id: post.meta.slug,
+            title: post.meta.title,
+            description: post.meta.description,
+            status: 'completed',
+            completedDate: post.meta.completedDate || post.meta.date,
+            image: post.meta.image,
+            youtubeVideoId: post.meta.youtubeVideoId,
+          }))}
+          locale={locale}
+        />
       </UnifiedSurface>
     </UnifiedPageShell>
   )

@@ -15,7 +15,11 @@ export default function HeaderSelection({ rawCsvData, setCsvData, setHeaders, se
  const [selectedHeaderIndex, setSelectedHeaderIndex] = useState<number>(0)
 
  const processHeaderSelection = useCallback((index: number, data: string[][]) => {
- const newHeaders = data[index].filter(header => header && header.trim() !== '')
+ // Preserve all columns including empty headers to maintain index alignment with data rows.
+ // Replace empty headers with positional labels so column mapping works correctly.
+ const newHeaders = data[index].map((header, i) =>
+   header && header.trim() !== '' ? header : `Column ${i + 1}`
+ )
  setHeaders(newHeaders)
  setCsvData(data.slice(index + 1))
  setError(null)
@@ -33,8 +37,8 @@ export default function HeaderSelection({ rawCsvData, setCsvData, setHeaders, se
  }
 
  return (
- <div className="space-y-4">
- <div className="max-h-[calc(80vh-200px)] overflow-auto">
+ <div className="h-full flex flex-col gap-4">
+ <div className="flex-1 min-h-0 overflow-auto">
  <Table>
  <TableHeader>
  <TableRow>

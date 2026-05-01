@@ -49,13 +49,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
   const [copied, setCopied] = useState(false)
   const affiliateUrl = 'https://whop.com/quantedge-solutions/affiliates'
 
-  useEffect(() => {
-    if (isOpen) {
-      fetchReferralData()
-    }
-  }, [isOpen])
-
-  const fetchReferralData = async () => {
+  async function fetchReferralData() {
     try {
       setIsLoading(true)
       const response = await fetch('/api/referral')
@@ -71,6 +65,12 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchReferralData()
+    }
+  }, [isOpen])
 
   const copyReferralCode = async () => {
     if (!referralData?.referral.slug) return

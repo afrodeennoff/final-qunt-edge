@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
 import {
   Conversation,
   ConversationContent,
   ConversationScrollButton,
-} from '@/components/ai-elements/conversation';
-import { Message, MessageContent } from '@/components/ai-elements/message';
+} from '@/components/ai-elements/conversation'
+import { Message, MessageContent } from '@/components/ai-elements/message'
 import {
   PromptInput,
   PromptInputActionAddAttachments,
@@ -26,44 +26,38 @@ import {
   PromptInputTextarea,
   PromptInputToolbar,
   PromptInputTools,
-} from '@/components/ai-elements/prompt-input';
+} from '@/components/ai-elements/prompt-input'
+import { Actions, Action } from '@/components/ai-elements/actions'
+import { Fragment, useEffect, useState } from 'react'
+import { useChat } from '@ai-sdk/react'
+import { Response } from '@/components/ai-elements/response'
+import { GlobeIcon, RefreshCcwIcon } from 'lucide-react'
+import { useI18n } from '@/locales/client'
+import { Source, Sources, SourcesContent, SourcesTrigger } from '@/components/ai-elements/sources'
+import { Reasoning, ReasoningContent, ReasoningTrigger } from '@/components/ai-elements/reasoning'
+import { Loader } from '@/components/ai-elements/loader'
+import { DefaultChatTransport } from 'ai'
+import { ClipboardCheckIcon } from '@/components/animated-icons/clipboard-check'
+import SupportForm from './components/support-form'
+import { toast } from 'sonner'
+import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
 import {
-  Actions,
-  Action,
-} from '@/components/ai-elements/actions';
-import { Fragment, useEffect, useState } from 'react';
-import { useChat } from '@ai-sdk/react';
-import { Response } from '@/components/ai-elements/response';
-import { GlobeIcon, RefreshCcwIcon } from 'lucide-react';
-import { useI18n } from '@/locales/client';
-import {
-  Source,
-  Sources,
-  SourcesContent,
-  SourcesTrigger,
-} from '@/components/ai-elements/sources';
-import {
-  Reasoning,
-  ReasoningContent,
-  ReasoningTrigger,
-} from '@/components/ai-elements/reasoning';
-import { Loader } from '@/components/ai-elements/loader';
-import { DefaultChatTransport } from 'ai';
-import { ClipboardCheckIcon } from '@/components/animated-icons/clipboard-check';
-import SupportForm from './components/support-form';
-import { toast } from 'sonner';
-import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell';
-import { SUPPORT_MODEL_OPTIONS, type SupportModelId, isSupportModelId } from '@/lib/ai/support-models';
+  SUPPORT_MODEL_OPTIONS,
+  type SupportModelId,
+  isSupportModelId,
+} from '@/lib/ai/support-models'
 
 const ChatBotDemo = () => {
-  const t = useI18n();
+  const t = useI18n()
   const getErrorMessage = (error: unknown) => {
-    const message = typeof error === 'object' && error !== null && 'message' in error
-      ? String((error as { message?: string }).message || '')
-      : ''
-    const type = typeof error === 'object' && error !== null && 'type' in error
-      ? String((error as { type?: string }).type || '')
-      : ''
+    const message =
+      typeof error === 'object' && error !== null && 'message' in error
+        ? String((error as { message?: string }).message || '')
+        : ''
+    const type =
+      typeof error === 'object' && error !== null && 'type' in error
+        ? String((error as { type?: string }).type || '')
+        : ''
 
     if (
       message.includes('Free credits temporarily have rate limits') ||
@@ -81,55 +75,62 @@ const ChatBotDemo = () => {
     }
     return t('support.errors.generic')
   }
-  const [input, setInput] = useState('');
-  const [model, setModel] = useState<SupportModelId>(SUPPORT_MODEL_OPTIONS[0].value);
-  const [webSearch, setWebSearch] = useState(false);
-  const { messages, sendMessage, status, setMessages } = useChat(
-    {
-      transport: new DefaultChatTransport({
-        api: '/api/ai/support',
-      }) ,
-      onError: (error) => {
-        console.warn('Chat error:', error);
-        // Add error message to chat
-        setMessages(prev => [...prev, {
+  const [input, setInput] = useState('')
+  const [model, setModel] = useState<SupportModelId>(SUPPORT_MODEL_OPTIONS[0].value)
+  const [webSearch, setWebSearch] = useState(false)
+  const { messages, sendMessage, status, setMessages } = useChat({
+    transport: new DefaultChatTransport({
+      api: '/api/ai/support',
+    }),
+    onError: (error) => {
+      console.warn('Chat error:', error)
+      // Add error message to chat
+      setMessages((prev) => [
+        ...prev,
+        {
           id: `error-${Date.now()}`,
           role: 'assistant',
-          parts: [{
-            type: 'text',
-            text: getErrorMessage(error),
-          }],
-        }]);
-      },
-    }
-  );
+          parts: [
+            {
+              type: 'text',
+              text: getErrorMessage(error),
+            },
+          ],
+        },
+      ])
+    },
+  })
 
   useEffect(() => {
     // If there are no messages, add the greeting message
     if (messages.length === 0) {
-      setMessages([{
-        id: '1',
-        role: 'assistant',
-        parts: [{
-          type: 'text',
-          text: t('support.greeting'),
-        }],
-      }]);
+      setMessages([
+        {
+          id: '1',
+          role: 'assistant',
+          parts: [
+            {
+              type: 'text',
+              text: t('support.greeting'),
+            },
+          ],
+        },
+      ])
     }
-  }, [messages.length, setMessages, t]);
+  }, [messages.length, setMessages, t])
 
   const handleSubmit = (message: PromptInputMessage) => {
-    const hasText = Boolean(message.text);
-    const hasAttachments = Boolean(message.files?.length);
+    const hasText = Boolean(message.text)
+    const hasAttachments = Boolean(message.files?.length)
 
     if (!(hasText || hasAttachments)) {
-      return;
+      return
     }
 
     sendMessage(
       {
         text: message.text || 'Sent with attachments',
-        files: message.files
+        files: message.files,
       },
       {
         body: {
@@ -137,18 +138,18 @@ const ChatBotDemo = () => {
           webSearch: webSearch,
         },
       },
-    );
-    setInput('');
-  };
+    )
+    setInput('')
+  }
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-20 lg:py-24">
       <UnifiedSurface className="flex h-[calc(100vh-220px)] min-h-[680px] flex-col">
         <header className="mb-4">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             Qunt Edge Support
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">
             Get technical help, account guidance, and workflow support from the Qunt Edge team.
           </p>
         </header>
@@ -164,9 +165,7 @@ const ChatBotDemo = () => {
               <h3 className="mb-1 text-lg font-semibold text-fg-primary">
                 {t('support.joinDiscord')}
               </h3>
-              <p className="text-sm text-fg-muted">
-                {t('support.discordDescription')}
-              </p>
+              <p className="text-sm text-fg-muted">{t('support.discordDescription')}</p>
             </div>
             <div className="text-fg-muted transition-colors duration-150 group-hover:text-fg-primary">
               <span className="sr-only">Discord</span>
@@ -180,26 +179,21 @@ const ChatBotDemo = () => {
           <ConversationContent>
             {messages.map((message) => (
               <div key={message.id}>
-                {message.role === 'assistant' && message.parts.filter((part) => part.type === 'source-url').length > 0 && (
-                  <Sources>
-                    <SourcesTrigger
-                      count={
-                        message.parts.filter(
-                          (part) => part.type === 'source-url',
-                        ).length
-                      }
-                    />
-                    {message.parts.filter((part) => part.type === 'source-url').map((part, i) => (
-                      <SourcesContent key={`${message.id}-${i}`}>
-                        <Source
-                          key={`${message.id}-${i}`}
-                          href={part.url}
-                          title={part.url}
-                        />
-                      </SourcesContent>
-                    ))}
-                  </Sources>
-                )}
+                {message.role === 'assistant' &&
+                  message.parts.filter((part) => part.type === 'source-url').length > 0 && (
+                    <Sources>
+                      <SourcesTrigger
+                        count={message.parts.filter((part) => part.type === 'source-url').length}
+                      />
+                      {message.parts
+                        .filter((part) => part.type === 'source-url')
+                        .map((part, i) => (
+                          <SourcesContent key={`${message.id}-${i}`}>
+                            <Source key={`${message.id}-${i}`} href={part.url} title={part.url} />
+                          </SourcesContent>
+                        ))}
+                    </Sources>
+                  )}
                 {message.parts.map((part, i) => {
                   switch (part.type) {
                     case 'text':
@@ -211,45 +205,43 @@ const ChatBotDemo = () => {
                        *   - think: an array of strings, each being the content of a <think> tag
                        */
                       const preprocessContent = (content: string) => {
-                        if (typeof content !== 'string') return { content, think: [] };
+                        if (typeof content !== 'string') return { content, think: [] }
 
-                        const think: string[] = [];
+                        const think: string[] = []
                         // Extract all <think>...</think> contents, even if </think> is missing
-                        let contentWithoutThink = content;
-                        think.length = 0;
-                        const thinkRegex = /<think>([\s\S]*?)(<\/think>|$)/g;
-                        contentWithoutThink = contentWithoutThink.replace(thinkRegex, (_, thinkContent) => {
-                          think.push(thinkContent);
-                          return '';
-                        });
+                        let contentWithoutThink = content
+                        think.length = 0
+                        const thinkRegex = /<think>([\s\S]*?)(<\/think>|$)/g
+                        contentWithoutThink = contentWithoutThink.replace(
+                          thinkRegex,
+                          (_, thinkContent) => {
+                            think.push(thinkContent)
+                            return ''
+                          },
+                        )
 
-                        return { content: contentWithoutThink, think };
-                      };
-                      const { content: contentWithoutThink, think } = preprocessContent(part.text);
+                        return { content: contentWithoutThink, think }
+                      }
+                      const { content: contentWithoutThink, think } = preprocessContent(part.text)
                       return (
                         <Fragment key={`${message.id}-${i}`}>
                           {think.map((think, index) => (
-                            <Reasoning
-                              key={`${message.id}-${i}-think-${index}`}
-                              className="w-full"
-                            >
+                            <Reasoning key={`${message.id}-${i}-think-${index}`} className="w-full">
                               <ReasoningTrigger />
                               <ReasoningContent>{think}</ReasoningContent>
                             </Reasoning>
                           ))}
                           <Message from={message.role}>
                             <MessageContent>
-                              <Response>
-                                {contentWithoutThink}
-                              </Response>
+                              <Response>{contentWithoutThink}</Response>
                             </MessageContent>
                           </Message>
                           {message.role === 'assistant' && (
                             <Actions className="mt-2">
                               <Action
-                                onClick={() =>{
+                                onClick={() => {
                                   navigator.clipboard.writeText(contentWithoutThink)
-                                  toast.success(t('support.copied'),{position: 'top-right'})
+                                  toast.success(t('support.copied'), { position: 'top-right' })
                                 }}
                                 label={t('common.copy')}
                               >
@@ -257,35 +249,38 @@ const ChatBotDemo = () => {
                               </Action>
                             </Actions>
                           )}
-                          {
-                            message.role === 'user' && (
-                              <Actions className="mt-2 justify-end">
-                                <Action
-                                  onClick={() =>
-                                    sendMessage(
-                                      { text: part.text },
-                                      { body: { model: model, webSearch: webSearch } }
-                                    )
-                                  }
-                                  label={t('common.retry')}
-                                >
-                                  <RefreshCcwIcon size={16} className="mr-2" />
-                                </Action>
-                              </Actions>
-                            )}
+                          {message.role === 'user' && (
+                            <Actions className="mt-2 justify-end">
+                              <Action
+                                onClick={() =>
+                                  sendMessage(
+                                    { text: part.text },
+                                    { body: { model: model, webSearch: webSearch } },
+                                  )
+                                }
+                                label={t('common.retry')}
+                              >
+                                <RefreshCcwIcon size={16} className="mr-2" />
+                              </Action>
+                            </Actions>
+                          )}
                         </Fragment>
-                      );
+                      )
                     case 'reasoning':
                       return (
                         <Reasoning
                           key={`${message.id}-${i}`}
                           className="w-full"
-                          isStreaming={status === 'streaming' && i === message.parts.length - 1 && message.id === messages.at(-1)?.id}
+                          isStreaming={
+                            status === 'streaming' &&
+                            i === message.parts.length - 1 &&
+                            message.id === messages.at(-1)?.id
+                          }
                         >
                           <ReasoningTrigger />
                           <ReasoningContent>{part.text}</ReasoningContent>
                         </Reasoning>
-                      );
+                      )
                     case 'tool-askForEmailForm':
                       switch (part.state) {
                         case 'input-available':
@@ -295,7 +290,12 @@ const ChatBotDemo = () => {
                             </div>
                           )
                         case 'output-available':
-                          if (part.output && typeof part.output === 'object' && 'summary' in part.output && 'locale' in part.output) {
+                          if (
+                            part.output &&
+                            typeof part.output === 'object' &&
+                            'summary' in part.output &&
+                            'locale' in part.output
+                          ) {
                             return (
                               <div key={`${message.id}-${i}`}>
                                 <SupportForm
@@ -320,10 +320,10 @@ const ChatBotDemo = () => {
                             </div>
                           )
                         default:
-                          return null;
+                          return null
                       }
                     default:
-                      return null;
+                      return null
                   }
                 })}
               </div>
@@ -359,14 +359,14 @@ const ChatBotDemo = () => {
                 <GlobeIcon size={16} />
                 <span>{t('support.search')}</span>
               </PromptInputButton>
-                <PromptInputModelSelect
-                  onValueChange={(value) => {
-                    if (isSupportModelId(value)) {
-                      setModel(value);
-                    }
-                  }}
-                  value={model}
-                >
+              <PromptInputModelSelect
+                onValueChange={(value) => {
+                  if (isSupportModelId(value)) {
+                    setModel(value)
+                  }
+                }}
+                value={model}
+              >
                 <PromptInputModelSelectTrigger>
                   <PromptInputModelSelectValue />
                 </PromptInputModelSelectTrigger>
@@ -384,7 +384,7 @@ const ChatBotDemo = () => {
         </PromptInput>
       </UnifiedSurface>
     </UnifiedPageShell>
-  );
-};
+  )
+}
 
-export default ChatBotDemo;
+export default ChatBotDemo

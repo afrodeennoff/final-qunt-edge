@@ -18,7 +18,6 @@ describe("Sidebar Active Link Detection", () => {
 
     act(() => {
       vi.spyOn(require("next/navigation"), "usePathname").mockReturnValue("/dashboard")
-      vi.spyOn(require("next/navigation"), "useSearchParams").mockReturnValue(new URLSearchParams())
     })
 
     const isActive = result.current
@@ -39,32 +38,30 @@ describe("Sidebar Active Link Detection", () => {
     expect(isActive("/teams/dashboard", true)).toBe(false)
   })
 
-  it("should handle tab-based navigation", () => {
+  it("should match route-based dashboard children", () => {
     const { result } = renderHook(() => useActiveLink())
 
     act(() => {
-      vi.spyOn(require("next/navigation"), "usePathname").mockReturnValue("/dashboard")
-      const searchParams = new URLSearchParams()
-      searchParams.set("tab", "chart")
-      vi.spyOn(require("next/navigation"), "useSearchParams").mockReturnValue(searchParams)
+      vi.spyOn(require("next/navigation"), "usePathname").mockReturnValue("/dashboard/trades")
     })
 
     const isActive = result.current
-    expect(isActive("/dashboard?tab=chart", false)).toBe(true)
-    expect(isActive("/dashboard?tab=widgets", false)).toBe(false)
+    expect(isActive("/dashboard/trades", false)).toBe(true)
+    expect(isActive("/dashboard/trades", true)).toBe(true)
   })
 
-  it("should handle default tab for dashboard", () => {
+  it("should detect dashboard as parent of nested routes", () => {
     const { result } = renderHook(() => useActiveLink())
 
     act(() => {
-      vi.spyOn(require("next/navigation"), "usePathname").mockReturnValue("/dashboard")
-      vi.spyOn(require("next/navigation"), "useSearchParams").mockReturnValue(new URLSearchParams())
+      vi.spyOn(require("next/navigation"), "usePathname").mockReturnValue("/dashboard/accounts")
     })
 
     const isActive = result.current
+    // /dashboard without exact matches because it's a parent route
     expect(isActive("/dashboard", false)).toBe(true)
-    expect(isActive("/dashboard?tab=widgets", false)).toBe(true)
+    // /dashboard with exact does NOT match /dashboard/accounts
+    expect(isActive("/dashboard", true)).toBe(false)
   })
 })
 
@@ -351,7 +348,7 @@ describe("useIsMobile SSR Safety", () => {
     })
 
     const { result } = renderHook(() => useIsMobile())
-    
+
     // During SSR/hydration, should return false (the safe default)
     expect(result.current).toBe(false)
   })
@@ -367,7 +364,7 @@ describe("useIsMobile SSR Safety", () => {
     })
 
     const { result } = renderHook(() => useIsMobile())
-    
+
     await waitFor(() => {
       expect(result.current).toBe(true)
     })

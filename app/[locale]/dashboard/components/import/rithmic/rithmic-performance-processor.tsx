@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { toast } from "sonner"
 import type { ImportTradeDraft as Trade } from '@/lib/trade-types'
 import { PlatformProcessorProps } from '../config/platforms'
 
@@ -47,15 +46,17 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
  // Ensure time values are stored as ISO strings
  try {
  if (item.entryDate) {
- item.entryDate = new Date(item.entryDate).toISOString();
+ const d = new Date(item.entryDate);
+ if (isNaN(d.getTime())) return;
+ item.entryDate = d.toISOString();
  }
  if (item.closeDate) {
- item.closeDate = new Date(item.closeDate).toISOString();
+ const d = new Date(item.closeDate);
+ if (isNaN(d.getTime())) return;
+ item.closeDate = d.toISOString();
  }
  } catch (e) {
- toast.error("Error", {
- description:"There was an error processing the trades. Please check the data and try again."
- })
+ console.warn('[RithmicPerformance] Error processing dates for row', e);
  return;
  }
  // On rithmic performance, the side is stored as 'B' or 'S'
@@ -75,6 +76,12 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
  }
  item.accountNumber = normalizedAccountNumber;
  item.id = `${item.entryId}-${item.closeId}`;
+
+ // Validate required fields before adding
+ if (!item.instrument || !item.entryDate || !item.closeDate || !item.entryPrice || !item.closePrice) {
+ return;
+ }
+
  newTrades.push(item as Trade);
  });
 

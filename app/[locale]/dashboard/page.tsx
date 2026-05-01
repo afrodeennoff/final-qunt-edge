@@ -1,6 +1,21 @@
-import { DashboardTabShell } from "./components/dashboard-tab-shell";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getCanonicalUrl } from "@/lib/seo";
+import { DashboardSkeleton } from "./components/skeletons/dashboard-skeleton";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import { Spinner } from "@/components/ui/skeleton";
+import { CheckoutSuccessHandler } from "./components/checkout-success-handler";
+
+const tabLoadingFallback = (
+  <div className="flex items-center justify-center h-64">
+    <Spinner size={24} />
+  </div>
+);
+
+const WidgetCanvas = dynamic(() => import("./components/widget-canvas"), {
+  loading: () => tabLoadingFallback,
+});
 
 export async function generateMetadata({
   params,
@@ -12,7 +27,8 @@ export async function generateMetadata({
 
   return {
     title: "Dashboard | Qunt Edge",
-    description: "Access your trading analytics dashboard with real-time performance metrics, behavioral insights, and comprehensive trade analysis.",
+    description:
+      "Access your trading analytics dashboard with real-time performance metrics, behavioral insights, and comprehensive trade analysis.",
     robots: {
       index: false,
       follow: false,
@@ -24,20 +40,24 @@ export async function generateMetadata({
 }
 
 export default async function DashboardPage(props: {
-  searchParams: Promise<{ tab?: string; success?: string }>;
+  searchParams: Promise<{ success?: string }>;
 }) {
   const searchParams = await props.searchParams;
-  const rawTab = searchParams?.tab;
-  const activeTab =
-    rawTab === "table" ||
-    rawTab === "accounts" ||
-    rawTab === "chart" ||
-    rawTab === "widgets"
-      ? rawTab
-      : "widgets";
   const checkoutSuccess = searchParams?.success === "true";
+  const shouldUseEnhancedSkeleton = FEATURE_FLAGS.ENABLE_SKELETON_LOADING;
 
   return (
-    <DashboardTabShell activeTab={activeTab} checkoutSuccess={checkoutSuccess} />
+    <>
+      {checkoutSuccess && <CheckoutSuccessHandler />}
+      <Suspense
+        fallback={
+          shouldUseEnhancedSkeleton ? (
+            <DashboardSkeleton activeTab="widgets" />
+          ) : null
+        }
+      >
+        <WidgetCanvas />
+      </Suspense>
+    </>
   );
 }

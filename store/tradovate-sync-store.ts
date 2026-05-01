@@ -104,13 +104,23 @@ export const useTradovateSyncStore = create<TradovateSyncStore>()(
           sessionStorage.removeItem('tradovate_environment')
         }
       },
+      version: 2,
       partialize: (state) => ({
-        isAuthenticated: state.isAuthenticated,
-        accounts: state.accounts,
-        lastSync: state.lastSync,
         environment: state.environment,
-        oauthState: state.oauthState,
       }),
+      migrate: (persistedState: unknown) => {
+        const state = persistedState as Partial<TradovateState> | null
+        return {
+          environment: state?.environment === 'live' ? 'live' : 'demo',
+        }
+      },
+      merge: (persistedState, currentState) => {
+        const state = persistedState as Partial<TradovateState> | null
+        return {
+          ...currentState,
+          environment: state?.environment === 'live' ? 'live' : 'demo',
+        }
+      },
     }
   )
 )

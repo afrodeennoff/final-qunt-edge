@@ -11,6 +11,24 @@ const PROD_CONNECT_SOURCES = [
   "https://*.pooler.supabase.com",
   "https://vercel.live",
   "https://vitals.vercel-insights.com",
+  "https://eu.i.posthog.com",
+  "https://api.z.ai",
+];
+
+const PROD_IMG_SOURCES = [
+  "'self'",
+  "data:",
+  "blob:",
+  "https:",
+];
+
+const PROD_SCRIPT_SOURCES_BASE = [
+  "'self'",
+];
+
+const DEV_SCRIPT_SOURCES_BASE = [
+  "'self'",
+  "'unsafe-eval'",
 ];
 
 const DEV_CONNECT_SOURCES = [
@@ -38,14 +56,14 @@ function normalizeSources(sources: string[]): string {
 export function buildAppCsp({ nonce, isDev, strictMode, reportOnly }: AppCspOptions): string {
   const connectSources = isDev ? DEV_CONNECT_SOURCES : PROD_CONNECT_SOURCES;
   const scriptSources = strictMode
-    ? [`'self'`, `'nonce-${nonce}'`]
-    : [`'self'`, `'nonce-${nonce}'`, `'unsafe-eval'`];
+    ? [...PROD_SCRIPT_SOURCES_BASE, `'nonce-${nonce}'`]
+    : [...PROD_SCRIPT_SOURCES_BASE, `'nonce-${nonce}'`, "'unsafe-eval'"];
 
   const directives = [
     "default-src 'self'",
     `script-src ${scriptSources.join(" ")}`,
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: blob: https:",
+    `img-src ${PROD_IMG_SOURCES.join(" ")}`,
     "font-src 'self' data: https:",
     `connect-src ${normalizeSources(connectSources)}`,
     "frame-ancestors 'self'",

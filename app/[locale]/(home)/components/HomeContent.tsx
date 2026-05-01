@@ -1,16 +1,34 @@
-import Hero from './Hero'
-import LiveStatsStrip from './LiveStatsStrip'
-import FeaturesBento from './FeaturesBento'
-import ProblemStatement from './ProblemStatement'
-import PropFirmsExplorer from './PropFirmsExplorer'
-import FinalCTA from './FinalCTA'
-import HowItWorks from './HowItWorks'
-import AnalysisDemo from './AnalysisDemo'
-import AudienceSegmentation from './AudienceSegmentation'
-import AIFeatures from './AIFeatures'
-import SocialProof from './SocialProof'
-import PricingSection from './PricingSection'
-import FAQSection from './FAQSection'
+import Link from 'next/link'
+import {
+  ArrowRight,
+  BarChart3,
+  Brain,
+  Download,
+  FileText,
+  LineChart,
+  NotebookTabs,
+  Play,
+  Shield,
+  Target,
+  Users,
+} from 'lucide-react'
+import { buttonVariants } from '@/components/ui/v2'
+import {
+  MarketingFeatureCard,
+  MarketingHyperframe,
+  MarketingSection,
+  MarketingSectionHeader,
+  MarketingStatBlock,
+  MarketingStepCard,
+  marketingBodyClassName,
+  marketingHeroTitleClassName,
+  marketingSectionTitleClassName,
+} from '@/components/layout/marketing-sections'
+import { MarketingPricingSection } from '@/components/layout/marketing-pricing-section'
+import { getI18n } from '@/locales/server'
+import { cn } from '@/lib/utils'
+import ProductDemoPlayer from './ProductDemoPlayer'
+import { SocialProofLazy, FAQSectionLazy, TrustAndProofLazy } from './LazySections'
 
 interface HomeContentProps {
   locale: string

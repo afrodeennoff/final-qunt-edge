@@ -1,4 +1,6 @@
-'use client'
+import ResetPasswordForm from './reset-password-form'
+import { getStaticParams } from '@/locales/server'
+import { setStaticParamsLocale } from 'next-international/server'
 
 import { useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'

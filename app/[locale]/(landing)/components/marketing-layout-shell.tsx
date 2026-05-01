@@ -3,6 +3,7 @@ import Footer from './footer'
 import { cn } from '@/lib/utils'
 import { Suspense } from 'react'
 import RollingAdBanner from '../../(home)/components/RollingAdBanner'
+import { CONTENT_PADDING, MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 
 type MarketingLayoutShellProps = Readonly<{
   children: React.ReactNode
@@ -12,10 +13,12 @@ type MarketingLayoutShellProps = Readonly<{
   topSpacingClassName?: string
   contentSpacingClassName?: string
   shellVariant?: 'accent' | 'black'
+  fullWidth?: boolean
+  showSidebar?: boolean
 }>
 
 const MiniMaxNavbarWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  return <div className="w-full bg-background">{children}</div>
+  return <div className="w-full border-b border-[oklch(0.65_0.22_260_/_0.05)] bg-background">{children}</div>
 }
 
 export default function MarketingLayoutShell({
@@ -26,18 +29,20 @@ export default function MarketingLayoutShell({
   topSpacingClassName = 'pt-16 sm:pt-20 lg:pt-24',
   contentSpacingClassName = 'space-y-8 pb-24 pt-6 sm:pt-8 lg:pt-10',
   shellVariant = 'black',
+  fullWidth = false,
+  showSidebar: _showSidebar = true,
 }: MarketingLayoutShellProps) {
   return (
     <div
       className={cn(
-        'marketing-shell qe-v2-app-shell min-h-screen w-full overflow-x-hidden bg-black',
+        'marketing-shell qe-v2-app-shell min-h-screen w-full overflow-x-hidden bg-background',
         className,
       )}
     >
       <div
         className={cn(
           'pointer-events-none fixed inset-0 hidden qe-v2-grid sm:block',
-          shellVariant === 'black' ? 'opacity-[0.05]' : 'opacity-[0.08]',
+          shellVariant === 'black' ? 'opacity-[0.012]' : 'opacity-[0.02]',
         )}
       />
       <div className="pointer-events-none fixed inset-0 opacity-[0.06] [background-image:radial-gradient(circle_at_top,hsl(var(--primary)/0.12),transparent_38%)]" />
@@ -48,7 +53,7 @@ export default function MarketingLayoutShell({
           <MiniMaxNavbarWrapper>
             <Navbar />
           </MiniMaxNavbarWrapper>
-          <div className={cn('relative z-10 min-w-0', topSpacingClassName)}>
+          <div className={cn('relative z-10 flex flex-1 flex-col min-w-0', topSpacingClassName)}>
             {showRollingBanner ? (
               <Suspense fallback={null}>
                 <RollingAdBanner />

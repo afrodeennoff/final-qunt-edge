@@ -18,6 +18,7 @@ import {
   CONTENT_PADDING,
   CONTENT_PADDING_Y,
   APP_SHELL_SOFT_BORDER_STYLE,
+  WORKSPACE_SHELL_WIDTH,
 } from '@/lib/constants/layout'
 import { Building2, Tags, BookOpen, Mail, BarChart, LayoutDashboard } from 'lucide-react'
 import type { MobileNavItem } from '@/components/mobile-bottom-nav'
@@ -38,7 +39,8 @@ export function AdminClientLayout({
     if (params.get('error')) {
       const errorDescription = params.get('error_description')
       toast.error('Authentication Error', {
-        description: errorDescription?.replace(/\+/g, ' ') || 'An error occurred during authentication',
+        description:
+          errorDescription?.replace(/\+/g, ' ') || 'An error occurred during authentication',
       })
       router.replace(`/${locale}/authentication`)
     }
@@ -63,7 +65,7 @@ export function AdminClientLayout({
       <SidebarInset className="qe-v2-app-shell relative overflow-hidden">
         <div className="pointer-events-none absolute inset-x-6 top-0 z-0 h-32 rounded-b-2xl border border-border/20 bg-primary/[0.02]" />
         <header
-          className={`${HEADER_Z_INDEX} sticky top-0 px-3 pb-2 pt-3 sm:px-4 sm:pb-3 sm:pt-4`}
+          className={`${HEADER_Z_INDEX} sticky top-0 px-3 pb-2 pt-3 sm:px-4 sm:pb-3 sm:pt-4 lg:px-6`}
         >
           <div className="mx-auto flex w-full max-w-[1800px] items-center">
             <div className={cn(unifiedSectionPanelClassName, 'relative flex min-h-[4.5rem] w-full flex-col gap-4 overflow-hidden rounded-2xl px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between')}>
@@ -106,8 +108,15 @@ export function AdminClientLayout({
             </div>
           </div>
         </header>
-        <main className={`flex-1 overflow-y-auto ${CONTENT_PADDING_Y} ${CONTENT_PADDING} relative z-0`}>
-          <div className="mx-auto flex max-w-[1800px] flex-col">
+        <main className="relative z-0 flex-1 overflow-y-auto">
+          <div
+            className={cn(
+              'mx-auto flex w-full flex-col',
+              WORKSPACE_SHELL_WIDTH,
+              CONTENT_PADDING,
+              CONTENT_PADDING_Y,
+            )}
+          >
             {children}
           </div>
         </main>

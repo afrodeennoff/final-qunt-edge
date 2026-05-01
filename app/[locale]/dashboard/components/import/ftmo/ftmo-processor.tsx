@@ -5,7 +5,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import type { ImportTradeDraft as Trade } from '@/lib/trade-types'
 import { useI18n } from '@/locales/client'
-import { createTradeWithDefaults } from '@/lib/trade-factory'
 import { PlatformProcessorProps } from '../config/platforms'
 
 const formatDuration = (seconds: number): string => {
@@ -89,7 +88,8 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
  // Calculate total commission including swap (overnight financing costs)
  const totalCommission = Math.abs(commission) - swap
 
- const trade = createTradeWithDefaults({
+ const trade: Partial<Trade> = {
+ id: `ftmo-${ticket}`,
  quantity,
  instrument: symbol,
  entryPrice: parseFloat(entryPrice.toString()),
@@ -101,11 +101,11 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
  timeInPosition: duration,
  side,
  comment: `FTMO Trade ${ticket}`,
- })
+ }
 
  // FTMO provides all cost information directly, no need for commission handling
 
- newTrades.push(trade as Trade)
+ newTrades.push(trade as Trade);
  }
 
  setProcessedTrades(newTrades);

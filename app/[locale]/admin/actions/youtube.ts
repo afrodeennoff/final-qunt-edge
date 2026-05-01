@@ -5,10 +5,10 @@ import { generateText, Output } from "ai"
 import { z } from 'zod/v3'
 import { cacheLife, cacheTag } from 'next/cache'
 
-const QUNT_EDGE_CONTEXT = `Qunt Edge est une plateforme web pour day traders de futures, avec une interface intuitive et personnalisable. Conçue à partir de mon expérience personnelle en tant que day trader de futures, utilisant des stratégies de scalping, elle propose des fonctionnalités comme la gestion de multiple compte, le suivi des challenges propfirms, et des tableaux de bord personnalisables. Notre but est de fournir aux traders des analyses approfondies sur leurs habitudes de trading pour optimiser leurs stratégies et améliorer leur prise de décision.`
+const QUNT_EDGE_CONTEXT = `Qunt Edge is a web platform for futures day traders, with an intuitive and customizable interface. Built from personal experience as a futures day trader using scalping strategies, it offers features like multi-account management, prop firm challenge tracking, and customizable dashboards. Our goal is to provide traders with deep analytics on their trading habits to optimize strategies and improve decision-making.`
 
 const summarySchema = z.object({
-  summary: z.string().describe("Un résumé technique concis des mises à jour présentées")
+  summary: z.string().describe("A concise technical summary of the presented updates")
 })
 
 export async function generateTranscriptSummary(transcript: string): Promise<string | null> {
@@ -16,17 +16,17 @@ export async function generateTranscriptSummary(transcript: string): Promise<str
     const { output } = await generateText({
       model: 'openai/gpt-5-mini',
       output: Output.object({ schema: summarySchema }),
-      prompt: `Tu es un expert en développement web et en trading qui aide à résumer les mises à jour de Qunt Edge.
+      prompt: `You are an expert in web development and trading who helps summarize Qunt Edge updates.
 ${QUNT_EDGE_CONTEXT}
 
-Ta tâche est de :
-1. Analyser la transcription d'une vidéo YouTube
-2. Générer un résumé technique concis (150-200 mots) des nouvelles fonctionnalités ou mises à jour présentées
-3. Mettre l'accent sur les aspects techniques et les avantages pour les traders
-4. Utiliser une terminologie précise du trading de futures
-5. Rester factuel et ne pas extrapoler au-delà du contenu de la transcription
+Your task is to:
+1. Analyze the transcript of a YouTube video
+2. Generate a concise technical summary (150-200 words) of the new features or updates presented
+3. Focus on technical aspects and benefits for traders
+4. Use precise futures trading terminology
+5. Stay factual and do not extrapolate beyond the transcript content
 
-Voici la transcription de la vidéo. Génère un résumé technique des mises à jour présentées :
+Here is the video transcript. Generate a technical summary of the presented updates:
 
 ${transcript}`,
       temperature: 0.7,
@@ -238,4 +238,4 @@ export async function findVideoIdForPostDateAction(postDate: string): Promise<st
     console.error('Error finding video for post date:', error);
     return null;
   }
-} 
+}

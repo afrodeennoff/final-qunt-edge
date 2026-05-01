@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useEffect, useState } from "react"
-import { motion, useReducedMotion, useInView, AnimatePresence } from "framer-motion"
+import { motion, useReducedMotion, useInView, AnimatePresence } from "motion/react"
 import { cn } from "@/lib/utils"
 import { SPRING_GENTLE, SPRING_BOUNCY } from "./enhanced-motion"
 

@@ -7,7 +7,7 @@ import { GroupWithAccounts } from './groups'
 import { getCurrentLocale } from '@/locales/server'
 import { prisma } from '@/lib/prisma'
 import { getDatabaseUserId, getUserId } from './auth'
-import { cacheLife, cacheTag, updateTag } from 'next/cache'
+import { cacheLife, cacheTag, revalidateTag } from 'next/cache'
 import { logger } from '@/lib/logger'
 import { FEATURE_FLAGS } from '@/lib/feature-flags'
 import {
@@ -16,7 +16,12 @@ import {
   markPrismaColumnUnavailable,
   withPrismaSchemaMismatchFallback
 } from '@/lib/prisma-guard'
-import { VALID_DASHBOARD_THEMES, type DashboardTheme } from '@/lib/constants/dashboard-themes'
+import {
+  DEFAULT_DASHBOARD_THEME,
+  isDashboardThemeInput,
+  normalizeDashboardTheme,
+  type DashboardTheme,
+} from '@/lib/constants/dashboard-themes'
 import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
 import { readStoredChatConversation } from '@/lib/chat-retention'
 import type { SharedParams } from './shared'
@@ -119,7 +124,7 @@ function toCompatUser(record: CoreUserCompatRecord, authUserId: string): User {
     isFirstConnection: record.isFirstConnection ?? true,
     isBeta: record.isBeta ?? false,
     language: record.language ?? 'en',
-    dashboardTheme: 'blue',
+    dashboardTheme: DEFAULT_DASHBOARD_THEME,
     showOnLeaderboard: false,
     etpToken: null,
     etpTokenHash: null,
@@ -417,13 +422,22 @@ export async function getUserData(forceRefresh: boolean = false): Promise<{
 }
 
 export async function getDashboardLayout(userId: string): Promise<DashboardLayout | null> {
-  const actorUserId = await getUserId()
-  if (actorUserId !== userId) {
+  const [actorAuthUserId, actorDatabaseUserId] = await Promise.all([
+    getUserId(),
+    getDatabaseUserId(),
+  ])
+  if (userId !== actorAuthUserId && userId !== actorDatabaseUserId) {
     throw new Error('Forbidden')
   }
 
   try {
-    const layout = await getDashboardLayoutCached(userId)
+    let layout = await getDashboardLayoutCached(actorAuthUserId)
+
+    if (!layout) {
+      const { createDefaultDashboardLayout } = await import('@/server/layouts')
+      await createDefaultDashboardLayout(actorAuthUserId)
+      layout = await loadDashboardLayout(actorAuthUserId)
+    }
 
     if (!layout) return null
 
@@ -433,7 +447,10 @@ export async function getDashboardLayout(userId: string): Promise<DashboardLayou
         try {
           return JSON.parse(val) as Prisma.JsonValue
         } catch (error) {
-          logger.error('[getDashboardLayout] Failed to parse dashboard JSON', { error, userId })
+          logger.error('[getDashboardLayout] Failed to parse dashboard JSON', {
+            error,
+            userId: actorAuthUserId,
+          })
           return []
         }
       }
@@ -446,7 +463,10 @@ export async function getDashboardLayout(userId: string): Promise<DashboardLayou
       mobile: parseIfNeeded(layout.mobile)
     }
   } catch (error) {
-    logger.error('[getDashboardLayout] Error fetching dashboard layout', { error, userId })
+    logger.error('[getDashboardLayout] Error fetching dashboard layout', {
+      error,
+      userId: actorAuthUserId,
+    })
     return null
   }
 }
@@ -460,7 +480,7 @@ export async function updateIsFirstConnectionAction(isFirstConnection: boolean) 
     where: { id: userId },
     data: { isFirstConnection }
   })
-  updateTag(`user-data-${userId}`)
+  revalidateTag(`user-data-${userId}`, CACHE_LIFETIMES.coreUserData)
 }
 
 export async function getUserDashboardTheme(): Promise<DashboardTheme | null> {
@@ -477,8 +497,8 @@ export async function getUserDashboardTheme(): Promise<DashboardTheme | null> {
       where: { id: userId },
       select: { dashboardTheme: true }
     })
-    if (user?.dashboardTheme && VALID_DASHBOARD_THEMES.includes(user.dashboardTheme as DashboardTheme)) {
-      return user.dashboardTheme as DashboardTheme
+    if (user?.dashboardTheme) {
+      return normalizeDashboardTheme(user.dashboardTheme)
     }
     return null
   } catch (error) {
@@ -493,31 +513,32 @@ export async function getUserDashboardTheme(): Promise<DashboardTheme | null> {
 export async function setUserDashboardTheme(theme: string): Promise<DashboardTheme> {
   const userId = await getDatabaseUserId()
   if (!userId) throw new Error('Unauthorized')
-  if (!VALID_DASHBOARD_THEMES.includes(theme as DashboardTheme)) {
+  if (!isDashboardThemeInput(theme)) {
     throw new Error(`Invalid theme: ${theme}`)
   }
 
+  const normalizedTheme = normalizeDashboardTheme(theme)
   const hasDashboardThemeColumn = await isPrismaColumnAvailable(USER_TABLE_NAME, DASHBOARD_THEME_COLUMN)
   if (!hasDashboardThemeColumn) {
-    return 'blue'
+    return DEFAULT_DASHBOARD_THEME
   }
 
   try {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: { dashboardTheme: theme },
+      data: { dashboardTheme: normalizedTheme },
       select: { dashboardTheme: true }
     })
-    await updateTag(`user-data-core-${userId}`)
-    await updateTag(`user-data-supplemental-${userId}`)
-    logger.info('[setUserDashboardTheme] Theme updated', { userId, theme })
-    return updatedUser.dashboardTheme as DashboardTheme
+    revalidateTag(`user-data-core-${userId}`, CACHE_LIFETIMES.coreUserData)
+    revalidateTag(`user-data-supplemental-${userId}`, CACHE_LIFETIMES.supplementalUserData)
+    logger.info('[setUserDashboardTheme] Theme updated', { userId, theme: normalizedTheme })
+    return normalizeDashboardTheme(updatedUser.dashboardTheme)
   } catch (error) {
     if (isPrismaSchemaMismatchError(error)) {
       markPrismaColumnUnavailable(USER_TABLE_NAME, DASHBOARD_THEME_COLUMN)
-      return 'blue'
+      return DEFAULT_DASHBOARD_THEME
     }
-    logger.error('[setUserDashboardTheme] Error updating user theme', { error, userId, theme })
+    logger.error('[setUserDashboardTheme] Error updating user theme', { error, userId, theme: normalizedTheme })
     throw new Error('Failed to update theme')
   }
 }

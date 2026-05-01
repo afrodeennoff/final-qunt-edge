@@ -5,7 +5,14 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Check, X, AlertCircle, Sparkles } from 'lucide-react'
 import { useCurrentLocale, useI18n } from '@/locales/client'
 import NumberFlow from '@number-flow/react'
@@ -160,7 +167,10 @@ function isCurrentPlan(subscription: CurrentSubscription | undefined, lookupKey:
   )
 }
 
-function isBlockedFromRecurring(subscription: CurrentSubscription | undefined, lookupKey: string): boolean {
+function isBlockedFromRecurring(
+  subscription: CurrentSubscription | undefined,
+  lookupKey: string,
+): boolean {
   if (!hasLifetimeSubscription(subscription)) return false
 
   const parts = lookupKey.split('_')
@@ -169,7 +179,10 @@ function isBlockedFromRecurring(subscription: CurrentSubscription | undefined, l
   return ['yearly', 'monthly', 'quarterly'].includes(interval)
 }
 
-function isBlockedFromLifetime(subscription: CurrentSubscription | undefined, lookupKey: string): boolean {
+function isBlockedFromLifetime(
+  subscription: CurrentSubscription | undefined,
+  lookupKey: string,
+): boolean {
   if (!hasLifetimeSubscription(subscription)) return false
 
   const parts = lookupKey.split('_')
@@ -198,8 +211,12 @@ function FreePlanCard({
     <div className="relative">
       <Card className={getPlanCardClassName(plan.isPopular ?? false)}>
         <CardHeader>
-          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">{plan.name}</CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">{plan.description}</CardDescription>
+          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">
+            {plan.name}
+          </CardTitle>
+          <CardDescription className="text-sm text-muted-foreground">
+            {plan.description}
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="mb-2">
@@ -217,7 +234,10 @@ function FreePlanCard({
           </div>
           <ul className="space-y-3">
             {plan.features.map((feature, index) => (
-              <li key={index} className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]">
+              <li
+                key={index}
+                className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]"
+              >
                 {index > 2 ? (
                   <X className="size-4 shrink-0 text-[oklch(0.64_0.255_22)]" />
                 ) : (
@@ -358,8 +378,12 @@ function PlusPlanCard({
       <Card className={getPlanCardClassName(true)}>
         <PlanPopularBadge popular={plan.isPopular ?? true} />
         <CardHeader>
-          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">{plan.name}</CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">{plan.description}</CardDescription>
+          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">
+            {plan.name}
+          </CardTitle>
+          <CardDescription className="text-sm text-muted-foreground">
+            {plan.description}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="mb-4 space-y-3 rounded-xl border border-border/0.06 bg-background/0.04 p-4">
@@ -465,7 +489,10 @@ function PlusPlanCard({
 
           <ul className="space-y-3">
             {plan.features.map((feature, index) => (
-              <li key={index} className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]">
+              <li
+                key={index}
+                className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]"
+              >
                 <Check className="size-4 text-[oklch(0.82_0.185_155)] shrink-0" />
                 <span>{feature}</span>
               </li>
@@ -486,7 +513,7 @@ function PlusPlanCard({
           )}
         </CardContent>
         <CardFooter className="flex flex-col gap-3">
-          <Button 
+          <Button
             onClick={handlePrimaryClick}
             disabled={isLoading || current || blocked}
             variant={current || blocked ? 'outline' : 'default'}
@@ -585,7 +612,13 @@ function PricingPlansContent({
   return (
     <div className="sm:px-6">
       <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-6 lg:grid-cols-2 stagger-reveal">
-        <FreePlanCard plan={plans.basic} isModal={isModal} onClose={onClose} locale={locale} currency={currency} />
+        <FreePlanCard
+          plan={plans.basic}
+          isModal={isModal}
+          onClose={onClose}
+          locale={locale}
+          currency={currency}
+        />
         <PlusPlanCard
           plan={plans.plus}
           billingPeriod={billingPeriod}
@@ -606,9 +639,7 @@ function PricingPlansContent({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('pricing.lifetimeUpgrade.title')}</DialogTitle>
-            <DialogDescription>
-              {t('pricing.lifetimeUpgrade.description')}
-            </DialogDescription>
+            <DialogDescription>{t('pricing.lifetimeUpgrade.description')}</DialogDescription>
           </DialogHeader>
           <div className="gap-4 py-4">
             <div className="rounded-lg border border-semantic-warning-border bg-semantic-warning-bg p-4">
@@ -629,35 +660,42 @@ function PricingPlansContent({
 
             {currentSubscription && (
               <div className="rounded-lg bg-muted p-4">
-                <h4 className="mb-2 font-medium">{t('pricing.lifetimeUpgrade.currentSubscription')}</h4>
+                <h4 className="mb-2 font-medium">
+                  {t('pricing.lifetimeUpgrade.currentSubscription')}
+                </h4>
                 <div className="gap-1 text-sm text-muted-foreground">
-                  <p><strong>{t('billing.currentPlan')}:</strong> {currentSubscription.plan.name}</p>
-                  <p><strong>{t('billing.billingPeriod')}:</strong> {currentSubscription.plan.interval}</p>
-                  <p><strong>{t('billing.status.active')}:</strong> {t('billing.status.active')}</p>
+                  <p>
+                    <strong>{t('billing.currentPlan')}:</strong> {currentSubscription.plan.name}
+                  </p>
+                  <p>
+                    <strong>{t('billing.billingPeriod')}:</strong>{' '}
+                    {currentSubscription.plan.interval}
+                  </p>
+                  <p>
+                    <strong>{t('billing.status.active')}:</strong> {t('billing.status.active')}
+                  </p>
                 </div>
               </div>
             )}
           </div>
           <DialogFooter>
-            <Button 
+            <Button
               variant="outline"
               onClick={() => setShowLifetimeConfirm(false)}
               disabled={isLoading}
             >
               {t('pricing.lifetimeUpgrade.cancel')}
             </Button>
-            <Button 
-              onClick={handleLifetimeConfirm}
-              disabled={isLoading}
-            >
+            <Button onClick={handleLifetimeConfirm} disabled={isLoading}>
               {isLoading ? t('billing.lifetimeUpgrade') : t('pricing.lifetimeUpgrade.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-          <p className="mt-8 text-center text-xs text-muted-foreground/80 [font-family:var(--home-copy)]">
-        Transparent pricing. No hidden data limits. Upgrade only when your review process needs more depth.
+      <p className="mt-8 text-center text-xs text-muted-foreground/80 [font-family:var(--home-copy)]">
+        Transparent pricing. No hidden data limits. Upgrade only when your review process needs more
+        depth.
       </p>
     </div>
   )
@@ -796,12 +834,8 @@ export default function PricingPlans({
   if (trigger) {
     return (
       <Dialog>
-        <DialogTrigger asChild>
-          {trigger}
-        </DialogTrigger>
-        <DialogContent className="max-h-[90vh] max-w-7xl overflow-y-auto">
-          {content}
-        </DialogContent>
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+        <DialogContent className="max-h-[90vh] max-w-7xl overflow-y-auto">{content}</DialogContent>
       </Dialog>
     )
   }

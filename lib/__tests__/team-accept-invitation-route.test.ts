@@ -25,6 +25,7 @@ vi.mock("@/server/team-membership", () => ({
 }))
 
 vi.mock("@/lib/api/with-api-route", () => ({
+  apiSuccess: <T>(data: T, status = 200) => Response.json(data, { status }),
   withRateLimited: <T>(handler: (req: NextRequest, ctx: T) => Promise<Response>) => handler,
 }))
 

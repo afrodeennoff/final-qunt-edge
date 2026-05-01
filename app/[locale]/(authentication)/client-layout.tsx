@@ -16,6 +16,9 @@ export default function AuthenticationLayout({
  const locale = useCurrentLocale();
 
  useEffect(() => {
+ if (typeof window === 'undefined') return
+
+ try {
  const hash = window.location.hash;
  const params = new URLSearchParams(hash.slice(1)); // Remove the # and parse
 
@@ -27,6 +30,9 @@ export default function AuthenticationLayout({
 
  // Clear the hash after showing the toast
  router.replace(`/${locale}/authentication`);
+ }
+ } catch (error) {
+ console.warn('Failed to parse error from URL hash:', error)
  }
  }, [locale, router]);
 

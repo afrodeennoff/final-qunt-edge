@@ -9,8 +9,12 @@ import {
   TradovateSyncContextProvider,
   useTradovateSyncContext,
 } from "@/context/tradovate-sync-context";
+import {
+  DxFeedSyncContextProvider,
+  useDxFeedSyncContext,
+} from "@/context/dxfeed-sync-context";
 
-type SyncService = "rithmic" | "tradovate";
+type SyncService = "rithmic" | "tradovate" | "dxfeed";
 
 interface ManualSyncResult {
   service: SyncService;
@@ -22,6 +26,7 @@ interface ManualSyncResult {
 interface SyncContextValue {
   rithmic: ReturnType<typeof useRithmicSyncContext>;
   tradovate: ReturnType<typeof useTradovateSyncContext>;
+  dxfeed: ReturnType<typeof useDxFeedSyncContext>;
   manualSync: (
     service: SyncService,
     identifier: string
@@ -33,6 +38,7 @@ const SyncContext = createContext<SyncContextValue | undefined>(undefined);
 function SyncContextBridge({ children }: { children: ReactNode }) {
   const rithmic = useRithmicSyncContext();
   const tradovate = useTradovateSyncContext();
+  const dxfeed = useDxFeedSyncContext();
 
   const manualSync = useCallback<SyncContextValue["manualSync"]>(
     async (service, identifier) => {
@@ -48,7 +54,10 @@ function SyncContextBridge({ children }: { children: ReactNode }) {
         };
       }
 
-      const result = await tradovate.performSyncForAccount(identifier);
+      const result =
+        service === "tradovate"
+          ? await tradovate.performSyncForAccount(identifier)
+          : await dxfeed.performSyncForAccount(identifier);
       if (!result) return;
 
       return {
@@ -64,9 +73,10 @@ function SyncContextBridge({ children }: { children: ReactNode }) {
     () => ({
       rithmic,
       tradovate,
+      dxfeed,
       manualSync,
     }),
-    [manualSync, rithmic, tradovate]
+    [manualSync, rithmic, tradovate, dxfeed]
   );
 
   return <SyncContext.Provider value={value}>{children}</SyncContext.Provider>;
@@ -76,7 +86,9 @@ export function SyncContextProvider({ children }: { children: ReactNode }) {
   return (
     <RithmicSyncContextProvider>
       <TradovateSyncContextProvider>
-        <SyncContextBridge>{children}</SyncContextBridge>
+        <DxFeedSyncContextProvider>
+          <SyncContextBridge>{children}</SyncContextBridge>
+        </DxFeedSyncContextProvider>
       </TradovateSyncContextProvider>
     </RithmicSyncContextProvider>
   );

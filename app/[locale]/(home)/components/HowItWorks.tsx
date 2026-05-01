@@ -1,23 +1,12 @@
-'use client'
-
-import { motion } from 'framer-motion'
-import { InteractiveWrapper } from '@/components/animation/interactive'
 import {
-  unifiedBodyCopyClassName,
-  unifiedInsetPanelClassName,
-  unifiedSectionEyebrowClassName,
-  unifiedSectionPanelClassName,
-} from '@/components/layout/unified-page-recipes'
-import { cn } from '@/lib/utils'
-import { useTypedI18n } from '@/locales/client'
+  MarketingSection,
+  MarketingSectionHeader,
+} from '@/components/layout/marketing-sections'
+import { getTypedI18n } from '@/locales/server'
+import ProductDemoPlayer from './ProductDemoPlayer'
 
-export default function HowItWorks() {
-  const t = useTypedI18n()
-
-  const steps = [1, 2, 3, 4, 5].map((index) => ({
-    name: t(`landing.home.workflow.step${index}Name`),
-    description: t(`landing.home.workflow.step${index}Description`),
-  }))
+export default async function HowItWorks() {
+  const t = await getTypedI18n()
 
   return (
     <section id="how-it-works" className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
@@ -90,6 +79,6 @@ export default function HowItWorks() {
           ))}
         </div>
       </div>
-    </section>
+    </MarketingSection>
   )
 }

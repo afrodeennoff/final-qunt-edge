@@ -1,15 +1,30 @@
 'use client'
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from 'react'
+import { motion } from 'motion/react'
 
 export default function HowItWorks() {
- const steps = [
- { name:"Raw Ingestion", desc:"Zero manual input. We hook directly into your broker's API to pull raw execution logs." },
- { name:"Intent Locking", desc:"You define the setup before the session. If you take a trade outside these parameters, we flag it." },
- { name:"Clinical Audit", desc:"Our engine separates outcome (luck) from process (skill). Did you follow the plan?" },
- { name:"Loop Detection", desc:"AI identifies the exact moment your psychology shifted (e.g., after 2 consecutive losses)." },
- { name:"Forced Adaptation", desc:"The system locks you out or mandates size reduction until stability is restored." }
- ];
+  const steps = [
+    {
+      name: 'Raw Ingestion',
+      desc: "Zero manual input. We hook directly into your broker's API to pull raw execution logs.",
+    },
+    {
+      name: 'Intent Locking',
+      desc: 'You define the setup before the session. If you take a trade outside these parameters, we flag it.',
+    },
+    {
+      name: 'Clinical Audit',
+      desc: 'Our engine separates outcome (luck) from process (skill). Did you follow the plan?',
+    },
+    {
+      name: 'Loop Detection',
+      desc: 'AI identifies the exact moment your psychology shifted (e.g., after 2 consecutive losses).',
+    },
+    {
+      name: 'Forced Adaptation',
+      desc: 'The system locks you out or mandates size reduction until stability is restored.',
+    },
+  ]
 
 return (
  <section id="how-it-works" className="relative overflow-hidden border-t border-border/30 bg-background px-4 py-24 sm:px-6 sm:py-24 lg:px-8">

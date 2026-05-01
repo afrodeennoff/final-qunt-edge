@@ -27,13 +27,75 @@ const propfirmGroups: PropfirmGroup[] = [
  { name: 'Other', prefix: '' },
 ]
 
+interface FilterButtonProps {
+ type: 'account' | 'instrument' | 'propfirm'
+ label: string
+ allItems: FilterItem[]
+ handleItemChange: (item: FilterItem) => void
+ isItemSelected: (item: FilterItem) => boolean
+ setSearchTerm: (value: string) => void
+}
+
+function FilterButton({
+ type,
+ label,
+ allItems,
+ handleItemChange,
+ isItemSelected,
+ setSearchTerm,
+}: FilterButtonProps) {
+ const [open, setOpen] = useState(false)
+ const items = allItems.filter(item => item.type === type)
+
+ return (
+ <Popover open={open} onOpenChange={setOpen}>
+ <PopoverTrigger asChild>
+ <Button
+ variant="outline"
+ role="combobox"
+ aria-expanded={open}
+ aria-label={`Select ${type}`}
+ className="w-[200px] justify-between"
+ >
+ {label}
+ <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+ </Button>
+ </PopoverTrigger>
+ <PopoverContent className="w-[200px] max-w-[90vw] p-0">
+ <Command>
+ <CommandInput placeholder={`Search ${type}...`} onValueChange={setSearchTerm} />
+ <CommandList>
+ <CommandEmpty>No {type} found.</CommandEmpty>
+ <CommandGroup>
+ <ScrollArea className="h-[200px]">
+ {items.map((item) => (
+ <CommandItem
+ key={item.value}
+ onSelect={() => handleItemChange(item)}
+ >
+ <Checkbox
+ checked={isItemSelected(item)}
+ className="mr-2"
+ />
+ {item.value}
+ </CommandItem>
+ ))}
+ </ScrollArea>
+ </CommandGroup>
+ </CommandList>
+ </Command>
+ </PopoverContent>
+ </Popover>
+ )
+}
+
 export default function NavbarFilters() {
  const { accountNumbers, setAccountNumbers, instruments, setInstruments } = useDashboardFilters()
  const trades = useTradingDomainStore(state => state.trades)
  
  const [allItems, setAllItems] = useState<FilterItem[]>([])
  const [selectedItems, setSelectedItems] = useState<FilterItem[]>([])
- const [searchTerm, setSearchTerm] = useState('')
+ const [, setSearchTerm] = useState('')
  const [propfirms, setPropfirms] = useState<string[]>([])
 
  useEffect(() => {
@@ -119,57 +181,11 @@ export default function NavbarFilters() {
  }
  }, [selectedItems, setAccountNumbers, setInstruments, accountNumbers, instruments, propfirms])
 
- const FilterButton = ({ type, label }: { type: 'account' | 'instrument' | 'propfirm', label: string }) => {
- const [open, setOpen] = useState(false)
- const items = allItems.filter(item => item.type === type)
-
- return (
- <Popover open={open} onOpenChange={setOpen}>
- <PopoverTrigger asChild>
- <Button 
- variant="outline"
- role="combobox"
- aria-expanded={open}
- aria-label={`Select ${type}`}
- className="w-[200px] justify-between"
- >
- {label}
- <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
- </Button>
- </PopoverTrigger>
- <PopoverContent className="w-[200px] max-w-[90vw] p-0">
- <Command>
- <CommandInput placeholder={`Search ${type}...`} onValueChange={setSearchTerm} />
- <CommandList>
- <CommandEmpty>No {type} found.</CommandEmpty>
- <CommandGroup>
- <ScrollArea className="h-[200px]">
- {items.map((item) => (
- <CommandItem
- key={item.value}
- onSelect={() => handleItemChange(item)}
- >
- <Checkbox
- checked={isItemSelected(item)}
- className="mr-2"
- />
- {item.value}
- </CommandItem>
- ))}
- </ScrollArea>
- </CommandGroup>
- </CommandList>
- </Command>
- </PopoverContent>
- </Popover>
- )
- }
-
  return (
  <div className="flex gap-2">
- <FilterButton type="account" label="Select account" />
- <FilterButton type="instrument" label="Select instrument" />
- <FilterButton type="propfirm" label="Select propfirm" />
+ <FilterButton type="account" label="Select account" allItems={allItems} handleItemChange={handleItemChange} isItemSelected={isItemSelected} setSearchTerm={setSearchTerm} />
+ <FilterButton type="instrument" label="Select instrument" allItems={allItems} handleItemChange={handleItemChange} isItemSelected={isItemSelected} setSearchTerm={setSearchTerm} />
+ <FilterButton type="propfirm" label="Select propfirm" allItems={allItems} handleItemChange={handleItemChange} isItemSelected={isItemSelected} setSearchTerm={setSearchTerm} />
  </div>
  )
 }

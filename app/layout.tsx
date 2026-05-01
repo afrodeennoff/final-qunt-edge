@@ -1,13 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import {
-  Cormorant_Garamond,
-  Geist,
-  IBM_Plex_Mono,
   DM_Sans,
-  Outfit,
-  Poppins,
-  Roboto,
 } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -20,65 +14,12 @@ const siteOrigin = getSiteOrigin()
 const ROOT_DESCRIPTION =
   'Qunt Edge is a trading journal and analytics platform for discretionary traders, with structured post-session review, performance breakdowns, and team workflows.'
 
-const fontSans = Geist({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  display: 'swap',
-  preload: true,
-  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-})
-
-const fontSerif = Cormorant_Garamond({
-  subsets: ['latin'],
-  variable: '--font-serif',
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-  preload: false,
-  fallback: ['Georgia', 'serif'],
-})
-
-const fontMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-  preload: true,
-  fallback: ['Menlo', 'monospace'],
-})
-
 const fontDmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-dm-sans',
   weight: ['400', '500', '600', '700'],
   display: 'swap',
-  preload: false,
-  fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
-})
-
-const fontOutfit = Outfit({
-  subsets: ['latin'],
-  variable: '--font-outfit',
-  weight: ['500', '600'],
-  display: 'swap',
-  preload: false,
-  fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
-})
-
-const fontPoppins = Poppins({
-  subsets: ['latin'],
-  variable: '--font-poppins',
-  weight: ['400', '500', '600', '700', '800'],
-  display: 'swap',
-  preload: false,
-  fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
-})
-
-const fontRoboto = Roboto({
-  subsets: ['latin'],
-  variable: '--font-roboto',
-  weight: ['400', '500', '600'],
-  display: 'swap',
-  preload: false,
+  preload: true,
   fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
 })
 
@@ -169,9 +110,13 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
+  minimumScale: 0.5,
   userScalable: true,
   viewportFit: 'cover',
-  themeColor: 'black',
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: 'oklch(0.06 0.01 260)' },
+    { media: '(prefers-color-scheme: light)', color: 'oklch(0.9838 0.0035 247.8583)' },
+  ],
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -188,7 +133,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
-      className={`${darkRootClass} ${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} ${fontDmSans.variable} ${fontOutfit.variable} ${fontPoppins.variable} ${fontRoboto.variable} bg-background`}
+      className={`${darkRootClass} ${fontDmSans.variable} bg-background`}
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning
@@ -196,13 +141,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         {/* Resource Hinting for Performance */}
         <link rel="dns-prefetch" href={siteOrigin} />
+        {process.env.NEXT_PUBLIC_SUPABASE_URL && (
+          <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
+        )}
 
         {/* Mobile-First Meta Tags */}
-        <meta name="theme-color" content="black" />
+        <meta name="theme-color" content="oklch(0.06 0.01 260)" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="format-detection" content="telephone=no, address=no, email=no" />
+        <meta name="color-gamut" content="p3" />
 
         {/* Accessibility & SEO */}
         <meta name="google" content="notranslate" />
@@ -229,7 +178,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body
-        className="bg-background font-sans type-body antialiased text-foreground"
+        className="flex min-h-screen flex-col bg-background font-sans type-body antialiased text-foreground"
         data-ui-variant={uiVariant}
       >
         <a
@@ -241,7 +190,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ScrollLockFixLazy />
         {enableVercelInsights ? <SpeedInsights /> : null}
         {enableVercelInsights ? <Analytics /> : null}
-        <main id="main-content">{children}</main>
+        <main id="main-content" className="flex flex-1 flex-col relative">
+          {/* PPR bailout fallback — always server-rendered, auto-fades after 5s as safety net */}
+          <style dangerouslySetInnerHTML={{ __html: `#initial-loader{animation:il-fade 5s ease-out forwards}@keyframes il-fade{0%,80%{opacity:1}100%{opacity:0;pointer-events:none;visibility:hidden}}` }} />
+          <div
+            id="initial-loader"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-background"
+          >
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-foreground" />
+          </div>
+          {children}
+        </main>
       </body>
     </html>
   )

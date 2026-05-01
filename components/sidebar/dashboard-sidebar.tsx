@@ -7,12 +7,11 @@ import {
     Activity,
     BarChart3,
     BookOpen,
-    Brain,
     Building2,
     CreditCard,
     Database,
     FileUp,
-    Globe,
+    FileText,
     LayoutDashboard,
     RefreshCw,
     Settings,
@@ -20,12 +19,9 @@ import {
     TrendingUp,
     Shield,
     Users,
-    Target,
     Compass,
     DollarSign,
-    Trophy,
 } from "lucide-react"
-import { LeaderboardIcon } from "@/components/icons/svg-icons"
 
 import { useDashboardActions } from "@/context/data-provider"
 import { useUserStore } from "@/store/user-store"
@@ -47,71 +43,103 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
     }, [resetUser])
 
     const navItems: UnifiedSidebarItem[] = React.useMemo(() => [
-        // ── Overview ──
+        // ── Workspace ──
         {
             href: `/${locale}/dashboard`,
             icon: <LayoutDashboard className={NAV_ICON_SIZE} />,
-            label: "Dashboard",
-            group: "Overview",
+            label: "Overview",
+            group: "Workspace",
             exact: true
         },
         {
-            href: `/${locale}/dashboard?tab=table`,
+            href: `/${locale}/dashboard/trades`,
             icon: <BookOpen className={NAV_ICON_SIZE} />,
-            label: "Journal",
-            group: "Overview"
+            label: "Trades",
+            group: "Workspace"
         },
         {
-            href: `/${locale}/dashboard?tab=accounts`,
+            href: `/${locale}/dashboard/notes`,
+            icon: <FileText className={NAV_ICON_SIZE} />,
+            label: "Notes",
+            group: "Workspace"
+        },
+        {
+            href: `/${locale}/dashboard/accounts`,
             icon: <Activity className={NAV_ICON_SIZE} />,
             label: "Accounts",
-            group: "Overview"
+            group: "Workspace"
         },
 
-        // ── Analysis ──
+        // ── Review ──
         {
-            href: `/${locale}/dashboard?tab=chart`,
-            icon: <Sparkles className={NAV_ICON_SIZE} />,
-            label: "Scenario Lab",
-            group: "Analysis"
+            href: `/${locale}/dashboard/analytics`,
+            icon: <Compass className={NAV_ICON_SIZE} />,
+            label: "Analytics",
+            group: "Review"
         },
         {
             href: `/${locale}/dashboard/reports`,
             icon: <BarChart3 className={NAV_ICON_SIZE} />,
-            label: "Analytics",
-            group: "Analysis"
-        },
-        {
-            href: `/${locale}/dashboard/behavior`,
-            icon: <Target className={NAV_ICON_SIZE} />,
-            label: "Coaching",
-            group: "Analysis"
+            label: "Reports",
+            group: "Review"
         },
         {
             href: `/${locale}/dashboard/strategies`,
-            icon: <Compass className={NAV_ICON_SIZE} />,
+            icon: <BookOpen className={NAV_ICON_SIZE} />,
             label: "Playbook",
-            group: "Analysis"
+            group: "Review"
         },
 
-        // ── Profile & Social ──
+        // ── Tools ──
         {
-            href: `/${locale}/dashboard/trader-profile`,
-            icon: <Brain className={NAV_ICON_SIZE} />,
-            label: "Trader Profile",
-            group: "Profile & Social"
+            href: `/${locale}/dashboard/import`,
+            icon: <FileUp className={NAV_ICON_SIZE} />,
+            label: "Import",
+            group: "Tools"
         },
         {
-            href: `/${locale}/leaderboard`,
-            icon: <Trophy className={NAV_ICON_SIZE} />,
-            label: "Leaderboard",
-            group: "Profile & Social"
+            href: `/${locale}/dashboard/behavior`,
+            icon: <Sparkles className={NAV_ICON_SIZE} />,
+            label: "AI Assistant",
+            group: "Tools"
+        },
+        {
+            href: `/${locale}/dashboard/data`,
+            icon: <Database className={NAV_ICON_SIZE} />,
+            label: "Data",
+            group: "Tools"
+        },
+        {
+            label: "Sync",
+            icon: <RefreshCw className={NAV_ICON_SIZE} />,
+            action: () => refreshAllData({ force: true }),
+            group: "Tools"
+        },
+
+        // ── Profile ──
+        {
+            href: `/${locale}/dashboard/trader-profile`,
+            icon: <TrendingUp className={NAV_ICON_SIZE} />,
+            label: "Profile",
+            group: "Profile"
         },
         {
             href: `/${locale}/teams/dashboard`,
             icon: <Users className={NAV_ICON_SIZE} />,
             label: "Teams",
-            group: "Profile & Social"
+            group: "Profile"
+        },
+        {
+            href: `/${locale}/dashboard/billing`,
+            icon: <CreditCard className={NAV_ICON_SIZE} />,
+            label: "Billing",
+            group: "Profile"
+        },
+        {
+            href: `/${locale}/dashboard/settings`,
+            icon: <Settings className={NAV_ICON_SIZE} />,
+            label: "Settings",
+            group: "Profile"
         },
 
         // ── Resources ──
@@ -129,36 +157,6 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
         },
 
         // ── System ──
-        {
-            href: `/${locale}/dashboard/import`,
-            icon: <FileUp className={NAV_ICON_SIZE} />,
-            label: "Import",
-            group: "System"
-        },
-        {
-            href: `/${locale}/dashboard/data`,
-            icon: <Database className={NAV_ICON_SIZE} />,
-            label: "Data",
-            group: "System"
-        },
-        {
-            label: "Sync",
-            icon: <RefreshCw className={NAV_ICON_SIZE} />,
-            action: () => refreshAllData({ force: true }),
-            group: "System"
-        },
-        {
-            href: `/${locale}/dashboard/billing`,
-            icon: <CreditCard className={NAV_ICON_SIZE} />,
-            label: "Billing",
-            group: "System"
-        },
-        {
-            href: `/${locale}/dashboard/settings`,
-            icon: <Settings className={NAV_ICON_SIZE} />,
-            label: "Settings",
-            group: "System"
-        },
         ...(isAdmin ? [{
             href: `/${locale}/admin`,
             icon: <Shield className={NAV_ICON_SIZE} />,

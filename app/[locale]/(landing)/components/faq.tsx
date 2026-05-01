@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import { useI18n } from "@/locales/client";
+import { useI18n } from '@/locales/client'
 
 export default function FAQ() {
- const t = useI18n();
+  const t = useI18n()
 
  return (
  <section className="py-12 sm:py-16 lg:py-24">

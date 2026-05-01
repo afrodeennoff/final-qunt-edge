@@ -125,7 +125,7 @@ function transformMT5DealToTrade(deal: z.infer<typeof mt5DealSchema>, accountNum
 
 export async function POST(req: NextRequest) {
   const requestId = crypto.randomUUID()
-  
+
   try {
     const limit = await mt5WriteRateLimit(req)
     if (!limit.success) {
@@ -142,11 +142,11 @@ export async function POST(req: NextRequest) {
     }
 
     const auth = await authenticateRequest(req)
-    
+
     if (!auth.authenticated) {
-      return apiError('UNAUTHORIZED', 'Unauthorized', auth.error?.status || 401)
+      return apiError('UNAUTHORIZED', 'Unauthorized', auth.error?.status || 401, { requestId })
     }
-    
+
     const user = auth.user!
     const data = await parseJson(req, mt5TradeSchema)
 

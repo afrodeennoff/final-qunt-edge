@@ -42,14 +42,14 @@ export function NewsletterEditor() {
  if (summary) {
  setDescription(summary)
  } else {
- toast.error("Impossible de générer le résumé de la vidéo")
+ toast.error("Unable to generate video summary")
  }
  } else {
- toast.error("Impossible de récupérer la transcription de la vidéo")
+ toast.error("Unable to retrieve video transcription")
  }
  } catch (error) {
  console.error('Error fetching transcript:', error)
- toast.error("Erreur lors de la récupération de la transcription")
+ toast.error("Error retrieving transcription")
  } finally {
  setIsLoadingTranscript(false)
  }
@@ -63,7 +63,7 @@ export function NewsletterEditor() {
  const handleGenerate = async () => {
  const videoId = extractYouTubeId(youtubeUrl)
  if (!videoId) {
- toast.error("Veuillez entrer une URL YouTube valide")
+ toast.error("Please enter a valid YouTube URL")
  return
  }
 
@@ -71,7 +71,7 @@ export function NewsletterEditor() {
  setGenerating(true)
  // Update the video ID in the content
  setContent((prev) => ({ ...prev, youtubeId: videoId }))
- 
+
  const result = await generateNewsletterContent({
  youtubeUrl: `https://youtube.com/watch?v=${videoId}`,
  description
@@ -85,14 +85,14 @@ export function NewsletterEditor() {
  introMessage: result.content.introMessage,
  features: result.content.features
  }))
- toast.success("Newsletter générée avec succès!")
+ toast.success("Newsletter generated successfully!")
  } else {
  console.error('Newsletter generation failed:', result)
- toast.error("Échec de la génération du contenu")
+ toast.error("Failed to generate content")
  }
  } catch (error) {
  console.error('Error generating newsletter:', error)
- toast.error("Une erreur est survenue lors de la génération")
+ toast.error("An error occurred during generation")
  } finally {
  setGenerating(false)
  }
@@ -103,7 +103,7 @@ export function NewsletterEditor() {
 
  // Store current content in case we need to restore it
  const currentContent = { ...content }
- 
+
  setLoading(true)
  try {
  const result = await sendNewsletter(currentContent)
@@ -111,14 +111,14 @@ export function NewsletterEditor() {
  toast.error(result.error)
  return
  }
- 
+
  // Ensure content is still the same after server action
  setContent(currentContent)
- toast.success("Newsletter envoyée avec succès")
+ toast.success("Newsletter sent successfully")
  } catch (error) {
  // Restore content in case of error
  setContent(currentContent)
- toast.error(error instanceof Error ? error.message :"Échec de l'envoi de la newsletter")
+ toast.error(error instanceof Error ? error.message : "Failed to send newsletter")
  console.error(error)
  } finally {
  setLoading(false)
@@ -133,18 +133,18 @@ export function NewsletterEditor() {
  <CardContent>
  <div className="space-y-6">
  <div className="space-y-2">
- <Label htmlFor="youtubeUrl" className="text-muted-foreground">URL de la vidéo YouTube</Label>
+ <Label htmlFor="youtubeUrl" className="text-muted-foreground">YouTube video URL</Label>
  <Input
  id="youtubeUrl"
  value={youtubeUrl}
  onChange={e => setYoutubeUrl(e.target.value)}
- placeholder="ex: https://youtube.com/watch?v=dQw4w9WgXcQ"
+ placeholder="e.g., https://youtube.com/watch?v=dQw4w9WgXcQ"
  required
  className="border-border/0.42 bg-background text-foreground placeholder:text-muted-foreground"
  />
  </div>
 
- <AudioExtractor 
+ <AudioExtractor
  onAudioExtracted={(audioBuffer, fileName) => {
  // Audio extracted, but no transcription here
  toast.success(`Audio extracted from ${fileName}`)
@@ -153,7 +153,7 @@ export function NewsletterEditor() {
 
  <div className="space-y-2">
  <Label className="text-muted-foreground">Audio Splitter (10-second segments)</Label>
- <AudioSplitter 
+ <AudioSplitter
  onSegmentsCreated={(segments) => {
  toast.success(`Created ${segments.length} audio segments`)
  }}
@@ -161,14 +161,14 @@ export function NewsletterEditor() {
  </div>
  <div className="space-y-2">
  <Label htmlFor="description" className="text-muted-foreground">
- Sur quoi as-tu travaillé ?
- {isLoadingTranscript &&" (Chargement de la transcription...)"}
+ What have you worked on?
+ {isLoadingTranscript && " (Loading transcription...)"}
  </Label>
  <Textarea
  id="description"
  value={description}
  onChange={e => setDescription(e.target.value)}
- placeholder="Décris ce sur quoi tu as travaillé dans cette vidéo. Par exemple: 'J'ai implémenté une nouvelle fonctionnalité de gestion des trades avec des graphiques interactifs...'"
+ placeholder="Describe what you've worked on in this video. For example: 'I implemented a new trade management feature with interactive charts...'"
  required
  className="min-h-[100px] border-border/0.42 bg-background text-foreground placeholder:text-muted-foreground"
  disabled={isLoadingTranscript}
@@ -176,7 +176,7 @@ export function NewsletterEditor() {
  </div>
 
  <div className="flex gap-2">
- <Button 
+ <Button
  type="button"
  className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
  onClick={handleGenerate}
@@ -185,28 +185,28 @@ export function NewsletterEditor() {
  {generating ? (
  <>
  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
- Génération...
+ Generating...
  </>
  ) : (
  <>
  <Sparkles className="w-4 h-4 mr-2" />
- Générer & Prévisualiser
+ Generate & Preview
  </>
  )}
  </Button>
 
- <Button 
+ <Button
  type="button"
  variant="outline"
  className="flex-1 border-border/0.42 bg-muted/40 text-foreground hover:bg-background/0.45"
  onClick={handleSend}
  disabled={loading || generating || !content.subject}
  >
- {loading ?"Envoi..." :"Envoyer la Newsletter"}
+ {loading ? "Sending..." : "Send Newsletter"}
  </Button>
  </div>
  </div>
  </CardContent>
  </Card>
  )
-} 
+}

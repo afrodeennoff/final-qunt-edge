@@ -7,17 +7,13 @@ interface PageShellProps {
   className?: string
 }
 
-export function PageShell({
-  children,
-  maxWidth = '430px',
-  className,
-}: PageShellProps) {
+export function PageShell({ children, maxWidth = '430px', className }: PageShellProps) {
   return (
     <div
       className={cn(
-        maxWidth === '430px' ? 'max-w-[430px] mx-auto' : 'max-w-[1320px] mx-auto',
+        maxWidth === '430px' ? 'max-w-[430px] mx-auto' : 'max-w-[1360px] mx-auto',
         'pb-24',
-        className
+        className,
       )}
       data-slot="page-shell"
     >

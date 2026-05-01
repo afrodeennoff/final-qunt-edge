@@ -8,18 +8,18 @@ export interface ChartColorConfig {
 }
 
 export const chartColors: ChartColorConfig = {
-  positive: 'hsl(173 58% 39%)',
+  positive: 'hsl(155 58% 39%)',
   negative: 'hsl(0 62% 55%)',
-  neutral: 'hsl(240 5% 50%)',
+  neutral: 'hsl(271 5% 50%)',
   palette: [
-    'hsl(217 91% 60%)',
-    'hsl(173 58% 39%)',
-    'hsl(197 55% 60%)',
-    'hsl(43 85% 60%)',
-    'hsl(27 85% 60%)',
-    'hsl(206 80% 60%)',
-    'hsl(260 65% 65%)',
-    'hsl(336 70% 65%)',
+    'hsl(271 68% 60%)',
+    'hsl(297 65% 58%)',
+    'hsl(260 55% 62%)',
+    'hsl(285 50% 55%)',
+    'hsl(310 45% 58%)',
+    'hsl(250 60% 65%)',
+    'hsl(300 55% 50%)',
+    'hsl(275 70% 45%)',
   ],
 };
 
@@ -38,12 +38,12 @@ export function getChartColorByIndex(index: number): string {
 }
 
 export function getChartColorGradient(isPositive: boolean | null): string {
-  const color = isPositive === null 
-    ? chartColors.neutral 
-    : isPositive 
-      ? chartColors.positive 
+  const color = isPositive === null
+    ? chartColors.neutral
+    : isPositive
+      ? chartColors.positive
       : chartColors.negative;
-  
+
   return `linear-gradient(135deg, ${color}00 0%, ${color}20 100%)`;
 }
 

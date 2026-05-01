@@ -127,8 +127,7 @@ export async function signInWithDiscord(next: string | null = null, locale?: str
     throw new Error('Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.')
   }
 
-  const supabase = await createClient()
-  const websiteURL = await getWebsiteURL()
+  const [supabase, websiteURL] = await Promise.all([createClient(), getWebsiteURL()])
   const callbackParams = new URLSearchParams()
   if (next) callbackParams.set('next', next)
   if (locale) callbackParams.set('locale', locale)
@@ -150,8 +149,7 @@ export async function signInWithGoogle(next: string | null = null, locale?: stri
     throw new Error('Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.')
   }
 
-  const supabase = await createClient()
-  const websiteURL = await getWebsiteURL()
+  const [supabase, websiteURL] = await Promise.all([createClient(), getWebsiteURL()])
   const callbackParams = new URLSearchParams()
   if (next) callbackParams.set('next', next)
   if (locale) callbackParams.set('locale', locale)
@@ -260,10 +258,7 @@ export async function signInWithPasswordAction(
 
   if (!supabaseUrl || !supabaseKey) {
     const message = 'Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.'
-    if (process.env.NODE_ENV !== 'production') {
-      return { success: false, error: message }
-    }
-    throw new Error(message)
+    return { success: false, error: message }
   }
 
   try {
@@ -273,17 +268,26 @@ export async function signInWithPasswordAction(
       actionType: 'password_login',
     })
     if (!guard.allowed) {
-      throw new Error(`${GENERIC_AUTH_ERROR}|RETRY_AFTER=${guard.retryAfterSeconds}`)
+      const externalMsg = getExternalAuthErrorMessage(`Rate limited. Retry after ${guard.retryAfterSeconds}s`)
+      return { success: false, error: externalMsg }
     }
 
     const supabase = await createClient()
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-      throw new Error(error.message)
+      await recordAuthFailure({
+        email,
+        ip: requestIp,
+        actionType: 'password_login',
+        userId: null,
+      })
+      const externalMsg = getExternalAuthErrorMessage(error.message)
+      return { success: false, error: externalMsg }
     }
 
-    // Sign-in succeeded normally
+    // Sign-in succeeded — ensure DB record exists (non-fatal if it fails)
+    let setupWarning = false
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
@@ -291,10 +295,9 @@ export async function signInWithPasswordAction(
       }
     } catch (e) {
       logger.error('[signInWithPasswordAction] ensureUserInDatabase failed', { error: e })
-      throw new PostAuthSetupError()
+      setupWarning = true
     }
 
-    // Optionally handle redirect on the client; return success and let client route
     const authUser = data.user ?? null
     await recordAuthSuccess({
       email,
@@ -302,25 +305,20 @@ export async function signInWithPasswordAction(
       actionType: 'password_login',
       userId: authUser?.id ?? null,
     })
-    return { success: true, next }
+    return { success: true, next, warning: setupWarning ? 'account_setup_partial' as const : undefined }
   } catch (error: unknown) {
-    if (!(error instanceof PostAuthSetupError)) {
-      await recordAuthFailure({
-        email,
-        ip: requestIp,
-        actionType: 'password_login',
-        userId: null,
-      })
-    }
-
-    if (error instanceof PostAuthSetupError) {
-      throw error
-    }
+    await recordAuthFailure({
+      email,
+      ip: requestIp,
+      actionType: 'password_login',
+      userId: null,
+    })
 
     if (error instanceof Error) {
-      throw new Error(getExternalAuthErrorMessage(error.message))
+      return { success: false, error: getExternalAuthErrorMessage(error.message) }
     }
-    handleAuthError(error)
+    // For truly unexpected errors, still try to return a structured response
+    return { success: false, error: GENERIC_AUTH_ERROR }
   }
 }
 
@@ -389,6 +387,12 @@ export async function signUpWithPasswordAction(
     if (error instanceof PostAuthSetupError) {
       throw error
     }
+    await recordAuthFailure({
+      email,
+      ip: requestIp,
+      actionType: 'password_login',
+      userId: null,
+    })
     handleAuthError(error)
   }
 }
@@ -430,7 +434,7 @@ export async function verifyOtp(email: string, token: string, type: 'email' = 'e
 
     if (data.user && data.session) {
       try {
-        const locale = email.includes('.fr') || email.startsWith('fr@') ? 'fr' : 'en'
+        const locale = 'en'
         await ensureUserInDatabase(data.user, locale)
       } catch (setupError) {
         logger.error('[verifyOtp] ensureUserInDatabase failed', { error: setupError })

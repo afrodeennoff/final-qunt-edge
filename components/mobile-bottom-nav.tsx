@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { Activity, LayoutDashboard, Settings, Sparkles, TrendingUp } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -14,7 +14,6 @@ export interface MobileNavItem {
   icon: React.ElementType
   label: string
   exact?: boolean
-  tab?: string
   disabled?: boolean
 }
 
@@ -25,27 +24,23 @@ function useNavItems(): MobileNavItem[] {
       {
         href: `/${locale}/dashboard`,
         icon: LayoutDashboard,
-        label: 'Home',
-        tab: 'widgets',
+        label: 'Overview',
         exact: true,
       },
       {
-        href: `/${locale}/dashboard?tab=table`,
+        href: `/${locale}/dashboard/trades`,
         icon: TrendingUp,
-        label: 'Journal',
-        tab: 'table',
+        label: 'Trades',
       },
       {
-        href: `/${locale}/dashboard?tab=chart`,
+        href: `/${locale}/dashboard/analytics`,
         icon: Sparkles,
         label: 'Lab',
-        tab: 'chart',
       },
       {
-        href: `/${locale}/dashboard?tab=accounts`,
+        href: `/${locale}/dashboard/accounts`,
         icon: Activity,
         label: 'Accounts',
-        tab: 'accounts',
       },
       {
         href: `/${locale}/dashboard/settings`,
@@ -53,30 +48,18 @@ function useNavItems(): MobileNavItem[] {
         label: 'Settings',
       },
     ],
-    [locale]
+    [locale],
   )
 }
 
 function useIsActive(item: MobileNavItem): boolean {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
-
-  // Derive basePath from item's href (strip query params)
-  const basePath = item.href.split('?')[0]
-
-  // Check if we're on the base path of this item
-  const isOnBasePath = pathname === basePath
-
-  if (item.tab) {
-    const activeTab = searchParams.get('tab') || 'widgets'
-    return isOnBasePath && activeTab === item.tab
-  }
 
   if (item.exact) {
-    return isOnBasePath && (!searchParams.get('tab') || searchParams.get('tab') === 'widgets')
+    return pathname === item.href
   }
 
-  // For items without tab/exact, match exact pathname
+  // For items without exact, match exact pathname
   return pathname === item.href
 }
 
@@ -102,7 +85,9 @@ function TabItem({ item }: { item: MobileNavItem }) {
       <span
         className={cn(
           'text-[10px] font-medium leading-tight transition-colors duration-200',
-          active ? 'text-sidebar-foreground' : 'text-sidebar-foreground/40 group-hover:text-sidebar-foreground/78'
+          active
+            ? 'text-sidebar-foreground'
+            : 'text-sidebar-foreground/40 group-hover:text-sidebar-foreground/78',
         )}
       >
         {item.label}
@@ -120,19 +105,16 @@ function TabItem({ item }: { item: MobileNavItem }) {
 function MobileBottomNav({ items }: { items?: MobileNavItem[] }) {
   const isMobile = useIsMobile()
   const defaultItems = useNavItems()
-  const navItems = (items ?? defaultItems).filter(item => !item.disabled)
+  const navItems = (items ?? defaultItems).filter((item) => !item.disabled)
 
   if (!isMobile) return null
 
   return (
     <nav
-      className={cn(
-        'fixed inset-x-0 bottom-0 z-40 md:hidden',
-        'px-3 pb-safe'
-      )}
+      className={cn('fixed inset-x-0 bottom-0 z-40 md:hidden', 'px-3 pb-safe')}
       aria-label="Dashboard navigation"
     >
-      <div className="flex h-[4.35rem] items-center justify-around rounded-[2rem] border border-[oklch(0.2505_0.0293_299.5707/0.9)] bg-[oklch(0.1249_0.0104_301.6956/0.92)] px-2 shadow-[0_0_0_0.5px_rgba(145,108,255,0.10),0_18px_40px_-24px_rgba(0,0,0,0.88)]">
+      <div className="flex h-[4.35rem] items-center justify-around rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.046_0.008_260_/_0.94)] px-2 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_18px_40px_-24px_rgba(0,0,0,0.84)]">
         {navItems.map((item) => (
           <TabItem key={item.label} item={item} />
         ))}

@@ -1,7 +1,9 @@
 // app/api/og/route.tsx
-import { createCanvas, loadImage } from 'canvas';
-import { NextRequest } from 'next/server';
-import sharp from 'sharp';
+import type { NextRequest } from 'next/server';
+
+function getCanvas() {
+  return require('canvas') as typeof import('canvas');
+}
 
 // Convert HSL to RGB hex
 function hslToHex(h: number, s: number, l: number): string {
@@ -61,6 +63,7 @@ export async function GET(req: NextRequest) {
   const width = 1200;
   const height = 630;
 
+  const { createCanvas } = getCanvas();
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext('2d');
 
@@ -87,7 +90,7 @@ export async function GET(req: NextRequest) {
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
 
-  // Blue light in bottom-left corner
+  // Purple light in bottom-left corner
   const bottomLeftGradient = ctx.createRadialGradient(
     0,
     height,
@@ -96,8 +99,8 @@ export async function GET(req: NextRequest) {
     height,
     Math.max(width, height) * 0.3
   );
-  bottomLeftGradient.addColorStop(0, '#3b82f6');
-  bottomLeftGradient.addColorStop(0.5, '#2563eb');
+  bottomLeftGradient.addColorStop(0, '#8b5cf6');
+  bottomLeftGradient.addColorStop(0.5, '#7c3aed');
   bottomLeftGradient.addColorStop(1, 'rgba(15, 15, 15, 0)');
   ctx.fillStyle = bottomLeftGradient;
   ctx.fillRect(0, 0, width, height);
@@ -194,6 +197,7 @@ export async function GET(req: NextRequest) {
   `.trim();
 
   // Convert SVG to PNG buffer using sharp
+  const sharp = (await import('sharp')).default;
   const logoBuffer = await sharp(Buffer.from(logoSvg))
     .resize(logoSize, logoSize, {
       fit: 'contain',
@@ -203,6 +207,7 @@ export async function GET(req: NextRequest) {
     .toBuffer();
 
   // Load the image and draw it on canvas
+  const { loadImage } = getCanvas();
   const logoImage = await loadImage(logoBuffer);
 
   // Set font to measure text width

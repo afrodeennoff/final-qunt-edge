@@ -86,16 +86,17 @@ interface ManagedTeam extends Team {
 }
 
 interface TeamManagementProps {
- // Event handlers
+ // Event handlers reserved for future use
  onTeamClick?: (team: Team) => void
  onManageClick?: (team: Team) => void
  onViewClick?: (team: Team) => void
 }
 
 export function TeamManagement({
- onTeamClick,
- onManageClick,
- onViewClick,
+ // Event handlers reserved for future use
+ // onTeamClick,
+ // onManageClick,
+ // onViewClick,
 }: TeamManagementProps) {
 
  const pathname = usePathname()
@@ -192,7 +193,7 @@ export function TeamManagement({
  loadTeamData()
  }, [])
 
- const loadTeamData = async () => {
+ async function loadTeamData() {
  setIsLoading(true)
  try {
  // Load owned and joined teams

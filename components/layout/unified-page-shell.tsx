@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { CONTENT_PADDING, WORKSPACE_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
 
 type UnifiedPageShellProps = {
@@ -28,16 +29,16 @@ type UnifiedSurfaceProps = {
 export function UnifiedPageShell({
   children,
   className,
-  widthClassName = 'max-w-none',
+  widthClassName = WORKSPACE_SHELL_WIDTH,
   density = 'default',
   variant = 'default',
 }: UnifiedPageShellProps) {
   const densityClasses =
     density === 'compact'
-      ? 'py-4 sm:py-6 lg:py-8'
+      ? 'py-4 sm:py-5 lg:py-6'
       : density === 'spacious'
-        ? 'py-12 sm:py-16'
-        : 'py-10 sm:py-12'
+        ? 'py-8 sm:py-10 lg:py-12'
+        : 'py-5 sm:py-7 lg:py-8'
 
   return (
     <div
@@ -47,7 +48,7 @@ export function UnifiedPageShell({
         variant === 'minimal' && 'border-x border-border/8',
         widthClassName === 'max-w-none' && 'max-w-[1800px]',
         widthClassName,
-        'px-4 sm:px-6 lg:px-8 xl:px-12',
+        CONTENT_PADDING,
         densityClasses,
         variant !== 'minimal' && [
           'before:absolute before:inset-x-6 before:top-0 before:h-44 before:pointer-events-none before:z-0',
@@ -58,7 +59,7 @@ export function UnifiedPageShell({
         className,
       )}
     >
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10 flex flex-col gap-4 sm:gap-5 lg:gap-6">{children}</div>
     </div>
   )
 }
@@ -91,8 +92,8 @@ export function UnifiedPageHeader({
         className,
       )}
     >
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="gap-2">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+        <div className="space-y-2">
           {eyebrow && (
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground mb-2">
               {eyebrow}
@@ -118,7 +119,7 @@ export function UnifiedPageHeader({
             </p>
           )}
         </div>
-        {actions && <div className="flex flex-wrap items-center gap-2 sm:gap-3">{actions}</div>}
+        {actions && <div className="flex flex-wrap items-center gap-2.5">{actions}</div>}
       </div>
     </header>
   )

@@ -1,14 +1,16 @@
 'use client'
 
 import React from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar'
 import {
   unifiedInsetPanelClassName,
   unifiedPrimaryActionClassName,
   unifiedSectionPanelClassName,
 } from '@/components/layout/unified-page-recipes'
+import { WORKSPACE_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
+import { WindowChrome } from '@/components/ui/window-chrome'
 import { useDashboardActions, useDashboardFilters } from '@/context/data-provider'
 import { useIsMobile } from '@/hooks/use-mobile'
 import dynamic from 'next/dynamic'
@@ -44,11 +46,9 @@ export function DashboardHeader() {
   const { isPlusUser } = useDashboardActions()
   const { accountNumbers, instruments, dateRange, pnlRange, tagFilter, weekdayFilter } =
     useDashboardFilters()
-  const searchParams = useSearchParams()
-  const activeTab = searchParams.get('tab') || 'widgets'
   const normalizedPathname = pathname.replace(/\/+$/, '') || '/'
   const isDashboardRoot = /^\/(?:[a-z]{2}(?:-[A-Za-z]{2})?)?\/dashboard$/i.test(normalizedPathname)
-  const isWidgetsTab = activeTab === 'widgets'
+  const isWidgetsTab = isDashboardRoot
   const isSidebarCollapsed = !isMobile && sidebarState === 'collapsed'
   const localeMatch = pathname.match(/^\/([a-z]{2}(?:-[A-Za-z]{2})?)(?=\/|$)/i)
   const billingHref = localeMatch?.[1]
@@ -56,12 +56,10 @@ export function DashboardHeader() {
     : '/dashboard/billing'
 
   const getTitle = () => {
-    if (isDashboardRoot) {
-      if (activeTab === 'table') return 'Journal'
-      if (activeTab === 'accounts') return 'Accounts'
-      if (activeTab === 'chart') return 'Scenario Lab'
-      return 'Home'
-    }
+    if (isDashboardRoot) return 'Home'
+    if (pathname.includes('/dashboard/trades')) return 'Journal'
+    if (pathname.includes('/dashboard/accounts')) return 'Accounts'
+    if (pathname.includes('/dashboard/analytics')) return 'Scenario Lab'
     if (pathname.includes('strategies')) return 'Playbook'
     if (pathname.includes('reports')) return 'Analytics'
     if (pathname.includes('behavior')) return 'Coaching'
@@ -76,15 +74,6 @@ export function DashboardHeader() {
   const title = getTitle()
   const sectionLabel = 'Dashboard'
   const showSectionLabel = !isDashboardRoot
-  const subtitle = isDashboardRoot
-    ? activeTab === 'table'
-      ? 'Review executions, annotate trades, and move through your daily journal.'
-      : activeTab === 'accounts'
-        ? 'Track balances, challenge pressure, and account consistency in one place.'
-        : activeTab === 'chart'
-          ? 'Explore forward-looking scenarios and projection experiments.'
-          : 'Your trading operating system for review, risk, and momentum.'
-    : 'Focused workspace for analysis, review, and execution.'
   const hasActiveFilters =
     (accountNumbers?.length || 0) > 0 ||
     (instruments?.length || 0) > 0 ||
@@ -96,7 +85,7 @@ export function DashboardHeader() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full shrink-0 px-3 pb-2 pt-3 transition-[opacity,background-color,border-color] duration-300 sm:px-4 sm:pb-3 sm:pt-4',
+        'sticky top-0 z-50 w-full shrink-0 px-3 pb-2 pt-3 transition-[opacity,background-color,border-color] duration-200 sm:px-4 sm:pb-2.5 sm:pt-3.5',
         isMobile && 'pt-[calc(env(safe-area-inset-top)+0.75rem)]',
       )}
       data-dashboard-header="true"
@@ -144,8 +133,9 @@ export function DashboardHeader() {
                   variant="navbar"
                   className={cn(
                     isSidebarCollapsed
-                      ? 'w-[clamp(280px,34vw,460px)]'
-                      : 'w-[clamp(220px,24vw,360px)]',
+                      ? 'w-[clamp(140px,20vw,280px)]'
+                      : 'w-[clamp(120px,18vw,240px)]',
+                    'max-w-[200px]',
                   )}
                 />
 

@@ -6,8 +6,8 @@ import { subMonths } from "date-fns";
 
 export type InsightActionTarget =
   | "/dashboard"
-  | "/dashboard?tab=table"
-  | "/dashboard?tab=accounts"
+  | "/dashboard/trades"
+  | "/dashboard/accounts"
   | "/dashboard/reports"
   | "/dashboard/behavior"
   | "/dashboard/trader-profile"
@@ -92,7 +92,7 @@ export async function getSmartInsights(): Promise<SmartInsight[]> {
                 metric: favoriteInstrument[0],
                 action: {
                   label: "Review Trade Log",
-                  href: "/dashboard?tab=table",
+                  href: "/dashboard/trades",
                 },
                 timestamp: new Date()
             });

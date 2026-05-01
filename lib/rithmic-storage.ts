@@ -31,6 +31,17 @@ interface EncryptedPayload {
   version: number
 }
 
+type StoredRithmicCredentials = {
+  username: string | EncryptedPayload
+  password: string | EncryptedPayload
+  server_type: string
+  location: string
+}
+
+type StoredRithmicCredentialSet = Omit<RithmicCredentialSet, 'credentials'> & {
+  credentials: StoredRithmicCredentials
+}
+
 async function getOrCreateEncryptionKey(): Promise<CryptoKey> {
   if (cachedKey) return cachedKey
 
@@ -52,7 +63,7 @@ async function getOrCreateEncryptionKey(): Promise<CryptoKey> {
       }
     }
   } catch {
-    logger.warn('[Rithmic] Failed to get session-derived key, falling back to localStorage')
+    logger.warn('[Rithmic] Failed to get session-derived key, trying legacy local key')
   }
 
   // Fallback: try existing localStorage key (migration path)
@@ -73,19 +84,7 @@ async function getOrCreateEncryptionKey(): Promise<CryptoKey> {
     }
   }
 
-  // Last resort: generate a new key
-  const key = await crypto.subtle.generateKey(
-    { name: CREDENTIAL_KEY_ALGORITHM, length: CREDENTIAL_KEY_LENGTH },
-    true,
-    ['encrypt', 'decrypt']
-  )
-
-  const exported = await crypto.subtle.exportKey('raw', key)
-  const keyBase64 = btoa(Array.from(new Uint8Array(exported), (b) => String.fromCharCode(b)).join(''))
-  localStorage.setItem(CREDENTIAL_KEY_NAME, keyBase64)
-
-  cachedKey = key
-  return key
+  throw new Error('Rithmic credential encryption key unavailable')
 }
 
 async function encryptField(plaintext: string, key: CryptoKey): Promise<EncryptedPayload> {
@@ -143,14 +142,22 @@ async function decryptCredentials(
   encrypted: Record<string, unknown>
 ): Promise<RithmicCredentialSet['credentials'] | null> {
   try {
-    const key = await getOrCreateEncryptionKey()
-
     if (isEncryptedPayload(encrypted.username) && isEncryptedPayload(encrypted.password)) {
+      const key = await getOrCreateEncryptionKey()
       const [username, password] = await Promise.all([
         decryptField(encrypted.username as EncryptedPayload, key),
         decryptField(encrypted.password as EncryptedPayload, key),
       ])
       return { username, password, server_type: '', location: '' }
+    }
+
+    if (typeof encrypted.username === 'string' && typeof encrypted.password === 'string') {
+      return {
+        username: encrypted.username,
+        password: encrypted.password,
+        server_type: '',
+        location: '',
+      }
     }
 
     return null
@@ -160,23 +167,113 @@ async function decryptCredentials(
   }
 }
 
+function sanitizeStringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === 'string') : []
+}
+
+function isCredentialSecret(value: unknown): value is string | EncryptedPayload {
+  return typeof value === 'string' || isEncryptedPayload(value)
+}
+
+function isStoredCredentials(value: unknown): value is StoredRithmicCredentials {
+  const credentials = value as Record<string, unknown> | null
+
+  return (
+    credentials !== null &&
+    typeof credentials === 'object' &&
+    isCredentialSecret(credentials.username) &&
+    isCredentialSecret(credentials.password) &&
+    typeof credentials.server_type === 'string' &&
+    typeof credentials.location === 'string'
+  )
+}
+
+function isValidStoredCredentialSet(data: unknown): data is StoredRithmicCredentialSet {
+  const d = data as Record<string, unknown>
+
+  return (
+    d != null &&
+    typeof d.id === 'string' &&
+    isStoredCredentials(d.credentials) &&
+    Array.isArray(d.selectedAccounts) &&
+    typeof d.lastSyncTime === 'string'
+  )
+}
+
+function readStoredRithmicData(): Record<string, StoredRithmicCredentialSet> {
+  const data = localStorage.getItem(STORAGE_KEY)
+  if (!data) return {}
+
+  const parsedData = JSON.parse(data)
+  const validatedData: Record<string, StoredRithmicCredentialSet> = {}
+
+  Object.entries(parsedData).forEach(([id, cred]) => {
+    if (isValidStoredCredentialSet(cred)) {
+      validatedData[id] = {
+        ...cred,
+        selectedAccounts: sanitizeStringArray(cred.selectedAccounts),
+      }
+    }
+  })
+
+  return validatedData
+}
+
+async function toReadableCredentialSet(
+  stored: StoredRithmicCredentialSet
+): Promise<RithmicCredentialSet | null> {
+  const decrypted = await decryptCredentials(stored.credentials as Record<string, unknown>)
+  if (!decrypted) return null
+
+  return {
+    ...stored,
+    credentials: {
+      ...decrypted,
+      server_type: stored.credentials.server_type,
+      location: stored.credentials.location,
+    },
+    selectedAccounts: sanitizeStringArray(stored.selectedAccounts),
+  }
+}
+
+async function toStoredCredentialSet(
+  credential: RithmicCredentialSet
+): Promise<StoredRithmicCredentialSet> {
+  const encryptedCredentials = await encryptCredentials(credential.credentials)
+
+  return {
+    ...credential,
+    credentials: {
+      username: encryptedCredentials.username as EncryptedPayload,
+      password: encryptedCredentials.password as EncryptedPayload,
+      server_type: credential.credentials.server_type,
+      location: credential.credentials.location,
+    },
+    selectedAccounts: sanitizeStringArray(credential.selectedAccounts),
+    lastSyncTime: credential.lastSyncTime || new Date().toISOString(),
+  }
+}
+
+async function writeStoredRithmicData(credentials: Record<string, RithmicCredentialSet>) {
+  const encryptedEntries = await Promise.all(
+    Object.entries(credentials).map(async ([id, credential]) => [
+      id,
+      await toStoredCredentialSet(credential),
+    ])
+  )
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(Object.fromEntries(encryptedEntries)))
+}
+
 export async function saveRithmicData(data: RithmicCredentialSet): Promise<void> {
   try {
     const existingData = await getAllRithmicData()
-    const encryptedCredentials = await encryptCredentials(data.credentials)
-    const updatedData = {
+    await writeStoredRithmicData({
       ...existingData,
       [data.id]: {
         ...data,
-        credentials: {
-          ...data.credentials,
-          username: encryptedCredentials.username,
-          password: encryptedCredentials.password,
-        },
         lastSyncTime: data.lastSyncTime || new Date().toISOString(),
       },
-    }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData))
+    })
   } catch (error) {
     logger.error('Failed to save Rithmic data:', { error })
   }
@@ -186,17 +283,7 @@ export async function getRithmicData(id: string): Promise<RithmicCredentialSet |
   try {
     const allData = await getAllRithmicData()
     const stored = allData[id]
-    if (!stored) return null
-
-    const decrypted = await decryptCredentials(stored.credentials as unknown as Record<string, unknown>)
-    if (decrypted) {
-      return {
-        ...stored,
-        credentials: { ...decrypted, server_type: stored.credentials.server_type, location: stored.credentials.location },
-      }
-    }
-
-    return stored
+    return stored || null
   } catch (error) {
     logger.error('Failed to retrieve Rithmic data:', { error })
     return null
@@ -221,19 +308,20 @@ export function isValidCredentialSet(data: unknown): data is RithmicCredentialSe
 
 export async function getAllRithmicData(): Promise<Record<string, RithmicCredentialSet>> {
   try {
-    const data = localStorage.getItem(STORAGE_KEY)
-    if (!data) return {}
+    const storedData = readStoredRithmicData()
+    const decryptedEntries = await Promise.all(
+      Object.entries(storedData).map(async ([id, cred]) => [
+        id,
+        await toReadableCredentialSet(cred),
+      ])
+    )
 
-    const parsedData = JSON.parse(data)
-    const validatedData: Record<string, RithmicCredentialSet> = {}
-
-    Object.entries(parsedData).forEach(([id, cred]) => {
-      if (isValidCredentialSet(cred)) {
-        validatedData[id] = cred
+    return decryptedEntries.reduce<Record<string, RithmicCredentialSet>>((acc, [id, cred]) => {
+      if (typeof id === 'string' && cred && isValidCredentialSet(cred)) {
+        acc[id] = cred
       }
-    })
-
-    return validatedData
+      return acc
+    }, {})
   } catch (error) {
     logger.error('Failed to retrieve all Rithmic data:', { error })
     localStorage.removeItem(STORAGE_KEY)
@@ -246,7 +334,7 @@ export async function clearRithmicData(id?: string): Promise<void> {
     if (id) {
       const allData = await getAllRithmicData()
       delete allData[id]
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(allData))
+      await writeStoredRithmicData(allData)
     } else {
       localStorage.removeItem(STORAGE_KEY)
     }

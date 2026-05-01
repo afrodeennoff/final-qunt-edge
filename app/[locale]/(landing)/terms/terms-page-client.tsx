@@ -1,20 +1,21 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { useI18n } from '@/locales/client';
-import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell';
+import React from 'react'
+import { useI18n } from '@/locales/client'
+import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
+import { MarketingSectionHeader } from '@/components/layout/marketing-sections'
 
 function LegalSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="space-y-3">
+    <section className="space-y-4">
       <h2 className="text-2xl font-semibold text-fg-primary">{title}</h2>
-      <div className="space-y-2 text-fg-muted">{children}</div>
+      <div className="space-y-3 text-[15px] leading-relaxed text-fg-muted">{children}</div>
     </section>
-  );
+  )
 }
 
 export function TermsPageClient() {
-  const t = useI18n();
+  const t = useI18n()
 
   return (
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
@@ -29,7 +30,10 @@ export function TermsPageClient() {
           <p>{t('terms.sections.companyInfo.content')}</p>
           <p>
             {t('terms.sections.companyInfo.contact')}
-            <a href="mailto:contact@qunt-edge.com" className="text-fg-primary underline underline-offset-4">
+            <a
+              href="mailto:contact@qunt-edge.com"
+              className="text-primary underline underline-offset-4 transition-colors duration-200 hover:text-primary/80"
+            >
               contact@qunt-edge.com
             </a>
           </p>
@@ -45,11 +49,15 @@ export function TermsPageClient() {
 
         <LegalSection title={t('terms.sections.subscriptionPayments.title')}>
           <p>{t('terms.sections.subscriptionPayments.content')}</p>
-          <h3 className="pt-2 text-lg font-semibold text-fg-primary">{t('terms.sections.subscriptionPayments.storageClarification')}</h3>
+          <h3 className="pt-2 text-lg font-semibold text-fg-primary">
+            {t('terms.sections.subscriptionPayments.storageClarification')}
+          </h3>
           <p>{t('terms.sections.subscriptionPayments.fairUse')}</p>
-          <h3 className="pt-2 text-lg font-semibold text-fg-primary">{t('terms.sections.subscriptionPayments.lifetimePlan.title')}</h3>
+          <h3 className="pt-2 text-lg font-semibold text-fg-primary">
+            {t('terms.sections.subscriptionPayments.lifetimePlan.title')}
+          </h3>
           <p>{t('terms.sections.subscriptionPayments.lifetimePlan.description')}</p>
-          <ul className="list-disc pl-5">
+          <ul className="list-disc pl-6 space-y-1.5">
             <li>{t('terms.sections.subscriptionPayments.lifetimePlan.condition1')}</li>
             <li>{t('terms.sections.subscriptionPayments.lifetimePlan.condition2')}</li>
             <li>{t('terms.sections.subscriptionPayments.lifetimePlan.condition3')}</li>
@@ -78,7 +86,7 @@ export function TermsPageClient() {
 
         <LegalSection title={t('terms.sections.serviceAvailability.title')}>
           <p>{t('terms.sections.serviceAvailability.description')}</p>
-          <ul className="list-disc pl-5">
+          <ul className="list-disc pl-6 space-y-1.5">
             <li>{t('terms.sections.serviceAvailability.condition1')}</li>
             <li>{t('terms.sections.serviceAvailability.condition2')}</li>
             <li>{t('terms.sections.serviceAvailability.condition3')}</li>
@@ -100,5 +108,5 @@ export function TermsPageClient() {
         </p>
       </UnifiedSurface>
     </UnifiedPageShell>
-  );
+  )
 }

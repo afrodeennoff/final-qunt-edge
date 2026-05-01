@@ -20,6 +20,12 @@ vi.mock("@/lib/prisma", () => ({
   },
 }))
 
+vi.mock("next/cache", () => ({
+  cacheLife: vi.fn(),
+  cacheTag: vi.fn(),
+  updateTag: vi.fn(),
+}))
+
 import { prisma } from "@/lib/prisma"
 import { getTeamAnalytics, updateTeamAnalytics } from "@/server/teams"
 

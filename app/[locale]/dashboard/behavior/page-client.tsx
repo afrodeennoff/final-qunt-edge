@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
 import { useI18n } from '@/locales/client'
 import type { BehaviorInsights } from '@/lib/behavior-insights'
 
@@ -189,25 +190,73 @@ export default function DashboardBehaviorPage() {
                   AI
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground">{t('analysis.description')}</p>
             </div>
-            <div className="hidden items-center gap-2 md:flex">
-              <Badge variant="outline" className="gap-1">
-                <TrendingUp className="h-3.5 w-3.5" />
-                Performance
-              </Badge>
-              <Badge variant="outline" className="gap-1">
-                <Bot className="h-3.5 w-3.5" />
-                Coach
-              </Badge>
-              <Badge variant="outline" className="gap-1">
-                <MessageSquareText className="h-3.5 w-3.5" />
-                Journal
-              </Badge>
-              <Badge variant="outline" className="gap-1">
-                <Gauge className="h-3.5 w-3.5" />
-                Stress Monitor
-              </Badge>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <Button
+                size="sm"
+                variant={periodDays === 7 ? 'solid' : 'ghost'}
+                onClick={() => setPeriodDays(7)}
+              >
+                7d
+              </Button>
+              <Button
+                size="sm"
+                variant={periodDays === 30 ? 'solid' : 'ghost'}
+                onClick={() => setPeriodDays(30)}
+              >
+                30d
+              </Button>
+              <Button
+                size="sm"
+                variant={periodDays === 90 ? 'solid' : 'ghost'}
+                onClick={() => setPeriodDays(90)}
+              >
+                90d
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  const section = document.getElementById('analysis-section')
+                  section?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }}
+              >
+                Open AI Analysis
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  const section = document.getElementById('coach-section')
+                  section?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }}
+              >
+                Ask AI Coach
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  const section = document.getElementById('mindset-section')
+                  section?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }}
+              >
+                Open Journal
+              </Button>
+              {isLoadingInsights ? (
+                <Badge variant="outline" className="gap-1">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  Updating insights
+                </Badge>
+              ) : null}
+              {!isLoadingInsights ? (
+                <Badge variant="outline" className="gap-1">
+                  Confidence: {insights?.summary.confidenceScore ?? 0}% (
+                  {insights?.summary.confidenceBand ?? 'low'})
+                </Badge>
+              ) : null}
             </div>
           </div>
         </CardHeader>
@@ -344,17 +393,13 @@ export default function DashboardBehaviorPage() {
                   {insights?.prompts.mindful ??
                     'Before executing: is this trade analysis-driven or emotion-driven?'}
                 </p>
-                <Button
-                  variant="ghost"
-                  className="w-full gap-2"
-                  onClick={() => setRefreshKey((value) => value + 1)}
-                >
-                  <PauseCircle className="h-4 w-4" />
-                  Refresh Prompt
-                </Button>
-              </CardContent>
-            </Card>
-          </section>
+              </div>
+            </div>
+            {insightsError ? (
+              <p className="mt-3 text-sm text-destructive">{insightsError}</p>
+            ) : null}
+          </CardContent>
+        </Card>
 
           {(insights?.drivers?.length ?? 0) > 0 ? (
             <section className="rounded-xl border border-border/45 bg-primary/[0.03] p-4 md:p-6">
@@ -374,10 +419,43 @@ export default function DashboardBehaviorPage() {
                       Contribution: {driver.contribution}
                     </Badge>
                   </div>
-                ))}
-              </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Emotional Risk</span>
+                    <span className="font-medium">
+                      {insights?.summary.emotionalRiskPercent ?? 0}%
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Check-In Rate</span>
+                    <span className="font-medium">{insights?.modules.checkInRate ?? 0}%</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Loss Chasing Events</span>
+                    <span className="font-medium">{insights?.summary.lossChasingEvents ?? 0}</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-border/45 bg-primary/[0.03]">
+                <CardHeader>
+                  <CardTitle className="text-base">Live Prompt</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    {insights?.prompts.mindful ??
+                      'Before executing: is this trade analysis-driven or emotion-driven?'}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    className="w-full gap-2"
+                    onClick={() => setRefreshKey((value) => value + 1)}
+                  >
+                    <PauseCircle className="h-4 w-4" />
+                    Refresh Prompt
+                  </Button>
+                </CardContent>
+              </Card>
             </section>
-          ) : null}
 
           <section className="grid gap-4 lg:grid-cols-2">
             <Card className="border-border/45 bg-primary/[0.03]">
@@ -434,9 +512,22 @@ export default function DashboardBehaviorPage() {
                   <p className="text-sm font-medium mb-1">Risk Guard</p>
                   <p className="text-xs text-muted-foreground">{insights?.prompts.riskGuard}</p>
                 </div>
-              </CardContent>
-            </Card>
-          </section>
+                <div className="grid gap-2 md:grid-cols-2">
+                  {insights?.drivers.slice(0, 4).map((driver) => (
+                    <div
+                      key={driver.key}
+                      className="rounded-xl border border-border/45 bg-background/60 p-3"
+                    >
+                      <p className="text-sm font-medium">{driver.key}</p>
+                      <p className="text-xs text-muted-foreground">{driver.explanation}</p>
+                      <Badge variant="secondary" className="mt-2">
+                        Contribution: {driver.contribution}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : null}
 
           {recommendationList.length > 0 ? (
             <section className="rounded-xl border border-border/45 bg-primary/[0.03] p-4 md:p-6">
@@ -471,11 +562,76 @@ export default function DashboardBehaviorPage() {
                       <p key={recommendation} className="text-sm text-muted-foreground">
                         {recommendation}
                       </p>
-                    ))}
+                      <p className="text-xs text-muted-foreground">{module.detail}</p>
+                    </div>
+                  ))}
+                  <div className="rounded-xl border border-border/45 bg-background/60 p-3">
+                    <p className="text-sm font-medium mb-1">Risk Guard</p>
+                    <p className="text-xs text-muted-foreground">{insights?.prompts.riskGuard}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+
+            {recommendationList.length > 0 ? (
+              <section className="rounded-xl border border-border/45 bg-primary/[0.03] p-4 md:p-6">
+                <div className="mb-3 flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-foreground" />
+                  <h3 className="text-base font-semibold">AI Recommendations</h3>
+                </div>
+                <div className="space-y-2">
+                  {insights?.recommendationsDetailed?.length
+                    ? insights.recommendationsDetailed.map((recommendation, index) => (
+                        <div
+                          key={`${recommendation.text}-${index}`}
+                          className="rounded-lg border border-border/45 p-3 bg-background/50"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="text-sm text-muted-foreground">{recommendation.text}</p>
+                            <Badge
+                              variant={
+                                recommendation.priority === 'high'
+                                  ? 'error'
+                                  : recommendation.priority === 'medium'
+                                    ? 'secondary'
+                                    : 'outline'
+                              }
+                            >
+                              {recommendation.priority}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))
+                    : recommendationList.map((recommendation) => (
+                        <p key={recommendation} className="text-sm text-muted-foreground">
+                          {recommendation}
+                        </p>
+                      ))}
+                </div>
+              </section>
+            ) : null}
+          </TabsContent>
+
+          <TabsContent value="workspace" className="space-y-4">
+            <section
+              id="analysis-section"
+              className="rounded-xl border border-border/45 bg-primary/[0.03] p-4 md:p-6"
+            >
+              <AnalysisOverview />
+            </section>
+
+            <section
+              id="coach-section"
+              className="rounded-xl border border-border/45 bg-primary/[0.03] p-4 md:p-6"
+            >
+              <div className="mb-4 flex items-center gap-2">
+                <Bot className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold">AI Trading Coach</h2>
+              </div>
+              <div className="h-[min(620px,68dvh)] min-h-[420px] sm:min-h-[500px]">
+                <ChatWidget size="large" />
               </div>
             </section>
-          ) : null}
-        </TabsContent>
 
         <TabsContent value="workspace" className="space-y-4">
           <section

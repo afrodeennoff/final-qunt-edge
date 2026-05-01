@@ -281,7 +281,7 @@ export function WeeklyRecapPreview() {
  <Label className="text-sm">Day {index + 1}</Label>
  <div className="flex gap-2">
  <Input
- value={day.date.toLocaleDateString('fr-FR', {
+ value={day.date.toLocaleDateString('en-US', {
  day: '2-digit',
  month: '2-digit'
  })}

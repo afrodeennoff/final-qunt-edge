@@ -3,31 +3,33 @@ import { useEffect } from 'react';
 import hotkeys from 'hotkeys-js';
 import { useRouter } from 'next/navigation';
 import { signOut } from '@/server/auth';
+import { useCurrentLocale } from '@/locales/client';
 
 export function useKeyboardShortcuts() {
   const router = useRouter();
+  const locale = useCurrentLocale();
 
   useEffect(() => {
     // Navigation shortcuts
     hotkeys('⌘+d, ctrl+d', (event) => {
       event.preventDefault();
-      router.push('/dashboard');
+      router.push(`/${locale}/dashboard`);
     });
 
     hotkeys('⌘+b, ctrl+b', (event) => {
       event.preventDefault();
-      router.push('/dashboard/billing');
+      router.push(`/${locale}/dashboard/billing`);
     });
 
     hotkeys('⌘+s, ctrl+s', (event) => {
       event.preventDefault();
-      router.push('/dashboard/data');
+      router.push(`/${locale}/dashboard/data`);
     });
 
     // Support shortcut
     hotkeys('⌘+h, ctrl+h', (event) => {
       event.preventDefault();
-      router.push('/support');
+      router.push(`/${locale}/support`);
     });
 
     // Keyboard shortcuts dialog
@@ -51,5 +53,5 @@ export function useKeyboardShortcuts() {
       hotkeys.unbind('⌘+k, ctrl+k');
       hotkeys.unbind('⇧+⌘+q, shift+ctrl+q');
     };
-  }, [router]);
-} 
+  }, [router, locale]);
+}

@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { Prisma } from '@/prisma/generated/prisma'
 import { getAccountsAction } from '@/server/accounts'
 import { apiError } from '@/lib/api-response'
 import { createRouteClient } from '@/lib/supabase/route-client'
-import { withRateLimited } from '@/lib/api/with-api-route'
+import { apiSuccess, withRateLimited } from '@/lib/api/with-api-route'
 
 function serializeWithDecimals<T>(value: T): T {
   return JSON.parse(
@@ -17,6 +17,7 @@ function serializeWithDecimals<T>(value: T): T {
 }
 
 async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<string, string>> }) {
+  const requestId = crypto.randomUUID()
   try {
     const supabase = createRouteClient(request)
     const {
@@ -24,15 +25,21 @@ async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<st
       error: authError,
     } = await supabase.auth.getUser()
     if (authError || !user?.id) {
-      return apiError('UNAUTHORIZED', 'Authentication required', 401, undefined, {
-        "Cache-Control": "no-store, max-age=0",
-      })
+      return apiError(
+        'UNAUTHORIZED',
+        'Authentication required',
+        401,
+        { requestId },
+        {
+          'Cache-Control': 'no-store, max-age=0',
+        },
+      )
     }
 
     const accounts = await getAccountsAction()
-    return NextResponse.json(serializeWithDecimals(accounts), {
+    return apiSuccess(serializeWithDecimals(accounts), 200, {
       headers: {
-        "Cache-Control": "no-store, max-age=0",
+        'Cache-Control': 'no-store, max-age=0',
       },
     })
   } catch (error) {
@@ -40,9 +47,11 @@ async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<st
       'INTERNAL_ERROR',
       'Failed to fetch accounts',
       500,
-      error instanceof Error ? error.message : undefined,
       {
-        "Cache-Control": "no-store, max-age=0",
+        requestId,
+      },
+      {
+        'Cache-Control': 'no-store, max-age=0',
       },
     )
   }
