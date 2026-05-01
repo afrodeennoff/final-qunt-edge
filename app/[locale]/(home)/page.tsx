@@ -1,8 +1,7 @@
 import { setStaticParamsLocale } from 'next-international/server'
 import { Metadata } from 'next'
 import { getI18n, getStaticParams } from '@/locales/server'
-import { ErrorBoundary } from '@/components/error-boundary'
-import HomeContent from './components/HomeContent'
+import dynamic from 'next/dynamic'
 import { ErrorBoundary } from '@/components/error-boundary'
 import {
   buildBreadcrumbSchema,
@@ -12,25 +11,6 @@ import {
 } from '@/lib/seo'
 
 type Locale = 'en' | 'fr'
-
-const HOME_METADATA: Record<
-  Locale,
-  {
-    title: string
-    description: string
-  }
-> = {
-  en: {
-    title: 'Qunt Edge | Professional Trading Journal & Analytics Platform',
-    description:
-      'The professional trading journal for serious traders. Track every trade, review your behavior, and understand your execution cadence.',
-  },
-  fr: {
-    title: 'Qunt Edge | Journal de trading professionnel et plateforme d analyse',
-    description:
-      'Le journal de trading professionnel pour les traders serieux. Suivez chaque trade, analysez votre comportement et comprenez votre cadence d execution.',
-  },
-}
 
 export function generateStaticParams() {
   return getStaticParams()
@@ -42,48 +22,60 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const metadata = HOME_METADATA[locale] ?? HOME_METADATA.en
+  const t = await getI18n()
 
   return buildPublicMetadata({
     locale,
     path: '/',
-    title: metadata.title,
-    description: metadata.description,
+    title: String(t('landing.home.metadata.title')),
+    description: String(t('landing.home.metadata.description')),
   })
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
-  let locale: Locale = 'en'
-
-  try {
-    const resolvedParams = await params
-    locale = resolvedParams.locale
-    setStaticParamsLocale(locale)
-  } catch {
-    locale = 'en'
-  }
+  const { locale } = await params
+  setStaticParamsLocale(locale)
 
   const softwareSchema = buildSoftwareApplicationSchema(locale, '/')
   const organizationSchema = buildOrganizationSchema()
   const breadcrumbSchema = buildBreadcrumbSchema(locale, [{ name: 'Home', path: '/' }])
 
   return (
-    <ErrorBoundary>
-      <>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-        />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <ErrorBoundary fallback={<div className="flex items-center justify-center min-h-screen">Loading content...</div>}>
         <HomeContent locale={locale} />
-      </>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </>
   )
 }
+
+const HomeContent = dynamic(() => import('./components/HomeContent'), {
+  loading: () => (
+    <div className="home-borderless relative min-w-0 overflow-x-hidden bg-transparent">
+      <div className="pointer-events-none absolute inset-x-4 top-0 h-48 rounded-b-[2.5rem] border border-border/40 bg-background/40 sm:inset-x-6 lg:inset-x-10 animate-pulse" />
+      <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-5 lg:block" />
+      <div className="pointer-events-none absolute inset-x-0 top-[22%] h-px bg-border/50" />
+
+      <main className="relative z-10 mx-auto w-full max-w-[1400px] min-w-0 px-4 sm:px-6 lg:px-8">
+        <div className="pt-24 sm:pt-32 lg:pt-40">
+          <div className="mx-auto max-w-3xl space-y-8 text-center">
+            <div className="h-16 w-96 animate-pulse bg-muted rounded mx-auto" />
+          </div>
+        </div>
+      </main>
+    </div>
+  ),
+  ssr: true
+})

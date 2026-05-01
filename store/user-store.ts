@@ -99,6 +99,7 @@ export type DashboardLayoutWithWidgets = {
 type UserStore = {
   user: User | null;
   supabaseUser: SupabaseUser | null;
+  username: string | null;
   subscription: SubscriptionData;
   tags: Tag[];
   accounts: Account[];
@@ -135,6 +136,7 @@ export const useUserStore = create<UserStore>()(
     (set) => ({
       user: null,
       supabaseUser: null,
+      username: null,
       subscription: null,
       tags: [],
       accounts: [],
@@ -258,6 +260,7 @@ export const useUserStore = create<UserStore>()(
         set({
           user: null,
           supabaseUser: null,
+          username: null,
           subscription: null,
           tags: [],
           accounts: [],
