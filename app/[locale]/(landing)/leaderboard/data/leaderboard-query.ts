@@ -302,7 +302,7 @@ export async function getLeaderboardData(
     return {
       rank: 0,
       userId: entry.userId,
-      username: userMap[entry.userId] ?? toUsername(null, entry.userId),
+      username: userMap[entry.userId] ?? toUsername(null, null, entry.userId),
       monthlyPnl,
       totalTrades,
       winRate,
