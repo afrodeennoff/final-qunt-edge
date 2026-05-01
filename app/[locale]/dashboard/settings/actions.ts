@@ -254,6 +254,7 @@ export async function getUserTeams() {
       select: {
         id: true,
         email: true,
+        username: true,
       },
     })
 
@@ -263,7 +264,7 @@ export async function getUserTeams() {
     // Enhance teams with trader and manager details
     const enhancedOwnedTeams = ownedTeams.map(team => ({
       ...team,
-      traders: team.traderIds.map(id => usersMap.get(id)).filter((trader): trader is { id: string; email: string } => trader !== undefined),
+      traders: team.traderIds.map(id => usersMap.get(id)).filter((trader): trader is { id: string; username: string | null; email: string } => trader !== undefined),
       managers: team.managers.map(manager => ({
         ...manager,
         email: usersMap.get(manager.managerId)?.email || 'Unknown',
@@ -272,7 +273,7 @@ export async function getUserTeams() {
 
     const enhancedJoinedTeams = joinedTeams.map(team => ({
       ...team,
-      traders: team.traderIds.map(id => usersMap.get(id)).filter((trader): trader is { id: string; email: string } => trader !== undefined),
+      traders: team.traderIds.map(id => usersMap.get(id)).filter((trader): trader is { id: string; username: string | null; email: string } => trader !== undefined),
       managers: team.managers.map(manager => ({
         ...manager,
         email: usersMap.get(manager.managerId)?.email || 'Unknown',
@@ -490,6 +491,7 @@ export async function getUserTeamAccess() {
       select: {
         id: true,
         email: true,
+        username: true,
       },
     })
 

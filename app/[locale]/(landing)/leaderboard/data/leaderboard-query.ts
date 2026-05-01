@@ -125,12 +125,12 @@ export async function getLeaderboardData(
     return getEmptyLeaderboardEntries()
   }
 
-  let eligibleUsers: Array<{ id: string; email: string | null }> = []
+  let eligibleUsers: Array<{ id: string; email: string | null; username: string | null }> = []
 
   try {
     eligibleUsers = await prisma.user.findMany({
       where: { showOnLeaderboard: true },
-      select: { id: true, email: true },
+      select: { id: true, email: true, username: true },
     })
   } catch (error) {
     if (isLeaderboardUnavailableError(error)) {
