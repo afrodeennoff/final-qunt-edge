@@ -12,6 +12,7 @@ import SocialProof from './SocialProof'
 import PricingSection from './PricingSection'
 import FAQSection from './FAQSection'
 import { ErrorBoundary } from '@/components/ui/error-boundary'
+import HomeContentLoading from './HomeContentLoading'
 
 interface HomeContentProps {
   locale: string
