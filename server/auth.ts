@@ -8,6 +8,7 @@ import { logger } from '@/lib/logger'
 import {
   validatePasswordStrength,
 } from '@/lib/security/password-validation'
+import type { User as PrismaUser } from '@/prisma/generated/prisma'
 
 const POST_AUTH_SETUP_ERROR_MESSAGE = 'Failed to complete post-authentication setup. Please try again.'
 
@@ -528,4 +529,36 @@ export async function linkGoogleAccount() {
 export async function unlinkIdentity(identity: Parameters<typeof import('./auth-identity')['unlinkIdentity']>[0]) {
   const { unlinkIdentity: fn } = await import('./auth-identity')
   return fn(identity)
+}
+
+// ============================================================================
+// USERNAME HELPERS
+// ============================================================================
+
+export async function getUserByUsername(username: string) {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('User')
+    .select('*')
+    .eq('username', username.toLowerCase())
+    .single()
+
+  if (error || !data) {
+    return null
+  }
+
+  return data as PrismaUser
+}
+
+export async function isUsernameAvailable(username: string): Promise<boolean> {
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('User')
+    .select('id')
+    .eq('username', username.toLowerCase())
+    .limit(1)
+
+  return !error
 }
