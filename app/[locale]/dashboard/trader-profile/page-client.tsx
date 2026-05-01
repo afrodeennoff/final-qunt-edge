@@ -7,6 +7,7 @@ import { CalendarIcon, CircleDot, Globe, Lock, Sparkles, TrendingUp, Wallet } fr
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from 'recharts'
 
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
+import { UnifiedPerformanceDashboard } from './components/UnifiedPerformanceDashboard'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -1104,7 +1105,14 @@ export default function TraderProfilePageClient() {
             </UnifiedSurface>
           </section>
 
-          <aside className="space-y-4 xl:sticky xl:top-28 xl:self-start">
+          <UnifiedPerformanceDashboard
+              metrics={metrics}
+              benchmark={benchmark}
+              totalCapitalAllAccounts={totalCapitalAllAccounts}
+              totalWithdrawAllAccounts={totalWithdrawAllAccounts}
+              primaryStripMetrics={primaryStripMetrics}
+              secondaryStripMetrics={secondaryStripMetrics}
+            >
             <UnifiedSurface
               variant="elevated"
               className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6"
@@ -1240,7 +1248,7 @@ export default function TraderProfilePageClient() {
                 />
               </div>
             </UnifiedSurface>
-          </aside>
+            </UnifiedPerformanceDashboard>
         </div>
 
         <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d5 p-5 sm:p-6">
