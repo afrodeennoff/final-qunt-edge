@@ -2,6 +2,7 @@
 
 # Git worktrees
 .worktrees/
+worktrees/
 
 # AI rules file
 .cursorrules
