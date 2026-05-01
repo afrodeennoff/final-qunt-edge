@@ -15,6 +15,8 @@ datasource db {
 
 model User {
   id                 String              @id @default(cuid())
+  username           String?             @unique
+  usernameHash       String?             @unique
   email              String              @unique
   auth_user_id       String              @unique
   isFirstConnection  Boolean             @default(true)
@@ -71,6 +73,7 @@ model User {
   reviewModerations   ReviewModeration[]   @relation("UserReviewModerations")
 
   @@index([email])
+  @@index([username])
   @@schema("public")
 }
 
