@@ -23,7 +23,8 @@ export type LeaderboardEntry = {
 
  type LeaderboardSeed = Omit<LeaderboardEntry, 'rank'>
 
-function toUsername(email: string | null | undefined, fallbackId: string): string {
+function toUsername(email: string | null | undefined, username: string | null, fallbackId: string): string {
+  if (username) return username
   const base = email?.split('@')[0]?.trim()
   if (base) return base
   return `Trader ${fallbackId.slice(0, 8)}`
@@ -246,7 +247,7 @@ export async function getLeaderboardData(
     return getEmptyLeaderboardEntries()
   }
   const userMap = Object.fromEntries(
-    eligibleUsers.map((user) => [user.id, toUsername(user.email, user.id)])
+    eligibleUsers.map((user) => [user.id, toUsername(user.email, user.username, user.id)])
   )
 
   const accountBalanceMap = new Map(
