@@ -1,5 +1,4 @@
-import MarketingLayoutShell from "../(landing)/components/marketing-layout-shell"
-import { PublicRootProviders } from "@/components/providers/root-providers"
+import LocaleLayoutInner from "./locale-layout-inner"
 
 import type { Metadata } from 'next';
 
@@ -23,20 +22,5 @@ export default function HomeLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <PublicRootProviders>
-      <MarketingLayoutShell
-        className="home-borderless-shell dark"
-        contentClassName="w-full"
-        showRollingBanner={true}
-        topSpacingClassName=""
-        contentSpacingClassName="pb-safe"
-        shellVariant="black"
-      >
-        <div className="pb-safe">
-          {children}
-        </div>
-      </MarketingLayoutShell>
-    </PublicRootProviders>
-  );
+  return <LocaleLayoutInner>{children}</LocaleLayoutInner>
 }

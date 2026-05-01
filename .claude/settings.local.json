@@ -9,7 +9,9 @@
       "Bash(npx:*)",
       "Bash(bun:*)",
       "Bash(git:*)",
-      "Bash(head:*)"
+      "Bash(head:*)",
+      "Bash(curl -s http://localhost:3000/en)",
+      "Bash(pkill -f \"npm run dev\")"
     ]
   },
   "model": "sonnet",
