@@ -2,6 +2,7 @@ import { setStaticParamsLocale } from 'next-international/server'
 import { Metadata } from 'next'
 import { getI18n, getStaticParams } from '@/locales/server'
 import HomeContent from './components/HomeContent'
+import { ErrorBoundary } from '@/components/error-boundary'
 import {
   buildBreadcrumbSchema,
   buildOrganizationSchema,
@@ -53,7 +54,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <HomeContent locale={locale} />
+      <ErrorBoundary fallback={<div className="flex items-center justify-center min-h-screen">Loading content...</div>}>
+        <HomeContent locale={locale} />
+      </ErrorBoundary>
     </>
   )
 }
