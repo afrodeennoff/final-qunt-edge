@@ -2,6 +2,7 @@ import { setStaticParamsLocale } from 'next-international/server'
 import { Metadata } from 'next'
 import { getStaticParams } from '@/locales/server'
 import HomeContent from './components/HomeContent'
+import { ErrorBoundary } from '@/components/error-boundary'
 import {
   buildBreadcrumbSchema,
   buildOrganizationSchema,
@@ -66,20 +67,22 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   const breadcrumbSchema = buildBreadcrumbSchema(locale, [{ name: 'Home', path: '/' }])
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      <HomeContent locale={locale} />
-    </>
+    <ErrorBoundary>
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        />
+        <HomeContent locale={locale} />
+      </>
+    </ErrorBoundary>
   )
 }

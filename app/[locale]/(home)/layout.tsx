@@ -26,19 +26,17 @@ export default function HomeLayout({
   children: React.ReactNode
 }>) {
   return (
-    <PublicRootProviders>
-      <MarketingLayoutShell
-        className="home-borderless-shell dark"
-        contentClassName="w-full flex-1"
-        showRollingBanner={false}
-        topSpacingClassName=""
-        contentSpacingClassName="pb-safe"
-        shellVariant="black"
-        fullWidth
-        showSidebar={false}
-      >
-        {children}
-      </MarketingLayoutShell>
-    </PublicRootProviders>
+    <MarketingLayoutShell
+      className="home-borderless-shell dark"
+      contentClassName="w-full flex-1"
+      showRollingBanner={false}
+      topSpacingClassName=""
+      contentSpacingClassName="pb-safe"
+      shellVariant="black"
+      fullWidth
+      showSidebar={false}
+    >
+      <PublicRootProviders>{children}</PublicRootProviders>
+    </MarketingLayoutShell>
   )
 }

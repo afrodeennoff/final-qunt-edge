@@ -190,7 +190,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ScrollLockFixLazy />
         {enableVercelInsights ? <SpeedInsights /> : null}
         {enableVercelInsights ? <Analytics /> : null}
-        <main id="main-content" className="flex flex-1 flex-col">{children}</main>
+        <main id="main-content" className="flex flex-1 flex-col relative">
+          {/* PPR bailout fallback — always server-rendered, auto-fades after 5s as safety net */}
+          <style dangerouslySetInnerHTML={{ __html: `#initial-loader{animation:il-fade 5s ease-out forwards}@keyframes il-fade{0%,80%{opacity:1}100%{opacity:0;pointer-events:none;visibility:hidden}}` }} />
+          <div
+            id="initial-loader"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-background"
+          >
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-foreground" />
+          </div>
+          {children}
+        </main>
       </body>
     </html>
   )

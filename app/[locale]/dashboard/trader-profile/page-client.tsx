@@ -52,7 +52,7 @@ import { getLeaderboardVisibility, toggleLeaderboardVisibility } from '@/server/
 import { useUserStore } from '@/store/user-store'
 import { toast } from 'sonner'
 
-import { MetricsSkeleton, TableSkeleton, CalendarSkeleton } from './components/Skeletons'
+import { TableSkeleton, CalendarSkeleton } from './components/Skeletons'
 import { TraderProfileShareButton } from './components/trader-profile-share-button'
 
 const RadarChartCard = dynamic(() => import('./components/RadarChartCard'), {
@@ -985,73 +985,100 @@ export default function TraderProfilePageClient() {
           </div>
         </UnifiedSurface>
 
-        {/* ---- Performance Snapshot ---- */}
-        <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6">
+        {/* ---- Comprehensive Dashboard View ---- */}
+        <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
           <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-            Performance snapshot
+            Performance dashboard
           </p>
 
-          <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-            {primaryStripMetrics.map((metric) => (
-              <StripMetric
-                key={metric.label}
-                label={metric.label}
-                value={metric.value}
-                tone={metric.tone}
-                emphasis
-                className="h-full"
+          <div className="mt-4 grid gap-4 lg:grid-cols-4">
+            {/* Primary Metrics Row */}
+            <div className="lg:col-span-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {primaryStripMetrics.map((metric) => (
+                <StripMetric
+                  key={metric.label}
+                  label={metric.label}
+                  value={metric.value}
+                  tone={metric.tone}
+                  emphasis
+                  className="h-full"
+                />
+              ))}
+            </div>
+
+            {/* Capital & Accounts Row */}
+            <div className="lg:col-span-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <StatTile
+                label="Total capital"
+                value={formatCapitalCompact(totalCapitalAllAccounts)}
+                tone={totalCapitalAllAccounts >= 0 ? 'positive' : 'negative'}
               />
-            ))}
-          </div>
-
-          <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {secondaryStripMetrics.map((metric) => (
-              <StripMetric
-                key={metric.label}
-                label={metric.label}
-                value={metric.value}
-                tone={metric.tone}
-                className="h-full"
+              <StatTile
+                label="Total withdraw"
+                value={formatCapitalCompact(totalWithdrawAllAccounts)}
               />
-            ))}
-          </div>
-        </UnifiedSurface>
+              <StatTile
+                label="Avg net / trade"
+                value={formatSigned(metrics.avgReturn)}
+                tone={
+                  metrics.avgReturn > 0
+                    ? 'positive'
+                    : metrics.avgReturn < 0
+                      ? 'negative'
+                      : 'default'
+                }
+              />
+              <StatTile label="Risk reward" value={formatValue(metrics.riskReward)} />
+            </div>
 
-        {/* ---- Accounts & Capital ---- */}
-        <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
-          <div className="flex items-center gap-2">
-            <Wallet className="h-4 w-4 text-muted-foreground" />
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-              Accounts & Capital
-            </p>
-          </div>
+            {/* Execution Quality Row */}
+            <div className="lg:col-span-2 grid gap-3 sm:grid-cols-2">
+              <StatTile
+                label="Max drawdown"
+                value={formatValue(metrics.drawdown)}
+                tone={metrics.drawdown > 0 ? 'negative' : 'default'}
+              />
+              <StatTile
+                label="Win rate"
+                value={`${formatValue(metrics.winRate)}%`}
+                tone={metrics.winRate >= 50 ? 'positive' : 'default'}
+              />
+              <StatTile
+                label="Break-even rate"
+                value={`${formatValue(metrics.breakEvenRate)}%`}
+              />
+              <StatTile
+                label="Gross wins"
+                value={formatCapitalCompact(metrics.sumGain)}
+                tone={metrics.sumGain > 0 ? 'positive' : 'default'}
+              />
+            </div>
 
-          <div className="mt-4 grid gap-4 lg:grid-cols-3">
-            <div className="lg:col-span-2 space-y-4">
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                <StatTile
-                  label="Total capital"
-                  value={formatCapitalCompact(totalCapitalAllAccounts)}
-                  tone={totalCapitalAllAccounts >= 0 ? 'positive' : 'negative'}
-                />
-                <StatTile
-                  label="Total withdraw"
-                  value={formatCapitalCompact(totalWithdrawAllAccounts)}
-                />
-                <StatTile
-                  label="Avg net / trade"
-                  value={formatSigned(metrics.avgReturn)}
-                  tone={
-                    metrics.avgReturn > 0
-                      ? 'positive'
-                      : metrics.avgReturn < 0
-                        ? 'negative'
-                        : 'default'
-                  }
-                />
-                <StatTile label="Risk reward" value={formatValue(metrics.riskReward)} />
-              </div>
+            {/* Secondary Metrics Row */}
+            <div className="lg:col-span-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <SignalTile
+                label="Active days"
+                value={String(tradeCalendarDays.length)}
+                tone={tradeCalendarDays.length > 0 ? 'positive' : 'default'}
+              />
+              <SignalTile
+                label="Total trades"
+                value={String(metrics.totalTrades)}
+              />
+              <SignalTile
+                label="Current streak"
+                value={metrics.winningStreak > 0 ? `${metrics.winningStreak} wins` : 'Reset'}
+                tone={metrics.winningStreak > 0 ? 'positive' : 'default'}
+              />
+              <SignalTile
+                label="Active accounts"
+                value={String(activeAccountsCount)}
+                tone={activeAccountsCount > 0 ? 'positive' : 'default'}
+              />
+            </div>
 
+            {/* Account Labels */}
+            <div className="lg:col-span-4">
               <div className={cn(insetPanelClassName, 'p-4')}>
                 {activeAccountLabels.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
@@ -1070,35 +1097,48 @@ export default function TraderProfilePageClient() {
                   </div>
                 )}
               </div>
-
-              <div>
-                <MeterRow
-                  label="Consistency"
-                  value={`${formatValue(metrics.consistencyRate)}%`}
-                  progress={Math.min(100, Math.max(10, metrics.consistencyRate))}
-                  fillClassName="bg-semantic-success/60"
-                />
-              </div>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-3">
-              <SignalTile
-                label="Active days"
-                value={String(tradeCalendarDays.length)}
-                tone={tradeCalendarDays.length > 0 ? 'positive' : 'default'}
+            {/* Progress Bars */}
+            <div className="lg:col-span-2 grid gap-3">
+              <MeterRow
+                label="Consistency"
+                value={`${formatValue(metrics.consistencyRate)}%`}
+                progress={Math.min(100, Math.max(10, metrics.consistencyRate))}
+                fillClassName="bg-semantic-success/60"
               />
-              <SignalTile
-                label="Win rate"
+              <MeterRow
+                label="Win rate balance"
                 value={`${formatValue(metrics.winRate)}%`}
-                tone={metrics.winRate >= 50 ? 'positive' : 'default'}
+                progress={Math.min(100, Math.max(8, metrics.winRate))}
               />
-              <SignalTile
-                label="Break-even rate"
-                value={`${formatValue(metrics.breakEvenRate)}%`}
+            </div>
+
+            <div className="lg:col-span-2 grid gap-3">
+              <MeterRow
+                label="Trade volume"
+                value={`${metrics.totalTrades} trades`}
+                progress={Math.min(100, Math.max(8, metrics.totalTrades))}
+                fillClassName="bg-primary/45"
+              />
+              <MeterRow
+                label="Guide cushion"
+                value={`${formatValue(winRateGuidePercent)}%`}
+                progress={winRateGuidePercent}
+                fillClassName="bg-primary/30"
               />
             </div>
           </div>
         </UnifiedSurface>
+
+        {/* ---- User Name Divider ---- */}
+        <div className="animate-fade-up-smooth animate-fade-up-smooth-d3 flex items-center gap-4">
+          <div className="h-px flex-1 bg-border/40" />
+          <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+            {profileName}
+          </h2>
+          <div className="h-px flex-1 bg-border/40" />
+        </div>
 
         {/* ---- Daily Session Pattern ---- */}
         <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 overflow-hidden p-5 sm:p-6">
@@ -1211,87 +1251,32 @@ export default function TraderProfilePageClient() {
           </div>
         </UnifiedSurface>
 
-        {/* ---- Benchmark & Metrics ---- */}
-        <div className="space-y-6">
-            <Suspense
-              fallback={
-                <UnifiedSurface variant="elevated" className="p-5 sm:p-6">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="h-3 w-20 animate-pulse rounded-lg bg-muted/30" />
-                    <div className="h-5 w-14 animate-pulse rounded-md bg-muted/30" />
-                  </div>
-                  <div className={cn(insetPanelClassName, 'mt-5 p-3')}>
-                    <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
-                  </div>
-                  <div className="mt-3 h-3 w-36 animate-pulse rounded bg-muted/30" />
-                </UnifiedSurface>
-              }
-            >
-              <UnifiedSurface
-                variant="elevated"
-                className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6"
-              >
-                <RadarChartCard
-                  radarData={radarData}
-                  isBenchmarkLoading={isBenchmarkLoading}
-                  benchmarkSampleSize={benchmark?.sampleSize}
-                />
-              </UnifiedSurface>
-            </Suspense>
-
-            <Suspense fallback={<MetricsSkeleton />}>
-              <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 p-5 sm:p-6">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                  <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                    Execution quality
-                  </p>
-                </div>
-
-                <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  <StatTile
-                    label="Max drawdown"
-                    value={formatValue(metrics.drawdown)}
-                    tone={metrics.drawdown > 0 ? 'negative' : 'default'}
-                  />
-                  <StatTile
-                    label="Win rate"
-                    value={`${formatValue(metrics.winRate)}%`}
-                    tone={metrics.winRate >= 50 ? 'positive' : 'default'}
-                  />
-                  <StatTile
-                    label="Break-even rate"
-                    value={`${formatValue(metrics.breakEvenRate)}%`}
-                  />
-                  <StatTile
-                    label="Gross wins"
-                    value={formatCapitalCompact(metrics.sumGain)}
-                    tone={metrics.sumGain > 0 ? 'positive' : 'default'}
-                  />
-                </div>
-
-                <div className="mt-4 space-y-3">
-                  <MeterRow
-                    label="Win rate balance"
-                    value={`${formatValue(metrics.winRate)}%`}
-                    progress={Math.min(100, Math.max(8, metrics.winRate))}
-                  />
-                  <MeterRow
-                    label="Trade volume"
-                    value={`${metrics.totalTrades} trades`}
-                    progress={Math.min(100, Math.max(8, metrics.totalTrades))}
-                    fillClassName="bg-primary/45"
-                  />
-                  <MeterRow
-                    label="Guide cushion"
-                    value={`${formatValue(winRateGuidePercent)}%`}
-                    progress={winRateGuidePercent}
-                    fillClassName="bg-primary/30"
-                  />
-                </div>
-              </UnifiedSurface>
-            </Suspense>
-        </div>
+        {/* ---- Benchmark Radar ---- */}
+        <Suspense
+          fallback={
+            <UnifiedSurface variant="elevated" className="p-5 sm:p-6">
+              <div className="flex items-start justify-between gap-3">
+                <div className="h-3 w-20 animate-pulse rounded-lg bg-muted/30" />
+                <div className="h-5 w-14 animate-pulse rounded-md bg-muted/30" />
+              </div>
+              <div className={cn(insetPanelClassName, 'mt-5 p-3')}>
+                <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
+              </div>
+              <div className="mt-3 h-3 w-36 animate-pulse rounded bg-muted/30" />
+            </UnifiedSurface>
+          }
+        >
+          <UnifiedSurface
+            variant="elevated"
+            className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6"
+          >
+            <RadarChartCard
+              radarData={radarData}
+              isBenchmarkLoading={isBenchmarkLoading}
+              benchmarkSampleSize={benchmark?.sampleSize}
+            />
+          </UnifiedSurface>
+        </Suspense>
 
         {/* ---- Trade History ---- */}
         <Suspense fallback={<TableSkeleton />}>
