@@ -1,13 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { CheckCircle2, XCircle, Loader2 } from 'lucide-react'
 import { Input } from './input'
 import { Label } from './label'
-import { Card, CardContent, CardDescription } from './card'
+import { Card, CardContent } from './card'
 import { Button } from './button'
 import { cn } from '@/lib/utils'
-import { useI18n } from '@/locales/client'
 
 interface UsernameInputProps {
   value?: string
@@ -36,42 +35,12 @@ export function UsernameInput({
   maxLength = 30,
   minLength = 3,
 }: UsernameInputProps) {
-  const t = useI18n()
   const [validation, setValidation] = useState<ValidationResult | null>(null)
   const [isValidating, setIsValidating] = useState(false)
   const [touched, setTouched] = useState(false)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const validateUsername = async (username: string): Promise<ValidationResult> => {
-    if (!username) {
-      return {
-        isValid: false,
-        isAvailable: false,
-        message: t('validation.required', { field: 'Username' })
-      }
-    }
-
-    if (username.length < minLength || username.length > maxLength) {
-      return {
-        isValid: false,
-        isAvailable: false,
-        message: t('validation.usernameLength', { min: minLength, max: maxLength })
-      }
-    }
-
-    // Username regex: letters, numbers, underscores, hyphens only
-    if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
-      return {
-        isValid: false,
-        isAvailable: false,
-        message: t('validation.usernameCharacters')
-      }
-    }
-
-    if (username === value) {
-      // If same as current value, we can reuse previous validation
-      return validation || { isValid: true, isAvailable: true }
-    }
-
+  const checkAvailability = useCallback(async (username: string): Promise<ValidationResult> => {
     setIsValidating(true)
     setValidation(null)
 
@@ -80,55 +49,65 @@ export function UsernameInput({
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to check username availability')
+        throw new Error(data.error || 'Failed to check availability')
       }
 
       return {
         isValid: true,
         isAvailable: data.available,
-        message: data.available
-          ? t('validation.usernameAvailable')
-          : t('validation.usernameTaken')
+        message: data.available ? 'Username is available' : 'Username is already taken',
       }
     } catch (error) {
       return {
         isValid: false,
         isAvailable: false,
-        message: error instanceof Error ? error.message : t('validation.error')
+        message: error instanceof Error ? error.message : 'Validation failed',
       }
     } finally {
       setIsValidating(false)
     }
-  }
+  }, [])
 
-  const handleInputChange = async (newValue: string) => {
+  const validateUsername = useCallback(async (username: string): Promise<ValidationResult> => {
+    if (!username) {
+      return { isValid: false, isAvailable: false, message: 'Username is required' }
+    }
+
+    if (username.length < minLength || username.length > maxLength) {
+      return { isValid: false, isAvailable: false, message: `Must be ${minLength}-${maxLength} characters` }
+    }
+
+    if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+      return { isValid: false, isAvailable: false, message: 'Only letters, numbers, underscores, and hyphens' }
+    }
+
+    return checkAvailability(username)
+  }, [minLength, maxLength, checkAvailability])
+
+  const handleInputChange = (newValue: string) => {
     onChange?.(newValue)
     setTouched(true)
 
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+    }
+
     if (newValue.length < minLength || newValue.length > maxLength) {
-      setValidation({
-        isValid: false,
-        isAvailable: false,
-        message: t('validation.usernameLength', { min: minLength, max: maxLength })
-      })
+      setValidation({ isValid: false, isAvailable: false, message: `Must be ${minLength}-${maxLength} characters` })
       return
     }
 
     if (!/^[a-zA-Z0-9_-]+$/.test(newValue)) {
-      setValidation({
-        isValid: false,
-        isAvailable: false,
-        message: t('validation.usernameCharacters')
-      })
+      setValidation({ isValid: false, isAvailable: false, message: 'Only letters, numbers, underscores, and hyphens' })
       return
     }
 
-    // Debounce validation
-    const timeoutId = setTimeout(() => {
-      validateUsername(newValue)
-    }, 500)
+    setValidation(null)
 
-    return () => clearTimeout(timeoutId)
+    debounceRef.current = setTimeout(async () => {
+      const result = await checkAvailability(newValue)
+      setValidation(result)
+    }, 500)
   }
 
   const handleSubmit = async () => {
@@ -162,7 +141,7 @@ export function UsernameInput({
 
   const getStatusText = () => {
     if (!touched) return ''
-    if (isValidating) return t('validation.checking')
+    if (isValidating) return 'Checking availability...'
     return validation?.message || ''
   }
 
@@ -171,33 +150,38 @@ export function UsernameInput({
       <CardContent className="space-y-4 p-6">
         <div className="space-y-2">
           <Label htmlFor="username">
-            {t('settings.username')}
+            Username
             <span className="text-muted-foreground ml-2">
               ({value.length}/{maxLength})
             </span>
           </Label>
           <div className="flex gap-2">
-            <Input
-              id="username"
-              type="text"
-              value={value}
-              onChange={(e) => handleInputChange(e.target.value)}
-              placeholder={placeholder}
-              disabled={disabled}
-              className={cn(
-                'flex-1',
-                validation?.isValid === false && 'border-destructive focus:border-destructive',
-                validation?.isValid === true && validation.isAvailable && 'border-green-500 focus:border-green-500'
-              )}
-              maxLength={maxLength}
-            />
+            <div className="relative flex-1">
+              <Input
+                id="username"
+                type="text"
+                value={value}
+                onChange={(e) => handleInputChange(e.target.value)}
+                placeholder={placeholder}
+                disabled={disabled}
+                className={cn(
+                  'pr-10',
+                  validation?.isValid === false && 'border-destructive focus:border-destructive',
+                  validation?.isValid === true && validation.isAvailable && 'border-green-500 focus:border-green-500',
+                )}
+                maxLength={maxLength}
+              />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                {getStatusIcon()}
+              </div>
+            </div>
             <Button
               type="button"
               onClick={handleSubmit}
               disabled={disabled || !value || isValidating || validation?.isValid === false || !validation?.isAvailable}
               size="sm"
             >
-              {t('common.save')}
+              Save
             </Button>
           </div>
         </div>
@@ -208,19 +192,19 @@ export function UsernameInput({
               <p className={cn(
                 'text-sm',
                 !validation.isValid ? 'text-destructive' :
-                validation.isAvailable ? 'text-green-600' : 'text-muted-foreground'
+                validation.isAvailable ? 'text-green-600' : 'text-muted-foreground',
               )}>
                 {getStatusText()}
               </p>
             )}
 
             <div className="space-y-1 text-xs text-muted-foreground">
-              <p>{t('validation.usernameRules.title')}</p>
+              <p>Username requirements:</p>
               <ul className="list-disc list-inside space-y-1 pl-2">
-                <li>{t('validation.usernameRules.minLength', { count: minLength })}</li>
-                <li>{t('validation.usernameRules.maxLength', { count: maxLength })}</li>
-                <li>{t('validation.usernameRules.characters')}</li>
-                <li>{t('validation.usernameRules.unique')}</li>
+                <li>At least {minLength} characters</li>
+                <li>Maximum {maxLength} characters</li>
+                <li>Letters, numbers, underscores, and hyphens only</li>
+                <li>Must be unique</li>
               </ul>
             </div>
           </div>

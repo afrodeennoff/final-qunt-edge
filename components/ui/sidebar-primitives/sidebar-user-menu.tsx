@@ -63,7 +63,7 @@ export function SidebarUserMenu({
                     {displayName}
                   </span>
                   <span className="truncate text-xs text-sidebar-foreground/50">
-                    {user?.email || 'Free Plan'}
+                    {user?.username ? `@${user.username}` : (user?.email || 'Free Plan')}
                   </span>
                 </div>
                 <MoreHorizontal className="ml-auto size-4 text-sidebar-foreground/40 transition-transform duration-200 group-hover/user:rotate-90 group-hover/user:text-sidebar-foreground/60 group-data-[collapsible=icon]:hidden" />
@@ -88,7 +88,9 @@ export function SidebarUserMenu({
                   <span className="truncate font-semibold text-sidebar-foreground">
                     {displayName}
                   </span>
-                  <span className="truncate text-xs text-sidebar-foreground/60">{user?.email}</span>
+                  <span className="truncate text-xs text-sidebar-foreground/60">
+                    {user?.username ? `@${user.username}` : (user?.email || '')}
+                  </span>
                 </div>
               </div>
             </DropdownMenuLabel>

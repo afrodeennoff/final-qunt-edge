@@ -121,8 +121,8 @@ type CoreUserCompatRecord = {
 function toCompatUser(record: CoreUserCompatRecord, authUserId: string): User {
   return {
     id: record.id,
-    username: record.username,
-    usernameHash: record.usernameHash,
+    username: record.username ?? null,
+    usernameHash: record.usernameHash ?? null,
     email: record.email,
     auth_user_id: record.auth_user_id ?? authUserId,
     isFirstConnection: record.isFirstConnection ?? true,

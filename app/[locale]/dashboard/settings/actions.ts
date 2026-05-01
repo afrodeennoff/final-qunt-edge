@@ -11,6 +11,54 @@ import { MemberRole } from '@/prisma/generated/prisma'
 import { ensureTeamMembership, resolveTeamUserId } from '@/server/team-membership'
 import { isAdminUser } from '@/server/authz'
 
+export async function updateUsername(username: string) {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user?.id) {
+      throw new Error('Unauthorized')
+    }
+
+    const normalized = username.trim().toLowerCase()
+
+    if (normalized.length < 3 || normalized.length > 30) {
+      throw new Error('Username must be 3-30 characters')
+    }
+
+    if (!/^[a-zA-Z0-9_-]+$/.test(normalized)) {
+      throw new Error('Username can only contain letters, numbers, underscores, and hyphens')
+    }
+
+    const existing = await prisma.user.findFirst({
+      where: {
+        OR: [{ username: normalized }, { usernameHash: normalized }],
+        NOT: { auth_user_id: user.id },
+      },
+      select: { id: true },
+    })
+
+    if (existing) {
+      throw new Error('Username is already taken')
+    }
+
+    const teamUserId = await resolveTeamUserId(user.id)
+
+    await prisma.user.update({
+      where: { id: teamUserId },
+      data: {
+        username: normalized,
+        usernameHash: normalized,
+      },
+    })
+
+    revalidatePath('/dashboard/settings')
+    return { success: true }
+  } catch (error) {
+    console.error('Error updating username:', error)
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to update username' }
+  }
+}
+
 export async function updateUserProfile(fullName: string) {
   try {
     const supabase = await createClient()
@@ -268,6 +316,7 @@ export async function getUserTeams() {
       managers: team.managers.map(manager => ({
         ...manager,
         email: usersMap.get(manager.managerId)?.email || 'Unknown',
+        username: usersMap.get(manager.managerId)?.username ?? null,
       })),
     }))
 
@@ -277,6 +326,7 @@ export async function getUserTeams() {
       managers: team.managers.map(manager => ({
         ...manager,
         email: usersMap.get(manager.managerId)?.email || 'Unknown',
+        username: usersMap.get(manager.managerId)?.username ?? null,
       })),
     }))
 
@@ -327,6 +377,7 @@ export async function addManagerToTeam(teamId: string, managerEmail: string, acc
     // Find the user by email
     const managerUser = await prisma.user.findUnique({
       where: { email: managerEmail },
+      select: { id: true, email: true, username: true },
     })
 
     if (!managerUser) {
@@ -502,10 +553,11 @@ export async function getUserTeamAccess() {
     const teamsWithAccess = managedTeams.map(bm => ({
       ...bm.team,
       userAccess: bm.access,
-      traders: bm.team.traderIds.map(id => usersMap.get(id)).filter((trader): trader is { id: string; email: string } => trader !== undefined),
+      traders: bm.team.traderIds.map(id => usersMap.get(id)).filter((trader): trader is { id: string; email: string; username: string | null } => trader !== undefined),
       managers: bm.team.managers.map(manager => ({
         ...manager,
         email: usersMap.get(manager.managerId)?.email || 'Unknown',
+        username: usersMap.get(manager.managerId)?.username ?? null,
       })),
     }))
 

@@ -69,7 +69,7 @@ import {
  unifiedSectionPanelClassName,
 } from '@/components/layout/unified-page-recipes'
 
-const getDisplayName = (user: { email: string; username: string | null }) => {
+const getDisplayName = (user: { email: string; username?: string | null }) => {
 	return user.username || user.email.split('@')[0]
 }
 
@@ -308,6 +308,7 @@ export function TeamManagement({
  managerId: 'temp-manager-id', // This will be updated when we reload the data
  access: newManagerAccess,
  email: newManagerEmail.trim(),
+ username: null as string | null,
  }
 
  const updatedSelectedTeam = {

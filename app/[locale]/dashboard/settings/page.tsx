@@ -45,7 +45,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { leaveTeam, getUserTeams, updateUserProfile } from './actions'
+import { leaveTeam, getUserTeams, updateUserProfile, updateUsername } from './actions'
 import { toast } from 'sonner'
 import {
   AlertDialog,
@@ -58,6 +58,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import { UsernameInput } from '@/components/ui/username-input'
 import { LinkedAccounts } from '@/components/linked-accounts'
 import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
 
@@ -314,6 +315,7 @@ export default function SettingsPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [fullName, setFullName] = useState(user?.user_metadata?.full_name || user?.user_metadata?.name || '')
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false)
+  const [username, setUsername] = useState('')
 
   const [userTeams, setUserTeams] = useState<UserTeamsState>({ ownedTeams: [], joinedTeams: [] })
 
@@ -350,6 +352,16 @@ export default function SettingsPage() {
       isCancelled = true
     }
   }, [])
+
+  const handleUsernameSubmit = async (newUsername: string) => {
+    const result = await updateUsername(newUsername)
+    if (result.success) {
+      toast.success('Username updated')
+      setUsername(newUsername)
+    } else {
+      toast.error(result.error || 'Failed to update username')
+    }
+  }
 
   const handleUpdateProfile = async () => {
     if (!fullName.trim()) {
@@ -416,7 +428,7 @@ export default function SettingsPage() {
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16">
                 <AvatarImage src={user?.user_metadata.avatar_url} />
-                <AvatarFallback className="text-lg">{user?.email![0].toUpperCase()}</AvatarFallback>
+                <AvatarFallback className="text-lg">{(user?.email?.[0] || 'U').toUpperCase()}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
@@ -429,22 +441,32 @@ export default function SettingsPage() {
               </div>
             </div>
             <Separator />
+            <UsernameInput
+              value={username}
+              onChange={setUsername}
+              onSubmit={handleUsernameSubmit}
+              placeholder="Choose a username"
+            />
+            <Separator />
             <div className="grid gap-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" placeholder="Enter your first name" />
+                  <Label htmlFor="fullName">{t('dashboard.profile') || 'Full Name'}</Label>
+                  <Input
+                    id="fullName"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Enter your name"
+                  />
                 </div>
                 <div>
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" placeholder="Enter your last name" />
+                  <Label htmlFor="email">Email</Label>
+                  <Input id="email" type="email" value={user?.email || ''} disabled />
                 </div>
               </div>
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={user?.email || ''} disabled />
-              </div>
-              <Button>Update Profile</Button>
+              <Button onClick={handleUpdateProfile} disabled={isUpdatingProfile}>
+                {isUpdatingProfile ? 'Saving...' : t('common.save') || 'Update Profile'}
+              </Button>
             </div>
           </CardContent>
         </Card>

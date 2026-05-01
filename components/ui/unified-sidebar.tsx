@@ -55,7 +55,7 @@ function buildCurrentRouteKey(
 }
 
 function getUserInitials(user?: UnifiedSidebarConfig['user']) {
-  const raw = user?.full_name || user?.email || 'User'
+  const raw = user?.full_name || user?.username || user?.email || 'User'
   const parts = raw.replace(/@.*/, '').trim().split(/\s+/).filter(Boolean).slice(0, 2)
 
   if (parts.length === 0) return 'U'
@@ -162,7 +162,7 @@ export function UnifiedSidebar({
     [currentRouteKey, scheduleNavigationFallback, isMobile, setOpenMobile],
   )
 
-  const displayName = user?.full_name || user?.email?.split('@')[0] || 'User'
+  const displayName = user?.full_name || user?.username || user?.email?.split('@')[0] || 'User'
   const initials = useMemo(() => getUserInitials(user), [user])
 
   return shouldRenderSidebar ? (
