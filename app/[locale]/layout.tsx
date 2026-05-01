@@ -31,8 +31,6 @@ async function LocaleLayoutInner(props: {
   return (
     <I18nProviderClient locale={locale}>
       <div className="qe-no-white-borders flex flex-1 flex-col" style={LOCALE_SOFT_BORDER_STYLE}>
-        {/* Remove the initial-loader overlay once content renders */}
-        <script dangerouslySetInnerHTML={{ __html: 'var _l=document.getElementById("initial-loader");if(_l){_l.style.transition="opacity .2s";_l.style.opacity="0";setTimeout(function(){_l.remove()},200)}' }} />
         <ConsentBannerLazy />
         {props.children}
       </div>
