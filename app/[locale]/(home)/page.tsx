@@ -71,19 +71,11 @@ const HomeContent = dynamic(() => import('./components/HomeContent'), {
       <main className="relative z-10 mx-auto w-full max-w-[1400px] min-w-0 px-4 sm:px-6 lg:px-8">
         <div className="pt-24 sm:pt-32 lg:pt-40">
           <div className="mx-auto max-w-3xl space-y-8 text-center">
-            <div className="h-6 w-32 animate-pulse bg-muted rounded mx-auto" />
-            <div className="space-y-6">
-              <div className="h-16 w-96 animate-pulse bg-muted rounded mx-auto" />
-              <div className="h-6 w-64 animate-pulse bg-muted rounded mx-auto" />
-            </div>
-            <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
-              <div className="h-12 w-40 animate-pulse bg-muted rounded" />
-              <div className="h-12 w-40 animate-pulse bg-muted rounded" />
-            </div>
+            <div className="h-16 w-96 animate-pulse bg-muted rounded mx-auto" />
           </div>
         </div>
       </main>
     </div>
   ),
-  ssr: false
+  ssr: true
 })
