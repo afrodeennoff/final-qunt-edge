@@ -440,6 +440,21 @@ export default {
         trust4Description:
           'Product support, in-app guidance, and direct escalation paths for active traders.',
       },
+      testimonials: {
+        eyebrow: 'Trader feedback',
+        title: 'Trusted by serious traders',
+        description:
+          'Built for disciplined review, repeatable execution, and long-term consistency.',
+        testimonial1Quote:
+          'Qunt Edge gave me a cleaner review loop. I stopped guessing and started improving session by session.',
+        testimonial1Name: 'Futures Trader',
+        testimonial2Quote:
+          'The import and review flow is fast enough for daily use, and strict enough for serious team accountability.',
+        testimonial2Name: 'Prop Team Lead',
+        testimonial3Quote:
+          'The journal feels like a real workspace, not a marketing dashboard. That changed my consistency.',
+        testimonial3Name: 'Discretionary Scalper',
+      },
       faq: {
         badge: 'FAQ',
         title: 'Clear answers for traders evaluating the platform seriously.',

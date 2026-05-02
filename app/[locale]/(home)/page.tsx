@@ -11,22 +11,14 @@ import {
   buildSoftwareApplicationSchema,
 } from '@/lib/seo'
 
-type Locale = 'en' | 'fr'
-
-const HOME_METADATA: Record<
-  Locale,
-  {
-    title: string
-    description: string
-  }
-> = {
+const HOME_METADATA: Record<string, { title: string; description: string }> = {
   en: {
-    title: 'Qunt Edge | Professional Trading Journal & Analytics Platform',
+    title: 'Professional Trading Journal & Analytics Platform',
     description:
       'The professional trading journal for serious traders. Track every trade, review your behavior, and understand your execution cadence.',
   },
   fr: {
-    title: 'Qunt Edge | Journal de trading professionnel et plateforme d analyse',
+    title: 'Journal de trading professionnel et plateforme d analyse',
     description:
       'Le journal de trading professionnel pour les traders serieux. Suivez chaque trade, analysez votre comportement et comprenez votre cadence d execution.',
   },
@@ -39,7 +31,7 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: Locale }>
+  params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
   const metadata = HOME_METADATA[locale] ?? HOME_METADATA.en
@@ -52,8 +44,8 @@ export async function generateMetadata({
   })
 }
 
-export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
-  let locale: Locale = 'en'
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  let locale = 'en'
 
   try {
     const resolvedParams = await params
@@ -97,13 +89,13 @@ function HomeSkeleton() {
         <section className="flex flex-col items-center px-4 pt-24 sm:pt-32 lg:pt-40">
           <div className="mx-auto max-w-3xl space-y-8 text-center">
             <div className="space-y-6">
-              <div className="mx-auto h-4 w-32 animate-pulse rounded bg-muted" />
-              <div className="mx-auto h-12 w-full max-w-2xl animate-pulse rounded bg-muted" />
-              <div className="mx-auto h-6 w-full max-w-lg animate-pulse rounded bg-muted" />
+              <div className="mx-auto h-4 w-32 animate-pulse rounded bg-primary/20" />
+              <div className="mx-auto h-12 w-full max-w-2xl animate-pulse rounded bg-muted-foreground/10" />
+              <div className="mx-auto h-6 w-full max-w-lg animate-pulse rounded bg-muted-foreground/10" />
             </div>
             <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
-              <div className="h-11 w-44 animate-pulse rounded-lg bg-muted" />
-              <div className="h-11 w-44 animate-pulse rounded-lg border border-border/20 bg-muted/50" />
+              <div className="h-11 w-44 animate-pulse rounded-lg bg-primary/15" />
+              <div className="h-11 w-44 animate-pulse rounded-lg border border-border/20 bg-muted-foreground/8" />
             </div>
           </div>
         </section>

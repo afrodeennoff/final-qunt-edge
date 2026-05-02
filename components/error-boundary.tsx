@@ -31,7 +31,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="text-center gap-2">
             <h2 className="text-xl font-semibold text-foreground">Something went wrong</h2>
             <p className="text-sm text-muted-foreground">
-              The dashboard encountered an error. Your data is safe.
+              An unexpected error occurred. Your data is safe.
             </p>
             {this.state.error && (
               <p className="text-xs text-muted-foreground/60 font-mono max-w-md truncate">
@@ -43,7 +43,7 @@ export class ErrorBoundary extends Component<Props, State> {
             onClick={() => window.location.reload()}
             variant="outline"
           >
-            Reload Dashboard
+            Reload page
           </Button>
         </div>
       )

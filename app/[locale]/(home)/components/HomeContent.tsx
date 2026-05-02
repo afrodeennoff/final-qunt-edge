@@ -100,19 +100,16 @@ export default async function HomeContent({ locale }: HomeContentProps) {
 
   const testimonials = [
     {
-      name: 'Futures Trader',
-      quote:
-        'Qunt Edge gave me a cleaner review loop. I stopped guessing and started improving session by session.',
+      name: t('landing.home.testimonials.testimonial1Name'),
+      quote: t('landing.home.testimonials.testimonial1Quote'),
     },
     {
-      name: 'Prop Team Lead',
-      quote:
-        'The import and review flow is fast enough for daily use, and strict enough for serious team accountability.',
+      name: t('landing.home.testimonials.testimonial2Name'),
+      quote: t('landing.home.testimonials.testimonial2Quote'),
     },
     {
-      name: 'Discretionary Scalper',
-      quote:
-        'The journal feels like a real workspace, not a marketing dashboard. That changed my consistency.',
+      name: t('landing.home.testimonials.testimonial3Name'),
+      quote: t('landing.home.testimonials.testimonial3Quote'),
     },
   ]
 
@@ -223,18 +220,18 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         {/* Testimonials */}
         <MarketingSection id="testimonials" className="py-16 lg:py-20">
           <MarketingSectionHeader
-            eyebrow="Trader feedback"
-            title="Trusted by serious traders"
-            description="Built for disciplined review, repeatable execution, and long-term consistency."
+            eyebrow={t('landing.home.testimonials.eyebrow')}
+            title={t('landing.home.testimonials.title')}
+            description={t('landing.home.testimonials.description')}
           />
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {testimonials.map((item) => (
               <article
                 key={item.name}
-                className="group rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] p-6 text-left shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)] transition-[border-color,background-color] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.068_0.012_260_/_0.92)]"
+                className="group rounded-2xl border border-border/10 bg-card/80 p-6 text-left shadow-sm transition-[border-color,background-color] duration-200 hover:border-border/15 hover:bg-card"
               >
                 <p className="text-[15px] leading-[1.65] text-foreground/80 italic">{item.quote}</p>
-                <div className="mt-5 border-t border-[oklch(0.65_0.22_260_/_0.06)] pt-4">
+                <div className="mt-5 border-t border-border/10 pt-4">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
                     {item.name}
                   </p>

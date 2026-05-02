@@ -58,7 +58,7 @@ export default function Footer() {
       className="border-t border-[oklch(0.65_0.22_260_/_0.08)] bg-background py-14 sm:py-20"
     >
       <h2 id="footer-heading" className="sr-only">
-        {t('footer.heading')}
+        Site footer
       </h2>
 
       <motion.div
