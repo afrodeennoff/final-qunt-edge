@@ -12,12 +12,12 @@ import {
 import { Logo } from '@/components/logo'
 import { MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
-import { useCurrentLocale, useI18n } from '@/locales/client'
+import { useCurrentLocale, useTypedI18n } from '@/locales/client'
 
 type NavLink = { title: string; href: string }
 
 export default function Navbar() {
-  const t = useI18n()
+  const t = useTypedI18n()
   const pathname = usePathname()
   const locale = useCurrentLocale()
 

@@ -29,6 +29,7 @@ import { getI18n } from '@/locales/server'
 import { cn } from '@/lib/utils'
 import ProductDemoPlayer from './ProductDemoPlayer'
 import { SocialProofLazy, FAQSectionLazy, TrustAndProofLazy } from './LazySections'
+import { ErrorBoundary } from '@/components/error-boundary'
 
 interface HomeContentProps {
   locale: string
@@ -153,7 +154,9 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         </MarketingSection>
 
         {/* Social Proof */}
-        <SocialProofLazy />
+        <ErrorBoundary fallback={null}>
+          <SocialProofLazy />
+        </ErrorBoundary>
 
         {/* Features */}
         <MarketingSection id="features" className="py-16 lg:py-20">
@@ -245,10 +248,14 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         <MarketingPricingSection locale={locale} />
 
         {/* Secondary Value */}
-        <TrustAndProofLazy />
+        <ErrorBoundary fallback={null}>
+          <TrustAndProofLazy />
+        </ErrorBoundary>
 
         {/* FAQ */}
-        <FAQSectionLazy />
+        <ErrorBoundary fallback={null}>
+          <FAQSectionLazy />
+        </ErrorBoundary>
 
         {/* Final CTA */}
         <MarketingSection className="pb-24 pt-16 text-center lg:pb-28">
