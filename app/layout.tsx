@@ -137,6 +137,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning
+      style={{ backgroundColor: '#0c0a14', color: '#f8f9fc' }}
     >
       <head>
         {/* Resource Hinting for Performance */}
@@ -180,6 +181,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body
         className="flex min-h-screen flex-col bg-background font-sans type-body antialiased text-foreground"
         data-ui-variant={uiVariant}
+        style={{ backgroundColor: '#0c0a14', color: '#f8f9fc' }}
       >
         <a
           href="#main-content"

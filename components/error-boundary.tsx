@@ -27,10 +27,10 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       if (this.props.fallback) return this.props.fallback
       return (
-        <div className="flex flex-col items-center justify-center min-h-[400px] gap-4 p-8">
+        <div className="flex flex-col items-center justify-center min-h-[400px] gap-4 p-8" style={{ color: '#f8f9fc' }}>
           <div className="text-center gap-2">
-            <h2 className="text-xl font-semibold text-foreground">Something went wrong</h2>
-            <p className="text-sm text-muted-foreground">
+            <h2 className="text-xl font-semibold">Something went wrong</h2>
+            <p className="text-sm" style={{ color: '#b0a8c0' }}>
               An unexpected error occurred. Your data is safe.
             </p>
             {this.state.error && (
