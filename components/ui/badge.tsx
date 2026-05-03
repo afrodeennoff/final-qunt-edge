@@ -3,25 +3,25 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const badgeVariants = cva(
-  'type-label inline-flex items-center justify-center gap-1 rounded-full border transition-[background-color,border-color,color,box-shadow] duration-150 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]',
+  "inline-flex items-center justify-center gap-1 rounded-[5px] font-medium tracking-[0.01em] transition-[background-color,border-color,color] duration-[130ms]",
   {
     variants: {
       variant: {
-        default: 'border-primary/16 bg-primary/10 text-primary',
+        default: "border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.65_0.22_260_/_0.08)] text-foreground/85",
         secondary:
-          'border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.058_0.011_260_/_0.8)] text-muted-foreground',
-        outline: 'border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent text-foreground shadow-none',
-        destructive: 'border-destructive/16 bg-destructive/10 text-destructive',
-        accent: 'border-accent/16 bg-accent/10 text-accent-foreground',
-        success: 'border-success/16 bg-success/10 text-success',
-        warning: 'border-warning/16 bg-warning/10 text-warning',
-        error: 'border-destructive/16 bg-destructive/10 text-destructive',
+          "border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.05)] text-muted-foreground",
+        outline: "border border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent text-foreground/80",
+        destructive: "border border-[oklch(0.65_0.22_22_/_0.25)] bg-[oklch(0.65_0.22_22_/_0.10)] text-[oklch(0.70_0.20_22)]",
+        accent: "border border-[oklch(0.62_0.22_290_/_0.25)] bg-[oklch(0.62_0.22_290_/_0.12)] text-[oklch(0.80_0.14_290)]",
+        success: "border border-[oklch(0.78_0.18_155_/_0.25)] bg-[oklch(0.78_0.18_155_/_0.10)] text-[oklch(0.82_0.16_155)]",
+        warning: "border border-[oklch(0.80_0.18_75_/_0.25)] bg-[oklch(0.80_0.18_75_/_0.10)] text-[oklch(0.84_0.16_75)]",
+        error: "border border-[oklch(0.65_0.22_22_/_0.25)] bg-[oklch(0.65_0.22_22_/_0.10)] text-[oklch(0.70_0.20_22)]",
         frost:
           'border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.058_0.011_260_/_0.8)] text-foreground',
-        'frost-accent': 'border-accent/16 bg-accent/10 text-accent-foreground',
-        'frost-success': 'border-success/16 bg-success/10 text-success',
-        'frost-warning': 'border-warning/16 bg-warning/10 text-warning',
-        'frost-error': 'border-destructive/16 bg-destructive/10 text-destructive',
+        'frost-accent': "border border-[oklch(0.62_0.22_290_/_0.25)] bg-[oklch(0.62_0.22_290_/_0.12)] text-[oklch(0.80_0.14_290)]",
+        'frost-success': "border border-[oklch(0.78_0.18_155_/_0.25)] bg-[oklch(0.78_0.18_155_/_0.10)] text-[oklch(0.82_0.16_155)]",
+        'frost-warning': "border border-[oklch(0.80_0.18_75_/_0.25)] bg-[oklch(0.80_0.18_75_/_0.10)] text-[oklch(0.84_0.16_75)]",
+        'frost-error': "border border-[oklch(0.65_0.22_22_/_0.25)] bg-[oklch(0.65_0.22_22_/_0.10)] text-[oklch(0.70_0.20_22)]",
         'frost-info': 'border-primary/16 bg-primary/10 text-primary',
         pill: 'border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent text-foreground shadow-none',
         'pill-accent': 'border-accent/16 bg-accent/10 text-accent-foreground',

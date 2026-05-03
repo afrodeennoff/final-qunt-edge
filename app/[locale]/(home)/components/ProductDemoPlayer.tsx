@@ -30,9 +30,9 @@ export default function ProductDemoPlayer() {
       <iframe
         title="Qunt Edge product promo"
         src={PROMO_SRC}
-        className="absolute inset-0 h-full w-full border-0"
         loading="lazy"
-        sandbox="allow-scripts"
+        className="absolute inset-0 w-full h-full border-0"
+        sandbox="allow-scripts allow-same-origin"
         onError={() => setHasError(true)}
       />
     </div>

@@ -5,8 +5,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { UnifiedMobileNav } from '@/components/mobile-nav'
 import {
-  unifiedInsetPanelClassName,
-  unifiedGhostActionClassName,
   unifiedPrimaryActionClassName,
 } from '@/components/layout/unified-page-recipes'
 import { Logo } from '@/components/logo'
@@ -41,17 +39,15 @@ export default function Navbar() {
   }
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 px-4 py-3 sm:px-6 sm:py-3.5">
+    <header className="fixed left-0 right-0 top-0 z-50 flex justify-center px-4 pt-3 pointer-events-none">
       <div className={cn('mx-auto w-full', MARKETING_SHELL_WIDTH)}>
         <div
           className={cn(
-            unifiedInsetPanelClassName,
-            'relative flex min-h-[4rem] items-center justify-between overflow-hidden rounded-[1.2rem] px-3.5 py-2.5 sm:px-5',
+            'pointer-events-auto relative flex items-center justify-between gap-4 h-12 w-full max-w-[1100px] rounded-full px-4 bg-[oklch(0.09_0.015_264_/_0.88)] backdrop-blur-2xl saturate-150 border border-[oklch(0.65_0.22_260_/_0.10)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_8px_24px_-12px_rgba(0,0,0,0.60)]',
           )}
         >
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[oklch(0.65_0.22_260_/_0.12)] to-transparent" />
           <Link href={`/${locale}`} className="group flex items-center gap-2.5 rounded-full px-2 py-1.5 transition-[background-color] duration-200 hover:bg-[oklch(0.65_0.22_260_/_0.04)]">
-            <div className="flex h-9 w-9 items-center justify-center rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] text-muted-foreground transition-[border-color,box-shadow] duration-200 group-hover:border-[oklch(0.65_0.22_260_/_0.13)] group-hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_20px_36px_-24px_rgba(0,0,0,0.68)]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-gradient-to-b from-primary/22 to-primary/12 border border-primary/16 shadow-[inset_0_1px_0_oklch(1_0_0_/_0.06)] text-primary">
               <Logo className="h-4.5 w-4.5 fill-current" />
             </div>
             <span className="hidden text-[15px] font-semibold tracking-[-0.02em] text-foreground sm:inline-flex">
@@ -59,16 +55,16 @@ export default function Navbar() {
             </span>
           </Link>
 
-          <nav className="mx-auto hidden items-center gap-1 lg:flex">
+          <nav className="mx-auto hidden items-center gap-5 lg:flex">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={`/${locale}${link.href}`}
                 className={cn(
-                  'inline-flex h-[38px] items-center rounded-[0.95rem] border px-4 text-[13px] font-medium tracking-[-0.01em] transition-[background-color,color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
+                  'text-[13px] font-medium tracking-[-0.01em] transition-[color] duration-[120ms]',
                   isActive(link.href)
-                    ? 'border-[oklch(0.65_0.22_260_/_0.13)] bg-[oklch(0.062_0.012_260_/_0.82)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06)]'
-                    : 'border-[oklch(0.65_0.22_260_/_0.06)] text-muted-foreground hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.062_0.012_260_/_0.78)] hover:text-foreground hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05)]',
+                    ? 'text-foreground'
+                    : 'text-muted-foreground hover:text-foreground',
                 )}
               >
                 {link.title}
@@ -79,17 +75,14 @@ export default function Navbar() {
           <div className="ml-auto flex items-center gap-2.5">
             <Link
               href={`/${locale}/authentication`}
-              className={cn(unifiedGhostActionClassName, 'hidden px-4 py-2 text-sm md:inline-flex')}
+              className="h-8 px-3.5 text-[13px] rounded-full border border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent text-muted-foreground hover:text-foreground hover:bg-[oklch(0.65_0.22_260_/_0.08)] hidden md:inline-flex"
             >
               {t('landing.navbar.signIn')}
             </Link>
 
             <Link
               href={`/${locale}/authentication`}
-              className={cn(
-                unifiedPrimaryActionClassName,
-                'hidden h-[38px] px-5 text-sm md:inline-flex',
-              )}
+              className="h-8 px-4 text-[13px] font-semibold rounded-full bg-primary text-primary-foreground shadow-[inset_0_1px_0_oklch(1_0_0_/_0.12)] hover:bg-primary/92 hidden md:inline-flex"
             >
               {t('landing.hero.ctaPrimary')}
             </Link>

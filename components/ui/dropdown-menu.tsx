@@ -63,7 +63,7 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        'z-50 min-w-[10rem] overflow-hidden rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.08)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.78)_0%,oklch(0.05_0.009_260_/_0.72)_100%)] p-1.5 text-popover-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_22px_40px_-30px_rgba(0,0,0,0.72)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+        'z-50 min-w-[8rem] overflow-hidden rounded-[10px] border border-[oklch(0.65_0.22_260_/_0.14)] bg-[oklch(0.112_0.018_264_/_0.97)] shadow-[0_8px_28px_-8px_rgba(0,0,0,0.72),0_0_0_1px_oklch(0.65_0.22_260_/_0.06)] backdrop-blur-2xl p-1 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         className,
       )}
       {...props}
@@ -81,8 +81,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      'type-body-sm relative flex cursor-default select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-foreground/80 outline-none transition-[background-color,border-color,color] duration-120 focus:bg-accent/60 focus:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-accent/60 hover:text-foreground',
-      'rounded-lg focus:bg-[oklch(0.052_0.009_260_/_0.72)] hover:bg-[oklch(0.052_0.009_260_/_0.72)]',
+      'relative flex cursor-default select-none items-center gap-2 rounded-[6px] px-2.5 h-[30px] text-[13px] font-medium tracking-[-0.005em] text-foreground/80 outline-none transition-[background-color,color] duration-[100ms] focus:bg-[oklch(0.65_0.22_260_/_0.10)] focus:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
       inset && 'pl-8',
       className,
     )}
@@ -144,7 +143,7 @@ const DropdownMenuLabel = React.forwardRef<
 >(({ className, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Label
     ref={ref}
-    className={cn('type-overline px-2.5 py-1.5 text-muted-foreground', inset && 'pl-8', className)}
+    className={cn('px-2.5 py-1.5 text-[10.5px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/55', inset && 'pl-8', className)}
     {...props}
   />
 ))
@@ -163,7 +162,7 @@ const DropdownMenuSeparator = React.forwardRef<
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName
 
 const DropdownMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
-  return <span className={cn('type-label ml-auto text-muted-foreground', className)} {...props} />
+  return <span className={cn('ml-auto text-[11px] tracking-widest text-muted-foreground/50', className)} {...props} />
 }
 DropdownMenuShortcut.displayName = 'DropdownMenuShortcut'
 

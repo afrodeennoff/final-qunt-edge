@@ -245,4 +245,101 @@
   .rs-text-primary { color: hsl(var(--rs-text-primary)); }
   .rs-text-secondary { color: hsl(var(--rs-text-secondary)); }
   .rs-text-tertiary { color: hsl(var(--rs-text-tertiary)); }
+
+  /* ===== MACOS PANEL SURFACES ===== */
+  .macos-panel {
+    background: linear-gradient(180deg, rgba(20,18,38,0.92) 0%, rgba(16,14,30,0.88) 100%);
+    border: 1px solid rgba(139,92,246,0.10);
+    box-shadow: inset 0 1px 0 rgba(139,92,246,0.06), 0 18px 38px -26px rgba(0,0,0,0.70);
+  }
+  @supports (color: oklch(0 0 0)) {
+    .macos-panel {
+      background: linear-gradient(180deg, oklch(0.10 0.016 264 / 0.92) 0%, oklch(0.082 0.013 264 / 0.88) 100%);
+      border-color: oklch(0.65 0.22 260 / 0.10);
+      box-shadow: inset 0 1px 0 oklch(0.65 0.22 260 / 0.06), 0 18px 38px -26px rgba(0,0,0,0.70);
+    }
+  }
+
+  .macos-sidebar-surface {
+    background: linear-gradient(180deg, rgba(18,16,34,0.94) 0%, rgba(14,12,28,0.90) 100%);
+    border-right: 1px solid rgba(139,92,246,0.08);
+  }
+  @supports (color: oklch(0 0 0)) {
+    .macos-sidebar-surface {
+      background: linear-gradient(180deg, oklch(0.090 0.016 264 / 0.94) 0%, oklch(0.076 0.013 264 / 0.90) 100%);
+      border-right-color: oklch(0.65 0.22 260 / 0.08);
+    }
+  }
+
+  .macos-toolbar {
+    background: rgba(18,16,36,0.90);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-bottom: 1px solid rgba(139,92,246,0.08);
+  }
+  @supports (color: oklch(0 0 0)) {
+    .macos-toolbar {
+      background: oklch(0.092 0.015 264 / 0.90);
+      border-bottom-color: oklch(0.65 0.22 260 / 0.08);
+    }
+  }
+
+  .macos-sheet {
+    background: linear-gradient(180deg, rgba(24,20,44,0.96) 0%, rgba(20,16,36,0.94) 100%);
+    border: 1px solid rgba(139,92,246,0.14);
+    box-shadow: inset 0 1px 0 rgba(139,92,246,0.08), 0 32px 64px -24px rgba(0,0,0,0.82);
+  }
+  @supports (color: oklch(0 0 0)) {
+    .macos-sheet {
+      background: linear-gradient(180deg, oklch(0.115 0.018 264 / 0.96) 0%, oklch(0.098 0.015 264 / 0.94) 100%);
+      border-color: oklch(0.65 0.22 260 / 0.14);
+      box-shadow: inset 0 1px 0 oklch(0.65 0.22 260 / 0.08), 0 32px 64px -24px rgba(0,0,0,0.82);
+    }
+  }
+
+  /* ===== MACOS INTERACTIVE STATES ===== */
+  .macos-hover {
+    transition: background-color var(--duration-fast, 130ms) var(--ease-out, cubic-bezier(0.16,1,0.3,1)),
+                border-color var(--duration-fast, 130ms) var(--ease-out, cubic-bezier(0.16,1,0.3,1));
+  }
+  .macos-hover:hover {
+    background: rgba(139,92,246,0.06);
+  }
+  @supports (color: oklch(0 0 0)) {
+    .macos-hover:hover {
+      background: oklch(0.65 0.22 260 / 0.06);
+    }
+  }
+  .macos-hover:active {
+    background: rgba(139,92,246,0.10);
+    transform: scale(0.98);
+    transition-duration: 75ms;
+  }
+  @supports (color: oklch(0 0 0)) {
+    .macos-hover:active {
+      background: oklch(0.65 0.22 260 / 0.10);
+    }
+  }
+
+  /* ===== MACOS SECTION DIVIDER ===== */
+  .macos-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(139,92,246,0.08) 20%, rgba(139,92,246,0.08) 80%, transparent);
+    margin: 0;
+  }
+  @supports (color: oklch(0 0 0)) {
+    .macos-divider {
+      background: linear-gradient(to right, transparent, oklch(0.65 0.22 260 / 0.08) 20%, oklch(0.65 0.22 260 / 0.08) 80%, transparent);
+    }
+  }
+
+  /* ===== MACOS METRIC DISPLAY ===== */
+  .macos-metric-positive { color: #22c55e; }
+  .macos-metric-negative { color: #dc2626; }
+  .macos-metric-neutral  { color: #d4cce8; }
+  @supports (color: oklch(0 0 0)) {
+    .macos-metric-positive { color: oklch(0.78 0.18 155); }
+    .macos-metric-negative { color: oklch(0.58 0.22 22); }
+    .macos-metric-neutral  { color: oklch(0.76 0.03 272); }
+  }
 }

@@ -6,12 +6,12 @@ import { MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
 
 export const marketingHeroTitleClassName =
-  'text-balance text-5xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-7xl'
+  'text-balance text-[48px] font-[275] leading-[1.00] tracking-[-0.04em] text-foreground sm:text-[64px] lg:text-[80px] xl:text-[96px]'
 
 export const marketingSectionTitleClassName =
-  'text-balance text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl'
+  'text-balance text-[32px] font-[350] leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[40px] lg:text-[48px]'
 
-export const marketingBodyClassName = 'text-sm leading-relaxed text-muted-foreground sm:text-base'
+export const marketingBodyClassName = 'text-[14px] leading-[1.68] text-muted-foreground/80 sm:text-[15px]'
 
 export function MarketingSection({
   children,
@@ -27,7 +27,7 @@ export function MarketingSection({
   return (
     <section
       id={id}
-      className={cn('scroll-smooth-butter px-4 py-16 sm:px-6 lg:px-8 lg:py-20', className)}
+      className={cn('scroll-smooth-butter px-4 py-20 sm:px-6 lg:px-8 lg:py-28', className)}
     >
       <div className={cn('mx-auto w-full', MARKETING_SHELL_WIDTH, innerClassName)}>{children}</div>
     </section>
@@ -60,7 +60,7 @@ export function MarketingSectionHeader({
       )}
     >
       {eyebrow ? (
-        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
+        <p className="text-[10.5px] font-semibold uppercase tracking-[0.10em] text-primary/85">
           {eyebrow}
         </p>
       ) : null}
@@ -88,7 +88,7 @@ export function MarketingFeatureCard({
   className?: string
 }) {
   return (
-    <Card variant="glass" className={cn('h-full p-6', className)}>
+    <Card variant="glass" className={cn('relative overflow-hidden rounded-[12px] border border-[oklch(0.65_0.22_260_/_0.10)] bg-[linear-gradient(160deg,oklch(0.096_0.016_264_/_0.92)_0%,oklch(0.078_0.013_264_/_0.88)_100%)] p-5 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_16px_32px_-20px_rgba(0,0,0,0.64)] transition-[border-color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.16)] hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_20px_40px_-20px_rgba(0,0,0,0.72)]', className)}>
       <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.65_0.22_260_/_0.08)] text-primary">
         {icon}
       </div>
@@ -114,7 +114,7 @@ export function MarketingStatBlock({
 }) {
   return (
     <Card variant="flat" className={cn('p-6 text-center', className)}>
-      <p className="text-4xl font-semibold leading-none tracking-[-0.04em] text-primary sm:text-5xl">
+      <p className="text-[32px] font-[250] tracking-[-0.05em] tabular-nums text-foreground leading-none">
         {value}
       </p>
       <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">

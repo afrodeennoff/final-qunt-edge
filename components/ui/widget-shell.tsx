@@ -86,20 +86,20 @@ export function WidgetShell({
  return (
  <Card
  data-widget-shell="v2"
- className={cn("widget-enter-smooth relative h-full overflow-hidden rounded-[1.15rem] border border-[oklch(0.65_0.22_260_/_0.1)] bg-[linear-gradient(180deg,oklch(0.068_0.012_260_/_0.9)_0%,oklch(0.056_0.01_260_/_0.84)_100%)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_20px_38px_-28px_rgba(0,0,0,0.68)]","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/32 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+ className={cn("widget-enter-smooth relative h-full overflow-hidden rounded-[12px] border border-[oklch(0.65_0.22_260_/_0.10)] bg-[linear-gradient(160deg,oklch(0.096_0.016_264_/_0.93)_0%,oklch(0.078_0.013_264_/_0.88)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.07),0_20px_40px_-28px_rgba(0,0,0,0.70)] focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.07),0_0_0_2px_var(--background),0_0_0_4px_oklch(0.62_0.22_290_/_0.45)]",
  variant ==="hoverable" &&
  className
  )}
  >
  {(title || actions || icon || description) && (
- <CardHeader className="border-b border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.06)] px-[var(--space-4)] py-[0.9rem] sm:px-[var(--space-4)] sm:py-[0.9rem]">
+ <CardHeader className="border-b border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.04)] px-4 py-[0.65rem]">
  <div className="flex items-start justify-between gap-[var(--space-3)]">
  <div className="min-w-0 gap-[var(--space-2)]">
  {(title || icon) && (
  <div className="flex items-center gap-[var(--space-2)]">
- {icon ? <span className="text-fg-muted">{icon}</span> : null}
+ {icon ? <span className="size-[15px] text-muted-foreground/50">{icon}</span> : null}
  {title ? (
- <CardTitle className="line-clamp-1 text-sm font-semibold tracking-[-0.01em] text-fg-primary sm:text-[15px]">{title}</CardTitle>
+ <CardTitle className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70">{title}</CardTitle>
  ) : null}
  {info ? (
  <TooltipProvider>

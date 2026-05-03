@@ -15,10 +15,10 @@ import {
 import type { UnifiedSidebarItem, PendingNavigation } from './types'
 
 const ITEM_BUTTON_CLASS =
-  'pointer-events-auto rounded-lg font-medium hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground transition-[opacity,background-color,border-color,box-shadow] duration-200'
-const INACTIVE_ITEM_CLASS = 'text-sidebar-foreground/68'
+  'pointer-events-auto h-[30px] rounded-[7px] px-2.5 gap-2 font-medium text-[13px] tracking-[-0.005em] hover:bg-[oklch(0.65_0.22_260_/_0.07)] hover:text-foreground/90 transition-[background-color,border-color,color] duration-[120ms] ease-[cubic-bezier(0.16,1,0.3,1)] data-[active=true]:bg-[oklch(0.62_0.22_290_/_0.13)] data-[active=true]:border data-[active=true]:border-[oklch(0.62_0.22_290_/_0.20)] data-[active=true]:text-foreground data-[active=true]:shadow-[0_1px_3px_rgba(0,0,0,0.24)]'
+const INACTIVE_ITEM_CLASS = 'text-muted-foreground/72'
 const ACTIVE_ITEM_CLASS =
-  'border-sidebar-primary/28 bg-sidebar-primary/12 text-sidebar-foreground shadow-[0_18px_32px_-28px_rgba(0,0,0,0.88)]'
+  'font-semibold text-foreground tracking-[-0.01em]'
 
 function isItemPending(
   item: UnifiedSidebarItem,
@@ -49,8 +49,8 @@ function renderItemIcon(
       className={cn(
         'shrink-0 transition-colors duration-200',
         isItemActive
-          ? 'text-sidebar-primary'
-          : 'text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80',
+          ? 'text-primary'
+          : 'text-muted-foreground/55 group-hover/btn:text-muted-foreground/75',
       )}
     >
       {item.icon}
@@ -62,8 +62,8 @@ function getItemTextClass(isItemActive: boolean) {
   return cn(
     'ml-3 truncate text-[13px] group-data-[collapsible=icon]:hidden',
     isItemActive
-      ? 'font-semibold text-sidebar-foreground tracking-[-0.01em]'
-      : 'font-medium text-sidebar-foreground/72 tracking-[-0.005em]',
+      ? 'font-semibold text-foreground tracking-[-0.01em]'
+      : 'font-medium text-muted-foreground/72 tracking-[-0.005em]',
   )
 }
 

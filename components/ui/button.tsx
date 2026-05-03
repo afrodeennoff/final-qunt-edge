@@ -6,44 +6,44 @@ import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'type-body-sm inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border border-transparent select-none overflow-hidden font-medium tracking-normal transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap select-none cursor-pointer font-medium tracking-[-0.01em] transition-[background-color,border-color,color,box-shadow,opacity] duration-[130ms] ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[0_0_0_2px_var(--background),0_0_0_4px_oklch(0.62_0.22_290_/_0.5)] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97] active:duration-75",
   {
     variants: {
       variant: {
         solid:
-          'rounded-[0.95rem] border-primary/18 bg-primary text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92 hover:shadow-[0_12px_28px_-22px_rgba(0,0,0,0.48)] active:scale-[0.985]',
+          "bg-primary text-primary-foreground border border-primary/20 shadow-[inset_0_1px_0_oklch(1_0_0_/_0.12),0_1px_3px_rgba(0,0,0,0.24)] hover:bg-primary/92",
         outline:
-          'rounded-[0.95rem] border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.7)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.11)] hover:bg-[oklch(0.056_0.009_260_/_0.78)] active:scale-[0.985]',
+          "bg-transparent text-foreground/80 border border-[oklch(0.65_0.22_260_/_0.14)] hover:bg-[oklch(0.65_0.22_260_/_0.08)] hover:text-foreground hover:border-[oklch(0.65_0.22_260_/_0.20)]",
         ghost:
-          'rounded-[0.95rem] bg-transparent text-muted-foreground hover:border-[oklch(0.65_0.22_260_/_0.07)] hover:bg-[oklch(0.052_0.009_260_/_0.56)] hover:text-foreground active:scale-[0.985]',
+          "bg-transparent text-muted-foreground border border-transparent hover:bg-[oklch(0.65_0.22_260_/_0.08)] hover:text-foreground",
         error:
-          'rounded-[0.95rem] border-destructive/18 bg-destructive text-destructive-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-destructive/92 active:scale-[0.985]',
+          "bg-destructive/90 text-destructive-foreground border border-destructive/20 shadow-[inset_0_1px_0_oklch(1_0_0_/_0.08)] hover:bg-destructive",
         destructive:
-          'rounded-[0.95rem] border-destructive/18 bg-destructive text-destructive-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-destructive/92 active:scale-[0.985]',
+          "bg-destructive/90 text-destructive-foreground border border-destructive/20 shadow-[inset_0_1px_0_oklch(1_0_0_/_0.08)] hover:bg-destructive",
         link: 'rounded-[0.95rem] text-primary underline-offset-4 hover:underline',
         'gradient-primary':
-          'rounded-[0.95rem] border-primary/18 bg-primary text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92 hover:shadow-[0_12px_28px_-22px_rgba(0,0,0,0.48)] active:scale-[0.985]',
+          "bg-gradient-to-b from-primary via-primary to-primary/88 text-primary-foreground border border-primary/20 shadow-[inset_0_1px_0_oklch(1_0_0_/_0.14),0_4px_16px_-8px_oklch(0.62_0.22_290_/_0.45)] hover:shadow-[inset_0_1px_0_oklch(1_0_0_/_0.14),0_8px_24px_-8px_oklch(0.62_0.22_290_/_0.55)]",
         'gradient-secondary':
-          'rounded-[0.95rem] border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.72)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.056_0.009_260_/_0.8)] active:scale-[0.985]',
+          "bg-[oklch(0.65_0.22_260_/_0.08)] text-foreground border border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.65_0.22_260_/_0.12)]",
         shimmer:
           'rounded-[0.95rem] border-primary/18 bg-primary text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92 hover:shadow-[0_12px_28px_-22px_rgba(0,0,0,0.48)] active:scale-[0.985]',
         default:
-          'rounded-[0.95rem] border-primary/18 bg-primary text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92 hover:shadow-[0_12px_28px_-22px_rgba(0,0,0,0.48)] active:scale-[0.985]',
+          "bg-primary text-primary-foreground border border-primary/20 shadow-[inset_0_1px_0_oklch(1_0_0_/_0.12),0_1px_3px_rgba(0,0,0,0.24)] hover:bg-primary/92",
         secondary:
-          'rounded-[0.95rem] border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.05_0.009_260_/_0.72)] text-secondary-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.054_0.009_260_/_0.78)] active:scale-[0.985]',
-        mono: 'rounded-[0.95rem] border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.05_0.009_260_/_0.72)] font-mono text-foreground hover:border-[oklch(0.65_0.22_260_/_0.11)] hover:bg-[oklch(0.054_0.009_260_/_0.8)]',
-        pill: 'rounded-full border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)] text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.056_0.009_260_/_0.78)] active:scale-[0.98]',
+          "bg-[oklch(0.65_0.22_260_/_0.07)] text-foreground/88 border border-[oklch(0.65_0.22_260_/_0.12)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05)] hover:bg-[oklch(0.65_0.22_260_/_0.11)] hover:text-foreground hover:border-[oklch(0.65_0.22_260_/_0.18)]",
+        mono: "font-mono text-[12px] rounded-md bg-[oklch(0.65_0.22_260_/_0.06)] text-muted-foreground border border-[oklch(0.65_0.22_260_/_0.10)] hover:bg-[oklch(0.65_0.22_260_/_0.10)] hover:text-foreground",
+        pill: "rounded-full bg-transparent text-foreground/80 border border-[oklch(0.65_0.22_260_/_0.16)] hover:bg-[oklch(0.65_0.22_260_/_0.08)] hover:text-foreground",
         'pill-solid':
-          'rounded-full border-primary/18 bg-primary text-primary-foreground shadow-[0_2px_4px_rgba(0,0,0,0.15)] hover:bg-primary/92 active:scale-[0.98]',
+          "rounded-full bg-foreground text-background border-none hover:bg-foreground/92",
         'pill-ghost':
-          'rounded-full bg-transparent text-muted-foreground hover:border-[oklch(0.65_0.22_260_/_0.07)] hover:bg-[oklch(0.052_0.009_260_/_0.56)] hover:text-foreground active:scale-[0.98]',
+          "rounded-full bg-transparent text-muted-foreground border-transparent hover:bg-[oklch(0.65_0.22_260_/_0.08)] hover:text-foreground",
       },
       size: {
-        sm: 'h-9 min-h-[36px] min-w-[36px] px-3',
-        default: 'h-10 min-h-[40px] min-w-[40px] px-4',
-        md: 'h-11 min-h-[44px] min-w-[44px] px-5',
-        lg: 'h-12 min-h-[48px] min-w-[48px] px-6 text-sm',
-        icon: 'h-10 w-10 min-h-[40px] min-w-[40px]',
+        sm: 'h-7 min-h-7 px-2.5 text-[12px] rounded-md gap-1 [&_svg]:size-3.5',
+        default: 'h-8 min-h-8 px-3.5 text-[13px] rounded-md [&_svg]:size-4',
+        md: 'h-9 min-h-9 px-4 text-[13px] rounded-[8px] [&_svg]:size-4',
+        lg: 'h-10 min-h-10 px-5 text-[14px] rounded-[9px] [&_svg]:size-4',
+        icon: 'h-8 w-8 min-h-8 min-w-8 rounded-md [&_svg]:size-4',
       },
     },
     defaultVariants: {

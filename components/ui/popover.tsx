@@ -22,7 +22,7 @@ const PopoverContent = React.forwardRef<
       align={align}
       sideOffset={sideOffset}
       className={cn(
-        'z-50 w-[90vw] sm:w-72 rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.08)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.78)_0%,oklch(0.05_0.009_260_/_0.72)_100%)] p-4 text-popover-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_22px_40px_-30px_rgba(0,0,0,0.72)] outline-none transition-[opacity,background-color,border-color] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-(--radix-popover-content-transform-origin)',
+        'z-50 w-72 rounded-[10px] border border-[oklch(0.65_0.22_260_/_0.13)] bg-[oklch(0.108_0.017_264_/_0.97)] shadow-[0_8px_24px_-8px_rgba(0,0,0,0.70),0_0_0_1px_oklch(0.65_0.22_260_/_0.05)] backdrop-blur-2xl p-3 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         className,
       )}
       {...props}

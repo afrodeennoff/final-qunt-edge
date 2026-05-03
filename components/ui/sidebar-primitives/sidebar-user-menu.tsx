@@ -46,23 +46,23 @@ export function SidebarUserMenu({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="group/user w-full rounded-xl border border-transparent px-2.5 py-1.5 transition-[opacity,background-color,border-color] duration-200 hover:border-sidebar-primary/14 hover:bg-sidebar-primary/8 data-[state=open]:border-sidebar-primary/18 data-[state=open]:bg-sidebar-primary/10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
+              className="group/user h-[52px] rounded-none border-t border-[oklch(0.65_0.22_260_/_0.07)] px-3 hover:bg-[oklch(0.65_0.22_260_/_0.06)]"
             >
               <div className="flex w-full items-center gap-2.5">
                 <div className="relative shrink-0">
-                  <Avatar className="h-9 w-9 overflow-hidden rounded-xl ring-1 ring-sidebar-primary/20">
+                  <Avatar className="h-8 w-8 overflow-hidden rounded-[8px] ring-1 ring-[oklch(0.65_0.22_260_/_0.18)]">
                     <AvatarImage src={user?.avatar_url} alt={displayName} />
-                    <AvatarFallback className="rounded-xl bg-gradient-to-br from-sidebar-primary/80 via-sidebar-primary/60 to-sidebar-primary/40 text-sidebar-primary-foreground text-xs font-bold tracking-wide">
+                    <AvatarFallback className="rounded-[8px] bg-gradient-to-b from-primary/25 to-primary/15 text-primary text-[11px] font-bold">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-sidebar bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]" />
                 </div>
                 <div className="grid min-w-0 flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                  <span className="truncate font-semibold text-sidebar-foreground">
+                  <span className="text-[13px] font-semibold tracking-[-0.01em] text-foreground truncate">
                     {displayName}
                   </span>
-                  <span className="truncate text-xs text-sidebar-foreground/50">
+                  <span className="text-[11px] text-muted-foreground/55 truncate">
                     {user?.username ? `@${user.username}` : (user?.email || 'Free Plan')}
                   </span>
                 </div>
@@ -85,10 +85,10 @@ export function SidebarUserMenu({
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold text-sidebar-foreground">
+                  <span className="text-[13px] font-semibold tracking-[-0.01em] text-foreground truncate">
                     {displayName}
                   </span>
-                  <span className="truncate text-xs text-sidebar-foreground/60">
+                  <span className="text-[11px] text-muted-foreground/55 truncate">
                     {user?.username ? `@${user.username}` : (user?.email || '')}
                   </span>
                 </div>

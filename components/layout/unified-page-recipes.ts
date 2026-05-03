@@ -1,11 +1,11 @@
 export const unifiedHeroPanelClassName =
-  'relative overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.074_0.013_260_/_0.94)_0%,oklch(0.056_0.01_260_/_0.88)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_18px_36px_-28px_rgba(0,0,0,0.7)]'
+  'relative overflow-hidden rounded-[12px] border border-[oklch(0.65_0.22_260_/_0.10)] bg-[linear-gradient(180deg,oklch(0.096_0.016_264_/_0.92)_0%,oklch(0.076_0.012_264_/_0.88)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.07),0_20px_40px_-28px_rgba(0,0,0,0.72)]'
 
 export const unifiedSectionPanelClassName =
-  'rounded-xl border border-[oklch(0.65_0.22_260_/_0.085)] bg-[linear-gradient(180deg,oklch(0.07_0.012_260_/_0.9)_0%,oklch(0.056_0.01_260_/_0.84)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_14px_28px_-24px_rgba(0,0,0,0.64)]'
+  'rounded-[10px] border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.090_0.015_264_/_0.90)_0%,oklch(0.074_0.012_264_/_0.86)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_14px_28px_-22px_rgba(0,0,0,0.62)]'
 
 export const unifiedInsetPanelClassName =
-  'rounded-lg border border-[oklch(0.65_0.22_260_/_0.075)] bg-[oklch(0.056_0.01_260_/_0.74)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]'
+  'rounded-[9px] border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.084_0.014_264_/_0.78)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05)]'
 
 export const unifiedMetricPanelClassName =
   'rounded-lg border border-[oklch(0.65_0.22_260_/_0.075)] bg-[oklch(0.056_0.01_260_/_0.72)] p-4 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]'
@@ -14,13 +14,13 @@ export const unifiedChipClassName =
   'inline-flex items-center gap-2 rounded-full border border-[oklch(0.65_0.22_260_/_0.11)] bg-[oklch(0.65_0.22_260_/_0.09)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.11em] text-muted-foreground'
 
 export const unifiedGhostActionClassName =
-  'inline-flex items-center justify-center gap-2 rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.085)] bg-[oklch(0.057_0.01_260_/_0.72)] px-4 py-[0.56rem] text-sm font-medium tracking-[-0.01em] text-muted-foreground transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.06_0.011_260_/_0.8)] hover:text-foreground'
+  'inline-flex items-center justify-center gap-1.5 rounded-[8px] border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.65_0.22_260_/_0.06)] px-3 py-1.5 text-[13px] font-medium tracking-[-0.01em] text-muted-foreground transition-[background-color,border-color,color] duration-[130ms] hover:bg-[oklch(0.65_0.22_260_/_0.10)] hover:text-foreground hover:border-[oklch(0.65_0.22_260_/_0.18)]'
 
 export const unifiedPrimaryActionClassName =
-  'inline-flex items-center justify-center gap-2 rounded-[0.95rem] border border-primary/18 bg-primary px-5 py-2.5 text-sm font-semibold tracking-[-0.01em] text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.18)] transition-[background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:bg-primary/94 hover:shadow-[0_10px_24px_-18px_rgba(0,0,0,0.45)]'
+  'inline-flex items-center justify-center gap-1.5 rounded-[8px] border border-primary/18 bg-primary px-4 py-2 text-[13px] font-semibold tracking-[-0.01em] text-primary-foreground shadow-[inset_0_1px_0_oklch(1_0_0_/_0.12),0_1px_4px_rgba(0,0,0,0.24)] transition-[background-color,box-shadow] duration-[130ms] hover:bg-primary/92 hover:shadow-[inset_0_1px_0_oklch(1_0_0_/_0.12),0_6px_18px_-8px_oklch(0.62_0.22_290_/_0.45)]'
 
 export const unifiedToolbarClassName =
-  'relative overflow-hidden rounded-lg border border-[oklch(0.65_0.22_260_/_0.075)] bg-[linear-gradient(180deg,oklch(0.068_0.011_260_/_0.78)_0%,oklch(0.054_0.009_260_/_0.72)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.045),0_14px_28px_-24px_rgba(0,0,0,0.6)]'
+  'relative overflow-hidden rounded-[9px] border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.090_0.015_264_/_0.82)_0%,oklch(0.074_0.012_264_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_12px_24px_-20px_rgba(0,0,0,0.58)]'
 
 export const unifiedToolbarBadgeClassName =
   'inline-flex items-center gap-2 rounded-full border border-[oklch(0.65_0.22_260_/_0.1)] bg-[oklch(0.06_0.011_260_/_0.74)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground'
@@ -32,12 +32,12 @@ export const unifiedToolbarMetaPanelClassName =
   'rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.075)] bg-[oklch(0.057_0.01_260_/_0.75)] px-3 py-2.5 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]'
 
 export const unifiedSectionEyebrowClassName =
-  'text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/88'
+  'text-[10.5px] font-semibold uppercase tracking-[0.09em] text-primary/80'
 
 export const unifiedDisplayTitleClassName =
-  'text-balance font-semibold tracking-[-0.03em] text-foreground'
+  'font-[300] tracking-[-0.04em] text-foreground leading-[1.02]'
 
-export const unifiedBodyCopyClassName = 'text-sm leading-[1.62] text-muted-foreground sm:text-base'
+export const unifiedBodyCopyClassName = 'text-[14px] leading-[1.68] text-muted-foreground/80 sm:text-[15px]'
 
 export const unifiedInfoLabelClassName =
   'text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground'

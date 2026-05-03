@@ -23,7 +23,7 @@ const SheetOverlay = React.forwardRef<
     ref={ref}
     data-slot="sheet-overlay"
     className={cn(
-      'fixed inset-0 z-50 bg-[oklch(0.015_0.004_260_/_0.78)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+      'fixed inset-0 z-50 bg-black/55 backdrop-blur-[2px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
       className,
     )}
     {...props}
@@ -32,7 +32,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
 
 const sheetVariants = cva(
-  'fixed z-50 gap-4 border frost-border-7 frost-gradient-card p-6 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_28px_56px_-34px_rgba(0,0,0,0.72)] transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-200 data-[state=open]:duration-300',
+  'fixed z-50 gap-4 border border-[oklch(0.65_0.22_260_/_0.14)] bg-[linear-gradient(180deg,oklch(0.115_0.018_264_/_0.97)_0%,oklch(0.096_0.015_264_/_0.96)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_32px_64px_-20px_rgba(0,0,0,0.84)] p-6 transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-200 data-[state=open]:duration-300',
   {
     variants: {
       side: {
@@ -80,7 +80,7 @@ SheetContent.displayName = SheetPrimitive.Content.displayName
 const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     data-slot="sheet-header"
-    className={cn('flex flex-col gap-2 text-center sm:text-left', className)}
+    className={cn('flex flex-col space-y-1.5 text-center sm:text-left', className)}
     {...props}
   />
 )
@@ -102,7 +102,7 @@ const SheetTitle = React.forwardRef<
   <SheetPrimitive.Title
     ref={ref}
     data-slot="sheet-title"
-    className={cn('text-lg font-semibold text-foreground', className)}
+    className={cn('text-[15px] font-semibold tracking-[-0.02em] text-foreground', className)}
     {...props}
   />
 ))
@@ -115,7 +115,7 @@ const SheetDescription = React.forwardRef<
   <SheetPrimitive.Description
     ref={ref}
     data-slot="sheet-description"
-    className={cn('text-sm text-muted-foreground', className)}
+    className={cn('text-[13px] text-muted-foreground/75', className)}
     {...props}
   />
 ))

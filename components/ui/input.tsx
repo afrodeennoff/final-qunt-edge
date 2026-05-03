@@ -34,7 +34,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={type}
             className={cn(
-              'type-body-sm flex h-10 w-full rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.05_0.009_260_/_0.72)] px-3.5 py-2 text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.03)] transition-[border-color,background-color,box-shadow] duration-200 ring-offset-background placeholder:text-muted-foreground/50 focus-visible:border-[oklch(0.65_0.22_260_/_0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.22_260_/_0.18)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+              "flex w-full rounded-[6px] border border-[oklch(0.65_0.22_260_/_0.14)] bg-[oklch(0.65_0.22_260_/_0.05)] px-3 py-1.5 text-[13px] text-foreground placeholder:text-muted-foreground/50 transition-[border-color,box-shadow] duration-[130ms] focus-visible:outline-none focus-visible:border-[oklch(0.62_0.22_290_/_0.45)] focus-visible:shadow-[0_0_0_2px_var(--background),0_0_0_4px_oklch(0.62_0.22_290_/_0.30),inset_0_1px_2px_rgba(0,0,0,0.12)] disabled:opacity-40 disabled:cursor-not-allowed file:border-0 file:bg-transparent file:text-sm file:font-medium",
               leftIcon && 'pl-10',
               rightIcon && 'pr-10',
               error &&
