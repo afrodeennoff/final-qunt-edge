@@ -315,7 +315,16 @@ export default function SettingsPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [fullName, setFullName] = useState(user?.user_metadata?.full_name || user?.user_metadata?.name || '')
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false)
+
+  const prismaUser = useUserStore((state) => state.user)
   const [username, setUsername] = useState('')
+
+  // Load existing username from the user store once it's available
+  useEffect(() => {
+    if (prismaUser?.username && !username) {
+      setUsername(prismaUser.username)
+    }
+  }, [prismaUser?.username])
 
   const [userTeams, setUserTeams] = useState<UserTeamsState>({ ownedTeams: [], joinedTeams: [] })
 
@@ -358,6 +367,11 @@ export default function SettingsPage() {
     if (result.success) {
       toast.success('Username updated')
       setUsername(newUsername)
+      // Update the user store so the username is immediately reflected
+      // in the sidebar and other pages without a full page reload
+      if (prismaUser) {
+        useUserStore.getState().setUser({ ...prismaUser, username: newUsername })
+      }
     } else {
       toast.error(result.error || 'Failed to update username')
     }

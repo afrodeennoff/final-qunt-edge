@@ -150,6 +150,7 @@ async function findCoreUserByIdCompat(userId: string, authUserId: string): Promi
       select: {
         id: true,
         email: true,
+        username: true,
         isFirstConnection: true,
         isBeta: true,
         language: true,
@@ -169,6 +170,7 @@ async function findCoreUserByIdCompat(userId: string, authUserId: string): Promi
       select: {
         id: true,
         email: true,
+        username: true,
         createdAt: true,
         updatedAt: true
       }
@@ -214,6 +216,7 @@ async function loadCoreUserData(authUserId: string | null, userId: string): Prom
         select: {
           id: true,
           email: true,
+          username: true,
           auth_user_id: true,
           isFirstConnection: true,
           isBeta: true,
