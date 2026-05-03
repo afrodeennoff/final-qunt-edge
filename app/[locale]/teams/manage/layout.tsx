@@ -84,7 +84,7 @@ export default async function TeamManageLayout({
       <DashboardProviders>
         <TeamsSidebar />
 
-        <SidebarInset className="relative overflow-hidden h-dvh selection:bg-background/0.45 selection:text-foreground">
+        <SidebarInset className="qe-v2-app-shell relative h-dvh overflow-hidden selection:bg-primary/20 selection:text-foreground">
           <BackgroundGlow variant="default" />
 
           <div className="relative z-0 flex h-full flex-col">
@@ -98,6 +98,7 @@ export default async function TeamManageLayout({
                     'flex min-h-[4.5rem] w-full items-center gap-4 px-3 py-2.5 sm:px-4',
                   )}
                 >
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/12 to-transparent" />
                   <div className="flex min-w-0 items-center gap-3">
                     <SidebarTrigger
                       className={cn(

@@ -85,11 +85,11 @@ async function getTraderSnapshot(slug: string): Promise<TraderSnapshot | null> {
   if (!hasConfiguredDatabaseConnection) return null
   if (!(await hasLeaderboardVisibilityColumn())) return null
 
-  let publicUser: { id: string; email: string | null; showOnLeaderboard: boolean; auth_user_id: string } | null = null
+  let publicUser: { id: string; email: string | null; username: string | null; showOnLeaderboard: boolean; auth_user_id: string } | null = null
   try {
     publicUser = await prisma.user.findUnique({
       where: { id: slug },
-      select: { id: true, email: true, auth_user_id: true, showOnLeaderboard: true },
+      select: { id: true, email: true, username: true, auth_user_id: true, showOnLeaderboard: true },
     })
   } catch (error) {
     if (isPrismaSchemaMismatchError(error)) return null
@@ -125,7 +125,7 @@ async function getTraderSnapshot(slug: string): Promise<TraderSnapshot | null> {
 
   return {
     id: publicUser.id,
-    username: toUsername(publicUser.email, publicUser.id),
+    username: publicUser.username || toUsername(publicUser.email, publicUser.id),
     totalPnl,
     totalTrades,
     winRate,

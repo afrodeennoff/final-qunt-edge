@@ -1,5 +1,9 @@
 import { Skeleton } from '@/components/ui/skeleton'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import {
+  unifiedInsetPanelClassName,
+  unifiedSectionPanelClassName,
+} from '@/components/layout/unified-page-recipes'
+import { cn } from '@/lib/utils'
 
 function DashboardHeaderSkeleton() {
   return (
@@ -21,13 +25,11 @@ function StatsGridSkeleton() {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {[1, 2, 3, 4].map((i) => (
-        <Card key={i}>
-          <CardContent className="pt-6">
-            <Skeleton className="h-4 w-20 mb-2" />
-            <Skeleton className="h-8 w-24" />
-            <Skeleton className="h-3 w-16 mt-2" />
-          </CardContent>
-        </Card>
+        <div key={i} className={cn(unifiedInsetPanelClassName, 'p-5')}>
+          <Skeleton className="h-4 w-20 mb-2" />
+          <Skeleton className="h-8 w-24" />
+          <Skeleton className="h-3 w-16 mt-2" />
+        </div>
       ))}
     </div>
   )
@@ -35,27 +37,19 @@ function StatsGridSkeleton() {
 
 function ChartSkeleton() {
   return (
-    <Card className="lg:col-span-4">
-      <CardHeader>
-        <Skeleton className="h-6 w-32" />
-      </CardHeader>
-      <CardContent>
-        <Skeleton className="h-[350px] w-full rounded-lg" />
-      </CardContent>
-    </Card>
+    <div className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6 lg:col-span-4')}>
+      <Skeleton className="h-6 w-32 mb-4" />
+      <Skeleton className="h-[350px] w-full rounded-lg" />
+    </div>
   )
 }
 
 function WidgetSkeleton() {
   return (
-    <Card>
-      <CardHeader>
-        <Skeleton className="h-5 w-24" />
-      </CardHeader>
-      <CardContent>
-        <Skeleton className="h-32 w-full rounded-lg" />
-      </CardContent>
-    </Card>
+    <div className={cn(unifiedInsetPanelClassName, 'p-5')}>
+      <Skeleton className="h-5 w-24 mb-4" />
+      <Skeleton className="h-32 w-full rounded-lg" />
+    </div>
   )
 }
 
@@ -68,7 +62,7 @@ function SidebarSkeleton() {
           <Skeleton key={i} className="h-9 w-full" />
         ))}
       </div>
-      <div className="pt-4 border-t border-border/20 space-y-2">
+      <div className="pt-4 border-t border-[oklch(0.65_0.22_260_/_0.075)] space-y-2">
         {[1, 2, 3].map((i) => (
           <Skeleton key={i} className="h-8 w-full" />
         ))}
@@ -80,14 +74,14 @@ function SidebarSkeleton() {
 export default function DashboardLoading() {
   return (
     <div className="flex h-full">
-      <aside className="hidden lg:block w-64 border-r border-border/20 p-4">
+      <aside className="hidden lg:block w-64 border-r border-[oklch(0.65_0.22_260_/_0.075)] p-4">
         <SidebarSkeleton />
       </aside>
-      
+
       <main className="flex-1 p-4 lg:p-6 overflow-auto">
         <DashboardHeaderSkeleton />
         <StatsGridSkeleton />
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <ChartSkeleton />
@@ -96,7 +90,7 @@ export default function DashboardLoading() {
               <WidgetSkeleton />
             </div>
           </div>
-          
+
           <div className="space-y-6">
             <WidgetSkeleton />
             <WidgetSkeleton />

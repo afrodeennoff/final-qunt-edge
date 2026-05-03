@@ -40,6 +40,17 @@ export default function FileUpload({
   const nextFileIndexRef = useRef(0)
   // Guard against duplicate concatenateFiles calls
   const hasConcatenatedRef = useRef(false)
+  // Keep a ref to parsedFiles so doConcatenateAndAdvance always reads the latest value
+  const parsedFilesRef = useRef<string[][][]>([])
+  // Keep a ref to uploadedFiles for consistent length checks in the effect
+  const uploadedFilesRef = useRef<File[]>([])
+  // Keep a ref to uploadProgress for consistent progress checks in the effect
+  const uploadProgressRef = useRef<{ [key: string]: number }>({})
+
+  // Sync refs with state so that doConcatenateAndAdvance always reads fresh values
+  useEffect(() => { parsedFilesRef.current = parsedFiles }, [parsedFiles])
+  useEffect(() => { uploadedFilesRef.current = uploadedFiles }, [uploadedFiles])
+  useEffect(() => { uploadProgressRef.current = uploadProgress }, [uploadProgress])
 
   const processFile = useCallback((file: File, index: number) => {
     return new Promise<void>((resolve, reject) => {
@@ -105,19 +116,33 @@ export default function FileUpload({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
   const removeFile = (index: number) => {
-    setUploadedFiles(prevFiles => prevFiles.filter((_, i) => i !== index))
-    setParsedFiles(prevFiles => prevFiles.filter((_, i) => i !== index))
-    setUploadProgress(prev => {
-      const newProgress = { ...prev }
-      delete newProgress[uploadedFiles[index].name]
-      return newProgress
+    setUploadedFiles(prevFiles => {
+      const removed = prevFiles[index]
+      if (removed) {
+        // Clear the progress entry for the removed file
+        setUploadProgress(prev => {
+          const newProgress = { ...prev }
+          delete newProgress[removed.name]
+          return newProgress
+        })
+      }
+      return prevFiles.filter((_, i) => i !== index)
     })
+    setParsedFiles(prevFiles => prevFiles.filter((_, i) => i !== index))
+    // Reset concatenation guard so a re-upload after removal can advance
+    hasConcatenatedRef.current = false
+    // The index tracker will be corrected on the next onDrop via uploadedFiles.length,
+    // but we also update it here in case the user uploads again immediately.
+    // Subtract 1 for the file just removed, but don't go below 0.
+    nextFileIndexRef.current = Math.max(0, nextFileIndexRef.current - 1)
   }
 
   const doConcatenateAndAdvance = useCallback(() => {
     if (hasConcatenatedRef.current) return
 
-    if (parsedFiles.length === 0) return
+    // Read from refs to avoid stale closure values
+    const currentParsedFiles = parsedFilesRef.current
+    if (currentParsedFiles.length === 0) return
 
     try {
       const platform = platforms.find(p => p.type === importType)
@@ -132,7 +157,8 @@ export default function FileUpload({
       let concatenatedData: string[][] = []
       let headers: string[] = []
 
-      parsedFiles.forEach((file, index) => {
+      currentParsedFiles.forEach((file, index) => {
+        if (!file || file.length === 0) return
         const { headers: fileHeaders, processedData } = platform.processFile!(file)
         if (index === 0) {
           headers = fileHeaders
@@ -157,7 +183,7 @@ export default function FileUpload({
     } catch (concatError) {
       setError((concatError as Error).message)
     }
-  }, [importType, parsedFiles, setRawCsvData, setCsvData, setHeaders, setStep, setError])
+  }, [importType, setRawCsvData, setCsvData, setHeaders, setStep, setError])
 
   // Reset concatenation guard when files change or component re-mounts for a fresh upload
   useEffect(() => {
@@ -165,22 +191,24 @@ export default function FileUpload({
     nextFileIndexRef.current = 0
   }, [importType])
 
-  // Primary effect: when all files are parsed and show 100% progress, concatenate and advance
+  // Primary effect: when all files are parsed and show 100% progress, concatenate and advance.
+  // Uses refs to read state so the callback reference (doConcatenateAndAdvance) stays stable,
+  // preventing infinite re-trigger loops from the dependency array.
   useEffect(() => {
-    const totalFiles = uploadedFiles.length
-    if (totalFiles === 0 || parsedFiles.length === 0) return
+    const totalFiles = uploadedFilesRef.current.length
+    if (totalFiles === 0 || parsedFilesRef.current.length === 0) return
 
-    const progressEntries = Object.values(uploadProgress)
+    const progressEntries = Object.values(uploadProgressRef.current)
     const allProgressComplete = progressEntries.length === totalFiles &&
       progressEntries.every(progress => progress === 100)
 
     // Check that we have parse results for every uploaded file
-    const parsedCount = parsedFiles.filter(f => f && f.length > 0).length
+    const parsedCount = parsedFilesRef.current.filter(f => f && f.length > 0).length
 
     if (allProgressComplete && parsedCount >= totalFiles) {
       doConcatenateAndAdvance()
     }
-  }, [parsedFiles, uploadProgress, doConcatenateAndAdvance, uploadedFiles.length])
+  }, [parsedFiles, uploadProgress, doConcatenateAndAdvance, uploadedFiles])
 
   return (
     <div className="space-y-4 w-full h-full p-8 flex flex-col items-center justify-center">

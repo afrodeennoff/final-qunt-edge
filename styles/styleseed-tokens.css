@@ -3,7 +3,7 @@
 @property --brand {
   syntax: '<color>';
   inherits: true;
-  initial-value: oklch(0.6083 0.2172 297.1153);
+  initial-value: #9066e8;
 }
 
 :root {
@@ -34,24 +34,43 @@
                      inset 0 1px 2px rgba(255,255,255,0.1);
   --shadow-modal: 0 8px 16px rgba(0,0,0,0.4),
                   inset 0 1px 2px rgba(255,255,255,0.1);
-  --shadow-glow-cobalt: 0 0 32px oklch(0.6083 0.2172 297.1153 / 0.30),
-                        0 0 8px oklch(0.6083 0.2172 297.1153 / 0.20);
-  --shadow-glow-emerald: 0 0 24px oklch(0.82 0.185 155 / 0.25);
-  --shadow-glow-crimson: 0 0 24px oklch(0.64 0.255 22 / 0.25);
+  --shadow-glow-cobalt: 0 0 32px rgba(145, 108, 232, 0.30),
+                        0 0 8px rgba(145, 108, 232, 0.20);
+  --shadow-glow-emerald: 0 0 24px rgba(82, 216, 122, 0.25);
+  --shadow-glow-crimson: 0 0 24px rgba(224, 72, 72, 0.25);
 
-  /* TEXT TOKENS (WCAG AAA contrast on dark surfaces) */
-  --text-strong: oklch(0.97 0 0);       /* Headings — maximum contrast */
-  --text-primary: oklch(0.90 0 0);      /* Body text — strong readability */
-  --text-secondary: oklch(0.64 0 0);    /* Secondary text — sufficient */
-  --text-tertiary: oklch(0.46 0 0);     /* Tertiary — captions */
-  --text-disabled: oklch(0.30 0 0);     /* Disabled — dimmed */
+  /* TEXT TOKENS (WCAG AAA contrast on dark surfaces) — hex fallbacks */
+  --text-strong: #f5f5f5;       /* Headings — maximum contrast */
+  --text-primary: #e0e0e0;      /* Body text — strong readability */
+  --text-secondary: #a0a0a0;    /* Secondary text — sufficient */
+  --text-tertiary: #747474;     /* Tertiary — captions */
+  --text-disabled: #4c4c4c;     /* Disabled — dimmed */
 
-  /* SURFACE TOKENS (4-tier depth hierarchy, 4% lightness steps) */
-  --surface-page: oklch(0 0 0);         /* Base — deepest, page bg */
-  --surface-card: oklch(0.038 0 0);     /* Cards — slightly lighter */
-  --surface-subtle: oklch(0.058 0 0);   /* Elevated surfaces */
-  --surface-muted: oklch(0.085 0 0);    /* Highest elevation */
-  --surface-elevated: oklch(0.105 0 0); /* Overlay/modal level */
-  --surface-overlay: oklch(0.135 0 0);  /* Popovers, top-level */
-  --brand-tint: oklch(0.6083 0.2172 297.1153 / 0.08);
+  /* SURFACE TOKENS (4-tier depth hierarchy, 4% lightness steps) — hex fallbacks */
+  --surface-page: #000000;         /* Base — deepest, page bg */
+  --surface-card: #080808;     /* Cards — slightly lighter */
+  --surface-subtle: #0e0e0e;   /* Elevated surfaces */
+  --surface-muted: #151515;    /* Highest elevation */
+  --surface-elevated: #1a1a1a; /* Overlay/modal level */
+  --surface-overlay: #222222;  /* Popovers, top-level */
+  --brand-tint: rgba(145, 108, 255, 0.08);
+}
+
+/* OKLCH overrides for StyleSeed tokens — precise colors for modern browsers */
+@supports (color: oklch(0 0 0)) {
+  :root {
+    --text-strong: oklch(0.97 0 0);
+    --text-primary: oklch(0.90 0 0);
+    --text-secondary: oklch(0.64 0 0);
+    --text-tertiary: oklch(0.46 0 0);
+    --text-disabled: oklch(0.30 0 0);
+
+    --surface-page: oklch(0 0 0);
+    --surface-card: oklch(0.038 0 0);
+    --surface-subtle: oklch(0.058 0 0);
+    --surface-muted: oklch(0.085 0 0);
+    --surface-elevated: oklch(0.105 0 0);
+    --surface-overlay: oklch(0.135 0 0);
+    --brand-tint: oklch(0.6083 0.2172 297.1153 / 0.08);
+  }
 }

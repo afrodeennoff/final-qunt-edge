@@ -21,6 +21,7 @@ import {
 } from '@/lib/constants/layout'
 import { DashboardProviders } from '@/components/providers/dashboard-providers'
 import { TeamsMobileBottomNav } from '../components/teams-mobile-bottom-nav'
+import { BackgroundGlow } from '@/components/ui/background-glow'
 
 export const metadata: Metadata = {
   robots: {
@@ -84,6 +85,7 @@ export default async function DashboardLayout({
         <TeamsSidebar />
 
         <SidebarInset className="qe-v2-app-shell relative h-dvh overflow-hidden selection:bg-primary/20 selection:text-foreground">
+          <BackgroundGlow variant="default" />
           <div className="relative z-0 flex h-full flex-col">
             <header
               className={`sticky top-0 ${HEADER_Z_INDEX} px-3 pb-2 pt-3 sm:px-4 sm:pb-3 sm:pt-4 lg:px-6`}

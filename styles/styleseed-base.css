@@ -15,8 +15,14 @@
 
   /* Selection color */
   ::selection {
-    background-color: oklch(0.55 0.22 264 / 0.2);
+    background-color: rgba(145, 108, 255, 0.2);
     color: inherit;
+  }
+
+  @supports (color: oklch(0 0 0)) {
+    ::selection {
+      background-color: oklch(0.55 0.22 264 / 0.2);
+    }
   }
 
   /* Smooth scrolling */
@@ -28,8 +34,14 @@
 
   /* Focus visible */
   :focus-visible {
-    outline: 2px solid oklch(0.55 0.22 264 / 0.5);
+    outline: 2px solid rgba(145, 108, 255, 0.5);
     outline-offset: 2px;
+  }
+
+  @supports (color: oklch(0 0 0)) {
+    :focus-visible {
+      outline-color: oklch(0.55 0.22 264 / 0.5);
+    }
   }
 
   /* Scrollbar styling */
