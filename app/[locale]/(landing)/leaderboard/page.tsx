@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getLeaderboardData, type LeaderboardSort } from './data/leaderboard-query'
 import { LeaderboardContent } from './components/leaderboard-content'
-import { LeaderboardTableSkeleton } from './components/leaderboard-table'
 import { buildPublicMetadata } from '@/lib/seo'
 import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
 
@@ -39,7 +38,7 @@ export default async function LeaderboardPage({
 
   return (
     <UnifiedPageShell widthClassName="max-w-[1360px]" className="py-12 sm:py-16">
-      <Suspense fallback={<LeaderboardTableSkeleton />}>
+      <Suspense fallback={null}>
         <LeaderboardContent initialEntries={entries} locale={locale} />
       </Suspense>
     </UnifiedPageShell>

@@ -34,7 +34,7 @@ export default async function AdminPage({
         >
           <ResizablePanel defaultSize={50}>
             <div className="h-full p-4">
-              <Suspense fallback={<div>Loading editor...</div>}>
+              <Suspense fallback={null}>
                 <NewsletterEditor />
               </Suspense>
             </div>
@@ -44,7 +44,7 @@ export default async function AdminPage({
 
           <ResizablePanel defaultSize={50}>
             <div className="h-full p-4">
-              <Suspense fallback={<div>Loading preview...</div>}>
+              <Suspense fallback={null}>
                 <NewsletterPreview />
               </Suspense>
             </div>
@@ -54,7 +54,7 @@ export default async function AdminPage({
         {/* Subscribers Table */}
         <div>
           <h2 className="text-2xl font-semibold mb-4">Subscribers</h2>
-          <Suspense fallback={<div>Loading subscribers...</div>}>
+          <Suspense fallback={null}>
             <SubscriberTable />
           </Suspense>
         </div>

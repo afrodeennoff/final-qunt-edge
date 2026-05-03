@@ -12,7 +12,7 @@ export default async function TraderDashboard(props: { params: Promise<{ slug: s
 
   return (
     <DataProvider adminView={{ userId: slug }}>
-      <Suspense fallback={<div>Loading trader info...</div>}>
+      <Suspense fallback={null}>
       <TraderInfo slug={slug}/>
       </Suspense>
       <div className="min-h-screen flex flex-col bg-background">

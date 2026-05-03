@@ -74,32 +74,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
-        <Suspense fallback={<HomeSkeleton />}>
+        <Suspense fallback={null}>
           <HomeContent locale={locale} />
         </Suspense>
       </>
     </ErrorBoundary>
-  )
-}
-
-function HomeSkeleton() {
-  return (
-    <div className="relative min-w-0 overflow-x-hidden bg-background">
-      <main className="relative z-10 flex min-w-0 flex-col">
-        <section className="flex flex-col items-center px-4 pt-24 sm:pt-32 lg:pt-40">
-          <div className="mx-auto max-w-3xl space-y-8 text-center">
-            <div className="space-y-6">
-              <div className="mx-auto h-4 w-32 animate-pulse rounded bg-primary/20" />
-              <div className="mx-auto h-12 w-full max-w-2xl animate-pulse rounded bg-muted-foreground/10" />
-              <div className="mx-auto h-6 w-full max-w-lg animate-pulse rounded bg-muted-foreground/10" />
-            </div>
-            <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
-              <div className="h-11 w-44 animate-pulse rounded-lg bg-primary/15" />
-              <div className="h-11 w-44 animate-pulse rounded-lg border border-border/20 bg-muted-foreground/8" />
-            </div>
-          </div>
-        </section>
-      </main>
-    </div>
   )
 }

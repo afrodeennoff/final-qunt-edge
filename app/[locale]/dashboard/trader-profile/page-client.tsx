@@ -47,7 +47,7 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
 import { getLeaderboardVisibility, toggleLeaderboardVisibility } from '@/server/user-profile'
 import { useUserStore } from '@/store/user-store'
-import { TableSkeleton, CalendarSkeleton } from './components/Skeletons'
+import { CalendarSkeleton } from './components/Skeletons'
 import { TraderProfileShareButton } from './components/trader-profile-share-button'
 
 const RadarChartCard = dynamic(() => import('./components/RadarChartCard'), {
@@ -1052,20 +1052,7 @@ export default function TraderProfilePageClient() {
         {/* ================================================================== */}
         {/*  Section 5 — Benchmark Radar Chart                                 */}
         {/* ================================================================== */}
-        <Suspense
-          fallback={
-            <UnifiedSurface variant="elevated" className="p-5 sm:p-6">
-              <div className="flex items-start justify-between gap-3">
-                <div className="h-3 w-20 animate-pulse rounded-lg bg-muted/30" />
-                <div className="h-5 w-14 animate-pulse rounded-md bg-muted/30" />
-              </div>
-              <div className={cn(insetPanelClassName, 'mt-5 p-3')}>
-                <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
-              </div>
-              <div className="mt-3 h-3 w-36 animate-pulse rounded bg-muted/30" />
-            </UnifiedSurface>
-          }
-        >
+        <Suspense fallback={null}>
           <UnifiedSurface
             variant="elevated"
             className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6"
@@ -1081,7 +1068,7 @@ export default function TraderProfilePageClient() {
         {/* ================================================================== */}
         {/*  Section 6 — Recent Trades                                         */}
         {/* ================================================================== */}
-        <Suspense fallback={<TableSkeleton />}>
+        <Suspense fallback={null}>
           <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d5 p-5 sm:p-6">
             <div className="flex items-center justify-between gap-2">
               <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">

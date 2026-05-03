@@ -6,27 +6,11 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
 import { ImportFeature } from "./import-feature"
 import { useI18n } from "@/locales/client"
-import { Skeleton } from "@/components/ui/skeleton"
 import { CalendarFeaturePreview } from "./calendar-preview"
 import { cn } from "@/lib/utils"
 import { PnlPerContractPreview } from "./pnl-per-contract-preview"
 
 const TradingChatAssistant = lazy(() => import("./chat-feature").then(m => ({ default: m.default })))
-
-function ChatLoadingFallback() {
- return (
- <div className="h-full w-full flex items-center justify-center bg-background/0.08">
- <div className="space-y-3 w-full max-w-[280px]">
- <Skeleton className="h-4 w-3/4" />
- <Skeleton className="h-4 w-1/2" />
- <div className="pt-2 space-y-2">
- <Skeleton className="h-8 w-full" />
- <Skeleton className="h-8 w-5/6" />
- </div>
- </div>
- </div>
- )
-}
 
 type FeatureCard = {
  id: string
@@ -115,7 +99,7 @@ export default function Features() {
  description: t("landing.features.ai-journaling.description"),
  stat: t("landing.features.ai-journaling.stat"),
  image: (
- <Suspense fallback={<ChatLoadingFallback />}>
+ <Suspense fallback={null}>
  <TradingChatAssistant />
  </Suspense>
  )
