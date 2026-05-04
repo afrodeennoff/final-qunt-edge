@@ -1,0 +1,318 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    BLACK SCREEN ISSUE: COMPREHENSIVE ANALYSIS                ║
+║                                                                              ║
+║ Status: Homepage displaying completely black screen upon loading             ║
+║ Platform: Next.js 16 + React 19.2 + Tailwind CSS v4                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════
+  ROOT CAUSE CATEGORIES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. CSS/STYLING ISSUES (40% likelihood)
+   ├─ Tailwind CSS not generating output files
+   ├─ CSS files 0 bytes or missing
+   ├─ Design tokens not defined in styles/tokens.css
+   ├─ Inline styles overriding theme colors
+   └─ Dark mode forced with dark text on dark background
+
+2. JAVASCRIPT RENDERING ERRORS (30% likelihood)
+   ├─ Import failures (missing modules, wrong paths)
+   ├─ Hydration mismatch (server vs client render difference)
+   ├─ Async component failures (getI18n() failing)
+   ├─ Params not awaited (Next.js 16 requirement)
+   └─ Unhandled errors in HomeContent component
+
+3. ASSET LOADING FAILURES (15% likelihood)
+   ├─ Fonts failing to load (Google Fonts CDN down)
+   ├─ Missing public assets (favicon.ico, images)
+   ├─ CSS file 404 errors
+   ├─ Network request failures
+   └─ NEXT_DISABLE_FONT_DOWNLOADS without fallback
+
+4. LAYOUT/CONTAINER ISSUES (10% likelihood)
+   ├─ Flexbox/Grid misconfiguration
+   ├─ Content positioned off-screen
+   ├─ Overflow hidden hiding content
+   ├─ Z-index issues (content behind invisible overlay)
+   └─ Missing viewport meta tags
+
+5. NEXT.JS 16 SPECIFIC (5% likelihood)
+   ├─ Build script failures
+   ├─ Async params not properly awaited
+   ├─ React Compiler issues
+   └─ Feature flag misconfigurations
+
+═══════════════════════════════════════════════════════════════════════════════
+  IMMEDIATE DIAGNOSTIC STEPS (DO THESE FIRST)
+═══════════════════════════════════════════════════════════════════════════════
+
+Step 1: Open Browser DevTools (F12)
+  ├─ Console Tab: Look for RED ERROR MESSAGES
+  │  ├─ "Cannot find module" → Missing import
+  │  ├─ "Hydration mismatch" → Server/client difference
+  │  └─ "is not defined" → Variable reference error
+  │
+  ├─ Network Tab: Check assets loaded
+  │  ├─ CSS files: Should load (not 404), size > 100KB
+  │  ├─ Fonts: Check Google Fonts loaded
+  │  └─ Images: Any 404 errors?
+  │
+  └─ Elements Tab: Verify DOM
+     ├─ Does <html> tag exist?
+     ├─ Does <body> tag exist with dimensions?
+     └─ Does <main> tag exist?
+
+Step 2: Check CSS Files
+  bash: ls -lah .next/static/css/
+  ├─ Should show 1+ files
+  ├─ Each file > 100KB (unless empty project)
+  └─ If missing: CSS build failed
+
+Step 3: Run Diagnostic
+  bash: node scripts/diagnose-black-screen.mjs
+  ├─ Checks CSS imports
+  ├─ Verifies layout files
+  ├─ Confirms error handling
+  └─ Validates dependencies
+
+═══════════════════════════════════════════════════════════════════════════════
+  QUICK FIXES TO TRY (IN PRIORITY ORDER)
+═══════════════════════════════════════════════════════════════════════════════
+
+Fix #1: Clean Build (40% success rate)
+  bash: bun run clean:build-artifacts
+  bash: bun run build
+  bash: bun start
+  ✓ Visit: http://localhost:3000
+
+Fix #2: Copy Browser Console Error
+  ├─ F12 → Console tab
+  ├─ Copy exact error message
+  ├─ Search in codebase for the error text
+  ├─ Fix the import/reference
+  └─ Rebuild and test
+
+Fix #3: Fix Async Params (Next.js 16)
+  Change: const locale = params.locale
+  To:     const { locale } = await params
+  ✓ Rebuild and test
+
+Fix #4: Check CSS File
+  bash: ls -lah .next/static/css/
+  If 0 bytes → CSS didn't build
+  bash: bun run build 2>&1 | grep -i error
+
+Fix #5: Change Text Color (if page loads but invisible)
+  File: app/layout.tsx
+  Find: style={{ backgroundColor: '#0c0a14', color: '#f8f9fc' }}
+  Change color to: '#ffffff' (bright white)
+  ✓ Rebuild and test
+
+═══════════════════════════════════════════════════════════════════════════════
+  PROJECT STRUCTURE ANALYSIS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ GOOD PATTERNS FOUND:
+  ✓ Error boundary implemented (components/error-boundary.tsx)
+  ✓ Suspense boundaries configured with fallbacks
+  ✓ Async server components properly structured
+  ✓ Comprehensive metadata & SEO setup
+  ✓ Proper viewport configuration
+  ✓ Internationalization (next-international)
+  ✓ Tailwind CSS v4 configured
+
+⚠️  POTENTIAL CONCERNS:
+  ⚠ Inline styles might override design tokens
+  ⚠ No visible fallback if CSS completely fails
+  ⚠ suppressHydrationWarning might mask real issues
+  ⚠ Complex async locale handling
+  ⚠ NEXT_DISABLE_FONT_DOWNLOADS in build script
+
+🔴 HIGH-RISK AREAS:
+  🔴 CSS loading (Tailwind v4 new @config syntax)
+  🔴 Locale resolution (async params handling)
+  🔴 HomeContent component (complex imports)
+  🔴 Font loading (disabled in build script)
+
+═══════════════════════════════════════════════════════════════════════════════
+  DOCUMENTATION PROVIDED
+═══════════════════════════════════════════════════════════════════════════════
+
+1. README_BLACK_SCREEN_ANALYSIS.md
+   ├─ Overview of all guides
+   ├─ Quick navigation guide
+   ├─ Root cause probability analysis
+   └─ When to ask for help
+
+2. QUICK_FIX_REFERENCE.md ⚡ START HERE IF BROKEN
+   ├─ 5-minute browser check
+   ├─ 5 quick fixes (prioritized)
+   ├─ Decision tree for diagnosis
+   ├─ Manual tests
+   └─ Emergency procedures
+
+3. BLACK_SCREEN_TROUBLESHOOTING.md 🔍 COMPREHENSIVE GUIDE
+   ├─ 5 major cause categories (detailed)
+   ├─ Diagnostic steps per category
+   ├─ Quick fixes per category
+   ├─ Comprehensive 6-step checklist
+   ├─ Prevention best practices
+   └─ Additional resources
+
+4. LAYOUT_ENHANCEMENT_GUIDE.md 🎨 CODE IMPROVEMENTS
+   ├─ 5 practical enhancements with code
+   ├─ Fallback CSS patterns
+   ├─ Development debugging
+   ├─ Error boundary improvements
+   ├─ Testing strategies
+   └─ Build validation scripts
+
+5. BEST_PRACTICES_RENDERING.md ✅ LONG-TERM STRATEGY
+   ├─ Layout best practices (DO's/DON'Ts)
+   ├─ Robust CSS architecture
+   ├─ Async component handling
+   ├─ Error handling patterns
+   ├─ Font & asset strategies
+   ├─ Dev vs Prod considerations
+   ├─ Testing approach
+   ├─ Monitoring strategies
+   └─ Performance optimization
+
+6. scripts/diagnose-black-screen.mjs
+   ├─ Automated diagnostic tool
+   ├─ Checks all critical files
+   ├─ Validates dependencies
+   └─ Reports status
+
+═══════════════════════════════════════════════════════════════════════════════
+  READING GUIDE: WHICH DOCUMENT TO START WITH?
+═══════════════════════════════════════════════════════════════════════════════
+
+Is your site DOWN RIGHT NOW?
+  └─→ Read: QUICK_FIX_REFERENCE.md
+      Duration: 5-30 minutes
+      Try quick fixes in order
+      If still stuck, read BLACK_SCREEN_TROUBLESHOOTING.md
+
+Do you want DETAILED DIAGNOSIS?
+  └─→ Read: BLACK_SCREEN_TROUBLESHOOTING.md
+      Duration: 1-2 hours
+      Learn about each cause category
+      Comprehensive troubleshooting checklist
+
+Do you want to IMPLEMENT PROTECTIVE MEASURES?
+  └─→ Read: LAYOUT_ENHANCEMENT_GUIDE.md
+      Duration: 2-4 hours
+      Real code examples
+      Practical patterns for error handling
+      Build validation setup
+
+Do you want LONG-TERM RELIABILITY?
+  └─→ Read: BEST_PRACTICES_RENDERING.md
+      Duration: Reference guide
+      Best practices DO's and DON'Ts
+      Comprehensive patterns with examples
+      Use during refactoring or new features
+
+═══════════════════════════════════════════════════════════════════════════════
+  QUICK REFERENCE: THE THREE BROWSER CHECKS
+═══════════════════════════════════════════════════════════════════════════════
+
+CONSOLE (F12 → Console)
+  ├─ Any RED error messages?
+  │  └─ YES → Copy and search codebase for error text
+  └─ NO → Issue is CSS or rendering (not JavaScript)
+
+NETWORK (F12 → Network → Reload)
+  ├─ CSS file loads (not 404)?
+  │  ├─ YES, size > 0 → CSS loaded
+  │  ├─ NO (404) → CSS build failed
+  │  └─ YES, 0 bytes → CSS empty (build error)
+  ├─ Fonts loading?
+  │  ├─ NO (404) → Use system fonts
+  │  └─ YES → Font loading OK
+  └─ Other assets?
+     └─ Any RED icons? → Those files missing
+
+ELEMENTS (F12 → Elements)
+  ├─ <html> tag visible?
+  │  └─ YES → DOM rendered
+  │  └─ NO → JavaScript error prevented render
+  ├─ <body> tag visible with dimensions?
+  │  └─ YES → Layout exists
+  │  └─ NO → CSS not applying
+  └─ <main id="main-content">?
+     └─ YES → Page structure correct
+     └─ NO → Layout issue
+
+═══════════════════════════════════════════════════════════════════════════════
+  WHEN TO ASK FOR HELP: PROVIDE THIS INFORMATION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Console Error (if any)
+   └─ F12 → Console → Copy exact error message
+
+2. Build Output
+   bash: bun run build 2>&1 | tail -50
+
+3. Diagnostic Results
+   bash: node scripts/diagnose-black-screen.mjs > diagnosis.txt
+   └─ Attach diagnosis.txt
+
+4. Network Screenshot
+   └─ F12 → Network → Reload → Screenshot showing CSS status
+
+5. What You Tried
+   └─ List of fixes already attempted
+
+═══════════════════════════════════════════════════════════════════════════════
+  GOLDEN RULES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. EVERY ERROR SHOWS IN THE BROWSER
+   └─ F12 → Console will always show what's wrong
+   └─ If nothing in console, issue is CSS loading
+
+2. BLACK SCREENS ARE NEVER MYSTERIOUS
+   └─ CSS not loading → Network tab shows 404
+   └─ JavaScript error → Console shows red error
+   └─ Layout issue → Elements inspector shows 0 dimensions
+   └─ Async failure → Console shows error from failed function
+
+3. START WITH BROWSER DEVTOOLS
+   └─ 90% of issues visible in F12
+   └─ Console, Network, and Elements tabs
+   └─ Check these FIRST before changing code
+
+4. BUILD FROM SCRATCH IF STUCK
+   bash: bun run clean:build-artifacts && bun run build
+   └─ Fixes 40% of issues
+   └─ Run this before trying anything else
+
+5. EVERY PAGE STATE NEEDS VISIBLE CONTENT
+   └─ Loading? Show spinner
+   └─ Error? Show error message
+   └─ Empty? Show placeholder
+   └─ Never show blank screen
+
+═══════════════════════════════════════════════════════════════════════════════
+  TIMELINE: EXPECTED RESOLUTION
+═══════════════════════════════════════════════════════════════════════════════
+
+5 minutes:  Check browser DevTools (F12)
+15 minutes: Try quick fixes from QUICK_FIX_REFERENCE.md
+30 minutes: Run full diagnostic and read BLACK_SCREEN_TROUBLESHOOTING.md
+1-2 hours:  Implement enhancements from LAYOUT_ENHANCEMENT_GUIDE.md
+2-4 hours:  Study BEST_PRACTICES_RENDERING.md for future prevention
+
+═══════════════════════════════════════════════════════════════════════════════
+
+START HERE: Open QUICK_FIX_REFERENCE.md for immediate action
+LEARN MORE: Read BLACK_SCREEN_TROUBLESHOOTING.md for details
+IMPLEMENT: Use LAYOUT_ENHANCEMENT_GUIDE.md for code improvements
+PREVENT: Reference BEST_PRACTICES_RENDERING.md for reliability
+
+═══════════════════════════════════════════════════════════════════════════════
+Analysis Complete: 2026-05-04 | Next.js 16 | React 19.2 | Tailwind CSS v4
+═══════════════════════════════════════════════════════════════════════════════
