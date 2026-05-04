@@ -1,4 +1,3 @@
-import { Suspense } from 'react'
 import { setStaticParamsLocale } from 'next-international/server'
 import { Metadata } from 'next'
 import { getStaticParams } from '@/locales/server'
@@ -74,9 +73,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
-        <Suspense fallback={null}>
-          <HomeContent locale={locale} />
-        </Suspense>
+        <HomeContent locale={locale} />
       </>
     </ErrorBoundary>
   )

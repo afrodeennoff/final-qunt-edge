@@ -1,12 +1,5 @@
-import { RouteLoadingScreen } from '@/components/ui/route-state'
-
+/* Intentionally empty — landing pages are server-rendered and stream
+ * directly without an intermediate loading shell. */
 export default function LandingLoading() {
-  return (
-    <RouteLoadingScreen
-      eyebrow="Loading"
-      title="Preparing the page"
-      description="Loading content and workspace shell."
-      fullScreen={false}
-    />
-  )
+  return null
 }
