@@ -2956,7 +2956,63 @@
     transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  /* ===== RESPECT REDUCED MOTION ===== */
+  /* ===== WIDGET CANVAS - REACT-GRID-LAYOUT POLISH ===== */
+  .react-grid-item > .react-resizable-handle {
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .react-grid-item:hover > .react-resizable-handle {
+    opacity: 1;
+  }
+  .react-grid-item > .react-resizable-handle::after {
+    border-right-color: var(--border);
+    border-bottom-color: var(--border);
+    width: 8px;
+    height: 8px;
+  }
+
+  /* Widget drag - floating with shadow */
+  .react-grid-item.react-grid-placeholder {
+    background: var(--primary) !important;
+    opacity: 0.06 !important;
+    border-radius: var(--radius-lg) !important;
+    border: 1.5px dashed var(--primary) !important;
+  }
+
+  /* ===== STAGGER ANIMATION FOR LISTS ===== */
+@keyframes item-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stagger-item {
+  animation: item-enter 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stagger-item:nth-child(1) { animation-delay: 0ms; }
+.stagger-item:nth-child(2) { animation-delay: 60ms; }
+.stagger-item:nth-child(3) { animation-delay: 120ms; }
+.stagger-item:nth-child(4) { animation-delay: 180ms; }
+.stagger-item:nth-child(5) { animation-delay: 240ms; }
+.stagger-item:nth-child(6) { animation-delay: 300ms; }
+
+/* ===== SHIMMER ANIMATION FOR SKELETONS ===== */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.animate-shimmer-slide {
+  position: relative;
+  overflow: hidden;
+}
+.animate-shimmer-slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+/* ===== RESPECT REDUCED MOTION ===== */
   @media (prefers-reduced-motion: reduce) {
     .animate-page-enter,
     .animate-page-exit,

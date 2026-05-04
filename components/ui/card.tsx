@@ -57,24 +57,24 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onClick={isInteractive ? onClick : undefined}
         className={cn(
           'group relative overflow-hidden text-foreground',
-          'relative rounded-[10px] text-card-foreground border border-[oklch(0.65_0.22_260_/_0.10)] bg-[linear-gradient(180deg,oklch(0.10_0.016_264_/_0.92)_0%,oklch(0.082_0.013_264_/_0.88)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_20px_40px_-28px_rgba(0,0,0,0.72)] transition-[border-color,box-shadow,background-color] duration-[130ms] ease-[cubic-bezier(0.16,1,0.3,1)]',
+          'relative rounded-[var(--radius-lg)] text-card-foreground border border-border/50 bg-card shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_20px_40px_-28px_rgba(0,0,0,0.72)] transition-[border-color,box-shadow,background-color] duration-[130ms] ease-[cubic-bezier(0.16,1,0.3,1)]',
           variant === 'glass' &&
-            'rounded-[10px] bg-[oklch(0.10_0.016_264_/_0.72)] backdrop-blur-2xl border border-[oklch(0.65_0.22_260_/_0.10)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_18px_36px_-24px_rgba(0,0,0,0.60)]',
+            'rounded-[var(--radius-lg)] bg-card/80 backdrop-blur-2xl border border-border/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_18px_36px_-24px_rgba(0,0,0,0.60)]',
           variant === 'elevated' &&
-            'rounded-[10px] bg-[linear-gradient(180deg,oklch(0.115_0.018_264_/_0.95)_0%,oklch(0.095_0.015_264_/_0.92)_100%)] border border-[oklch(0.65_0.22_260_/_0.14)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_28px_56px_-32px_rgba(0,0,0,0.80)]',
+            'rounded-[var(--radius-lg)] bg-card border border-border/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_28px_56px_-32px_rgba(0,0,0,0.80)]',
           variant === 'outlined' &&
-            'rounded-[10px] bg-transparent border-2 border-[oklch(0.65_0.22_260_/_0.14)]',
-          variant === 'flat' && 'rounded-[10px] border-0 bg-transparent shadow-none',
+            'rounded-[var(--radius-lg)] bg-transparent border-2 border-border/60',
+          variant === 'flat' && 'rounded-[var(--radius-lg)] border-0 bg-transparent shadow-none',
           variant === 'gradient-border' &&
-            'border-primary/22 bg-[linear-gradient(180deg,oklch(0.074_0.014_260_/_0.9)_0%,oklch(0.06_0.012_260_/_0.84)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_18px_32px_-24px_rgba(0,0,0,0.64)]',
+            'border-primary/22 bg-card shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_18px_32px_-24px_rgba(0,0,0,0.64)]',
           variant === 'frost' &&
-            'rounded-[10px] bg-transparent border border-[oklch(0.65_0.22_260_/_0.12)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_0_0_1px_oklch(0.65_0.22_260_/_0.04)]',
+            'rounded-[var(--radius-lg)] bg-transparent border border-border/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_0_0_1px_rgba(139,92,246,0.04)]',
           accent && accentClassMap[accent],
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',
           size === 'lg' && 'type-body-lg',
           hover &&
-            'transition-[background-color,border-color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_20px_36px_-24px_rgba(0,0,0,0.68)]',
+            'transition-[background-color,border-color,box-shadow,transform] duration-200 hover:border-border/80 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_20px_36px_-24px_rgba(0,0,0,0.68)] hover:-translate-y-px',
           isInteractive &&
             'cursor-pointer transition-[background-color,border-color,box-shadow,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           isLoading && 'pointer-events-none opacity-80',
@@ -89,7 +89,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ) : null}
 
         {status ? (
-          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.06_0.012_260_/_0.82)] px-2.5 py-1 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06)]">
+          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-border/50 bg-card px-2.5 py-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
             <div
               className={cn(
                 'h-1.5 w-1.5 rounded-full',
@@ -120,7 +120,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
     <div
       ref={ref}
       className={cn(
-        'flex flex-col space-y-1 border-b border-[oklch(0.65_0.22_260_/_0.07)] px-4 py-3',
+        'flex flex-col space-y-1 border-b border-border/30 px-5 py-4',
         className,
       )}
       {...props}
@@ -203,7 +203,7 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
     <div
       ref={ref}
       className={cn(
-        'px-4 py-3',
+        'px-5 py-4',
         className,
       )}
       {...props}
@@ -221,7 +221,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
     <div
       ref={ref}
       className={cn(
-        'flex items-center border-t border-[oklch(0.65_0.22_260_/_0.07)] px-4 py-3',
+        'flex items-center border-t border-border/30 px-5 py-4',
         className,
       )}
       {...props}

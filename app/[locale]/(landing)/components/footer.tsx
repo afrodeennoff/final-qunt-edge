@@ -55,14 +55,14 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-[oklch(0.65_0.22_260_/_0.08)] bg-background py-14 sm:py-20"
+      className="border-t border-border/30 bg-background py-14 sm:py-20"
     >
       <h2 id="footer-heading" className="sr-only">
         Site footer
       </h2>
 
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={false}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
@@ -70,13 +70,13 @@ export default function Footer() {
       >
         <div
           className={cn(
-            'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]',
+            'rounded-2xl border border-border/50 bg-card shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_32px_-26px_rgba(0,0,0,0.62)]',
             'grid gap-8 p-7 sm:p-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)] lg:p-10',
           )}
         >
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] text-muted-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05)]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/40 bg-muted/30 text-muted-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
                 <Logo className="h-5 w-5 fill-current" />
               </div>
               <div className="leading-none">

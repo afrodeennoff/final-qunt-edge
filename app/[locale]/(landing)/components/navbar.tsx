@@ -43,11 +43,11 @@ export default function Navbar() {
       <div className={cn('mx-auto w-full', MARKETING_SHELL_WIDTH)}>
         <div
           className={cn(
-            'pointer-events-auto relative flex items-center justify-between gap-4 h-12 w-full max-w-[1100px] rounded-full px-4 bg-[oklch(0.09_0.015_264_/_0.88)] backdrop-blur-2xl saturate-150 border border-[oklch(0.65_0.22_260_/_0.10)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_8px_24px_-12px_rgba(0,0,0,0.60)]',
+            'pointer-events-auto relative flex items-center justify-between gap-4 h-12 w-full max-w-[1100px] rounded-[1.15rem] px-4 backdrop-blur-2xl backdrop-saturate-180 border border-border/50 bg-card/80 shadow-[0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-8px_rgba(0,0,0,0.40)]',
           )}
         >
-          <Link href={`/${locale}`} className="group flex items-center gap-2.5 rounded-full px-2 py-1.5 transition-[background-color] duration-200 hover:bg-[oklch(0.65_0.22_260_/_0.04)]">
-            <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-gradient-to-b from-primary/22 to-primary/12 border border-primary/16 shadow-[inset_0_1px_0_oklch(1_0_0_/_0.06)] text-primary">
+          <Link href={`/${locale}`} className="group flex items-center gap-2.5 rounded-full px-2 py-1.5 transition-[background-color] duration-200 hover:bg-border/4">
+            <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-gradient-to-b from-primary/22 to-primary/12 border border-primary/16 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] text-primary">
               <Logo className="h-4.5 w-4.5 fill-current" />
             </div>
             <span className="hidden text-[15px] font-semibold tracking-[-0.02em] text-foreground sm:inline-flex">
@@ -75,14 +75,14 @@ export default function Navbar() {
           <div className="ml-auto flex items-center gap-2.5">
             <Link
               href={`/${locale}/authentication`}
-              className="h-8 px-3.5 text-[13px] rounded-full border border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent text-muted-foreground hover:text-foreground hover:bg-[oklch(0.65_0.22_260_/_0.08)] hidden md:inline-flex"
+              className="h-8 px-3.5 text-[13px] rounded-full border border-border/14 bg-transparent text-muted-foreground hover:text-foreground hover:bg-border/8 hidden md:inline-flex"
             >
               {t('landing.navbar.signIn')}
             </Link>
 
             <Link
               href={`/${locale}/authentication`}
-              className="h-8 px-4 text-[13px] font-semibold rounded-full bg-primary text-primary-foreground shadow-[inset_0_1px_0_oklch(1_0_0_/_0.12)] hover:bg-primary/92 hidden md:inline-flex"
+              className="h-8 px-4 text-[13px] font-semibold rounded-full bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] hover:bg-primary/92 hidden md:inline-flex"
             >
               {t('landing.hero.ctaPrimary')}
             </Link>

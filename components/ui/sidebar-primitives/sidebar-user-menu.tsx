@@ -46,11 +46,11 @@ export function SidebarUserMenu({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="group/user h-[52px] rounded-none border-t border-[oklch(0.65_0.22_260_/_0.07)] px-3 hover:bg-[oklch(0.65_0.22_260_/_0.06)]"
+              className="group/user h-[52px] rounded-none border-t border-border/30 px-3 hover:bg-muted/40"
             >
               <div className="flex w-full items-center gap-2.5">
                 <div className="relative shrink-0">
-                  <Avatar className="h-8 w-8 overflow-hidden rounded-[8px] ring-1 ring-[oklch(0.65_0.22_260_/_0.18)]">
+                  <Avatar className="h-8 w-8 overflow-hidden rounded-[8px] ring-1 ring-border/50">
                     <AvatarImage src={user?.avatar_url} alt={displayName} />
                     <AvatarFallback className="rounded-[8px] bg-gradient-to-b from-primary/25 to-primary/15 text-primary text-[11px] font-bold">
                       {initials}
