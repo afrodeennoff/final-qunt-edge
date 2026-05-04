@@ -118,9 +118,9 @@ function getPlanCardClassName(popular: boolean): string {
   return cn(
     'relative flex w-full flex-col overflow-hidden transition-[opacity,background-color,border-color,transform] duration-300 hover:-translate-y-1',
     !popular &&
-      'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.055_0.01_260_/_0.68)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_8px_32px_-8px_rgba(0,0,0,0.80)]',
+      'rounded-2xl border border-border/40 bg-muted/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_32px_-8px_rgba(0,0,0,0.80)]',
     popular &&
-      'relative rounded-2xl border border-[oklch(0.65_0.22_260_/_0.14)] bg-[oklch(0.055_0.01_260_/_0.72)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_0_40px_hsl(var(--primary)/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
+      'relative rounded-2xl border border-border/60 bg-card shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_0_40px_hsl(var(--primary)/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
   )
 }
 
@@ -243,9 +243,9 @@ function FreePlanCard({
                 className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]"
               >
                 {index > 2 ? (
-                  <X className="size-4 shrink-0 text-[oklch(0.64_0.255_22)]" />
+                  <X className="size-4 shrink-0 text-destructive" />
                 ) : (
-                  <Check className="size-4 text-[oklch(0.82_0.185_155)] shrink-0" />
+                  <Check className="size-4 text-success shrink-0" />
                 )}
                 <span>{feature}</span>
               </li>
@@ -497,7 +497,7 @@ function PlusPlanCard({
                 key={index}
                 className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]"
               >
-                <Check className="size-4 text-[oklch(0.82_0.185_155)] shrink-0" />
+                <Check className="size-4 text-success shrink-0" />
                 <span>{feature}</span>
               </li>
             ))}

@@ -13,51 +13,15 @@
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "ss01" 1;
   }
 
-  /* Selection color */
-  ::selection {
-    background-color: rgba(145, 108, 255, 0.2);
-    color: inherit;
-  }
-
-  @supports (color: oklch(0 0 0)) {
-    ::selection {
-      background-color: oklch(0.55 0.22 264 / 0.2);
-    }
-  }
+  /* NOTE: ::selection, :focus-visible, and scrollbar styles are
+   * defined in app/globals.css with oklch progressive enhancement.
+   * Do NOT duplicate them here to avoid specificity conflicts. */
 
   /* Smooth scrolling */
   @media (prefers-reduced-motion: no-preference) {
     html {
       scroll-behavior: smooth;
     }
-  }
-
-  /* Focus visible */
-  :focus-visible {
-    outline: 2px solid rgba(145, 108, 255, 0.5);
-    outline-offset: 2px;
-  }
-
-  @supports (color: oklch(0 0 0)) {
-    :focus-visible {
-      outline-color: oklch(0.55 0.22 264 / 0.5);
-    }
-  }
-
-  /* Scrollbar styling */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted-foreground) / 0.35);
-    border-radius: 3px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.55);
   }
 
   /* Hide scrollbar utility class */

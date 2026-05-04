@@ -39,12 +39,9 @@
   --shadow-glow-emerald: 0 0 24px rgba(82, 216, 122, 0.25);
   --shadow-glow-crimson: 0 0 24px rgba(224, 72, 72, 0.25);
 
-  /* TEXT TOKENS (WCAG AAA contrast on dark surfaces) — hex fallbacks */
-  --text-strong: #f5f5f5;       /* Headings — maximum contrast */
-  --text-primary: #e0e0e0;      /* Body text — strong readability */
-  --text-secondary: #a0a0a0;    /* Secondary text — sufficient */
-  --text-tertiary: #747474;     /* Tertiary — captions */
-  --text-disabled: #4c4c4c;     /* Disabled — dimmed */
+  /* TEXT TOKENS — reference canonical globals.css tokens to avoid conflicts.
+   * NOTE: --text-strong, --text-primary, etc. are also defined in globals.css.
+   * StyleSeed-specific tokens are prefixed --ss-* to avoid collisions. */
 
   /* SURFACE TOKENS (4-tier depth hierarchy, 4% lightness steps) — hex fallbacks */
   --surface-page: #000000;         /* Base — deepest, page bg */
@@ -56,15 +53,9 @@
   --brand-tint: rgba(145, 108, 255, 0.08);
 }
 
-/* OKLCH overrides for StyleSeed tokens — precise colors for modern browsers */
+/* OKLCH overrides for StyleSeed surface tokens — precise colors for modern browsers */
 @supports (color: oklch(0 0 0)) {
   :root {
-    --text-strong: oklch(0.97 0 0);
-    --text-primary: oklch(0.90 0 0);
-    --text-secondary: oklch(0.64 0 0);
-    --text-tertiary: oklch(0.46 0 0);
-    --text-disabled: oklch(0.30 0 0);
-
     --surface-page: oklch(0 0 0);
     --surface-card: oklch(0.038 0 0);
     --surface-subtle: oklch(0.058 0 0);

@@ -148,29 +148,30 @@
   .bg-modal { background-color: hsl(var(--bg-modal)); }
   .bg-highlight { background-color: hsl(var(--bg-highlight)); }
 
-  .bg-accent-neutral { background-color: hsl(var(--accent-neutral)); }
-  .text-accent-neutral { color: hsl(var(--accent-neutral)); }
-  .border-accent-neutral { border-color: hsl(var(--accent-neutral)); }
+  /* These tokens resolve to hex values — no hsl() wrapper needed */
+  .bg-accent-neutral { background-color: var(--accent-neutral); }
+  .text-accent-neutral { color: var(--accent-neutral); }
+  .border-accent-neutral { border-color: var(--accent-neutral); }
 
-  .text-fg-primary { color: hsl(var(--fg-primary)); }
-  .text-fg-secondary { color: hsl(var(--fg-secondary)); }
-  .text-fg-tertiary { color: hsl(var(--fg-tertiary)); }
-  .text-fg-muted { color: hsl(var(--fg-muted)); }
+  .text-fg-primary { color: var(--fg-primary); }
+  .text-fg-secondary { color: var(--fg-secondary); }
+  .text-fg-tertiary { color: var(--fg-tertiary); }
+  .text-fg-muted { color: var(--fg-muted); }
 
-  .text-token-primary { color: hsl(var(--text-primary)); }
-  .text-token-secondary { color: hsl(var(--text-secondary)); }
-  .text-tertiary { color: hsl(var(--text-tertiary)); }
-  .text-disabled { color: hsl(var(--text-disabled)); }
+  .text-token-primary { color: var(--text-primary); }
+  .text-token-secondary { color: var(--text-secondary); }
+  .text-tertiary { color: var(--text-tertiary); }
+  .text-disabled { color: var(--text-disabled); }
 
-  .bg-surface-subtle { background-color: var(--surface-subtle); }
-  .bg-surface-subtle-hover:hover { background-color: var(--surface-subtle-hover); }
-  .bg-surface-muted { background-color: var(--surface-muted); }
-  .bg-surface-muted-hover:hover { background-color: var(--surface-muted-hover); }
-  .bg-surface-elevated { background-color: var(--surface-elevated); }
-  .bg-surface-elevated-hover:hover { background-color: var(--surface-elevated-hover); }
+  .bg-surface-subtle { background-color: var(--surface-subtle, hsl(var(--bg-card))); }
+  .bg-surface-subtle-hover:hover { background-color: var(--surface-subtle-hover, hsl(var(--bg-card-hover))); }
+  .bg-surface-muted { background-color: var(--surface-muted, hsl(var(--bg-overlay))); }
+  .bg-surface-muted-hover:hover { background-color: var(--surface-muted-hover, hsl(var(--bg-modal))); }
+  .bg-surface-elevated { background-color: var(--surface-elevated, hsl(var(--bg-highlight))); }
+  .bg-surface-elevated-hover:hover { background-color: var(--surface-elevated-hover, hsl(var(--bg-interactive))); }
 
-  .border-subtle { border-color: var(--border-subtle); }
-  .border-muted { border-color: var(--border-muted); }
+  .border-subtle { border-color: hsl(var(--border-subtle)); }
+  .border-muted { border-color: var(--border-muted, hsl(var(--border-strong))); }
 
   .glass {
     background: hsl(var(--glass-bg));
@@ -202,13 +203,13 @@
 
   .focus-ring-neutral:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--focus-ring-offset),
-      0 0 0 4px hsl(var(--focus-ring));
+    box-shadow: 0 0 0 2px var(--focus-ring-offset, transparent),
+      0 0 0 4px var(--focus-ring, var(--ring));
   }
 
-  .chart-positive { color: hsl(var(--chart-positive)); }
-  .chart-negative { color: hsl(var(--chart-negative)); }
-  .chart-neutral { color: hsl(var(--chart-neutral)); }
+  .chart-positive { color: var(--chart-positive, var(--success)); }
+  .chart-negative { color: var(--chart-negative, var(--destructive)); }
+  .chart-neutral { color: var(--chart-neutral, var(--muted-foreground)); }
 
   .card-shadow-sm { box-shadow: var(--card-shadow-sm); }
   .card-shadow-md { box-shadow: var(--card-shadow-md); }
@@ -227,7 +228,7 @@
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25),
                 inset 0 1px 2px rgba(255, 255, 255, 0.1);
-    border-color: hsl(var(--border-focus));
+    border-color: var(--border-focus);
   }
   .card-clickable {
     cursor: pointer;

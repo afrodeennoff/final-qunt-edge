@@ -29,7 +29,7 @@ export default function Icon() {
                     style={{
                         position: 'absolute',
                         inset: 0,
-                        background: 'radial-gradient(ellipse at 40% 35%, oklch(0.6083 0.2172 297.1153 / 0.18) 0%, transparent 65%)',
+                        background: 'radial-gradient(ellipse at 40% 35%, rgba(139, 92, 246, 0.18) 0%, transparent 65%)',
                         borderRadius: '22%',
                     }}
                 />

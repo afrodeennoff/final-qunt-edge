@@ -1,33 +1,50 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   unifiedChipClassName,
   unifiedInsetPanelClassName,
   unifiedMetricPanelClassName,
-  unifiedSectionPanelClassName,
+  unifiedSectionPanelClassName
 } from '@/components/layout/unified-page-recipes'
 import { format } from 'date-fns'
 import { useData } from '@/context/data-provider'
 import { SharedWidgetCanvas } from './shared-widget-canvas'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/locales/client'
-import { Loader2, ChevronDown } from 'lucide-react'
-import { useState } from 'react'
 import {
-  MotionSection,
-  MotionStagger,
-  MotionStaggerItem,
-} from '@/components/animation/enhanced-motion'
+  Loader2,
+  ChevronDown,
+  TrendingUp,
+  TrendingDown,
+  BarChart3,
+  PieChart,
+  Activity,
+  Target,
+  Calendar,
+  DollarSign
+} from 'lucide-react'
+import { MotionStagger, MotionStaggerItem } from '@/components/animation/enhanced-motion'
+import { motion } from 'motion/react'
+import { EmptyState } from '@/components/ui/empty-state'
 
-// Create a client component for the accounts selection
-function AccountsSelector({ accounts }: { accounts: string[] }) {
+// Enhanced Accounts Selector with Better UX
+function AccountsSelector({ accounts }: { accounts: any[] }) {
   const { accountNumbers, setAccountNumbers } = useData()
   const t = useI18n()
   const [isExpanded, setIsExpanded] = useState(false)
-  const visibleAccounts = isExpanded ? accounts : accounts.slice(0, 2)
-  const remainingAccounts = accounts.length - 2
+  const [selectAll, setSelectAll] = useState(false)
+
+  const visibleAccounts = isExpanded ? accounts : accounts.slice(0, 3)
+  const remainingAccounts = accounts.length - 3
+
+  useEffect(() => {
+    setSelectAll(accountNumbers.length === accounts.length && accounts.length > 0)
+  }, [accountNumbers, accounts.length])
 
   const toggleAccount = (account: string) => {
     if (accountNumbers.includes(account)) {
@@ -38,182 +55,330 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
   }
 
   const toggleAll = () => {
-    if (accountNumbers.length === accounts.length) {
+    if (selectAll) {
       setAccountNumbers([])
     } else {
       setAccountNumbers([...accounts])
     }
+    setSelectAll(!selectAll)
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="mb-2 flex flex-col justify-between gap-2 xs:flex-row xs:items-center xs:gap-0">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-          {t('shared.tradingAccounts')}
-        </p>
-        <div className="flex flex-wrap items-center gap-1.5 w-full xs:w-auto justify-end">
-          {accounts.length > 2 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="h-7 min-w-0 gap-1 text-xs text-foreground/60 hover:text-foreground"
-            >
-              {isExpanded
-                ? t('shared.showLessAccounts')
-                : t('shared.showMoreAccounts', { count: remainingAccounts })}
-              <ChevronDown
-                className={cn(
-                  'h-3 w-3 transition-transform shrink-0',
-                  isExpanded ? 'rotate-180' : '',
-                )}
-              />
-            </Button>
-          )}
+    <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Activity className="h-4 w-4 text-primary" />
+            <CardTitle className="text-sm font-semibold">Trading Accounts</CardTitle>
+            <Badge variant="secondary" className="text-xs">
+              {accountNumbers.length}/{accounts.length}
+            </Badge>
+          </div>
           <Button
             variant="ghost"
             size="sm"
-            onClick={toggleAll}
-            className="h-7 min-w-0 whitespace-nowrap text-xs text-foreground/60 hover:text-foreground"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
           >
-            {accountNumbers.length === accounts.length
-              ? t('shared.deselectAll')
-              : t('shared.selectAll')}
-          </Button>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1.5 xs:gap-2">
-        {visibleAccounts.map((account) => (
-          <button
-            key={account}
-            onClick={() => toggleAccount(account)}
-            className={cn(
-              'flex items-center rounded-xl border px-2 py-2 transition-[opacity,background-color,border-color,transform] duration-200 hover:-translate-y-0.5',
-              accountNumbers.includes(account)
-                ? 'frost-border-10 frost-bg-prominent text-foreground frost-shadow-inset-sm shadow-[0_18px_36px_-26px_rgba(0,0,0,0.72)]'
-                : 'frost-border-7 frost-bg-dim text-muted-foreground hover:frost-border-10 hover:frost-bg-hover',
-            )}
-          >
-            <div
+            {isExpanded ? 'Show Less' : `Show ${remainingAccounts} More`}
+            <ChevronDown
               className={cn(
-                'mr-1.5 h-2.5 w-2.5 shrink-0 rounded-full xs:mr-2',
-                accountNumbers.includes(account)
-                  ? 'bg-v2-accent shadow-[0_0_12px_rgba(56,189,248,0.7)]'
-                  : 'bg-foreground/20',
+                'h-3 w-3 ml-1 transition-transform',
+                isExpanded && 'rotate-180'
               )}
             />
-            <span className="text-xs xs:text-sm font-medium truncate" title={account}>
-              {account}
-            </span>
-          </button>
-        ))}
-      </div>
+          </Button>
+        </div>
+        <CardDescription className="text-xs">
+          Select accounts to view their trading performance
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <div className="space-y-2">
+          {visibleAccounts.map((account) => (
+            <MotionStaggerItem key={account}>
+              <div className="flex items-center justify-between p-2.5 rounded-lg border border-border/40 hover:border-primary/40 transition-all cursor-pointer bg-muted/30"
+                   onClick={() => toggleAccount(account)}>
+                <div className="flex items-center gap-2.5">
+                  <div className={cn(
+                    "h-2 w-2 rounded-full transition-colors",
+                    accountNumbers.includes(account)
+                      ? "bg-primary ring-2 ring-primary/20"
+                      : "bg-muted-foreground/30"
+                  )} />
+                  <span className="text-sm font-medium">Account {account}</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    "h-6 px-2 text-xs",
+                    accountNumbers.includes(account)
+                      ? "text-primary bg-primary/10 border border-primary/20"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    toggleAccount(account)
+                  }}
+                >
+                  {accountNumbers.includes(account) ? 'Selected' : 'Select'}
+                </Button>
+              </div>
+            </MotionStaggerItem>
+          ))}
+          {accounts.length > 3 && !isExpanded && (
+            <div className="text-center text-xs text-muted-foreground py-2">
+              +{remainingAccounts} more accounts
+            </div>
+          )}
+        </div>
+
+        {accounts.length > 1 && (
+          <div className="mt-3 pt-3 border-t border-border/30">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={toggleAll}
+              className="w-full h-8 text-xs"
+            >
+              {selectAll ? 'Deselect All Accounts' : 'Select All Accounts'}
+            </Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+// Enhanced Dashboard Header with Performance Summary
+function DashboardHeader() {
+  const t = useI18n()
+
+  // Mock data for demo - in real app this would come from shared API
+  const totalTrades = 1247
+  const winRate = 64.2
+  const totalPnL = 15738.42
+  const avgTrade = 12.63
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <MotionStaggerItem>
+        <Card className="border-border/30 bg-gradient-to-br from-primary/5 to-primary/0 border border-primary/20">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <BarChart3 className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Total Trades</p>
+                <p className="text-lg font-bold text-foreground tabular-nums">
+                  {totalTrades.toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </MotionStaggerItem>
+
+      <MotionStaggerItem>
+        <Card className="border-border/30 bg-gradient-to-br from-success/5 to-success/0 border border-success/20">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-success/10">
+                <Target className="h-4 w-4 text-success" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Win Rate</p>
+                <p className="text-lg font-bold text-success tabular-nums">
+                  {winRate.toFixed(1)}%
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </MotionStaggerItem>
+
+      <MotionStaggerItem>
+        <Card className="border-border/30 bg-gradient-to-br from-amber/5 to-amber/0 border border-amber/20">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-amber/10">
+                <DollarSign className="h-4 w-4 text-amber" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Total P&L</p>
+                <p className={cn(
+                  "text-lg font-bold tabular-nums",
+                  totalPnL >= 0 ? "text-success" : "text-destructive"
+                )}>
+                  {totalPnL >= 0 ? '+' : ''}{totalPnL.toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                  })}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </MotionStaggerItem>
+
+      <MotionStaggerItem>
+        <Card className="border-border/30 bg-gradient-to-br from-blue/5 to-blue/0 border border-blue/20">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-blue/10">
+                <PieChart className="h-4 w-4 text-blue" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Avg Trade</p>
+                <p className={cn(
+                  "text-lg font-bold tabular-nums",
+                  avgTrade >= 0 ? "text-success" : "text-destructive"
+                )}>
+                  {avgTrade >= 0 ? '+' : ''}{avgTrade.toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                  })}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </MotionStaggerItem>
     </div>
   )
 }
 
+// Main Shared Page Component
 export function SharedPageClient() {
+  const {
+    isLoading,
+    accountNumbers,
+    accounts,
+    isSharedView
+  } = useData()
   const t = useI18n()
-  const { isLoading, sharedParams } = useData()
+  const [activeTab, setActiveTab] = useState('overview')
 
   if (isLoading) {
     return (
-      <div className="qe-v2-app-shell flex flex-col items-center justify-center px-4 pt-28 sm:pt-32">
-        <div className="flex w-full max-w-lg flex-col items-center gap-3 rounded-2xl border frost-border-7 frost-gradient-card px-6 py-8 text-center frost-shadow-inset shadow-[0_18px_44px_-30px_rgba(0,0,0,0.9)]">
-          <Loader2 className="h-8 w-8 animate-spin text-foreground/60" />
-          <p className="text-sm text-muted-foreground">{t('shared.loading')}</p>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground mb-3" />
+          <p className="text-muted-foreground">Loading shared trading performance...</p>
         </div>
       </div>
     )
   }
 
-  if (!sharedParams) {
+  if (!isSharedView) {
     return (
-      <div className="qe-v2-app-shell flex flex-col items-center justify-center px-4 pt-28 sm:pt-32">
-        <Card className="max-w-lg w-full">
-          <CardHeader>
-            <CardTitle>{t('shared.notFound')}</CardTitle>
-            <CardDescription>{t('shared.notFoundDescription')}</CardDescription>
-          </CardHeader>
-        </Card>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <EmptyState
+          icon={<BarChart3 className="h-12 w-12 text-muted-foreground/50" />}
+          title="Shared View Not Available"
+          description="This page requires a valid shared trading performance link."
+        />
       </div>
     )
   }
 
-  const dateRange = sharedParams.dateRange as { from: Date; to: Date }
-
   return (
-    <div className="container-fluid qe-v2-app-shell flex-1 pt-24 sm:pt-28">
-      <main className="w-full py-6 lg:py-8">
-        <MotionSection delay={0.04}>
-          <Card className={cn(unifiedSectionPanelClassName, 'mb-6 w-full overflow-hidden')}>
-            <CardContent className="p-4 sm:p-5 lg:p-6">
-              <div className="grid gap-4 xl:grid-cols-[minmax(0,1.12fr)_340px] xl:gap-6">
-                <div className={cn(unifiedInsetPanelClassName, 'p-5 sm:p-6')}>
-                  <CardHeader className="space-y-4 p-0">
-                    <div className={unifiedChipClassName}>Shared Report</div>
-                    <div className="flex flex-col gap-2">
-                      <CardTitle className="text-xl font-[350] tracking-[-0.04em] sm:text-2xl lg:text-3xl">
-                        {sharedParams.title || t('shared.title')}
-                      </CardTitle>
-                      <CardDescription className="max-w-3xl text-sm leading-[1.7] text-muted-foreground sm:text-base">
-                        {sharedParams.description || t('shared.description')}
-                      </CardDescription>
-                    </div>
-                  </CardHeader>
+    <div className="min-h-screen bg-gradient-to-b from-background/0 to-muted/10">
+      {/* Header Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="border-b border-border/30 bg-card/80 backdrop-blur-sm"
+      >
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground tracking-tight">
+                Shared Trading Performance
+              </h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                View comprehensive trading analytics and performance metrics
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-xs">
+                Public Dashboard
+              </Badge>
+              <Badge variant="secondary" className="text-xs">
+                {accountNumbers.length > 0 ? `${accountNumbers.length} account${accountNumbers.length > 1 ? 's' : ''} selected` : 'No accounts selected'}
+              </Badge>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Dashboard Header */}
+        <DashboardHeader />
+
+        {/* Accounts Selector */}
+        <MotionStaggerItem>
+          <AccountsSelector accounts={accounts || []} />
+        </MotionStaggerItem>
+
+        {/* Main Content */}
+        <MotionStaggerItem>
+          <Card className="border-border/30 bg-card/80 backdrop-blur-sm mt-6">
+            <CardHeader>
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <div className="flex items-center justify-between">
+                  <TabsList className="grid w-full max-w-md h-10">
+                    <TabsTrigger
+                      value="overview"
+                      className="text-xs font-medium transition-all duration-200 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/20"
+                    >
+                      <BarChart3 className="h-3 w-3 mr-1.5" />
+                      Overview
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="performance"
+                      className="text-xs font-medium transition-all duration-200 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/20"
+                    >
+                      <TrendingUp className="h-3 w-3 mr-1.5" />
+                      Performance
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="analytics"
+                      className="text-xs font-medium transition-all duration-200 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/20"
+                    >
+                      <PieChart className="h-3 w-3 mr-1.5" />
+                      Analytics
+                    </TabsTrigger>
+                  </TabsList>
                 </div>
 
-                <MotionStagger className="grid gap-4" delay={0.06}>
-                  <MotionStaggerItem>
-                    <Card className={cn(unifiedMetricPanelClassName, 'shadow-none')}>
-                      <CardContent className="p-4">
-                        <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-                          {t('shared.sharedOn')}
-                        </p>
-                        <p className="text-sm text-foreground/70">
-                          {format(new Date(sharedParams.createdAt || new Date()), 'PPP')}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </MotionStaggerItem>
-                  <MotionStaggerItem>
-                    <Card className={cn(unifiedMetricPanelClassName, 'shadow-none')}>
-                      <CardContent className="p-4">
-                        <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-                          {dateRange.to ? t('shared.period') : t('shared.since')}
-                        </p>
-                        <p className="text-sm text-foreground/70">
-                          {dateRange.to ? (
-                            <>
-                              {format(new Date(dateRange.from), 'PPP')}
-                              {' - '}
-                              {format(new Date(dateRange.to), 'PPP')}
-                            </>
-                          ) : (
-                            format(new Date(dateRange.from), 'PPP')
-                          )}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </MotionStaggerItem>
-                </MotionStagger>
-              </div>
+                <TabsContent value="overview" className="mt-6">
+                  <SharedWidgetCanvas />
+                </TabsContent>
 
-              <MotionSection delay={0.08}>
-                <Card className={cn(unifiedInsetPanelClassName, 'mt-4 shadow-none')}>
-                  <CardContent className="p-4">
-                    <AccountsSelector accounts={sharedParams.accountNumbers} />
-                  </CardContent>
-                </Card>
-              </MotionSection>
-            </CardContent>
+                <TabsContent value="performance" className="mt-6">
+                  <div className="text-center py-12">
+                    <Activity className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">Performance Analytics</h3>
+                    <p className="text-muted-foreground">Performance analytics coming soon...</p>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="analytics" className="mt-6">
+                  <div className="text-center py-12">
+                    <PieChart className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">Advanced Analytics</h3>
+                    <p className="text-muted-foreground">Advanced analytics coming soon...</p>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </CardHeader>
           </Card>
-        </MotionSection>
-
-        <MotionSection delay={0.1}>
-          <SharedWidgetCanvas />
-        </MotionSection>
-      </main>
+        </MotionStaggerItem>
+      </div>
     </div>
   )
 }

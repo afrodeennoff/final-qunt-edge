@@ -53,7 +53,7 @@ export default function GlobalError({
             <button
               type="button"
               onClick={reset}
-              className="inline-flex items-center gap-2 rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-5 py-2.5 text-sm font-medium text-foreground transition-[background-color,border-color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.068_0.012_260_/_0.92)]"
+              className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-muted px-5 py-2.5 text-sm font-medium text-foreground transition-[background-color,border-color,box-shadow] duration-200 hover:border-border/80 hover:bg-muted/80"
             >
               Try again
             </button>
