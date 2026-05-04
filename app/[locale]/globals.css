@@ -117,10 +117,10 @@
 
 @keyframes status-ring {
   0%, 100% {
-    box-shadow: 0 0 0 0 oklch(0.55 0.22 264 / 0.4);
+    box-shadow: 0 0 0 0 rgba(0,102,204,0.4);
   }
   50% {
-    box-shadow: 0 0 0 4px oklch(0.55 0.22 264 / 0);
+    box-shadow: 0 0 0 4px rgba(0,102,204,0);
   }
 }
 
