@@ -516,7 +516,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </div>
  )}
  <Tabs value={tab} onValueChange={(v) => { setTab(v as 'magic' | 'password'); setLastAuthPreference(v as 'magic' | 'password'); }}>
- <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-[oklch(0.65_0.22_260_/_0.085)] bg-[oklch(0.056_0.01_260_/_0.72)] p-1 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]">
+ <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/50 bg-muted p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
  <TabsTrigger
  value="magic"
  className="h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_1px_2px_rgba(0,0,0,0.14)]"
@@ -530,7 +530,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <span className="truncate">{t('auth.tabs.password')}</span>
  <Badge
  variant="secondary"
- className="absolute -right-1.5 -top-1.5 border border-[oklch(0.65_0.22_260_/_0.11)] bg-primary/15 px-1 py-0 text-[8px] font-semibold text-primary"
+ className="absolute -right-1.5 -top-1.5 border border-primary/50 bg-primary/10 px-1 py-0 text-[8px] font-semibold text-primary"
  >
  {t('auth.new')}
  </Badge>
