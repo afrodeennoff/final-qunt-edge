@@ -51,12 +51,12 @@ export default function Navbar() {
         initial={false}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="pointer-events-auto flex items-center h-11 w-full px-3 gap-0 bg-[oklch(0.090_0.015_264_/_0.90)] backdrop-blur-[28px] saturate-150 border-b border-[oklch(0.65_0.22_260_/_0.08)] shadow-[0_1px_0_oklch(0.65_0.22_260_/_0.06)]"
+        className="pointer-events-auto flex items-center h-11 w-full px-3 gap-0 bg-[var(--card)] backdrop-blur-[28px] saturate-150 border-b border-[rgba(0,0,0,0.06)] shadow-[0_1px_0_rgba(0,0,0,0.04)]"
       >
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Left Side: Sidebar Toggle & Brand */}
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="h-8 w-8 rounded-[7px] text-muted-foreground/55 border border-transparent hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.65_0.22_260_/_0.08)] hover:text-foreground/80" />
+            <SidebarTrigger className="h-8 w-8 rounded-[7px] text-muted-foreground/55 border border-transparent hover:border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.06)] hover:text-foreground/80" />
             <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
           </div>
 

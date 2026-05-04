@@ -34,7 +34,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={type}
             className={cn(
-              "flex w-full rounded-md border border-border/70 bg-background/80 px-3.5 py-2 text-[13px] text-foreground placeholder:text-muted-foreground/50 transition-[border-color,box-shadow,background-color] duration-200 focus-visible:outline-none focus-visible:border-ring/60 focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-ring/25 focus-visible:shadow-[inset_0_1px_2px_rgba(0,0,0,0.06),0_0_0_3px_rgba(139,92,246,0.12)] disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-muted/30 file:border-0 file:bg-transparent file:text-sm file:font-medium",
+              "flex w-full rounded-md border border-border/70 bg-background/80 px-3.5 py-2 text-[13px] text-foreground placeholder:text-muted-foreground/50 transition-[border-color,box-shadow,background-color] duration-200 focus-visible:outline-none focus-visible:border-ring/60 focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-ring/25 focus-visible:shadow-[inset_0_1px_2px_rgba(0,0,0,0.06),0_0_0_3px_rgba(0,102,204,0.12)] disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-muted/30 file:border-0 file:bg-transparent file:text-sm file:font-medium",
               leftIcon && 'pl-10',
               rightIcon && 'pr-10',
               error &&

@@ -110,7 +110,7 @@ export default function Footer() {
               </Link>
             </div>
 
-            <div className="h-px w-full max-w-sm bg-[oklch(0.65_0.22_260_/_0.09)]" />
+            <div className="h-px w-full max-w-sm bg-[rgba(0,0,0,0.06)]" />
 
             <div className="flex items-center gap-2.5">
               {socialLinks.map((item, index) => (
@@ -125,7 +125,7 @@ export default function Footer() {
                   viewport={{ once: true }}
                   transition={{ delay: 0.08 + index * 0.05, duration: 0.35 }}
                   className={cn(
-                    'flex h-9 w-9 items-center justify-center rounded-full border border-[oklch(0.65_0.22_260_/_0.075)] bg-[oklch(0.056_0.01_260_/_0.74)] text-muted-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.06_0.011_260_/_0.82)] hover:text-primary',
+                    'flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(0,0,0,0.06)] bg-[var(--card)] text-muted-foreground shadow-[inset_0_1px_0_rgba(0,0,0,0.03)] transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-[rgba(0,0,0,0.06)] hover:bg-[var(--card)] hover:text-primary',
                   )}
                 >
                   <item.icon className="size-[18px]" />
@@ -141,7 +141,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-[oklch(0.65_0.22_260_/_0.08)] pt-6">
+        <div className="mt-8 border-t border-[rgba(0,0,0,0.06)] pt-6">
           <p className="text-xs tracking-[-0.005em] text-muted-foreground/70">
             {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
@@ -174,7 +174,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
             <Link
               href={`/${locale}${item.href}`}
               prefetch={false}
-              className="inline-flex rounded-lg px-2 py-1 text-sm text-muted-foreground/80 transition-[color,background-color] duration-200 hover:bg-[oklch(0.65_0.22_260_/_0.04)] hover:text-foreground"
+              className="inline-flex rounded-lg px-2 py-1 text-sm text-muted-foreground/80 transition-[color,background-color] duration-200 hover:bg-[rgba(0,0,0,0.03)] hover:text-foreground"
             >
               {item.name}
             </Link>

@@ -100,7 +100,7 @@ export function DashboardHeader() {
           )}
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/12 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[oklch(0.65_0.22_260_/_0.12)]" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[rgba(0,0,0,0.08)]" />
           <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4">
             <WindowChrome className="hidden md:block" />
             <SidebarTrigger

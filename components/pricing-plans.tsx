@@ -390,20 +390,20 @@ function PlusPlanCard({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="mb-4 space-y-3 rounded-xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.055_0.01_260_/_0.5)] p-4">
+          <div className="mb-4 space-y-3 rounded-xl border border-[rgba(0,0,0,0.05)] bg-[var(--muted)] p-4">
             <span className="block text-center text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/35">
               {t('pricing.billingPeriod')}
             </span>
 
-            <div className="grid grid-cols-3 gap-1 rounded-xl border border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.05_0.009_260_/_0.6)] p-1">
+            <div className="grid grid-cols-3 gap-1 rounded-xl border border-[rgba(0,0,0,0.04)] bg-[var(--card)] p-1">
               {recurringBillingOptions.map((option) => (
                 <button
                   key={option.key}
                   className={cn(
                     'rounded-xl px-3 py-2 text-xs capitalize transition-[opacity,background-color,border-color,transform]',
                     billingPeriod === option.key
-                      ? 'bg-primary text-primary-foreground font-semibold shadow-[0_18px_32px_-22px_oklch(0.65_0.22_260_/_0.48)]'
-                      : 'text-muted-foreground/75 hover:bg-[oklch(0.052_0.009_260_/_0.72)] hover:text-foreground',
+                      ? 'bg-primary text-primary-foreground font-semibold shadow-[0_18px_32px_-22px_rgba(0,0,0,0.20)]'
+                      : 'text-muted-foreground/75 hover:bg-[var(--card)] hover:text-foreground',
                   )}
                   onClick={() => setBillingPeriod(option.key)}
                   title={option.description}
@@ -413,13 +413,13 @@ function PlusPlanCard({
               ))}
             </div>
 
-            <div className="border-t border-[oklch(0.65_0.22_260_/_0.06)] pt-3">
+            <div className="border-t border-[rgba(0,0,0,0.04)] pt-3">
               <button
                 className={cn(
                   'flex w-full items-center justify-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition-[opacity,background-color,border-color,transform]',
                   billingPeriod === 'lifetime'
-                    ? 'border-[hsl(var(--primary)/0.28)] bg-[hsl(var(--primary)/0.08)] text-[oklch(0.75_0.22_260)]'
-                    : 'border-[oklch(0.65_0.22_260_/_0.07)] text-muted-foreground hover:bg-[oklch(0.055_0.01_260_/_0.58)] hover:text-foreground',
+                    ? 'border-[hsl(var(--primary)/0.28)] bg-[hsl(var(--primary)/0.08)] text-[var(--card)]'
+                    : 'border-[rgba(0,0,0,0.05)] text-muted-foreground hover:bg-[var(--card)] hover:text-foreground',
                 )}
                 onClick={() => setBillingPeriod('lifetime')}
               >

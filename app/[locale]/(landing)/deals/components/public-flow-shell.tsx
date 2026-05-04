@@ -40,7 +40,7 @@ export function PublicFlowShell({
       <div className="mx-auto w-full max-w-[1280px] px-4 pb-24 pt-8 sm:px-6 lg:px-8">
         {!compactHeader ? (
           <>
-            <section className="rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.035)] p-6 sm:p-8">
+            <section className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.06)] p-6 sm:p-8">
               <div>
                 <MarketingSectionHeader
                   eyebrow="Futures Funding Offers Hub"
@@ -74,7 +74,7 @@ export function PublicFlowShell({
             </section>
 
             <section className="mt-6 grid gap-6 text-xs text-muted-foreground sm:grid-cols-3">
-              <article className="rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.035)] p-4">
+              <article className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.06)] p-4">
                 <p className="font-semibold uppercase tracking-[0.12em] text-foreground">
                   Offer Checks
                 </p>
@@ -82,7 +82,7 @@ export function PublicFlowShell({
                   Deal terms re-validated before listing changes are published.
                 </p>
               </article>
-              <article className="rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.035)] p-4">
+              <article className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.06)] p-4">
                 <p className="font-semibold uppercase tracking-[0.12em] text-foreground">
                   Policy Context
                 </p>
@@ -90,7 +90,7 @@ export function PublicFlowShell({
                   Pricing, drawdown style, and payout notes linked in one flow.
                 </p>
               </article>
-              <article className="rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.035)] p-4">
+              <article className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.06)] p-4">
                 <p className="font-semibold uppercase tracking-[0.12em] text-foreground">
                   Decision Tools
                 </p>

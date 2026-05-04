@@ -50,7 +50,7 @@ export default async function UpdatesPage(props: PageProps) {
       {locale === 'fr' && latestVideoId && (
         <UnifiedSurface>
           <h2 className="mb-4 text-lg font-semibold text-foreground">{t('updates.weeklyVideo')}</h2>
-          <div className="overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)]">
+          <div className="overflow-hidden rounded-xl border border-[rgba(0,0,0,0.06)]">
             <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
               <iframe
                 className="absolute left-0 top-0 h-full w-full"

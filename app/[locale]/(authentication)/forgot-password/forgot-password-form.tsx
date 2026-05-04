@@ -68,7 +68,7 @@ export default function ForgotPasswordForm({ locale }: { locale: string }) {
  autoComplete="email"
  data-testid="forgot-password-email"
  disabled={isLoading}
- className="h-11 rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20"
+ className="h-11 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20"
  />
  <Button
  type="submit"

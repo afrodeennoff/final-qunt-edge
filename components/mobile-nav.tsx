@@ -124,7 +124,7 @@ export function UnifiedMobileNav({
         <SheetDescription className="sr-only">
           Primary site navigation. Use links to navigate to different sections.
         </SheetDescription>
-        <div className="flex h-full flex-col overflow-y-auto rounded-2xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.96)_0%,oklch(0.05_0.009_260_/_0.92)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_32px_76px_-42px_rgba(0,0,0,0.94)]">
+        <div className="flex h-full flex-col overflow-y-auto rounded-2xl border border-[rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_32px_76px_-42px_rgba(0,0,0,0.94)]">
           {showUser && (
             <>
               <div className="px-3 pt-6 pb-2">

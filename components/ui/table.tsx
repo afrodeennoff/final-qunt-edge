@@ -6,7 +6,7 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
   ({ className, ...props }, ref) => (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-auto overscroll-x-contain rounded-[1.2rem] border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.058_0.01_260_/_0.84)_0%,oklch(0.048_0.009_260_/_0.78)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.03),0_18px_34px_-28px_rgba(0,0,0,0.58)]"
+      className="relative w-full overflow-auto overscroll-x-contain rounded-[1.2rem] border border-border/7 bg-[linear-gradient(180deg,hsl(var(--card)_/_0.84)_0%,hsl(var(--card)_/_0.78)_100%)] shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.02),0_18px_34px_-28px_rgba(0,0,0,0.58)]"
     >
       <table
         ref={ref}
@@ -27,7 +27,7 @@ const TableHeader = React.forwardRef<
     ref={ref}
     data-slot="table-header"
     className={cn(
-      'sticky top-0 border-b border-[oklch(0.65_0.22_260_/_0.06)] bg-[oklch(0.05_0.009_260_/_0.76)] [&_tr]:border-b [&_tr]:border-[oklch(0.65_0.22_260_/_0.06)]',
+      'sticky top-0 border-b border-border/6 bg-[hsl(var(--card)_/_0.76)] [&_tr]:border-b [&_tr]:border-border/6',
       className,
     )}
     {...props}
@@ -56,7 +56,7 @@ const TableFooter = React.forwardRef<
     ref={ref}
     data-slot="table-footer"
     className={cn(
-      'border-t border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.74)] font-medium last:[&>tr]:border-b-0',
+      'border-t border-border/8 bg-[hsl(var(--card)_/_0.74)] font-medium last:[&>tr]:border-b-0',
       className,
     )}
     {...props}
@@ -70,7 +70,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
       ref={ref}
       data-slot="table-row"
       className={cn(
-        'border-b border-[oklch(0.65_0.22_260_/_0.05)] transition-colors hover:bg-[oklch(0.05_0.009_260_/_0.62)] data-[state=selected]:bg-[oklch(0.65_0.22_260_/_0.08)]',
+        'border-b border-border/5 transition-colors hover:bg-[hsl(var(--card)_/_0.62)] data-[state=selected]:bg-[hsl(var(--foreground)_/_0.05)]',
         className,
       )}
       {...props}
@@ -104,7 +104,7 @@ const TableCell = React.forwardRef<
     data-slot="table-cell"
       className={cn(
         'border-b border-border/60 p-3.5 align-middle type-body-sm leading-[1.5] sm:p-4 [&:has([role=checkbox])]:pr-0',
-      'border-[oklch(0.65_0.22_260_/_0.06)]',
+      'border-border/6',
       className,
     )}
     {...props}

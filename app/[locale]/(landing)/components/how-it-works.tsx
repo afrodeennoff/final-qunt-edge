@@ -31,13 +31,13 @@ export default function HowItWorks() {
       id="how-it-works"
       className="relative overflow-hidden border-t border-border/30 bg-background px-4 py-24 sm:px-6 sm:py-24 lg:px-8"
     >
-      <div className="mx-6 overflow-hidden rounded-2xl border frost-border-7 frost-gradient-card p-6 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
+      <div className="mx-6 overflow-hidden rounded-2xl border frost-border-7 frost-gradient-card p-6 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-xl border frost-border-7 bg-[oklch(0.052_0.009_260_/_0.68)] p-6"
+            className="rounded-xl border frost-border-7 bg-[var(--card)] p-6"
           >
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
               Optimization Pipeline
@@ -79,10 +79,10 @@ export default function HowItWorks() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.15 }}
-                className="relative z-10 rounded-xl border frost-border-7 bg-[oklch(0.052_0.009_260_/_0.68)] p-4"
+                className="relative z-10 rounded-xl border frost-border-7 bg-[var(--card)] p-4"
               >
                 <div className="mb-6 flex items-center justify-between gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border frost-border-7 bg-[oklch(0.05_0.009_260_/_0.62)]">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border frost-border-7 bg-[var(--secondary)]">
                     <span className="font-mono text-xs font-bold text-foreground sm:text-sm">
                       0{i + 1}
                     </span>

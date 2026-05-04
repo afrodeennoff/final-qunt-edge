@@ -20,40 +20,40 @@
     --ui-10-accent-fg: var(--primary-foreground);
 
     /* ===== MARKETING SURFACES ===== */
-    --mk-bg-0: 0 0% 0%;
-    --mk-bg-1: 0 0% 0%;
-    --mk-bg-2: 0 0% 2%;
-    --mk-surface: 0 0% 3%;
-    --mk-surface-muted: 0 0% 4%;
-    --mk-border: 0 0% 7%;
-    --mk-text: 0 0% 96%;
-    --mk-text-muted: 0 0% 42%;
-    --mk-lime: 155 100% 58%;
-    --mk-lime-ink: 0 0% 6%;
+    --mk-bg-0: 0 0% 95%;
+    --mk-bg-1: 0 0% 96%;
+    --mk-bg-2: 0 0% 93%;
+    --mk-surface: 0 0% 100%;
+    --mk-surface-muted: 0 0% 96%;
+    --mk-border: 0 0% 82%;
+    --mk-text: 0 0% 12%;
+    --mk-text-muted: 0 0% 44%;
+    --mk-lime: 210 100% 40%;
+    --mk-lime-ink: 0 0% 100%;
 
-    /* ===== BACKGROUND HIERARCHY (8 levels) ===== */
-    --bg-base: 0 0% 0%;
-    --bg-elevated: 0 0% 1.5%;
-    --bg-card: 0 0% 2.5%;
-    --bg-card-hover: 0 0% 3.5%;
-    --bg-overlay: 0 0% 5%;
-    --bg-modal: 0 0% 6.5%;
-    --bg-highlight: 0 0% 8%;
-    --bg-interactive: 0 0% 9%;
+    /* ===== BACKGROUND HIERARCHY (8 levels) — macOS light ===== */
+    --bg-base: 0 0% 95%;
+    --bg-elevated: 0 0% 98%;
+    --bg-card: 0 0% 100%;
+    --bg-card-hover: 0 0% 97%;
+    --bg-overlay: 0 0% 96%;
+    --bg-modal: 0 0% 100%;
+    --bg-highlight: 0 0% 94%;
+    --bg-interactive: 0 0% 93%;
 
     /* ===== PRIMARY ACCENT ===== */
     --accent-neutral: var(--primary);
 
-    /* ===== OBSIDIAN FROST SYSTEM ===== */
-    --rs-frost-border: 0 0% 7%;
-    --rs-frost-border-alt: 0 0% 5%;
-    --rs-frost-ring: 0 0% 10%;
-    --rs-frost-surface: 0 0% 90% / 0.02;
-    --rs-frost-hover: 0 0% 100% / 0.06;
-    --rs-text-strong: 0 0% 96%;
-    --rs-text-primary: 0 0% 90%;
-    --rs-text-secondary: 0 0% 60%;
-    --rs-text-tertiary: 0 0% 44%;
+    /* ===== macOS NATIVE BORDER SYSTEM ===== */
+    --rs-frost-border: 0 0% 82%;
+    --rs-frost-border-alt: 0 0% 87%;
+    --rs-frost-ring: 210 100% 40%;
+    --rs-frost-surface: 0 0% 90% / 0.06;
+    --rs-frost-hover: 0 0% 0% / 0.04;
+    --rs-text-strong: 0 0% 12%;
+    --rs-text-primary: 0 0% 20%;
+    --rs-text-secondary: 0 0% 44%;
+    --rs-text-tertiary: 0 0% 60%;
 
     /* ===== BRAND ===== */
     --brand-primary: var(--primary);
@@ -63,77 +63,77 @@
     /* ===== FOREGROUND EXTENSIONS ===== */
     --fg-primary: var(--foreground);
     --fg-secondary: var(--muted-foreground);
-    --fg-tertiary: #6e6e6e;
-    --fg-muted: #666666;
-    --fg-disabled: #474747;
+    --fg-tertiary: #AEAEB2;
+    --fg-muted: #C7C7CC;
+    --fg-disabled: #D1D1D6;
 
     /* ===== BORDER EXTENSIONS ===== */
     --border-default: var(--border);
-    --border-subtle: 0 0% 6%;
-    --border-strong: 0 0% 10%;
+    --border-subtle: 0 0% 87%;
+    --border-strong: 0 0% 75%;
     --border-focus: var(--ring);
     --border-error: var(--destructive);
     --border-success: var(--success);
 
-    /* ===== GLASSMORPHISM — Premium Luxury grade ===== */
-    --glass-bg: 0 0% 3% / 0.55;
-    --glass-bg-strong: 0 0% 4% / 0.72;
-    --glass-bg-subtle: 0 0% 1% / 0.35;
-    --glass-blur: blur(40px) saturate(180%);
-    --glass-blur-strong: blur(60px) saturate(200%);
-    --glass-border: 0 0% 8%;
-    --glass-border-opacity: 0.10;
-    --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.14),
-                    inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    /* ===== GLASSMORPHISM — macOS native ===== */
+    --glass-bg: 0 0% 100% / 0.72;
+    --glass-bg-strong: 0 0% 100% / 0.85;
+    --glass-bg-subtle: 0 0% 100% / 0.45;
+    --glass-blur: blur(24px) saturate(180%);
+    --glass-blur-strong: blur(40px) saturate(200%);
+    --glass-border: 0 0% 82%;
+    --glass-border-opacity: 0.35;
+    --glass-shadow: 0 1px 2px rgba(0,0,0,0.06),
+                    0 4px 12px rgba(0,0,0,0.08);
 
-    /* ===== macOS TAHOE SHADOWS ===== */
-    --macos-shadow-low:    0 1px 2px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.1);
-    --macos-shadow-medium: 0 2px 4px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.1);
-    --macos-shadow-high:   0 4px 8px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.1);
+    /* ===== macOS SHADOWS — native depth ===== */
+    --macos-shadow-low:    0 1px 2px rgba(0,0,0,0.05);
+    --macos-shadow-medium: 0 2px 4px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --macos-shadow-high:   0 4px 8px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
 
     /* ===== INTERACTIVE STATES ===== */
-    --hover-overlay: 255 255 255 / 0.05;
-    --hover-overlay-strong: 255 255 255 / 0.09;
-    --active-overlay: 255 255 255 / 0.03;
+    --hover-overlay: 0 0 0% / 0.04;
+    --hover-overlay-strong: 0 0 0% / 0.07;
+    --active-overlay: 0 0 0% / 0.02;
   }
 
   .light {
-    /* ===== MARKETING SURFACE TOKENS (MiniMax Light Theme) ===== */
-    --mk-bg-0: 0 0% 100%;
-    --mk-bg-1: 0 0% 98%;
-    --mk-bg-2: 0 0% 96%;
+    /* ===== MARKETING SURFACE TOKENS (macOS Light) ===== */
+    --mk-bg-0: 0 0% 95%;
+    --mk-bg-1: 0 0% 96%;
+    --mk-bg-2: 0 0% 93%;
     --mk-surface: 0 0% 100%;
     --mk-surface-muted: 0 0% 96%;
-    --mk-border: 220 13% 91%;
-    --mk-text: 0 0% 13%;
-    --mk-text-muted: 214 15% 32%;
-    --mk-lime: 76 86% 59%;
+    --mk-border: 0 0% 82%;
+    --mk-text: 0 0% 12%;
+    --mk-text-muted: 0 0% 44%;
+    --mk-lime: 210 100% 40%;
     --mk-lime-ink: 0 0% 100%;
 
-    /* ===== MINI MAX SHADOW TOKENS ===== */
-    --mk-shadow-standard: 0 4px 6px rgba(0, 0, 0, 0.08);
-    --mk-shadow-brand-glow: 0 0 15px rgba(44, 30, 116, 0.16);
-    --mk-shadow-elevated: 0 12px 16px -4px rgba(36, 36, 36, 0.08);
-    --mk-shadow-soft-glow: 0 0 22.576px rgba(0, 0, 0, 0.08);
-    --mk-shadow-direction: 6.5px 2px 17.5px rgba(44, 30, 116, 0.11);
+    /* ===== SHADOW TOKENS ===== */
+    --mk-shadow-standard: 0 4px 6px rgba(0,0,0,0.07);
+    --mk-shadow-brand-glow: 0 0 15px rgba(0,102,204,0.12);
+    --mk-shadow-elevated: 0 12px 16px -4px rgba(0,0,0,0.07);
+    --mk-shadow-soft-glow: 0 0 22px rgba(0,0,0,0.06);
+    --mk-shadow-direction: 6px 2px 17px rgba(0,102,204,0.08);
 
-    /* ===== MINI MAX COLOR TOKENS ===== */
-    --mk-brand-blue: 222 89% 51%;
-    --mk-brand-pink: 309 73% 65%;
-    --mk-sky-blue: 203 100% 62%;
+    /* ===== BRAND COLORS ===== */
+    --mk-brand-blue: 210 100% 40%;
+    --mk-brand-pink: 340 75% 55%;
+    --mk-sky-blue: 203 100% 42%;
 
     /* ===== LIGHT GLASSMORPHISM TOKENS ===== */
-    --glass-bg: 0 0% 100% / 0.65;
+    --glass-bg: 0 0% 100% / 0.72;
     --glass-bg-strong: 0 0% 100% / 0.85;
-    --glass-bg-subtle: 0 0% 100% / 0.4;
-    --glass-blur: blur(20px);
-    --glass-blur-strong: blur(40px);
-    --glass-border: 220 13% 91%;
-    --glass-border-opacity: 0.5;
-    --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.04),
-                    0 4px 12px rgba(0, 0, 0, 0.06),
-                    0 16px 40px -12px rgba(0, 0, 0, 0.08),
-                    0 0 0 0.5px rgba(0, 0, 0, 0.04);
+    --glass-bg-subtle: 0 0% 100% / 0.45;
+    --glass-blur: blur(24px) saturate(180%);
+    --glass-blur-strong: blur(40px) saturate(200%);
+    --glass-border: 0 0% 82%;
+    --glass-border-opacity: 0.35;
+    --glass-shadow: 0 1px 2px rgba(0,0,0,0.04),
+                    0 4px 12px rgba(0,0,0,0.06),
+                    0 16px 40px -12px rgba(0,0,0,0.08),
+                    0 0 0 0.5px rgba(0,0,0,0.04);
   }
 }
 
@@ -247,55 +247,29 @@
   .rs-text-secondary { color: hsl(var(--rs-text-secondary)); }
   .rs-text-tertiary { color: hsl(var(--rs-text-tertiary)); }
 
-  /* ===== MACOS PANEL SURFACES ===== */
+  /* ===== MACOS PANEL SURFACES — theme-aware ===== */
   .macos-panel {
-    background: linear-gradient(180deg, rgba(20,18,38,0.92) 0%, rgba(16,14,30,0.88) 100%);
-    border: 1px solid rgba(139,92,246,0.10);
-    box-shadow: inset 0 1px 0 rgba(139,92,246,0.06), 0 18px 38px -26px rgba(0,0,0,0.70);
-  }
-  @supports (color: oklch(0 0 0)) {
-    .macos-panel {
-      background: linear-gradient(180deg, oklch(0.10 0.016 264 / 0.92) 0%, oklch(0.082 0.013 264 / 0.88) 100%);
-      border-color: oklch(0.65 0.22 260 / 0.10);
-      box-shadow: inset 0 1px 0 oklch(0.65 0.22 260 / 0.06), 0 18px 38px -26px rgba(0,0,0,0.70);
-    }
+    background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(245,245,247,0.92) 100%);
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 4px 12px rgba(0,0,0,0.08);
   }
 
   .macos-sidebar-surface {
-    background: linear-gradient(180deg, rgba(18,16,34,0.94) 0%, rgba(14,12,28,0.90) 100%);
-    border-right: 1px solid rgba(139,92,246,0.08);
-  }
-  @supports (color: oklch(0 0 0)) {
-    .macos-sidebar-surface {
-      background: linear-gradient(180deg, oklch(0.090 0.016 264 / 0.94) 0%, oklch(0.076 0.013 264 / 0.90) 100%);
-      border-right-color: oklch(0.65 0.22 260 / 0.08);
-    }
+    background: linear-gradient(180deg, rgba(246,246,248,0.94) 0%, rgba(242,242,247,0.90) 100%);
+    border-right: 1px solid rgba(0,0,0,0.08);
   }
 
   .macos-toolbar {
-    background: rgba(18,16,36,0.90);
+    background: rgba(255,255,255,0.85);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border-bottom: 1px solid rgba(139,92,246,0.08);
-  }
-  @supports (color: oklch(0 0 0)) {
-    .macos-toolbar {
-      background: oklch(0.092 0.015 264 / 0.90);
-      border-bottom-color: oklch(0.65 0.22 260 / 0.08);
-    }
+    border-bottom: 1px solid rgba(0,0,0,0.08);
   }
 
   .macos-sheet {
-    background: linear-gradient(180deg, rgba(24,20,44,0.96) 0%, rgba(20,16,36,0.94) 100%);
-    border: 1px solid rgba(139,92,246,0.14);
-    box-shadow: inset 0 1px 0 rgba(139,92,246,0.08), 0 32px 64px -24px rgba(0,0,0,0.82);
-  }
-  @supports (color: oklch(0 0 0)) {
-    .macos-sheet {
-      background: linear-gradient(180deg, oklch(0.115 0.018 264 / 0.96) 0%, oklch(0.098 0.015 264 / 0.94) 100%);
-      border-color: oklch(0.65 0.22 260 / 0.14);
-      box-shadow: inset 0 1px 0 oklch(0.65 0.22 260 / 0.08), 0 32px 64px -24px rgba(0,0,0,0.82);
-    }
+    background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(250,250,252,0.96) 100%);
+    border: 1px solid rgba(0,0,0,0.10);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 20px 48px -24px rgba(0,0,0,0.16);
   }
 
   /* ===== MACOS INTERACTIVE STATES ===== */
@@ -304,40 +278,25 @@
                 border-color var(--duration-fast, 130ms) var(--ease-out, cubic-bezier(0.16,1,0.3,1));
   }
   .macos-hover:hover {
-    background: rgba(139,92,246,0.06);
-  }
-  @supports (color: oklch(0 0 0)) {
-    .macos-hover:hover {
-      background: oklch(0.65 0.22 260 / 0.06);
-    }
+    background: rgba(0,0,0,0.04);
   }
   .macos-hover:active {
-    background: rgba(139,92,246,0.10);
+    background: rgba(0,0,0,0.07);
     transform: scale(0.98);
     transition-duration: 75ms;
-  }
-  @supports (color: oklch(0 0 0)) {
-    .macos-hover:active {
-      background: oklch(0.65 0.22 260 / 0.10);
-    }
   }
 
   /* ===== MACOS SECTION DIVIDER ===== */
   .macos-divider {
     height: 1px;
-    background: linear-gradient(to right, transparent, rgba(139,92,246,0.08) 20%, rgba(139,92,246,0.08) 80%, transparent);
+    background: linear-gradient(to right, transparent, rgba(0,0,0,0.08) 20%, rgba(0,0,0,0.08) 80%, transparent);
     margin: 0;
-  }
-  @supports (color: oklch(0 0 0)) {
-    .macos-divider {
-      background: linear-gradient(to right, transparent, oklch(0.65 0.22 260 / 0.08) 20%, oklch(0.65 0.22 260 / 0.08) 80%, transparent);
-    }
   }
 
   /* ===== MACOS METRIC DISPLAY ===== */
-  .macos-metric-positive { color: #22c55e; }
-  .macos-metric-negative { color: #dc2626; }
-  .macos-metric-neutral  { color: #d4cce8; }
+  .macos-metric-positive { color: #1A7F37; }
+  .macos-metric-negative { color: #C0392B; }
+  .macos-metric-neutral  { color: #6E6E73; }
   @supports (color: oklch(0 0 0)) {
     .macos-metric-positive { color: oklch(0.78 0.18 155); }
     .macos-metric-negative { color: oklch(0.58 0.22 22); }

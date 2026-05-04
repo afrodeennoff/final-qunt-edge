@@ -225,7 +225,7 @@ function Sidebar({
             'flex h-full w-full flex-col border border-sidebar-border/35 bg-sidebar/95 shadow-[inset_0_1px_0_hsl(var(--sidebar-foreground)/0.02),0_8px_24px_-12px_rgba(0,0,0,0.5)]',
             'group-data-[variant=floating]:rounded-2xl',
             'group-data-[variant=inset]:rounded-2xl',
-            'border-[oklch(0.65_0.22_260_/_0.1)] bg-[linear-gradient(180deg,oklch(0.064_0.012_260_/_0.76)_0%,oklch(0.052_0.01_260_/_0.72)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_24px_48px_-34px_rgba(0,0,0,0.7)]',
+            'border-[rgba(0,0,0,0.07)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_24px_48px_-34px_rgba(0,0,0,0.7)]',
           )}
         >
           {children}
@@ -244,7 +244,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       variant="ghost"
       size="icon"
       className={cn(
-        'size-[38px] rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.058_0.011_260_/_0.74)] text-foreground/68 shadow-none hover:border-[oklch(0.65_0.22_260_/_0.12)] hover:bg-[oklch(0.062_0.012_260_/_0.82)] hover:text-foreground',
+        'size-[38px] rounded-[0.95rem] border border-[rgba(0,0,0,0.06)] bg-[var(--card)] text-foreground/68 shadow-none hover:border-[rgba(0,0,0,0.08)] hover:bg-[var(--card)] hover:text-foreground',
         className,
       )}
       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
@@ -303,7 +303,7 @@ function SidebarInput({ className, ...props }: React.ComponentProps<'input'>) {
       data-slot="sidebar-input"
       data-sidebar="input"
       className={cn(
-        'type-body-sm flex h-[38px] w-full rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.058_0.011_260_/_0.74)] px-3.5 text-sidebar-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05)] ring-sidebar-ring file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-sidebar-foreground/46 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.22_260_/_0.2)] disabled:cursor-not-allowed disabled:opacity-50',
+        'type-body-sm flex h-[38px] w-full rounded-[0.95rem] border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-3.5 text-sidebar-foreground shadow-[inset_0_1px_0_rgba(0,0,0,0.03)] ring-sidebar-ring file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-sidebar-foreground/46 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(0,0,0,0.06)] disabled:cursor-not-allowed disabled:opacity-50',
         className,
       )}
       {...props}
@@ -338,7 +338,7 @@ function SidebarSeparator({ className, ...props }: React.ComponentProps<typeof S
     <Separator
       data-slot="sidebar-separator"
       data-sidebar="separator"
-      className={cn('mx-3.5 w-auto bg-[oklch(0.65_0.22_260_/_0.09)]', className)}
+      className={cn('mx-3.5 w-auto bg-[rgba(0,0,0,0.06)]', className)}
       {...props}
     />
   )
@@ -444,13 +444,13 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  'peer/menu-button type-body-sm flex w-full items-center gap-2.5 overflow-hidden rounded-[0.95rem] border border-transparent px-2.5 py-[0.56rem] text-left font-medium tracking-[-0.01em] ring-sidebar-ring outline-hidden transition-[width,height,padding,background-color,border-color,box-shadow,color] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5! hover:border-[oklch(0.65_0.22_260_/_0.08)] hover:bg-[oklch(0.058_0.011_260_/_0.72)] hover:text-sidebar-foreground focus-visible:ring-2 active:bg-[oklch(0.062_0.012_260_/_0.78)] active:text-sidebar-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-[oklch(0.65_0.22_260_/_0.09)] data-[active=true]:bg-[oklch(0.65_0.22_260_/_0.1)] data-[active=true]:font-medium data-[active=true]:text-sidebar-foreground data-[active=true]:shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] data-[state=open]:hover:bg-[oklch(0.062_0.012_260_/_0.78)] data-[state=open]:hover:text-sidebar-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-none',
+  'peer/menu-button type-body-sm flex w-full items-center gap-2.5 overflow-hidden rounded-[0.95rem] border border-transparent px-2.5 py-[0.56rem] text-left font-medium tracking-[-0.01em] ring-sidebar-ring outline-hidden transition-[width,height,padding,background-color,border-color,box-shadow,color] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5! hover:border-[rgba(0,0,0,0.06)] hover:bg-[var(--card)] hover:text-sidebar-foreground focus-visible:ring-2 active:bg-[var(--card)] active:text-sidebar-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-[rgba(0,0,0,0.06)] data-[active=true]:bg-[rgba(0,0,0,0.07)] data-[active=true]:font-medium data-[active=true]:text-sidebar-foreground data-[active=true]:shadow-[inset_0_1px_0_rgba(0,0,0,0.03)] data-[state=open]:hover:bg-[var(--card)] data-[state=open]:hover:text-sidebar-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-none',
   {
     variants: {
       variant: {
         default: 'hover:bg-sidebar-accent/65 hover:text-sidebar-foreground',
         outline:
-          'border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.058_0.011_260_/_0.72)] shadow-none hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.65_0.22_260_/_0.1)] hover:text-sidebar-foreground',
+          'border border-[rgba(0,0,0,0.06)] bg-[var(--card)] shadow-none hover:border-[rgba(0,0,0,0.07)] hover:bg-[rgba(0,0,0,0.07)] hover:text-sidebar-foreground',
       },
       size: {
         default: 'h-8 text-sm',
@@ -524,7 +524,7 @@ function SidebarMenuAction({
       data-slot="sidebar-menu-action"
       data-sidebar="menu-action"
       className={cn(
-        'absolute top-1.5 right-1 flex aspect-square w-5 items-center justify-center rounded-lg p-0 text-sidebar-foreground/74 outline-hidden transition-transform peer-hover/menu-button:text-sidebar-foreground hover:bg-[oklch(0.062_0.012_260_/_0.78)] hover:text-sidebar-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
+        'absolute top-1.5 right-1 flex aspect-square w-5 items-center justify-center rounded-lg p-0 text-sidebar-foreground/74 outline-hidden transition-transform peer-hover/menu-button:text-sidebar-foreground hover:bg-[var(--card)] hover:text-sidebar-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
         'after:absolute after:-inset-2 md:after:hidden',
         'peer-data-[size=sm]/menu-button:top-1',
         'peer-data-[size=default]/menu-button:top-1.5',
@@ -588,7 +588,7 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<'ul'>) {
       data-slot="sidebar-menu-sub"
       data-sidebar="menu-sub"
       className={cn(
-        'mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-[oklch(0.65_0.22_260_/_0.08)] px-2.5 py-0.5',
+        'mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-[rgba(0,0,0,0.06)] px-2.5 py-0.5',
         'group-data-[collapsible=icon]:hidden',
         className,
       )}
@@ -627,8 +627,8 @@ function SidebarMenuSubButton({
       data-size={size}
       data-active={isActive}
       className={cn(
-        'flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-lg px-2 text-sidebar-foreground ring-sidebar-ring outline-hidden hover:bg-[oklch(0.058_0.011_260_/_0.74)] hover:text-sidebar-foreground focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-foreground/78',
-        'data-[active=true]:bg-[oklch(0.65_0.22_260_/_0.1)] data-[active=true]:text-sidebar-foreground',
+        'flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-lg px-2 text-sidebar-foreground ring-sidebar-ring outline-hidden hover:bg-[var(--card)] hover:text-sidebar-foreground focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-foreground/78',
+        'data-[active=true]:bg-[rgba(0,0,0,0.07)] data-[active=true]:text-sidebar-foreground',
         size === 'sm' && 'text-xs',
         size === 'md' && 'text-sm',
         'group-data-[collapsible=icon]:hidden',

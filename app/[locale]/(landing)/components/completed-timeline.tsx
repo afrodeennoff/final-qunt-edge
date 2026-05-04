@@ -28,18 +28,18 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
   return (
     <div className="relative">
       {/* Vertical timeline line */}
-      <div className="absolute left-[15px] top-2 bottom-2 w-px bg-[oklch(0.65_0.22_260_/_0.1)]" />
+      <div className="absolute left-[15px] top-2 bottom-2 w-px bg-[rgba(0,0,0,0.07)]" />
 
       <div className="space-y-1">
         {completedMilestones.map((milestone) => (
           <Link
             key={milestone.id}
             href={`/${locale}/updates/${milestone.id}`}
-            className="group relative flex gap-5 rounded-xl p-4 transition-[background-color,border-color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[oklch(0.65_0.22_260_/_0.04)]"
+            className="group relative flex gap-5 rounded-xl p-4 transition-[background-color,border-color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[rgba(0,0,0,0.03)]"
           >
             {/* Timeline dot */}
             <div className="relative z-10 mt-1.5 flex h-[30px] w-[30px] flex-shrink-0 items-center justify-center">
-              <div className="h-2 w-2 rounded-full bg-[oklch(0.65_0.22_260_/_0.5)] transition-[background-color] duration-200 group-hover:bg-[oklch(0.65_0.22_260_/_0.8)]" />
+              <div className="h-2 w-2 rounded-full bg-[rgba(0,0,0,0.06)] transition-[background-color] duration-200 group-hover:bg-[rgba(0,0,0,0.06)]" />
             </div>
 
             {/* Content */}
@@ -55,7 +55,7 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
               </p>
 
               {locale === 'fr' && milestone.youtubeVideoId && (
-                <div className="mt-3 overflow-hidden rounded-lg border border-[oklch(0.65_0.22_260_/_0.08)]">
+                <div className="mt-3 overflow-hidden rounded-lg border border-[rgba(0,0,0,0.06)]">
                   <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                     <iframe
                       className="absolute top-0 left-0 h-full w-full"
@@ -69,7 +69,7 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
               )}
 
               {milestone.image && !milestone.youtubeVideoId && (
-                <div className="mt-3 overflow-hidden rounded-lg border border-[oklch(0.65_0.22_260_/_0.08)]">
+                <div className="mt-3 overflow-hidden rounded-lg border border-[rgba(0,0,0,0.06)]">
                   <Image
                     src={milestone.image}
                     alt={milestone.title}

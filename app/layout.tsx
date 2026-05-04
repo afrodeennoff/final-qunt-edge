@@ -114,7 +114,7 @@ export const viewport: Viewport = {
   userScalable: true,
   viewportFit: 'cover',
   themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: 'oklch(0.06 0.01 260)' },
+    { media: '(prefers-color-scheme: dark)', color: 'var(--card)' },
     { media: '(prefers-color-scheme: light)', color: 'oklch(0.9838 0.0035 247.8583)' },
   ],
 }
@@ -147,7 +147,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         )}
 
         {/* Mobile-First Meta Tags */}
-        <meta name="theme-color" content="oklch(0.06 0.01 260)" />
+        <meta name="theme-color" content="var(--card)" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />

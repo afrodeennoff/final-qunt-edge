@@ -96,8 +96,8 @@ function TabItem({ item }: { item: MobileNavItem }) {
       </span>
       {active && (
         <>
-          <div className="absolute inset-0 rounded-2xl border border-[oklch(0.65_0.22_260_/_0.1)] bg-[oklch(0.65_0.22_260_/_0.12)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_18px_32px_-24px_rgba(0,0,0,0.7)]" />
-          <div className="absolute left-1/2 top-1.5 h-[2px] w-6 -translate-x-1/2 rounded-full bg-sidebar-primary shadow-[0_0_12px_oklch(0.65_0.22_260_/_0.34)]" />
+          <div className="absolute inset-0 rounded-2xl border border-[rgba(0,0,0,0.07)] bg-[rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_18px_32px_-24px_rgba(0,0,0,0.7)]" />
+          <div className="absolute left-1/2 top-1.5 h-[2px] w-6 -translate-x-1/2 rounded-full bg-sidebar-primary shadow-[0_0_12px_rgba(0,0,0,0.06)]" />
         </>
       )}
     </Link>
@@ -116,7 +116,7 @@ function MobileBottomNav({ items }: { items?: MobileNavItem[] }) {
       className={cn('fixed inset-x-0 bottom-0 z-40 md:hidden', 'px-3 pb-safe')}
       aria-label="Dashboard navigation"
     >
-      <div className="flex h-[4.35rem] items-center justify-around rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.046_0.008_260_/_0.94)] px-2 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_18px_40px_-24px_rgba(0,0,0,0.84)]">
+      <div className="flex h-[4.35rem] items-center justify-around rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-2 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_18px_40px_-24px_rgba(0,0,0,0.84)]">
         {navItems.map((item) => (
           <TabItem key={item.label} item={item} />
         ))}

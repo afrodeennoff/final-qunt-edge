@@ -32,7 +32,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
 
 const sheetVariants = cva(
-  'fixed z-50 gap-4 border border-[oklch(0.65_0.22_260_/_0.14)] bg-[linear-gradient(180deg,oklch(0.115_0.018_264_/_0.97)_0%,oklch(0.096_0.015_264_/_0.96)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_32px_64px_-20px_rgba(0,0,0,0.84)] p-6 transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-200 data-[state=open]:duration-300',
+  'fixed z-50 gap-4 border border-[rgba(0,0,0,0.08)] bg-[var(--card)] shadow-[inset_0_1px_0_rgba(0,0,0,0.05),0_32px_64px_-20px_rgba(0,0,0,0.84)] p-6 transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-200 data-[state=open]:duration-300',
   {
     variants: {
       side: {
@@ -68,7 +68,7 @@ const SheetContent = React.forwardRef<
       {...props}
     >
       {children}
-      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-xl border frost-border-7 frost-bg p-1.5 opacity-75 ring-offset-background transition-[opacity,background-color,border-color] duration-200 hover:frost-bg-hover hover:opacity-100 hover:frost-border-12 focus:outline-none focus:ring-2 focus:ring-[oklch(0.65_0.22_260_/_0.24)] focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-[oklch(0.052_0.009_260_/_0.76)]">
+      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-xl border frost-border-7 frost-bg p-1.5 opacity-75 ring-offset-background transition-[opacity,background-color,border-color] duration-200 hover:frost-bg-hover hover:opacity-100 hover:frost-border-12 focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0.10)] focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-[var(--card)]">
         <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
         <span className="sr-only">Close</span>
       </SheetPrimitive.Close>

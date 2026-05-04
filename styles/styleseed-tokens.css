@@ -1,9 +1,9 @@
 /* StyleSeed Design Engine Tokens */
-/* Brand: tweakcn Deep Purple aligned */
+/* Brand: macOS Native aligned */
 @property --brand {
   syntax: '<color>';
   inherits: true;
-  initial-value: #9066e8;
+  initial-value: #0066CC;
 }
 
 :root {
@@ -25,43 +25,21 @@
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
 
-  /* SHADOWS (premium multi-layer depth) */
-  --shadow-card: 0 1px 2px rgba(0,0,0,0.2),
-                 inset 0 1px 2px rgba(255,255,255,0.1);
-  --shadow-card-hover: 0 2px 4px rgba(0,0,0,0.25),
-                       inset 0 1px 2px rgba(255,255,255,0.1);
-  --shadow-elevated: 0 4px 8px rgba(0,0,0,0.3),
-                     inset 0 1px 2px rgba(255,255,255,0.1);
-  --shadow-modal: 0 8px 16px rgba(0,0,0,0.4),
-                  inset 0 1px 2px rgba(255,255,255,0.1);
-  --shadow-glow-cobalt: 0 0 32px rgba(145, 108, 232, 0.30),
-                        0 0 8px rgba(145, 108, 232, 0.20);
-  --shadow-glow-emerald: 0 0 24px rgba(82, 216, 122, 0.25);
-  --shadow-glow-crimson: 0 0 24px rgba(224, 72, 72, 0.25);
+  /* SHADOWS (macOS native depth) */
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-card-hover: 0 4px 12px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-elevated: 0 8px 24px rgba(0,0,0,0.09), 0 4px 8px rgba(0,0,0,0.04);
+  --shadow-modal: 0 20px 48px rgba(0,0,0,0.14), 0 8px 16px rgba(0,0,0,0.06);
+  --shadow-glow-cobalt: 0 0 24px rgba(0,102,204,0.15), 0 0 8px rgba(0,102,204,0.10);
+  --shadow-glow-emerald: 0 0 24px rgba(26,127,55,0.15);
+  --shadow-glow-crimson: 0 0 24px rgba(192,57,43,0.15);
 
-  /* TEXT TOKENS — reference canonical globals.css tokens to avoid conflicts.
-   * NOTE: --text-strong, --text-primary, etc. are also defined in globals.css.
-   * StyleSeed-specific tokens are prefixed --ss-* to avoid collisions. */
-
-  /* SURFACE TOKENS (4-tier depth hierarchy, 4% lightness steps) — hex fallbacks */
-  --surface-page: #000000;         /* Base — deepest, page bg */
-  --surface-card: #080808;     /* Cards — slightly lighter */
-  --surface-subtle: #0e0e0e;   /* Elevated surfaces */
-  --surface-muted: #151515;    /* Highest elevation */
-  --surface-elevated: #1a1a1a; /* Overlay/modal level */
-  --surface-overlay: #222222;  /* Popovers, top-level */
-  --brand-tint: rgba(145, 108, 255, 0.08);
-}
-
-/* OKLCH overrides for StyleSeed surface tokens — precise colors for modern browsers */
-@supports (color: oklch(0 0 0)) {
-  :root {
-    --surface-page: oklch(0 0 0);
-    --surface-card: oklch(0.038 0 0);
-    --surface-subtle: oklch(0.058 0 0);
-    --surface-muted: oklch(0.085 0 0);
-    --surface-elevated: oklch(0.105 0 0);
-    --surface-overlay: oklch(0.135 0 0);
-    --brand-tint: oklch(0.6083 0.2172 297.1153 / 0.08);
-  }
+  /* SURFACE TOKENS — macOS light hierarchy */
+  --surface-page: #F2F2F7;
+  --surface-card: #FFFFFF;
+  --surface-subtle: #F5F5F7;
+  --surface-muted: #EBEBED;
+  --surface-elevated: #FFFFFF;
+  --surface-overlay: #FFFFFF;
+  --brand-tint: rgba(0,102,204,0.06);
 }

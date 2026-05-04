@@ -165,7 +165,7 @@ export default function TeamNavbar() {
  <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] list-none">
  <li className="row-span-3">
  <NavigationMenuLink asChild>
- <Link className="flex h-full w-full select-none flex-col justify-end rounded-md bg-[linear-gradient(180deg,oklch(0.07_0.012_260_/_0.9)_0%,oklch(0.056_0.01_260_/_0.84)_100%)] p-6 no-underline outline-hidden focus:shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.06),0_8px_32px_-8px_rgba(0,0,0,0.4)]" href="/teams">
+ <Link className="flex h-full w-full select-none flex-col justify-end rounded-md bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] p-6 no-underline outline-hidden focus:shadow-[inset_0_1px_0_rgba(0,0,0,0.04),0_8px_32px_-8px_rgba(0,0,0,0.4)]" href="/teams">
  <Logo className='w-6 h-6' />
  <div className="mb-2 mt-4 text-lg font-medium">
  Qunt Edge Enterprise

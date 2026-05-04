@@ -159,7 +159,7 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
         <ArrowLeft className="h-3.5 w-3.5" />
         Leaderboard
       </Link>
-      <div className="rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] p-8 text-center shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
+      <div className="rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] p-8 text-center shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
         <p className="text-4xl font-semibold text-muted-foreground/40">404</p>
         <h1 className="mt-3 text-xl font-semibold text-foreground">{slug}</h1>
         <p className="mt-2 text-sm text-muted-foreground">This public trader profile is unavailable or has been set to private.</p>
@@ -190,7 +190,7 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
     ? 'bg-semantic-success/8 border-semantic-success/15'
     : snapshot.totalPnl < 0
       ? 'bg-semantic-error/8 border-semantic-error/15'
-      : 'bg-muted/20 border-[oklch(0.65_0.22_260_/_0.09)]'
+      : 'bg-muted/20 border-[rgba(0,0,0,0.06)]'
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-4 py-10 sm:py-14 lg:py-16">
@@ -200,7 +200,7 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
       <nav>
         <Link
           href={`/${locale}/leaderboard`}
-          className="group inline-flex items-center gap-2 rounded-[0.95rem] px-3 py-1.5 text-sm font-medium text-muted-foreground transition-[color,background-color] duration-200 hover:bg-[oklch(0.052_0.009_260_/_0.56)] hover:text-foreground"
+          className="group inline-flex items-center gap-2 rounded-[0.95rem] px-3 py-1.5 text-sm font-medium text-muted-foreground transition-[color,background-color] duration-200 hover:bg-[var(--card)] hover:text-foreground"
         >
           <ArrowLeft className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
           Leaderboard
@@ -208,18 +208,18 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
       </nav>
 
       {/* ---- Profile Header ---- */}
-      <section className="relative overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
+      <section className="relative overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-primary/[0.04] to-transparent" />
         <div className="relative p-6 sm:p-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex min-w-0 items-center gap-5">
               <div className="relative">
-                <Avatar className="h-18 w-18 shrink-0 rounded-2xl border-2 border-primary/20 bg-[oklch(0.058_0.011_260_/_0.82)] sm:h-20 sm:w-20">
+                <Avatar className="h-18 w-18 shrink-0 rounded-2xl border-2 border-primary/20 bg-[var(--card)] sm:h-20 sm:w-20">
                   <AvatarFallback className="rounded-2xl bg-primary/10 text-base font-semibold text-primary sm:text-lg">
                     {snapshot.username.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[oklch(0.054_0.01_260)] bg-semantic-success text-[10px] font-bold text-white">
+                <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[var(--card)] bg-semantic-success text-[10px] font-bold text-white">
                   W
                 </div>
               </div>
@@ -231,7 +231,7 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
                   Public Trading Profile
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.058_0.011_260_/_0.8)] px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(0,0,0,0.08)] bg-[var(--card)] px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
                     <TrendingUp className="h-3 w-3" />
                     {snapshot.totalTrades.toLocaleString()} trades
                   </span>
@@ -239,7 +239,7 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
                     'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em]',
                     snapshot.winRate >= 50
                       ? 'border border-semantic-success/20 bg-semantic-success/8 text-semantic-success'
-                      : 'border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.058_0.011_260_/_0.8)] text-muted-foreground'
+                      : 'border border-[rgba(0,0,0,0.08)] bg-[var(--card)] text-muted-foreground'
                   )}>
                     <Target className="h-3 w-3" />
                     {snapshot.winRate.toFixed(1)}% win rate
@@ -259,7 +259,7 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-3 py-1.5 text-xs font-medium text-foreground transition-[background-color,border-color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.068_0.012_260_/_0.92)]"
+                      className="inline-flex items-center gap-1.5 rounded-[0.95rem] border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-3 py-1.5 text-xs font-medium text-foreground transition-[background-color,border-color,box-shadow] duration-200 hover:border-[rgba(0,0,0,0.06)] hover:bg-[var(--card)]"
                     >
                       <Icon className="h-3.5 w-3.5 text-muted-foreground" />
                       {label}
@@ -286,28 +286,28 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
           label="Win Rate"
           value={`${snapshot.winRate.toFixed(1)}%`}
           className={snapshot.winRate >= 50 ? 'text-semantic-success' : 'text-foreground'}
-          accentClassName={snapshot.winRate >= 50 ? 'bg-semantic-success/8 border-semantic-success/15' : 'bg-muted/20 border-[oklch(0.65_0.22_260_/_0.09)]'}
+          accentClassName={snapshot.winRate >= 50 ? 'bg-semantic-success/8 border-semantic-success/15' : 'bg-muted/20 border-[rgba(0,0,0,0.06)]'}
         />
         <MetricCard
           icon={<BarChart3 className="h-4 w-4" />}
           label="Avg. Trade"
           value={formatCurrency(snapshot.avgPnl)}
           className={snapshot.avgPnl > 0 ? 'text-semantic-success' : snapshot.avgPnl < 0 ? 'text-semantic-error' : 'text-foreground'}
-          accentClassName={snapshot.avgPnl > 0 ? 'bg-semantic-success/8 border-semantic-success/15' : snapshot.avgPnl < 0 ? 'bg-semantic-error/8 border-semantic-error/15' : 'bg-muted/20 border-[oklch(0.65_0.22_260_/_0.09)]'}
+          accentClassName={snapshot.avgPnl > 0 ? 'bg-semantic-success/8 border-semantic-success/15' : snapshot.avgPnl < 0 ? 'bg-semantic-error/8 border-semantic-error/15' : 'bg-muted/20 border-[rgba(0,0,0,0.06)]'}
         />
         <MetricCard
           icon={<TrendingUp className="h-4 w-4" />}
           label="Total Trades"
           value={snapshot.totalTrades.toLocaleString()}
           className="text-foreground"
-          accentClassName="bg-muted/20 border-[oklch(0.65_0.22_260_/_0.09)]"
+          accentClassName="bg-muted/20 border-[rgba(0,0,0,0.06)]"
         />
       </section>
 
       {/* ---- Calendar + Recent Trades ---- */}
       <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <article className="overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
-          <div className="flex items-center gap-2 border-b border-[oklch(0.65_0.22_260_/_0.08)] px-5 py-3.5">
+        <article className="overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
+          <div className="flex items-center gap-2 border-b border-[rgba(0,0,0,0.06)] px-5 py-3.5">
             <Calendar className="h-4 w-4 text-primary" />
             <h2 className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Performance Calendar</h2>
           </div>
@@ -315,14 +315,14 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
             <CalendarGrid dayPnl={snapshot.dayPnl} />
           </div>
         </article>
-        <article className="overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
-          <div className="flex items-center gap-2 border-b border-[oklch(0.65_0.22_260_/_0.08)] px-5 py-3.5">
+        <article className="overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
+          <div className="flex items-center gap-2 border-b border-[rgba(0,0,0,0.06)] px-5 py-3.5">
             <TrendingUp className="h-4 w-4 text-primary" />
             <h2 className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Recent Trades</h2>
           </div>
-          <div className="divide-y divide-[oklch(0.65_0.22_260_/_0.06)]">
+          <div className="divide-y divide-[rgba(0,0,0,0.04)]">
             {snapshot.recentTrades.map((trade) => (
-              <div key={trade.id} className="flex items-center justify-between gap-3 px-5 py-3 transition-[background-color] duration-150 hover:bg-[oklch(0.068_0.012_260_/_0.5)]">
+              <div key={trade.id} className="flex items-center justify-between gap-3 px-5 py-3 transition-[background-color] duration-150 hover:bg-[var(--card)]">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold tracking-tight text-foreground">{trade.symbol}</p>
                   <p className="mt-0.5 text-[11px] text-muted-foreground">{format(trade.closeTime, 'MMM d, yyyy')}</p>
@@ -340,7 +340,7 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
       </section>
 
       {/* ---- Footer CTA ---- */}
-      <section className="relative overflow-hidden rounded-2xl border border-primary/15 bg-[linear-gradient(135deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.058_0.014_260_/_0.9)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_18px_32px_-24px_rgba(0,0,0,0.64)]">
+      <section className="relative overflow-hidden rounded-2xl border border-primary/15 bg-[linear-gradient(135deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_18px_32px_-24px_rgba(0,0,0,0.64)]">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-primary/[0.03] to-transparent" />
         <div className="relative flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div className="space-y-2">
@@ -354,7 +354,7 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
           <div className="flex shrink-0 flex-wrap gap-3">
             <Link
               href={`/${locale}/leaderboard`}
-              className="inline-flex items-center gap-2 rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-4 py-2.5 text-sm font-medium text-foreground transition-[background-color,border-color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.068_0.012_260_/_0.92)]"
+              className="inline-flex items-center gap-2 rounded-[0.95rem] border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-4 py-2.5 text-sm font-medium text-foreground transition-[background-color,border-color,box-shadow] duration-200 hover:border-[rgba(0,0,0,0.06)] hover:bg-[var(--card)]"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Leaderboard
@@ -387,7 +387,7 @@ function MetricCard({
   accentClassName: string
 }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
+    <div className="relative overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
       <div className="flex items-start justify-between p-5">
         <div className="space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{label}</p>

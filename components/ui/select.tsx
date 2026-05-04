@@ -20,8 +20,8 @@ const SelectTrigger = React.forwardRef<
     ref={ref}
     data-slot="select-trigger"
     className={cn(
-      'type-body-sm flex h-10 w-full items-center justify-between rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.72)] px-3.5 py-2 text-left text-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] transition-[background-color,border-color,box-shadow] duration-200 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
-      'focus-visible:border-[oklch(0.65_0.22_260_/_0.14)] focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.22_260_/_0.24)]',
+      'type-body-sm flex h-10 w-full items-center justify-between rounded-[0.95rem] border border-border/7 bg-[hsl(var(--card)/0.72)] px-3.5 py-2 text-left text-foreground shadow-[inset_0_1px_0_hsl(var(--foreground)/0.025)] transition-[background-color,border-color,box-shadow] duration-200 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+      'focus-visible:border-border/14 focus-visible:ring-2 focus-visible:ring-ring/30',
       error &&
         'border-destructive/60 focus-visible:border-destructive/70 focus-visible:ring-destructive/20',
       className,
@@ -74,7 +74,7 @@ const SelectContent = React.forwardRef<
       ref={ref}
       data-slot="select-content"
       className={cn(
-        'relative z-50 max-h-96 min-w-32 overflow-hidden rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.08)] bg-[linear-gradient(180deg,oklch(0.062_0.01_260_/_0.78)_0%,oklch(0.05_0.009_260_/_0.72)_100%)] text-popover-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_22px_40px_-30px_rgba(0,0,0,0.7)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+        'relative z-50 max-h-96 min-w-32 overflow-hidden rounded-[0.95rem] border border-border/8 bg-[linear-gradient(180deg,hsl(var(--card)/0.78)_0%,hsl(var(--card)/0.72)_100%)] text-popover-foreground shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03),0_22px_40px_-30px_rgba(0,0,0,0.7)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         position === 'popper' &&
           'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
         className,
@@ -119,7 +119,7 @@ const SelectItem = React.forwardRef<
     ref={ref}
     data-slot="select-item"
     className={cn(
-      'type-body-sm relative flex w-full cursor-default select-none items-center rounded-lg py-2 pl-6 pr-2 text-foreground outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-[oklch(0.052_0.009_260_/_0.7)] focus:text-foreground hover:bg-[oklch(0.052_0.009_260_/_0.7)] hover:text-foreground data-[state=checked]:bg-[oklch(0.65_0.22_260_/_0.12)] data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
+      'type-body-sm relative flex w-full cursor-default select-none items-center rounded-lg py-2 pl-6 pr-2 text-foreground outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-[hsl(var(--card)/0.7)] focus:text-foreground hover:bg-[hsl(var(--card)/0.7)] hover:text-foreground data-[state=checked]:bg-[hsl(var(--foreground)/0.08)] data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
       className,
     )}
     {...props}

@@ -8,16 +8,16 @@ export default function ProblemStatement() {
       id="problem"
       className="py-24 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background border-t border-border/30 relative"
     >
-      <div className="mx-6 overflow-hidden rounded-2xl border frost-border-7 frost-gradient-card p-6 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
+      <div className="mx-6 overflow-hidden rounded-2xl border frost-border-7 frost-gradient-card p-6 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-start">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="sticky top-20 rounded-2xl border frost-border-7 bg-[oklch(0.052_0.009_260_/_0.68)] p-6 lg:top-32"
+            className="sticky top-20 rounded-2xl border frost-border-7 bg-[var(--card)] p-6 lg:top-32"
           >
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.68)] px-3 py-1 sm:mb-8">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[rgba(0,0,0,0.03)] bg-[var(--card)] px-3 py-1 sm:mb-8">
               <div className="w-1.5 h-1.5 rounded-full bg-foreground/60 animate-pulse"></div>
               <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-fg-secondary">
                 System Failure Detected
@@ -73,9 +73,9 @@ export default function ProblemStatement() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group relative rounded-xl border frost-border-7 bg-[oklch(0.052_0.009_260_/_0.68)] p-5 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 hover:frost-border-10"
+                className="group relative rounded-xl border frost-border-7 bg-[var(--card)] p-5 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 hover:frost-border-10"
               >
-                <div className="relative h-full overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.06)] frost-bg-dim p-4 transition-colors group-hover:frost-border-10 sm:p-6">
+                <div className="relative h-full overflow-hidden rounded-xl border border-[rgba(0,0,0,0.03)] frost-bg-dim p-4 transition-colors group-hover:frost-border-10 sm:p-6">
                   <div className="absolute right-3 top-3 text-[8px] font-mono text-foreground/80 transition-colors group-hover:text-fg-primary sm:right-4 sm:top-4 sm:text-[9px]">
                     {item.code}
                   </div>

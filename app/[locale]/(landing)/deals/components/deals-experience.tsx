@@ -74,13 +74,13 @@ const TABS: ReadonlyArray<{ id: string; label: string }> = [
 
 const DEALS_SPOTLIGHT_AUTO_SLIDE_MS = 5000
 const dealsPanelClassName =
-  'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]'
+  'rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]'
 const dealsInsetPanelClassName =
-  'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent shadow-none'
+  'rounded-2xl border border-[rgba(0,0,0,0.08)] bg-transparent shadow-none'
 const dealsChipClassName =
-  'rounded-full border border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent'
+  'rounded-full border border-[rgba(0,0,0,0.08)] bg-transparent'
 const dealsGhostButtonClassName =
-  'inline-flex items-center justify-center gap-2 rounded-full border border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent px-4 py-2.5 text-sm font-medium text-foreground transition-[background-color,border-color,color,transform,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[hsl(var(--primary)/0.11)]'
+  'inline-flex items-center justify-center gap-2 rounded-full border border-[rgba(0,0,0,0.08)] bg-transparent px-4 py-2.5 text-sm font-medium text-foreground transition-[background-color,border-color,color,transform,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[rgba(0,0,0,0.06)] hover:bg-[hsl(var(--primary)/0.11)]'
 const dealsPrimaryButtonClassName =
   'inline-flex items-center justify-center gap-2 rounded-[0.95rem] border border-primary/18 bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] transition-[background-color,transform,box-shadow,filter] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:bg-primary/92 hover:shadow-[0_2px_4px_rgba(0,0,0,0.18)]'
 
@@ -120,9 +120,9 @@ function DealsTabBar({
   onTabClick: (id: string) => void
 }) {
   return (
-    <nav className="sticky top-16 z-40 border-y border-[oklch(0.65_0.22_260_/_0.09)] bg-background/95">
+    <nav className="sticky top-16 z-40 border-y border-[rgba(0,0,0,0.06)] bg-background/95">
       <div className="mx-auto max-w-[1360px] overflow-hidden px-4 sm:px-6 md:px-8 lg:px-12">
-        <div className="my-3 flex gap-1.5 overflow-x-auto overflow-y-hidden rounded-full border border-[oklch(0.65_0.22_260_/_0.09)] bg-background/30 p-1.5 scrollbar-none">
+        <div className="my-3 flex gap-1.5 overflow-x-auto overflow-y-hidden rounded-full border border-[rgba(0,0,0,0.06)] bg-background/30 p-1.5 scrollbar-none">
           {TABS.map((tab) => (
             <button
               key={tab.id}
@@ -467,7 +467,7 @@ function DealsBoard({
   const faqItems = faqs.length > 0 ? faqs : faqFallbackItems
 
   return (
-    <div className="min-h-screen overflow-hidden bg-[radial-gradient(900px_320px_at_15%_0%,hsl(var(--primary)/0.16),transparent_72%),radial-gradient(860px_280px_at_85%_2%,hsl(var(--primary)/0.10),transparent_72%),linear-gradient(180deg,oklch(0_0_0)_0%,oklch(0.08_0.02_260)_24%,oklch(0_0_0)_100%)]">
+    <div className="min-h-screen overflow-hidden bg-[radial-gradient(900px_320px_at_15%_0%,hsl(var(--primary)/0.16),transparent_72%),radial-gradient(860px_280px_at_85%_2%,hsl(var(--primary)/0.10),transparent_72%),linear-gradient(180deg,oklch(0_0_0)_0%,var(--card)_24%,oklch(0_0_0)_100%)]">
       <UnifiedPageShell
         widthClassName="max-w-[1360px]"
         density="compact"
@@ -605,7 +605,7 @@ function DealsTabSections({
             <div
               className={cn(
                 dealsInsetPanelClassName,
-                'p-5 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260_/_0.13)]',
+                'p-5 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[rgba(0,0,0,0.06)]',
               )}
             >
               <h3 className="text-base font-bold text-foreground">1. Set max month-one spend</h3>
@@ -616,7 +616,7 @@ function DealsTabSections({
             <div
               className={cn(
                 dealsInsetPanelClassName,
-                'p-5 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260_/_0.13)]',
+                'p-5 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[rgba(0,0,0,0.06)]',
               )}
             >
               <h3 className="text-base font-bold text-foreground">2. Pick executable drawdown</h3>
@@ -627,7 +627,7 @@ function DealsTabSections({
             <div
               className={cn(
                 dealsInsetPanelClassName,
-                'p-5 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260_/_0.13)]',
+                'p-5 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[rgba(0,0,0,0.06)]',
               )}
             >
               <h3 className="text-base font-bold text-foreground">3. Align payout cadence</h3>
@@ -1014,7 +1014,7 @@ function BiggestDealsCarousel({
 function BackgroundDealTeaser({ deal, align }: { deal: DealItem; align: 'left' | 'right' }) {
   return (
     <div
-      className={`w-[360px] overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-transparent px-6 py-6 opacity-20 ${
+      className={`w-[360px] overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.06)] bg-transparent px-6 py-6 opacity-20 ${
         align === 'left' ? 'translate-x-[-56%]' : 'translate-x-[56%]'
       }`}
     >
@@ -1143,7 +1143,7 @@ function BrowseDealsSection({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-2xl border border-dashed border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent p-8 text-center text-sm leading-relaxed text-muted-foreground">
+        <div className="mt-6 rounded-2xl border border-dashed border-[rgba(0,0,0,0.08)] bg-transparent p-8 text-center text-sm leading-relaxed text-muted-foreground">
           {filteredDeals.length === 0
             ? 'No deals match the current filter stack. Try widening the firm or market selection.'
             : 'All matching deals are already highlighted above.'}
@@ -1295,7 +1295,7 @@ function DealsFilterPanel({
               value={search}
               onChange={(event) => onSearchChange(event.target.value)}
               placeholder="Search by firm, coupon, or platform..."
-              className="h-10 w-full rounded-full border border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent pl-11 pr-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] placeholder:text-muted-foreground/60 focus:border-primary/35"
+              className="h-10 w-full rounded-full border border-[rgba(0,0,0,0.08)] bg-transparent pl-11 pr-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] placeholder:text-muted-foreground/60 focus:border-primary/35"
             />
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex">
@@ -1318,7 +1318,7 @@ function DealsFilterPanel({
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   selectedDiscount === option.value
                     ? 'border-primary/35 bg-primary text-primary-foreground shadow-[0_12px_20px_-14px_hsl(var(--primary)/0.75)]'
-                    : 'border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent text-muted-foreground hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:text-foreground'
+                    : 'border-[rgba(0,0,0,0.08)] bg-transparent text-muted-foreground hover:border-[rgba(0,0,0,0.06)] hover:text-foreground'
                 }`}
               >
                 {option.label}
@@ -1334,7 +1334,7 @@ function DealsFilterPanel({
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   sortKey === item.key
                     ? 'border-primary/35 bg-primary text-primary-foreground shadow-[0_12px_20px_-14px_hsl(var(--primary)/0.75)]'
-                    : 'border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent text-muted-foreground hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:text-foreground'
+                    : 'border-[rgba(0,0,0,0.08)] bg-transparent text-muted-foreground hover:border-[rgba(0,0,0,0.06)] hover:text-foreground'
                 }`}
               >
                 {item.label}
@@ -1344,7 +1344,7 @@ function DealsFilterPanel({
         </div>
 
         {hasActiveFilters ? (
-          <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-dashed border-[oklch(0.65_0.22_260_/_0.14)] bg-primary/[0.05] px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+          <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-dashed border-[rgba(0,0,0,0.08)] bg-primary/[0.05] px-4 py-3 text-sm leading-relaxed text-muted-foreground">
             <span>
               The deal board is narrowed right now. Reset to return to the full live tape.
             </span>
@@ -1377,7 +1377,7 @@ function DealsFilterPanel({
               <Link
                 key={firm.id}
                 href={getFirmHrefFromPrefix(localePrefix, firm.slug)}
-                className="flex items-center justify-between rounded-full border border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent px-3 py-2 text-sm transition-[background-color,border-color,color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[hsl(var(--primary)/0.09)]"
+                className="flex items-center justify-between rounded-full border border-[rgba(0,0,0,0.08)] bg-transparent px-3 py-2 text-sm transition-[background-color,border-color,color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[rgba(0,0,0,0.06)] hover:bg-[hsl(var(--primary)/0.09)]"
               >
                 <span className="font-medium text-foreground">{firm.name}</span>
                 <span className="text-muted-foreground">
@@ -1466,7 +1466,7 @@ function DealCard({
   const isExternalClaim = Boolean(deal.claimUrl)
 
   return (
-    <div className="group overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] p-5 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)] transition-[transform,box-shadow,border-color,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:shadow-[0_16px_40px_-24px_rgba(0,0,0,0.68)]">
+    <div className="group overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] p-5 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)] transition-[transform,box-shadow,border-color,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[rgba(0,0,0,0.06)] hover:shadow-[0_16px_40px_-24px_rgba(0,0,0,0.68)]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div
@@ -1482,7 +1482,7 @@ function DealCard({
             {deal.platform} • {deal.payoutModel}
           </p>
         </div>
-        <div className="rounded-2xl border border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent px-3 py-2 text-right">
+        <div className="rounded-2xl border border-[rgba(0,0,0,0.08)] bg-transparent px-3 py-2 text-right">
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Discount</p>
           <p className="mt-1 text-xl font-bold text-foreground">{deal.discountPercent}%</p>
         </div>
@@ -1598,7 +1598,7 @@ function SelectLike<T extends string>({
     <select
       value={value}
       onChange={(event) => onChange(event.target.value as T)}
-      className="h-10 rounded-full border border-[oklch(0.65_0.22_260_/_0.14)] bg-transparent px-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:border-primary/35"
+      className="h-10 rounded-full border border-[rgba(0,0,0,0.08)] bg-transparent px-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:border-primary/35"
     >
       {options.map((option) => (
         <option key={option} value={option}>

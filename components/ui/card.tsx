@@ -68,7 +68,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           variant === 'gradient-border' &&
             'border-primary/22 bg-card shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_18px_32px_-24px_rgba(0,0,0,0.64)]',
           variant === 'frost' &&
-            'rounded-[var(--radius-lg)] bg-transparent border border-border/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_0_0_1px_rgba(139,92,246,0.04)]',
+            'rounded-[var(--radius-lg)] bg-transparent border border-border/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_0_0_1px_rgba(0,102,204,0.04)]',
           accent && accentClassMap[accent],
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',

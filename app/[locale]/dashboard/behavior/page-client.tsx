@@ -179,7 +179,7 @@ export default function DashboardBehaviorPage() {
   return (
     <UnifiedPageShell density="compact">
       <div className="space-y-6">
-        <Card className="rounded-2xl border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.72)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]">
+        <Card className="rounded-2xl border-[rgba(0,0,0,0.06)] bg-[var(--card)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03)]">
           <CardHeader className="pb-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="space-y-2">

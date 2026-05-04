@@ -57,8 +57,8 @@ export default function AuthenticationPageClient() {
       <div className="relative mx-auto flex min-h-screen w-full items-center justify-center px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <div className={cn(unifiedHeroPanelClassName, 'w-full', MARKETING_SHELL_WIDTH)}>
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.06fr)_minmax(460px,0.94fr)]">
-            <section className="relative overflow-hidden p-6 sm:p-8 lg:border-r lg:border-[oklch(0.65_0.22_260_/_0.085)] lg:p-10 xl:p-12">
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[oklch(0.65_0.22_260_/_0.12)] to-transparent" />
+            <section className="relative overflow-hidden p-6 sm:p-8 lg:border-r lg:border-[rgba(0,0,0,0.06)] lg:p-10 xl:p-12">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(0,0,0,0.08)] to-transparent" />
 
               <div className="flex items-center justify-between gap-3">
                 <Link
@@ -76,7 +76,7 @@ export default function AuthenticationPageClient() {
 
               <div className="auth-entrance-1 mt-10 max-w-[39rem] lg:mt-14">
                 <span className={unifiedSectionEyebrowClassName}>Qunt Edge</span>
-                <div className="mt-4 inline-flex items-center gap-3 rounded-2xl border border-[oklch(0.65_0.22_260_/_0.085)] bg-[linear-gradient(180deg,oklch(0.07_0.012_260_/_0.9)_0%,oklch(0.056_0.01_260_/_0.84)_100%)] px-4 py-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_14px_28px_-24px_rgba(0,0,0,0.64)]">
+                <div className="mt-4 inline-flex items-center gap-3 rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] px-4 py-3 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_14px_28px_-24px_rgba(0,0,0,0.64)]">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary/18 bg-primary/10 text-primary">
                     <Logo className="h-4.5 w-4.5 fill-current" />
                   </div>
@@ -119,7 +119,7 @@ export default function AuthenticationPageClient() {
               </div>
             </section>
 
-            <section className="flex items-center justify-center border-t border-[oklch(0.65_0.22_260_/_0.085)] p-6 sm:p-8 lg:border-t-0 lg:p-10 xl:p-12">
+            <section className="flex items-center justify-center border-t border-[rgba(0,0,0,0.06)] p-6 sm:p-8 lg:border-t-0 lg:p-10 xl:p-12">
               <div className="auth-entrance-2 mx-auto w-full max-w-[560px]">
                 <div className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
                   <div className="mb-5 flex items-start justify-between gap-4">
@@ -160,14 +160,14 @@ export default function AuthenticationPageClient() {
                     {t('authentication.termsAndPrivacy.prefix')}{' '}
                     <Link
                       href={`/${locale}/terms`}
-                      className="text-foreground/70 underline decoration-[oklch(0.65_0.22_260_/_0.2)] underline-offset-4 hover:text-foreground"
+                      className="text-foreground/70 underline decoration-[rgba(0,0,0,0.06)] underline-offset-4 hover:text-foreground"
                     >
                       {t('authentication.termsAndPrivacy.terms')}
                     </Link>{' '}
                     {t('authentication.termsAndPrivacy.and')}{' '}
                     <Link
                       href={`/${locale}/privacy`}
-                      className="text-foreground/70 underline decoration-[oklch(0.65_0.22_260_/_0.2)] underline-offset-4 hover:text-foreground"
+                      className="text-foreground/70 underline decoration-[rgba(0,0,0,0.06)] underline-offset-4 hover:text-foreground"
                     >
                       {t('authentication.termsAndPrivacy.privacy')}
                     </Link>

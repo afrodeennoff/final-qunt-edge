@@ -104,7 +104,7 @@ export function TermsPageClient() {
           <p>{t('terms.sections.changesTerms.content')}</p>
         </LegalSection>
 
-        <p className="border-t border-[oklch(0.65_0.22_260_/_0.14)] pt-6 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+        <p className="border-t border-[rgba(0,0,0,0.08)] pt-6 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
           {t('terms.lastUpdated')}
           {new Date().toISOString().split('T')[0]}
         </p>

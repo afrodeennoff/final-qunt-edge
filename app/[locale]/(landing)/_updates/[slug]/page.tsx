@@ -183,7 +183,7 @@ export default async function Page({ params }: PageProps) {
         {/* Back link */}
         <Link
           href={`/${locale}/updates`}
-          className="mb-6 inline-flex items-center gap-2 rounded-lg border frost-border-7 bg-[oklch(0.052_0.009_260_/_0.62)] px-3 py-1.5 text-xs font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:frost-border-12 hover:bg-[oklch(0.056_0.009_260_/_0.72)] hover:text-foreground"
+          className="mb-6 inline-flex items-center gap-2 rounded-lg border frost-border-7 bg-[var(--card)] px-3 py-1.5 text-xs font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:frost-border-12 hover:bg-[var(--card)] hover:text-foreground"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           All Updates
@@ -220,7 +220,7 @@ export default async function Page({ params }: PageProps) {
         />
 
         {meta.image && (
-          <div className="overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)]">
+          <div className="overflow-hidden rounded-xl border border-[rgba(0,0,0,0.06)]">
             <Image
               src={meta.image}
               alt={meta.title}
@@ -237,19 +237,19 @@ export default async function Page({ params }: PageProps) {
           <div
             className="prose dark:prose-invert max-w-none
             prose-pre:p-0 prose-pre:bg-transparent
-            prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-[oklch(0.65_0.22_260_/_0.06)] prose-code:text-muted-foreground
-            dark:prose-code:bg-[oklch(0.65_0.22_260_/_0.08)] dark:prose-code:text-muted-foreground/80
+            prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-[rgba(0,0,0,0.04)] prose-code:text-muted-foreground
+            dark:prose-code:bg-[rgba(0,0,0,0.06)] dark:prose-code:text-muted-foreground/80
             prose-table:w-full prose-table:mt-6 prose-table:mb-8
-            prose-thead:border-b prose-thead:border-[oklch(0.65_0.22_260_/_0.08)]
+            prose-thead:border-b prose-thead:border-[rgba(0,0,0,0.06)]
             prose-th:px-6 prose-th:py-3 prose-th:text-left prose-th:font-semibold
-            prose-td:px-6 prose-td:py-3 prose-td:border-b prose-td:border-[oklch(0.65_0.22_260_/_0.06)]
-            prose-tr:transition-[background-color] prose-tr:hover:bg-[oklch(0.65_0.22_260_/_0.04)]
+            prose-td:px-6 prose-td:py-3 prose-td:border-b prose-td:border-[rgba(0,0,0,0.04)]
+            prose-tr:transition-[background-color] prose-tr:hover:bg-[rgba(0,0,0,0.03)]
             prose-headings:text-foreground prose-headings:tracking-tight
             prose-p:text-muted-foreground prose-p:leading-relaxed
-            prose-a:text-foreground prose-a:underline prose-a:decoration-[oklch(0.65_0.22_260_/_0.3)] prose-a:underline-offset-4 hover:prose-a:decoration-[oklch(0.65_0.22_260_/_0.6)]
+            prose-a:text-foreground prose-a:underline prose-a:decoration-[rgba(0,0,0,0.06)] prose-a:underline-offset-4 hover:prose-a:decoration-[rgba(0,0,0,0.06)]
             prose-strong:text-foreground
             prose-li:text-muted-foreground
-            prose-hr:border-[oklch(0.65_0.22_260_/_0.08)]"
+            prose-hr:border-[rgba(0,0,0,0.06)]"
             itemProp="articleBody"
           >
             {content}

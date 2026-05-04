@@ -38,7 +38,7 @@ export default async function NewsletterPage(props: {
       />
       <div className="mx-auto max-w-2xl space-y-6 sm:space-y-8">
         {isUnsubscribed && (
-          <Card className="border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.035)]">
+          <Card className="border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.06)]">
             <CardHeader className="space-y-3 sm:space-y-4">
               <div className="flex items-center gap-x-2.5">
                 <CheckCircle2 className="h-5 w-5 text-semantic-success shrink-0" />
@@ -56,7 +56,7 @@ export default async function NewsletterPage(props: {
           </Card>
         )}
 
-        <Card className="border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.035)]">
+        <Card className="border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.06)]">
           <CardHeader className="space-y-3 sm:space-y-4">
             <CardTitle className="text-lg sm:text-xl">{t('preferences.title')}</CardTitle>
             <p className="text-sm text-muted-foreground sm:text-base">

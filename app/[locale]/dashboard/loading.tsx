@@ -62,7 +62,7 @@ function SidebarSkeleton() {
           <Skeleton key={i} className="h-9 w-full" />
         ))}
       </div>
-      <div className="pt-4 border-t border-[oklch(0.65_0.22_260_/_0.075)] space-y-2">
+      <div className="pt-4 border-t border-[rgba(0,0,0,0.06)] space-y-2">
         {[1, 2, 3].map((i) => (
           <Skeleton key={i} className="h-8 w-full" />
         ))}
@@ -74,7 +74,7 @@ function SidebarSkeleton() {
 export default function DashboardLoading() {
   return (
     <div className="flex h-full">
-      <aside className="hidden lg:block w-64 border-r border-[oklch(0.65_0.22_260_/_0.075)] p-4">
+      <aside className="hidden lg:block w-64 border-r border-[rgba(0,0,0,0.06)] p-4">
         <SidebarSkeleton />
       </aside>
 
