@@ -41,48 +41,59 @@ export default function Navbar() {
   return (
     <header className="fixed left-0 right-0 top-0 z-50 flex justify-center px-4 pt-3 pointer-events-none">
       <div className={cn('mx-auto w-full', MARKETING_SHELL_WIDTH)}>
-        <div
+        <nav
           className={cn(
-            'pointer-events-auto relative flex items-center justify-between gap-4 h-12 w-full max-w-[1100px] rounded-[1.15rem] px-4 backdrop-blur-2xl backdrop-saturate-180 border border-border/50 bg-card/80 shadow-[0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-8px_rgba(0,0,0,0.40)]',
+            'pointer-events-auto relative flex items-center justify-between gap-3 h-12 w-full max-w-[1100px] rounded-full px-3 backdrop-blur-2xl backdrop-saturate-180',
+            'border border-[var(--mkt-border-subtle)] bg-[rgba(9,9,11,0.75)]',
+            'shadow-[0_1px_0_rgba(255,255,255,0.03),0_8px_24px_-12px_rgba(0,0,0,0.50)]',
           )}
         >
-          <Link href={`/${locale}`} className="group flex items-center gap-2.5 rounded-full px-2 py-1.5 transition-[background-color] duration-200 hover:bg-border/4">
-            <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-gradient-to-b from-primary/22 to-primary/12 border border-primary/16 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] text-primary">
-              <Logo className="h-4.5 w-4.5 fill-current" />
+          {/* Logo */}
+          <Link
+            href={`/${locale}`}
+            className="group flex items-center gap-2 rounded-full px-2 py-1.5 transition-[background-color] duration-200 hover:bg-[rgba(255,255,255,0.04)]"
+          >
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--mkt-accent-subtle)] border border-[var(--mkt-accent-border)] text-[var(--mkt-accent)]">
+              <Logo className="h-3.5 w-3.5 fill-current" />
             </div>
-            <span className="hidden text-[15px] font-semibold tracking-[-0.02em] text-foreground sm:inline-flex">
+            <span className="hidden text-[13px] font-semibold tracking-[-0.02em] text-[var(--mkt-text-primary)] sm:inline-flex">
               Qunt Edge
             </span>
           </Link>
 
-          <nav className="mx-auto hidden items-center gap-5 lg:flex">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={`/${locale}${link.href}`}
-                className={cn(
-                  'text-[13px] font-medium tracking-[-0.01em] transition-[color] duration-[120ms]',
-                  isActive(link.href)
-                    ? 'text-foreground'
-                    : 'text-muted-foreground hover:text-foreground',
-                )}
-              >
-                {link.title}
-              </Link>
-            ))}
-          </nav>
+          {/* Nav links — pill-shaped active indicator */}
+          <div className="mx-auto hidden items-center gap-0.5 lg:flex">
+            {links.map((link) => {
+              const active = isActive(link.href)
+              return (
+                <Link
+                  key={link.href}
+                  href={`/${locale}${link.href}`}
+                  className={cn(
+                    'relative rounded-full px-3 py-1.5 text-[12.5px] font-medium tracking-[-0.005em] transition-[color,background-color] duration-150',
+                    active
+                      ? 'bg-[rgba(255,255,255,0.06)] text-[var(--mkt-text-primary)]'
+                      : 'text-[var(--mkt-text-tertiary)] hover:text-[var(--mkt-text-secondary)] hover:bg-[rgba(255,255,255,0.03)]',
+                  )}
+                >
+                  {link.title}
+                </Link>
+              )
+            })}
+          </div>
 
-          <div className="ml-auto flex items-center gap-2.5">
+          {/* Actions */}
+          <div className="ml-auto flex items-center gap-2">
             <Link
               href={`/${locale}/authentication`}
-              className="h-8 px-3.5 text-[13px] rounded-full border border-[rgba(255,255,255,0.10)] bg-transparent text-[var(--mkt-text-secondary)] hover:text-[var(--mkt-text-primary)] hover:bg-[rgba(255,255,255,0.04)] hover:border-[rgba(255,255,255,0.16)] hidden md:inline-flex"
+              className="hidden h-8 items-center justify-center rounded-full px-3.5 text-[12.5px] font-medium text-[var(--mkt-text-tertiary)] transition-[color,background-color] duration-150 hover:text-[var(--mkt-text-secondary)] hover:bg-[rgba(255,255,255,0.04)] md:inline-flex"
             >
               {t('landing.navbar.signIn')}
             </Link>
 
             <Link
               href={`/${locale}/authentication`}
-              className="h-8 px-4 text-[13px] font-semibold rounded-full text-white shadow-[0_0_12px_rgba(139,92,246,0.25)] transition-[transform,box-shadow] duration-200 hover:-translate-y-[1px] hover:shadow-[0_0_24px_rgba(139,92,246,0.35)] active:scale-[0.97] hidden md:inline-flex"
+              className="hidden h-8 items-center justify-center gap-1.5 rounded-full px-4 text-[12.5px] font-semibold text-white transition-[transform,box-shadow] duration-200 hover:-translate-y-[0.5px] hover:shadow-[0_0_20px_rgba(139,92,246,0.30)] active:scale-[0.97] md:inline-flex"
               style={{ background: 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)' }}
             >
               {t('landing.hero.ctaPrimary')}
@@ -100,7 +111,7 @@ export default function Navbar() {
               }
             />
           </div>
-        </div>
+        </nav>
       </div>
     </header>
   )

@@ -2227,12 +2227,10 @@
   }
 
   /* Shimmer animation for AI loading states */
-  @keyframes shimmer {
-    0% {
-      background-position: -200% center;
-    }
+  
+
     100% {
-      background-position: 200% center;
+      transform: translateX(100%);
     }
   }
 
@@ -4041,15 +4039,6 @@ img[loading='lazy'] {
 }
 
 /* Shimmer Animation */
-@keyframes shimmer {
-  0% {
-    background-position: -200% center;
-  }
-  100% {
-    background-position: 200% center;
-  }
-}
-
 @keyframes shimmer-gradient {
   0% {
     background-position: -200% 0;

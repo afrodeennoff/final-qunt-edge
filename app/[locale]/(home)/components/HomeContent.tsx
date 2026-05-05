@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import Link from 'next/link'
 import {
   ArrowRight,
@@ -28,7 +29,7 @@ import { MarketingPricingSection } from '@/components/layout/marketing-pricing-s
 import { getI18n } from '@/locales/server'
 import { cn } from '@/lib/utils'
 import ProductDemoPlayer from './ProductDemoPlayer'
-import { SocialProofLazy, FAQSectionLazy, TrustAndProofLazy } from './LazySections'
+import { SocialProofLazy, FAQSectionLazy, TrustAndProofLazy, SectionSkeleton } from './LazySections'
 import { ErrorBoundary } from '@/components/error-boundary'
 
 interface HomeContentProps {
@@ -116,7 +117,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
   return (
     <div className="relative min-w-0 overflow-x-hidden bg-background selection:bg-primary/30 selection:text-foreground">
       <main className="relative z-10 flex min-w-0 flex-col">
-        {/* Hero — Purple gradient with radial glow */}
+        {/* Hero — above fold, no Suspense needed */}
         <MarketingSection className="relative pt-24 sm:pt-32 lg:pt-40 overflow-hidden">
           {/* Radial purple glow overlay */}
           <div className="pointer-events-none absolute inset-0" style={{ background: 'var(--mkt-gradient-glow)' }} aria-hidden />
@@ -128,7 +129,15 @@ export default async function HomeContent({ locale }: HomeContentProps) {
                 <span className="text-[10px]">&#10022;</span>
                 {t('landing.hero.badge')}
               </span>
-              <h1 className={`${marketingHeroTitleClassName} leading-[1.02]`}>
+              <h1
+                className={`${marketingHeroTitleClassName} leading-[1.02]`}
+                style={{
+                  background: 'var(--mkt-gradient-purple)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
                 {t('landing.hero.headline')}
               </h1>
               <p className={`${marketingBodyClassName} mx-auto max-w-lg text-lg leading-relaxed`}>
@@ -162,148 +171,166 @@ export default async function HomeContent({ locale }: HomeContentProps) {
           </div>
         </MarketingSection>
 
-        {/* Social Proof */}
+        {/* Social Proof — streaming boundary */}
         <ErrorBoundary fallback={null}>
-          <SocialProofLazy />
+          <Suspense fallback={<SectionSkeleton />}>
+            <SocialProofLazy />
+          </Suspense>
         </ErrorBoundary>
 
-        {/* Features */}
-        <MarketingSection id="features" className="py-16 lg:py-20">
-          <MarketingSectionHeader
-            eyebrow={t('landing.home.features.eyebrow')}
-            title={
-              <>
-                {t('landing.home.features.title')}{' '}
-                <span className="text-[var(--mkt-accent)]">{t('landing.home.features.highlight')}</span>
-              </>
-            }
-            description={t('landing.home.features.description')}
-          />
-          <div className="mt-12 grid min-w-0 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature) => (
-              <MarketingFeatureCard
-                key={String(feature.title)}
-                icon={feature.icon}
-                title={feature.title}
-                description={feature.description}
-              />
-            ))}
-          </div>
-        </MarketingSection>
+        {/* Features — streaming boundary */}
+        <Suspense fallback={<SectionSkeleton />}>
+          <MarketingSection id="features" className="py-16 lg:py-20">
+            <MarketingSectionHeader
+              eyebrow={t('landing.home.features.eyebrow')}
+              title={
+                <>
+                  {t('landing.home.features.title')}{' '}
+                  <span className="text-[var(--mkt-accent)]">{t('landing.home.features.highlight')}</span>
+                </>
+              }
+              description={t('landing.home.features.description')}
+            />
+            <div className="mt-12 grid min-w-0 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {features.map((feature) => (
+                <MarketingFeatureCard
+                  key={String(feature.title)}
+                  icon={feature.icon}
+                  title={feature.title}
+                  description={feature.description}
+                />
+              ))}
+            </div>
+          </MarketingSection>
+        </Suspense>
 
-        {/* Workflow */}
-        <MarketingSection id="how-it-works" className="py-16 lg:py-20">
-          <MarketingSectionHeader
-            eyebrow={t('landing.home.workflow.eyebrow')}
-            title={t('landing.home.workflow.title')}
-            description={t('landing.home.workflow.description')}
-          />
-          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            {workflowSteps.map((step) => (
-              <MarketingStepCard
-                key={step.step}
-                step={step.step}
-                icon={step.icon}
-                title={step.title}
-                description={step.description}
-              />
-            ))}
-          </div>
-        </MarketingSection>
+        {/* Workflow — streaming boundary */}
+        <Suspense fallback={<SectionSkeleton />}>
+          <MarketingSection id="how-it-works" className="py-16 lg:py-20">
+            <MarketingSectionHeader
+              eyebrow={t('landing.home.workflow.eyebrow')}
+              title={t('landing.home.workflow.title')}
+              description={t('landing.home.workflow.description')}
+            />
+            <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+              {workflowSteps.map((step) => (
+                <MarketingStepCard
+                  key={step.step}
+                  step={step.step}
+                  icon={step.icon}
+                  title={step.title}
+                  description={step.description}
+                />
+              ))}
+            </div>
+          </MarketingSection>
+        </Suspense>
 
-        {/* Demo */}
-        <MarketingSection id="product-walkthrough" className="py-16 lg:py-20">
-          <MarketingSectionHeader
-            eyebrow={t('landing.home.demo.eyebrow')}
-            title={t('landing.home.demo.title')}
-            description={t('landing.home.demo.description')}
-          />
-          <div className="mx-auto mt-12 max-w-4xl">
-            <MarketingHyperframe
-              label={t('landing.home.demo.frameLabel')}
-              status="Live audit"
-              className="shadow-[0_32px_80px_-48px_hsl(var(--primary)/0.5)]"
-            >
-              <ProductDemoPlayer />
-            </MarketingHyperframe>
-          </div>
-        </MarketingSection>
-
-        {/* Testimonials */}
-        <MarketingSection id="testimonials" className="py-16 lg:py-20">
-          <MarketingSectionHeader
-            eyebrow={t('landing.home.testimonials.eyebrow')}
-            title={t('landing.home.testimonials.title')}
-            description={t('landing.home.testimonials.description')}
-          />
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {testimonials.map((item) => (
-              <article
-                key={item.name}
-                className="group rounded-2xl border border-[var(--mkt-border-subtle)] bg-[var(--mkt-bg-surface)]/80 p-6 text-left shadow-sm transition-[border-color,background-color,transform] duration-200 hover:border-[var(--mkt-border-accent)] hover:bg-[linear-gradient(135deg,var(--mkt-bg-surface)_0%,rgba(139,92,246,0.04)_100%)] hover:-translate-y-[2px]"
+        {/* Demo — streaming boundary */}
+        <Suspense fallback={<SectionSkeleton />}>
+          <MarketingSection id="product-walkthrough" className="py-16 lg:py-20">
+            <MarketingSectionHeader
+              eyebrow={t('landing.home.demo.eyebrow')}
+              title={t('landing.home.demo.title')}
+              description={t('landing.home.demo.description')}
+            />
+            <div className="mx-auto mt-12 max-w-4xl">
+              <MarketingHyperframe
+                label={t('landing.home.demo.frameLabel')}
+                status="Live audit"
+                className="shadow-[0_32px_80px_-48px_hsl(var(--primary)/0.5)]"
               >
-                <p className="text-[15px] leading-[1.65] text-[var(--mkt-text-primary)]/80 italic">{item.quote}</p>
-                <div className="mt-5 border-t border-[var(--mkt-border-subtle)] pt-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[var(--mkt-accent)]">
-                    {item.name}
-                  </p>
+                <ProductDemoPlayer />
+              </MarketingHyperframe>
+            </div>
+          </MarketingSection>
+        </Suspense>
+
+        {/* Testimonials — streaming boundary */}
+        <Suspense fallback={<SectionSkeleton />}>
+          <MarketingSection id="testimonials" className="py-16 lg:py-20">
+            <MarketingSectionHeader
+              eyebrow={t('landing.home.testimonials.eyebrow')}
+              title={t('landing.home.testimonials.title')}
+              description={t('landing.home.testimonials.description')}
+            />
+            <div className="mt-10 grid gap-6 md:grid-cols-3">
+              {testimonials.map((item) => (
+                <article
+                  key={item.name}
+                  className="group rounded-2xl border border-[var(--mkt-border-subtle)] bg-[var(--mkt-bg-surface)]/80 p-6 text-left shadow-sm transition-[border-color,background-color,transform] duration-200 hover:border-[var(--mkt-border-accent)] hover:bg-[linear-gradient(135deg,var(--mkt-bg-surface)_0%,rgba(139,92,246,0.04)_100%)] hover:-translate-y-[2px]"
+                >
+                  <p className="text-[15px] leading-[1.65] text-[var(--mkt-text-primary)]/80 italic">{item.quote}</p>
+                  <div className="mt-5 border-t border-[var(--mkt-border-subtle)] pt-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[var(--mkt-accent)]">
+                      {item.name}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </MarketingSection>
+        </Suspense>
+
+        {/* Pricing — streaming boundary */}
+        <Suspense fallback={<SectionSkeleton />}>
+          <MarketingPricingSection locale={locale} />
+        </Suspense>
+
+        {/* Secondary Value — streaming boundary */}
+        <ErrorBoundary fallback={null}>
+          <Suspense fallback={<SectionSkeleton />}>
+            <TrustAndProofLazy />
+          </Suspense>
+        </ErrorBoundary>
+
+        {/* FAQ — streaming boundary */}
+        <ErrorBoundary fallback={null}>
+          <Suspense fallback={<SectionSkeleton />}>
+            <FAQSectionLazy />
+          </Suspense>
+        </ErrorBoundary>
+
+        {/* Final CTA — streaming boundary */}
+        <Suspense fallback={<SectionSkeleton />}>
+          <MarketingSection className="relative pb-24 pt-16 text-center lg:pb-28 overflow-hidden">
+            {/* Subtle radial glow behind CTA */}
+            <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(ellipse 60% 60% at 50% 60%, rgba(139,92,246,0.12) 0%, transparent 70%)' }} aria-hidden />
+            <div className="relative z-10">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[var(--mkt-accent)]">
+                {t('landing.home.finalCta.eyebrow')}
+              </p>
+              <h2 className={`${marketingSectionTitleClassName} mx-auto mt-3 max-w-2xl`}>
+                {t('landing.home.finalCta.title')}
+              </h2>
+              <p className={`${marketingBodyClassName} mx-auto mt-4 max-w-xl`}>
+                {t('landing.home.finalCta.description')}
+              </p>
+              <div className="mt-6">
+                <div className="flex flex-col justify-center gap-3 sm:flex-row">
+                  <Link
+                    href={`/${locale}/authentication?next=dashboard`}
+                    className={cn(
+                      'inline-flex h-11 w-full items-center justify-center gap-2 rounded-full px-7 text-[14px] font-semibold text-white shadow-[var(--mkt-shadow-glow-sm)] transition-[transform,box-shadow] duration-200 hover:-translate-y-[1px] hover:shadow-[var(--mkt-shadow-glow)] active:scale-[0.97] sm:w-auto',
+                    )}
+                    style={{ background: 'var(--mkt-gradient-purple)' }}
+                  >
+                    <span>{t('landing.home.finalCta.primary')}</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    href={`/${locale}/propfirms`}
+                    className={cn(
+                      'inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-[var(--mkt-border-default)] bg-transparent px-7 text-[14px] font-medium text-[var(--mkt-text-primary)] transition-[border-color,background-color] duration-200 hover:bg-white/[0.04] hover:border-[var(--mkt-border-strong)] sm:w-auto',
+                    )}
+                  >
+                    {t('landing.home.finalCta.secondary')}
+                  </Link>
                 </div>
-              </article>
-            ))}
-          </div>
-        </MarketingSection>
-
-        {/* Pricing */}
-        <MarketingPricingSection locale={locale} />
-
-        {/* Secondary Value */}
-        <ErrorBoundary fallback={null}>
-          <TrustAndProofLazy />
-        </ErrorBoundary>
-
-        {/* FAQ */}
-        <ErrorBoundary fallback={null}>
-          <FAQSectionLazy />
-        </ErrorBoundary>
-
-        {/* Final CTA */}
-        <MarketingSection className="relative pb-24 pt-16 text-center lg:pb-28 overflow-hidden">
-          {/* Subtle radial glow behind CTA */}
-          <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(ellipse 60% 60% at 50% 60%, rgba(139,92,246,0.12) 0%, transparent 70%)' }} aria-hidden />
-          <div className="relative z-10">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[var(--mkt-accent)]">
-              {t('landing.home.finalCta.eyebrow')}
-            </p>
-            <h2 className={`${marketingSectionTitleClassName} mx-auto mt-3 max-w-2xl`}>
-              {t('landing.home.finalCta.title')}
-            </h2>
-            <p className={`${marketingBodyClassName} mx-auto mt-4 max-w-xl`}>
-              {t('landing.home.finalCta.description')}
-            </p>
-            <div className="mt-6">
-              <div className="flex flex-col justify-center gap-3 sm:flex-row">
-                <Link
-                  href={`/${locale}/authentication?next=dashboard`}
-                  className={cn(
-                    'inline-flex h-11 w-full items-center justify-center gap-2 rounded-full px-7 text-[14px] font-semibold text-white shadow-[var(--mkt-shadow-glow-sm)] transition-[transform,box-shadow] duration-200 hover:-translate-y-[1px] hover:shadow-[var(--mkt-shadow-glow)] active:scale-[0.97] sm:w-auto',
-                  )}
-                  style={{ background: 'var(--mkt-gradient-purple)' }}
-                >
-                  <span>{t('landing.home.finalCta.primary')}</span>
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href={`/${locale}/propfirms`}
-                  className={cn(
-                    'inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-[var(--mkt-border-default)] bg-transparent px-7 text-[14px] font-medium text-[var(--mkt-text-primary)] transition-[border-color,background-color] duration-200 hover:bg-white/[0.04] hover:border-[var(--mkt-border-strong)] sm:w-auto',
-                  )}
-                >
-                  {t('landing.home.finalCta.secondary')}
-                </Link>
               </div>
             </div>
-          </div>
-        </MarketingSection>
+          </MarketingSection>
+        </Suspense>
       </main>
     </div>
   )

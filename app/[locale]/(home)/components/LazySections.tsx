@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic'
 
-function SectionSkeleton() {
+export function SectionSkeleton() {
   return (
     <div className="animate-pulse px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
       <div className="mx-auto w-full max-w-5xl space-y-8">
