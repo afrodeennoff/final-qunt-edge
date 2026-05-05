@@ -118,7 +118,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
     <div className="relative min-w-0 overflow-x-hidden bg-background selection:bg-primary/30 selection:text-foreground">
       <main className="relative z-10 flex min-w-0 flex-col">
         {/* Hero — above fold, no Suspense needed */}
-        <MarketingSection className="relative pt-24 sm:pt-32 lg:pt-40 overflow-hidden">
+        <MarketingSection className="relative pt-16 sm:pt-20 lg:pt-24 overflow-hidden">
           {/* Radial purple glow overlay */}
           <div className="pointer-events-none absolute inset-0" style={{ background: 'var(--mkt-gradient-glow)' }} aria-hidden />
           <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(139,92,246,0.25) 0%, transparent 60%)' }} aria-hidden />
@@ -145,7 +145,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
               </p>
             </div>
 
-            <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
+            <div className="flex flex-col justify-center gap-4 sm:flex-row sm:gap-6">
               {/* Primary CTA — Purple gradient */}
               <Link
                 href={`/${locale}/authentication?next=dashboard`}
@@ -191,7 +191,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
               }
               description={t('landing.home.features.description')}
             />
-            <div className="mt-12 grid min-w-0 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-8 grid min-w-0 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {features.map((feature) => (
                 <MarketingFeatureCard
                   key={String(feature.title)}
