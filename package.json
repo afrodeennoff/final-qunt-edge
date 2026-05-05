@@ -34,6 +34,7 @@
     "test:smoke": "node scripts/smoke-http.mjs",
     "test:coverage": "vitest run --config vitest.config.ts --coverage",
     "loadtest:k6": "k6 run scripts/loadtest/k6-smoke.js",
+    "audit:spacing": "node scripts/audit-spacing.mjs",
     "check:route-budgets": "node scripts/check-route-budgets.mjs",
     "check:route-security": "node scripts/check-route-security.mjs",
     "check:dead-code": "node scripts/check-dead-code.mjs",
