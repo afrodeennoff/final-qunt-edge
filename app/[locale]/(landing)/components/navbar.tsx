@@ -75,14 +75,15 @@ export default function Navbar() {
           <div className="ml-auto flex items-center gap-2.5">
             <Link
               href={`/${locale}/authentication`}
-              className="h-8 px-3.5 text-[13px] rounded-full border border-border/14 bg-transparent text-muted-foreground hover:text-foreground hover:bg-border/8 hidden md:inline-flex"
+              className="h-8 px-3.5 text-[13px] rounded-full border border-[rgba(255,255,255,0.10)] bg-transparent text-[var(--mkt-text-secondary)] hover:text-[var(--mkt-text-primary)] hover:bg-[rgba(255,255,255,0.04)] hover:border-[rgba(255,255,255,0.16)] hidden md:inline-flex"
             >
               {t('landing.navbar.signIn')}
             </Link>
 
             <Link
               href={`/${locale}/authentication`}
-              className="h-8 px-4 text-[13px] font-semibold rounded-full bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] hover:bg-primary/92 hidden md:inline-flex"
+              className="h-8 px-4 text-[13px] font-semibold rounded-full text-white shadow-[0_0_12px_rgba(139,92,246,0.25)] transition-[transform,box-shadow] duration-200 hover:-translate-y-[1px] hover:shadow-[0_0_24px_rgba(139,92,246,0.35)] active:scale-[0.97] hidden md:inline-flex"
+              style={{ background: 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)' }}
             >
               {t('landing.hero.ctaPrimary')}
             </Link>

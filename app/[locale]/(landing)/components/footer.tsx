@@ -125,7 +125,7 @@ export default function Footer() {
                   viewport={{ once: true }}
                   transition={{ delay: 0.08 + index * 0.05, duration: 0.35 }}
                   className={cn(
-                    'flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(0,0,0,0.06)] bg-[var(--card)] text-muted-foreground shadow-[inset_0_1px_0_rgba(0,0,0,0.03)] transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-[rgba(0,0,0,0.06)] hover:bg-[var(--card)] hover:text-primary',
+                    'flex h-9 w-9 items-center justify-center rounded-full border border-[var(--mkt-border-subtle)] bg-[var(--mkt-bg-surface)] text-[var(--mkt-text-tertiary)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03)] transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-[var(--mkt-border-accent)] hover:bg-[var(--mkt-bg-elevated)] hover:text-[var(--mkt-accent)]',
                   )}
                 >
                   <item.icon className="size-[18px]" />

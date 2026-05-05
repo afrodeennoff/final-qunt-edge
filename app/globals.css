@@ -445,6 +445,14 @@
   --impact-info: #007AFF;
   --impact-alert: #D35400;
 
+  /* ── TRADING SEMANTIC TOKENS (Light) ── */
+  --profit: #00C851;
+  --profit-bg: rgba(0,200,81,0.10);
+  --loss: #FF3B30;
+  --loss-bg: rgba(255,59,48,0.10);
+  --info: #007AFF;
+  --info-bg: rgba(0,122,255,0.10);
+
   /* ── 8PT SPACING GRID ── */
   --space-0: 0px;
   --space-px: 1px;
@@ -647,6 +655,38 @@
   --type-metric-size: 28px;
   --type-metric-weight: 250;
   --type-metric-tracking: -0.04em;
+
+  /* ═══════════════════════════════════════════════════════════
+     MARKETING PAGE TOKENS — Black/Purple Theme
+     Applied via [data-page="marketing"] or .marketing-page
+  ═══════════════════════════════════════════════════════════ */
+  --mkt-bg-base:        #09090B;
+  --mkt-bg-surface:     #111113;
+  --mkt-bg-elevated:    #18181B;
+  --mkt-bg-overlay:     #27272A;
+
+  --mkt-text-primary:   #FAFAFA;
+  --mkt-text-secondary: #A1A1AA;
+  --mkt-text-tertiary:  #71717A;
+
+  --mkt-accent:           #8B5CF6;
+  --mkt-accent-hover:     #7C3AED;
+  --mkt-accent-active:    #6D28D9;
+  --mkt-accent-subtle:    rgba(139,92,246,0.12);
+  --mkt-accent-border:    rgba(139,92,246,0.30);
+
+  --mkt-border-subtle:    rgba(255,255,255,0.06);
+  --mkt-border-default:   rgba(255,255,255,0.10);
+  --mkt-border-strong:    rgba(255,255,255,0.16);
+  --mkt-border-accent:    rgba(139,92,246,0.40);
+
+  --mkt-gradient-hero: linear-gradient(135deg, #1A0533 0%, #09090B 50%, #0D0D1A 100%);
+  --mkt-gradient-purple: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+  --mkt-gradient-purple-subtle: linear-gradient(135deg, rgba(139,92,246,0.15) 0%, rgba(109,40,217,0.05) 100%);
+  --mkt-gradient-glow: radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.20) 0%, transparent 60%);
+
+  --mkt-shadow-glow: 0 0 24px rgba(139,92,246,0.35);
+  --mkt-shadow-glow-sm: 0 0 12px rgba(139,92,246,0.25);
 }
 
 
@@ -657,32 +697,40 @@
   --card-foreground: #F5F5F7;
   --popover: #1C1C1E;
   --popover-foreground: #F5F5F7;
-  --primary: #409CFF;
+  --primary: #A78BFA;
   --primary-foreground: #FFFFFF;
   --secondary: #2C2C2E;
   --secondary-foreground: #F5F5F7;
   --muted: #3A3A3C;
-  --muted-foreground: #AEAEB2;
+  --muted-foreground: #98989D;
   --accent: #3A3A3C;
-  --accent-foreground: #409CFF;
-  --success: #34C759;
+  --accent-foreground: #A78BFA;
+  --success: #30D158;
   --success-foreground: #FFFFFF;
-  --warning: #FF9F0A;
-  --warning-foreground: #FFFFFF;
+  --warning: #FFD60A;
+  --warning-foreground: #000000;
   --destructive: #FF453A;
   --destructive-foreground: #FFFFFF;
-  --border: rgba(255,255,255,0.13);
-  --input: rgba(255,255,255,0.12);
-  --ring: #409CFF;
-  --sidebar: rgba(28,28,30,0.85);
-  --sidebar-background: rgba(28,28,30,0.85);
+  --border: rgba(255,255,255,0.10);
+  --input: rgba(255,255,255,0.10);
+  --ring: #7C3AED;
+  --sidebar: rgba(22,22,24,0.92);
+  --sidebar-background: rgba(22,22,24,0.92);
   --sidebar-foreground: #F5F5F7;
-  --sidebar-primary: #409CFF;
+  --sidebar-primary: #A78BFA;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: rgba(255,255,255,0.10);
-  --sidebar-accent-foreground: #409CFF;
-  --sidebar-border: rgba(255,255,255,0.07);
-  --sidebar-ring: #409CFF;
+  --sidebar-accent: rgba(167,139,250,0.12);
+  --sidebar-accent-foreground: #A78BFA;
+  --sidebar-border: rgba(255,255,255,0.06);
+  --sidebar-ring: #7C3AED;
+
+  /* ── TRADING SEMANTIC TOKENS (Dark) ── */
+  --profit: #30D158;
+  --profit-bg: rgba(48,209,88,0.12);
+  --loss: #FF453A;
+  --loss-bg: rgba(255,69,58,0.12);
+  --info: #0A84FF;
+  --info-bg: rgba(10,132,255,0.12);
   --legacy-50: 240 18% 14%;
   --legacy-100: 240 16% 18%;
   --legacy-200: 240 14% 24%;

@@ -116,13 +116,18 @@ export default async function HomeContent({ locale }: HomeContentProps) {
   return (
     <div className="relative min-w-0 overflow-x-hidden bg-background selection:bg-primary/30 selection:text-foreground">
       <main className="relative z-10 flex min-w-0 flex-col">
-        {/* Hero */}
-        <MarketingSection className="pt-24 sm:pt-32 lg:pt-40">
-          <div className="mx-auto max-w-3xl space-y-8 text-center">
+        {/* Hero — Purple gradient with radial glow */}
+        <MarketingSection className="relative pt-24 sm:pt-32 lg:pt-40 overflow-hidden">
+          {/* Radial purple glow overlay */}
+          <div className="pointer-events-none absolute inset-0" style={{ background: 'var(--mkt-gradient-glow)' }} aria-hidden />
+          <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(139,92,246,0.25) 0%, transparent 60%)' }} aria-hidden />
+          <div className="relative z-10 mx-auto max-w-3xl space-y-8 text-center">
             <div className="space-y-6">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
+              {/* Badge */}
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--mkt-border-accent)] bg-[var(--mkt-accent-subtle)] px-3.5 py-1 text-[12px] font-medium tracking-[0.01em] text-[var(--mkt-accent)]">
+                <span className="text-[10px]">&#10022;</span>
                 {t('landing.hero.badge')}
-              </p>
+              </span>
               <h1 className={`${marketingHeroTitleClassName} leading-[1.02]`}>
                 {t('landing.hero.headline')}
               </h1>
@@ -132,16 +137,23 @@ export default async function HomeContent({ locale }: HomeContentProps) {
             </div>
 
             <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
+              {/* Primary CTA — Purple gradient */}
               <Link
                 href={`/${locale}/authentication?next=dashboard`}
-                className={cn(buttonVariants({ size: 'lg' }))}
+                className={cn(
+                  'inline-flex h-11 items-center justify-center gap-2 rounded-full px-7 text-[14px] font-semibold text-white shadow-[var(--mkt-shadow-glow-sm)] transition-[transform,box-shadow] duration-200 hover:-translate-y-[1px] hover:shadow-[var(--mkt-shadow-glow)] active:scale-[0.97]',
+                )}
+                style={{ background: 'var(--mkt-gradient-purple)' }}
               >
                 <span>{t('landing.hero.ctaPrimary')}</span>
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="h-4 w-4" />
               </Link>
+              {/* Secondary CTA — Outline */}
               <a
                 href="#product-walkthrough"
-                className={cn(buttonVariants({ variant: 'outline', size: 'lg' }))}
+                className={cn(
+                  'inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[var(--mkt-border-default)] bg-transparent px-7 text-[14px] font-medium text-[var(--mkt-text-primary)] transition-[border-color,background-color] duration-200 hover:bg-white/[0.04] hover:border-[var(--mkt-border-strong)]',
+                )}
               >
                 <Play className="h-4 w-4" />
                 <span>{t('landing.hero.ctaSecondary')}</span>
@@ -162,7 +174,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
             title={
               <>
                 {t('landing.home.features.title')}{' '}
-                <span className="text-primary">{t('landing.home.features.highlight')}</span>
+                <span className="text-[var(--mkt-accent)]">{t('landing.home.features.highlight')}</span>
               </>
             }
             description={t('landing.home.features.description')}
@@ -228,11 +240,11 @@ export default async function HomeContent({ locale }: HomeContentProps) {
             {testimonials.map((item) => (
               <article
                 key={item.name}
-                className="group rounded-2xl border border-border/10 bg-card/80 p-6 text-left shadow-sm transition-[border-color,background-color] duration-200 hover:border-border/15 hover:bg-card"
+                className="group rounded-2xl border border-[var(--mkt-border-subtle)] bg-[var(--mkt-bg-surface)]/80 p-6 text-left shadow-sm transition-[border-color,background-color,transform] duration-200 hover:border-[var(--mkt-border-accent)] hover:bg-[linear-gradient(135deg,var(--mkt-bg-surface)_0%,rgba(139,92,246,0.04)_100%)] hover:-translate-y-[2px]"
               >
-                <p className="text-[15px] leading-[1.65] text-foreground/80 italic">{item.quote}</p>
-                <div className="mt-5 border-t border-border/10 pt-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
+                <p className="text-[15px] leading-[1.65] text-[var(--mkt-text-primary)]/80 italic">{item.quote}</p>
+                <div className="mt-5 border-t border-[var(--mkt-border-subtle)] pt-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[var(--mkt-accent)]">
                     {item.name}
                   </p>
                 </div>
@@ -255,34 +267,40 @@ export default async function HomeContent({ locale }: HomeContentProps) {
         </ErrorBoundary>
 
         {/* Final CTA */}
-        <MarketingSection className="pb-24 pt-16 text-center lg:pb-28">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
-            {t('landing.home.finalCta.eyebrow')}
-          </p>
-          <h2 className={`${marketingSectionTitleClassName} mx-auto mt-3 max-w-2xl`}>
-            {t('landing.home.finalCta.title')}
-          </h2>
-          <p className={`${marketingBodyClassName} mx-auto mt-4 max-w-xl`}>
-            {t('landing.home.finalCta.description')}
-          </p>
-          <div className="mt-6">
-            <div className="flex flex-col justify-center gap-3 sm:flex-row">
-              <Link
-                href={`/${locale}/authentication?next=dashboard`}
-                className={cn(buttonVariants({ size: 'lg' }), 'w-full sm:w-auto')}
-              >
-                <span>{t('landing.home.finalCta.primary')}</span>
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-              <Link
-                href={`/${locale}/propfirms`}
-                className={cn(
-                  buttonVariants({ variant: 'outline', size: 'lg' }),
-                  'w-full sm:w-auto',
-                )}
-              >
-                {t('landing.home.finalCta.secondary')}
-              </Link>
+        <MarketingSection className="relative pb-24 pt-16 text-center lg:pb-28 overflow-hidden">
+          {/* Subtle radial glow behind CTA */}
+          <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(ellipse 60% 60% at 50% 60%, rgba(139,92,246,0.12) 0%, transparent 70%)' }} aria-hidden />
+          <div className="relative z-10">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[var(--mkt-accent)]">
+              {t('landing.home.finalCta.eyebrow')}
+            </p>
+            <h2 className={`${marketingSectionTitleClassName} mx-auto mt-3 max-w-2xl`}>
+              {t('landing.home.finalCta.title')}
+            </h2>
+            <p className={`${marketingBodyClassName} mx-auto mt-4 max-w-xl`}>
+              {t('landing.home.finalCta.description')}
+            </p>
+            <div className="mt-6">
+              <div className="flex flex-col justify-center gap-3 sm:flex-row">
+                <Link
+                  href={`/${locale}/authentication?next=dashboard`}
+                  className={cn(
+                    'inline-flex h-11 w-full items-center justify-center gap-2 rounded-full px-7 text-[14px] font-semibold text-white shadow-[var(--mkt-shadow-glow-sm)] transition-[transform,box-shadow] duration-200 hover:-translate-y-[1px] hover:shadow-[var(--mkt-shadow-glow)] active:scale-[0.97] sm:w-auto',
+                  )}
+                  style={{ background: 'var(--mkt-gradient-purple)' }}
+                >
+                  <span>{t('landing.home.finalCta.primary')}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href={`/${locale}/propfirms`}
+                  className={cn(
+                    'inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-[var(--mkt-border-default)] bg-transparent px-7 text-[14px] font-medium text-[var(--mkt-text-primary)] transition-[border-color,background-color] duration-200 hover:bg-white/[0.04] hover:border-[var(--mkt-border-strong)] sm:w-auto',
+                  )}
+                >
+                  {t('landing.home.finalCta.secondary')}
+                </Link>
+              </div>
             </div>
           </div>
         </MarketingSection>

@@ -60,7 +60,7 @@ export function MarketingSectionHeader({
       )}
     >
       {eyebrow ? (
-        <p className="text-[10.5px] font-semibold uppercase tracking-[0.10em] text-primary/85">
+        <p className="text-[10.5px] font-semibold uppercase tracking-[0.10em] text-[var(--mkt-accent)]">
           {eyebrow}
         </p>
       ) : null}
@@ -88,11 +88,11 @@ export function MarketingFeatureCard({
   className?: string
 }) {
   return (
-    <Card variant="glass" className={cn('relative overflow-hidden rounded-[12px] border border-border/60 bg-[linear-gradient(160deg,var(--card)_0%,var(--card)_100%)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_32px_-20px_rgba(0,0,0,0.64)] transition-[border-color,box-shadow] duration-200 hover:border-border/80 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_20px_40px_-20px_rgba(0,0,0,0.72)]', className)}>
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-border/50 bg-secondary text-primary">
+    <Card variant="glass" className={cn('relative overflow-hidden rounded-[12px] border border-[var(--mkt-border-subtle)] bg-[linear-gradient(160deg,var(--mkt-bg-surface)_0%,var(--mkt-bg-surface)_100%)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_32px_-20px_rgba(0,0,0,0.64)] transition-[border-color,box-shadow,background,transform] duration-200 hover:border-[var(--mkt-border-accent)] hover:bg-[linear-gradient(135deg,var(--mkt-bg-surface)_0%,rgba(139,92,246,0.04)_100%)] hover:-translate-y-[2px] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_20px_40px_-20px_rgba(0,0,0,0.72)]', className)}>
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--mkt-accent-border)] bg-[var(--mkt-accent-subtle)] text-[var(--mkt-accent)]">
         {icon}
       </div>
-      <h3 className="mt-4 text-base font-semibold tracking-tight text-foreground">{title}</h3>
+      <h3 className="mt-4 text-base font-semibold tracking-tight text-[var(--mkt-text-primary)]">{title}</h3>
       <p className={cn(marketingBodyClassName, 'mt-2 line-clamp-2 text-sm')}>{description}</p>
       {footer ? (
         <div className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
@@ -143,7 +143,7 @@ export function MarketingStepCard({
         <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {step}
         </span>
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/50 bg-secondary text-primary">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--mkt-accent-border)] bg-[var(--mkt-accent-subtle)] text-[var(--mkt-accent)]">
           {icon}
         </span>
       </div>
@@ -184,7 +184,7 @@ export function MarketingPricingCard({
       hover
       className={cn(
         'relative flex h-full flex-col p-7',
-        highlighted && 'border-primary/22',
+        highlighted && 'border-[var(--mkt-accent-border)] shadow-[var(--mkt-shadow-glow)]',
         className,
       )}
     >
@@ -210,14 +210,14 @@ export function MarketingPricingCard({
             key={index}
             className="flex items-start gap-3 text-sm leading-6 text-muted-foreground"
           >
-            <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">
+            <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--mkt-accent-subtle)] text-[var(--mkt-accent)]">
               <Check className="h-3 w-3" />
             </span>
             <span>{feature}</span>
           </li>
         ))}
       </ul>
-      <Button asChild variant={highlighted ? 'solid' : 'outline'} size="lg" className={cn('mt-8 w-full', highlighted && 'rounded-[0.95rem] border border-primary/18 bg-primary text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92')}>
+      <Button asChild variant={highlighted ? 'solid' : 'outline'} size="lg" className={cn('mt-8 w-full', highlighted && 'rounded-[0.95rem] border border-[var(--mkt-accent-border)] text-white shadow-[var(--mkt-shadow-glow-sm)] hover:shadow-[var(--mkt-shadow-glow)]')} style={highlighted ? { background: 'var(--mkt-gradient-purple)' } : undefined}>
         <Link href={href}>{cta}</Link>
       </Button>
     </Card>
