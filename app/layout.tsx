@@ -137,6 +137,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning
+      style={{ backgroundColor: '#000000', color: '#F5F5F7' }}
     >
       <head>
         {/* Resource Hinting for Performance */}
