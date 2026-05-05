@@ -2229,10 +2229,11 @@
   /* Shimmer animation for AI loading states */
   @keyframes shimmer {
     0% {
-      background-position: -200% center;
+      transform: translateX(-100%);
     }
+
     100% {
-      background-position: 200% center;
+      transform: translateX(100%);
     }
   }
 
@@ -2255,7 +2256,10 @@
     box-shadow: 0 0 0 1px hsl(var(--border) / 0.45);
   }
 
-  
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
 
     50% {
       transform: translateY(-10px);
@@ -2351,7 +2355,10 @@
   }
 }
 
-
+@keyframes drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 
   50% {
     transform: translate3d(0, -16px, 0) scale(1.03);
@@ -3043,7 +3050,8 @@
 .stagger-item:nth-child(6) { animation-delay: 300ms; }
 
 /* ===== SHIMMER ANIMATION FOR SKELETONS ===== */
-
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
 .animate-shimmer-slide {
@@ -3226,13 +3234,20 @@ img[loading='lazy'] {
   }
 }
 
-
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
   50% {
     transform: translateY(-8px);
   }
 }
 
-
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
   100% {
     background-position: 200% 0;
   }
@@ -3285,7 +3300,10 @@ img[loading='lazy'] {
 }
 
 /* Rolling ad banner animation */
-
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
   100% {
     transform: translateX(-50%);
   }
@@ -3319,7 +3337,11 @@ img[loading='lazy'] {
 /* ===== PRECISION TERMINAL ANIMATIONS ===== */
 
 /* Scanner Line Animation */
-
+@keyframes scan {
+  0% {
+    left: 0;
+    opacity: 1;
+  }
   50% {
     opacity: 0.5;
   }
@@ -3334,7 +3356,11 @@ img[loading='lazy'] {
 }
 
 /* Fade Up Animation for stagger reveals */
-
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
   to {
     opacity: 1;
     transform: translateY(0);
@@ -3733,7 +3759,11 @@ img[loading='lazy'] {
     pointer-events: none;
   }
 
-  
+  @keyframes ripple {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
   }
 }
 
@@ -4041,15 +4071,6 @@ img[loading='lazy'] {
 }
 
 /* Shimmer Animation */
-@keyframes shimmer {
-  0% {
-    background-position: -200% center;
-  }
-  100% {
-    background-position: 200% center;
-  }
-}
-
 @keyframes shimmer-gradient {
   0% {
     background-position: -200% 0;
