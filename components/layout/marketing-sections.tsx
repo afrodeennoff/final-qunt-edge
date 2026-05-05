@@ -27,7 +27,7 @@ export function MarketingSection({
   return (
     <section
       id={id}
-      className={cn('scroll-smooth-butter px-4 py-20 sm:px-6 lg:px-8 lg:py-28', className)}
+      className={cn('scroll-smooth-butter px-4 py-16 sm:px-6 lg:px-8 lg:py-20', className)}
     >
       <div className={cn('mx-auto w-full', MARKETING_SHELL_WIDTH, innerClassName)}>{children}</div>
     </section>
@@ -92,8 +92,10 @@ export function MarketingFeatureCard({
       <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--mkt-accent-border)] bg-[var(--mkt-accent-subtle)] text-[var(--mkt-accent)]">
         {icon}
       </div>
-      <h3 className="mt-4 text-base font-semibold tracking-tight text-[var(--mkt-text-primary)]">{title}</h3>
-      <p className={cn(marketingBodyClassName, 'mt-2 line-clamp-2 text-sm')}>{description}</p>
+      <div className="mt-4">
+        <h3 className="text-base font-semibold tracking-tight text-[var(--mkt-text-primary)]">{title}</h3>
+        <p className={cn(marketingBodyClassName, 'mt-2 line-clamp-2 text-sm')}>{description}</p>
+      </div>
       {footer ? (
         <div className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {footer}
@@ -139,7 +141,7 @@ export function MarketingStepCard({
 }) {
   return (
     <Card variant="glass" className={cn('h-full p-6', className)}>
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-3">
         <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {step}
         </span>
@@ -197,14 +199,14 @@ export function MarketingPricingCard({
         <h3 className="text-base font-semibold tracking-[-0.01em] text-foreground">{name}</h3>
         <p className={cn(marketingBodyClassName, 'mt-2 text-sm')}>{description}</p>
       </div>
-      <div className="mt-8 flex items-end gap-2">
+      <div className="mt-8 flex items-end gap-3">
         <span className="text-5xl font-semibold leading-none tracking-[-0.05em] text-foreground">
           {price}
         </span>
         {period ? <span className="pb-1 text-sm text-muted-foreground">{period}</span> : null}
       </div>
       {billingNote ? <p className="mt-2 text-xs text-muted-foreground">{billingNote}</p> : null}
-      <ul className="mt-8 grid flex-1 gap-3.5">
+      <ul className="mt-8 grid flex-1 gap-3">
         {features.map((feature, index) => (
           <li
             key={index}
