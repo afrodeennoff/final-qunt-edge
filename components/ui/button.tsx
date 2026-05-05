@@ -22,7 +22,7 @@ const buttonVariants = cva(
           "bg-destructive/90 text-destructive-foreground border border-destructive/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-destructive",
         link: 'text-primary underline-offset-4 hover:underline',
         'gradient-primary':
-          "bg-gradient-to-b from-primary via-primary to-primary/88 text-primary-foreground border border-primary/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_4px_16px_-8px_rgba(0,102,204,0.40)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_24px_-8px_rgba(0,102,204,0.50)]",
+          "bg-gradient-to-b from-primary via-primary to-primary/88 text-primary-foreground border border-primary/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_4px_16px_-8px_rgba(0,0,0,0.40)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_24px_-8px_rgba(0,0,0,0.50)]",
         'gradient-secondary':
           "bg-muted/40 text-foreground border border-border/60 hover:bg-muted/60",
         shimmer:

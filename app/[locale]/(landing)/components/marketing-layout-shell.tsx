@@ -18,7 +18,7 @@ type MarketingLayoutShellProps = Readonly<{
 }>
 
 const MiniMaxNavbarWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  return <div className="w-full border-b border-[rgba(0,0,0,0.03)] bg-background">{children}</div>
+  return <div className="w-full border-b border-border/50 bg-background">{children}</div>
 }
 
 export default function MarketingLayoutShell({

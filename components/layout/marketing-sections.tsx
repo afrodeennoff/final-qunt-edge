@@ -88,8 +88,8 @@ export function MarketingFeatureCard({
   className?: string
 }) {
   return (
-    <Card variant="glass" className={cn('relative overflow-hidden rounded-[12px] border border-[rgba(0,0,0,0.07)] bg-[linear-gradient(160deg,var(--card)_0%,var(--card)_100%)] p-5 shadow-[inset_0_1px_0_rgba(0,0,0,0.04),0_16px_32px_-20px_rgba(0,0,0,0.64)] transition-[border-color,box-shadow] duration-200 hover:border-[rgba(0,0,0,0.06)] hover:shadow-[inset_0_1px_0_rgba(0,0,0,0.06),0_20px_40px_-20px_rgba(0,0,0,0.72)]', className)}>
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.06)] text-primary">
+    <Card variant="glass" className={cn('relative overflow-hidden rounded-[12px] border border-border/60 bg-[linear-gradient(160deg,var(--card)_0%,var(--card)_100%)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_32px_-20px_rgba(0,0,0,0.64)] transition-[border-color,box-shadow] duration-200 hover:border-border/80 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_20px_40px_-20px_rgba(0,0,0,0.72)]', className)}>
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-border/50 bg-secondary text-primary">
         {icon}
       </div>
       <h3 className="mt-4 text-base font-semibold tracking-tight text-foreground">{title}</h3>
@@ -143,7 +143,7 @@ export function MarketingStepCard({
         <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {step}
         </span>
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.06)] text-primary">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/50 bg-secondary text-primary">
           {icon}
         </span>
       </div>
@@ -210,7 +210,7 @@ export function MarketingPricingCard({
             key={index}
             className="flex items-start gap-3 text-sm leading-6 text-muted-foreground"
           >
-            <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[rgba(0,0,0,0.07)] text-primary">
+            <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">
               <Check className="h-3 w-3" />
             </span>
             <span>{feature}</span>
@@ -239,13 +239,13 @@ export function MarketingHyperframe({
 }) {
   return (
     <Card id={id} variant="elevated" className={cn('overflow-hidden p-0', className)}>
-      <div className="flex items-center justify-between border-b border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-4 py-2.5">
+      <div className="flex items-center justify-between border-b border-border/50 bg-[var(--card)] px-4 py-2.5">
         <div className="flex items-center gap-[6px] px-2 py-1" aria-hidden>
-          <span className="h-3 w-3 rounded-full bg-[oklch(0.68_0.23_28)] opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
-          <span className="h-3 w-3 rounded-full bg-[oklch(0.85_0.17_87)] opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
-          <span className="h-3 w-3 rounded-full bg-[oklch(0.76_0.2_145)] opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
+          <span className="h-3 w-3 rounded-full bg-destructive/80 opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
+          <span className="h-3 w-3 rounded-full bg-warning/80 opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
+          <span className="h-3 w-3 rounded-full bg-success/80 opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
         </div>
-        <div className="rounded-full border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.03)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
+        <div className="rounded-full border border-border/50 bg-secondary/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
           {label}
         </div>
         <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80 sm:flex">

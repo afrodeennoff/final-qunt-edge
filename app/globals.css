@@ -711,6 +711,21 @@
   --v2-glow-error: 0 16px 60px -28px rgba(220,38,38,0.28);
 }
 
+/* ═══════════════════════════════════════════════════════════
+   HOMEPAGE DARK + PURPLE OVERRIDE
+   Scoped to .home-borderless-shell so only the landing page
+   gets the purple accent; dashboard keeps the blue tokens.
+   ═══════════════════════════════════════════════════════════ */
+.home-borderless-shell {
+  --primary: #8B5CF6;
+  --primary-foreground: #FFFFFF;
+  --ring: #8B5CF6;
+  --accent-foreground: #8B5CF6;
+  --sidebar-primary: #8B5CF6;
+  --sidebar-ring: #8B5CF6;
+  --sidebar-accent-foreground: #8B5CF6;
+}
+
 
 @layer utilities {
   .frost-surface {
