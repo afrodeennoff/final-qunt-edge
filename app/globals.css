@@ -712,11 +712,12 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   HOMEPAGE DARK + PURPLE OVERRIDE
-   Scoped to .home-borderless-shell so only the landing page
-   gets the purple accent; dashboard keeps the blue tokens.
+   MARKETING PAGES PURPLE OVERRIDE
+   Scoped to .marketing-shell so ALL public-facing marketing
+   pages (home + landing) get purple accent.
+   Dashboard keeps the blue tokens.
    ═══════════════════════════════════════════════════════════ */
-.home-borderless-shell {
+.marketing-shell {
   --primary: #8B5CF6;
   --primary-foreground: #FFFFFF;
   --ring: #8B5CF6;
