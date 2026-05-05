@@ -282,8 +282,8 @@
   --popover: #FFFFFF;
   --popover-foreground: #1D1D1F;
 
-  /* ── BRAND — macOS Blue ── */
-  --primary: #0066CC;
+  /* ── BRAND — Default macOS Blue ── */
+  --primary: #007AFF;
   --primary-foreground: #FFFFFF;
 
   /* ── SECONDARY SURFACES ── */
@@ -296,7 +296,7 @@
 
   /* ── ACCENT ── */
   --accent: #F5F5F7;
-  --accent-foreground: #0066CC;
+  --accent-foreground: #007AFF;
 
   /* ── SEMANTIC — Profit Green ── */
   --success: #1A7F37;
@@ -313,10 +313,10 @@
   /* ── BORDERS — macOS native ── */
   --border: rgba(0,0,0,0.13);
   --input: rgba(0,0,0,0.15);
-  --ring: #0066CC;
+  --ring: #007AFF;
 
   /* ── CHART PALETTE — macOS semantic ── */
-  --chart-1: #0066CC;
+  --chart-1: #007AFF;
   --chart-2: #1A7F37;
   --chart-3: #C0392B;
   --chart-4: #6C3483;
@@ -329,12 +329,12 @@
   --sidebar: rgba(246,246,248,0.82);
   --sidebar-background: rgba(246,246,248,0.82);
   --sidebar-foreground: #1D1D1F;
-  --sidebar-primary: #0066CC;
+  --sidebar-primary: #007AFF;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: rgba(0,0,0,0.05);
-  --sidebar-accent-foreground: #0066CC;
+  --sidebar-accent-foreground: #007AFF;
   --sidebar-border: rgba(0,0,0,0.08);
-  --sidebar-ring: #0066CC;
+  --sidebar-ring: #007AFF;
 
   /* ── RADIUS — macOS native ── */
   --radius: 0.625rem;
@@ -442,7 +442,7 @@
   --impact-profit: #1A7F37;
   --impact-loss: #C0392B;
   --impact-neutral: #6E6E73;
-  --impact-info: #0066CC;
+  --impact-info: #007AFF;
   --impact-alert: #D35400;
 
   /* ── 8PT SPACING GRID ── */
@@ -967,14 +967,14 @@
   --card-foreground: #1D1D1F;
   --popover: #FFFFFF;
   --popover-foreground: #1D1D1F;
-  --primary: #0066CC;
+  --primary: #007AFF;
   --primary-foreground: #FFFFFF;
   --secondary: #F5F5F7;
   --secondary-foreground: #1D1D1F;
   --muted: #EBEBED;
   --muted-foreground: #6E6E73;
   --accent: #F5F5F7;
-  --accent-foreground: #0066CC;
+  --accent-foreground: #007AFF;
   --success: #1A7F37;
   --success-foreground: #FFFFFF;
   --warning: #D35400;
@@ -983,8 +983,8 @@
   --destructive-foreground: #FFFFFF;
   --border: rgba(0,0,0,0.13);
   --input: rgba(0,0,0,0.15);
-  --ring: #0066CC;
-  --chart-1: #0066CC;
+  --ring: #007AFF;
+  --chart-1: #007AFF;
   --chart-2: #1A7F37;
   --chart-3: #C0392B;
   --chart-4: #6C3483;
@@ -995,12 +995,12 @@
   --sidebar: rgba(246,246,248,0.82);
   --sidebar-background: rgba(246,246,248,0.82);
   --sidebar-foreground: #1D1D1F;
-  --sidebar-primary: #0066CC;
+  --sidebar-primary: #007AFF;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: rgba(0,0,0,0.05);
-  --sidebar-accent-foreground: #0066CC;
+  --sidebar-accent-foreground: #007AFF;
   --sidebar-border: rgba(0,0,0,0.08);
-  --sidebar-ring: #0066CC;
+  --sidebar-ring: #007AFF;
   --font-sans: var(--font-dm-sans), 'DM Sans', sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Geist Mono, monospace;
@@ -1142,7 +1142,7 @@
   --v2-text-muted: #6E6E73;
   --v2-border: rgba(0,0,0,0.13);
   --v2-border-subtle: rgba(0,0,0,0.08);
-  --v2-accent: #0066CC;
+  --v2-accent: #007AFF;
   --v2-accent-foreground: #FFFFFF;
   --v2-accent-hover: #0052A3;
   --v2-accent-subtle: rgba(0,102,204,0.1);
@@ -1154,8 +1154,8 @@
   --v2-error-foreground: #FFFFFF;
 
   /* ===== V2 GRADIENT TOKENS (Light Mode) ===== */
-  --v2-gradient-blue-purple: linear-gradient(135deg, #0066CC 0%, #0052A3 100%);
-  --v2-gradient-blue-cyan: linear-gradient(135deg, #0066CC 0%, #1A7F37 100%);
+  --v2-gradient-blue-purple: linear-gradient(135deg, #007AFF 0%, #0052A3 100%);
+  --v2-gradient-blue-cyan: linear-gradient(135deg, #007AFF 0%, #1A7F37 100%);
   --v2-gradient-subtle-mesh:
     radial-gradient(ellipse at 30% 20%, rgba(0,102,204,0.05) 0%, transparent 50%),
     radial-gradient(ellipse at 70% 80%, rgba(0,102,204,0.04) 0%, transparent 50%);
