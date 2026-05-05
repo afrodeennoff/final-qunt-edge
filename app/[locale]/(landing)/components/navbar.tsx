@@ -39,7 +39,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 flex justify-center px-4 pt-3 pointer-events-none">
+    <header className="fixed left-0 right-0 top-0 z-50 flex justify-center px-4 pt-3 sm:px-6 lg:px-8 pointer-events-none">
       <div className={cn('mx-auto w-full', MARKETING_SHELL_WIDTH)}>
         <nav
           className={cn(
