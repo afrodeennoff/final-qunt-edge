@@ -35,7 +35,7 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
           <Link
             key={milestone.id}
             href={`/${locale}/updates/${milestone.id}`}
-            className="group relative flex gap-5 rounded-xl p-4 transition-[background-color,border-color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[rgba(0,0,0,0.03)]"
+            className="group relative flex gap-6 rounded-xl p-4 transition-[background-color,border-color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[rgba(0,0,0,0.03)]"
           >
             {/* Timeline dot */}
             <div className="relative z-10 mt-1.5 flex h-[30px] w-[30px] flex-shrink-0 items-center justify-center">

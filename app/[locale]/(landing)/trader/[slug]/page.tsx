@@ -212,7 +212,7 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
         <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-primary/[0.04] to-transparent" />
         <div className="relative p-6 sm:p-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex min-w-0 items-center gap-5">
+            <div className="flex min-w-0 items-center gap-6">
               <div className="relative">
                 <Avatar className="h-18 w-18 shrink-0 rounded-2xl border-2 border-primary/20 bg-[var(--card)] sm:h-20 sm:w-20">
                   <AvatarFallback className="rounded-2xl bg-primary/10 text-base font-semibold text-primary sm:text-lg">
@@ -342,7 +342,7 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
       {/* ---- Footer CTA ---- */}
       <section className="relative overflow-hidden rounded-2xl border border-primary/15 bg-[linear-gradient(135deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_18px_32px_-24px_rgba(0,0,0,0.64)]">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-primary/[0.03] to-transparent" />
-        <div className="relative flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+        <div className="relative flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div className="space-y-2">
             <h2 className="text-base font-semibold tracking-tight text-foreground">
               Start Tracking Your Performance

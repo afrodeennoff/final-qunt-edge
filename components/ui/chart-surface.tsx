@@ -119,7 +119,7 @@ export function ChartSurface({
  return (
  <div
  data-chart-surface="modern"
- className={cn("relative flex h-full flex-col overflow-hidden rounded-[1.15rem] border","border-border/10","bg-[linear-gradient(180deg,hsl(var(--card)_/_0.92)_0%,hsl(var(--card)_/_0.86)_100%)]","shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03),0_20px_38px_-28px_rgba(0,0,0,0.68)]","","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.32] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
+ className={cn("relative flex h-full flex-col overflow-hidden rounded-[var(--radius-xl)] border","border-border/10","bg-[linear-gradient(180deg,hsl(var(--card)_/_0.92)_0%,hsl(var(--card)_/_0.86)_100%)]","shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03),0_20px_38px_-28px_rgba(0,0,0,0.68)]","","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.32] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
  className
  )}
  style={height ? { height } : undefined}

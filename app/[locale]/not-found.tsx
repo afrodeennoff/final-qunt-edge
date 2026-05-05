@@ -24,7 +24,7 @@ export default function LocaleNotFound() {
         </Button>
       }
     >
-      <div className="flex flex-col items-center gap-5">
+      <div className="flex flex-col items-center gap-6">
         <div className="rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] px-8 py-4 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
           <span className="text-5xl font-semibold tracking-[-0.06em] text-primary">404</span>
         </div>

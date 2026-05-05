@@ -96,7 +96,7 @@ export function WidgetShell({
  )}
  >
  {(title || actions || icon || description) && (
- <CardHeader className="border-b border-border/30 bg-muted/20 px-4 py-[0.65rem] backdrop-blur-sm">
+ <CardHeader className="border-b border-border/30 bg-muted/20 px-4 py-2.5 backdrop-blur-sm">
  <div className="flex items-start justify-between gap-[var(--space-3)]">
  <div className="min-w-0 gap-[var(--space-2)]">
  {(title || icon) && (

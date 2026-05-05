@@ -240,7 +240,7 @@ function FreePlanCard({
             {plan.features.map((feature, index) => (
               <li
                 key={index}
-                className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]"
+                className="flex items-center gap-2 text-[13px] text-foreground/70 tracking-[-0.005em]"
               >
                 {index > 2 ? (
                   <X className="size-4 shrink-0 text-destructive" />
@@ -395,7 +395,7 @@ function PlusPlanCard({
               {t('pricing.billingPeriod')}
             </span>
 
-            <div className="grid grid-cols-3 gap-1 rounded-xl border border-[rgba(0,0,0,0.04)] bg-[var(--card)] p-1">
+            <div className="grid grid-cols-3 gap-1.5 rounded-xl border border-[rgba(0,0,0,0.04)] bg-[var(--card)] p-1">
               {recurringBillingOptions.map((option) => (
                 <button
                   key={option.key}
@@ -416,7 +416,7 @@ function PlusPlanCard({
             <div className="border-t border-[rgba(0,0,0,0.04)] pt-3">
               <button
                 className={cn(
-                  'flex w-full items-center justify-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition-[opacity,background-color,border-color,transform]',
+                  'flex w-full items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-medium transition-[opacity,background-color,border-color,transform]',
                   billingPeriod === 'lifetime'
                     ? 'border-[hsl(var(--primary)/0.28)] bg-[hsl(var(--primary)/0.08)] text-[var(--card)]'
                     : 'border-[rgba(0,0,0,0.05)] text-muted-foreground hover:bg-[var(--card)] hover:text-foreground',
@@ -437,7 +437,7 @@ function PlusPlanCard({
           <div className="mb-4 text-center">
             {billingPeriod === 'lifetime' ? (
               <div className="space-y-3">
-                <div className="flex items-center justify-center gap-3">
+                <div className="flex items-center justify-center gap-2.5">
                   <div className="relative text-lg text-muted-foreground">
                     <NumberFlow
                       value={previousPrice}
@@ -495,7 +495,7 @@ function PlusPlanCard({
             {plan.features.map((feature, index) => (
               <li
                 key={index}
-                className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]"
+                className="flex items-center gap-2 text-[13px] text-foreground/70 tracking-[-0.005em]"
               >
                 <Check className="size-4 text-success shrink-0" />
                 <span>{feature}</span>
@@ -505,7 +505,7 @@ function PlusPlanCard({
 
           {billingPeriod === 'lifetime' && (
             <div className="mt-4 border-t border-border pt-3">
-              <div className="gap-1">
+              <div className="gap-1.5">
                 <p className="text-xs text-muted-foreground">
                   • {t('pricing.lifetimeDisclaimer1')}
                 </p>
@@ -615,7 +615,7 @@ function PricingPlansContent({
 
   return (
     <div className="sm:px-6">
-      <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-6 lg:grid-cols-2 stagger-reveal">
+      <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-8 lg:grid-cols-2 stagger-reveal">
         <FreePlanCard
           plan={plans.basic}
           isModal={isModal}
@@ -645,11 +645,11 @@ function PricingPlansContent({
             <DialogTitle>{t('pricing.lifetimeUpgrade.title')}</DialogTitle>
             <DialogDescription>{t('pricing.lifetimeUpgrade.description')}</DialogDescription>
           </DialogHeader>
-          <div className="gap-4 py-4">
+          <div className="gap-3 py-4">
             <div className="rounded-lg border border-semantic-warning-border bg-semantic-warning-bg p-4">
               <div className="flex items-start">
                 <AlertCircle className="mr-3 mt-0.5 h-5 w-5 shrink-0 text-semantic-warning" />
-                <div className="gap-2">
+                <div className="gap-2.5">
                   <p className="text-sm font-medium text-semantic-warning">
                     {t('pricing.lifetimeUpgrade.warning')}
                   </p>

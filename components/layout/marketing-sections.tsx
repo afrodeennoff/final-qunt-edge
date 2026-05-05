@@ -6,12 +6,12 @@ import { MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
 
 export const marketingHeroTitleClassName =
-  'text-balance text-[48px] font-[275] leading-[1.00] tracking-[-0.04em] text-foreground sm:text-[64px] lg:text-[80px] xl:text-[96px]'
+  'text-balance text-[48px] font-[275] leading-[var(--leading-none)] tracking-[var(--tracking-tighter)] text-foreground sm:text-[64px] lg:text-[80px] xl:text-[96px]'
 
 export const marketingSectionTitleClassName =
-  'text-balance text-[32px] font-[350] leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[40px] lg:text-[48px]'
+  'text-balance text-[32px] font-[350] leading-[var(--leading-snug)] tracking-[var(--tracking-tight)] text-foreground sm:text-[40px] lg:text-[48px]'
 
-export const marketingBodyClassName = 'text-[14px] leading-[1.68] text-muted-foreground/80 sm:text-[15px]'
+export const marketingBodyClassName = 'text-[14px] leading-[var(--leading-relaxed)] text-muted-foreground/80 sm:text-[15px]'
 
 export function MarketingSection({
   children,
@@ -210,7 +210,7 @@ export function MarketingPricingCard({
         {features.map((feature, index) => (
           <li
             key={index}
-            className="flex items-start gap-3 text-sm leading-6 text-muted-foreground"
+            className="flex items-start gap-2.5 text-sm leading-6 text-muted-foreground"
           >
             <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--mkt-accent-subtle)] text-[var(--mkt-accent)]">
               <Check className="h-3 w-3" />
@@ -242,7 +242,7 @@ export function MarketingHyperframe({
   return (
     <Card id={id} variant="elevated" className={cn('overflow-hidden p-0', className)}>
       <div className="flex items-center justify-between border-b border-border/50 bg-[var(--card)] px-4 py-2.5">
-        <div className="flex items-center gap-[6px] px-2 py-1" aria-hidden>
+        <div className="flex items-center gap-1.5 px-2 py-1" aria-hidden>
           <span className="h-3 w-3 rounded-full bg-destructive/80 opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
           <span className="h-3 w-3 rounded-full bg-warning/80 opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
           <span className="h-3 w-3 rounded-full bg-success/80 opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />

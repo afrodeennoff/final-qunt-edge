@@ -816,8 +816,8 @@ export default function TraderProfilePageClient() {
           variant="elevated"
           className="animate-fade-up-smooth overflow-hidden p-6 sm:p-8"
         >
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-center">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex min-w-0 flex-col gap-6 sm:flex-row sm:items-center">
               <Avatar className="h-20 w-20 shrink-0 rounded-2xl border border-border/30 bg-card/50">
                 <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
                 <AvatarFallback className="bg-card text-base font-semibold text-foreground">

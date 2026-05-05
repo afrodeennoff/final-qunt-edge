@@ -6,7 +6,7 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
   ({ className, ...props }, ref) => (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-auto overscroll-x-contain rounded-[1.2rem] border border-border/7 bg-[linear-gradient(180deg,hsl(var(--card)_/_0.84)_0%,hsl(var(--card)_/_0.78)_100%)] shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.02),0_18px_34px_-28px_rgba(0,0,0,0.58)]"
+      className="relative w-full overflow-auto overscroll-x-contain rounded-[var(--radius-xl)] border border-border/7 bg-[linear-gradient(180deg,hsl(var(--card)_/_0.84)_0%,hsl(var(--card)_/_0.78)_100%)] shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.02),0_18px_34px_-28px_rgba(0,0,0,0.58)]"
     >
       <table
         ref={ref}
@@ -103,7 +103,7 @@ const TableCell = React.forwardRef<
     ref={ref}
     data-slot="table-cell"
       className={cn(
-        'border-b border-border/60 p-3.5 align-middle type-body-sm leading-[1.5] sm:p-4 [&:has([role=checkbox])]:pr-0',
+        'border-b border-border/60 p-3.5 align-middle type-body-sm leading-[var(--leading-normal)] sm:p-4 [&:has([role=checkbox])]:pr-0',
       'border-border/6',
       className,
     )}

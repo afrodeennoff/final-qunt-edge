@@ -103,7 +103,7 @@ export function UnifiedPageHeader({
             <p
               className={cn(
                 'max-w-3xl text-sm text-muted-foreground sm:text-[15px]',
-                'leading-[1.62]',
+                'leading-[var(--leading-relaxed)]',
               )}
             >
               {description}
