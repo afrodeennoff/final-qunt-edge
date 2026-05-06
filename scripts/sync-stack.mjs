@@ -134,6 +134,14 @@ async function canReachDatabase(urlString) {
   };
 }
 
+// Skip database migrations for deployment if environment variable is set
+const shouldSkipMigrations = process.env.NEXT_PUBLIC_SKIP_DATABASE_MIGRATIONS === "true";
+
+if (shouldSkipMigrations) {
+  info("[sync-stack] Skipping Prisma migrations for deployment");
+  process.exit(0);
+}
+
 const shouldForcePrismaGenerate = process.env.PRISMA_GENERATE_STRICT === "true";
 
 if (hasGeneratedPrismaClient() && !shouldForcePrismaGenerate) {
