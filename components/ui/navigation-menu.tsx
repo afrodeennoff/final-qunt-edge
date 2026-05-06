@@ -4,6 +4,7 @@ import { cva } from "class-variance-authority"
 import { ChevronDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { FOCUS_RING } from "@/lib/theme/focus"
 
 const NavigationMenu = React.forwardRef<
  React.ElementRef<typeof NavigationMenuPrimitive.Root>,
@@ -40,7 +41,7 @@ NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName
 
 const NavigationMenuItem = NavigationMenuPrimitive.Item
 
-const navigationMenuTriggerStyle = cva("group inline-flex h-[38px] w-max items-center justify-center rounded-[var(--radius-lg)] border border-transparent bg-background px-4 py-2 text-[13px] font-medium tracking-[-0.01em] transition-colors hover:border-border/0.04 hover:bg-background/80 data-[state=open]:border-border/0.04 data-[state=open]:bg-v2-accent/10 data-[state=open]:text-v2-accent focus:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+const navigationMenuTriggerStyle = cva("group inline-flex h-[38px] w-max items-center justify-center rounded-[var(--radius-lg)] border border-transparent bg-background px-4 py-2 text-[13px] font-medium tracking-[-0.01em] transition-colors hover:border-border/0.04 hover:bg-background/80 data-[state=open]:border-border/0.04 data-[state=open]:bg-v2-accent/10 data-[state=open]:text-v2-accent focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring/30 disabled:pointer-events-none disabled:opacity-50"
 )
 
 const NavigationMenuTrigger = React.forwardRef<

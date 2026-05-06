@@ -109,14 +109,18 @@ const siteMetadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 5,
-  minimumScale: 0.5,
+  maximumScale: 10, // Increased for 12K scaling capability
+  minimumScale: 0.1, // Allow zoom out for ultra-high-res content
   userScalable: true,
   viewportFit: 'cover',
   themeColor: [
     { media: '(prefers-color-scheme: dark)', color: 'var(--card)' },
     { media: '(prefers-color-scheme: light)', color: 'oklch(0.9838 0.0035 247.8583)' },
   ],
+  // 12K-specific properties for high-DPI displays
+  colorScheme: 'dark light',
+  // Note: devicePixelRatio cannot be set directly in viewport,
+  // but will be detected and handled by CSS media queries
 }
 
 export async function generateMetadata(): Promise<Metadata> {

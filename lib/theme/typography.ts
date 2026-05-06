@@ -24,6 +24,7 @@ export const fontSize = {
 // ── Type Scale (matches --type-* CSS variables) ──
 
 export const typeScale = {
+  // Standard scales (desktop/tablet)
   display: {
     size:    '3.35rem',
     weight:  600,
@@ -83,6 +84,68 @@ export const typeScale = {
     weight:  700,
     lineHeight: 1.2,
     tracking: '0.12em',
+  },
+
+  // Ultra-high resolution scales (4K-12K)
+  display4k: {
+    size:    '8rem',
+    weight:  600,
+    lineHeight: 0.94,
+    tracking: '-0.055em',
+  },
+  h14k: {
+    size:    '12rem',
+    weight:  600,
+    lineHeight: 0.96,
+    tracking: '-0.045em',
+  },
+  h24k: {
+    size:    '6rem',
+    weight:  600,
+    lineHeight: 1.02,
+    tracking: '-0.035em',
+  },
+  h34k: {
+    size:    '3.5rem',
+    weight:  600,
+    lineHeight: 1.15,
+    tracking: '-0.025em',
+  },
+  h44k: {
+    size:    '2.5rem',
+    weight:  600,
+    lineHeight: 1.25,
+    tracking: '-0.015em',
+  },
+  bodyLg4k: {
+    size:    '2.25rem',
+    weight:  450,
+    lineHeight: 1.75,
+    tracking: '-0.01em',
+  },
+  body4k: {
+    size:    '1.5rem',
+    weight:  450,
+    lineHeight: 1.65,
+    tracking: '-0.005em',
+  },
+  bodySm4k: {
+    size:    '1.125rem',
+    weight:  500,
+    lineHeight: 1.55,
+    tracking: '0.005em',
+  },
+  label4k: {
+    size:    '1rem',
+    weight:  600,
+    lineHeight: 1.3,
+    tracking: '0.1em',
+  },
+  overline4k: {
+    size:    '0.875rem',
+    weight:  700,
+    lineHeight: 1.3,
+    tracking: '0.15em',
   },
 } as const
 

@@ -7,6 +7,7 @@
  */
 
 export const space = {
+  // Standard spacing (0-96)
   0:   '0px',
   px:  '1px',
   '0_5': '2px',
@@ -42,12 +43,21 @@ export const space = {
   72:  '288px',
   80:  '320px',
   96:  '384px',
+
+  // Ultra-high resolution spacing (128-4096)
+  '128': '32rem',     // 2048px
+  '256': '64rem',     // 4096px
+  '512': '128rem',    // 8192px
+  '1024': '256rem',   // 16384px
+  '2048': '512rem',   // 32768px
+  '4096': '1024rem',  // 65536px
 } as const
 
 export type SpaceKey = keyof typeof space
 
 // Numeric pixel values for calculations
 export const spacePx = {
+  // Standard spacing (0-96)
   0:   0,
   px:  1,
   '0_5': 2,
@@ -68,6 +78,14 @@ export const spacePx = {
   16:  64,
   20:  80,
   24:  96,
+
+  // Ultra-high resolution spacing (128-4096)
+  '128': 2048,     // 32rem
+  '256': 4096,     // 64rem
+  '512': 8192,     // 128rem
+  '1024': 16384,   // 256rem
+  '2048': 32768,   // 512rem
+  '4096': 65536,   // 1024rem
 } as const
 
 // Semantic spacing presets for common patterns
@@ -98,11 +116,17 @@ export const spacingPresets = {
 
 // Fluid spacing utilities (responsive clamp values)
 export const fluidSpacing = {
+  // Standard fluid spacing
   sm: 'clamp(0.375rem, 0.3rem + 0.25vw, 0.75rem)',
   md: 'clamp(0.75rem, 0.6rem + 0.75vw, 1.5rem)',
   lg: 'clamp(1rem, 0.8rem + 1vw, 2.5rem)',
   xl: 'clamp(1.5rem, 1.2rem + 1.5vw, 4rem)',
   '2xl': 'clamp(2rem, 1.5rem + 2.5vw, 6rem)',
+
+  // Ultra-high resolution fluid spacing
+  '4k': 'clamp(3rem, 2rem + 1vw, 8rem)',
+  '8k': 'clamp(6rem, 4rem + 2vw, 16rem)',
+  '12k': 'clamp(12rem, 8rem + 3vw, 24rem)',
 } as const
 
 export const fluidGap = {

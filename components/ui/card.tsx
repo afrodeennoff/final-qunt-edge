@@ -9,6 +9,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   status?: CardStatusTone
   isLoading?: boolean
   accent?: 'primary' | 'success' | 'warning' | 'destructive' | 'info'
+  ariaLabel?: string
 }
 
 export type CardStatusTone = 'live' | 'synced' | 'idle' | 'destructive' | 'error'
@@ -34,6 +35,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       accent,
       onClick,
       children,
+      ariaLabel,
       ...props
     },
     ref,
@@ -55,6 +57,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         tabIndex={isInteractive ? 0 : undefined}
         onKeyDown={isInteractive ? handleKeyDown : undefined}
         onClick={isInteractive ? onClick : undefined}
+        aria-label={isInteractive ? ariaLabel : undefined}
         className={cn(
           'group relative overflow-hidden text-foreground',
           'relative rounded-[var(--radius-lg)] text-card-foreground border border-border/50 bg-card shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_20px_40px_-28px_rgba(0,0,0,0.72)] transition-[border-color,box-shadow,background-color] duration-[130ms] ease-[cubic-bezier(0.16,1,0.3,1)]',
