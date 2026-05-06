@@ -20,6 +20,8 @@ export default async function FeaturesBento() {
     title: t(`landing.home.features.feature${index}Title`),
     description: t(`landing.home.features.feature${index}Description`),
     icon: featureIcons[index - 1],
+    highlighted: index === 2, // Only feature 2 is highlighted
+    colSpan: index === 1 ? 'lg:col-span-2' : '', // First feature spans 2 columns
   }))
 
   return (
