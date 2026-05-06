@@ -1,9 +1,14 @@
-import { BarChart3, Brain, Download, FileText, Shield, Users } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import {
-  MarketingFeatureCard,
-  MarketingSection,
-  MarketingSectionHeader,
-} from '@/components/layout/marketing-sections'
+  unifiedBodyCopyClassName,
+  unifiedChipClassName,
+  unifiedInsetPanelClassName,
+  unifiedSectionEyebrowClassName,
+  unifiedSectionPanelClassName,
+} from '@/components/layout/unified-page-recipes'
+import { MarketingSection } from '@/components/layout/marketing-sections'
+import { MotionSection, MotionStagger, MotionStaggerItem } from '@/components/motion'
 import { getTypedI18n } from '@/locales/server'
 
 const featureIcons = [Download, BarChart3, Users, Shield, FileText, Brain]
@@ -35,33 +40,7 @@ export default async function FeaturesBento() {
           </div>
         </div>
 
-        <MotionStagger className="grid gap-4 md:grid-cols-3" delay={0.08}>
-          {issues.map((issue) => {
-            const Icon = issue.icon
-            return (
-              <MotionStaggerItem key={String(issue.title)}>
-                <article className={cn(unifiedSectionPanelClassName, 'flex h-full flex-col gap-4 p-6')}>
-                  <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-primary/18 bg-primary/10 text-primary">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <span className={cn(unifiedChipClassName, 'w-fit px-3 py-1.5')}>{issue.badge}</span>
-                  <div className="space-y-2">
-                    <h3 className="text-[1.1rem] font-semibold tracking-[-0.02em] text-foreground">
-                      {issue.title}
-                    </h3>
-                    <p className="text-sm leading-[1.65] text-muted-foreground">{issue.description}</p>
-                  </div>
-                  <div className="mt-auto inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
-                    <ArrowRight className="h-3.5 w-3.5" />
-                    {issue.solution}
-                  </div>
-                </article>
-              </MotionStaggerItem>
-            )
-          })}
-        </MotionStagger>
-
-        <div className="px-1">
+                <div className="px-1">
           <span className={cn(unifiedChipClassName, 'px-3 py-1.5 text-foreground/80')}>
             {t('landing.home.features.listLabel')}
           </span>
@@ -97,7 +76,9 @@ export default async function FeaturesBento() {
               </MotionStaggerItem>
             )
           })}
-        </div>
+        </MotionStagger>
+      </div>
+    </MarketingSection>
       </div>
     </MarketingSection>
   )
