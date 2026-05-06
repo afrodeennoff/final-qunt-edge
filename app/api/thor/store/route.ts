@@ -171,7 +171,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     const validationResponse = toValidationErrorResponse(error)
     if (validationResponse.status !== 500) return validationResponse
-    console.error('[thor/store] Error processing request:', error)
+    logger.error('[thor/store] Error processing request:', { error })
     return apiError('INTERNAL_ERROR', 'Internal server error', 500, { requestId })
   }
 }
@@ -254,7 +254,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     const validationResponse = toValidationErrorResponse(error)
     if (validationResponse.status !== 500) return validationResponse
-    console.error('[thor/store] Error retrieving trades:', error);
+    logger.error('[thor/store] Error retrieving trades:', { error });
     return apiError('INTERNAL_ERROR', 'Failed to retrieve trades', 500, { requestId })
   }
 }
@@ -296,7 +296,7 @@ export async function DELETE(req: NextRequest) {
   } catch (error) {
     const validationResponse = toValidationErrorResponse(error)
     if (validationResponse.status !== 500) return validationResponse
-    console.error('[thor/store] Error deleting trades:', error);
+    logger.error('[thor/store] Error deleting trades:', { error });
     return apiError('INTERNAL_ERROR', 'Failed to delete trades', 500, { requestId })
   }
 }

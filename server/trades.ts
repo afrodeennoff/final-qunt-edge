@@ -69,6 +69,7 @@ type TradeError =
 interface TradeResponse {
   error: TradeError | false
   numberOfTradesAdded: number
+  skippedCount: number
   details?: unknown
   warnings?: string[]
 }
@@ -257,7 +258,7 @@ async function saveTradesForResolvedUser(
   logger.info(`[saveTrades] Saving trades`, { count: data.length, userId, rawUserId })
 
   if (!Array.isArray(data) || data.length === 0) {
-    return { error: 'INVALID_DATA', numberOfTradesAdded: 0, details: 'No trades provided' }
+    return { error: 'INVALID_DATA', numberOfTradesAdded: 0, skippedCount: 0, details: 'No trades provided' }
   }
 
   try {
@@ -312,6 +313,7 @@ async function saveTradesForResolvedUser(
       return {
         error: 'INVALID_DATA',
         numberOfTradesAdded: 0,
+        skippedCount: data.length,
         details: validationErrors.join('; ')
       }
     }
@@ -368,13 +370,16 @@ async function saveTradesForResolvedUser(
       logger.info('[saveTrades] No trades added. Duplicate check.')
       return {
         error: 'DUPLICATE_TRADES',
-        numberOfTradesAdded: 0
+        numberOfTradesAdded: 0,
+        skippedCount: data.length,
+        details: undefined
       }
     }
 
     return {
       error: false,
       numberOfTradesAdded: result.count,
+      skippedCount: data.length - userAssignedTrades.length,
       warnings: validationErrors.length > 0 ? validationErrors : undefined,
     }
   } catch (error) {
@@ -382,6 +387,7 @@ async function saveTradesForResolvedUser(
     return {
       error: 'DATABASE_ERROR',
       numberOfTradesAdded: 0,
+      skippedCount: data.length,
       details: 'Database operation failed'
     }
   }

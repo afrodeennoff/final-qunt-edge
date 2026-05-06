@@ -56,6 +56,8 @@ const TRADOVATE_ENVIRONMENTS = {
   }
 }
 
+const MAX_TRADOVATE_TRADES = 5_000
+
 interface TradovateAccount {
   id: number
   name: string
@@ -903,11 +905,11 @@ export async function testTradovateAuth(accessToken: string) {
       return { success: true, userData }
     } else {
       const errorText = await response.text()
-      console.error('Demo user list endpoint failed:', { status: response.status, errorText })
+      logger.error('Demo user list endpoint failed:', { status: response.status, errorText })
       return { success: false, error: errorText }
     }
   } catch (error) {
-    console.error('Error testing auth:', error)
+    logger.error('Error testing auth:', { error })
     return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
   }
 }
@@ -926,7 +928,7 @@ export async function getTradovateAccounts(accessToken: string): Promise<Tradova
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('Failed to fetch accounts:', { status: response.status, errorText })
+      logger.error('Failed to fetch accounts:', { status: response.status, errorText })
       return { error: `Failed to fetch accounts: ${errorText}` }
     }
 
@@ -938,7 +940,7 @@ export async function getTradovateAccounts(accessToken: string): Promise<Tradova
 
     return { accounts }
   } catch (error) {
-    console.error('Failed to get Tradovate accounts:', error)
+    logger.error('Failed to get Tradovate accounts:', { error })
     return { error: 'Failed to get accounts' }
   }
 }
@@ -1330,7 +1332,7 @@ export async function removeTradovateToken(accountId?: string) {
 
     return { deletedCount }
   } catch (error) {
-    console.error('Failed to remove Tradovate token:', error)
+    logger.error('Failed to remove Tradovate token:', { error })
     return { error: 'Failed to remove token' }
   }
 }
@@ -1359,7 +1361,7 @@ export async function getTradovateSynchronizations() {
 
     return { synchronizations }
   } catch (error) {
-    console.error('TRADOVATE SYNC: Failed to get Tradovate synchronizations:', error)
+    logger.error('TRADOVATE SYNC: Failed to get Tradovate synchronizations:', { error })
     return { error: 'Failed to get synchronizations' }
   }
 }
@@ -1410,7 +1412,7 @@ export async function setCustomTradovateToken(
       expiresAt: expirationDate.toISOString()
     }
   } catch (error) {
-    console.error('Failed to set custom Tradovate token:', error)
+    logger.error('Failed to set custom Tradovate token:', { error })
     return { error: 'Failed to set custom token' }
   }
 }
@@ -1511,6 +1513,15 @@ export async function getTradovateTrades(
     logger.info('Fetching fill pairs...')
     const fillPairs = await getFillPairs(accessToken)
     logger.info(`Received ${fillPairs.length} fill pairs from Tradovate`)
+
+    // Apply trade count limit
+    if (fillPairs.length > MAX_TRADOVATE_TRADES) {
+      const originalCount = fillPairs.length
+      // Sort by ID descending and keep most recent pairs
+      const sortedFillPairs = fillPairs.sort((a, b) => b.id - a.id)
+      fillPairs.splice(0, fillPairs.length, ...sortedFillPairs.slice(0, MAX_TRADOVATE_TRADES))
+      logger.warn(`Truncated ${originalCount} fill pairs to ${fillPairs.length} (max allowed: ${MAX_TRADOVATE_TRADES})`)
+    }
 
     // Means there are no trades to import
     if (fillPairs.length === 0) {
@@ -1696,7 +1707,7 @@ export async function updateDailySyncTimeAction(
 
     return { success: true }
   } catch (error) {
-    console.error('Error updating daily sync time:', error)
+    logger.error('Error updating daily sync time:', { error })
     return { success: false, error: 'Failed to update daily sync time' }
   }
 }

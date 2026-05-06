@@ -175,7 +175,7 @@ export async function POST(req: NextRequest) {
       return apiError('PAYLOAD_TOO_LARGE', `Too many trades. Maximum is ${MAX_MT5_TRADES}.`, 413)
     }
     
-    const result = await saveTradesForUserAction(trades as never[], user.id)
+    const result = await saveTradesForUserAction(trades, user.id)
 
     if (result.error && result.error !== 'DUPLICATE_TRADES') {
       return apiError('BAD_REQUEST', result.error, 400, result.details)
