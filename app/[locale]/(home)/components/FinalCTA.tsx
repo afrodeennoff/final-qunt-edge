@@ -43,6 +43,6 @@ export default async function FinalCTA({ locale }: FinalCTAProps) {
           </Button>
         </div>
       </div>
-    </MarketingSection>
+    </section>
   )
 }

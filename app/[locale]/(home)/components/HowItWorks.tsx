@@ -1,7 +1,14 @@
+import { cn } from '@/lib/utils'
 import {
   MarketingSection,
   MarketingSectionHeader,
-} from '@/components/layout/marketing-sections'
+  unifiedBodyCopyClassName,
+  unifiedSectionEyebrowClassName,
+  unifiedSectionPanelClassName,
+  unifiedInsetPanelClassName,
+} from '@/components/layout/unified-page-recipes'
+import { motion } from 'framer-motion'
+import { InteractiveWrapper } from '@/components/interactive-wrapper'
 import { getTypedI18n } from '@/locales/server'
 import ProductDemoPlayer from './ProductDemoPlayer'
 
@@ -79,6 +86,6 @@ export default async function HowItWorks() {
           ))}
         </div>
       </div>
-    </MarketingSection>
+    </section>
   )
 }
