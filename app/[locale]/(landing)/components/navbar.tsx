@@ -26,8 +26,6 @@ export default function Navbar() {
     { title: String(t('landing.navbar.propFirmPerk')), href: '/deals' },
     { title: String(t('landing.navbar.leaderboard')), href: '/leaderboard' },
     { title: String(t('landing.navbar.teams')), href: '/teams' },
-    { title: String(t('landing.nav.blog')), href: '/blogs' },
-    { title: String(t('landing.navbar.support')), href: '/support' },
   ], [t])
 
   const isHomePath = useMemo(() => pathname === '/' || /^\/[a-z]{2}$/.test(pathname), [pathname])
@@ -39,30 +37,31 @@ export default function Navbar() {
   }
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 flex justify-center px-4 pt-3 sm:px-6 lg:px-8 pointer-events-none">
+    <header className="fixed left-0 right-0 top-0 z-[60] flex justify-center px-4 pt-4 sm:px-6 lg:px-8 pointer-events-none">
       <div className={cn('mx-auto w-full', MARKETING_SHELL_WIDTH)}>
         <nav
           className={cn(
-            'pointer-events-auto relative flex items-center justify-between gap-3 h-12 w-full max-w-[1100px] rounded-full px-3 backdrop-blur-2xl backdrop-saturate-180',
-            'border border-[var(--mkt-border-subtle)] bg-[rgba(9,9,11,0.75)]',
-            'shadow-[0_1px_0_rgba(255,255,255,0.03),0_8px_24px_-12px_rgba(0,0,0,0.50)]',
+            'pointer-events-auto relative flex items-center justify-between gap-4 h-14 w-full max-w-[1280px] rounded-2xl px-5 backdrop-blur-[20px] backdrop-saturate-180',
+            'border border-[rgba(139,92,246,0.1)] bg-[rgba(15,15,20,0.8)]',
+            'shadow-[0_4px_32px_-8px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.03)]',
+            'transition-[background-color,border-color,box-shadow] duration-[300ms]',
           )}
         >
           {/* Logo */}
           <Link
             href={`/${locale}`}
-            className="group flex items-center gap-2 rounded-full px-2 py-1.5 transition-[background-color] duration-200 hover:bg-[rgba(255,255,255,0.04)]"
+            className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-[300ms] hover:bg-[rgba(139,92,246,0.08)]"
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--mkt-accent-subtle)] border border-[var(--mkt-accent-border)] text-[var(--mkt-accent)]">
-              <Logo className="h-3.5 w-3.5 fill-current" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-[0_4px_12px_-4px_rgba(139,92,246,0.4)]">
+              <Logo className="h-4 w-4 fill-current" />
             </div>
-            <span className="hidden text-[13px] font-semibold tracking-[-0.02em] text-[var(--mkt-text-primary)] sm:inline-flex">
+            <span className="hidden text-[14px] font-[600] tracking-[-0.015em] text-[var(--mkt-text-primary)] sm:inline-flex bg-gradient-to-r from-purple-400 to-purple-500 bg-clip-text text-transparent">
               Qunt Edge
             </span>
           </Link>
 
-          {/* Nav links — pill-shaped active indicator */}
-          <div className="mx-auto hidden items-center gap-0.5 lg:flex">
+          {/* Nav links — minimalist underline indicator */}
+          <div className="mx-auto hidden items-center gap-1 lg:flex">
             {links.map((link) => {
               const active = isActive(link.href)
               return (
@@ -70,31 +69,37 @@ export default function Navbar() {
                   key={link.href}
                   href={`/${locale}${link.href}`}
                   className={cn(
-                    'relative rounded-full px-3 py-1.5 text-[12.5px] font-medium tracking-[-0.005em] transition-[color,background-color] duration-150',
+                    'relative px-4 py-2 text-[13px] font-[500] tracking-[-0.005em] transition-all duration-[200ms]',
                     active
-                      ? 'bg-[rgba(255,255,255,0.06)] text-[var(--mkt-text-primary)]'
-                      : 'text-[var(--mkt-text-tertiary)] hover:text-[var(--mkt-text-secondary)] hover:bg-[rgba(255,255,255,0.03)]',
+                      ? 'text-purple-400'
+                      : 'text-[var(--mkt-text-tertiary)] hover:text-[var(--mkt-text-secondary)]',
                   )}
                 >
                   {link.title}
+                  {active && (
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full" />
+                  )}
                 </Link>
               )
             })}
           </div>
 
           {/* Actions */}
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-3">
             <Link
               href={`/${locale}/authentication`}
-              className="hidden h-8 items-center justify-center rounded-full px-3.5 text-[12.5px] font-medium text-[var(--mkt-text-tertiary)] transition-[color,background-color] duration-150 hover:text-[var(--mkt-text-secondary)] hover:bg-[rgba(255,255,255,0.04)] md:inline-flex"
+              className="hidden h-9 items-center justify-center rounded-xl px-4 text-[13px] font-[500] text-[var(--mkt-text-tertiary)] transition-all duration-[200ms] hover:text-[var(--mkt-text-secondary)] hover:bg-[rgba(255,255,255,0.04)] md:inline-flex"
             >
               {t('landing.navbar.signIn')}
             </Link>
 
             <Link
               href={`/${locale}/authentication`}
-              className="hidden h-8 items-center justify-center gap-1.5 rounded-full px-4 text-[12.5px] font-semibold text-white transition-[transform,box-shadow] duration-200 hover:-translate-y-[0.5px] hover:shadow-[0_0_20px_rgba(139,92,246,0.30)] active:scale-[0.97] md:inline-flex"
-              style={{ background: 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)' }}
+              className="hidden h-9 items-center justify-center gap-1.5 rounded-xl px-5 text-[13px] font-[600] text-white transition-all duration-[300ms] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-4px_rgba(139,92,246,0.4)] active:scale-[0.98] md:inline-flex"
+              style={{
+                background: 'linear-gradient(135deg, rgba(139,92,246,1) 0%, rgba(109,40,217,1) 100%)',
+                boxShadow: '0 4px 16px -8px rgba(139,92,246,0.4)'
+              }}
             >
               {t('landing.hero.ctaPrimary')}
             </Link>
@@ -104,7 +109,7 @@ export default function Navbar() {
               footer={
                 <Link
                   href={`/${locale}/authentication`}
-                  className={cn(unifiedPrimaryActionClassName, 'w-full')}
+                  className={cn(unifiedPrimaryActionClassName, 'w-full rounded-xl h-9')}
                 >
                   {t('landing.hero.ctaPrimary')}
                 </Link>
