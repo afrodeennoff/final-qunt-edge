@@ -1,10 +1,8 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { ButtonV2 as Button } from '@/components/ui/v2'
-import { cn } from '@/lib/utils'
-import { unifiedSectionPanelClassName } from '@/components/layout/unified-page-recipes'
-import { motion } from 'framer-motion'
 import {
+  MarketingSection,
   marketingBodyClassName,
   marketingSectionTitleClassName,
 } from '@/components/layout/marketing-sections'
@@ -44,7 +42,7 @@ export default async function FinalCTA({ locale }: FinalCTAProps) {
             </Link>
           </Button>
         </div>
-      </motion.div>
-    </section>
+      </div>
+    </MarketingSection>
   )
 }
