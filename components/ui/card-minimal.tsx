@@ -1,0 +1,84 @@
+import * as React from 'react'
+import { cn } from '@/lib/utils'
+
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'default' | 'flat' | 'embedded'
+  hover?: boolean
+  size?: 'sm' | 'md' | 'lg'
+  clickable?: boolean
+  isLoading?: boolean
+}
+
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  (
+    {
+      className,
+      variant = 'default',
+      hover = false,
+      size = 'md',
+      clickable = false,
+      isLoading = false,
+      onClick,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const isInteractive = clickable || typeof onClick === 'function'
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (!isInteractive) return
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        onClick?.(event as unknown as React.MouseEvent<HTMLDivElement>)
+      }
+    }
+
+    const baseClasses = cn(
+      'relative overflow-hidden text-foreground',
+      'transition-all duration-[200ms] ease-out',
+      hover && 'hover:shadow-lg hover:-translate-y-px',
+      isInteractive && 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
+      isLoading && 'pointer-events-none opacity-80'
+    )
+
+    const variantClasses = {
+      default: 'rounded-lg border border-border/50 bg-card shadow-sm',
+      flat: 'rounded-lg border border-border/20 bg-card shadow-none',
+      embedded: 'rounded-lg border-0 bg-card shadow-md',
+    }
+
+    const sizeClasses = {
+      sm: 'p-3 text-sm',
+      md: 'p-4',
+      lg: 'p-6 text-lg',
+    }
+
+    return (
+      <div
+        ref={ref}
+        role={isInteractive ? 'button' : undefined}
+        tabIndex={isInteractive ? 0 : undefined}
+        onKeyDown={isInteractive ? handleKeyDown : undefined}
+        onClick={isInteractive ? onClick : undefined}
+        className={cn(
+          baseClasses,
+          variantClasses[variant],
+          sizeClasses[size],
+          className
+        )}
+        {...props}
+      >
+        {isLoading && (
+          <div className="absolute inset-0 z-10 overflow-hidden rounded-[inherit]">
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          </div>
+        )}
+        {children}
+      </div>
+    )
+  }
+)
+Card.displayName = 'Card'
+
+export { Card }

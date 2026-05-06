@@ -6,13 +6,10 @@
 // ── Shadow System (macOS Layered Depth) ──
 
 export const shadows = {
-  '2xs': '0 1px 2px rgba(0,0,0,0.05)',
-  xs:    '0 1px 2px rgba(0,0,0,0.05)',
-  sm:    '0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)',
-  md:    '0 4px 12px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04)',
-  lg:    '0 8px 24px rgba(0,0,0,0.09), 0 4px 8px rgba(0,0,0,0.04)',
-  xl:    '0 20px 48px rgba(0,0,0,0.14), 0 8px 16px rgba(0,0,0,0.06)',
-  '2xl': '0 20px 48px rgba(0,0,0,0.14), 0 8px 16px rgba(0,0,0,0.06)',
+  sm: '0 1px 2px rgba(0,0,0,0.05)',
+  md: '0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)',
+  lg: '0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)',
+  xl: '0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)',
 } as const
 
 export const ultraShadows = {
@@ -42,13 +39,10 @@ export const premiumShadows = {
 // ── Border Radius Scale ──
 
 export const radius = {
+  none: '0',
   sm:   '0.375rem',   // 6px
-  md:   '0.625rem',   // 10px
-  lg:   '0.875rem',   // 14px
-  xl:   '1.25rem',    // 20px
-  '2xl':'1.75rem',    // 28px
-  pill: '9999px',
-  icon: '0.625rem',   // 10px
+  md:   '0.5rem',     // 8px
+  lg:   '0.75rem',    // 12px
 } as const
 
 // ── Blur Presets (macOS) ──
