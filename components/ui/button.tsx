@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'type-body-sm inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border border-transparent select-none overflow-hidden font-medium tracking-normal transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'type-body-sm inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border border-transparent select-none overflow-hidden font-medium tracking-normal transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 min-h-[44px]',
   {
     variants: {
       variant: {
@@ -40,11 +40,11 @@ const buttonVariants = cva(
           'rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground active:scale-[0.98]',
       },
       size: {
-        sm: 'h-8 min-h-[32px] min-w-[32px] px-3 rounded-xl',
-        default: 'h-9 min-h-[36px] min-w-[36px] px-4 rounded-xl',
-        md: 'h-10 min-h-[40px] min-w-[40px] px-5 rounded-xl',
+        sm: 'h-8 min-h-[44px] min-w-[32px] px-3 rounded-xl',
+        default: 'h-9 min-h-[44px] min-w-[36px] px-4 rounded-xl',
+        md: 'h-10 min-h-[44px] min-w-[40px] px-5 rounded-xl',
         lg: 'h-11 min-h-[44px] min-w-[44px] px-6 text-sm rounded-xl',
-        icon: 'h-9 w-9 min-h-[36px] min-w-[36px] rounded-xl',
+        icon: 'h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl',
       },
     },
     defaultVariants: {
