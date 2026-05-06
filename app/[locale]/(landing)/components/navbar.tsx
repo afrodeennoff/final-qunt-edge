@@ -22,14 +22,14 @@ export default function Navbar() {
   const locale = useCurrentLocale()
 
   const links: NavLink[] = useMemo(() => [
-    { title: String(t('landing.navbar.features')), href: '/#features' },
-    { title: String(t('landing.navbar.pricing')), href: '/pricing' },
-    { title: String(t('landing.navbar.propFirms')), href: '/propfirms' },
-    { title: String(t('landing.navbar.propFirmPerk')), href: '/deals' },
-    { title: String(t('landing.navbar.leaderboard')), href: '/leaderboard' },
-    { title: String(t('landing.navbar.teams')), href: '/teams' },
-    { title: String(t('landing.nav.blog')), href: '/blogs' },
-    { title: String(t('landing.navbar.support')), href: '/support' },
+    { title: 'Features', href: '/#features' },
+    { title: 'Pricing', href: '/pricing' },
+    { title: 'Prop Firms Catalogue', href: '/propfirms' },
+    { title: 'Deals', href: '/deals' },
+    { title: 'Leaderboard', href: '/leaderboard' },
+    { title: 'Teams', href: '/teams' },
+    { title: 'Blog', href: '/blogs' },
+    { title: 'Support', href: '/support' },
   ], [t])
 
   const isHomePath = useMemo(() => pathname === '/' || /^\/[a-z]{2}$/.test(pathname), [pathname])
