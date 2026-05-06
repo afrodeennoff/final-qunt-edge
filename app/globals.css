@@ -157,7 +157,7 @@
   /* Focus ring — macOS precision ring */
   :focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px rgba(0,102,204,0.45);
+    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px hsl(var(--ring) / 0.45);
     transition: box-shadow 130ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -1962,10 +1962,7 @@
     padding-right: env(safe-area-inset-right);
   }
 
-  .focus-ring {
-    outline: 2px solid hsl(var(--ring));
-    outline-offset: 2px;
-  }
+  /* .focus-ring removed — use @utility focus-ring above or FOCUS_RING from lib/theme/focus */
 
   /* Reduced Motion */
   @media (prefers-reduced-motion: reduce) {
@@ -3163,9 +3160,9 @@ img[loading='lazy'] {
   background: oklch(0.6083 0.2172 297.1153 / 0.3);
 }
 
-/* Focus rings — shared custom accent */
+/* Focus rings — theme-aware accent */
 *:focus-visible {
-  outline-color: oklch(0.6083 0.2172 297.1153 / 0.5);
+  outline-color: hsl(var(--ring) / 0.5);
 }
 
 /* Subtle custom ambient glow on cards (static, no performance cost) */
