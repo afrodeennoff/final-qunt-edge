@@ -79,7 +79,5 @@ export default async function FeaturesBento() {
         </MotionStagger>
       </div>
     </MarketingSection>
-      </div>
-    </MarketingSection>
   )
 }
