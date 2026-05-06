@@ -42,7 +42,7 @@ export default async function FinalCTA({ locale }: FinalCTAProps) {
             </Link>
           </Button>
         </div>
-      </div>
+      </motion.div>
     </section>
   )
 }

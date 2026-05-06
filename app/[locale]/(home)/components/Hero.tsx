@@ -1,11 +1,15 @@
 import Link from 'next/link'
 import { ArrowRight, Play } from 'lucide-react'
 import { ButtonV2 as Button } from '@/components/ui/v2'
+import { cn } from '@/lib/utils'
 import {
-  MarketingSection,
+  unifiedGhostActionClassName,
+  unifiedInsetPanelClassName,
+  unifiedInfoLabelClassName,
+  unifiedInfoValueClassName,
   marketingBodyClassName,
   marketingHeroTitleClassName,
-} from '@/components/layout/marketing-sections'
+} from '@/components/layout/unified-page-recipes'
 import { getI18n } from '@/locales/server'
 
 export default async function Hero({ locale }: { locale: string }) {
@@ -31,7 +35,8 @@ export default async function Hero({ locale }: { locale: string }) {
               {t('landing.hero.ctaSecondary')}
               <ArrowRight className="h-4 w-4" />
             </a>
-          </div>
+          </Button>
+        </div>
 
           <div className="animate-fade-up-smooth animate-fade-up-smooth-d3 flex flex-wrap gap-2.5">
             {proofPills.map((item) => (
