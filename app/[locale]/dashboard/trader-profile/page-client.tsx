@@ -1355,51 +1355,6 @@ export default function TraderProfilePageClient() {
             </UnifiedPerformanceDashboard>
         </div>
 
-        <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d5 p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-              Trade history
-            </p>
-            <Badge variant="secondary">{tradeFeedSummary}</Badge>
-          </div>
-
-          {isLoading ? (
-            <div className="mt-5 space-y-3">
-              {[1, 2, 3].map((index) => (
-                <div
-                  className={cn(
-                    insetPanelClassName,
-                    'w-full rounded-xl px-4 py-3 sm:w-auto sm:min-w-[18rem] lg:min-w-[19rem]',
-                  )}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-1">
-                      <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                        Benchmark
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        <Badge
-                          variant={metrics.winRate >= 50 ? 'success' : 'outline'}
-                          className="gap-1.5"
-                        >
-                          Win rate: <span className="tabular-nums">{formatValue(metrics.winRate)}%</span>
-                        </Badge>
-                        <Badge
-                          variant={metrics.drawdown <= 0 ? 'success' : 'outline'}
-                          className="gap-1.5"
-                        >
-                          Drawdown: <span className="tabular-nums">{formatValue(metrics.drawdown)}%</span>
-                        </Badge>
-                      </div>
-                    </div>
-
-                    <TrendingUp className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </UnifiedSurface>
 
         {/* ---- Comprehensive Dashboard View ---- */}
         <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">

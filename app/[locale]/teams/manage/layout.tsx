@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { createClient } from '@/server/auth'
 import { redirect } from 'next/navigation'
 import { TeamsSidebar } from '../components/teams-sidebar'
@@ -8,18 +9,16 @@ import { SidebarRootProviders } from '@/components/providers/root-providers'
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
 import { BackgroundGlow } from '@/components/ui/background-glow'
 import {
+  HEADER_HEIGHT,
   HEADER_Z_INDEX,
+  HEADER_BORDER,
+  HEADER_BG,
   CONTENT_PADDING,
   CONTENT_PADDING_Y,
   APP_SHELL_SOFT_BORDER_STYLE,
-  WORKSPACE_SHELL_WIDTH,
 } from '@/lib/constants/layout'
-import {
-  unifiedToolbarBadgeClassName,
-  unifiedToolbarButtonClassName,
-  unifiedToolbarClassName,
-} from '@/components/layout/unified-page-recipes'
-import { cn } from '@/lib/utils'
+import { AuthProfileButton } from '../components/auth-profile-button'
+import { AuthProfileButtonSkeleton } from '../components/auth-profile-button-skeleton'
 import { DashboardProviders } from '@/components/providers/dashboard-providers'
 import { TeamsMobileBottomNav } from '../components/teams-mobile-bottom-nav'
 
@@ -84,66 +83,33 @@ export default async function TeamManageLayout({
       <DashboardProviders>
         <TeamsSidebar />
 
-                <SidebarInset className="relative overflow-hidden h-dvh selection:bg-background/0.45 selection:text-foreground">
-                    <BackgroundGlow variant="default" />
+        <SidebarInset className="relative overflow-hidden h-dvh selection:bg-background/0.45 selection:text-foreground">
+          <BackgroundGlow variant="default" />
 
-                    <div className="relative z-0 flex h-full flex-col">
-                        <header
-                            className={`sticky top-0 ${HEADER_HEIGHT} ${HEADER_Z_INDEX} ${HEADER_BORDER} ${HEADER_BG}`}
-                        >
-                            <div className="flex h-full w-full items-center justify-between px-4 sm:px-6 lg:px-8">
-                                <div className="flex items-center gap-3">
-                                    <SidebarTrigger className="-ml-1" />
-                                    <div className="flex flex-col">
-                                        <h1 className="text-sm font-bold tracking-wide text-foreground">
-                                            Team Management
-                                        </h1>
-                                        <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-                                            Unified Workspace
-                                        </span>
-                                    </div>
-                                </div>
-                                <Suspense fallback={<AuthProfileButtonSkeleton />}>
-                                    <AuthProfileButton />
-                                </Suspense>
-                            </div>
-                        </header>
-
-                        <main className="flex-1 overflow-y-auto">
-                            <div className={`w-full ${CONTENT_PADDING} ${CONTENT_PADDING_Y}`}>
-                                {children}
-                            </div>
-                        </main>
-                    </div>
-                    <TeamsMobileBottomNav
-                        dashboardRoot={dashboardRoot}
-                        slug={slug}
-                        backHref={`/${locale}/dashboard`}
-                    />
-                    <div className="flex min-w-0 flex-col">
-                      <div className="flex items-center gap-2.5">
-                        <span className={cn(unifiedToolbarBadgeClassName, 'hidden sm:inline-flex')}>
-                          Team
-                        </span>
-                        <h1 className="truncate text-[0.92rem] font-semibold tracking-[0.02em] text-foreground">
-                          Team Management
-                        </h1>
-                      </div>
-                    </div>
+          <div className="relative z-0 flex h-full flex-col">
+            <header
+              className={`sticky top-0 ${HEADER_HEIGHT} ${HEADER_Z_INDEX} ${HEADER_BORDER} ${HEADER_BG}`}
+            >
+              <div className="flex h-full w-full items-center justify-between px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center gap-3">
+                  <SidebarTrigger className="-ml-1" />
+                  <div className="flex flex-col">
+                    <h1 className="text-sm font-bold tracking-wide text-foreground">
+                      Team Management
+                    </h1>
+                    <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                      Unified Workspace
+                    </span>
                   </div>
                 </div>
+                <Suspense fallback={<AuthProfileButtonSkeleton />}>
+                  <AuthProfileButton />
+                </Suspense>
               </div>
             </header>
 
             <main className="flex-1 overflow-y-auto">
-              <div
-                className={cn(
-                  'mx-auto w-full',
-                  WORKSPACE_SHELL_WIDTH,
-                  CONTENT_PADDING,
-                  CONTENT_PADDING_Y,
-                )}
-              >
+              <div className={`w-full ${CONTENT_PADDING} ${CONTENT_PADDING_Y}`}>
                 {children}
               </div>
             </main>
