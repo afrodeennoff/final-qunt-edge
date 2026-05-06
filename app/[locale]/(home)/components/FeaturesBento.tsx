@@ -8,7 +8,7 @@ import {
   unifiedSectionPanelClassName,
 } from '@/components/layout/unified-page-recipes'
 import { MarketingSection } from '@/components/layout/marketing-sections'
-import { MotionSection, MotionStagger, MotionStaggerItem } from '@/components/motion'
+import { MotionSection, MotionStagger, MotionStaggerItem } from '@/components/animation/enhanced-motion'
 import { getTypedI18n } from '@/locales/server'
 
 const featureIcons = [Download, BarChart3, Users, Shield, FileText, Brain]
