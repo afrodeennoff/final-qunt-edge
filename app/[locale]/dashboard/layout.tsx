@@ -27,16 +27,14 @@ import { APP_SHELL_SOFT_BORDER_STYLE, WORKSPACE_SHELL_WIDTH } from '@/lib/consta
 import { cn } from '@/lib/utils'
 
 const DashboardHeader = dynamic(
-  () => import('./components/dashboard-header').then((m) => m.DashboardHeader),
-  {
-    loading: () => (
-      <div className="flex h-16 items-center justify-between px-4">
-        <div className="h-8 w-32 animate-pulse rounded-lg bg-background/30" />
-        <div className="h-8 w-24 animate-pulse rounded-lg bg-background/30" />
-      </div>
-    ),
-  },
-)
+  () => import("./components/dashboard-header").then((m) => m.DashboardHeader),
+  { loading: () => (
+    <div className="flex h-16 items-center justify-between px-4">
+      <div className="h-8 w-32 animate-pulse rounded-lg bg-background/30" />
+      <div className="h-8 w-24 animate-pulse rounded-lg bg-background/30" />
+    </div>
+  ) }
+);
 
 const DashboardClientOverlays = dynamic(
   () => import('./components/dashboard-client-overlays').then((m) => m.DashboardClientOverlays),

@@ -18,16 +18,14 @@ export function TermsPageClient() {
   const t = useI18n()
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-20 lg:py-24">
-      <UnifiedSurface className="space-y-10">
-        <MarketingSectionHeader
-          eyebrow="Legal"
-          title="Terms of Service"
-          titleAs="h1"
-          align="left"
-          className="m-0"
-          description="These terms describe account usage, payment policies, and service responsibilities for Qunt Edge."
-        />
+    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+      <UnifiedSurface className="space-y-8">
+        <header className="space-y-2">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground">Terms of Service</h1>
+          <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
+            These terms describe account usage, payment policies, and service responsibilities for Qunt Edge.
+          </p>
+        </header>
         <LegalSection title={t('terms.sections.companyInfo.title')}>
           <p>{t('terms.sections.companyInfo.content')}</p>
           <p>
@@ -104,7 +102,7 @@ export function TermsPageClient() {
           <p>{t('terms.sections.changesTerms.content')}</p>
         </LegalSection>
 
-        <p className="border-t border-[rgba(0,0,0,0.08)] pt-6 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+        <p className="border-t border-border/30 pt-5 text-xs uppercase tracking-[0.12em] text-fg-muted">
           {t('terms.lastUpdated')}
           {new Date().toISOString().split('T')[0]}
         </p>

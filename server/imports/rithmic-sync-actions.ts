@@ -4,13 +4,6 @@ import { getDatabaseUserId } from "@/server/auth"
 import { Synchronization } from "@/prisma/generated/prisma"
 import { withPrismaSchemaMismatchFallback } from "@/lib/prisma-guard"
 import { CACHE_TAGS } from "@/lib/cache/cache-invalidation"
-import { authSecurityConfig } from "@/lib/security/auth-config"
-import { encryptToken } from "@/lib/security/token-crypto"
-
-type RithmicSynchronizationInput = Pick<
-  Partial<Synchronization>,
-  "accountId" | "dailySyncTime" | "lastSyncedAt" | "service" | "token" | "tokenExpiresAt"
->
 
 async function resolveSyncUserIds() {
   const databaseUserId = await getDatabaseUserId()

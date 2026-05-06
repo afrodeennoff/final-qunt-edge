@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useParams } from 'next/navigation'
 import { RouteErrorScreen } from '@/components/ui/route-state'
 
 export default function DashboardError({
@@ -26,7 +25,7 @@ export default function DashboardError({
       onRetry={reset}
       retryLabel="Reload dashboard"
       secondaryLabel="Go home"
-      onSecondary={() => window.location.assign(`/${locale || 'en'}`)}
+      onSecondary={() => window.location.assign('/')}
       fullScreen={false}
     />
   )

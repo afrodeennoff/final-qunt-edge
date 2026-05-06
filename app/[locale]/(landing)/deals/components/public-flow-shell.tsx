@@ -40,16 +40,28 @@ export function PublicFlowShell({
       <div className="mx-auto w-full max-w-[1280px] px-4 pb-24 pt-8 sm:px-6 lg:px-8">
         {!compactHeader ? (
           <>
-            <section className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.06)] p-6 sm:p-8">
-              <div>
-                <MarketingSectionHeader
-                  eyebrow="Futures Funding Offers Hub"
-                  title={title}
-                  titleAs="h1"
-                  description={subtitle}
-                  align="left"
-                  className="m-0"
-                />
+            <section className="qe-soft-panel relative overflow-hidden rounded-2xl p-5 sm:p-7">
+              <div className="pointer-events-none absolute inset-0">
+                <div className="absolute -left-16 -top-24 h-56 w-56 rounded-full bg-foreground/10 blur-3xl" />
+                <div className="absolute right-6 top-8 h-32 w-32 rounded-full bg-foreground/10 blur-2xl" />
+                <div className="absolute -bottom-16 right-24 h-44 w-44 rounded-full bg-foreground/5 blur-3xl" />
+                <div className="absolute inset-0 bg-[linear-gradient(130deg,hsl(var(--foreground)/0.08),transparent_48%,hsl(var(--foreground)/0.03))]" />
+              </div>
+
+              <div className="relative">
+                <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  <span className="qe-soft-surface rounded-full px-2 py-1 text-foreground">
+                    Qunt Edge
+                  </span>
+                  <span>Futures Funding Offers Hub</span>
+                </div>
+                <h1 className="mt-4 max-w-3xl text-3xl font-semibold tracking-tight text-foreground sm:text-5xl">
+                  {title}
+                </h1>
+                <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  {subtitle}
+                </p>
+
                 <nav className="mt-6 flex flex-wrap gap-2" aria-label="Deals flow">
                   {FLOW_LINKS.map((link) => {
                     const active = isActive(pathname, link.path)
@@ -62,7 +74,7 @@ export function PublicFlowShell({
                           'rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition-colors',
                           active
                             ? 'border-primary bg-primary text-primary-foreground'
-                            : 'border-border/35 bg-background/60 text-foreground hover:border-border/45 hover:bg-background/25',
+                            : 'border-border/35 bg-background/60 text-foreground hover:border-border/45 hover:bg-background/25'
                         )}
                       >
                         {link.label}
@@ -73,30 +85,18 @@ export function PublicFlowShell({
               </div>
             </section>
 
-            <section className="mt-6 grid gap-6 text-xs text-muted-foreground sm:grid-cols-3">
-              <article className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.06)] p-4">
-                <p className="font-semibold uppercase tracking-[0.12em] text-foreground">
-                  Offer Checks
-                </p>
-                <p className="mt-1">
-                  Deal terms re-validated before listing changes are published.
-                </p>
+            <section className="qe-soft-panel mt-4 grid gap-3 rounded-xl p-4 text-xs text-muted-foreground sm:grid-cols-3 sm:p-5">
+              <article className="qe-soft-surface rounded-xl px-3 py-2">
+                <p className="font-semibold uppercase tracking-[0.12em] text-foreground">Offer Checks</p>
+                <p className="mt-1">Deal terms re-validated before listing changes are published.</p>
               </article>
-              <article className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.06)] p-4">
-                <p className="font-semibold uppercase tracking-[0.12em] text-foreground">
-                  Policy Context
-                </p>
-                <p className="mt-1">
-                  Pricing, drawdown style, and payout notes linked in one flow.
-                </p>
+              <article className="qe-soft-surface rounded-xl px-3 py-2">
+                <p className="font-semibold uppercase tracking-[0.12em] text-foreground">Policy Context</p>
+                <p className="mt-1">Pricing, drawdown style, and payout notes linked in one flow.</p>
               </article>
-              <article className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.06)] p-4">
-                <p className="font-semibold uppercase tracking-[0.12em] text-foreground">
-                  Decision Tools
-                </p>
-                <p className="mt-1">
-                  Compare, plan costs, and verify rules before committing capital.
-                </p>
+              <article className="qe-soft-surface rounded-xl px-3 py-2">
+                <p className="font-semibold uppercase tracking-[0.12em] text-foreground">Decision Tools</p>
+                <p className="mt-1">Compare, plan costs, and verify rules before committing capital.</p>
               </article>
             </section>
           </>

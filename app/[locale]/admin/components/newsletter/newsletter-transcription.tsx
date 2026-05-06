@@ -243,7 +243,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  <div className="space-y-4">
  <div className="flex items-center justify-between">
  <h3 className="text-lg font-semibold text-foreground">
- Transcription results
+ Résultats de transcription
  </h3>
  <div className="flex items-center gap-2">
  <Badge variant="outline">
@@ -280,7 +280,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  </span>
  </div>
  <p className="text-foreground text-sm leading-relaxed">
- {result.text || "No transcription available"}
+ {result.text ||"Aucune transcription disponible"}
  </p>
  </div>
  <Button

@@ -310,15 +310,119 @@ export default function FileUpload({
         </div>
       )}
 
-      {uploadedFiles.length > 0 && (
-        <Alert className="animate-in slide-in-from-bottom-5 duration-700 w-full max-w-2xl">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>{t('import.upload.note')}</AlertTitle>
-          <AlertDescription>
-            {t('import.upload.noteDescription')}
-          </AlertDescription>
-        </Alert>
-      )}
-    </div>
-  )
+ // Find current step index and move to next step
+ const currentStepIndex = platform.steps.findIndex(step => step.id === 'upload-file')
+ if (currentStepIndex !== -1 && currentStepIndex < platform.steps.length - 1) {
+ setStep(platform.steps[currentStepIndex + 1].id)
+ }
+ 
+ setError(null)
+ } catch (error) {
+ setError((error as Error).message)
+ }
+ }, [importType, parsedFiles, setRawCsvData, setCsvData, setHeaders, setStep, setError])
+
+ useEffect(() => {
+ if (parsedFiles.length === 0 || isConcatenatingRef.current) return
+ if (parsedFiles.length !== uploadedFiles.length) return
+ if (!Object.values(uploadProgress).every(progress => progress === 100)) return
+
+ isConcatenatingRef.current = true
+ concatenateFiles()
+ return () => { isConcatenatingRef.current = false }
+ }, [concatenateFiles, parsedFiles.length, uploadProgress, uploadedFiles.length])
+
+ return (
+ <div className="space-y-4 w-full h-full p-8 flex flex-col items-center justify-center">
+ <div 
+ {...getRootProps()} 
+ className={cn("h-80 w-full max-w-2xl border-2 border-dashed rounded-lg p-12 text-center transition-[opacity,background-color,border-color] duration-300 ease-in-out","hover:border-primary/50 group relative",
+ isDragActive 
+ ?"border-primary bg-primary/5 scale-[0.99]" 
+ :"border-border hover:bg-background/80","cursor-pointer flex items-center justify-center"
+ )}
+ >
+ <input {...getInputProps()} />
+ <div className="flex flex-col items-center gap-4">
+ <ArrowUpCircle 
+ className={cn("h-14 w-14 transition-[opacity,background-color,border-color] duration-300 ease-bounce",
+ isDragActive 
+ ?"text-primary scale-110 -translate-y-2" 
+ :"text-muted-foreground group-hover:text-primary group-hover:scale-110 group-hover:-translate-y-2"
+ )} 
+ />
+ {isDragActive ? (
+ <div className="space-y-2 relative">
+ <p className="text-xl font-medium text-primary animate-in fade-in slide-in-from-bottom-2">
+ {t('import.upload.dropHere')}
+ </p>
+ <p className="text-sm text-muted-foreground animate-in fade-in slide-in-from-bottom-3">
+ {t('import.upload.weWillHandle')}
+ </p>
+ </div>
+ ) : (
+ <div className="space-y-2 relative">
+ <p className="text-xl font-medium group-hover:text-primary transition-colors">
+ {t('import.upload.dragAndDrop')}
+ </p>
+ <p className="text-sm text-muted-foreground">
+ {t('import.upload.clickToBrowse')}
+ </p>
+ </div>
+ )}
+ </div>
+ </div>
+
+ {uploadedFiles.length > 0 && (
+ <div className="space-y-2 animate-in slide-in-from-bottom-4 duration-500 w-full max-w-2xl">
+ <h3 className="text-lg font-semibold">{t('import.upload.uploadedFiles')}</h3>
+ {uploadedFiles.map((file, index) => (
+ <div 
+ key={index} 
+ className={cn("flex items-center justify-between","bg-background rounded-lg","p-3 hover:bg-background/80","transition-[opacity,background-color,border-color] duration-200 ease-in-out","animate-in slide-in-from-bottom fade-in","group"
+ )}
+ style={{ animationDelay: `${index * 100}ms` }}
+ >
+ <div className="flex items-center gap-3">
+ <div className="bg-primary/10 p-2 rounded-md group-hover:bg-primary/20 transition-colors">
+ <FileIcon className="h-5 w-5 text-primary" />
+ </div>
+ <div className="flex flex-col">
+ <span className="text-sm font-medium">{file.name}</span>
+ <span className="text-xs text-muted-foreground">
+ {t('import.upload.fileSize', { size: (file.size / 1024).toFixed(1) })}
+ </span>
+ </div>
+ </div>
+ <div className="flex items-center gap-3">
+ <Progress 
+ value={uploadProgress[file.name] || 0} 
+ className="w-24 h-2"
+ />
+ <Button 
+ variant="ghost" 
+ size="icon"
+ onClick={() => removeFile(index)}
+ className="opacity-0 group-hover:opacity-100 transition-opacity"
+ >
+ <XIcon className="h-4 w-4" />
+ <span className="sr-only">{t('import.upload.removeFile')}</span>
+ </Button>
+ </div>
+ </div>
+ ))}
+ </div>
+ )}
+
+ {uploadedFiles.length > 0 && (
+ <Alert className="animate-in slide-in-from-bottom-5 duration-700 w-full max-w-2xl">
+ <AlertCircle className="h-4 w-4" />
+ <AlertTitle>{t('import.upload.note')}</AlertTitle>
+ <AlertDescription>
+ {t('import.upload.noteDescription')}
+ </AlertDescription>
+ </Alert>
+ )}
+ </div>
+ )
 }

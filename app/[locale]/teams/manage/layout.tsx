@@ -84,27 +84,41 @@ export default async function TeamManageLayout({
       <DashboardProviders>
         <TeamsSidebar />
 
-        <SidebarInset className="qe-v2-app-shell relative h-dvh overflow-hidden selection:bg-primary/20 selection:text-foreground">
-          <BackgroundGlow variant="default" />
+                <SidebarInset className="relative overflow-hidden h-dvh selection:bg-background/0.45 selection:text-foreground">
+                    <BackgroundGlow variant="default" />
 
-          <div className="relative z-0 flex h-full flex-col">
-            <header
-              className={`sticky top-0 ${HEADER_Z_INDEX} px-3 pb-2 pt-3 sm:px-4 sm:pb-3 sm:pt-4 lg:px-6`}
-            >
-              <div className={cn('mx-auto flex w-full items-center', WORKSPACE_SHELL_WIDTH)}>
-                <div
-                  className={cn(
-                    unifiedToolbarClassName,
-                    'flex min-h-[4.5rem] w-full items-center gap-4 px-3 py-2.5 sm:px-4',
-                  )}
-                >
-                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/12 to-transparent" />
-                  <div className="flex min-w-0 items-center gap-3">
-                    <SidebarTrigger
-                      className={cn(
-                        unifiedToolbarButtonClassName,
-                        '-ml-0.5 h-10 w-10 md:h-9 md:w-9',
-                      )}
+                    <div className="relative z-0 flex h-full flex-col">
+                        <header
+                            className={`sticky top-0 ${HEADER_HEIGHT} ${HEADER_Z_INDEX} ${HEADER_BORDER} ${HEADER_BG}`}
+                        >
+                            <div className="flex h-full w-full items-center justify-between px-4 sm:px-6 lg:px-8">
+                                <div className="flex items-center gap-3">
+                                    <SidebarTrigger className="-ml-1" />
+                                    <div className="flex flex-col">
+                                        <h1 className="text-sm font-bold tracking-wide text-foreground">
+                                            Team Management
+                                        </h1>
+                                        <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                                            Unified Workspace
+                                        </span>
+                                    </div>
+                                </div>
+                                <Suspense fallback={<AuthProfileButtonSkeleton />}>
+                                    <AuthProfileButton />
+                                </Suspense>
+                            </div>
+                        </header>
+
+                        <main className="flex-1 overflow-y-auto">
+                            <div className={`w-full ${CONTENT_PADDING} ${CONTENT_PADDING_Y}`}>
+                                {children}
+                            </div>
+                        </main>
+                    </div>
+                    <TeamsMobileBottomNav
+                        dashboardRoot={dashboardRoot}
+                        slug={slug}
+                        backHref={`/${locale}/dashboard`}
                     />
                     <div className="flex min-w-0 flex-col">
                       <div className="flex items-center gap-2.5">

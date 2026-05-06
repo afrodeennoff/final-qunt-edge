@@ -44,11 +44,17 @@ export function UnifiedPageShell({
     <div
       className={cn(
         'scroll-smooth-butter animate-page-enter relative mx-auto w-full',
-        variant === 'refined' && 'xl:border-x xl:border-[rgba(0,0,0,0.06)]',
-        variant === 'minimal' && 'xl:border-x xl:border-[rgba(0,0,0,0.04)]',
+        variant === 'refined' && 'border-x border-border/12',
+        variant === 'minimal' && 'border-x border-border/8',
+        widthClassName === 'max-w-none' && 'max-w-[1800px]',
         widthClassName,
         CONTENT_PADDING,
         densityClasses,
+        variant !== 'minimal' && [
+          'before:absolute before:inset-x-6 before:top-0 before:h-44 before:pointer-events-none before:z-0',
+          'before:rounded-b-2xl before:border before:border-border/20 before:bg-primary/[0.02]',
+          'after:absolute after:inset-x-0 after:top-0 after:h-px after:pointer-events-none after:z-0 after:bg-border/35',
+        ],
         '[&_.scroll-container]:overflow-y-auto [&_.scroll-container]:scrollbar-thin',
         className,
       )}
@@ -69,16 +75,19 @@ export function UnifiedPageHeader({
   return (
     <header
       className={cn(
-        'rounded-xl border px-4 py-4 sm:px-5 sm:py-5',
-        'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
+        'mb-8 rounded-xl border px-5 py-6 shadow-sm sm:px-6',
+        'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
-          'border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_18px_36px_-28px_rgba(0,0,0,0.72)]',
+          'border-border/35 bg-card/80',
+          '',
         ],
         variant === 'gradient' && [
-          'border-[rgba(0,0,0,0.07)] bg-[linear-gradient(135deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.04),0_18px_36px_-28px_rgba(0,0,0,0.74)]',
+          'border-primary/14 bg-[hsl(var(--card)/0.96)]',
+          '',
         ],
         variant === 'elevated' && [
-          'border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.05),0_22px_42px_-30px_rgba(0,0,0,0.76)]',
+          'border-border/40 bg-card/90 shadow-sm',
+          '',
         ],
         className,
       )}
@@ -86,14 +95,14 @@ export function UnifiedPageHeader({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
         <div className="space-y-2">
           {eyebrow && (
-            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground mb-2">
               {eyebrow}
             </p>
           )}
           <h1
             className={cn(
-              'text-balance font-semibold tracking-[-0.03em] text-foreground',
-              'text-[1.85rem] sm:text-[2.15rem]',
+              'font-semibold tracking-tight text-foreground sm:tracking-tight',
+              'text-3xl sm:text-4xl',
               variant === 'gradient' && 'text-foreground',
             )}
           >
@@ -102,8 +111,8 @@ export function UnifiedPageHeader({
           {description && (
             <p
               className={cn(
-                'max-w-3xl text-sm text-muted-foreground sm:text-[15px]',
-                'leading-[var(--leading-relaxed)]',
+                'max-w-3xl mt-2 text-sm text-muted-foreground sm:text-base',
+                'leading-relaxed',
               )}
             >
               {description}
@@ -116,44 +125,32 @@ export function UnifiedPageHeader({
   )
 }
 
-export function UnifiedSurface({
-  children,
-  className,
-  variant = 'default',
-  hover = false,
-}: UnifiedSurfaceProps) {
+export function UnifiedSurface({ children, className, variant = 'default', hover = false }: UnifiedSurfaceProps) {
   return (
     <section
       className={cn(
-        'rounded-xl border p-4 sm:p-5',
-        'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
+        'rounded-xl border p-4 shadow-sm sm:p-6',
+        'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
-          'border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-24px_rgba(0,0,0,0.7)]',
-          hover
-            ? 'hover:border-[rgba(0,0,0,0.08)] hover:bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)]'
-            : '',
+          'border-border/35 bg-card/80',
+          hover ? 'hover:border-border/50 hover:bg-card/95' : '',
         ],
         variant === 'glass' && [
-          'border-[rgba(0,0,0,0.06)] bg-[var(--card)]',
-          hover
-            ? 'hover:border-[rgba(0,0,0,0.06)] hover:bg-[var(--card)]'
-            : '',
+          'border-border/30 bg-primary/4',
+          hover ? 'hover:border-border/40 hover:bg-primary/6' : '',
+          '',
         ],
         variant === 'gradient-border' && [
-          'border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.04),0_20px_36px_-28px_rgba(0,0,0,0.72)]',
-          hover ? 'hover:border-[rgba(0,0,0,0.06)]' : '',
+          'border-border/35 bg-card/70',
+          hover ? 'hover:border-border/45' : '',
         ],
         variant === 'elevated' && [
-          'border-[rgba(0,0,0,0.08)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.06),0_24px_42px_-28px_rgba(0,0,0,0.74)]',
-          hover
-            ? 'hover:border-[rgba(0,0,0,0.06)] hover:bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)]'
-            : '',
+          'border-border/40 bg-card/90 shadow-sm',
+          hover ? 'hover:border-border/50 hover:bg-card/95' : '',
         ],
         variant === 'subtle' && [
-          'border-[rgba(0,0,0,0.06)] bg-[var(--card)] shadow-none',
-          hover
-            ? 'hover:border-[rgba(0,0,0,0.08)] hover:bg-[var(--card)]'
-            : '',
+          'border-border/35 bg-[hsl(var(--background)/0.62)] shadow-none',
+          hover ? 'hover:border-border/40 hover:bg-background/80' : '',
         ],
         className,
       )}

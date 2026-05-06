@@ -10,7 +10,7 @@ const TEAMS_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as c
 
 /** Invalidate teams cache for all affected user IDs after a mutation */
 function invalidateTeamsCache(userIds: string[]): void {
-  for (const uid of new Set(userIds.filter(Boolean))) {
+  for (const uid of userIds) {
     updateTag(`teams-${uid}`)
   }
 }

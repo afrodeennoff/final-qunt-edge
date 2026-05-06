@@ -85,11 +85,11 @@ async function getTraderSnapshot(slug: string): Promise<TraderSnapshot | null> {
   if (!hasConfiguredDatabaseConnection) return null
   if (!(await hasLeaderboardVisibilityColumn())) return null
 
-  let publicUser: { id: string; email: string | null; username: string | null; showOnLeaderboard: boolean; auth_user_id: string } | null = null
+  let publicUser: { id: string; email: string | null; showOnLeaderboard: boolean; auth_user_id: string } | null = null
   try {
     publicUser = await prisma.user.findUnique({
       where: { id: slug },
-      select: { id: true, email: true, username: true, auth_user_id: true, showOnLeaderboard: true },
+      select: { id: true, email: true, auth_user_id: true, showOnLeaderboard: true },
     })
   } catch (error) {
     if (isPrismaSchemaMismatchError(error)) return null
@@ -125,7 +125,7 @@ async function getTraderSnapshot(slug: string): Promise<TraderSnapshot | null> {
 
   return {
     id: publicUser.id,
-    username: publicUser.username || toUsername(publicUser.email, publicUser.id),
+    username: toUsername(publicUser.email, publicUser.id),
     totalPnl,
     totalTrades,
     winRate,
@@ -151,217 +151,25 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16">
-      <Link
-        href={`/${locale}/leaderboard`}
-        className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        Leaderboard
-      </Link>
-      <div className="rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] p-8 text-center shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
-        <p className="text-4xl font-semibold text-muted-foreground/40">404</p>
-        <h1 className="mt-3 text-xl font-semibold text-foreground">{slug}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">This public trader profile is unavailable or has been set to private.</p>
-      </div>
-    </div>
-  )
-}
-
-const socialItems = [
-  { key: 'x' as const, icon: Twitter, label: 'X' },
-  { key: 'instagram' as const, icon: Instagram, label: 'Instagram' },
-  { key: 'discord' as const, icon: MessageCircle, label: 'Discord' },
-  { key: 'youtube' as const, icon: Youtube, label: 'YouTube' },
-]
-
-export default async function TraderProfilePage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
-  const { locale, slug } = await params
-  await connection()
-  const snapshot = await getTraderSnapshot(slug)
-  if (!snapshot) return <NotFoundState slug={slug} locale={locale} />
-
-  const social = await getPublicSocialLinks(snapshot.authUserId)
-  const personSchema = { '@context': 'https://schema.org', '@type': 'Person', name: snapshot.username, url: getCanonicalUrl(locale, `/trader/${slug}`) }
-  const breadcrumbSchema = buildBreadcrumbSchema(locale, [{ name: 'Leaderboard', path: '/leaderboard' }, { name: snapshot.username, path: `/trader/${slug}` }])
-
-  const pnlColor = snapshot.totalPnl > 0 ? 'text-semantic-success' : snapshot.totalPnl < 0 ? 'text-semantic-error' : 'text-foreground'
-  const pnlBg = snapshot.totalPnl > 0
-    ? 'bg-semantic-success/8 border-semantic-success/15'
-    : snapshot.totalPnl < 0
-      ? 'bg-semantic-error/8 border-semantic-error/15'
-      : 'bg-muted/20 border-[rgba(0,0,0,0.06)]'
-
-  return (
-    <div className="mx-auto max-w-6xl space-y-8 px-4 py-10 sm:py-14 lg:py-16">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }} />
-
-      {/* Navigation */}
-      <nav>
-        <Link
-          href={`/${locale}/leaderboard`}
-          className="group inline-flex items-center gap-2 rounded-[0.95rem] px-3 py-1.5 text-sm font-medium text-muted-foreground transition-[color,background-color] duration-200 hover:bg-[var(--card)] hover:text-foreground"
-        >
-          <ArrowLeft className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
-          Leaderboard
-        </Link>
-      </nav>
-
-      {/* ---- Profile Header ---- */}
-      <section className="relative overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-primary/[0.04] to-transparent" />
-        <div className="relative p-6 sm:p-8">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex min-w-0 items-center gap-6">
-              <div className="relative">
-                <Avatar className="h-18 w-18 shrink-0 rounded-2xl border-2 border-primary/20 bg-[var(--card)] sm:h-20 sm:w-20">
-                  <AvatarFallback className="rounded-2xl bg-primary/10 text-base font-semibold text-primary sm:text-lg">
-                    {snapshot.username.slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[var(--card)] bg-semantic-success text-[10px] font-bold text-white">
-                  W
-                </div>
-              </div>
-              <div className="min-w-0 space-y-2">
-                <h1 className="truncate text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                  {snapshot.username}
-                </h1>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  Public Trading Profile
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(0,0,0,0.08)] bg-[var(--card)] px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-                    <TrendingUp className="h-3 w-3" />
-                    {snapshot.totalTrades.toLocaleString()} trades
-                  </span>
-                  <span className={cn(
-                    'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em]',
-                    snapshot.winRate >= 50
-                      ? 'border border-semantic-success/20 bg-semantic-success/8 text-semantic-success'
-                      : 'border border-[rgba(0,0,0,0.08)] bg-[var(--card)] text-muted-foreground'
-                  )}>
-                    <Target className="h-3 w-3" />
-                    {snapshot.winRate.toFixed(1)}% win rate
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {Object.values(social).some(Boolean) && (
-              <div className="flex flex-wrap gap-2">
-                {socialItems.map(({ key, icon: Icon, label }) => {
-                  const url = social[key]
-                  if (!url) return null
-                  return (
-                    <a
-                      key={key}
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-[0.95rem] border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-3 py-1.5 text-xs font-medium text-foreground transition-[background-color,border-color,box-shadow] duration-200 hover:border-[rgba(0,0,0,0.06)] hover:bg-[var(--card)]"
-                    >
-                      <Icon className="h-3.5 w-3.5 text-muted-foreground" />
-                      {label}
-                    </a>
-                  )
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ---- Key Metrics ---- */}
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard
-          icon={<DollarSign className="h-4 w-4" />}
-          label="Net PnL"
-          value={formatCurrency(snapshot.totalPnl)}
-          className={pnlColor}
-          accentClassName={pnlBg}
-        />
-        <MetricCard
-          icon={<Target className="h-4 w-4" />}
-          label="Win Rate"
-          value={`${snapshot.winRate.toFixed(1)}%`}
-          className={snapshot.winRate >= 50 ? 'text-semantic-success' : 'text-foreground'}
-          accentClassName={snapshot.winRate >= 50 ? 'bg-semantic-success/8 border-semantic-success/15' : 'bg-muted/20 border-[rgba(0,0,0,0.06)]'}
-        />
-        <MetricCard
-          icon={<BarChart3 className="h-4 w-4" />}
-          label="Avg. Trade"
-          value={formatCurrency(snapshot.avgPnl)}
-          className={snapshot.avgPnl > 0 ? 'text-semantic-success' : snapshot.avgPnl < 0 ? 'text-semantic-error' : 'text-foreground'}
-          accentClassName={snapshot.avgPnl > 0 ? 'bg-semantic-success/8 border-semantic-success/15' : snapshot.avgPnl < 0 ? 'bg-semantic-error/8 border-semantic-error/15' : 'bg-muted/20 border-[rgba(0,0,0,0.06)]'}
-        />
-        <MetricCard
-          icon={<TrendingUp className="h-4 w-4" />}
-          label="Total Trades"
-          value={snapshot.totalTrades.toLocaleString()}
-          className="text-foreground"
-          accentClassName="bg-muted/20 border-[rgba(0,0,0,0.06)]"
-        />
-      </section>
-
-      {/* ---- Calendar + Recent Trades ---- */}
-      <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <article className="overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
-          <div className="flex items-center gap-2 border-b border-[rgba(0,0,0,0.06)] px-5 py-3.5">
-            <Calendar className="h-4 w-4 text-primary" />
-            <h2 className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Performance Calendar</h2>
-          </div>
-          <div className="p-5">
-            <CalendarGrid dayPnl={snapshot.dayPnl} />
-          </div>
-        </article>
-        <article className="overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
-          <div className="flex items-center gap-2 border-b border-[rgba(0,0,0,0.06)] px-5 py-3.5">
-            <TrendingUp className="h-4 w-4 text-primary" />
-            <h2 className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Recent Trades</h2>
-          </div>
-          <div className="divide-y divide-[rgba(0,0,0,0.04)]">
-            {snapshot.recentTrades.map((trade) => (
-              <div key={trade.id} className="flex items-center justify-between gap-3 px-5 py-3 transition-[background-color] duration-150 hover:bg-[var(--card)]">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold tracking-tight text-foreground">{trade.symbol}</p>
-                  <p className="mt-0.5 text-[11px] text-muted-foreground">{format(trade.closeTime, 'MMM d, yyyy')}</p>
-                </div>
-                <p className={cn(
-                  'shrink-0 text-sm font-semibold tabular-nums tracking-tight',
-                  trade.pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error'
-                )}>
-                  {trade.pnl >= 0 ? '+' : ''}{trade.pnl.toFixed(2)}
-                </p>
-              </div>
-            ))}
-          </div>
-        </article>
-      </section>
-
-      {/* ---- Footer CTA ---- */}
-      <section className="relative overflow-hidden rounded-2xl border border-primary/15 bg-[linear-gradient(135deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_18px_32px_-24px_rgba(0,0,0,0.64)]">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-primary/[0.03] to-transparent" />
-        <div className="relative flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-          <div className="space-y-2">
-            <h2 className="text-base font-semibold tracking-tight text-foreground">
-              Start Tracking Your Performance
-            </h2>
-            <p className="max-w-lg text-sm leading-relaxed text-muted-foreground">
-              Join {snapshot.username} and other serious traders using Qunt Edge for transparent performance review.
-            </p>
-          </div>
-          <div className="flex shrink-0 flex-wrap gap-3">
+    <div className="min-h-[calc(100vh-72px)] bg-black px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <div className="mx-auto max-w-[1120px]">
+        <div className={`rounded-2xl border ${FB} bg-black p-8`} style={FR}>
+          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">Trader profile</p>
+          <h1 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-foreground">{slug}</h1>
+          <p className="mt-3 max-w-xl text-[14px] leading-[1.6] text-muted-foreground">
+            This profile is not available yet. Once the trader has public stats or the database is connected, it will appear here.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-2">
             <Link
               href={`/${locale}/leaderboard`}
-              className="inline-flex items-center gap-2 rounded-[0.95rem] border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-4 py-2.5 text-sm font-medium text-foreground transition-[background-color,border-color,box-shadow] duration-200 hover:border-[rgba(0,0,0,0.06)] hover:bg-[var(--card)]"
+              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-4 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-accent/55`}
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Leaderboard
             </Link>
             <Link
               href={`/${locale}/dashboard/trader-profile`}
-              className="inline-flex items-center gap-2 rounded-[0.95rem] border border-primary/18 bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] transition-[background-color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:bg-primary/92 hover:shadow-[0_12px_28px_-22px_rgba(0,0,0,0.48)] active:scale-[0.985]"
+              className="inline-flex items-center rounded-full bg-foreground px-4 py-1.5 text-[13px] font-semibold text-background transition-opacity hover:opacity-90"
             >
               <Globe className="h-3.5 w-3.5" />
               Create your profile
@@ -387,7 +195,7 @@ function MetricCard({
   accentClassName: string
 }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
+    <div className="relative overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
       <div className="flex items-start justify-between p-5">
         <div className="space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
@@ -397,6 +205,219 @@ function MetricCard({
           <div className={className}>{icon}</div>
         </div>
       </div>
+    </div>
+  )
+}
+
+/* ─── Main page ─── */
+export default async function TraderProfilePage({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>
+}) {
+  const { locale, slug } = await params
+  const snapshot = await getTraderSnapshot(slug)
+
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: snapshot?.username ?? slug,
+    url: getCanonicalUrl(locale, `/trader/${slug}`),
+  }
+  const breadcrumbSchema = buildBreadcrumbSchema(locale, [
+    { name: "Leaderboard", path: "/leaderboard" },
+    { name: slug, path: `/trader/${slug}` },
+  ])
+
+  if (!snapshot) {
+    return (
+      <>
+        <NotFoundState slug={slug} locale={locale} />
+      </>
+    )
+  }
+
+  const positive = snapshot.totalPnl > 0
+  const negative = snapshot.totalPnl < 0
+
+  return (
+    <div className="min-h-[calc(100vh-72px)] bg-black px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }}
+      />
+      <div className="mx-auto grid max-w-[1120px] gap-8 xl:grid-cols-[1.35fr_1fr]">
+        <section className="space-y-6">
+          {/* Header */}
+          <div className={`rounded-2xl border ${FB} bg-black p-6 sm:p-8`} style={FR}>
+            <div className="flex items-start gap-6">
+              <Avatar className={`h-20 w-20 border ${FB} ${FS}`} style={FR}>
+                <AvatarFallback className={`${FS} text-lg font-semibold text-foreground`}>
+                  {snapshot.username.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-foreground">{snapshot.username}</p>
+                <p className="mt-1 text-[13px] text-muted-foreground">Public profile</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className={`inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-primary`}>
+                    <Zap className="h-3 w-3" />
+                    Trader Profile
+                  </span>
+                  {snapshot.demo ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/22 bg-emerald-400/8 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-success">
+                      Demo
+                    </span>
+                  ) : null}
+                  <span className={`inline-flex items-center rounded-full border ${FB} ${FS} px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground`}>
+                    {snapshot.totalTrades} Trades
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Stats row */}
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <StatCell label="Total Trades" value={snapshot.totalTrades.toLocaleString()} />
+              <StatCell label="Total PnL" value={formatSigned(snapshot.totalPnl)} accent={positive ? 'green' : negative ? 'red' : undefined} />
+              <StatCell label="Profile Type" value={snapshot.demo ? 'Demo' : 'Live'} />
+            </div>
+          </div>
+
+          {/* Profit + Trades cards */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Profit</p>
+              <p className={`mt-2 text-2xl font-semibold tracking-[-0.02em] ${positive ? 'text-success' : negative ? 'text-destructive' : 'text-foreground'}`}>
+                {formatCurrency(snapshot.totalPnl)}
+              </p>
+              <p className="mt-2 text-[12px] text-muted-foreground">Current public performance snapshot</p>
+            </div>
+            <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Trades</p>
+              <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-foreground">{snapshot.totalTrades.toLocaleString()}</p>
+              <p className="mt-2 text-[12px] text-muted-foreground">Visible public trades</p>
+            </div>
+          </div>
+
+          {/* Demo leaderboard stats */}
+          {snapshot.demo && snapshot.winRate !== undefined ? (
+            <div className={`rounded-xl border ${FB} bg-black p-6`} style={FR}>
+              <div className="mb-5 flex items-center justify-between">
+                <p className="text-[14px] font-semibold text-foreground">Demo Leaderboard Stats</p>
+                <span className={`inline-flex items-center gap-1.5 rounded-full border ${FB} ${FS} px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground`}>
+                  <Lock className="h-3 w-3" />
+                  Preview Data
+                </span>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
+                  <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Win Rate</p>
+                  <p className="mt-2 text-3xl font-semibold text-foreground">{formatValue(snapshot.winRate)}%</p>
+                  <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
+                    <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, snapshot.winRate))}%` }} />
+                  </div>
+                </div>
+                {snapshot.returnPct !== undefined && (
+                  <div className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
+                    <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Return</p>
+                    <p className={`mt-2 text-3xl font-semibold ${snapshot.returnPct >= 0 ? 'text-success' : 'text-destructive'}`}>
+                      {formatSigned(snapshot.returnPct)}%
+                    </p>
+                    <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
+                      <div className={`h-full rounded-full ${snapshot.returnPct >= 0 ? 'bg-[rgba(17,255,153,0.35)]' : 'bg-[rgba(255,32,71,0.35)]'}`} style={{ width: `${Math.min(100, Math.max(8, Math.abs(snapshot.returnPct)))}%` }} />
+                    </div>
+                  </div>
+                )}
+                {snapshot.topInstrument && (
+                  <div className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
+                    <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Top Instrument</p>
+                    <p className="mt-2 text-3xl font-semibold text-foreground">{snapshot.topInstrument}</p>
+                    {snapshot.avgDurationMinutes !== undefined && (
+                      <p className="mt-2 text-[12px] text-muted-foreground">Avg Duration: {formatValue(snapshot.avgDurationMinutes, 0)}m</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : null}
+
+          {/* Nav links */}
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href={`/${locale}/leaderboard`}
+              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-5 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-accent/55`}
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back to leaderboard
+            </Link>
+            <Link
+              href={`/${locale}/dashboard/trader-profile`}
+              className="inline-flex items-center rounded-full bg-[#ffffff] px-5 py-1.5 text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-90"
+            >
+              Manage profile
+            </Link>
+          </div>
+        </section>
+
+        {/* Right aside */}
+        <aside className="space-y-4">
+          <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Capital</p>
+            <p className="mt-2 text-3xl font-semibold text-foreground">{formatCapitalCompact(snapshot.totalPnl)}</p>
+          </div>
+
+          {snapshot.demo && snapshot.winRate !== undefined && (
+            <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Win Rate</p>
+              <p className="mt-2 text-4xl font-semibold text-foreground">{formatValue(snapshot.winRate)}%</p>
+              <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
+                <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, snapshot.winRate))}%` }} />
+              </div>
+            </div>
+          )}
+
+          <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Trades</p>
+              <span className={`inline-flex items-center rounded-full border ${FB} ${FS} px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground`}>
+                {snapshot.totalTrades > 100 ? 'Active' : 'Growing'}
+              </span>
+            </div>
+            <p className="mt-2 text-4xl font-semibold text-foreground">{snapshot.totalTrades}</p>
+            <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
+              <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, snapshot.totalTrades))}%` }} />
+            </div>
+          </div>
+
+          <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Profile Status</p>
+              <span className={`inline-flex items-center gap-1.5 rounded-full border ${FB} ${FS} px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground`}>
+                <Lock className="h-3 w-3" />
+                {snapshot.demo ? 'Demo' : 'Live'}
+              </span>
+            </div>
+            <p className="mt-3 text-[13px] leading-[1.5] text-muted-foreground">
+              {snapshot.demo
+                ? 'Demo profile with preview data from the leaderboard.'
+                : 'Live trading profile with verified performance data.'}
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  )
+}
+
+/* ─── Shared stat cell ─── */
+
+function StatCell({ label, value, accent }: { label: string; value: string; accent?: 'green' | 'red' }) {
+  const color = accent === 'green' ? 'text-success' : accent === 'red' ? 'text-destructive' : 'text-foreground'
+  return (
+    <div className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
+      <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
+      <p className={`mt-2 text-xl font-semibold ${color}`}>{value}</p>
     </div>
   )
 }

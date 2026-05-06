@@ -128,7 +128,7 @@ export function NewsletterEditor() {
  return (
  <Card className="border-border/0.42 bg-background/0.3">
  <CardHeader>
- <CardTitle className="text-foreground">Compose a Newsletter</CardTitle>
+ <CardTitle className="text-foreground">Composer une Newsletter</CardTitle>
  </CardHeader>
  <CardContent>
  <div className="space-y-6">

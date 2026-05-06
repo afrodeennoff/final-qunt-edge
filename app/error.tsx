@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useParams } from 'next/navigation'
 import { RouteErrorScreen } from '@/components/ui/route-state'
 
 export default function Error({
@@ -25,7 +24,7 @@ export default function Error({
       description={error.message || 'An unexpected error interrupted the application shell.'}
       onRetry={reset}
       secondaryLabel="Go home"
-      onSecondary={() => window.location.assign(`/${locale || 'en'}`)}
+      onSecondary={() => window.location.assign('/')}
     />
   )
 }

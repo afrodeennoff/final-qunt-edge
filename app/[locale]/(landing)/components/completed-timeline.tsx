@@ -25,64 +25,58 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
       .sort((a, b) => new Date(b.completedDate).getTime() - new Date(a.completedDate).getTime())
   }, [milestones])
 
-  return (
-    <div className="relative">
-      {/* Vertical timeline line */}
-      <div className="absolute left-[15px] top-2 bottom-2 w-px bg-[rgba(0,0,0,0.07)]" />
-
-      <div className="space-y-1">
-        {completedMilestones.map((milestone) => (
-          <Link
-            key={milestone.id}
-            href={`/${locale}/updates/${milestone.id}`}
-            className="group relative flex gap-6 rounded-xl p-4 transition-[background-color,border-color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[rgba(0,0,0,0.03)]"
-          >
-            {/* Timeline dot */}
-            <div className="relative z-10 mt-1.5 flex h-[30px] w-[30px] flex-shrink-0 items-center justify-center">
-              <div className="h-2 w-2 rounded-full bg-[rgba(0,0,0,0.06)] transition-[background-color] duration-200 group-hover:bg-[rgba(0,0,0,0.06)]" />
-            </div>
-
-            {/* Content */}
-            <div className="min-w-0 flex-1">
-              <time className="mb-1 block text-xs font-medium tracking-wide text-muted-foreground">
-                {format(new Date(milestone.completedDate), 'MMMM d, yyyy', { locale: dateLocale })}
-              </time>
-              <h3 className="text-[15px] font-semibold tracking-tight text-foreground transition-[color] duration-200 group-hover:text-foreground">
-                {milestone.title}
-              </h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground line-clamp-2">
-                {milestone.description}
-              </p>
-
-              {locale === 'fr' && milestone.youtubeVideoId && (
-                <div className="mt-3 overflow-hidden rounded-lg border border-[rgba(0,0,0,0.06)]">
-                  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                    <iframe
-                      className="absolute top-0 left-0 h-full w-full"
-                      src={`https://www.youtube.com/embed/${milestone.youtubeVideoId}`}
-                      title={milestone.title}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  </div>
-                </div>
-              )}
-
-              {milestone.image && !milestone.youtubeVideoId && (
-                <div className="mt-3 overflow-hidden rounded-lg border border-[rgba(0,0,0,0.06)]">
-                  <Image
-                    src={milestone.image}
-                    alt={milestone.title}
-                    width={800}
-                    height={400}
-                    className="w-full h-auto"
-                  />
-                </div>
-              )}
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
-  )
+ return (
+ <div className="relative">
+ <div className="absolute left-4 top-0 h-full w-0.5 bg-border/70 dark:bg-border/85" />
+ 
+ <div className="space-y-12 pl-12">
+ {completedMilestones.map((milestone) => (
+ <div key={milestone.id} className="relative">
+ <div className="absolute -left-[44px] flex h-7 w-7 items-center justify-center rounded-full border border-border/30 bg-background/0.14 dark:border-border/32 dark:bg-background/0.14">
+ <div className="h-3 w-3 rounded-full bg-muted/40 dark:bg-muted/30" />
+ </div>
+ 
+ <Link href={`/${locale}/updates/${milestone.id}`} className="block hover:opacity-90 transition-opacity">
+ <time className="mb-2 block text-sm text-foreground/80">
+ {format(new Date(milestone.completedDate), 'MMMM d, yyyy', { locale: dateLocale })}
+ </time>
+ <h3 className="text-lg font-semibold text-foreground">
+ {milestone.title}
+ </h3>
+ <p className="mt-2 text-foreground">
+ {milestone.description}
+ </p>
+ 
+ {/* Display YouTube video for French locale if available */}
+ {locale === 'fr' && milestone.youtubeVideoId && (
+ <div className="mt-4 rounded-lg overflow-hidden bg-background/0.11 dark:bg-background/0.12">
+ <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+ <iframe
+ className="absolute top-0 left-0 w-full h-full"
+ src={`https://www.youtube.com/embed/${milestone.youtubeVideoId}`}
+ title={milestone.title}
+ allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+ allowFullScreen
+ />
+ </div>
+ </div>
+ )}
+ 
+ {milestone.image && !milestone.youtubeVideoId && (
+ <div className="mt-4 rounded-lg overflow-hidden bg-background/0.11 dark:bg-background/0.12">
+ <Image
+ src={milestone.image}
+ alt={milestone.title}
+ width={800}
+ height={400}
+ className="w-full h-auto"
+ />
+ </div>
+ )}
+ </Link>
+ </div>
+ ))}
+ </div>
+ </div>
+ )
 }

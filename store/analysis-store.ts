@@ -179,11 +179,29 @@ export const useAnalysisStore = create<AnalysisStore>()(
     {
       name: "qunt-edge-analysis-store",
       storage: createJSONStorage(() => localStorage),
-      version: 2,
-      // Analysis payloads include account numbers, PnL, and AI text; keep them session-only.
-      partialize: () => ({}),
-      migrate: () => ({}),
-      merge: (_persistedState, currentState) => currentState,
+      // Persist all state except isLoading
+      partialize: (state) => ({
+        accountPerformanceData: state.accountPerformanceData,
+        analysisResult: state.analysisResult,
+        lastUpdated: state.lastUpdated,
+        error: state.error,
+      }),
+      // Custom serialization for dates
+      onRehydrateStorage: () => (state) => {
+        if (state?.lastUpdated) {
+          // Auto-clear stale analysis if older than 24 hours
+          const lastUpdated = new Date(state.lastUpdated)
+          const staleThreshold = 24 * 60 * 60 * 1000 // 24 hours
+          if (Date.now() - lastUpdated.getTime() > staleThreshold) {
+            state.accountPerformanceData = null
+            state.analysisResult = null
+            state.lastUpdated = null
+            state.error = null
+          } else {
+            state.lastUpdated = lastUpdated
+          }
+        }
+      },
     },
   ),
 );

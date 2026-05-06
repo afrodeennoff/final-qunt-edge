@@ -30,17 +30,15 @@ export async function generateMetadata({
 
 export default function PrivacyPolicy() {
   return (
-    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-20 lg:py-24">
-      <UnifiedSurface className="space-y-10 text-fg-muted">
-        <MarketingSectionHeader
-          eyebrow="Legal"
-          title="Privacy Policy"
-          titleAs="h1"
-          align="left"
-          className="m-0"
-          description="This policy explains what data we collect and how we use it to provide the Qunt Edge platform."
-        />
-        <section className="space-y-4">
+    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+      <UnifiedSurface className="space-y-8 text-fg-muted">
+        <header className="space-y-2">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground">Privacy Policy</h1>
+          <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
+            This policy explains what data we collect and how we use it to provide the Qunt Edge platform.
+          </p>
+        </header>
+        <section className="space-y-3">
           <h2 className="text-2xl font-semibold text-fg-primary">1. Introduction</h2>
           <p className="text-[15px] leading-relaxed">
             Qunt Edge (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) is committed to
@@ -136,7 +134,7 @@ export default function PrivacyPolicy() {
           </p>
         </section>
 
-        <p className="border-t border-[rgba(0,0,0,0.08)] pt-6 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+        <p className="border-t border-border/30 pt-5 text-xs uppercase tracking-[0.12em] text-fg-muted">
           Last updated: {LAST_UPDATED}
         </p>
       </UnifiedSurface>

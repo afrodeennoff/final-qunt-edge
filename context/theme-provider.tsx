@@ -8,6 +8,7 @@ import {
   normalizeDashboardTheme,
   type DashboardTheme,
 } from '@/lib/constants/dashboard-themes'
+import { colors } from '@/lib/theme/tokens'
 
 type ThemeContextType = {
   theme: DashboardTheme

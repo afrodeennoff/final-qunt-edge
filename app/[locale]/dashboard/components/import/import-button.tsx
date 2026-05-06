@@ -585,7 +585,7 @@ export default function ImportButton() {
  <Button 
  onClick={() => setIsOpen(true)}
  variant="outline"
- className={cn("group h-9 w-auto justify-center gap-2 rounded-full border border-transparent bg-transparent px-3.5 text-muted-foreground shadow-none transition-colors hover:bg-background/70 hover:text-foreground md:px-4"
+ className={cn("group h-9 w-auto justify-center gap-2 rounded-full border border-transparent bg-transparent px-3.5 text-muted-foreground shadow-none transition-colors hover:bg-background/80/70 hover:text-foreground md:px-4"
  )}
  id="import-data"
  onMouseEnter={() => uploadIconRef.current?.startAnimation()}

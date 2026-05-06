@@ -25,14 +25,14 @@ export default async function BlogsPage() {
   const posts = await getBlogPosts(true)
 
   return (
-    <MarketingSection className="pt-24 lg:pt-32">
-      <MarketingSectionHeader
-        eyebrow="Blog"
-        title={t('blogs.title')}
-        titleAs="h1"
-        description={t('blogs.description')}
-      />
-      <BlogList initialPosts={posts} />
-    </MarketingSection>
+    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+      <UnifiedSurface>
+        <div className="mb-6">
+          <h1 className="text-3xl font-semibold text-foreground">{t('blogs.title')}</h1>
+          <p className="mt-1 text-muted-foreground">{t('blogs.description')}</p>
+        </div>
+        <BlogList initialPosts={posts} />
+      </UnifiedSurface>
+    </UnifiedPageShell>
   )
 }

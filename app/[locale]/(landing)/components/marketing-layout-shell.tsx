@@ -23,11 +23,11 @@ const MiniMaxNavbarWrapper: React.FC<{ children?: React.ReactNode }> = ({ childr
 
 export default function MarketingLayoutShell({
   children,
-  contentClassName,
+  contentClassName = 'mx-auto w-full max-w-[1380px]',
   className,
   showRollingBanner = true,
-  topSpacingClassName = 'pt-16 sm:pt-[4.5rem] lg:pt-[5.25rem]',
-  contentSpacingClassName = 'space-y-6 pb-16 pt-5 sm:space-y-7 sm:pt-6 lg:space-y-8 lg:pt-7',
+  topSpacingClassName = 'pt-16 sm:pt-20 lg:pt-24',
+  contentSpacingClassName = 'space-y-8 pb-24 pt-6 sm:pt-8 lg:pt-10',
   shellVariant = 'black',
   fullWidth = false,
   showSidebar: _showSidebar = true,
@@ -45,8 +45,11 @@ export default function MarketingLayoutShell({
           shellVariant === 'black' ? 'opacity-[0.012]' : 'opacity-[0.02]',
         )}
       />
-      <div className="flex min-h-screen w-full flex-col">
-        <div className="flex flex-1 flex-col min-h-0 min-w-0 bg-transparent">
+      <div className="pointer-events-none fixed inset-0 opacity-[0.06] [background-image:radial-gradient(circle_at_top,hsl(var(--primary)/0.12),transparent_38%)]" />
+      <div className="pointer-events-none fixed inset-x-8 top-0 z-0 h-40 rounded-b-2xl border border-border/30 bg-background/30" />
+      <div className="flex min-h-screen w-full">
+        {/* Full-width content: no sidebar column */}
+        <div className="flex-1 min-h-0 min-w-0 bg-transparent">
           <MiniMaxNavbarWrapper>
             <Navbar />
           </MiniMaxNavbarWrapper>
@@ -56,16 +59,7 @@ export default function MarketingLayoutShell({
                 <RollingAdBanner />
               </Suspense>
             ) : null}
-            <div
-              className={cn(
-                'relative flex flex-1 flex-col min-w-0',
-                !fullWidth && CONTENT_PADDING,
-                'mx-auto w-full',
-                !fullWidth && MARKETING_SHELL_WIDTH,
-                contentSpacingClassName,
-                contentClassName,
-              )}
-            >
+            <div className={cn('min-w-0 px-2 sm:px-4', contentSpacingClassName, contentClassName)}>
               {children}
             </div>
           </div>

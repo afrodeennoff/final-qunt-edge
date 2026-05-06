@@ -22,9 +22,9 @@ interface PlatformCardProps {
 
 const categoryBadgeColors: Record<string, { variant:"default" |"secondary" |"outline" |"accent" |"success" |"warning" |"error"; className: string }> = {
  'Direct Account Sync': { variant: 'accent', className: 'bg-v2-accent-subtle text-v2-accent' },
- 'Intelligent Import': { variant: 'outline', className: 'bg-card text-muted-foreground' },
+ 'Intelligent Import': { variant: 'outline', className: 'bg-card/90 text-muted-foreground' },
  'Platform CSV Import': { variant: 'success', className: 'bg-v2-success-subtle text-v2-success' },
- 'Manual Entry': { variant: 'secondary', className: 'bg-card text-muted-foreground' },
+ 'Manual Entry': { variant: 'secondary', className: 'bg-card/90 text-muted-foreground' },
 };
 
 function PlatformCardInner({
@@ -70,7 +70,7 @@ function PlatformCardInner({
  hover={isInteractive}
  size="sm"
  onClick={isInteractive ? handleSelect : undefined}
- className={cn("group relative flex h-full min-h-[10.5rem] flex-col items-start gap-3 rounded-xl border-border/70 bg-card text-left transition-[opacity,background-color,border-color] duration-300",
+ className={cn("group relative flex h-full min-h-[13.5rem] flex-col items-start gap-3 rounded-xl border-border/70 bg-card/75 text-left transition-[opacity,background-color,border-color] duration-300",
  isSelected &&"border-v2-accent shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] shadow-v2-accent/20",
  (platform.isDisabled || platform.isComingSoon) &&"cursor-not-allowed opacity-60 grayscale-[0.5]"
  )}
@@ -107,7 +107,7 @@ function PlatformCardInner({
  </div>
 
  <CardHeader size="sm" className="p-0 gap-3">
- <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-border/50 bg-muted/50 p-2 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] transition-transform group-hover:scale-105">
+ <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-border/50 bg-background/80 p-2 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] transition-transform group-hover:scale-105">
  {platform.logo.path && (
  <div className="relative h-full w-full">
  <Image
@@ -127,7 +127,7 @@ function PlatformCardInner({
  <CardTitle size="sm" className="min-h-[2rem] leading-snug">
  {t(String(platform.name), { count: 1 })}
  </CardTitle>
- <p className="min-h-[2.5rem] text-xs text-muted-foreground line-clamp-2">
+ <p className="min-h-[3rem] text-xs text-muted-foreground line-clamp-2">
  {t(String(platform.description), { count: 1 })}
  </p>
  </CardContent>

@@ -4,7 +4,6 @@ import { cva } from "class-variance-authority"
 import { ChevronDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { FOCUS_RING } from "@/lib/theme/focus"
 
 const NavigationMenu = React.forwardRef<
  React.ElementRef<typeof NavigationMenuPrimitive.Root>,
@@ -41,7 +40,7 @@ NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName
 
 const NavigationMenuItem = NavigationMenuPrimitive.Item
 
-const navigationMenuTriggerStyle = cva("group inline-flex h-[38px] w-max items-center justify-center rounded-[var(--radius-lg)] border border-transparent bg-background px-4 py-2 text-[13px] font-medium tracking-[-0.01em] transition-colors hover:border-border/0.04 hover:bg-background/80 data-[state=open]:border-border/0.04 data-[state=open]:bg-v2-accent/10 data-[state=open]:text-v2-accent focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring/30 disabled:pointer-events-none disabled:opacity-50"
+const navigationMenuTriggerStyle = cva("group inline-flex h-10 w-max items-center justify-center rounded-md border border-transparent bg-background px-4 py-2 text-sm font-medium transition-colors hover:border-border/0.04 hover:bg-background/80 data-[state=open]:border-border/0.04 data-[state=open]:bg-v2-accent/10 data-[state=open]:text-v2-accent focus:outline-hidden disabled:pointer-events-none disabled:opacity-50"
 )
 
 const NavigationMenuTrigger = React.forwardRef<
@@ -87,7 +86,7 @@ const NavigationMenuViewport = React.forwardRef<
  <div className={cn("absolute left-0 top-full flex justify-center")}>
  <NavigationMenuPrimitive.Viewport
  data-slot="navigation-menu-viewport"
- className={cn("origin-top-center relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-[var(--radius-lg)] border border-[rgba(0,0,0,0.03)] bg-[var(--card)] text-popover-foreground shadow-[0_22px_40px_-28px_rgba(0,0,0,0.72)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-(--radix-navigation-menu-viewport-width)",
+ className={cn("origin-top-center relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-md border border-border/0.04 bg-background/0.06 text-popover-foreground shadow-[0_18px_40px_-24px_rgba(0,0,0,0.72)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-(--radix-navigation-menu-viewport-width)",
  className
  )}
  ref={ref}

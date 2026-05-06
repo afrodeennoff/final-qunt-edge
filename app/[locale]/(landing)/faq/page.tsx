@@ -68,55 +68,40 @@ export default async function FAQPage({ params }: { params: Promise<{ locale: st
     { name: 'FAQ', path: '/faq' },
   ])
 
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <MarketingSection className="pt-24 lg:pt-32">
-        <MarketingSectionHeader
-          eyebrow="FAQ"
-          title="Answers before setup."
-          titleAs="h1"
-          description="Common questions about Qunt Edge workflows, integrations, data security, and teams."
-        />
-        <Accordion type="single" collapsible className="w-full">
-          {faqs.map((faq, index) => (
-            <AccordionItem
-              key={faq.question}
-              value={`item-${index}`}
-              className="mb-3 rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] px-5 py-1 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)] transition-[background-color,border-color,box-shadow] duration-200 hover:border-[rgba(0,0,0,0.06)]"
-            >
-              <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline">
-                {faq.question}
-              </AccordionTrigger>
-              <AccordionContent className="pb-6 pt-2 text-[15px] leading-relaxed text-muted-foreground">
-                {faq.answer}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </MarketingSection>
+    return (
+        <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+            <UnifiedSurface className="space-y-4">
+                <header className="mb-6">
+                    <h1 className="text-3xl font-semibold text-foreground">Frequently Asked Questions</h1>
+                    <p className="mt-1 text-muted-foreground">Find answers to common questions about the platform and its features.</p>
+                </header>
+                <Accordion type="single" collapsible className="w-full">
+                    {faqs.map((faq, index) => (
+                        <AccordionItem key={index} value={`item-${index}`} className="mb-3 rounded-xl bg-surface-muted px-4">
+                            <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline">
+                                {faq.question}
+                            </AccordionTrigger>
+                            <AccordionContent className="pb-6 pt-2 leading-relaxed text-muted-foreground">
+                                {faq.answer}
+                            </AccordionContent>
+                        </AccordionItem>
+                    ))}
+                </Accordion>
+            </UnifiedSurface>
 
-      <MarketingSection className="pb-28 text-center">
-        <MarketingSectionHeader
-          eyebrow="Support"
-          title="Still have questions?"
-          description="Get help with setup, billing, integrations, and review workflows."
-        />
-        <Button asChild>
-          <a href={`/${locale}/support`}>Contact support</a>
-        </Button>
-      </MarketingSection>
-    </>
-  )
+            <UnifiedSurface className="mt-6 text-center">
+                <h2 className="mb-2 text-xl font-semibold text-foreground">Still have questions?</h2>
+                <p className="mb-5 text-muted-foreground">We&apos;re here to help you elevate your trading execution.</p>
+                <a
+                    href={`/${locale}/support`}
+                    className="inline-flex items-center justify-center rounded-full border border-border/30 bg-primary/[0.03] px-8 py-3 text-xs font-bold uppercase tracking-widest text-foreground transition-colors hover:bg-background/0.11 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border/24 focus-visible:ring-offset-0"
+                >
+                    Contact Support
+                </a>
+            </UnifiedSurface>
+        </UnifiedPageShell>
+    );
 }

@@ -138,7 +138,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  {/* Left Side: Grid of options */}
  <div className="flex flex-col gap-4 h-full min-h-0 relative">
  {/* Header & Filter */}
- <div className="p-4 border-b border-border bg-card sticky top-0 z-10">
+ <div className="p-4 border-b border-border bg-card/95 sticky top-0 z-10">
  <div className="flex items-center gap-3">
  <div className="relative flex-1">
  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -146,7 +146,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  placeholder={String(t('import.type.search'))}
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="pl-9 bg-background/50 border-transparent hover:bg-background/70 focus:bg-card transition-[opacity,background-color,border-color]"
+ className="pl-9 bg-background/80/50 border-transparent hover:bg-background/80/80 focus:bg-card transition-[opacity,background-color,border-color]"
  />
  </div>
  <Button
@@ -211,7 +211,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  ))
  ) : (
  <div className="col-span-full py-16 text-center">
- <div className="inline-flex h-16 w-16 items-center justify-center rounded-xl bg-muted/50 mb-5">
+ <div className="inline-flex h-16 w-16 items-center justify-center rounded-xl bg-background/80 mb-5">
  <ListFilter className="h-8 w-8 text-muted-foreground" />
  </div>
  <p className="text-base font-medium text-foreground mb-1.5">
@@ -228,7 +228,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  {isCompareMode && selectedPlatforms.length >= 2 && (
  <div className="absolute bottom-4 left-4 right-4 z-20"
  >
- <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-card border border-border shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]">
+ <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-card/95 border border-border shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] shadow-v2-bg-base/50">
  <div className="flex items-center gap-2 text-sm text-muted-foreground">
  <span>{selectedPlatforms.length} platforms selected</span>
  </div>
@@ -264,7 +264,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  </div>
 
  {/* Always reserve right panel space on desktop */}
- <div className={cn("relative hidden h-full overflow-hidden lg:flex", showDesktopDetailPanel ? "bg-background/20" : "bg-transparent")}>
+ <div className={cn("relative hidden h-full overflow-hidden lg:flex", showDesktopDetailPanel ? "bg-background/80/20" : "bg-transparent")}>
  {isCompareMode && selectedPlatforms.length >= 2 ? (
  <div className="h-full flex flex-col w-full">
  <div className="p-4 border-b border-border flex items-center justify-between">

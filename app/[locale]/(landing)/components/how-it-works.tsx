@@ -31,13 +31,13 @@ export default function HowItWorks() {
       id="how-it-works"
       className="relative overflow-hidden border-t border-border/30 bg-background px-4 py-24 sm:px-6 sm:py-24 lg:px-8"
     >
-      <div className="mx-6 overflow-hidden rounded-2xl border frost-border-7 frost-gradient-card p-6 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
+      <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-border/30 bg-background/40 p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-xl border frost-border-7 bg-[var(--card)] p-6"
+            className="rounded-xl border border-border/30 bg-background/30 p-6"
           >
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
               Optimization Pipeline
@@ -79,10 +79,10 @@ export default function HowItWorks() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.15 }}
-                className="relative z-10 min-w-[280px] flex-shrink-0 snap-center rounded-xl border frost-border-7 bg-[var(--card)] p-4 lg:min-w-0"
+                className="relative z-10 min-w-[280px] flex-shrink-0 snap-center rounded-xl border border-border/30 bg-background/30 p-4 lg:min-w-0"
               >
                 <div className="mb-6 flex items-center justify-between gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border frost-border-7 bg-[var(--secondary)]">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border/35 bg-black/50">
                     <span className="font-mono text-xs font-bold text-foreground sm:text-sm">
                       0{i + 1}
                     </span>

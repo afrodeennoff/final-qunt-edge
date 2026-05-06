@@ -6,47 +6,45 @@ import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap select-none cursor-pointer font-medium tracking-[-0.01em] transition-[background-color,border-color,color,box-shadow,opacity,transform] duration-[130ms] ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[0_0_0_2px_var(--background),0_0_0_4px_var(--ring)/0.5] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.982] active:duration-75 min-h-[44px]",
+  'type-body-sm inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border border-transparent select-none overflow-hidden font-medium tracking-normal transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         solid:
-          "bg-primary text-primary-foreground border border-primary/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_1px_3px_rgba(0,0,0,0.24)] hover:bg-primary/92",
+          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
         outline:
-          "bg-transparent text-foreground/80 border border-border hover:bg-muted/60 hover:text-foreground hover:border-border/80",
+          'rounded-xl border-border/40 bg-background/50 text-foreground hover:border-border/55 hover:bg-primary/6 active:scale-[0.98]',
         ghost:
-          "bg-transparent text-muted-foreground border border-transparent hover:bg-muted/60 hover:text-foreground",
+          'rounded-xl text-muted-foreground hover:bg-muted/50 hover:text-foreground active:scale-[0.98]',
         error:
-          "bg-destructive/90 text-destructive-foreground border border-destructive/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-destructive",
+          'rounded-xl border-destructive/20 bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 active:scale-[0.98]',
         destructive:
-          "bg-destructive/90 text-destructive-foreground border border-destructive/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-destructive",
-        link: 'text-primary underline-offset-4 hover:underline',
+          'rounded-xl border-destructive/20 bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 active:scale-[0.98]',
+        link: 'rounded-xl text-primary underline-offset-4 hover:underline',
         'gradient-primary':
-          "bg-gradient-to-b from-primary via-primary to-primary/88 text-primary-foreground border border-primary/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_4px_16px_-8px_rgba(0,0,0,0.40)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_24px_-8px_rgba(0,0,0,0.50)]",
+          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
         'gradient-secondary':
-          "bg-muted/40 text-foreground border border-border/60 hover:bg-muted/60",
+          'rounded-xl border-border/40 bg-background/50 text-foreground hover:border-border/55 hover:bg-primary/6 active:scale-[0.98]',
         shimmer:
-          'border-primary/18 bg-primary text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92 hover:shadow-[0_12px_28px_-22px_rgba(0,0,0,0.48)] active:scale-[0.985]',
+          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
         default:
-          "bg-primary text-primary-foreground border border-primary/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_1px_3px_rgba(0,0,0,0.24)] hover:bg-primary/92",
+          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
         secondary:
-          "bg-muted/50 text-foreground/88 border border-border/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] hover:bg-muted/70 hover:text-foreground hover:border-border/80",
-        mono: "font-mono text-[12px] rounded-md bg-muted/40 text-muted-foreground border border-border/60 hover:bg-muted/60 hover:text-foreground",
-        pill: "rounded-full bg-transparent text-foreground/80 border border-border hover:bg-muted/60 hover:text-foreground",
+          'rounded-xl border-border/40 bg-secondary/70 text-secondary-foreground hover:border-border/55 hover:bg-secondary/80 active:scale-[0.98]',
+        mono:
+          'rounded-xl border-border/40 bg-background text-foreground hover:bg-muted/50 font-mono',
+        pill: 'rounded-full border-border/40 bg-background/50 text-foreground hover:border-border/55 hover:bg-primary/6 active:scale-[0.98]',
         'pill-solid':
-          "rounded-full bg-foreground text-background border-none hover:bg-foreground/92",
+          'rounded-full border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
         'pill-ghost':
-          "rounded-full bg-transparent text-muted-foreground border-transparent hover:bg-muted/60 hover:text-foreground",
+          'rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground active:scale-[0.98]',
       },
       size: {
-        sm: 'h-8 min-h-[44px] px-3 text-[13px] rounded-md gap-1.5 [&_svg]:size-3.5',
-        default: 'h-9 min-h-[44px] px-4 text-[13px] rounded-md gap-1.5 [&_svg]:size-4',
-        md: 'h-10 min-h-[44px] px-5 text-[13px] rounded-[8px] gap-1.5 [&_svg]:size-4',
-        lg: 'h-11 min-h-[44px] px-6 text-[14px] rounded-[9px] gap-1.5 [&_svg]:size-4',
-        xl: 'h-12 min-h-[48px] px-7 text-[15px] rounded-[10px] gap-1.5 [&_svg]:size-5',
-        icon: 'h-11 w-11 min-h-[44px] min-w-[44px] rounded-md gap-0 [&_svg]:size-4',
-        'icon-sm': 'h-11 w-11 min-h-[44px] min-w-[44px] rounded-md gap-0 [&_svg]:size-3.5',
-        'icon-lg': 'h-11 w-11 min-h-[44px] min-w-[44px] rounded-[8px] gap-0 [&_svg]:size-4',
+        sm: 'h-8 min-h-[32px] min-w-[32px] px-3 rounded-xl',
+        default: 'h-9 min-h-[36px] min-w-[36px] px-4 rounded-xl',
+        md: 'h-10 min-h-[40px] min-w-[40px] px-5 rounded-xl',
+        lg: 'h-11 min-h-[44px] min-w-[44px] px-6 text-sm rounded-xl',
+        icon: 'h-9 w-9 min-h-[36px] min-w-[36px] rounded-xl',
       },
     },
     defaultVariants: {

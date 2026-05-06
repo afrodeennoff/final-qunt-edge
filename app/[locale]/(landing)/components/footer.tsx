@@ -55,14 +55,14 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-border/30 bg-background py-12 sm:py-16 lg:py-20"
+      className="border-t border-border/50 bg-black py-12 sm:py-16"
     >
       <h2 id="footer-heading" className="sr-only">
-        Site footer
+        {t('footer.heading')}
       </h2>
 
       <motion.div
-        initial={false}
+        initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
@@ -70,13 +70,13 @@ export default function Footer() {
       >
         <div
           className={cn(
-            'rounded-2xl border border-border/50 bg-card shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_32px_-26px_rgba(0,0,0,0.62)]',
+            'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]',
             'grid gap-8 p-7 sm:p-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)] lg:p-10',
           )}
         >
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/40 bg-muted/30 text-muted-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border/30 bg-background/40 text-muted-foreground">
                 <Logo className="h-5 w-5 fill-current" />
               </div>
               <div className="leading-none">
@@ -110,7 +110,7 @@ export default function Footer() {
               </Link>
             </div>
 
-            <div className="h-px w-full max-w-sm bg-[rgba(0,0,0,0.06)]" />
+            <div className="h-px w-full max-w-md bg-border/45" />
 
             <div className="flex items-center gap-2.5">
               {socialLinks.map((item, index) => (
@@ -125,7 +125,7 @@ export default function Footer() {
                   viewport={{ once: true }}
                   transition={{ delay: 0.08 + index * 0.05, duration: 0.35 }}
                   className={cn(
-                    'flex h-9 w-9 items-center justify-center rounded-full border border-[var(--mkt-border-subtle)] bg-[var(--mkt-bg-surface)] text-[var(--mkt-text-tertiary)] shadow-[inset_0_1px_0_rgba(0,0,0,0.03)] transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-[var(--mkt-border-accent)] hover:bg-[var(--mkt-bg-elevated)] hover:text-[var(--mkt-accent)]',
+                    'flex h-9 w-9 items-center justify-center rounded-full border border-[oklch(0.65_0.22_260_/_0.075)] bg-[oklch(0.056_0.01_260_/_0.74)] text-muted-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.06_0.011_260_/_0.82)] hover:text-primary',
                   )}
                 >
                   <item.icon className="size-[18px]" />
@@ -141,8 +141,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-[rgba(0,0,0,0.06)] pt-6">
-          <p className="text-xs tracking-[-0.005em] text-muted-foreground/70">
+        <div className="mt-8 border-t border-border/50 pt-5">
+          <p className="text-xs tracking-[-0.005em] text-muted-foreground">
             {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
           <p className="mt-2 text-xs leading-relaxed text-muted-foreground/50">
@@ -159,7 +159,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
 
   return (
     <div>
-      <h3 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/60">
+      <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-foreground/70">
         {title}
       </h3>
       <ul className="space-y-2.5">
@@ -174,7 +174,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
             <Link
               href={`/${locale}${item.href}`}
               prefetch={false}
-              className="inline-flex rounded-lg px-2 py-1 text-sm text-muted-foreground/80 transition-[color,background-color] duration-200 hover:bg-[rgba(0,0,0,0.03)] hover:text-foreground"
+              className="inline-flex rounded-lg px-2 py-1 text-sm text-muted-foreground/80 transition-[color,background-color] duration-200 hover:bg-[oklch(0.65_0.22_260_/_0.04)] hover:text-foreground"
             >
               {item.name}
             </Link>

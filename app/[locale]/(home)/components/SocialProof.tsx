@@ -67,8 +67,8 @@ export default function SocialProof() {
   }))
 
   return (
-    <section className="bg-muted/30 overflow-x-hidden px-4 py-12 sm:py-16 lg:py-20 md:px-6 lg:px-8">
-      <div className="mx-auto min-w-0 max-w-[1360px]">
+    <section className="bg-muted/30 px-4 py-12 sm:py-16 lg:py-20 md:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1360px]">
         <motion.div
           className="mb-8 grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-end"
           initial={false}

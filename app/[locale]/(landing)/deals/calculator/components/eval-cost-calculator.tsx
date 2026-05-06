@@ -41,9 +41,7 @@ export function EvalCostCalculator() {
     <section className="qe-soft-panel mt-6 rounded-2xl p-5 sm:p-6">
       <div className="qe-soft-surface mb-4 rounded-xl p-3">
         <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Planner Inputs</p>
-        <p className="mt-1 text-sm text-foreground">
-          Adjust values to simulate realistic month-one evaluation economics.
-        </p>
+        <p className="mt-1 text-sm text-foreground">Adjust values to simulate realistic month-one evaluation economics.</p>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <label className="space-y-2 text-sm">
@@ -105,20 +103,19 @@ export function EvalCostCalculator() {
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
         <article className="qe-soft-surface rounded-xl p-4">
           <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Expected Cost</p>
-          <p className="mt-2 text-2xl font-semibold text-foreground">
-            ${values.expectedTotalCost.toFixed(0)}
-          </p>
+          <p className="mt-2 text-2xl font-semibold text-foreground">${values.expectedTotalCost.toFixed(0)}</p>
         </article>
         <article className="qe-soft-surface rounded-xl p-4">
           <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Net After Costs</p>
-          <p className="mt-2 text-2xl font-semibold text-foreground">
-            ${values.netTargetAfterCosts.toFixed(0)}
-          </p>
+          <p className="mt-2 text-2xl font-semibold text-foreground">${values.netTargetAfterCosts.toFixed(0)}</p>
         </article>
         <article className="qe-soft-surface rounded-xl p-4">
           <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Cost-to-Payout Ratio</p>
-          <p className="mt-2 text-2xl font-semibold text-foreground">
-            {values.minReturnNeeded.toFixed(1)}%
+          <p className="mt-2 text-2xl font-semibold text-foreground">{values.minReturnNeeded.toFixed(1)}%</p>
+          <p className="mt-2">
+            <Badge variant={values.riskBand === 'high' ? 'error' : values.riskBand === 'mid' ? 'default' : 'secondary'}>
+              {values.riskBand === 'high' ? 'High pressure band' : values.riskBand === 'mid' ? 'Manageable band' : 'Healthy planning range'}
+            </Badge>
           </p>
           <div className="mt-2">
             <Badge

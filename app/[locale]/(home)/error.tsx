@@ -16,11 +16,9 @@ export default function HomeError({
 
   return (
     <RouteErrorScreen
-      eyebrow="Qunt Edge"
-      title="Something went wrong"
-      description={
-        error.message || 'We could not load the page. Please try again.'
-      }
+      eyebrow="Home"
+      title="Home failed to load"
+      description={error.message || 'The main public surface could not be composed right now.'}
       onRetry={reset}
       fullScreen={false}
     />

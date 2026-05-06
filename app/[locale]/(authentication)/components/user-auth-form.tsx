@@ -494,7 +494,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  return (
  <div className={cn("grid gap-6", className)} {...props}>
  {alreadySignedIn && (
- <div className="flex items-center justify-between gap-3 rounded-2xl border border-success/30 bg-success/10 px-4 py-3 shadow-[inset_0_1px_0_rgba(0,0,0,0.02)]">
+ <div className="flex items-center justify-between gap-3 rounded-2xl border border-success/30 bg-success/10 px-4 py-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.03)]">
  <div className="flex items-center gap-3">
  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-success/15">
  <svg className="h-4 w-4 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -516,7 +516,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </div>
  )}
  <Tabs value={tab} onValueChange={(v) => { setTab(v as 'magic' | 'password'); setLastAuthPreference(v as 'magic' | 'password'); }}>
- <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/50 bg-muted p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+ <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/0.04 bg-background/0.08 p-1">
  <TabsTrigger
  value="magic"
  className="h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_1px_2px_rgba(0,0,0,0.14)]"
@@ -530,7 +530,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <span className="truncate">{t('auth.tabs.password')}</span>
  <Badge
  variant="secondary"
- className="absolute -right-1.5 -top-1.5 border border-primary/50 bg-primary/10 px-1 py-0 text-[8px] font-semibold text-primary"
+ className="absolute -right-1.5 -top-1.5 border border-border/0.04 bg-accent/70 px-1 py-0 text-[8px] text-foreground"
  >
  {t('auth.new')}
  </Badge>
@@ -555,7 +555,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  autoComplete="email"
  autoCorrect="off"
  disabled={isLoading || (isEmailSent || authMethod === 'discord' || authMethod === 'google')}
- className="h-11 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20 focus-visible:ring-offset-0"
+ className="h-11 rounded-xl border-border/0.06 bg-background/0.08 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
  {...field}
  />
  </FormControl>
@@ -579,7 +579,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <Button
  type="button"
  variant="outline"
- className="h-11 w-full rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[rgba(0,0,0,0.06)] hover:bg-[var(--card)] hover:text-foreground"
+ className="h-11 w-full rounded-xl border-border/0.06 bg-background/0.08 text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/70 hover:text-foreground"
  onClick={openMailClient}
  disabled={authMethod === 'discord' || authMethod === 'google'}
  >
@@ -589,7 +589,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <Button
  type="submit"
  variant="ghost"
- className="h-10 w-full rounded-xl text-muted-foreground transition-[background-color,color] duration-200 hover:bg-[var(--card)] hover:text-foreground"
+ className="h-10 w-full rounded-xl text-muted-foreground hover:bg-accent/60 hover:text-foreground"
  disabled={countdown > 0 || authMethod === 'discord' || authMethod === 'google'}
  >
  {countdown > 0 ? (
@@ -604,7 +604,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </Form>
  {showOtpInput && (
  <Form {...otpForm}>
- <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] p-5 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_14px_28px_-24px_rgba(0,0,0,0.64)]">
+ <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-xl border border-border/0.04 bg-background/0.06 p-4">
  <FormField
  control={otpForm.control}
  name="otp"
@@ -672,7 +672,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  autoComplete="email"
  autoCorrect="off"
  disabled={isLoading}
- className="h-11 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20 focus-visible:ring-offset-0"
+ className="h-11 rounded-xl border-border/0.06 bg-background/0.08 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
  {...field}
  />
  </FormControl>
@@ -693,7 +693,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  type="password"
  autoComplete="current-password"
  disabled={isLoading}
- className="h-11 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20 focus-visible:ring-offset-0"
+ className="h-11 rounded-xl border-border/0.06 bg-background/0.08 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
  {...field}
  />
  </FormControl>
@@ -724,10 +724,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
  <div className="relative py-1">
  <div className="absolute inset-0 flex items-center">
- <span className="w-full border-t border-[rgba(0,0,0,0.06)]" />
+ <span className="w-full border-t border-border/0.04" />
  </div>
- <div className="relative flex justify-center text-[11px] uppercase tracking-[0.1em]">
- <span className="bg-[var(--card)] px-3 text-muted-foreground">
+ <div className="relative flex justify-center text-[10px] uppercase tracking-[0.14em]">
+ <span className="bg-primary/[0.03] px-2 text-muted-foreground">
  {t('auth.continueWith')}
  </span>
  </div>
@@ -738,7 +738,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  type="button"
  disabled={isLoading || authMethod === 'email'}
  onClick={onSubmitDiscord}
- className="h-11 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[rgba(0,0,0,0.06)] hover:bg-[var(--card)] hover:text-foreground"
+ className="h-11 rounded-xl border-border/0.06 bg-background/0.08 text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/70 hover:text-foreground"
  >
  {isLoading && authMethod === 'discord' ? (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -752,7 +752,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  type="button"
  disabled={isLoading || authMethod === 'email'}
  onClick={onSubmitGoogle}
- className="h-11 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[rgba(0,0,0,0.06)] hover:bg-[var(--card)] hover:text-foreground"
+ className="h-11 rounded-xl border-border/0.06 bg-background/0.08 text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/70 hover:text-foreground"
  >
  {isLoading && authMethod === 'google' ? (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

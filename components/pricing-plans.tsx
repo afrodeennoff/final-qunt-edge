@@ -117,10 +117,8 @@ function formatPlanAmount(
 function getPlanCardClassName(popular: boolean): string {
   return cn(
     'relative flex w-full flex-col overflow-hidden transition-[opacity,background-color,border-color,transform] duration-300 hover:-translate-y-1',
-    !popular &&
-      'rounded-2xl border border-border/40 bg-muted/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_32px_-8px_rgba(0,0,0,0.80)]',
-    popular &&
-      'relative rounded-2xl border border-border/60 bg-card shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_0_40px_hsl(var(--primary)/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
+    !popular && 'rounded-2xl border border-border/0.06 bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_8px_32px_-8px_rgba(0,0,0,0.80)]',
+    popular && 'relative rounded-2xl border border-[hsl(var(--primary)/0.35)] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_hsl(var(--primary)/0.30),0_0_40px_hsl(var(--primary)/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
   )
 }
 
@@ -128,7 +126,7 @@ function getPlanCtaClassName(): string {
   return cn(
     'h-12 w-full rounded-xl bg-primary text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground',
     'shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-[opacity,background-color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-primary/90 active:translate-y-0 active:shadow-md',
-    '[font-family:var(--home-copy)]',
+    '[font-family:var(--home-copy)]'
   )
 }
 
@@ -232,20 +230,18 @@ function FreePlanCard({
               }}
               className="text-[40px] font-[250] tracking-[-0.05em] text-foreground leading-none"
             />
-            <span className="ml-1 text-[13px] text-muted-foreground/70 font-medium tracking-[-0.01em]">
-              {t('pricing.free.name')}
-            </span>
+            <span className="ml-1 text-[13px] text-muted-foreground/70 font-medium tracking-[-0.01em]">{t('pricing.free.name')}</span>
           </div>
           <ul className="space-y-3">
             {plan.features.map((feature, index) => (
               <li
                 key={index}
-                className="flex items-center gap-2 text-[13px] text-foreground/70 tracking-[-0.005em]"
+                className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]"
               >
                 {index > 2 ? (
-                  <X className="size-4 shrink-0 text-destructive" />
+                  <X className="size-4 shrink-0 text-[oklch(0.64_0.255_22)]" />
                 ) : (
-                  <Check className="size-4 text-success shrink-0" />
+                  <Check className="size-4 text-[oklch(0.82_0.185_155)] shrink-0" />
                 )}
                 <span>{feature}</span>
               </li>
@@ -390,20 +386,20 @@ function PlusPlanCard({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="mb-4 space-y-3 rounded-xl border border-[rgba(0,0,0,0.05)] bg-[var(--muted)] p-4">
+          <div className="mb-4 space-y-3 rounded-xl border border-border/0.06 bg-background/0.04 p-4">
             <span className="block text-center text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/35">
               {t('pricing.billingPeriod')}
             </span>
 
-            <div className="grid grid-cols-3 gap-1.5 rounded-xl border border-[rgba(0,0,0,0.04)] bg-[var(--card)] p-1">
+            <div className="grid grid-cols-3 gap-1 rounded-[1rem] border border-border/0.04 bg-black/25 p-1">
               {recurringBillingOptions.map((option) => (
                 <button
                   key={option.key}
                   className={cn(
                     'rounded-xl px-3 py-2 text-xs capitalize transition-[opacity,background-color,border-color,transform]',
                     billingPeriod === option.key
-                      ? 'bg-primary text-primary-foreground font-semibold shadow-[0_18px_32px_-22px_rgba(0,0,0,0.20)]'
-                      : 'text-muted-foreground/75 hover:bg-[var(--card)] hover:text-foreground',
+                      ? 'bg-white text-black font-semibold shadow-[0_8px_20px_-12px_rgba(255,255,255,0.45)]'
+                      : 'text-muted-foreground/75 hover:bg-background/0.09 hover:text-foreground',
                   )}
                   onClick={() => setBillingPeriod(option.key)}
                   title={option.description}
@@ -413,13 +409,13 @@ function PlusPlanCard({
               ))}
             </div>
 
-            <div className="border-t border-[rgba(0,0,0,0.04)] pt-3">
+            <div className="border-t border-border/0.04 pt-3">
               <button
                 className={cn(
-                  'flex w-full items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-medium transition-[opacity,background-color,border-color,transform]',
+                  'flex w-full items-center justify-center gap-2 rounded-[1rem] border px-3 py-2 text-xs font-medium transition-[opacity,background-color,border-color,transform]',
                   billingPeriod === 'lifetime'
-                    ? 'border-[hsl(var(--primary)/0.28)] bg-[hsl(var(--primary)/0.08)] text-[var(--card)]'
-                    : 'border-[rgba(0,0,0,0.05)] text-muted-foreground hover:bg-[var(--card)] hover:text-foreground',
+                    ? 'border-[hsl(var(--primary)/0.28)] bg-[hsl(var(--primary)/0.08)] text-[oklch(0.75_0.22_260)]'
+                    : 'border-border/0.06 text-muted-foreground hover:bg-background/0.09 hover:text-foreground',
                 )}
                 onClick={() => setBillingPeriod('lifetime')}
               >
@@ -437,7 +433,7 @@ function PlusPlanCard({
           <div className="mb-4 text-center">
             {billingPeriod === 'lifetime' ? (
               <div className="space-y-3">
-                <div className="flex items-center justify-center gap-2.5">
+                <div className="flex items-center justify-center gap-3">
                   <div className="relative text-lg text-muted-foreground">
                     <NumberFlow
                       value={previousPrice}
@@ -495,9 +491,9 @@ function PlusPlanCard({
             {plan.features.map((feature, index) => (
               <li
                 key={index}
-                className="flex items-center gap-2 text-[13px] text-foreground/70 tracking-[-0.005em]"
+                className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]"
               >
-                <Check className="size-4 text-success shrink-0" />
+                <Check className="size-4 text-[oklch(0.82_0.185_155)] shrink-0" />
                 <span>{feature}</span>
               </li>
             ))}
@@ -505,7 +501,7 @@ function PlusPlanCard({
 
           {billingPeriod === 'lifetime' && (
             <div className="mt-4 border-t border-border pt-3">
-              <div className="gap-1.5">
+              <div className="gap-1">
                 <p className="text-xs text-muted-foreground">
                   • {t('pricing.lifetimeDisclaimer1')}
                 </p>
@@ -615,7 +611,7 @@ function PricingPlansContent({
 
   return (
     <div className="sm:px-6">
-      <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-8 lg:grid-cols-2 stagger-reveal">
+      <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-6 lg:grid-cols-2 stagger-reveal">
         <FreePlanCard
           plan={plans.basic}
           isModal={isModal}
@@ -645,11 +641,11 @@ function PricingPlansContent({
             <DialogTitle>{t('pricing.lifetimeUpgrade.title')}</DialogTitle>
             <DialogDescription>{t('pricing.lifetimeUpgrade.description')}</DialogDescription>
           </DialogHeader>
-          <div className="gap-3 py-4">
+          <div className="gap-4 py-4">
             <div className="rounded-lg border border-semantic-warning-border bg-semantic-warning-bg p-4">
               <div className="flex items-start">
                 <AlertCircle className="mr-3 mt-0.5 h-5 w-5 shrink-0 text-semantic-warning" />
-                <div className="gap-2.5">
+                <div className="gap-2">
                   <p className="text-sm font-medium text-semantic-warning">
                     {t('pricing.lifetimeUpgrade.warning')}
                   </p>

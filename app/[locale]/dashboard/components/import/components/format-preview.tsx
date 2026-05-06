@@ -858,7 +858,7 @@ export function FormatPreview({
  <Button 
  onClick={startProcessing}
  disabled={isProcessing || totalBatches === 0}
- className="bg-muted/30 hover:bg-muted/30 text-foreground"
+ className="bg-muted/50 hover:bg-muted/50 text-foreground"
  >
  {isProcessing ? t('import.processing.starting') : t('import.processing.startProcessing')}
  </Button>

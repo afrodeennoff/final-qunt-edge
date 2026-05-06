@@ -1147,3 +1147,34 @@ export async function joinTeamByInvitation(invitationToken: string) {
     return { success: false, error: error instanceof Error ? error.message : 'Failed to join team' }
   }
 }
+
+export async function updateUsernameAction(username: string) {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user?.id) {
+      throw new Error('Unauthorized')
+    }
+
+    // Hash the username for validation
+    const usernameHash = Buffer.from(username).toString('hex')
+
+    const { error } = await supabase
+      .from('users')
+      .update({
+        username,
+        username_hash: usernameHash,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', user.id)
+
+    if (error) throw error
+
+    revalidatePath('/dashboard/settings')
+    return { success: true }
+  } catch (error) {
+    console.error('Error updating username:', error)
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to update username' }
+  }
+}

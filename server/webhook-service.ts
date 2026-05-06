@@ -19,9 +19,6 @@ import crypto from 'crypto'
 import { updateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
 
-// Note: This is a route handler (app/api route), NOT a server action
-// Route handlers should NOT have 'use server' directive
-
 interface WebhookEvent {
   id: string
   type: string

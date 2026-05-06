@@ -3570,14 +3570,17 @@ img[loading='lazy'] {
   .qe-v2-app-shell {
     position: relative;
     background:
-      radial-gradient(1180px 720px at 10% -8%, oklch(0.6083 0.2172 297.1153 / 0.055), transparent 56%),
-      radial-gradient(920px 640px at 90% 108%, oklch(0.56 0.12 235 / 0.035), transparent 58%),
-      linear-gradient(
-        180deg,
-        oklch(0.05 0.008 297) 0%,
-        oklch(0.043 0.007 297) 46%,
-        oklch(0.04 0.006 297) 100%
-      );
+      radial-gradient(
+        1200px 720px at 8% -8%,
+        oklch(0.7001 0.1882 313.2907 / 0.1),
+        transparent 56%
+      ),
+      radial-gradient(
+        900px 640px at 92% 105%,
+        oklch(0.4865 0.2423 291.8661 / 0.08),
+        transparent 56%
+      ),
+      linear-gradient(180deg, oklch(0.1091 0.0091 301.6956) 0%, oklch(0.097 0.008 301.4) 46%, oklch(0.093 0.007 300.8) 100%);
   }
 
   .qe-v2-card {

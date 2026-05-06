@@ -225,9 +225,9 @@ const ACCENT = {
     badge: 'border-emerald-500/18 bg-success/8',
     text: 'text-success',
   },
-  violet: {
+  blue: {
     icon: 'text-primary',
-    badge: 'border-primary/20 bg-primary/10',
+    badge: 'border-blue-500/20 bg-blue-500/10',
     text: 'text-primary',
   },
 } as const

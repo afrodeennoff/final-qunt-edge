@@ -7,11 +7,10 @@ import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from '@/lib/s
 import { SidebarRootProviders } from '@/components/providers/root-providers'
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
 import {
-  unifiedToolbarBadgeClassName,
-  unifiedToolbarButtonClassName,
-  unifiedToolbarClassName,
-} from '@/components/layout/unified-page-recipes'
-import { cn } from '@/lib/utils'
+    unifiedMetricPanelClassName,
+    unifiedSectionPanelClassName,
+} from "@/components/layout/unified-page-recipes"
+import { cn } from "@/lib/utils"
 import {
   HEADER_Z_INDEX,
   CONTENT_PADDING,
@@ -21,7 +20,6 @@ import {
 } from '@/lib/constants/layout'
 import { DashboardProviders } from '@/components/providers/dashboard-providers'
 import { TeamsMobileBottomNav } from '../components/teams-mobile-bottom-nav'
-import { BackgroundGlow } from '@/components/ui/background-glow'
 
 export const metadata: Metadata = {
   robots: {
@@ -84,26 +82,65 @@ export default async function DashboardLayout({
       <DashboardProviders>
         <TeamsSidebar />
 
-        <SidebarInset className="qe-v2-app-shell relative h-dvh overflow-hidden selection:bg-primary/20 selection:text-foreground">
-          <BackgroundGlow variant="default" />
-          <div className="relative z-0 flex h-full flex-col">
-            <header
-              className={`sticky top-0 ${HEADER_Z_INDEX} px-3 pb-2 pt-3 sm:px-4 sm:pb-3 sm:pt-4 lg:px-6`}
-            >
-              <div className={cn('mx-auto w-full', WORKSPACE_SHELL_WIDTH)}>
-                <div
-                  className={cn(
-                    unifiedToolbarClassName,
-                    'flex min-h-[4.5rem] w-full items-center gap-4 px-3 py-2.5 sm:px-4',
-                  )}
-                >
-                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/12 to-transparent" />
-                  <div className="flex min-w-0 items-center gap-3">
-                    <SidebarTrigger
-                      className={cn(
-                        unifiedToolbarButtonClassName,
-                        '-ml-0.5 h-10 w-10 md:h-9 md:w-9',
-                      )}
+                <SidebarInset className="qe-v2-app-shell relative h-dvh overflow-hidden selection:bg-primary/20 selection:text-foreground">
+                    <div className="pointer-events-none absolute inset-x-6 top-0 z-0 h-32 rounded-b-2xl border border-border/20 bg-primary/[0.02]" />
+
+                    <div className="relative z-0 flex h-full flex-col">
+                        <header
+                            className={`sticky top-0 ${HEADER_Z_INDEX} px-3 pb-2 pt-3 sm:px-4 sm:pb-3 sm:pt-4`}
+                        >
+                            <div className="mx-auto w-full max-w-[1800px]">
+                                <div className={cn(unifiedSectionPanelClassName, 'relative flex min-h-[4.5rem] flex-col gap-4 overflow-hidden rounded-2xl px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between')}>
+                                    <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/20 to-transparent" />
+                                    <div className="flex min-w-0 items-center gap-3">
+                                        <SidebarTrigger className="-ml-0.5 h-10 w-10 rounded-xl border border-border/30 bg-background/40 text-muted-foreground hover:border-border/50 hover:bg-background/60 hover:text-foreground md:h-9 md:w-9" />
+                                        <div className="flex min-w-0 flex-1 flex-col">
+                                            <div className="flex items-center gap-2.5">
+                                                <span className="hidden rounded-full border border-border/30 bg-background/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground sm:inline-flex">
+                                                    Team
+                                                </span>
+                                                <h1 className="truncate text-sm font-bold uppercase tracking-[0.18em] text-foreground">
+                                                    Team Command
+                                                </h1>
+                                            </div>
+                                            <span className="truncate pt-1 text-xs text-muted-foreground">
+                                                Unified oversight for members, performance, and operational team health.
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid gap-2 sm:grid-cols-2 lg:w-auto">
+                                        <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2.5')}>
+                                            <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                                                Focus
+                                            </span>
+                                            <span className="block pt-1 text-sm text-foreground/60">
+                                                Members and process visibility
+                                            </span>
+                                        </div>
+                                        <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2.5')}>
+                                            <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                                                Surface
+                                            </span>
+                                            <span className="block pt-1 text-sm text-foreground/60">
+                                                Shared team operating layer
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+
+                        <main className="flex-1 overflow-y-auto">
+                            <div className={`mx-auto w-full max-w-[1800px] ${CONTENT_PADDING} ${CONTENT_PADDING_Y}`}>
+                                {children}
+                            </div>
+                        </main>
+                    </div>
+                    <TeamsMobileBottomNav
+                        dashboardRoot={dashboardRoot}
+                        slug={slug}
+                        backHref={`/${locale}/dashboard`}
                     />
                     <div className="flex min-w-0 flex-1 flex-col">
                       <div className="flex items-center gap-2.5">

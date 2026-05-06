@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useParams } from 'next/navigation'
 import { RouteErrorScreen } from '@/components/ui/route-state'
 
 export default function AdminError({
@@ -25,7 +24,7 @@ export default function AdminError({
       description={error.message || 'An admin workspace error interrupted this surface.'}
       onRetry={reset}
       secondaryLabel="Go to dashboard"
-      onSecondary={() => window.location.assign(`/${locale || 'en'}/dashboard`)}
+      onSecondary={() => window.location.assign('/dashboard')}
       fullScreen={false}
     />
   )

@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { CheckCircle2 } from 'lucide-react'
 import { getScopedI18n } from '@/locales/server'
-import { CardV2 as Card, CardContent, CardHeader, CardTitle } from '@/components/ui/v2'
+import { CardV2 as Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/v2'
 import { MarketingSection, MarketingSectionHeader } from '@/components/layout/marketing-sections'
 import { buildPublicMetadata } from '@/lib/seo'
 
@@ -29,16 +29,29 @@ export default async function NewsletterPage(props: {
   const email = searchParams?.email
 
   return (
-    <MarketingSection className="min-h-[calc(100vh-4rem)] pt-24 lg:pt-32">
-      <MarketingSectionHeader
-        eyebrow="Newsletter"
-        title={t('preferences.title')}
-        titleAs="h1"
-        description={t('preferences.description')}
-      />
-      <div className="mx-auto max-w-2xl space-y-6 sm:space-y-8">
-        {isUnsubscribed && (
-          <Card className="border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.06)]">
+    <main className="min-h-[calc(100vh-4rem)] flex items-start">
+      <div className="w-full px-4 py-6 sm:px-6 sm:py-8 md:py-12 lg:px-8">
+        <div className="mx-auto max-w-2xl space-y-6 sm:space-y-8">
+          {isUnsubscribed && (
+            <Card className="border-border/30 dark:border-border/40 bg-background/0.12 dark:bg-background/0.11">
+              <CardHeader className="space-y-3 sm:space-y-4">
+                <div className="flex items-center gap-x-2.5">
+                  <CheckCircle2 className="h-5 w-5 text-semantic-success shrink-0" />
+                  <CardTitle className="text-lg sm:text-xl">{t("unsubscribed.title")}</CardTitle>
+                </div>
+                <CardDescription className="text-foreground text-sm sm:text-base">
+                  {t("unsubscribed.description")}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm sm:text-base text-foreground break-all">
+                  {email && `${t("unsubscribed.email")}: ${email}`}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          <Card className="shadow-xs">
             <CardHeader className="space-y-3 sm:space-y-4">
               <div className="flex items-center gap-x-2.5">
                 <CheckCircle2 className="h-5 w-5 text-semantic-success shrink-0" />
@@ -56,7 +69,7 @@ export default async function NewsletterPage(props: {
           </Card>
         )}
 
-        <Card className="border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.06)]">
+        <Card className="border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.035)]">
           <CardHeader className="space-y-3 sm:space-y-4">
             <CardTitle className="text-lg sm:text-xl">{t('preferences.title')}</CardTitle>
             <p className="text-sm text-muted-foreground sm:text-base">

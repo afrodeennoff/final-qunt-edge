@@ -149,8 +149,8 @@ export default function TeamNavbar() {
  <div className={`fixed inset-0 bg-background/80 z-40 transition-opacity duration-300 ${hoveredItem ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} />
  <span className={`h-14 fixed top-0 left-0 right-0 bg-background z-50 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}></span>
  <header className={`max-w-7xl mx-auto fixed top-0 left-0 right-0 px-4 lg:px-6 h-14 flex items-center justify-between z-50 text-foreground transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
- <Link href={teamsBase} className="flex items-center gap-2">
- <Logo className='w-6 h-6 fill-white' />
+ <Link href="/teams" className="flex items-center gap-2">
+ <Logo className='w-6 h-6 fill-black dark:fill-white' />
  <span className="font-bold text-xl">Qunt Edge</span>
  <Badge variant="secondary" className="text-xs">
  {t('teams.badge')}
@@ -165,7 +165,7 @@ export default function TeamNavbar() {
  <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] list-none">
  <li className="row-span-3">
  <NavigationMenuLink asChild>
- <Link className="flex h-full w-full select-none flex-col justify-end rounded-md bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] p-6 no-underline outline-hidden focus:shadow-[inset_0_1px_0_rgba(0,0,0,0.04),0_8px_32px_-8px_rgba(0,0,0,0.4)]" href="/teams">
+ <Link className="flex h-full w-full select-none flex-col justify-end rounded-md bg-linear-to-b from-muted/50 to-muted p-6 no-underline outline-hidden focus:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]" href="/teams">
  <Logo className='w-6 h-6' />
  <div className="mb-2 mt-4 text-lg font-medium">
  Qunt Edge Enterprise

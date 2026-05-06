@@ -27,7 +27,7 @@ export function ImportDialogHeader({ step, importType }: ImportDialogHeaderProps
  <DialogHeader className="flex-none border-b border-border px-6 py-5 gap-3">
  <div className="flex items-center gap-3">
  {platform.logo.path && (
- <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/50 bg-muted/50 p-1.5">
+ <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/50 bg-background/80 p-1.5">
  <Image
  src={platform.logo.path}
  alt={platform.logo.alt ||""}
@@ -50,7 +50,7 @@ export function ImportDialogHeader({ step, importType }: ImportDialogHeaderProps
 
  {totalSteps > 1 && (
  <div className="space-y-2 pt-1">
- <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted/50">
+ <div className="h-1.5 w-full overflow-hidden rounded-full bg-background/80">
  <div
  className="h-full rounded-full bg-v2-accent transition-[opacity,background-color,border-color] duration-500 ease-out"
  style={{ width: `${progress}%` }}

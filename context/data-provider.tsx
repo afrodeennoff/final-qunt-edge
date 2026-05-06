@@ -1706,16 +1706,16 @@ export const DataProvider: React.FC<{
 
   const renameGroup = useCallback(
     async (groupId: string, name: string) => {
-      if (!supabaseUser?.id) return
-      const previousGroups = [...useUserStore.getState().groups]
+      if (!supabaseUser?.id) return;
+      const previousGroups = [...useUserStore.getState().groups];
       try {
         setGroups(groups.map((group) => (group.id === groupId ? { ...group, name } : group)))
         await renameGroupAction(groupId, name)
         clearDashboardBrowserCache('all', 'renameGroup')
       } catch (error) {
-        setGroups(previousGroups)
-        logger.error({ error }, 'Error renaming group')
-        throw error
+        setGroups(previousGroups);
+        logger.error({ error }, "Error renaming group");
+        throw error;
       }
     },
     [supabaseUser?.id, groups, setGroups, clearDashboardBrowserCache],
@@ -1724,8 +1724,8 @@ export const DataProvider: React.FC<{
   // Add deleteGroup function
   const deleteGroup = useCallback(
     async (groupId: string) => {
-      const previousGroups = [...useUserStore.getState().groups]
-      const previousAccounts = [...useUserStore.getState().accounts]
+      const previousGroups = [...useUserStore.getState().groups];
+      const previousAccounts = [...useUserStore.getState().accounts];
       try {
         // Remove groupId from accounts
         const updatedAccounts = accounts.map((account: Account) => {
@@ -1739,10 +1739,10 @@ export const DataProvider: React.FC<{
         await deleteGroupAction(groupId)
         clearDashboardBrowserCache('all', 'deleteGroup')
       } catch (error) {
-        setGroups(previousGroups)
-        setAccounts(previousAccounts)
-        logger.error({ error }, 'Error deleting group')
-        throw error
+        setGroups(previousGroups);
+        setAccounts(previousAccounts);
+        logger.error({ error }, "Error deleting group");
+        throw error;
       }
     },
     [accounts, setAccounts, groups, setGroups, clearDashboardBrowserCache],
@@ -1960,8 +1960,8 @@ export const DataProvider: React.FC<{
   // Add deletePayout function
   const deletePayout = useCallback(
     async (payoutId: string) => {
-      if (!supabaseUser?.id || isSharedView) return
-      const previousAccounts = [...useUserStore.getState().accounts]
+      if (!supabaseUser?.id || isSharedView) return;
+      const previousAccounts = [...useUserStore.getState().accounts];
 
       try {
         // Find the account that has this payout
@@ -1999,9 +1999,9 @@ export const DataProvider: React.FC<{
         }
         clearDashboardBrowserCache('all', 'deletePayout')
       } catch (error) {
-        setAccounts(previousAccounts)
-        logger.error({ error }, 'Error deleting payout')
-        throw error
+        setAccounts(previousAccounts);
+        logger.error({ error }, "Error deleting payout");
+        throw error;
       }
     },
     [supabaseUser?.id, isSharedView, accounts, setAccounts, trades, clearDashboardBrowserCache],
@@ -2140,8 +2140,8 @@ export const DataProvider: React.FC<{
 
   const saveDashboardLayout = useCallback(
     async (layout: PrismaDashboardLayout) => {
-      if (!supabaseUser?.id) return
-      const previousLayout = useUserStore.getState().dashboardLayout
+      if (!supabaseUser?.id) return;
+      const previousLayout = useUserStore.getState().dashboardLayout;
 
       try {
         const normalizedLayout = {
@@ -2153,9 +2153,9 @@ export const DataProvider: React.FC<{
         setDashboardLayout(normalizedLayout as unknown as DashboardLayoutWithWidgets)
         await saveDashboardLayoutAction(normalizedLayout)
       } catch (error: unknown) {
-        setDashboardLayout(previousLayout as unknown as DashboardLayoutWithWidgets)
-        logger.error({ error }, 'Error saving dashboard layout')
-        throw error
+        setDashboardLayout(previousLayout as unknown as DashboardLayoutWithWidgets);
+        logger.error({ error }, "Error saving dashboard layout");
+        throw error;
       }
     },
     [supabaseUser, setDashboardLayout],
