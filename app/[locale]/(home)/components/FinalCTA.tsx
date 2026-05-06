@@ -41,7 +41,10 @@ export default async function FinalCTA({ locale }: FinalCTAProps) {
               {t('landing.home.finalCta.primary')}
             </Link>
           </Button>
+          </h2>
         </div>
+      </div>
+    </motion.div>
       </motion.div>
     </section>
   )
