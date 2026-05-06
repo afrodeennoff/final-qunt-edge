@@ -24,7 +24,7 @@ export default async function FinalCTA({ locale }: FinalCTAProps) {
         viewport={{ once: true }}
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className={cn(unifiedSectionPanelClassName, 'px-6 py-10 text-center md:px-10 md:py-14')}>
+        <div className="px-6 py-10 text-center md:px-10 md:py-14">
           <h2 className="text-balance text-[clamp(2.2rem,4.6vw,3.8rem)] font-medium leading-[1.02] tracking-[-0.05em] text-foreground">
             {t('landing.home.finalCta.titlePrefix')}{' '}
             <span className="line-through decoration-muted-foreground/40 decoration-2">
@@ -43,6 +43,6 @@ export default async function FinalCTA({ locale }: FinalCTAProps) {
           </Button>
         </div>
       </div>
-    </MarketingSection>
+    </section>
   )
 }
