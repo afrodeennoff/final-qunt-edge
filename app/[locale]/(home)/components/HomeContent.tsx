@@ -115,7 +115,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
   ]
 
   return (
-    <div className="relative min-w-0 overflow-x-hidden bg-background selection:bg-primary/30 selection:text-foreground">
+    <div className="relative min-w-0 overflow-x-hidden bg-background selection:bg-primary/30 selection:text-foreground px-4 sm:px-6">
       <main className="relative z-10 flex min-w-0 flex-col">
         {/* Hero — above fold, no Suspense needed */}
         <MarketingSection className="relative pt-16 sm:pt-20 lg:pt-24 overflow-hidden">
@@ -150,7 +150,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
               <Link
                 href={`/${locale}/authentication?next=dashboard`}
                 className={cn(
-                  'inline-flex h-11 items-center justify-center gap-2 rounded-full px-7 text-[14px] font-semibold text-white shadow-[var(--mkt-shadow-glow-sm)] transition-[transform,box-shadow] duration-200 hover:-translate-y-[1px] hover:shadow-[var(--mkt-shadow-glow)] active:scale-[0.97]',
+                  'touch-target inline-flex h-11 items-center justify-center gap-2 rounded-full px-7 text-[14px] font-semibold text-white shadow-[var(--mkt-shadow-glow-sm)] transition-[transform,box-shadow] duration-200 hover:-translate-y-[1px] hover:shadow-[var(--mkt-shadow-glow)] active:scale-[0.97]',
                 )}
                 style={{ background: 'var(--mkt-gradient-purple)' }}
               >
@@ -161,7 +161,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
               <a
                 href="#product-walkthrough"
                 className={cn(
-                  'inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[var(--mkt-border-default)] bg-transparent px-7 text-[14px] font-medium text-[var(--mkt-text-primary)] transition-[border-color,background-color] duration-200 hover:bg-white/[0.04] hover:border-[var(--mkt-border-strong)]',
+                  'touch-target inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[var(--mkt-border-default)] bg-transparent px-7 text-[14px] font-medium text-[var(--mkt-text-primary)] transition-[border-color,background-color] duration-200 hover:bg-white/[0.04] hover:border-[var(--mkt-border-strong)]',
                 )}
               >
                 <Play className="h-4 w-4" />
@@ -307,11 +307,11 @@ export default async function HomeContent({ locale }: HomeContentProps) {
                 {t('landing.home.finalCta.description')}
               </p>
               <div className="mt-6">
-                <div className="flex flex-col justify-center gap-3 sm:flex-row">
+                <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
                   <Link
                     href={`/${locale}/authentication?next=dashboard`}
                     className={cn(
-                      'inline-flex h-11 w-full items-center justify-center gap-2 rounded-full px-7 text-[14px] font-semibold text-white shadow-[var(--mkt-shadow-glow-sm)] transition-[transform,box-shadow] duration-200 hover:-translate-y-[1px] hover:shadow-[var(--mkt-shadow-glow)] active:scale-[0.97] sm:w-auto',
+                      'touch-target inline-flex h-11 w-full items-center justify-center gap-2 rounded-full px-7 text-[14px] font-semibold text-white shadow-[var(--mkt-shadow-glow-sm)] transition-[transform,box-shadow] duration-200 hover:-translate-y-[1px] hover:shadow-[var(--mkt-shadow-glow)] active:scale-[0.97] sm:w-auto',
                     )}
                     style={{ background: 'var(--mkt-gradient-purple)' }}
                   >
@@ -321,7 +321,7 @@ export default async function HomeContent({ locale }: HomeContentProps) {
                   <Link
                     href={`/${locale}/propfirms`}
                     className={cn(
-                      'inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-[var(--mkt-border-default)] bg-transparent px-7 text-[14px] font-medium text-[var(--mkt-text-primary)] transition-[border-color,background-color] duration-200 hover:bg-white/[0.04] hover:border-[var(--mkt-border-strong)] sm:w-auto',
+                      'touch-target inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-[var(--mkt-border-default)] bg-transparent px-7 text-[14px] font-medium text-[var(--mkt-text-primary)] transition-[border-color,background-color] duration-200 hover:bg-white/[0.04] hover:border-[var(--mkt-border-strong)] sm:w-auto',
                     )}
                   >
                     {t('landing.home.finalCta.secondary')}

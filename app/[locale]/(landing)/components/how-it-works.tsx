@@ -62,7 +62,7 @@ export default function HowItWorks() {
             </motion.p>
           </motion.div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4 relative">
+          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 sm:grid sm:grid-cols-2 lg:grid lg:grid-cols-5 lg:gap-4 lg:overflow-visible lg:pb-0 relative">
             <div className="hidden lg:block absolute top-8 left-[8%] w-[84%] h-px z-0 bg-background/0.12" />
             <motion.div
               initial={{ width: 0 }}
@@ -79,7 +79,7 @@ export default function HowItWorks() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.15 }}
-                className="relative z-10 rounded-xl border frost-border-7 bg-[var(--card)] p-4"
+                className="relative z-10 min-w-[280px] flex-shrink-0 snap-center rounded-xl border frost-border-7 bg-[var(--card)] p-4 lg:min-w-0"
               >
                 <div className="mb-6 flex items-center justify-between gap-3">
                   <div className="flex h-12 w-12 items-center justify-center rounded-lg border frost-border-7 bg-[var(--secondary)]">
@@ -99,6 +99,15 @@ export default function HowItWorks() {
                   <p className="text-sm leading-[1.8] text-foreground/60">{step.desc}</p>
                 </div>
               </motion.div>
+            ))}
+          </div>
+          <div className="flex justify-center gap-2 mt-4 lg:hidden">
+            {steps.map((_, i) => (
+              <button
+                key={i}
+                className="w-2 h-2 rounded-full bg-border/40 hover:bg-border/60 transition-colors"
+                aria-label={`Go to step ${i + 1}`}
+              />
             ))}
           </div>
         </div>

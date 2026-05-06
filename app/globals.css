@@ -259,6 +259,65 @@
   hr {
     border-color: rgba(0,0,0,0.08);
   }
+
+  /* Mobile-optimized smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* iOS momentum scrolling for all overflow containers */
+  .overflow-auto,
+  .overflow-x-auto,
+  .overflow-y-auto,
+  .overflow-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Touch target minimum size utility */
+  .touch-target {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Safe area padding for notched devices */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .pl-safe {
+    padding-left: env(safe-area-inset-left, 0px);
+  }
+  .pr-safe {
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+
+  /* Focus visible ring for keyboard navigation */
+  :focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Landscape orientation on tablet — adjust bottom nav */
+  @media (orientation: landscape) and (max-height: 500px) {
+    .mobile-landscape-compact {
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: 4px;
+    }
+  }
 }
 
 /* Dark mode tokens defined in .dark block below - this ensures single source of truth */

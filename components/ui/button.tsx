@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap select-none cursor-pointer font-medium tracking-[-0.01em] transition-[background-color,border-color,color,box-shadow,opacity,transform] duration-[130ms] ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[0_0_0_2px_var(--background),0_0_0_4px_var(--ring)/0.5] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.982] active:duration-75",
+  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap select-none cursor-pointer font-medium tracking-[-0.01em] transition-[background-color,border-color,color,box-shadow,opacity,transform] duration-[130ms] ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[0_0_0_2px_var(--background),0_0_0_4px_var(--ring)/0.5] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.982] active:duration-75 min-h-[44px]",
   {
     variants: {
       variant: {
@@ -39,14 +39,14 @@ const buttonVariants = cva(
           "rounded-full bg-transparent text-muted-foreground border-transparent hover:bg-muted/60 hover:text-foreground",
       },
       size: {
-        sm: 'h-8 min-h-[32px] px-3 text-[13px] rounded-md gap-1.5 [&_svg]:size-3.5',
-        default: 'h-9 min-h-[36px] px-4 text-[13px] rounded-md gap-1.5 [&_svg]:size-4',
-        md: 'h-10 min-h-[40px] px-5 text-[13px] rounded-[8px] gap-1.5 [&_svg]:size-4',
+        sm: 'h-8 min-h-[44px] px-3 text-[13px] rounded-md gap-1.5 [&_svg]:size-3.5',
+        default: 'h-9 min-h-[44px] px-4 text-[13px] rounded-md gap-1.5 [&_svg]:size-4',
+        md: 'h-10 min-h-[44px] px-5 text-[13px] rounded-[8px] gap-1.5 [&_svg]:size-4',
         lg: 'h-11 min-h-[44px] px-6 text-[14px] rounded-[9px] gap-1.5 [&_svg]:size-4',
         xl: 'h-12 min-h-[48px] px-7 text-[15px] rounded-[10px] gap-1.5 [&_svg]:size-5',
-        icon: 'h-9 w-9 min-h-[36px] min-w-[36px] rounded-md gap-0 [&_svg]:size-4',
-        'icon-sm': 'h-8 w-8 min-h-[32px] min-w-[32px] rounded-md gap-0 [&_svg]:size-3.5',
-        'icon-lg': 'h-10 w-10 min-h-[40px] min-w-[40px] rounded-[8px] gap-0 [&_svg]:size-4',
+        icon: 'h-11 w-11 min-h-[44px] min-w-[44px] rounded-md gap-0 [&_svg]:size-4',
+        'icon-sm': 'h-11 w-11 min-h-[44px] min-w-[44px] rounded-md gap-0 [&_svg]:size-3.5',
+        'icon-lg': 'h-11 w-11 min-h-[44px] min-w-[44px] rounded-[8px] gap-0 [&_svg]:size-4',
       },
     },
     defaultVariants: {

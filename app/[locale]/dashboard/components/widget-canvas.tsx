@@ -345,6 +345,7 @@ export default function WidgetCanvas() {
  const showDataDebug = searchParams.get("debugData") ==="1"
  const pendingSaveRef = useRef<DashboardLayoutWithWidgets | null>(null)
  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+ const [expandedWidget, setExpandedWidget] = useState<string | null>(null)
 
  // Add this state to track if the layout change is from user interaction
  const activeLayout = useMemo(() => isMobile ? 'mobile' : 'desktop', [isMobile])
@@ -625,6 +626,7 @@ export default function WidgetCanvas() {
  key={widget.i}
  className="h-full min-h-0"
  data-customizing={isCustomizing}
+ onDoubleClick={() => { if (isMobile) setExpandedWidget(widget.i) }}
  >
  <motion.div
  className="h-full min-h-0"
@@ -674,6 +676,29 @@ export default function WidgetCanvas() {
  })}
  </ResponsiveGridLayout>
  </div>
+ )}
+ {/* Mobile widget expand overlay */}
+ {expandedWidget && isMobile && (
+ <motion.div
+ className="fixed inset-0 z-50 bg-background overflow-auto pb-safe pt-safe"
+ initial={{ y: '100%' }}
+ animate={{ y: 0 }}
+ exit={{ y: '100%' }}
+ transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+ drag="y"
+ dragConstraints={{ top: 0, bottom: 0 }}
+ dragElastic={0.4}
+ onDragEnd={(_, info) => {
+ if (info.offset.y > 100) setExpandedWidget(null)
+ }}
+ >
+ <div className="flex justify-center pt-2 pb-2">
+ <div className="h-1 w-10 rounded-full bg-muted-foreground/30" />
+ </div>
+ <div className="p-4">
+ <p className="text-sm text-muted-foreground text-center">Widget expanded view</p>
+ </div>
+ </motion.div>
  )}
  </div>
  )

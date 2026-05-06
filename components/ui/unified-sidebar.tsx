@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
 import { useNavigationLoading } from '@/hooks/use-navigation-loading'
+import { useIsMobile } from '@/hooks/use-mobile'
 import {
   Sidebar,
   SidebarContent,
@@ -92,6 +93,7 @@ export function UnifiedSidebar({
   )
 
   const { isMobile, setOpenMobile } = useSidebar()
+  const isMobileScreen = useIsMobile()
   const isActive = useActiveLink()
   const { isLoading } = useNavigationLoading()
 
@@ -166,24 +168,52 @@ export function UnifiedSidebar({
   const initials = useMemo(() => getUserInitials(user), [user])
 
   return shouldRenderSidebar ? (
-    <SidebarContentRender
-      items={items}
-      actions={actions}
-      user={user}
-      timezone={timezone}
-      onLogout={onLogout}
-      displayName={displayName}
-      initials={initials}
-      openGroups={mergedOpenGroups}
-      pendingNavigation={pendingNavigation}
-      currentRouteKey={currentRouteKey}
-      isLoading={isLoading}
-      isActive={isActive}
-      isMobile={isMobile}
-      styleVariant={styleVariant}
-      onGroupOpenChange={handleGroupOpenChange}
-      onNavigate={handleNavigate}
-    />
+    <>
+      <SidebarContentRender
+        items={items}
+        actions={actions}
+        user={user}
+        timezone={timezone}
+        onLogout={onLogout}
+        displayName={displayName}
+        initials={initials}
+        openGroups={mergedOpenGroups}
+        pendingNavigation={pendingNavigation}
+        currentRouteKey={currentRouteKey}
+        isLoading={isLoading}
+        isActive={isActive}
+        isMobile={isMobile}
+        styleVariant={styleVariant}
+        onGroupOpenChange={handleGroupOpenChange}
+        onNavigate={handleNavigate}
+      />
+      {/* Swipe zone for opening sidebar on mobile */}
+      {isMobileScreen && !isMobile && (
+        <div
+          className="fixed left-0 top-0 bottom-0 w-5 z-30"
+          onTouchStart={(e) => {
+            const startX = e.touches[0].clientX
+            const startY = e.touches[0].clientY
+            let moved = false
+
+            const onMove = (ev: TouchEvent) => {
+              const dx = ev.touches[0].clientX - startX
+              if (dx > 30 && Math.abs(ev.touches[0].clientY - startY) < 50) {
+                moved = true
+              }
+            }
+            const onEnd = () => {
+              if (moved) setOpenMobile(true)
+              document.removeEventListener('touchmove', onMove)
+              document.removeEventListener('touchend', onEnd)
+            }
+
+            document.addEventListener('touchmove', onMove, { passive: true })
+            document.addEventListener('touchend', onEnd, { once: true })
+          }}
+        />
+      )}
+    </>
   ) : null
 }
 

@@ -113,7 +113,7 @@ function MobileBottomNav({ items }: { items?: MobileNavItem[] }) {
 
   return (
     <nav
-      className={cn('fixed inset-x-0 bottom-0 z-40 md:hidden', 'px-3 pb-safe')}
+      className={cn('fixed inset-x-0 bottom-0 z-40 md:hidden', 'px-3 pb-safe mobile-landscape-compact transition-all duration-200')}
       aria-label="Dashboard navigation"
     >
       <div className="flex h-[4.35rem] items-center justify-around rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-2 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_18px_40px_-24px_rgba(0,0,0,0.84)]">
