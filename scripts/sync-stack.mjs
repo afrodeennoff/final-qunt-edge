@@ -134,11 +134,12 @@ async function canReachDatabase(urlString) {
   };
 }
 
-// Skip database migrations for deployment if environment variable is set
+// Skip database migrations in Vercel build environment or when explicitly requested
+const isVercelBuild = process.env.VERCEL === "1";
 const shouldSkipMigrations = process.env.NEXT_PUBLIC_SKIP_DATABASE_MIGRATIONS === "true";
 
-if (shouldSkipMigrations) {
-  info("[sync-stack] Skipping Prisma migrations for deployment");
+if (isVercelBuild || shouldSkipMigrations) {
+  info("[sync-stack] Skipping Prisma migrations for deployment (Vercel build detected)");
   process.exit(0);
 }
 
