@@ -25,7 +25,7 @@ export default async function FeaturesBento() {
   }))
 
   return (
-    <MotionSection className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+    <MarketingSection className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
       <div className="mx-auto max-w-[1360px] space-y-6">
         <div className={cn(unifiedSectionPanelClassName, 'p-6 sm:p-8')}>
           <p className={unifiedSectionEyebrowClassName}>{t('landing.home.features.eyebrow')}</p>
