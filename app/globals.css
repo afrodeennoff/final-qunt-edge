@@ -64,7 +64,6 @@
   a, button, [role="button"], summary {
     touch-action: manipulation;
   }
-  }
 
   /* ── TYPOGRAPHY HIERARCHY ── */
   h1,

@@ -15,9 +15,6 @@ const configWithRedirects: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   async redirects() {
     const existingRedirects = await nextConfig.redirects?.() ?? []
     return [
