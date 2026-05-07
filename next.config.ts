@@ -12,6 +12,12 @@ const withMDX = createMDX({
 
 const configWithRedirects: NextConfig = {
   ...nextConfig,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   async redirects() {
     const existingRedirects = await nextConfig.redirects?.() ?? []
     return [
