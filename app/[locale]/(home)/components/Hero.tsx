@@ -12,7 +12,7 @@ export default async function Hero({ locale }: { locale: string }) {
   const t = await getI18n()
 
   return (
-    <MarketingSection className="pt-24 sm:pt-28 lg:pt-36" innerClassName="max-w-[980px]">
+    <MarketingSection className="pt-20 sm:pt-24 lg:pt-28" innerClassName="max-w-[980px]">
       <div className="mx-auto text-center">
         <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/88">
           {t('landing.hero.badge')}
@@ -22,7 +22,7 @@ export default async function Hero({ locale }: { locale: string }) {
           {t('landing.hero.subheadline')}
         </p>
 
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Button asChild size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
             <Link href={`/${locale}/authentication?next=dashboard`}>
               {t('landing.hero.ctaPrimary')}

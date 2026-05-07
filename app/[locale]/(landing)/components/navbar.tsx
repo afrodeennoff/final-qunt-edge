@@ -10,7 +10,6 @@ import {
   unifiedPrimaryActionClassName,
 } from '@/components/layout/unified-page-recipes'
 import { Logo } from '@/components/logo'
-import { MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
 import { useCurrentLocale, useI18n } from '@/locales/client'
 
@@ -41,34 +40,37 @@ export default function Navbar() {
   }
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 px-4 py-3 sm:px-6">
+    <header className="fixed left-0 right-0 top-0 z-50 px-3 py-2 sm:px-4 sm:py-3">
       <div className="mx-auto w-full max-w-[1400px]">
         <div
           className={cn(
             unifiedInsetPanelClassName,
-            'relative flex min-h-[4.25rem] items-center justify-between overflow-hidden rounded-2xl px-3.5 py-2 sm:px-4',
+            'relative flex min-h-[3.5rem] items-center justify-between overflow-hidden rounded-xl px-3 py-1.5 sm:min-h-[4rem] sm:px-4 sm:py-2 backdrop-blur-md',
           )}
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/30 to-transparent" />
-          <Link href={`/${locale}`} className="flex items-center gap-2 rounded-full px-2 py-1.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/30 bg-background/40 text-muted-foreground">
-              <Logo className="h-4.5 w-4.5 fill-current" />
+          <Link
+            href={`/${locale}`}
+            className="flex items-center gap-2 rounded-lg px-2 py-2 min-h-[44px] min-w-[44px] transition-colors hover:bg-background/40"
+          >
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/30 bg-background/40 text-muted-foreground">
+              <Logo className="h-4 w-4 fill-current" />
             </div>
-            <span className="hidden text-[15px] font-semibold tracking-[-0.02em] text-foreground sm:inline-flex">
+            <span className="hidden text-sm font-semibold tracking-[-0.02em] text-foreground sm:inline-flex">
               Qunt Edge
             </span>
           </Link>
 
-          <nav className="mx-auto hidden items-center gap-1 lg:flex">
+          <nav className="mx-auto hidden items-center gap-0.5 lg:flex">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={`/${locale}${link.href}`}
                 className={cn(
-                  'rounded-full border border-border/35 h-9 px-4 text-sm font-medium transition-[background-color,color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
+                  'rounded-lg px-3.5 py-2 text-[13px] font-medium transition-[background-color,color] duration-150 min-h-[36px] inline-flex items-center',
                   isActive(link.href)
-                    ? 'border-border/50 bg-background/60 text-foreground'
-                    : 'text-muted-foreground hover:border-border/50 hover:bg-background/72 hover:text-foreground',
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:bg-background/60 hover:text-foreground',
                 )}
               >
                 {link.title}
@@ -76,10 +78,10 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <div className="ml-auto flex items-center gap-2.5">
+          <div className="ml-auto flex items-center gap-2">
             <Link
               href={`/${locale}/authentication`}
-              className={cn(unifiedGhostActionClassName, 'hidden px-4 py-2 text-sm md:inline-flex')}
+              className={cn(unifiedGhostActionClassName, 'hidden px-3 py-2 text-sm min-h-[44px] md:inline-flex items-center')}
             >
               {t('landing.navbar.signIn')}
             </Link>
@@ -88,7 +90,7 @@ export default function Navbar() {
               href={`/${locale}/authentication`}
               className={cn(
                 unifiedPrimaryActionClassName,
-                'hidden h-[38px] px-5 text-sm md:inline-flex',
+                'hidden h-10 px-5 text-sm min-h-[44px] md:inline-flex items-center',
               )}
             >
               {t('landing.hero.ctaPrimary')}
@@ -99,7 +101,7 @@ export default function Navbar() {
               footer={
                 <Link
                   href={`/${locale}/authentication`}
-                  className={cn(unifiedPrimaryActionClassName, 'w-full')}
+                  className={cn(unifiedPrimaryActionClassName, 'w-full min-h-[44px]')}
                 >
                   {t('landing.hero.ctaPrimary')}
                 </Link>

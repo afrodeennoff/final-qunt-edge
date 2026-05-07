@@ -21,7 +21,7 @@ export default async function HowItWorks() {
   const t = await getTypedI18n()
 
   return (
-    <section id="how-it-works" className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+    <section id="how-it-works" className="relative overflow-hidden px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
       <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-8">
         <motion.div
           className={cn(unifiedSectionPanelClassName, 'p-6 lg:sticky lg:top-28 lg:h-fit')}

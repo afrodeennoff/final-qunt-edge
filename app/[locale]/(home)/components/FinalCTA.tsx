@@ -14,7 +14,7 @@ export default async function FinalCTA({ locale }: FinalCTAProps) {
   const t = await getI18n()
 
   return (
-    <section className="relative px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+    <section className="relative px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
       <motion.div
         className="mx-auto max-w-5xl"
         initial={{ opacity: 0, y: 10 }}

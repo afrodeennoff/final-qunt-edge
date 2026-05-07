@@ -81,7 +81,7 @@ export default function FAQSection() {
   }))
 
   return (
-    <section id="faq" className="px-4 py-12 sm:py-16 lg:py-20 md:px-6 lg:px-8">
+    <section id="faq" className="px-4 py-8 sm:py-12 lg:py-16 md:px-6 lg:px-8">
       <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
         <motion.div
           className="rounded-lg border border-border/0.04 bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] lg:sticky lg:top-28"
