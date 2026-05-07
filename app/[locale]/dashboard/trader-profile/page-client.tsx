@@ -260,7 +260,7 @@ function formatTradeTimestamp(value: string | Date | null | undefined) {
   return format(parsed, 'MMM d, yyyy • p')
 }
 
-function StatTile({
+export function StatTile({
   label,
   value,
   helper,
@@ -348,7 +348,7 @@ function SignalTile({
   )
 }
 
-function StripMetric({
+export function StripMetric({
   label,
   value,
   helper,

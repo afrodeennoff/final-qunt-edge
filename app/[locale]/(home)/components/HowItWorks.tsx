@@ -1,7 +1,5 @@
 import { cn } from '@/lib/utils'
 import {
-  MarketingSection,
-  MarketingSectionHeader,
   unifiedBodyCopyClassName,
   unifiedSectionEyebrowClassName,
   unifiedSectionPanelClassName,
@@ -10,7 +8,14 @@ import {
 import { motion } from 'framer-motion'
 import { InteractiveWrapper } from '@/components/interactive-wrapper'
 import { getTypedI18n } from '@/locales/server'
-import ProductDemoPlayer from './ProductDemoPlayer'
+
+const steps = [
+  { name: 'Connect', description: 'Link your broker and import your trading history automatically.' },
+  { name: 'Analyze', description: 'AI-powered analytics surface patterns in your execution.' },
+  { name: 'Journal', description: 'Structured debriefs turn every session into actionable insight.' },
+  { name: 'Improve', description: 'Track behavioral metrics and refine your edge over time.' },
+  { name: 'Scale', description: 'Build consistency and graduate to larger allocations.' },
+]
 
 export default async function HowItWorks() {
   const t = await getTypedI18n()

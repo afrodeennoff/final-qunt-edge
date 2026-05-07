@@ -1,7 +1,6 @@
 import { getBlogPosts } from '@/app/[locale]/admin/actions/blog-actions'
 import { BlogList } from './components/blog-list'
 import { getI18n } from '@/locales/server'
-import { MarketingSection, MarketingSectionHeader } from '@/components/layout/marketing-sections'
 import type { Metadata } from 'next'
 import { buildPublicMetadata } from '@/lib/seo'
 
@@ -25,14 +24,14 @@ export default async function BlogsPage() {
   const posts = await getBlogPosts(true)
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
-      <UnifiedSurface>
+    <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
+      <div className="rounded-xl border border-border/30 bg-background/0.11 p-6">
         <div className="mb-6">
           <h1 className="text-3xl font-semibold text-foreground">{t('blogs.title')}</h1>
           <p className="mt-1 text-muted-foreground">{t('blogs.description')}</p>
         </div>
         <BlogList initialPosts={posts} />
-      </UnifiedSurface>
-    </UnifiedPageShell>
+      </div>
+    </div>
   )
 }

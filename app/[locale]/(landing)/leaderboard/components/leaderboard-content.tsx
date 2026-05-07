@@ -162,7 +162,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
               label="Average win rate"
               value={`${summary.avgWinRate}%`}
               icon={Activity}
-              accent="violet"
+              accent="purple"
               className="animate-scale-reveal animate-scale-reveal-d2"
             />
             <SummaryCard

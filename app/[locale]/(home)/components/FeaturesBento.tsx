@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Download, BarChart3, Users, Shield, FileText, Brain } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
   unifiedBodyCopyClassName,
