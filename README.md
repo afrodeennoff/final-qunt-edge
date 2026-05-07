@@ -22,7 +22,7 @@
 ## ✨ Key Features
 
   <div align="center">
-  <img src="public/dashboard-overview.gif" alt="Dashboard overview GIF" width="650" style="margin-bottom: 1.5rem;" />
+  <img src="public/dashboard-overview-poster.webp" alt="Dashboard overview" width="650" style="margin-bottom: 1.5rem;" />
 </div>
 
 ### 📊 Advanced Trading Analytics

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-10T16:02:43.985Z",
+  "generatedAt": "2026-05-07T11:26:46.067Z",
   "budgets": {
     "defaultRouteBudgetKb": 300,
     "homeRouteBudgetKb": 80,
@@ -21,400 +21,400 @@
     {
       "route": "/[locale]/dashboard/data",
       "file": "/.next/server/app/[locale]/dashboard/data/page_client-reference-manifest.js",
-      "bytes": 69696,
-      "kb": 68.06,
+      "bytes": 89372,
+      "kb": 87.28,
+      "budgetKb": 80,
+      "withinBudget": false
+    },
+    {
+      "route": "/[locale]/dashboard",
+      "file": "/.next/server/app/[locale]/dashboard/page_client-reference-manifest.js",
+      "bytes": 77427,
+      "kb": 75.61,
       "budgetKb": 80,
       "withinBudget": true
     },
     {
       "route": "/[locale]/dashboard/strategies",
       "file": "/.next/server/app/[locale]/dashboard/strategies/page_client-reference-manifest.js",
-      "bytes": 67016,
-      "kb": 65.45,
-      "budgetKb": 80,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/dashboard/trader-profile",
-      "file": "/.next/server/app/[locale]/dashboard/trader-profile/page_client-reference-manifest.js",
-      "bytes": 66742,
-      "kb": 65.18,
-      "budgetKb": 80,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/dashboard/settings",
-      "file": "/.next/server/app/[locale]/dashboard/settings/page_client-reference-manifest.js",
-      "bytes": 66580,
-      "kb": 65.02,
+      "bytes": 76102,
+      "kb": 74.32,
       "budgetKb": 80,
       "withinBudget": true
     },
     {
       "route": "/[locale]/dashboard/reports",
       "file": "/.next/server/app/[locale]/dashboard/reports/page_client-reference-manifest.js",
-      "bytes": 66244,
-      "kb": 64.69,
+      "bytes": 75401,
+      "kb": 73.63,
+      "budgetKb": 80,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/dashboard/settings",
+      "file": "/.next/server/app/[locale]/dashboard/settings/page_client-reference-manifest.js",
+      "bytes": 74701,
+      "kb": 72.95,
       "budgetKb": 80,
       "withinBudget": true
     },
     {
       "route": "/[locale]/dashboard/billing",
       "file": "/.next/server/app/[locale]/dashboard/billing/page_client-reference-manifest.js",
-      "bytes": 66241,
-      "kb": 64.69,
-      "budgetKb": 80,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/dashboard/import",
-      "file": "/.next/server/app/[locale]/dashboard/import/page_client-reference-manifest.js",
-      "bytes": 66238,
-      "kb": 64.69,
+      "bytes": 74657,
+      "kb": 72.91,
       "budgetKb": 80,
       "withinBudget": true
     },
     {
       "route": "/[locale]/dashboard/behavior",
       "file": "/.next/server/app/[locale]/dashboard/behavior/page_client-reference-manifest.js",
-      "bytes": 66100,
-      "kb": 64.55,
+      "bytes": 74623,
+      "kb": 72.87,
       "budgetKb": 80,
       "withinBudget": true
     },
     {
-      "route": "/[locale]/dashboard",
-      "file": "/.next/server/app/[locale]/dashboard/page_client-reference-manifest.js",
-      "bytes": 65645,
-      "kb": 64.11,
+      "route": "/[locale]/dashboard/import",
+      "file": "/.next/server/app/[locale]/dashboard/import/page_client-reference-manifest.js",
+      "bytes": 74527,
+      "kb": 72.78,
+      "budgetKb": 80,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/dashboard/trades",
+      "file": "/.next/server/app/[locale]/dashboard/trades/page_client-reference-manifest.js",
+      "bytes": 73136,
+      "kb": 71.42,
+      "budgetKb": 80,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/dashboard/accounts",
+      "file": "/.next/server/app/[locale]/dashboard/accounts/page_client-reference-manifest.js",
+      "bytes": 73075,
+      "kb": 71.36,
+      "budgetKb": 80,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/dashboard/notes",
+      "file": "/.next/server/app/[locale]/dashboard/notes/page_client-reference-manifest.js",
+      "bytes": 72761,
+      "kb": 71.06,
+      "budgetKb": 80,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/dashboard/trader-profile",
+      "file": "/.next/server/app/[locale]/dashboard/trader-profile/page_client-reference-manifest.js",
+      "bytes": 72062,
+      "kb": 70.37,
+      "budgetKb": 80,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/dashboard/analytics",
+      "file": "/.next/server/app/[locale]/dashboard/analytics/page_client-reference-manifest.js",
+      "bytes": 71620,
+      "kb": 69.94,
+      "budgetKb": 80,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(home)",
+      "file": "/.next/server/app/[locale]/(home)/page_client-reference-manifest.js",
+      "bytes": 66206,
+      "kb": 64.65,
       "budgetKb": 80,
       "withinBudget": true
     },
     {
       "route": "/[locale]/teams/manage",
       "file": "/.next/server/app/[locale]/teams/manage/page_client-reference-manifest.js",
-      "bytes": 59672,
-      "kb": 58.27,
+      "bytes": 48742,
+      "kb": 47.6,
       "budgetKb": 300,
       "withinBudget": true
     },
     {
       "route": "/[locale]/teams/dashboard/trader/[slug]",
       "file": "/.next/server/app/[locale]/teams/dashboard/trader/[slug]/page_client-reference-manifest.js",
-      "bytes": 57956,
-      "kb": 56.6,
+      "bytes": 47255,
+      "kb": 46.15,
       "budgetKb": 80,
       "withinBudget": true
     },
     {
       "route": "/[locale]/teams/dashboard/[slug]/traders",
       "file": "/.next/server/app/[locale]/teams/dashboard/[slug]/traders/page_client-reference-manifest.js",
-      "bytes": 57071,
-      "kb": 55.73,
-      "budgetKb": 80,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/teams/dashboard/[slug]/members",
-      "file": "/.next/server/app/[locale]/teams/dashboard/[slug]/members/page_client-reference-manifest.js",
-      "bytes": 57022,
-      "kb": 55.69,
+      "bytes": 45047,
+      "kb": 43.99,
       "budgetKb": 80,
       "withinBudget": true
     },
     {
       "route": "/[locale]/teams/dashboard/[slug]/analytics",
       "file": "/.next/server/app/[locale]/teams/dashboard/[slug]/analytics/page_client-reference-manifest.js",
-      "bytes": 56693,
-      "kb": 55.36,
+      "bytes": 44958,
+      "kb": 43.9,
+      "budgetKb": 80,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/teams/dashboard/[slug]/members",
+      "file": "/.next/server/app/[locale]/teams/dashboard/[slug]/members/page_client-reference-manifest.js",
+      "bytes": 44713,
+      "kb": 43.67,
       "budgetKb": 80,
       "withinBudget": true
     },
     {
       "route": "/[locale]/teams/dashboard/[slug]",
       "file": "/.next/server/app/[locale]/teams/dashboard/[slug]/page_client-reference-manifest.js",
-      "bytes": 56205,
-      "kb": 54.89,
+      "bytes": 44190,
+      "kb": 43.15,
       "budgetKb": 80,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/updates/[slug]",
-      "file": "/.next/server/app/[locale]/(landing)/updates/[slug]/page_client-reference-manifest.js",
-      "bytes": 55653,
-      "kb": 54.35,
-      "budgetKb": 300,
       "withinBudget": true
     },
     {
       "route": "/[locale]/teams/dashboard",
       "file": "/.next/server/app/[locale]/teams/dashboard/page_client-reference-manifest.js",
-      "bytes": 55356,
-      "kb": 54.06,
+      "bytes": 42942,
+      "kb": 41.94,
       "budgetKb": 80,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/community",
+      "file": "/.next/server/app/[locale]/(landing)/community/page_client-reference-manifest.js",
+      "bytes": 41638,
+      "kb": 40.66,
+      "budgetKb": 300,
       "withinBudget": true
     },
     {
       "route": "/[locale]/admin/newsletter-builder",
       "file": "/.next/server/app/[locale]/admin/newsletter-builder/page_client-reference-manifest.js",
-      "bytes": 53931,
-      "kb": 52.67,
+      "bytes": 41352,
+      "kb": 40.38,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/updates/[slug]",
+      "file": "/.next/server/app/[locale]/(landing)/updates/[slug]/page_client-reference-manifest.js",
+      "bytes": 38123,
+      "kb": 37.23,
       "budgetKb": 300,
       "withinBudget": true
     },
     {
       "route": "/[locale]/(landing)/community/post/[id]",
       "file": "/.next/server/app/[locale]/(landing)/community/post/[id]/page_client-reference-manifest.js",
-      "bytes": 53365,
-      "kb": 52.11,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/admin/weekly-recap",
-      "file": "/.next/server/app/[locale]/admin/weekly-recap/page_client-reference-manifest.js",
-      "bytes": 52960,
-      "kb": 51.72,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/admin/welcome-email",
-      "file": "/.next/server/app/[locale]/admin/welcome-email/page_client-reference-manifest.js",
-      "bytes": 52955,
-      "kb": 51.71,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/admin/blogs/[id]/edit",
-      "file": "/.next/server/app/[locale]/admin/blogs/[id]/edit/page_client-reference-manifest.js",
-      "bytes": 52911,
-      "kb": 51.67,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/admin/blogs/new",
-      "file": "/.next/server/app/[locale]/admin/blogs/new/page_client-reference-manifest.js",
-      "bytes": 52869,
-      "kb": 51.63,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/admin/send-email",
-      "file": "/.next/server/app/[locale]/admin/send-email/page_client-reference-manifest.js",
-      "bytes": 52591,
-      "kb": 51.36,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/shared/[slug]",
-      "file": "/.next/server/app/[locale]/shared/[slug]/page_client-reference-manifest.js",
-      "bytes": 52531,
-      "kb": 51.3,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/admin/propfirms/[id]",
-      "file": "/.next/server/app/[locale]/admin/propfirms/[id]/page_client-reference-manifest.js",
-      "bytes": 52406,
-      "kb": 51.18,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/admin/coupons",
-      "file": "/.next/server/app/[locale]/admin/coupons/page_client-reference-manifest.js",
-      "bytes": 52285,
-      "kb": 51.06,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/admin/blogs",
-      "file": "/.next/server/app/[locale]/admin/blogs/page_client-reference-manifest.js",
-      "bytes": 52129,
-      "kb": 50.91,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/admin",
-      "file": "/.next/server/app/[locale]/admin/page_client-reference-manifest.js",
-      "bytes": 51946,
-      "kb": 50.73,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/community",
-      "file": "/.next/server/app/[locale]/(landing)/community/page_client-reference-manifest.js",
-      "bytes": 51877,
-      "kb": 50.66,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/admin/propfirms",
-      "file": "/.next/server/app/[locale]/admin/propfirms/page_client-reference-manifest.js",
-      "bytes": 51737,
-      "kb": 50.52,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/admin/reviews",
-      "file": "/.next/server/app/[locale]/admin/reviews/page_client-reference-manifest.js",
-      "bytes": 51727,
-      "kb": 50.51,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/firm/[slug]",
-      "file": "/.next/server/app/[locale]/(landing)/firm/[slug]/page_client-reference-manifest.js",
-      "bytes": 50997,
-      "kb": 49.8,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/support",
-      "file": "/.next/server/app/[locale]/(landing)/support/page_client-reference-manifest.js",
-      "bytes": 50882,
-      "kb": 49.69,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/teams/join",
-      "file": "/.next/server/app/[locale]/teams/join/page_client-reference-manifest.js",
-      "bytes": 50706,
-      "kb": 49.52,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/embed",
-      "file": "/.next/server/app/[locale]/embed/page_client-reference-manifest.js",
-      "bytes": 50602,
-      "kb": 49.42,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/blogs/[slug]",
-      "file": "/.next/server/app/[locale]/(landing)/blogs/[slug]/page_client-reference-manifest.js",
-      "bytes": 50507,
-      "kb": 49.32,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/propfirms/[slug]",
-      "file": "/.next/server/app/[locale]/(landing)/propfirms/[slug]/page_client-reference-manifest.js",
-      "bytes": 50447,
-      "kb": 49.26,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/propfirms",
-      "file": "/.next/server/app/[locale]/(landing)/propfirms/page_client-reference-manifest.js",
-      "bytes": 50357,
-      "kb": 49.18,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/leaderboard",
-      "file": "/.next/server/app/[locale]/(landing)/leaderboard/page_client-reference-manifest.js",
-      "bytes": 50353,
-      "kb": 49.17,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/deals/calculator",
-      "file": "/.next/server/app/[locale]/(landing)/deals/calculator/page_client-reference-manifest.js",
-      "bytes": 50343,
-      "kb": 49.16,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/firm",
-      "file": "/.next/server/app/[locale]/(landing)/firm/page_client-reference-manifest.js",
-      "bytes": 50342,
-      "kb": 49.16,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/deals/compare",
-      "file": "/.next/server/app/[locale]/(landing)/deals/compare/page_client-reference-manifest.js",
-      "bytes": 50337,
-      "kb": 49.16,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/deals/guides",
-      "file": "/.next/server/app/[locale]/(landing)/deals/guides/page_client-reference-manifest.js",
-      "bytes": 50335,
-      "kb": 49.16,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/deals/faq",
-      "file": "/.next/server/app/[locale]/(landing)/deals/faq/page_client-reference-manifest.js",
-      "bytes": 50329,
-      "kb": 49.15,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/teams/(landing)",
-      "file": "/.next/server/app/[locale]/teams/(landing)/page_client-reference-manifest.js",
-      "bytes": 50329,
-      "kb": 49.15,
-      "budgetKb": 300,
-      "withinBudget": true
-    },
-    {
-      "route": "/[locale]/(landing)/blogs",
-      "file": "/.next/server/app/[locale]/(landing)/blogs/page_client-reference-manifest.js",
-      "bytes": 50295,
-      "kb": 49.12,
+      "bytes": 37573,
+      "kb": 36.69,
       "budgetKb": 300,
       "withinBudget": true
     },
     {
       "route": "/[locale]/(landing)/deals",
       "file": "/.next/server/app/[locale]/(landing)/deals/page_client-reference-manifest.js",
-      "bytes": 50249,
-      "kb": 49.07,
+      "bytes": 37194,
+      "kb": 36.32,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/shared/[slug]",
+      "file": "/.next/server/app/[locale]/shared/[slug]/page_client-reference-manifest.js",
+      "bytes": 35953,
+      "kb": 35.11,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/admin/propfirms/[id]",
+      "file": "/.next/server/app/[locale]/admin/propfirms/[id]/page_client-reference-manifest.js",
+      "bytes": 35857,
+      "kb": 35.02,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/updates",
+      "file": "/.next/server/app/[locale]/(landing)/updates/page_client-reference-manifest.js",
+      "bytes": 35740,
+      "kb": 34.9,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/admin/coupons",
+      "file": "/.next/server/app/[locale]/admin/coupons/page_client-reference-manifest.js",
+      "bytes": 35132,
+      "kb": 34.31,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/teams/(landing)",
+      "file": "/.next/server/app/[locale]/teams/(landing)/page_client-reference-manifest.js",
+      "bytes": 34480,
+      "kb": 33.67,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/deals/calculator",
+      "file": "/.next/server/app/[locale]/(landing)/deals/calculator/page_client-reference-manifest.js",
+      "bytes": 34012,
+      "kb": 33.21,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/deals/compare",
+      "file": "/.next/server/app/[locale]/(landing)/deals/compare/page_client-reference-manifest.js",
+      "bytes": 34009,
+      "kb": 33.21,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/deals/guides",
+      "file": "/.next/server/app/[locale]/(landing)/deals/guides/page_client-reference-manifest.js",
+      "bytes": 34008,
+      "kb": 33.21,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/deals/faq",
+      "file": "/.next/server/app/[locale]/(landing)/deals/faq/page_client-reference-manifest.js",
+      "bytes": 34005,
+      "kb": 33.21,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/support",
+      "file": "/.next/server/app/[locale]/(landing)/support/page_client-reference-manifest.js",
+      "bytes": 33759,
+      "kb": 32.97,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/pricing",
+      "file": "/.next/server/app/[locale]/(landing)/pricing/page_client-reference-manifest.js",
+      "bytes": 33398,
+      "kb": 32.62,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/about",
+      "file": "/.next/server/app/[locale]/(landing)/about/page_client-reference-manifest.js",
+      "bytes": 33392,
+      "kb": 32.61,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/trader/[slug]",
+      "file": "/.next/server/app/[locale]/(landing)/trader/[slug]/page_client-reference-manifest.js",
+      "bytes": 33372,
+      "kb": 32.59,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/blogs/[slug]",
+      "file": "/.next/server/app/[locale]/(landing)/blogs/[slug]/page_client-reference-manifest.js",
+      "bytes": 33143,
+      "kb": 32.37,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/propfirms",
+      "file": "/.next/server/app/[locale]/(landing)/propfirms/page_client-reference-manifest.js",
+      "bytes": 32771,
+      "kb": 32,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/firm",
+      "file": "/.next/server/app/[locale]/(landing)/firm/page_client-reference-manifest.js",
+      "bytes": 32756,
+      "kb": 31.99,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/firm/[slug]",
+      "file": "/.next/server/app/[locale]/(landing)/firm/[slug]/page_client-reference-manifest.js",
+      "bytes": 32743,
+      "kb": 31.98,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/admin/weekly-recap",
+      "file": "/.next/server/app/[locale]/admin/weekly-recap/page_client-reference-manifest.js",
+      "bytes": 32462,
+      "kb": 31.7,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/leaderboard",
+      "file": "/.next/server/app/[locale]/(landing)/leaderboard/page_client-reference-manifest.js",
+      "bytes": 32407,
+      "kb": 31.65,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/blogs",
+      "file": "/.next/server/app/[locale]/(landing)/blogs/page_client-reference-manifest.js",
+      "bytes": 32392,
+      "kb": 31.63,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/disclaimers",
+      "file": "/.next/server/app/[locale]/(landing)/disclaimers/page_client-reference-manifest.js",
+      "bytes": 32242,
+      "kb": 31.49,
       "budgetKb": 300,
       "withinBudget": true
     },
     {
       "route": "/[locale]/(landing)/referral",
       "file": "/.next/server/app/[locale]/(landing)/referral/page_client-reference-manifest.js",
-      "bytes": 50162,
-      "kb": 48.99,
+      "bytes": 32211,
+      "kb": 31.46,
       "budgetKb": 300,
       "withinBudget": true
     },
     {
-      "route": "/[locale]/(authentication)/forgot-password",
-      "file": "/.next/server/app/[locale]/(authentication)/forgot-password/page_client-reference-manifest.js",
-      "bytes": 50156,
-      "kb": 48.98,
+      "route": "/[locale]/(landing)/terms",
+      "file": "/.next/server/app/[locale]/(landing)/terms/page_client-reference-manifest.js",
+      "bytes": 32208,
+      "kb": 31.45,
+      "budgetKb": 300,
+      "withinBudget": true
+    },
+    {
+      "route": "/[locale]/(landing)/newsletter",
+      "file": "/.next/server/app/[locale]/(landing)/newsletter/page_client-reference-manifest.js",
+      "bytes": 32188,
+      "kb": 31.43,
       "budgetKb": 300,
       "withinBudget": true
     }

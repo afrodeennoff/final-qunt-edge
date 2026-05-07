@@ -1,7 +1,22 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataManagementCard } from "@/app/[locale]/dashboard/data/components/data-management/data-management-card"
-import { TradeTableReview } from "../components/tables/trade-table-review"
 import { UnifiedPageShell, UnifiedSurface } from "@/components/layout/unified-page-shell"
+import dynamic from "next/dynamic"
+
+// Only load TradeTableReview when trades tab is active
+const TradeTableReview = dynamic(
+  () => import("../components/tables/trade-table-review"),
+  {
+    loading: () => (
+      <div className="flex items-center justify-center h-[400px]">
+        <div className="text-center">
+          <div className="h-8 w-8 mx-auto mb-2 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          <p className="text-muted-foreground">Loading trades...</p>
+        </div>
+      </div>
+    ),
+  }
+)
 
 export default function DashboardPage() {
   return (

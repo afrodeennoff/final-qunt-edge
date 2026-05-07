@@ -54,9 +54,9 @@ const siteMetadata: Metadata = {
     locale: 'en-US',
     images: [
       {
-        url: `${siteOrigin}/opengraph-image.png`,
-        width: 1200,
-        height: 630,
+        url: `${siteOrigin}/opengraph-image.webp`,
+        width: 630,
+        height: 315,
         alt: 'Qunt Edge Open Graph Image',
       },
     ],

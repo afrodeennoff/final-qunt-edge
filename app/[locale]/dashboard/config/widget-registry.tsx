@@ -11,6 +11,8 @@ import { translateWeekday } from '@/lib/translation-utils'
 
 const widgetFallback = <div className="h-full w-full rounded-xl bg-background/0.08" />
 
+// All widgets use dynamic imports for code splitting — they are only loaded when rendered.
+// DO NOT reference these in getPreview() — use skeleton previews instead to avoid eager loading.
 const SmartInsightsWidget = dynamic(
   () => import('../components/widgets/smart-insights-widget').then((m) => m.SmartInsightsWidget),
   { loading: () => widgetFallback }
@@ -123,6 +125,38 @@ const PropfirmCatalogueWidget = dynamic(
   () => import('../components/widgets/propfirm-catalogue-widget'),
   { loading: () => widgetFallback }
 )
+
+// Lightweight chart preview skeleton — no dynamic imports, pure CSS
+function ChartPreviewSkeleton({ title }: { title: string }) {
+  return (
+    <Card data-chart-surface="modern" className="h-[300px]">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+      </CardHeader>
+      <CardContent className="pb-2 flex flex-col gap-3">
+        <div className="flex items-end gap-1 h-24">
+          {Array.from({ length: 8 }, (_, i) => (
+            <div key={i} className="flex-1 rounded-t bg-background/25-foreground/10" style={{ height: `${30 + Math.random() * 70}%` }} />
+          ))}
+        </div>
+        <div className="h-3 w-3/4 bg-background/25-foreground/10 rounded" />
+      </CardContent>
+    </Card>
+  )
+}
+
+// Lightweight stat card preview
+function StatPreviewSkeleton({ height = 100 }: { height?: number }) {
+  return (
+    <div className="h-[300px] rounded-xl border border-border/20 bg-card/40 p-4 animate-pulse">
+      <div className="space-y-3">
+        <div className="h-3 w-20 rounded bg-muted/40" />
+        <div className="h-8 w-28 rounded bg-muted/30" />
+        <div className="h-2 w-full rounded bg-muted/20" />
+      </div>
+    </div>
+  )
+}
 // import MarketChart from '../components/market/market-chart'
 
 export interface WidgetConfig {
@@ -482,7 +516,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <WeekdayPNLChart size={size} />,
-    getPreview: () => <WeekdayPNLChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="Weekday P&L" />
   },
   pnlChart: {
     type: 'pnlChart',
@@ -491,7 +525,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <PNLChart size={size} />,
-    getPreview: () => <PNLChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="P&L Chart" />
   },
   timeOfDayChart: {
     type: 'timeOfDayChart',
@@ -500,7 +534,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <TimeOfDayTradeChart size={size} />,
-    getPreview: () => <TimeOfDayTradeChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="Time of Day" />
   },
   timeInPositionChart: {
     type: 'timeInPositionChart',
@@ -509,7 +543,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <TimeInPositionChart size={size} />,
-    getPreview: () => <TimeInPositionChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="Time in Position" />
   },
   equityChart: {
     type: 'equityChart',
@@ -518,7 +552,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <EquityChart size={size} />,
-    getPreview: () => <EquityChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="Equity Curve" />
   },
   pnlBySideChart: {
     type: 'pnlBySideChart',
@@ -527,7 +561,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <PnLBySideChart size={size} />,
-    getPreview: () => <PnLBySideChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="Long vs Short" />
   },
   pnlPerContractChart: {
     type: 'pnlPerContractChart',
@@ -536,7 +570,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <PnLPerContractChart size={size} />,
-    getPreview: () => <PnLPerContractChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="P&L Per Contract" />
   },
   pnlPerContractDailyChart: {
     type: 'pnlPerContractDailyChart',
@@ -545,7 +579,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <PnLPerContractDailyChart size={size} />,
-    getPreview: () => <PnLPerContractDailyChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="Daily P&L/Contract" />
   },
   tickDistribution: {
     type: 'tickDistribution',
@@ -554,7 +588,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <TickDistributionChart size={size} />,
-    getPreview: () => <TickDistributionChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="Tick Distribution" />
   },
   commissionsPnl: {
     type: 'commissionsPnl',
@@ -563,7 +597,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <CommissionsPnLChart size={size} />,
-    getPreview: () => <CommissionsPnLChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="Commissions" />
   },
   tradeDistribution: {
     type: 'tradeDistribution',
@@ -572,7 +606,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <TradeDistributionChart size={size} />,
-    getPreview: () => <TradeDistributionChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="Trade Distribution" />
   },
   averagePositionTime: {
     type: 'averagePositionTime',
@@ -581,7 +615,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'statistics',
     previewHeight: 100,
     getComponent: ({ size }) => <AveragePositionTimeCard size={size} />,
-    getPreview: () => <AveragePositionTimeCard size="tiny" />
+    getPreview: () => <StatPreviewSkeleton />
   },
   cumulativePnl: {
     type: 'cumulativePnl',
@@ -590,7 +624,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'statistics',
     previewHeight: 100,
     getComponent: ({ size }) => <CumulativePnlCard size={size} />,
-    getPreview: () => <CumulativePnlCard size="tiny" />
+    getPreview: () => <StatPreviewSkeleton />
   },
   longShortPerformance: {
     type: 'longShortPerformance',
@@ -599,7 +633,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'statistics',
     previewHeight: 100,
     getComponent: ({ size }) => <LongShortPerformanceCard size={size} />,
-    getPreview: () => <LongShortPerformanceCard size="tiny" />
+    getPreview: () => <StatPreviewSkeleton />
   },
   tradePerformance: {
     type: 'tradePerformance',
@@ -608,7 +642,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'statistics',
     previewHeight: 100,
     getComponent: ({ size }) => <TradePerformanceCard size={size} />,
-    getPreview: () => <TradePerformanceCard size="tiny" />
+    getPreview: () => <StatPreviewSkeleton />
   },
   winningStreak: {
     type: 'winningStreak',
@@ -617,7 +651,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'statistics',
     previewHeight: 100,
     getComponent: ({ size }) => <WinningStreakCard size={size} />,
-    getPreview: () => <WinningStreakCard size="tiny" />
+    getPreview: () => <StatPreviewSkeleton />
   },
   profitFactor: {
     type: 'profitFactor',
@@ -626,7 +660,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'statistics',
     previewHeight: 100,
     getComponent: ({ size }) => <ProfitFactorCard size={size} />,
-    getPreview: () => <ProfitFactorCard size="tiny" />
+    getPreview: () => <StatPreviewSkeleton />
   },
   dailyTickTarget: {
     type: 'dailyTickTarget',
@@ -635,7 +669,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <DailyTickTargetChart size={size} />,
-    getPreview: () => <DailyTickTargetChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="Daily Tick Target" />
   },
   statisticsWidget: {
     type: 'statisticsWidget',
@@ -644,7 +678,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'statistics',
     previewHeight: 100,
     getComponent: ({ size }) => <StatisticsWidget size={size} />,
-    getPreview: () => <StatisticsWidget size="small" />
+    getPreview: () => <StatPreviewSkeleton />
   },
   chatWidget: {
     type: 'chatWidget',
@@ -681,7 +715,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'tables',
     previewHeight: 300,
     getComponent: ({ size }) => <AccountsOverview size={size} />,
-    getPreview: () => <AccountsOverview size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="Accounts" />
   },
   propFirmCatalogue: {
     type: 'propFirmCatalogue',
@@ -699,7 +733,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <TimeRangePerformanceChart size={size} />,
-    getPreview: () => <TimeRangePerformanceChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="Time Range" />
   },
   mindsetWidget: {
     type: 'mindsetWidget',
@@ -717,7 +751,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'other',
     previewHeight: 300,
     getComponent: ({ size }) => <TagWidget />,
-    getPreview: () => <div className="h-[300px]"><TagWidget /></div>
+    getPreview: () => <StatPreviewSkeleton />
   },
   riskRewardRatio: {
     type: 'riskRewardRatio',
@@ -726,7 +760,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'statistics',
     previewHeight: 100,
     getComponent: ({ size }) => <RiskRewardRatioCard size={size} />,
-    getPreview: () => <RiskRewardRatioCard size="tiny" />
+    getPreview: () => <StatPreviewSkeleton />
   },
   tradingScore: {
     type: 'tradingScore',
@@ -735,7 +769,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'statistics',
     previewHeight: 300,
     getComponent: ({ size }) => <TradingScoreWidget size={size} />,
-    getPreview: () => <TradingScoreWidget size="small" />
+    getPreview: () => <StatPreviewSkeleton />
   },
   expectancy: {
     type: 'expectancy',
@@ -744,7 +778,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'statistics',
     previewHeight: 300,
     getComponent: ({ size }) => <ExpectancyWidget size={size} />,
-    getPreview: () => <ExpectancyWidget size="small" />
+    getPreview: () => <StatPreviewSkeleton />
   },
   riskMetrics: {
     type: 'riskMetrics',
@@ -753,7 +787,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'statistics',
     previewHeight: 300,
     getComponent: ({ size }) => <RiskMetricsWidget size={size} />,
-    getPreview: () => <RiskMetricsWidget size="small" />
+    getPreview: () => <StatPreviewSkeleton />
   },
   contractQuantity: {
     type: 'contractQuantity',
@@ -762,7 +796,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     category: 'charts',
     previewHeight: 300,
     getComponent: ({ size }) => <ContractQuantityChart size={size} />,
-    getPreview: () => <ContractQuantityChart size="small" />
+    getPreview: () => <ChartPreviewSkeleton title="Contract Quantity" />
   },
   // marketChart: {
   //   type: 'marketChart',
