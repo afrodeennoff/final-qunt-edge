@@ -1,9 +1,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DataManagementCard } from "@/app/[locale]/dashboard/data/components/data-management/data-management-card"
 import { UnifiedPageShell, UnifiedSurface } from "@/components/layout/unified-page-shell"
 import dynamic from "next/dynamic"
 
-// Only load TradeTableReview when trades tab is active
+const DataManagementCard = dynamic(
+  () => import("./components/data-management/data-management-card").then((m) => m.DataManagementCard),
+  { loading: () => <div className="h-64 animate-pulse rounded-xl bg-card/40" /> }
+)
 const TradeTableReview = dynamic(
   () => import("../components/tables/trade-table-review"),
   {
