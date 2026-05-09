@@ -136,16 +136,15 @@ function ChartPreviewSkeleton({ title }: { title: string }) {
       <CardContent className="pb-2 flex flex-col gap-3">
         <div className="flex items-end gap-1 h-24">
           {Array.from({ length: 8 }, (_, i) => (
-            <div key={i} className="flex-1 rounded-t bg-background/25-foreground/10" style={{ height: `${30 + Math.random() * 70}%` }} />
+            <div key={i} className="flex-1 rounded-t bg-muted/30" style={{ height: `${30 + ((i * 11) % 70)}%` }} />
           ))}
         </div>
-        <div className="h-3 w-3/4 bg-background/25-foreground/10 rounded" />
+        <div className="h-3 w-3/4 bg-muted/20 rounded" />
       </CardContent>
     </Card>
   )
 }
 
-// Lightweight stat card preview
 function StatPreviewSkeleton({ height = 100 }: { height?: number }) {
   return (
     <div className="h-[300px] rounded-xl border border-border/20 bg-card/40 p-4 animate-pulse">
@@ -186,7 +185,7 @@ function createTablePreview(type: 'tradeTableReview' | 'consistencyTable') {
           <div className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 bg-background/25 rounded-md border-border/30">
             {Array(type === 'tradeTableReview' ? 4 : 5).fill(0).map((_, i) => (
               <div key={i} className={cn(
-                "h-4 bg-background/25-foreground/20 rounded",
+                "h-4 bg-muted/20 rounded",
                 type === 'tradeTableReview'
                   ? i === 1 ? "flex-3" : "flex-2"
                   : i < 2 ? "flex-2" : "flex-1"
@@ -197,7 +196,7 @@ function createTablePreview(type: 'tradeTableReview' | 'consistencyTable') {
             <div key={rowIndex} className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 border border-border/20 rounded-md">
               {Array(type === 'tradeTableReview' ? 4 : 5).fill(0).map((_, i) => (
                 <div key={i} className={cn(
-                  "h-3 bg-background/25-foreground/10 rounded",
+                  "h-3 bg-muted/10 rounded",
                   type === 'tradeTableReview'
                     ? i === 1 ? "flex-3" : "flex-2"
                     : i < 2 ? "flex-2" : "flex-1"
@@ -232,8 +231,8 @@ function createPropfirmPreview() {
           {[...Array(2)].map((_, index) => (
             <div key={index} className="flex flex-col gap-2 p-3 bg-background/25 rounded-md border-border/30">
               <div className="flex justify-between items-center">
-                <div className="h-4 w-24 bg-background/25-foreground/20 rounded" />
-                <div className="h-4 w-16 bg-background/25-foreground/20 rounded" />
+                <div className="h-4 w-24 bg-muted/20 rounded" />
+                <div className="h-4 w-16 bg-muted/20 rounded" />
               </div>
               <div className="h-20 w-full">
                 <svg viewBox="0 0 100 40" className="h-full w-full" preserveAspectRatio="none">
@@ -287,7 +286,7 @@ function createMindsetPreview() {
               )}>
                 <div className="h-1 w-1 rounded-full bg-primary/[0.03]" />
               </div>
-              {index < 6 && <div className="h-4 w-px bg-background/25-foreground/20" />}
+              {index < 6 && <div className="h-4 w-px bg-muted/20" />}
             </div>
           ))}
         </div>
@@ -295,7 +294,7 @@ function createMindsetPreview() {
         {/* Content area mock */}
         <div className="flex-1 p-4 flex flex-col gap-3">
           <div className="flex flex-col gap-2">
-            <div className="h-4 w-32 bg-background/25-foreground/20 rounded" />
+            <div className="h-4 w-32 bg-muted/20 rounded" />
             <div className="flex gap-2">
               <div className="h-6 w-16 bg-background/25 rounded-full" />
               <div className="h-6 w-20 bg-background/25 rounded-full" />
@@ -304,15 +303,15 @@ function createMindsetPreview() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <div className="h-4 w-24 bg-background/25-foreground/20 rounded" />
+            <div className="h-4 w-24 bg-muted/20 rounded" />
             <div className="h-16 w-full bg-background/25 rounded border-border/30" />
           </div>
 
           <div className="flex flex-col gap-2">
-            <div className="h-4 w-28 bg-background/25-foreground/20 rounded" />
+            <div className="h-4 w-28 bg-muted/20 rounded" />
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 bg-background/25 rounded-full" />
-              <div className="h-2 flex-1 bg-background/25-foreground/10 rounded-full">
+              <div className="h-2 flex-1 bg-muted/10 rounded-full">
                 <div className="h-2 w-1/2 bg-primary rounded-full" />
               </div>
             </div>
@@ -380,8 +379,8 @@ function CreateCalendarPreview() {
               key={i}
               className="flex flex-col items-center justify-center p-1 rounded border border-border/30 hover:bg-background/0.08 transition-colors cursor-pointer"
             >
-              <div className="h-4 w-full bg-background/25-foreground/10 rounded mb-0.5" />
-              <div className="h-2 w-3/4 bg-background/25-foreground/5 rounded" />
+              <div className="h-4 w-full bg-muted/10 rounded mb-0.5" />
+              <div className="h-2 w-3/4 bg-muted/5 rounded" />
             </div>
           ))}
         </div>
@@ -415,8 +414,8 @@ function CreateChatPreview() {
                 <div className="w-3 h-3 rounded-full bg-primary" />
               </div>
               <div className="bg-background/25 rounded-lg p-2 max-w-[80%]">
-                <div className="h-3 w-32 bg-background/25-foreground/20 rounded mb-1" />
-                <div className="h-3 w-24 bg-background/25-foreground/20 rounded" />
+                <div className="h-3 w-32 bg-muted/20 rounded mb-1" />
+                <div className="h-3 w-24 bg-muted/20 rounded" />
               </div>
             </div>
 
@@ -436,9 +435,9 @@ function CreateChatPreview() {
                 <div className="w-3 h-3 rounded-full bg-primary" />
               </div>
               <div className="bg-background/25 rounded-lg p-2 max-w-[80%]">
-                <div className="h-3 w-40 bg-background/25-foreground/20 rounded mb-1" />
-                <div className="h-3 w-28 bg-background/25-foreground/20 rounded mb-1" />
-                <div className="h-3 w-16 bg-background/25-foreground/20 rounded" />
+                <div className="h-3 w-40 bg-muted/20 rounded mb-1" />
+                <div className="h-3 w-28 bg-muted/20 rounded mb-1" />
+                <div className="h-3 w-16 bg-muted/20 rounded" />
               </div>
             </div>
           </div>
@@ -448,7 +447,7 @@ function CreateChatPreview() {
         <div className="border-t p-3">
           <div className="flex items-center gap-2">
             <div className="flex-1 h-9 bg-background/25 rounded-md border-border/30 flex items-center px-3">
-              <div className="h-3 w-24 bg-background/25-foreground/20 rounded" />
+              <div className="h-3 w-24 bg-muted/20 rounded" />
             </div>
             <Button size="sm" className="h-9 px-3">
               Send
