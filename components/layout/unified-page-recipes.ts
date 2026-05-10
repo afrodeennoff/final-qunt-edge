@@ -1,5 +1,5 @@
 export const unifiedHeroPanelClassName =
-  'relative overflow-hidden rounded-2xl border border-border/35 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]'
+  'relative rounded-2xl border border-border/35 bg-card shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]'
 
 export const unifiedSectionPanelClassName =
   'rounded-2xl border border-border/35 bg-card/80 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'

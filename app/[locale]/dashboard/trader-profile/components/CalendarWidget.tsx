@@ -3,10 +3,6 @@
 import { format } from 'date-fns'
 import type { DayButtonProps } from 'react-day-picker'
 import { Calendar } from '@/components/ui/calendar'
-import { cn } from '@/lib/utils'
-
-const insetPanelClassName =
-  'rounded-xl border border-border/30 bg-card/40 shadow-none'
 
 function formatPnlCell(value: number) {
   if (!Number.isFinite(value)) return '0'
