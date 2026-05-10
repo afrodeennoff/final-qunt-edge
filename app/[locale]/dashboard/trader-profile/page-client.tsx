@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { endOfDay, format, startOfDay, subDays, subMonths, subYears } from 'date-fns'
-import type { DateRange } from 'react-day-picker'
+import type { DateRange, DayButtonProps } from 'react-day-picker'
 import {
   Calendar as CalendarIcon,
   CircleDot,
@@ -52,6 +52,7 @@ import { cn } from '@/lib/utils'
 import { getLeaderboardVisibility, toggleLeaderboardVisibility } from '@/server/user-profile'
 import { useUserStore } from '@/store/user-store'
 import { toast } from 'sonner'
+import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from 'recharts'
 
 import { TableSkeleton, CalendarSkeleton } from './components/Skeletons'
 import { TraderProfileShareButton } from './components/trader-profile-share-button'

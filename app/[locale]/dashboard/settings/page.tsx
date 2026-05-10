@@ -13,7 +13,11 @@ import { Badge } from '@/components/ui/badge'
 import { useUserStore } from '../../../../store/user-store'
 import { useTradovateSyncStore } from '../../../../store/tradovate-sync-store'
 import { useTheme } from '@/context/theme-provider'
-import { VALID_DASHBOARD_THEMES } from '@/lib/constants/dashboard-themes'
+import {
+  THEME_LABELS,
+  THEME_PALETTES,
+  VALID_DASHBOARD_THEMES,
+} from '@/lib/constants/dashboard-themes'
 import {
   User,
   Settings,
@@ -294,6 +298,7 @@ export default function SettingsPage() {
   const changeLocale = useChangeLocale()
   const currentLocale = useCurrentLocale()
   const user = useUserStore((state) => state.supabaseUser)
+  const storedUsername = useUserStore((state) => state.username)
   const timezone = useUserStore((state) => state.timezone)
   const setTimezone = useUserStore((state) => state.setTimezone)
   const resetUser = useUserStore((state) => state.resetUser)
@@ -310,8 +315,12 @@ export default function SettingsPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const [userTeams, setUserTeams] = useState<UserTeamsState>({ ownedTeams: [], joinedTeams: [] })
-  const [username, setUsername] = useState(user?.username || '')
+  const [username, setUsername] = useState(() => storedUsername ?? '')
   const [isUpdatingUsername, setIsUpdatingUsername] = useState(false)
+
+  useEffect(() => {
+    setUsername(storedUsername ?? '')
+  }, [storedUsername])
 
   const languages: { value: Locale; label: string }[] = [
     { value: 'en', label: 'English' },
@@ -363,11 +372,7 @@ export default function SettingsPage() {
       const result = await updateUsernameAction(username)
       if (result.success) {
         toast.success('Username updated successfully')
-        // Update the user store with the new username
-        useUserStore.getState().setSupabaseUser({
-          ...user,
-          username
-        })
+        useUserStore.setState({ username: username.trim() })
       } else {
         toast.error(result.error || 'Failed to update username')
       }
@@ -502,28 +507,19 @@ export default function SettingsPage() {
                         type="button"
                         onClick={() => setTheme(t)}
                         className="relative flex flex-col items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-lg p-1"
-                        aria-label={`Set accent color to ${t}`}
+                        aria-label={`Set accent color to ${THEME_LABELS[t]}`}
                         aria-pressed={theme === t}
                       >
                         <span
                           className={`h-8 w-8 rounded-full transition-[opacity,background-color,border-color] ${theme === t ? 'ring-2 ring-offset-2 ring-offset-background ring-primary scale-110' : 'hover:scale-105'}`}
                           style={{
-                            backgroundColor:
-                              t === 'blue'
-                                ? 'oklch(0.55 0.22 264)'
-                                : t === 'violet'
-                                  ? 'oklch(0.60 0.22 290)'
-                                  : t === 'emerald'
-                                    ? 'oklch(0.55 0.20 160)'
-                                    : t === 'amber'
-                                      ? 'oklch(0.60 0.20 70)'
-                                      : 'oklch(0.58 0.22 10)',
+                            backgroundColor: THEME_PALETTES[t]['--primary'],
                           }}
                         />
                         <span
-                          className={`text-xs capitalize ${theme === t ? 'text-primary font-medium' : 'text-muted-foreground'}`}
+                          className={`text-xs text-center ${theme === t ? 'text-primary font-medium' : 'text-muted-foreground'}`}
                         >
-                          {t}
+                          {THEME_LABELS[t]}
                         </span>
                       </button>
                     ))}

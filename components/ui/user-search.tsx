@@ -5,8 +5,6 @@ import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useUserStore } from '@/store/user-store'
-
 interface UserSearchProps {
   onSelect?: (user: any) => void
   placeholder?: string
@@ -16,8 +14,6 @@ export function UserSearch({ onSelect, placeholder = "Search users..." }: UserSe
   const [query, setQuery] = useState('')
   // Note: This will need to be connected to actual user data from the API
   // For now, using mock data structure
-  const { users } = useUserStore()
-
   const filteredUsers = useMemo(() => {
     if (!query) return []
     // This will need actual user data from the store or API
@@ -32,7 +28,7 @@ export function UserSearch({ onSelect, placeholder = "Search users..." }: UserSe
       user.username?.toLowerCase().includes(query.toLowerCase()) ||
       user.email.toLowerCase().includes(query.toLowerCase())
     )
-  }, [query, users])
+  }, [query])
 
   return (
     <div className="relative">

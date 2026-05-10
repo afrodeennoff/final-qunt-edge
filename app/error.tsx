@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { useParams } from 'next/navigation'
 import { RouteErrorScreen } from '@/components/ui/route-state'
 
 export default function Error({

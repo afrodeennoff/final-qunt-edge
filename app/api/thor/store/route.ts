@@ -7,6 +7,7 @@ import { apiError } from '@/lib/api-response';
 import { z } from 'zod'
 import { createRateLimitResponse, rateLimit } from '@/lib/rate-limit'
 import { parseJson, parseQuery, toValidationErrorResponse } from '@/app/api/_utils/validate'
+import { logger } from '@/lib/logger'
 
 const MAX_THOR_BODY_BYTES = 3 * 1024 * 1024
 const MAX_THOR_TRADES = 5_000

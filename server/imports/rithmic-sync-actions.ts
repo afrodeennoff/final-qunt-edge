@@ -1,9 +1,19 @@
 'use server'
 import { prisma } from "@/lib/prisma"
 import { getDatabaseUserId } from "@/server/auth"
-import { Synchronization } from "@/prisma/generated/prisma"
 import { withPrismaSchemaMismatchFallback } from "@/lib/prisma-guard"
 import { CACHE_TAGS } from "@/lib/cache/cache-invalidation"
+import { authSecurityConfig } from '@/lib/security/auth-config'
+import { encryptToken } from '@/lib/security/token-crypto'
+
+export type RithmicSynchronizationInput = {
+  service?: string
+  accountId?: string
+  token?: string | null
+  lastSyncedAt?: Date | null
+  dailySyncTime?: Date | null
+  tokenExpiresAt?: Date | null
+}
 
 async function resolveSyncUserIds() {
   const databaseUserId = await getDatabaseUserId()

@@ -1,5 +1,7 @@
 'use client'
 
+import type { ReactNode } from 'react'
+
 import { UnifiedSurface } from '@/components/layout/unified-page-shell'
 import { StatTile, StripMetric } from '../page-client'
 import { cn } from '@/lib/utils'
@@ -11,6 +13,7 @@ interface UnifiedPerformanceDashboardProps {
   totalWithdrawAllAccounts: number
   primaryStripMetrics: Array<{ label: string; value: string; tone?: string }>
   secondaryStripMetrics: Array<{ label: string; value: string; tone?: string }>
+  children?: ReactNode
 }
 
 export function UnifiedPerformanceDashboard({
@@ -19,7 +22,8 @@ export function UnifiedPerformanceDashboard({
   totalCapitalAllAccounts,
   totalWithdrawAllAccounts,
   primaryStripMetrics,
-  secondaryStripMetrics
+  secondaryStripMetrics,
+  children,
 }: UnifiedPerformanceDashboardProps) {
   return (
     <div className="space-y-6">
@@ -147,6 +151,8 @@ export function UnifiedPerformanceDashboard({
           </div>
         )}
       </UnifiedSurface>
+
+      {children}
     </div>
   )
 }
