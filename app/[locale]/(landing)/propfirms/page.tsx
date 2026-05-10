@@ -1,15 +1,18 @@
 import { Metadata } from 'next'
-import { connection } from 'next/server'
+import dynamic from 'next/dynamic'
 import { setStaticParamsLocale } from 'next-international/server'
 import { getI18n } from '@/locales/server'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getPropfirmCatalogueData } from './actions/get-propfirm-catalogue'
 import type { PropfirmCatalogueStats } from './actions/types'
-import { PropFirmCatalogueExperience } from './components/catalogue-experience'
 import { getUnifiedFirms } from '@/server/deals'
 import { normalizeFirmName } from '@/lib/prop-firms/normalize'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import { buildBreadcrumbSchema, buildOrganizationSchema, buildPublicMetadata } from '@/lib/seo'
+
+const PropFirmCatalogueExperience = dynamic(
+  () => import('./components/catalogue-experience').then((mod) => mod.PropFirmCatalogueExperience),
+)
 
 function buildEmptyStats(name: string): PropfirmCatalogueStats {
   return {
@@ -93,7 +96,6 @@ export default async function PropFirmsPage({
 }) {
   const { locale } = await params
   setStaticParamsLocale(locale)
-  await connection()
   const t = await getI18n()
   const [catalogue, unifiedFirms] = await Promise.all([
     getPropfirmCatalogueData('allTime'),

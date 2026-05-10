@@ -44,8 +44,6 @@ export function UnifiedPageShell({
     <div
       className={cn(
         'scroll-smooth-butter animate-page-enter relative mx-auto w-full',
-        variant === 'refined' && 'border-x border-border/12',
-        variant === 'minimal' && 'border-x border-border/8',
         widthClassName === 'max-w-none' && 'max-w-[1800px]',
         widthClassName,
         CONTENT_PADDING,

@@ -20,16 +20,19 @@ export default function Navbar() {
   const pathname = usePathname()
   const locale = useCurrentLocale()
 
-  const links: NavLink[] = useMemo(() => [
-    { title: 'Features', href: '/#features' },
-    { title: 'Pricing', href: '/pricing' },
-    { title: 'Prop Firms Catalogue', href: '/propfirms' },
-    { title: 'Deals', href: '/deals' },
-    { title: 'Leaderboard', href: '/leaderboard' },
-    { title: 'Teams', href: '/teams' },
-    { title: 'Blog', href: '/blogs' },
-    { title: 'Support', href: '/support' },
-  ], [t])
+  const links: NavLink[] = useMemo(
+    () => [
+      { title: 'Features', href: '/#features' },
+      { title: 'Pricing', href: '/pricing' },
+      { title: 'Prop Firms Catalogue', href: '/propfirms' },
+      { title: 'Deals', href: '/deals' },
+      { title: 'Leaderboard', href: '/leaderboard' },
+      { title: 'Teams', href: '/teams' },
+      { title: 'Blog', href: '/blogs' },
+      { title: 'Support', href: '/support' },
+    ],
+    [],
+  )
 
   const isHomePath = useMemo(() => pathname === '/' || /^\/[a-z]{2}$/.test(pathname), [pathname])
 
@@ -45,7 +48,7 @@ export default function Navbar() {
         <div
           className={cn(
             unifiedInsetPanelClassName,
-            'relative flex min-h-[3.5rem] items-center justify-between overflow-hidden rounded-xl px-3 py-1.5 sm:min-h-[4rem] sm:px-4 sm:py-2 backdrop-blur-md',
+            'relative flex min-h-[3.5rem] items-center justify-between overflow-hidden rounded-xl px-3 py-1.5 sm:min-h-[4rem] sm:px-4 sm:py-2',
           )}
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/30 to-transparent" />
