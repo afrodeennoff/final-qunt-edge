@@ -35,6 +35,8 @@ Qunt Edge Obsidian V3 is a direct-replace visual system for the entire product. 
 - Keep max content width consistent:
   - app shells: `max-w-[1800px]`
   - marketing/home shells: `max-w-[1320px]` to `max-w-[1360px]`
+- Do not draw visible white/gray perimeter frames around first-viewport marketing hero sections. If a page uses `UnifiedPageShell` and the shell's decorative top outline creates a boxed frame, use the `minimal` shell variant for that page.
+- Prop-firm catalogue specifically must keep its hero visually borderless: `UnifiedPageShell variant="minimal"` and a local `border-0` override on the `unifiedHeroPanelClassName` section. The page should read as a dark, open hero surface, not a white outlined container.
 
 ## Primitive Rules
 

@@ -102,6 +102,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  const t = useI18n()
 
  const [alreadySignedIn, setAlreadySignedIn] = React.useState(false)
+ const redirectDestination = React.useMemo(
+ () => (nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`),
+ [locale, nextUrl],
+ )
 
  React.useEffect(() => {
  if (typeof window === 'undefined') return
@@ -148,6 +152,20 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  console.warn('Failed to parse URL params:', error)
  }
  }, [t])
+
+ React.useEffect(() => {
+ router.prefetch(redirectDestination)
+ }, [redirectDestination, router])
+
+ React.useEffect(() => {
+ if (!alreadySignedIn || typeof window === 'undefined') return
+
+ const redirectHandle = window.setTimeout(() => {
+ window.location.replace(redirectDestination)
+ }, 250)
+
+ return () => window.clearTimeout(redirectHandle)
+ }, [alreadySignedIn, redirectDestination])
 
  React.useEffect(() => {
  if (countdown > 0) {
@@ -353,7 +371,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 	 toast.success(t('success'), { description: t('auth.signIn') })
 	 }
 	 if (typeof window !== 'undefined') {
-	 window.location.assign(result.next || (nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`))
+	 window.location.assign(result.next || redirectDestination)
 	 }
  setLastAuthPreference('password')
  } catch (error) {
@@ -399,7 +417,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 	 description:"Successfully verified. Redirecting...",
 	 })
 	 if (typeof window !== 'undefined') {
-	 window.location.assign(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)
+	 window.location.assign(redirectDestination)
 	 }
  } catch (error) {
  toast.error("Error", {
@@ -509,7 +527,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <Button
  size="sm"
  className="shrink-0 rounded-[0.95rem] border-success/30 bg-success/20 text-success hover:bg-success/30"
- onClick={() => router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)}
+ onClick={() => window.location.assign(redirectDestination)}
  >
  Go to Dashboard
  </Button>

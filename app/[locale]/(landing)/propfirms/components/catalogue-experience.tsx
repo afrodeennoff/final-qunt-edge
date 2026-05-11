@@ -159,12 +159,16 @@ export function PropFirmCatalogueExperience({
   }
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[1360px]" className="py-12 sm:py-16">
+    <UnifiedPageShell
+      widthClassName="max-w-[1360px]"
+      variant="minimal"
+      className="py-12 sm:py-16"
+    >
       <div className="flex flex-col gap-6 lg:gap-8">
         <section
           className={cn(
             unifiedHeroPanelClassName,
-            'animate-fade-up-smooth grid gap-6 p-6 lg:grid-cols-[1.1fr_0.9fr] lg:p-8',
+            'animate-fade-up-smooth grid gap-6 border-0 p-6 lg:grid-cols-[1.1fr_0.9fr] lg:p-8',
           )}
         >
           <div>
@@ -484,4 +488,3 @@ function PayoutPill({
     </div>
   )
 }
-

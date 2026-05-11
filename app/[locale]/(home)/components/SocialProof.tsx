@@ -1,6 +1,3 @@
-'use client'
-
-import { motion } from 'motion/react'
 import {
   Clock,
   Globe,
@@ -12,15 +9,14 @@ import {
   Trophy,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { AnimatedCounter } from '@/components/animation/enhanced-motion'
-import { useTypedI18n } from '@/locales/client'
+import { getTypedI18n } from '@/locales/server'
 
 const statIcons = [Trophy, Globe, Clock, MessageSquare]
 const trustIcons = [Lock, Server, ShieldCheck, LifeBuoy]
 const initials = ['FT', 'DM', 'TC']
 
-export default function SocialProof() {
-  const t = useTypedI18n()
+export default async function SocialProof() {
+  const t = await getTypedI18n()
 
   const stats = [
     {
@@ -69,13 +65,7 @@ export default function SocialProof() {
   return (
     <section className="bg-muted/30 px-4 py-8 sm:py-12 lg:py-16 md:px-6 lg:px-8">
       <div className="mx-auto max-w-[1360px]">
-        <motion.div
-          className="mb-8 grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-end"
-          initial={false}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        >
+        <div className="mb-8 grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-end">
           <div className="rounded-lg border border-border/0.04 bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:p-8">
             <Badge
               variant="outline"
@@ -92,35 +82,27 @@ export default function SocialProof() {
           </div>
 
           <div className="grid min-w-0 grid-cols-2 gap-4">
-            {stats.map((stat, index) => {
+            {stats.map((stat) => {
               const Icon = stat.icon
               return (
-                <motion.article
+                <article
                   key={String(stat.label)}
                   className="rounded-lg border border-border/0.04 bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
-                  initial={false}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: 0.4,
-                    delay: index * 0.06,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-md border border-border/0.04 bg-background/70 text-primary">
                     <Icon className="h-5 w-5" />
                   </div>
                   <div className="mt-4 tabular-nums text-3xl font-bold tracking-tight text-foreground">
                     {stat.prefix}
-                    <AnimatedCounter target={stat.value} />
+                    {stat.value.toLocaleString('en-US')}
                     {stat.suffix}
                   </div>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{stat.label}</p>
-                </motion.article>
+                </article>
               )
             })}
           </div>
-        </motion.div>
+        </div>
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
           <div>
@@ -134,18 +116,10 @@ export default function SocialProof() {
             </div>
 
             <div className="grid gap-4">
-              {testimonials.map((testimonial, index) => (
-                <motion.article
+              {testimonials.map((testimonial) => (
+                <article
                   key={String(testimonial.name)}
                   className="flex h-full flex-col rounded-lg border border-border/0.04 bg-card/70 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
-                  initial={false}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: 0.4,
-                    delay: index * 0.06,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
                 >
                   <div className="mb-4 inline-flex w-fit rounded-full border border-border/0.04 bg-background/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                     {t('landing.home.social.traderVoice')}
@@ -163,7 +137,7 @@ export default function SocialProof() {
                       <p className="text-sm text-muted-foreground">{testimonial.role}</p>
                     </div>
                   </div>
-                </motion.article>
+                </article>
               ))}
             </div>
           </div>
@@ -179,20 +153,12 @@ export default function SocialProof() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              {pillars.map((pillar, index) => {
+              {pillars.map((pillar) => {
                 const Icon = pillar.icon
                 return (
-                  <motion.article
+                  <article
                     key={String(pillar.title)}
                     className="rounded-lg border border-border/0.04 bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
-                    initial={false}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{
-                      duration: 0.4,
-                      delay: index * 0.06,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-md border border-border/0.04 bg-background/70 text-primary">
                       <Icon className="h-5 w-5" />
@@ -203,7 +169,7 @@ export default function SocialProof() {
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                       {pillar.description}
                     </p>
-                  </motion.article>
+                  </article>
                 )
               })}
             </div>

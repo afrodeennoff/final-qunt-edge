@@ -11,7 +11,6 @@ import {
   Lock,
   Sparkles,
   TrendingUp,
-  Wallet,
 } from 'lucide-react'
 
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
@@ -1058,7 +1057,7 @@ export default function TraderProfilePageClient() {
             </UnifiedSurface>
           </section>
 
-          <div className="space-y-6">
+          <div className="space-y-4 xl:sticky xl:top-24 xl:self-start">
             <UnifiedSurface
               variant="elevated"
               className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6"
@@ -1068,39 +1067,6 @@ export default function TraderProfilePageClient() {
                 isBenchmarkLoading={isBenchmarkLoading}
                 benchmarkSampleSize={benchmark?.sampleSize}
               />
-            </UnifiedSurface>
-
-            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
-              <div className="flex items-center gap-2">
-                <Wallet className="h-4 w-4 text-muted-foreground" />
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Capital snapshot
-                </p>
-              </div>
-
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <StatTile
-                  label="Total capital"
-                  value={formatCapitalCompact(totalCapitalAllAccounts)}
-                />
-                <StatTile
-                  label="Total withdraw"
-                  value={formatCapitalCompact(totalWithdrawAllAccounts)}
-                />
-                <StatTile
-                  label="Risk reward"
-                  value={formatValue(metrics.riskReward)}
-                />
-              </div>
-
-              <div className="mt-4">
-                <MeterRow
-                  label="Consistency"
-                  value={`${formatValue(metrics.consistencyRate)}%`}
-                  progress={Math.min(100, Math.max(10, metrics.consistencyRate))}
-                  fillClassName="bg-semantic-success/60"
-                />
-              </div>
             </UnifiedSurface>
 
             <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 p-5 sm:p-6">
@@ -1121,6 +1087,11 @@ export default function TraderProfilePageClient() {
                   label="Win rate"
                   value={`${formatValue(metrics.winRate)}%`}
                   tone={metrics.winRate >= 50 ? 'positive' : 'default'}
+                />
+                <StatTile
+                  label="Risk reward"
+                  value={formatValue(metrics.riskReward)}
+                  tone={metrics.riskReward >= 1 ? 'positive' : 'default'}
                 />
                 <StatTile
                   label="Gross wins"
