@@ -45,6 +45,7 @@ import { cn } from '@/lib/utils'
 import { getLeaderboardVisibility, toggleLeaderboardVisibility } from '@/server/user-profile'
 import { useUserStore } from '@/store/user-store'
 import { TableSkeleton, CalendarSkeleton } from './components/Skeletons'
+import { TraderProfileShareButton } from './components/trader-profile-share-button'
 
 const RadarChartCard = dynamic(() => import('./components/RadarChartCard'), {
   loading: () => (
@@ -90,7 +91,7 @@ type DateFilterPreset =
 type StatTone = 'default' | 'positive' | 'negative'
 
 const insetPanelClassName =
-  'rounded-xl border border-border/30 bg-card/40 shadow-none'
+  'rounded-xl border border-border/30 bg-background/50 shadow-none'
 
 function clamp(value: number, min = 0, max = 100) {
   return Math.min(max, Math.max(min, value))
@@ -831,6 +832,7 @@ export default function TraderProfilePageClient() {
                         <Sparkles className="h-3.5 w-3.5" />
                         Trader Profile
                       </Badge>
+                      <TraderProfileShareButton />
                     </div>
 
                     <div className="space-y-2">

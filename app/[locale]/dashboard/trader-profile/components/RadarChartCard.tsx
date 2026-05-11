@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 const insetPanelClassName =
-  'rounded-xl border border-border/30 bg-card/40 shadow-none'
+  'rounded-xl border border-border/30 bg-background/50 shadow-none'
 
 interface RadarChartDataPoint {
   metric: string
