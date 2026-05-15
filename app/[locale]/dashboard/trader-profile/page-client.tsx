@@ -1059,19 +1059,19 @@ export default function TraderProfilePageClient() {
             </UnifiedSurface>
           </section>
 
-          <div className="space-y-4 xl:sticky xl:top-24 xl:self-start">
-            <UnifiedSurface
-              variant="elevated"
-              className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6"
-            >
-              <RadarChartCard
-                radarData={radarData}
-                isBenchmarkLoading={isBenchmarkLoading}
-                benchmarkSampleSize={benchmark?.sampleSize}
-              />
-            </UnifiedSurface>
+          <UnifiedSurface
+            variant="elevated"
+            className="animate-fade-up-smooth animate-fade-up-smooth-d1 space-y-6 p-5 sm:p-6 xl:sticky xl:top-24 xl:self-start"
+          >
+            <RadarChartCard
+              radarData={radarData}
+              isBenchmarkLoading={isBenchmarkLoading}
+              benchmarkSampleSize={benchmark?.sampleSize}
+            />
 
-            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 p-5 sm:p-6">
+            <div className="border-t border-border/25" />
+
+            <div>
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
@@ -1115,8 +1115,8 @@ export default function TraderProfilePageClient() {
                   fillClassName="bg-primary/45"
                 />
               </div>
-            </UnifiedSurface>
-          </div>
+            </div>
+          </UnifiedSurface>
         </div>
 
 
