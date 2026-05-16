@@ -5,6 +5,7 @@ import {
   useDashboardFilters,
   useDashboardStats,
   useDashboardActions,
+  useDashboardIsMobile,
 } from '@/context/data-provider'
 import {
   ColumnDef,
@@ -83,6 +84,7 @@ import {
 import { EditableTimeCell } from './editable-time-cell'
 import { EditableInstrumentCell } from './editable-instrument-cell'
 import { BulkEditPanel } from './bulk-edit-panel'
+import { MobileCardTable } from '@/components/ui/mobile-card-table'
 
 // Custom Tags Header Component
 function TagsColumnHeader() {
@@ -259,6 +261,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
   const tags = useUserStore((state) => state.tags)
   const timezone = useUserStore((state) => state.timezone)
   const tickDetails = useTickDetailsStore((state) => state.tickDetails)
+  const isMobile = useDashboardIsMobile()
   let contextTrades = formattedTrades
 
   if (tradesParam) {
@@ -1175,6 +1178,84 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
   // Note: This only controls the Card header, not the table column headers
   const showHeader = config?.showHeader !== false
 
+  // Mobile card table fields
+  const mobileCardFields = [
+    {
+      key: 'instrument',
+      label: t('trade-table.instrument'),
+      render: (value: unknown) => {
+        const trade = value as ExtendedTrade
+        return (
+          <div className="font-semibold text-sm">
+            {trade.instrument}
+            <span className="ml-2 text-xs text-muted-foreground">
+              {trade.side?.toUpperCase()}
+            </span>
+          </div>
+        )
+      },
+      primary: true,
+    },
+    {
+      key: 'entryDate',
+      label: t('trade-table.entryDate'),
+      render: (value: unknown) => {
+        const trade = value as ExtendedTrade
+        return formatInTimeZone(new Date(trade.entryDate), timezone, 'yyyy-MM-dd')
+      },
+      primary: true,
+    },
+    {
+      key: 'pnl',
+      label: t('trade-table.pnl'),
+      render: (value: unknown) => {
+        const trade = value as ExtendedTrade
+        const pnl = Number(trade.pnl)
+        return (
+          <span
+            className={cn(
+              pnl >= 0 ? 'text-semantic-success font-bold' : 'text-muted-foreground',
+            )}
+          >
+            {pnl.toFixed(2)}
+          </span>
+        )
+      },
+    },
+    {
+      key: 'entryPrice',
+      label: t('trade-table.entryPrice'),
+      render: (value: unknown) => {
+        const trade = value as ExtendedTrade
+        return `$${(trade.entryPrice ?? 0).toFixed(2)}`
+      },
+    },
+    {
+      key: 'closePrice',
+      label: t('trade-table.exitPrice'),
+      render: (value: unknown) => {
+        const trade = value as ExtendedTrade
+        return `$${(trade.closePrice ?? 0).toFixed(2)}`
+      },
+    },
+    {
+      key: 'quantity',
+      label: t('trade-table.quantity'),
+      render: (value: unknown) => {
+        const trade = value as ExtendedTrade
+        return trade.quantity.toLocaleString()
+      },
+    },
+    {
+      key: 'timeInPosition',
+      label: t('trade-table.positionTime'),
+      render: (value: unknown) => {
+        const trade = value as ExtendedTrade
+        return parsePositionTime(Number(trade.timeInPosition || 0))
+      },
+    },
+  ]
+
   // Visible columns are used for rendering header/body/footer so hidden columns don't create gaps
   const visibleColumns = table.getVisibleLeafColumns()
   const tableRows = table.getRowModel().rows
@@ -1328,11 +1409,15 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
       )}
       <CardContent
         ref={tableViewportRef}
-        className="min-h-0 flex-1 overflow-x-auto overflow-y-auto p-0"
+        className={cn(
+          'min-h-0 flex-1 overflow-x-auto overflow-y-auto p-0',
+          isMobile && 'overflow-visible',
+        )}
         role="region"
         aria-label="Trade data table"
         tabIndex={0}
         onScroll={(event) => {
+          if (isMobile) return
           const nextScrollTop = event.currentTarget.scrollTop
           if (scrollRafRef.current !== null) return
           scrollRafRef.current = requestAnimationFrame(() => {
@@ -1346,7 +1431,14 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           })
         }}
       >
-        <div className="relative w-full min-w-fit">
+        {isMobile ? (
+          <MobileCardTable
+            data={groupedTrades as unknown as Record<string, unknown>[]}
+            fields={mobileCardFields}
+            expandable={true}
+          />
+        ) : (
+          <div className="relative w-full min-w-fit">
           <table className="type-body-sm w-full table-auto border-separate border-spacing-0 caption-bottom tabular-nums">
             <thead className="sticky top-0 z-10 border-b border-border/70 bg-card/95 [&_tr]:border-b">
               {table.getHeaderGroups().map((headerGroup) => (
@@ -1552,6 +1644,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
             </tfoot>
           </table>
         </div>
+        )}
       </CardContent>
       <CardFooter className="flex flex-col gap-3 border-t border-border/70 bg-muted/20 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="type-body-sm text-muted-foreground">

@@ -1,4 +1,4 @@
-import { MarketingPricingSection } from '@/components/layout/marketing-pricing-section'
+'use client'
 
 import Link from 'next/link'
 import { useState } from 'react'
@@ -69,7 +69,7 @@ export default function PricingSection({ locale }: { locale: string }) {
   ]
 
   return (
-    <section id="pricing" className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+    <section id="pricing" className="px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
       <div className="mx-auto max-w-[1360px] space-y-6">
         <motion.div
           className={cn(unifiedSectionPanelClassName, 'p-6 text-center md:p-8')}

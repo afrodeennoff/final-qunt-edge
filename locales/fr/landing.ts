@@ -452,6 +452,21 @@ export default {
         trust4Description:
           "Support produit, guidage in-app et chemins d'escalade directs pour les traders actifs.",
       },
+      testimonials: {
+        eyebrow: 'Retour des traders',
+        title: 'La confiance des traders sérieux',
+        description:
+          'Conçu pour la revue disciplinée, l\'exécution reproductible et la cohérence à long terme.',
+        testimonial1Quote:
+          'Qunt Edge m\'a donné une boucle de revue plus claire. J\'ai arrêté de deviner et j\'ai commencé à m\'améliorer session par session.',
+        testimonial1Name: 'Trader Futures',
+        testimonial2Quote:
+          'Le flux d\'import et de revue est assez rapide pour un usage quotidien, et assez strict pour une véritable responsabilité d\'équipe.',
+        testimonial2Name: 'Responsable d\'équipe Prop',
+        testimonial3Quote:
+          'Le journal ressemble à un véritable espace de travail, pas à un tableau de bord marketing. Ça a changé ma constance.',
+        testimonial3Name: 'Scalpeur discrétionnaire',
+      },
       faq: {
         badge: 'FAQ',
         title: 'Des réponses claires pour les traders qui évaluent sérieusement la plateforme.',

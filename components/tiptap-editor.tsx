@@ -43,6 +43,7 @@ import { z } from "zod";
 import { OptimizedBubbleMenu } from "@/components/tiptap/optimized-bubble-menu";
 import { ResponsiveMenuBar } from "@/components/tiptap/menu-bar";
 import { ActionSchema as EditorAction } from "@/app/api/ai/editor/schema";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const supabase = createClient();
 
@@ -136,6 +137,7 @@ export function TiptapEditor({
   const user = useUserStore((state) => state.user);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const locale = useCurrentLocale();
+  const isMobile = useIsMobile();
 
   const editorRef = useRef<ReturnType<typeof useEditor> | null>(null);
   // Prevent initial empty onUpdate from clearing externally provided content
@@ -605,6 +607,47 @@ export function TiptapEditor({
               status={isLoading ? "streaming" : "ready"}
             />
           </div>
+
+          {/* Mobile floating toolbar */}
+          {isMobile && editor && (
+            <div className="fixed bottom-16 inset-x-0 z-40 flex items-center justify-center gap-1 rounded-t-2xl border-t border-border/50 bg-card/95 backdrop-blur-lg px-2 py-2 pb-safe">
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleBold().run()}
+                className={`touch-target rounded-lg px-3 py-2 text-sm font-bold ${editor.isActive('bold') ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`}
+              >
+                B
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleItalic().run()}
+                className={`touch-target rounded-lg px-3 py-2 text-sm italic ${editor.isActive('italic') ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`}
+              >
+                I
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                className={`touch-target rounded-lg px-3 py-2 text-sm font-semibold ${editor.isActive('heading', { level: 2 }) ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`}
+              >
+                H2
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleBulletList().run()}
+                className={`touch-target rounded-lg px-3 py-2 text-sm ${editor.isActive('bulletList') ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`}
+              >
+                •
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                className={`touch-target rounded-lg px-3 py-2 text-sm ${editor.isActive('orderedList') ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`}
+              >
+                1.
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -636,6 +679,47 @@ export function TiptapEditor({
                 status={isLoading ? "streaming" : "ready"}
               />
             </div>
+
+            {/* Mobile floating toolbar */}
+            {isMobile && editor && (
+              <div className="fixed bottom-16 inset-x-0 z-40 flex items-center justify-center gap-1 rounded-t-2xl border-t border-border/50 bg-card/95 backdrop-blur-lg px-2 py-2 pb-safe">
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleBold().run()}
+                  className={`touch-target rounded-lg px-3 py-2 text-sm font-bold ${editor.isActive('bold') ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`}
+                >
+                  B
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleItalic().run()}
+                  className={`touch-target rounded-lg px-3 py-2 text-sm italic ${editor.isActive('italic') ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`}
+                >
+                  I
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                  className={`touch-target rounded-lg px-3 py-2 text-sm font-semibold ${editor.isActive('heading', { level: 2 }) ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`}
+                >
+                  H2
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleBulletList().run()}
+                  className={`touch-target rounded-lg px-3 py-2 text-sm ${editor.isActive('bulletList') ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`}
+                >
+                  •
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                  className={`touch-target rounded-lg px-3 py-2 text-sm ${editor.isActive('orderedList') ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`}
+                >
+                  1.
+                </button>
+              </div>
+            )}
           </div>
         </DialogContent>
       )}

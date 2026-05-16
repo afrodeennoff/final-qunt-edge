@@ -11,6 +11,7 @@ import {
     unifiedSectionPanelClassName,
 } from "@/components/layout/unified-page-recipes"
 import { cn } from "@/lib/utils"
+import { BackgroundGlow } from '@/components/ui/background-glow'
 import {
   HEADER_Z_INDEX,
   CONTENT_PADDING,
@@ -142,41 +143,8 @@ export default async function DashboardLayout({
                         slug={slug}
                         backHref={`/${locale}/dashboard`}
                     />
-                    <div className="flex min-w-0 flex-1 flex-col">
-                      <div className="flex items-center gap-2.5">
-                        <span className={cn(unifiedToolbarBadgeClassName, 'hidden sm:inline-flex')}>
-                          Team
-                        </span>
-                        <h1 className="truncate text-[0.92rem] font-semibold tracking-[0.02em] text-foreground">
-                          Team Command
-                        </h1>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </header>
-
-            <main className="flex-1 overflow-y-auto">
-              <div
-                className={cn(
-                  'mx-auto w-full',
-                  WORKSPACE_SHELL_WIDTH,
-                  CONTENT_PADDING,
-                  CONTENT_PADDING_Y,
-                )}
-              >
-                {children}
-              </div>
-            </main>
-          </div>
-          <TeamsMobileBottomNav
-            dashboardRoot={dashboardRoot}
-            slug={slug}
-            backHref={`/${locale}/dashboard`}
-          />
-        </SidebarInset>
-      </DashboardProviders>
-    </SidebarRootProviders>
-  )
+                </SidebarInset>
+            </DashboardProviders>
+        </SidebarRootProviders>
+    )
 }

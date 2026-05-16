@@ -17,7 +17,7 @@ const ROOT_DESCRIPTION =
 const fontDmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-dm-sans',
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '600'],
   display: 'swap',
   preload: true,
   fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
@@ -54,9 +54,9 @@ const siteMetadata: Metadata = {
     locale: 'en-US',
     images: [
       {
-        url: `${siteOrigin}/opengraph-image.png`,
-        width: 1200,
-        height: 630,
+        url: `${siteOrigin}/opengraph-image.webp`,
+        width: 630,
+        height: 315,
         alt: 'Qunt Edge Open Graph Image',
       },
     ],
@@ -109,14 +109,18 @@ const siteMetadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 5,
-  minimumScale: 0.5,
+  maximumScale: 10, // Increased for 12K scaling capability
+  minimumScale: 0.1, // Allow zoom out for ultra-high-res content
   userScalable: true,
   viewportFit: 'cover',
   themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: 'oklch(0.06 0.01 260)' },
+    { media: '(prefers-color-scheme: dark)', color: 'var(--card)' },
     { media: '(prefers-color-scheme: light)', color: 'oklch(0.9838 0.0035 247.8583)' },
   ],
+  // 12K-specific properties for high-DPI displays
+  colorScheme: 'dark light',
+  // Note: devicePixelRatio cannot be set directly in viewport,
+  // but will be detected and handled by CSS media queries
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -133,20 +137,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
-      className={`${darkRootClass} ${fontDmSans.variable} bg-background`}
+      className={`${darkRootClass} ${fontDmSans.variable} bg-background text-foreground`}
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning
+      style={{ backgroundColor: '#000000', color: '#F5F5F7' }}
     >
       <head>
         {/* Resource Hinting for Performance */}
         <link rel="dns-prefetch" href={siteOrigin} />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {process.env.NEXT_PUBLIC_SUPABASE_URL && (
           <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
         )}
 
         {/* Mobile-First Meta Tags */}
-        <meta name="theme-color" content="oklch(0.06 0.01 260)" />
+        <meta name="theme-color" content="var(--card)" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -191,14 +198,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {enableVercelInsights ? <SpeedInsights /> : null}
         {enableVercelInsights ? <Analytics /> : null}
         <main id="main-content" className="flex flex-1 flex-col relative">
-          {/* PPR bailout fallback — always server-rendered, auto-fades after 5s as safety net */}
-          <style dangerouslySetInnerHTML={{ __html: `#initial-loader{animation:il-fade 5s ease-out forwards}@keyframes il-fade{0%,80%{opacity:1}100%{opacity:0;pointer-events:none;visibility:hidden}}` }} />
-          <div
-            id="initial-loader"
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-background"
-          >
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-foreground" />
-          </div>
           {children}
         </main>
       </body>

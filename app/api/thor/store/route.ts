@@ -7,6 +7,7 @@ import { apiError } from '@/lib/api-response';
 import { z } from 'zod'
 import { createRateLimitResponse, rateLimit } from '@/lib/rate-limit'
 import { parseJson, parseQuery, toValidationErrorResponse } from '@/app/api/_utils/validate'
+import { logger } from '@/lib/logger'
 
 const MAX_THOR_BODY_BYTES = 3 * 1024 * 1024
 const MAX_THOR_TRADES = 5_000
@@ -171,7 +172,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     const validationResponse = toValidationErrorResponse(error)
     if (validationResponse.status !== 500) return validationResponse
-    console.error('[thor/store] Error processing request:', error)
+    logger.error('[thor/store] Error processing request:', { error })
     return apiError('INTERNAL_ERROR', 'Internal server error', 500, { requestId })
   }
 }
@@ -254,7 +255,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     const validationResponse = toValidationErrorResponse(error)
     if (validationResponse.status !== 500) return validationResponse
-    console.error('[thor/store] Error retrieving trades:', error);
+    logger.error('[thor/store] Error retrieving trades:', { error });
     return apiError('INTERNAL_ERROR', 'Failed to retrieve trades', 500, { requestId })
   }
 }
@@ -296,7 +297,7 @@ export async function DELETE(req: NextRequest) {
   } catch (error) {
     const validationResponse = toValidationErrorResponse(error)
     if (validationResponse.status !== 500) return validationResponse
-    console.error('[thor/store] Error deleting trades:', error);
+    logger.error('[thor/store] Error deleting trades:', { error });
     return apiError('INTERNAL_ERROR', 'Failed to delete trades', 500, { requestId })
   }
 }

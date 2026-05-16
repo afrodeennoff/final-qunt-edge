@@ -1,27 +1,29 @@
-# Qunt Edge Design System — Resend-Inspired Refinement
+# Qunt Edge Design System — Cobalt Void
 
-> **Design Inspiration**: Resend's cinematic dark aesthetic, adapted for trading analytics.
-> **Goal**: Premium, precise, quietly confident — trading infrastructure as a luxury product.
+> **Aesthetic**: macOS-inspired dark theme with purple/cobalt accents and premium depth.
+> **Goal**: Deep, rich darkness with electric cobalt highlights — trading infrastructure as a refined instrument.
 
 ---
 
 ## 1. Philosophy
 
-Qunt Edge is professional trading analytics. The UI should feel like a Bloomberg terminal designed by a premium SaaS company — dark, focused, data-dense, but with deliberate refinement in every interaction.
+Qunt Edge is professional trading analytics. The UI feels like a Bloomberg terminal crossed with a premium SaaS product — dark, data-dense, with purple-tinted depth and deliberate refinement.
 
-**Resend's DNA we're adopting:**
-- Pure void backgrounds that make content pop
-- Icy, blue-tinted frost borders — the signature element
-- Pill-shaped interactive elements for primary CTAs
-- Ring shadows instead of box shadows (invisible on pure black otherwise)
-- Multi-color accent scale for semantic communication
-- Commit Mono for code/data — monospace as a design element
+**Core DNA:**
+- Void-black backgrounds that anchor all content
+- Purple/cobalt-tinted frost borders — the signature element
+- Layered surface hierarchy with near-black purple tones
+- Premium ultra-deep shadows for elevation
+- Pill-shaped interactive elements for CTAs
+- Glassmorphism effects for overlays and modals
+- 8pt spacing grid for consistent rhythm
 
-**What we're keeping from current system:**
-- The oklch color model (future-proof, perceptually uniform)
-- The `v2-` token naming convention
+**What we keep from the token system:**
+- CSS custom properties as single source of truth
+- `unified-page-recipes.ts` for shared panel classes
+- `UnifiedPageShell` / `UnifiedSurface` layout primitives
 - CVA-based variant architecture
-- The overall dark palette (oklch 0-11% lightness)
+- Dark-only surface enforcement via feature flag
 
 ---
 
@@ -31,78 +33,82 @@ Qunt Edge is professional trading analytics. The UI should feel like a Bloomberg
 
 ```css
 /* Void — the defining canvas */
---void: oklch(0 0% 0%);           /* Pure black #000000 */
---void-95: oklch(0.95 0 0);       /* Near-black for subtle surfaces */
+--background: #000000;                      /* Pure black base */
 
-/* Primary text — theater-like contrast */
---text-primary: oklch(0.95 0 0);   /* #f0f0f0 */
---text-secondary: oklch(0.65 0.01 275);
---text-muted: oklch(0.45 0 0);
+/* Surfaces — purple-tinted darkness */
+--card: #0e0c1c;                            /* Card surface */
+--popover: #110f1f;                         /* Popover surface */
+--sidebar: #0c0a18;                         /* Sidebar background */
+--muted: #181428;                           /* Muted background */
+--secondary: #1e1a2e;                       /* Secondary surface */
 
-/* Surfaces — layered darkness */
---surface-base: oklch(0 0% 0%);          /* #000000 void */
---surface-raised: oklch(0.06 0 0);        /* Cards, elevated */
---surface-overlay: oklch(0.08 0 0);       /* Modals, dropdowns */
---surface-hover: oklch(0.10 0 0);          /* Interactive hover */
---surface-active: oklch(0.12 0 0);         /* Active/pressed state */
+/* Interactive surfaces */
+--surface-hover: #1c1838;                   /* Hover state */
+--surface-overlay: rgba(255,255,255,0.85);  /* Overlay */
+```
+
+### Primary & Accent
+
+```css
+/* Primary — electric purple */
+--primary: #8b5cf6;
+--primary-foreground: #f8f6ff;
+
+/* Ring / focus */
+--ring: #7c3aed;
+```
+
+### Semantic Colors
+
+```css
+/* Success — profit green */
+--success: #22c55e;
+--success-foreground: #f0fdf4;
+
+/* Warning — amber */
+--warning: #f59e0b;
+--warning-foreground: #fffbeb;
+
+/* Error / Destructive — red */
+--destructive: #dc2626;
+--destructive-foreground: #fff1f2;
+
+/* Muted text */
+--muted-foreground: #8b82a8;
+
+/* Secondary text */
+--secondary-foreground: #c4b8e8;
 ```
 
 ### Frost Border System (THE SIGNATURE)
 
-Resend's most distinctive element — icy, blue-tinted borders at 19% opacity.
+Purple-tinted frost borders at low opacity — micro-contrast on dark surfaces.
 
 ```css
-/* Primary frost border — use everywhere structural */
---frost-border: rgba(214, 235, 253, 0.19);
+/* Frost levels */
+--frost-border: rgba(139,92,246,0.04);           /* Subtle — list items */
+--frost-border-strong: rgba(139,92,246,0.10);     /* Emphasis, focus */
 
-/* Variants */
---frost-border-subtle: rgba(217, 237, 254, 0.12);  /* List items, dividers */
---frost-border-strong: rgba(214, 235, 253, 0.35);   /* Emphasis, focus */
+/* Border defaults */
+--border: #1e1a30;                                /* Default structural */
+--border-subtle: rgba(0,0,0,0.08);               /* Divider */
 
-/* Ring shadow — frost glow effect */
---frost-ring: rgba(176, 199, 217, 0.145) 0px 0px 0px 1px;
+/* Frost glow */
+--frost-glow: 0 18px 60px -26px rgba(139,92,246,0.2);
 
-/* Legacy v2- tokens (mapped to frost) */
---v2-border: var(--frost-border);
---v2-border-subtle: var(--frost-border-subtle);
-```
-
-### Accent Scale
-
-```css
-/* Primary accent — electric blue (kept from current system) */
---accent: oklch(0.55 0.22 264);
---accent-hover: oklch(0.65 0.22 264);
---accent-subtle: oklch(0.55 0.22 264 / 0.15);
---accent-foreground: oklch(1 0 0);
-
-/* Success — emerald green */
---success: oklch(0.55 0.15 166);
---success-subtle: oklch(0.55 0.15 166 / 0.15);
-
-/* Warning — amber */
---warning: oklch(0.65 0.2 45);
---warning-subtle: oklch(0.65 0.2 45 / 0.15);
-
-/* Error — coral red */
---error: oklch(0.6 0.2 15);
---error-subtle: oklch(0.6 0.2 15 / 0.15);
-
-/* Info — frost blue (NEW — Resend-inspired) */
---info: oklch(0.55 0.12 220);
---info-subtle: oklch(0.55 0.12 220 / 0.15);
+/* Ambient glow */
+--v2-glow-ambient: 0 18px 60px -26px rgba(139,92,246,0.2);
 ```
 
 ### Interactive States
 
 ```css
-/* Hover — white glass effect (Resend pattern) */
---hover-glass: rgba(255, 255, 255, 0.08);
---hover-glass-strong: rgba(255, 255, 255, 0.14);
+/* Hover — white glass effect */
+--hover-glass: rgba(255,255,255,0.08);
+--hover-glass-strong: rgba(255,255,255,0.14);
 
-/* Focus — heavy black ring (accessibility) */
---focus-ring: rgb(0, 0, 0) 0px 0px 0px 8px;
---focus-ring-accent: oklch(0.55 0.22 264) 0px 0px 0px 3px;
+/* Focus ring */
+--focus-ring: 0 0 0 2px var(--ring), 0 0 0 8px var(--background);
 ```
 
 ---
@@ -112,205 +118,71 @@ Resend's most distinctive element — icy, blue-tinted borders at 19% opacity.
 ### Font Stack
 
 ```css
-/* Body / UI — Inter */
---font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-
-/* Code / Data — Commit Mono */
---font-mono: 'CommitMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-
-/* Display — Reserved for hero/feature moments (optional) */
---font-display: 'Inter', ui-sans-serif, system-ui;
+/* 7 Google fonts loaded as CSS variables */
+--font-sans: 'Geist', 'DM_Sans', 'Outfit', 'Poppins', system-ui;  /* Body/UI */
+--font-serif: 'Cormorant Garamond';                                 /* Display/hero */
+--font-mono: 'IBM Plex Mono', 'Roboto Mono', monospace;             /* Code/data */
 ```
 
 ### Scale
 
-| Role | Size | Weight | Line Height | Tracking | Usage |
-|------|------|--------|-------------|----------|-------|
-| Display | 4rem / 64px | 400 | 1.00 | -0.02em | Hero headlines |
-| H1 | 2.5rem / 40px | 600 | 1.10 | -0.02em | Page titles |
-| H2 | 1.75rem / 28px | 600 | 1.20 | -0.01em | Section headings |
-| H3 | 1.25rem / 20px | 600 | 1.30 | 0 | Subsection |
-| Body | 1rem / 16px | 400 | 1.50 | 0 | Standard text |
-| Body Small | 0.875rem / 14px | 400 | 1.50 | 0 | Secondary text |
-| Caption | 0.75rem / 12px | 500 | 1.33 | 0.02em | Labels, meta |
-| Code | 0.875rem / 14px | 400 | 1.50 | 0 | Inline code |
+| Role | Size | Weight | Usage |
+|------|------|--------|-------|
+| Display | clamp(2.25rem, 5.4vw, 4.8rem) | 500 | Hero headlines |
+| H1 | 2.5rem / 40px | 600 | Page titles |
+| H2 | 1.75rem / 28px | 600 | Section headings |
+| H3 | 1.25rem / 20px | 600 | Subsection |
+| Body | 0.9375rem / 15px | 450 | Standard text |
+| Body Small | 0.875rem / 14px | 400 | Secondary text |
+| Caption | 0.72rem / 11.5px | 600 | Labels, eyebrows |
+| Code | 0.875rem / 14px | 400 | Inline code |
+
+### Tracking
+
+| Role | Value |
+|------|-------|
+| Display | `-0.04em` |
+| Eyebrow/Label | `0.16em - 0.18em` (uppercase) |
+| Body | `0` |
 
 ---
 
-## 4. Component Refinements
+## 4. Shadows & Depth
 
-### Buttons
-
-**Pill Variant (NEW — Resend primary CTA)**
-```css
-/* Primary Pill — Resend's signature button */
-.btn-pill {
-  background: transparent;
-  color: var(--text-primary);
-  padding: 5px 12px;
-  border-radius: 9999px;
-  border: 1px solid var(--frost-border);
-  transition: background 150ms ease;
-}
-.btn-pill:hover {
-  background: var(--hover-glass);
-}
-.btn-pill:active {
-  background: var(--hover-glass-strong);
-  transform: scale(0.98);
-}
-```
-
-**White Solid Pill (High contrast CTA)**
-```css
-.btn-pill-solid {
-  background: var(--text-primary);  /* #f0f0f0 */
-  color: var(--void);                 /* #000000 */
-  padding: 5px 12px;
-  border-radius: 9999px;
-  border: none;
-}
-```
-
-**Ghost Button (Secondary actions)**
-```css
-.btn-ghost {
-  background: transparent;
-  color: var(--text-secondary);
-  border-radius: 4px;
-  border: none;
-}
-.btn-ghost:hover {
-  background: var(--hover-glass);
-  color: var(--text-primary);
-}
-```
-
-### Cards
-
-**Frost Card (NEW variant)**
-```css
-.card-frost {
-  background: transparent;
-  border: 1px solid var(--frost-border);
-  border-radius: 16px;
-  box-shadow: var(--frost-ring);
-}
-```
-
-**Glass Card (Enhanced)**
-```css
-.card-glass {
-  background: var(--surface-overlay / 0.30);
-  backdrop-filter: blur(24px);
-  border: 1px solid var(--frost-border-subtle);
-  border-radius: 16px;
-}
-```
-
-### Badges
-
-**Pill Badges (Resend style)**
-```css
-.badge-pill {
-  background: var(--accent) at 18% opacity;
-  color: var(--accent);
-  padding: 2px 8px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
-/* Multi-color accent badges */
-.badge-success { background: var(--success) at 18%; color: var(--success); }
-.badge-warning { background: var(--warning) at 18%; color: var(--warning); }
-.badge-error { background: var(--error) at 18%; color: var(--error); }
-.badge-info { background: var(--info) at 18%; color: var(--info); }
-```
-
-### Navigation
-
-**Header**
-```css
-.nav-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: var(--void);
-  border-bottom: 1px solid var(--frost-border);
-  backdrop-filter: blur(12px);
-}
-```
-
-**Sidebar Item**
-```css
-.nav-item {
-  color: var(--text-secondary);
-  border-radius: 6px;
-  padding: 8px 12px;
-  transition: all 150ms ease;
-}
-.nav-item:hover {
-  color: var(--text-primary);
-  background: var(--hover-glass);
-}
-.nav-item-active {
-  color: var(--text-primary);
-  background: var(--accent-subtle);
-  border: 1px solid var(--frost-border);
-}
-```
-
-### Inputs
+Layered shadows for premium depth on dark surfaces.
 
 ```css
-.input {
-  background: transparent;
-  border: 1px solid var(--frost-border);
-  border-radius: 4px;
-  color: var(--text-primary);
-  padding: 8px 12px;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
-}
-.input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-subtle);
-}
-.input::placeholder {
-  color: var(--text-muted);
-}
-```
-
----
-
-## 5. Shadows & Depth
-
-**Why ring shadows?** On pure black (`#000000`), traditional box shadows are invisible — there's no lighter surface to cast onto. Resend's solution: borders themselves create depth.
-
-```css
-/* Level 0 — Flat (default) */
+/* Level 0 — Flat */
 shadow: none;
 
-/* Level 1 — Ring (frost border as shadow) */
-box-shadow: rgba(176, 199, 217, 0.145) 0px 0px 0px 1px;
+/* Level 1 — Subtle */
+--shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
 
-/* Level 2 — Subtle glow */
-box-shadow: 0 0 40px -10px var(--accent / 0.15);
+/* Level 2 — Standard */
+--shadow: 0 4px 12px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
 
-/* Level 3 — Strong glow (accent elements) */
-box-shadow: 0 0 60px -15px var(--accent / 0.25);
+/* Level 3 — Elevated */
+--shadow-lg: 0 8px 24px rgba(0,0,0,0.09), 0 4px 8px rgba(0,0,0,0.04);
 
-/* Focus — Heavy ring for accessibility */
-box-shadow: 0 0 0 8px var(--void), 0 0 0 10px var(--frost-border);
+/* Level 4 — Ultra premium */
+--shadow-ultra-md: 0 2px 4px rgba(0,0,0,0.30), 0 8px 20px rgba(0,0,0,0.28);
+
+/* Level 5 — Deep */
+--shadow-ultra-lg: 0 4px 8px rgba(0,0,0,0.25), 0 12px 28px rgba(0,0,0,0.30);
+
+/* Panel shadows (used in unified-page-recipes) */
+shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]   /* Hero panels */
+shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]    /* Section panels */
+
+/* Accent glow */
+--frost-glow: 0 18px 60px -26px rgba(139,92,246,0.2);
 ```
 
 ---
 
-## 6. Spacing System
+## 5. Spacing System
 
-Base unit: **4px**
+Base unit: **4px** (8pt grid)
 
 | Token | Value | Usage |
 |-------|-------|-------|
@@ -318,114 +190,120 @@ Base unit: **4px**
 | `--space-2` | 8px | Icon-text gaps |
 | `--space-3` | 12px | Button padding-x |
 | `--space-4` | 16px | Standard padding |
+| `--space-5` | 20px | Comfortable padding |
 | `--space-6` | 24px | Card padding |
 | `--space-8` | 32px | Section gaps |
-| `--space-12` | 48px | Large gaps |
+| `--space-10` | 40px | Large gaps |
+| `--space-12` | 48px | Hero spacing |
 | `--space-16` | 64px | Section padding-y |
-| `--space-24` | 96px | Hero spacing |
 
 ---
 
-## 7. Border Radius Scale
+## 6. Border Radius Scale
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `--radius-sm` | 4px | Inputs, ghost buttons |
-| `--radius-md` | 8px | Cards, tabs |
-| `--radius-lg` | 12px | Modals, large cards |
-| `--radius-xl` | 16px | Feature cards |
-| `--radius-2xl` | 24px | Section containers |
-| `--radius-pill` | 9999px | Primary CTAs, badges |
+| `--radius-sm` | 6px | Inputs, small elements |
+| `--radius` | 10px | Default |
+| `--radius-md` | 10px | Cards |
+| `--radius-lg` | 14px | Large cards |
+| `--radius-xl` | 20px | Feature cards |
+| `--radius-2xl` | 28px | Section containers, hero panels |
+| `--radius-pill` | 9999px | CTAs, badges, chips |
 
 ---
 
-## 8. Animation & Transitions
+## 7. Unified Panel Recipes
 
-```css
-/* Standard transition */
-transition: all 150ms ease;
+Shared classes from `components/layout/unified-page-recipes.ts`:
 
-/* Button press */
-transition: transform 100ms ease, background 150ms ease;
-
-/* Focus (accessibility) */
-transition: box-shadow 150ms ease, border-color 150ms ease;
-
-/* Hover lift (optional, use sparingly) */
-transform: translateY(-1px);
-```
-
----
-
-## 9. Component Status
-
-### To Update
-
-| Component | Current | Target | Priority |
-|-----------|---------|--------|----------|
-| `button.tsx` | Has `outline`, `ghost` variants | Add `pill`, `pill-solid` variants | HIGH |
-| `card.tsx` | Has `glass`, `outlined` variants | Add `frost` variant | HIGH |
-| `badge.tsx` | Basic variants | Add pill + accent color variants | MEDIUM |
-| `badge-v2.tsx` | Partial accent support | Full frost border + multi-color | MEDIUM |
-| `globals.css` | Monochrome borders | Add frost border tokens | HIGH |
-
-### New Components to Create
-
-| Component | Description |
-|-----------|-------------|
-| `frost-divider.tsx` | Horizontal rule with frost border |
-| `glass-panel.tsx` | Backdrop blur panel with frost border |
-
----
-
-## 10. Migration Guide
-
-### Step 1: CSS Variables (globals.css)
-Add frost border tokens alongside existing v2 tokens.
-
-### Step 2: Button Variants
-Add pill variants to `buttonVariants`:
 ```typescript
-pill: "bg-transparent text-v2-text-primary border border-[var(--frost-border)] rounded-full hover:bg-[var(--hover-glass)]",
-pillSolid: "bg-v2-text-primary text-void rounded-full",
+// Hero panel — top-level page header
+unifiedHeroPanelClassName =
+  'relative rounded-2xl border border-border/35 bg-card shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]'
+
+// Section panel — standard content sections
+unifiedSectionPanelClassName =
+  'rounded-2xl border border-border/35 bg-card/80 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
+
+// Inset panel — nested cards within sections
+unifiedInsetPanelClassName =
+  'rounded-xl border border-border/30 bg-background/50'
+
+// Metric panel — stat displays
+unifiedMetricPanelClassName =
+  'rounded-xl border border-border/30 bg-background/40'
+
+// Chip — eyebrow labels
+unifiedChipClassName =
+  'rounded-full border border-primary/14 bg-primary/6'
+
+// Ghost action — secondary CTA
+unifiedGhostActionClassName =
+  'rounded-full border border-border/35 bg-background/40'
+
+// Primary action — main CTA
+unifiedPrimaryActionClassName =
+  'rounded-xl bg-primary text-primary-foreground'
 ```
-
-### Step 3: Card Variants
-Add frost variant to `Card` component:
-```typescript
-frost: "bg-transparent border border-[var(--frost-border)] shadow-[var(--frost-ring)]"
-```
-
-### Step 4: Badge Updates
-Update badgeV2Variants to use frost borders and accent scales.
-
-### Step 5: Apply to Pages
-Apply new components to marketing pages (propfirms, home, pricing).
 
 ---
 
-## 11. Example Usage
+## 8. Layout Primitives
+
+### UnifiedPageShell
+
+Wrapper for all page-level content. Provides max-width, padding, and decorative pseudo-elements.
 
 ```tsx
-// Primary CTA — Pill style (Resend)
-<Button variant="pill">Get started</Button>
-
-// High contrast CTA
-<Button variant="pillSolid">Start free trial</Button>
-
-// Frost card
-<Card variant="frost">
-  <CardHeader>
-    <CardTitle>Trading Analytics</CardTitle>
-  </CardHeader>
-  <CardContent>
-    Professional-grade execution tracking.
-  </CardContent>
-</Card>
-
-// Accent badge
-<BadgeV2 variant="accent" size="sm">PRO</BadgeV2>
-<BadgeV2 variant="success" size="sm">Live</BadgeV2>
-<BadgeV2 variant="warning" size="sm">Pending</BadgeV2>
-<BadgeV2 variant="error" size="sm">Failed</BadgeV2>
+<UnifiedPageShell widthClassName="max-w-[1360px]" className="py-12">
+  {children}
+</UnifiedPageShell>
 ```
+
+- `widthClassName`: Default `WORKSPACE_SHELL_WIDTH`, override for wider pages
+- `density`: `'default' | 'compact' | 'spacious'`
+- `variant`: `'default' | 'refined' | 'minimal'` (minimal skips decorative pseudo-elements)
+
+### UnifiedSurface
+
+Reusable section wrapper with variant support.
+
+```tsx
+<UnifiedSurface variant="glass" hover>
+  {children}
+</UnifiedSurface>
+```
+
+Variants: `'default' | 'glass' | 'gradient-border' | 'elevated' | 'subtle'`
+
+---
+
+## 9. Animations
+
+```css
+/* Standard transitions */
+transition-[background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]
+
+/* Page enter */
+animate-page-enter
+
+/* Fade up */
+animate-fade-up-smooth
+
+/* Scale reveal (staggered) */
+animate-scale-reveal
+animate-scale-reveal-d1   /* +100ms delay */
+animate-scale-reveal-d2   /* +200ms delay */
+animate-scale-reveal-d3   /* +300ms delay */
+```
+
+---
+
+## 10. Feature Flags
+
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `DARK_ONLY_SURFACE_ENFORCEMENT` | `true` | Forces dark theme on all surfaces |
+
+Managed in `lib/feature-flags.ts`.

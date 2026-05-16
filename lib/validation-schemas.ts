@@ -69,7 +69,7 @@ export const thorTradeSchema = z.object({
 export const webhookValidationSchema = z.object({
   id: z.string(),
   type: z.string(),
-  data: z.any(),
+  data: z.record(z.string(), z.unknown()),
   created_at: z.string().datetime().optional(),
 })
 

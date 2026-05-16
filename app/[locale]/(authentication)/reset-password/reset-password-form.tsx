@@ -48,7 +48,7 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  if (isSuccess) {
  return (
  <div className="flex min-h-screen items-center justify-center p-4">
- <div className="w-full max-w-md rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] p-6 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)] sm:p-8">
+ <div className="w-full max-w-md rounded-2xl border border-border/50 bg-card p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_32px_-26px_rgba(0,0,0,0.62)] sm:p-8">
  <div className="flex flex-col items-center gap-4 text-center">
  <h2 className="text-2xl font-semibold tracking-tight text-foreground">Password updated!</h2>
  <p className="text-sm text-muted-foreground">
@@ -65,7 +65,7 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
 
  return (
  <div className="flex min-h-screen items-center justify-center p-4">
- <div className="w-full max-w-md rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] p-6 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)] sm:p-8">
+ <div className="w-full max-w-md rounded-2xl border border-border/50 bg-card p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_32px_-26px_rgba(0,0,0,0.62)] sm:p-8">
  <div className="flex flex-col gap-6">
  <div className="text-center">
  <h2 className="text-2xl font-semibold tracking-tight text-foreground">Set new password</h2>
@@ -85,7 +85,7 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  autoComplete="new-password"
  data-testid="reset-password"
  disabled={isLoading}
- className="h-11 rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-4 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20"
+ className="h-11 rounded-xl border border-border/50 bg-background px-4 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring/20"
  />
  <button
  type="button"
@@ -106,10 +106,10 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  autoComplete="new-password"
  data-testid="reset-password-confirm"
  disabled={isLoading}
- className="h-11 rounded-xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[oklch(0.058_0.011_260_/_0.82)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20"
+ className="h-11 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20"
  />
 
- <div className="space-y-1.5 rounded-xl border border-[oklch(0.65_0.22_260_/_0.075)] bg-[oklch(0.056_0.01_260_/_0.74)] p-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)]">
+ <div className="space-y-1.5 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] p-3 shadow-[inset_0_1px_0_rgba(0,0,0,0.03)]">
  {requirements.map((req) => (
  <div
  key={req.key}

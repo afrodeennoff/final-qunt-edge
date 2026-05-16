@@ -1,13 +1,7 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { BookOpen, Code, GraduationCap, LineChart } from 'lucide-react'
 import { ButtonV2 as Button, BadgeV2 as Badge } from '@/components/ui/v2'
-import {
-  MarketingFeatureCard,
-  MarketingSection,
-  MarketingSectionHeader,
-  marketingBodyClassName,
-  marketingHeroTitleClassName,
-} from '@/components/layout/marketing-sections'
 import { buildPublicMetadata } from '@/lib/seo'
 
 export async function generateMetadata({
@@ -62,7 +56,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   ]
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+    <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
       <header className="mb-6 rounded-xl border border-border/30 bg-background/0.11 p-6">
         <h1 className="text-3xl font-semibold tracking-tight text-foreground">About Qunt Edge</h1>
         <p className="mt-2 max-w-3xl text-sm text-muted-foreground sm:text-base">
@@ -77,65 +71,39 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           </Link>
         </div>
       </header>
+
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <Card className="border-border/30 bg-background/0.11">
-          <CardHeader>
-            <CardTitle className="text-2xl">Our Mission</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">
-              At Qunt Edge, we&apos;re on a mission to empower traders with advanced analytics and AI-driven insights. 
-              Our platform is designed to help you understand your trading patterns, optimize your strategies, 
-              and ultimately become a better trader through comprehensive backtesting and analysis of your real track record.
-            </p>
-          </CardContent>
-        </Card>
+        {storyCards.map((card) => (
+          <div key={card.title} className="rounded-xl border border-border/30 bg-background/0.11 p-6">
+            <div className="mb-3 text-primary">{card.icon}</div>
+            <h3 className="text-xl font-semibold text-foreground">{card.title}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{card.description}</p>
+          </div>
+        ))}
 
-        <Card className="border-border/30 bg-background/0.11">
-          <CardHeader>
-            <CardTitle className="text-2xl">THE TRADER BEHIND TIMON|</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-4 text-muted-foreground">
-              I&apos;m Timon - a futures trader and trading educator. After years of studying price action, market behavior, and trading psychology, I developed a structured approach focused on clarity, simplicity, and consistent execution.
-            </p>
-            <p className="text-muted-foreground">
-              This method is built to help traders avoid common mistakes, reduce noise, and progress with better decision-making and discipline. The focus is straightforward: strategy, execution, and mindset. No distractions. Just a process designed to support steady improvement over time.
-            </p>
-          </CardContent>
-        </Card>
+        <div className="rounded-xl border border-border/30 bg-background/0.11 p-6 md:col-span-2">
+          <h3 className="text-xl font-semibold text-foreground">Founder&apos;s Expertise</h3>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {founderSkills.map((skill) => (
+              <Badge key={skill.name} variant="secondary" className="flex items-center gap-1 border-border/30 bg-secondary/30 px-2 py-1 text-sm">
+                {skill.icon}
+                {skill.name}
+              </Badge>
+            ))}
+          </div>
+        </div>
 
-        <Card className="border-border/30 bg-background/0.11 md:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-2xl">Founder&apos;s Expertise</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {founderSkills.map((skill, index) => (
-                <Badge key={index} variant="secondary" className="border-border/30 bg-secondary/30 text-sm py-1 px-2 flex items-center gap-1">
-                  {skill.icon}
-                  {skill.name}
-                </Badge>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-border/30 bg-background/0.11 md:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-2xl">Why Qunt Edge?</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-              <li>Built by a trader, for traders</li>
-              <li>Advanced analytics powered by real-world trading experience</li>
-              <li>Comprehensive backtesting using your actual trade history</li>
-              <li>AI-driven insights to improve your trading psychology</li>
-              <li>Tailored to serious traders looking to elevate their performance</li>
-            </ul>
-          </CardContent>
-        </Card>
+        <div className="rounded-xl border border-border/30 bg-background/0.11 p-6 md:col-span-2">
+          <h3 className="text-xl font-semibold text-foreground">Why Qunt Edge?</h3>
+          <ul className="mt-4 list-inside list-disc space-y-2 text-muted-foreground">
+            <li>Built by a trader, for traders</li>
+            <li>Advanced analytics powered by real-world trading experience</li>
+            <li>Comprehensive backtesting using your actual trade history</li>
+            <li>AI-driven insights to improve your trading psychology</li>
+            <li>Tailored to serious traders looking to elevate their performance</li>
+          </ul>
+        </div>
       </div>
-    </UnifiedPageShell>
+    </div>
   )
 }

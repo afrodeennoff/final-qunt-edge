@@ -9,18 +9,11 @@ import {
   CircleDot,
   Globe,
   Lock,
-  Share2,
-  Twitter,
-  Instagram,
-  Youtube,
-  MessageCircle,
   Sparkles,
   TrendingUp,
-  Wallet,
 } from 'lucide-react'
 
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
-import { UnifiedPerformanceDashboard } from './components/UnifiedPerformanceDashboard'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -51,8 +44,6 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
 import { getLeaderboardVisibility, toggleLeaderboardVisibility } from '@/server/user-profile'
 import { useUserStore } from '@/store/user-store'
-import { toast } from 'sonner'
-
 import { TableSkeleton, CalendarSkeleton } from './components/Skeletons'
 import { TraderProfileShareButton } from './components/trader-profile-share-button'
 
@@ -100,7 +91,7 @@ type DateFilterPreset =
 type StatTone = 'default' | 'positive' | 'negative'
 
 const insetPanelClassName =
-  'rounded-xl border border-border/30 bg-card/40 shadow-none'
+  'rounded-xl border border-border/30 bg-background/50 shadow-none'
 
 function clamp(value: number, min = 0, max = 100) {
   return Math.min(max, Math.max(min, value))
@@ -141,95 +132,10 @@ function formatCapitalCompact(value: number) {
   return `${sign}${abs.toFixed(0)}`
 }
 
-function formatPnlCell(value: number) {
-  if (!Number.isFinite(value)) return '0'
-  if (value === 0) return '0'
-  const sign = value > 0 ? '+' : '-'
-  const abs = Math.abs(value)
-  if (abs >= 1_000_000) return `${sign}${(abs / 1_000_000).toFixed(abs >= 10_000_000 ? 0 : 1)}m`
-  if (abs >= 1_000) return `${sign}${(abs / 1_000).toFixed(abs >= 100_000 ? 0 : 1)}k`
-  return `${sign}${abs.toFixed(0)}`
-}
-
 function getTradeDay(dateValue: string | Date) {
   const date = new Date(dateValue)
   if (Number.isNaN(date.getTime())) return 'Invalid date'
   return date.toISOString().slice(0, 10)
-}
-
-function formatSocialUrl(url: string | null | undefined) {
-  if (!url) return null
-  const trimmed = url.trim()
-  if (!trimmed) return null
-  if (!trimmed.startsWith('http')) return `https://${trimmed}`
-  return trimmed
-}
-
-function SocialLinks({ user }: { user: { id: string } }) {
-  const userStore = useUserStore()
-  const supabaseUser = userStore.supabaseUser
-
-  const socialData = useMemo(() => {
-    return {
-      twitter: formatSocialUrl(supabaseUser?.user_metadata?.twitter_url),
-      instagram: formatSocialUrl(supabaseUser?.user_metadata?.instagram_url),
-      discord: formatSocialUrl(supabaseUser?.user_metadata?.discord_url),
-      youtube: formatSocialUrl(supabaseUser?.user_metadata?.youtube_url),
-    }
-  }, [supabaseUser?.user_metadata])
-
-  const hasAnySocial = Object.values(socialData).some(Boolean)
-
-  if (!hasAnySocial) return null
-
-  return (
-    <div className="flex flex-wrap gap-2">
-      {socialData.twitter && (
-        <a
-          href={socialData.twitter}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"
-        >
-          <Twitter className="h-3.5 w-3.5" />
-          <span>Twitter</span>
-        </a>
-      )}
-      {socialData.instagram && (
-        <a
-          href={socialData.instagram}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"
-        >
-          <Instagram className="h-3.5 w-3.5" />
-          <span>Instagram</span>
-        </a>
-      )}
-      {socialData.discord && (
-        <a
-          href={socialData.discord}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"
-        >
-          <MessageCircle className="h-3.5 w-3.5" />
-          <span>Discord</span>
-        </a>
-      )}
-      {socialData.youtube && (
-        <a
-          href={socialData.youtube}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card/80 transition-colors"
-        >
-          <Youtube className="h-3.5 w-3.5" />
-          <span>YouTube</span>
-        </a>
-      )}
-    </div>
-  )
 }
 
 function getWinningStreak(values: number[]) {
@@ -260,7 +166,7 @@ function formatTradeTimestamp(value: string | Date | null | undefined) {
   return format(parsed, 'MMM d, yyyy • p')
 }
 
-function StatTile({
+export function StatTile({
   label,
   value,
   helper,
@@ -348,7 +254,7 @@ function SignalTile({
   )
 }
 
-function StripMetric({
+export function StripMetric({
   label,
   value,
   helper,
@@ -815,8 +721,6 @@ export default function TraderProfilePageClient() {
 
   const latestTradeDay =
     tradeCalendarDays.length > 0 ? tradeCalendarDays[tradeCalendarDays.length - 1] : undefined
-  const winRateGuidePercent = Math.min(30, Math.max(25, 100 - metrics.winRate))
-
   const selectedPnl = useMemo(() => {
     const target = selectedCalendarDay ?? latestTradeDay
     if (!target) return 0
@@ -928,6 +832,7 @@ export default function TraderProfilePageClient() {
                         <Sparkles className="h-3.5 w-3.5" />
                         Trader Profile
                       </Badge>
+                      <TraderProfileShareButton />
                     </div>
 
                     <div className="space-y-2">
@@ -1127,68 +1032,13 @@ export default function TraderProfilePageClient() {
                   'mt-4 min-h-[30rem] overflow-x-auto p-2 sm:p-3 lg:min-h-[36rem]',
                 )}
               >
-                <Calendar
-                  mode="single"
-                  selected={selectedCalendarDay ?? latestTradeDay}
-                  onSelect={setSelectedCalendarDay}
-                  defaultMonth={selectedCalendarDay ?? latestTradeDay}
-                  modifiers={{
-                    positive: positivePnlDays,
-                    negative: negativePnlDays,
-                  }}
-                  modifiersClassNames={{
-                    positive: 'bg-semantic-success-bg/20 text-semantic-success',
-                    negative: 'bg-semantic-error-bg text-semantic-error',
-                  }}
-                  className="w-full min-w-[19rem] p-0"
-                  classNames={{
-                    months: 'flex min-h-[26rem] flex-col gap-4 lg:min-h-[31rem]',
-                    month: 'space-y-4',
-                    weekday:
-                      'w-11 text-center text-[0.75rem] font-medium text-muted-foreground sm:w-12',
-                    day: 'relative h-11 w-11 overflow-hidden rounded-lg p-0 text-center align-middle sm:h-12 sm:w-12',
-                    day_button:
-                      'h-11 w-11 rounded-lg p-0 font-normal text-foreground transition-[background-color,border-color,color] hover:bg-background/90 aria-selected:bg-primary/12 aria-selected:text-foreground sm:h-12 sm:w-12',
-                  }}
-                  components={{
-                    DayButton: ({ day, className, ...buttonProps }: DayButtonProps) => {
-                      const date = day.date
-                      const displayMonth = day.displayMonth
-
-                      if (date.getMonth() !== displayMonth.getMonth()) {
-                        return (
-                          <button type="button" {...buttonProps} className={className}>
-                            <span className="text-[11px] text-muted-foreground">
-                              {format(date, 'd')}
-                            </span>
-                          </button>
-                        )
-                      }
-
-                      const key = date.toISOString().slice(0, 10)
-                      const pnl = tradePnlByDay.get(key) ?? 0
-                      const hasTrade = tradePnlByDay.has(key)
-                      const tint =
-                        pnl > 0
-                          ? 'text-semantic-success'
-                          : pnl < 0
-                            ? 'text-semantic-error'
-                            : hasTrade
-                              ? 'text-foreground'
-                              : 'text-muted-foreground'
-
-                      return (
-                        <button type="button" {...buttonProps} className={className}>
-                          <div className="flex h-full w-full flex-col items-center justify-center gap-1">
-                            <span className="text-[11px] leading-none">{format(date, 'd')}</span>
-                            <span className={`text-[10px] font-semibold leading-none ${tint}`}>
-                              {hasTrade ? formatPnlCell(pnl) : ''}
-                            </span>
-                          </div>
-                        </button>
-                      )
-                    },
-                  }}
+                <CalendarWidget
+                  selectedDay={selectedCalendarDay}
+                  latestTradeDay={latestTradeDay}
+                  onSelectDay={setSelectedCalendarDay}
+                  positivePnlDays={positivePnlDays}
+                  negativePnlDays={negativePnlDays}
+                  tradePnlByDay={tradePnlByDay}
                 />
 
                 <div className="mt-4 flex flex-wrap items-center gap-3 px-1 text-[11px] text-muted-foreground">
@@ -1209,100 +1059,19 @@ export default function TraderProfilePageClient() {
             </UnifiedSurface>
           </section>
 
-          <UnifiedPerformanceDashboard
-              metrics={metrics}
-              benchmark={benchmark}
-              totalCapitalAllAccounts={totalCapitalAllAccounts}
-              totalWithdrawAllAccounts={totalWithdrawAllAccounts}
-              primaryStripMetrics={primaryStripMetrics}
-              secondaryStripMetrics={secondaryStripMetrics}
-            >
-            <UnifiedSurface
-              variant="elevated"
-              className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Benchmark
-                </p>
-                <Badge variant={isBenchmarkLoading ? 'outline' : 'success'}>
-                  {isBenchmarkLoading ? 'Refreshing' : 'Live'}
-                </Badge>
-              </div>
+          <UnifiedSurface
+            variant="elevated"
+            className="animate-fade-up-smooth animate-fade-up-smooth-d1 space-y-6 p-5 sm:p-6 xl:sticky xl:top-24 xl:self-start"
+          >
+            <RadarChartCard
+              radarData={radarData}
+              isBenchmarkLoading={isBenchmarkLoading}
+              benchmarkSampleSize={benchmark?.sampleSize}
+            />
 
-              <div className={cn(insetPanelClassName, 'mt-5 p-3')}>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart data={radarData}>
-                      <PolarGrid stroke="hsl(var(--border) / 0.45)" />
-                      <PolarAngleAxis
-                        dataKey="metric"
-                        tick={{
-                          fill: 'hsl(var(--muted-foreground))',
-                          fontSize: 11,
-                          fontWeight: 600,
-                        }}
-                      />
-                      <Radar
-                        dataKey="trader"
-                        stroke="hsl(var(--foreground) / 0.85)"
-                        fill="hsl(var(--foreground) / 0.2)"
-                        fillOpacity={1}
-                      />
-                    </RadarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
+            <div className="border-t border-border/25" />
 
-              <p className="mt-3 text-xs text-muted-foreground">
-                {benchmark?.sampleSize
-                  ? `${benchmark.sampleSize} traders in sample`
-                  : 'Loading benchmark data...'}
-              </p>
-            </UnifiedSurface>
-
-            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
-              <div className="flex items-center gap-2">
-                <Wallet className="h-4 w-4 text-muted-foreground" />
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Capital snapshot
-                </p>
-              </div>
-
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <StatTile
-                  label="Total capital"
-                  value={formatCapitalCompact(totalCapitalAllAccounts)}
-                />
-                <StatTile
-                  label="Total withdraw"
-                  value={formatCapitalCompact(totalWithdrawAllAccounts)}
-                />
-                <StatTile
-                  label="Avg net / trade"
-                  value={formatSigned(metrics.avgReturn)}
-                  tone={
-                    metrics.avgReturn > 0
-                      ? 'positive'
-                      : metrics.avgReturn < 0
-                        ? 'negative'
-                        : 'default'
-                  }
-                />
-                <StatTile label="Risk reward" value={formatValue(metrics.riskReward)} />
-              </div>
-
-              <div className="mt-4">
-                <MeterRow
-                  label="Consistency"
-                  value={`${formatValue(metrics.consistencyRate)}%`}
-                  progress={Math.min(100, Math.max(10, metrics.consistencyRate))}
-                  fillClassName="bg-semantic-success/60"
-                />
-              </div>
-            </UnifiedSurface>
-
-            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 p-5 sm:p-6">
+            <div>
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
@@ -1322,8 +1091,9 @@ export default function TraderProfilePageClient() {
                   tone={metrics.winRate >= 50 ? 'positive' : 'default'}
                 />
                 <StatTile
-                  label="Break-even rate"
-                  value={`${formatValue(metrics.breakEvenRate)}%`}
+                  label="Risk reward"
+                  value={formatValue(metrics.riskReward)}
+                  tone={metrics.riskReward >= 1 ? 'positive' : 'default'}
                 />
                 <StatTile
                   label="Gross wins"
@@ -1344,355 +1114,11 @@ export default function TraderProfilePageClient() {
                   progress={Math.min(100, Math.max(8, metrics.totalTrades))}
                   fillClassName="bg-primary/45"
                 />
-                <MeterRow
-                  label="Guide cushion"
-                  value={`${formatValue(winRateGuidePercent)}%`}
-                  progress={winRateGuidePercent}
-                  fillClassName="bg-primary/30"
-                />
-              </div>
-            </UnifiedSurface>
-            </UnifiedPerformanceDashboard>
-        </div>
-
-        <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d5 p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-              Trade history
-            </p>
-            <Badge variant="secondary">{tradeFeedSummary}</Badge>
-          </div>
-
-          {isLoading ? (
-            <div className="mt-5 space-y-3">
-              {[1, 2, 3].map((index) => (
-                <div
-                  className={cn(
-                    insetPanelClassName,
-                    'w-full rounded-xl px-4 py-3 sm:w-auto sm:min-w-[18rem] lg:min-w-[19rem]',
-                  )}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-1">
-                      <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                        Benchmark
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        <Badge
-                          variant={metrics.winRate >= 50 ? 'success' : 'outline'}
-                          className="gap-1.5"
-                        >
-                          Win rate: <span className="tabular-nums">{formatValue(metrics.winRate)}%</span>
-                        </Badge>
-                        <Badge
-                          variant={metrics.drawdown <= 0 ? 'success' : 'outline'}
-                          className="gap-1.5"
-                        >
-                          Drawdown: <span className="tabular-nums">{formatValue(metrics.drawdown)}%</span>
-                        </Badge>
-                      </div>
-                    </div>
-
-                    <TrendingUp className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </UnifiedSurface>
-
-        {/* ---- Comprehensive Dashboard View ---- */}
-        <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-            Performance dashboard
-          </p>
-
-          <div className="mt-4 grid gap-4 lg:grid-cols-4">
-            {/* Primary Metrics Row */}
-            <div className="lg:col-span-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {primaryStripMetrics.map((metric) => (
-                <StripMetric
-                  key={metric.label}
-                  label={metric.label}
-                  value={metric.value}
-                  tone={metric.tone}
-                  emphasis
-                  className="h-full"
-                />
-              ))}
-            </div>
-
-            {/* Capital & Accounts Row */}
-            <div className="lg:col-span-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              <StatTile
-                label="Total capital"
-                value={formatCapitalCompact(totalCapitalAllAccounts)}
-                tone={totalCapitalAllAccounts >= 0 ? 'positive' : 'negative'}
-              />
-              <StatTile
-                label="Total withdraw"
-                value={formatCapitalCompact(totalWithdrawAllAccounts)}
-              />
-              <StatTile
-                label="Avg net / trade"
-                value={formatSigned(metrics.avgReturn)}
-                tone={
-                  metrics.avgReturn > 0
-                    ? 'positive'
-                    : metrics.avgReturn < 0
-                      ? 'negative'
-                      : 'default'
-                }
-              />
-              <StatTile label="Risk reward" value={formatValue(metrics.riskReward)} />
-            </div>
-
-            {/* Execution Quality Row */}
-            <div className="lg:col-span-2 grid gap-3 sm:grid-cols-2">
-              <StatTile
-                label="Max drawdown"
-                value={formatValue(metrics.drawdown)}
-                tone={metrics.drawdown > 0 ? 'negative' : 'default'}
-              />
-              <StatTile
-                label="Win rate"
-                value={`${formatValue(metrics.winRate)}%`}
-                tone={metrics.winRate >= 50 ? 'positive' : 'default'}
-              />
-              <StatTile
-                label="Break-even rate"
-                value={`${formatValue(metrics.breakEvenRate)}%`}
-              />
-              <StatTile
-                label="Gross wins"
-                value={formatCapitalCompact(metrics.sumGain)}
-                tone={metrics.sumGain > 0 ? 'positive' : 'default'}
-              />
-            </div>
-
-            {/* Secondary Metrics Row */}
-            <div className="lg:col-span-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <SignalTile
-                label="Active days"
-                value={String(tradeCalendarDays.length)}
-                tone={tradeCalendarDays.length > 0 ? 'positive' : 'default'}
-              />
-              <SignalTile
-                label="Total trades"
-                value={String(metrics.totalTrades)}
-              />
-              <SignalTile
-                label="Current streak"
-                value={metrics.winningStreak > 0 ? `${metrics.winningStreak} wins` : 'Reset'}
-                tone={metrics.winningStreak > 0 ? 'positive' : 'default'}
-              />
-              <SignalTile
-                label="Active accounts"
-                value={String(activeAccountsCount)}
-                tone={activeAccountsCount > 0 ? 'positive' : 'default'}
-              />
-            </div>
-
-            {/* Account Labels */}
-            <div className="lg:col-span-4">
-              <div className={cn(insetPanelClassName, 'p-4')}>
-                {activeAccountLabels.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {activeAccountLabels.map((accountLabel) => (
-                      <span
-                        key={accountLabel}
-                        className="rounded-full border border-border/30 bg-card/50 px-3 py-1.5 text-xs font-medium tabular-nums text-foreground"
-                      >
-                        {accountLabel}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-sm text-muted-foreground">
-                    No linked accounts yet.
-                  </div>
-                )}
               </div>
             </div>
-
-            {/* Progress Bars */}
-            <div className="lg:col-span-2 grid gap-3">
-              <MeterRow
-                label="Consistency"
-                value={`${formatValue(metrics.consistencyRate)}%`}
-                progress={Math.min(100, Math.max(10, metrics.consistencyRate))}
-                fillClassName="bg-semantic-success/60"
-              />
-              <MeterRow
-                label="Win rate balance"
-                value={`${formatValue(metrics.winRate)}%`}
-                progress={Math.min(100, Math.max(8, metrics.winRate))}
-              />
-            </div>
-
-            <div className="lg:col-span-2 grid gap-3">
-              <MeterRow
-                label="Trade volume"
-                value={`${metrics.totalTrades} trades`}
-                progress={Math.min(100, Math.max(8, metrics.totalTrades))}
-                fillClassName="bg-primary/45"
-              />
-              <MeterRow
-                label="Guide cushion"
-                value={`${formatValue(winRateGuidePercent)}%`}
-                progress={winRateGuidePercent}
-                fillClassName="bg-primary/30"
-              />
-            </div>
-          </div>
-        </UnifiedSurface>
-
-        {/* ---- User Name Divider ---- */}
-        <div className="animate-fade-up-smooth animate-fade-up-smooth-d3 flex items-center gap-4">
-          <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-            {profileName}
-          </h2>
-          <div className="h-px flex-1 bg-border/40" />
-        </div>
-
-        {/* ---- Daily Session Pattern ---- */}
-        <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 overflow-hidden p-5 sm:p-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="space-y-1">
-              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                Daily session pattern
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Review day-by-day trading rhythm and session results.
-              </p>
-            </div>
-
-            <div className="flex gap-3">
-              <div
-                className={cn(
-                  insetPanelClassName,
-                  'rounded-xl px-4 py-3',
-                  metrics.netPnl >= 0 ? 'border-semantic-success/30 bg-semantic-success/5' : 'border-semantic-error/30 bg-semantic-error/5',
-                )}
-              >
-                <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                  Selected day
-                </p>
-                <p className="mt-1 text-lg font-semibold tabular-nums text-foreground">
-                  {selectedDayLabel}
-                </p>
-              </div>
-
-              <div
-                className={cn(
-                  insetPanelClassName,
-                  'rounded-xl px-4 py-3',
-                  selectedPnl >= 0 ? 'border-semantic-success/30 bg-semantic-success/5' : 'border-semantic-error/30 bg-semantic-error/5',
-                )}
-              >
-                <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                  Selected PnL
-                </p>
-                <p className="mt-1 text-lg font-semibold tabular-nums text-foreground">
-                  {formatSigned(selectedPnl)}
-                </p>
-              </div>
-
-              <div
-                className={cn(
-                  insetPanelClassName,
-                  'rounded-xl px-4 py-3',
-                  totalWithdrawAllAccounts >= 0 ? 'border-semantic-success/30 bg-semantic-success/5' : 'border-semantic-error/30 bg-semantic-error/5',
-                )}
-              >
-                <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                  Session PnL
-                </p>
-                <p className="mt-1 text-lg font-semibold tabular-nums text-foreground">
-                  {formatSigned(totalWithdrawAllAccounts)}
-                </p>
-              </div>
-
-              <div className={cn(insetPanelClassName, 'rounded-xl px-3 py-3')}>
-                <Select
-                  value={dateFilterPreset}
-                  onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
-                >
-                  <SelectTrigger className="h-full w-[140px] border-border/30 bg-card/40 text-xs text-foreground">
-                    <SelectValue placeholder="Range" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="last_week">Last Week</SelectItem>
-                    <SelectItem value="last_month">Last Month</SelectItem>
-                    <SelectItem value="last_3_months">Last 3 Months</SelectItem>
-                    <SelectItem value="last_6_months">Last 6 Months</SelectItem>
-                    <SelectItem value="last_year">Last Year</SelectItem>
-                    <SelectItem value="custom">Custom</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-
-          <div
-            className={cn(
-              insetPanelClassName,
-              'mt-4 min-h-[30rem] overflow-x-auto p-2 sm:p-3 lg:min-h-[36rem]',
-            )}
-          >
-            <CalendarWidget
-              selectedDay={selectedCalendarDay}
-              latestTradeDay={latestTradeDay}
-              onSelectDay={setSelectedCalendarDay}
-              positivePnlDays={positivePnlDays}
-              negativePnlDays={negativePnlDays}
-              tradePnlByDay={tradePnlByDay}
-            />
-
-            <div className="mt-4 flex flex-wrap items-center gap-4 px-1 text-[11px] text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-semantic-success/40" />
-                Profit day
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-semantic-error/40" />
-                Loss day
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-muted-foreground/20" />
-                No trades
-              </span>
-            </div>
-          </div>
-        </UnifiedSurface>
-
-        {/* ---- Benchmark Radar ---- */}
-        <Suspense
-          fallback={
-            <UnifiedSurface variant="elevated" className="p-5 sm:p-6">
-              <div className="flex items-start justify-between gap-3">
-                <div className="h-3 w-20 animate-pulse rounded-lg bg-muted/30" />
-                <div className="h-5 w-14 animate-pulse rounded-md bg-muted/30" />
-              </div>
-              <div className={cn(insetPanelClassName, 'mt-5 p-3')}>
-                <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
-              </div>
-              <div className="mt-3 h-3 w-36 animate-pulse rounded bg-muted/30" />
-            </UnifiedSurface>
-          }
-        >
-          <UnifiedSurface
-            variant="elevated"
-            className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6"
-          >
-            <RadarChartCard
-              radarData={radarData}
-              isBenchmarkLoading={isBenchmarkLoading}
-              benchmarkSampleSize={benchmark?.sampleSize}
-            />
           </UnifiedSurface>
-        </Suspense>
+        </div>
+
 
         {/* ---- Trade History ---- */}
         <Suspense fallback={<TableSkeleton />}>

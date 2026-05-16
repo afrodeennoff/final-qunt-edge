@@ -23,6 +23,7 @@ export interface UnifiedSidebarConfig {
     avatar_url?: string
     email?: string
     full_name?: string
+    username?: string | null
   }
   actions?: React.ReactNode
   showSubscription?: boolean

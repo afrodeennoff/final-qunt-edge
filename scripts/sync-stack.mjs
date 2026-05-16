@@ -134,6 +134,15 @@ async function canReachDatabase(urlString) {
   };
 }
 
+// Skip database migrations in Vercel build environment or when explicitly requested
+const isVercelBuild = process.env.VERCEL === "1";
+const shouldSkipMigrations = process.env.NEXT_PUBLIC_SKIP_DATABASE_MIGRATIONS === "true";
+
+if (isVercelBuild || shouldSkipMigrations) {
+  info("[sync-stack] Skipping Prisma migrations for deployment (Vercel build detected)");
+  process.exit(0);
+}
+
 const shouldForcePrismaGenerate = process.env.PRISMA_GENERATE_STRICT === "true";
 
 if (hasGeneratedPrismaClient() && !shouldForcePrismaGenerate) {

@@ -55,9 +55,12 @@ function normalizeSources(sources: string[]): string {
 
 export function buildAppCsp({ nonce, isDev, strictMode, reportOnly }: AppCspOptions): string {
   const connectSources = isDev ? DEV_CONNECT_SOURCES : PROD_CONNECT_SOURCES;
+  // Next.js App Router generates internal inline scripts (RSC streaming, chunk loading, hydration)
+  // that cannot receive a nonce. Using 'unsafe-inline' is the standard approach for Next.js apps.
+  // The CSP still provides security through connect-src, img-src, frame-ancestors, and other directives.
   const scriptSources = strictMode
-    ? [...PROD_SCRIPT_SOURCES_BASE, `'nonce-${nonce}'`]
-    : [...PROD_SCRIPT_SOURCES_BASE, `'nonce-${nonce}'`, "'unsafe-eval'"];
+    ? [...PROD_SCRIPT_SOURCES_BASE, "'unsafe-inline'"]
+    : [...PROD_SCRIPT_SOURCES_BASE, "'unsafe-inline'", "'unsafe-eval'"];
 
   const directives = [
     "default-src 'self'",

@@ -326,7 +326,7 @@ function applyPrivateNoStoreHeaders(response: NextResponse) {
 }
 
 function applyPublicRevalidateHeaders(response: NextResponse) {
-  response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=60, stale-while-revalidate=300')
+  response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400')
   response.headers.set('x-dashboard-cache-policy', 'public-revalidate')
 }
 
@@ -569,10 +569,6 @@ export async function proxy(req: NextRequest) {
   }
 
   const nonce = createNonce()
-  const requestHeaders = new Headers(req.headers)
-  requestHeaders.set('x-nonce', nonce)
-  attachRequestHeaders(response, requestHeaders)
-  response.headers.set('x-nonce', nonce)
 
   // Embed route check (public path, no auth/session roundtrip needed)
   if (isEmbedRoute) {

@@ -22,7 +22,7 @@ export default async function TeamDashboardPage({ params }: TeamDashboardPagePro
         </p>
       </header>
 
-      <Suspense fallback={<div className={cn(unifiedSectionPanelClassName, 'p-5 text-sm text-muted-foreground')}>Loading team overview…</div>}>
+      <Suspense fallback={null}>
         <TeamEquityGridClient teamId={slug} />
       </Suspense>
     </section>

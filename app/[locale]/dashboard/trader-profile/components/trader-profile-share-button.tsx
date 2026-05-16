@@ -64,14 +64,13 @@ export function TraderProfileShareButton() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="gap-2"
+        <button
+          type="button"
+          className="inline-flex items-center gap-1.5 rounded-full border border-border/35 bg-background/70 px-3 py-1.5 text-xs font-medium text-foreground transition-[background-color,border-color] hover:bg-background/90 hover:border-border/50"
         >
-          <Share2 className="h-4 w-4" />
+          <Share2 className="h-3.5 w-3.5" />
           {t('share.traderProfile.button')}
-        </Button>
+        </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>

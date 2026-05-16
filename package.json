@@ -19,6 +19,7 @@
     "db:sync": "node scripts/sync-stack.mjs",
     "db:seed-firms": "npx tsx scripts/seed-prop-firms.ts",
     "build": "node scripts/sync-stack.mjs && NODE_OPTIONS=--max-old-space-size=8192 NEXT_DISABLE_FONT_DOWNLOADS=1 NEXT_BUILD_CPUS=${NEXT_BUILD_CPUS:-1} node scripts/robust-next-build.mjs",
+    "check:oklch-safety": "node oklch-guardrail.cjs",
     "build:bun": "bun run scripts/sync-stack.mjs && NODE_OPTIONS=--max-old-space-size=8192 NEXT_DISABLE_FONT_DOWNLOADS=1 NEXT_BUILD_CPUS=${NEXT_BUILD_CPUS:-1} bun run scripts/robust-next-build.mjs",
     "build:npm": "npm run build",
     "start": "next start -H 0.0.0.0 -p ${PORT:-3000}",
@@ -33,6 +34,7 @@
     "test:smoke": "node scripts/smoke-http.mjs",
     "test:coverage": "vitest run --config vitest.config.ts --coverage",
     "loadtest:k6": "k6 run scripts/loadtest/k6-smoke.js",
+    "audit:spacing": "node scripts/audit-spacing.mjs",
     "check:route-budgets": "node scripts/check-route-budgets.mjs",
     "check:route-security": "node scripts/check-route-security.mjs",
     "check:dead-code": "node scripts/check-dead-code.mjs",
@@ -150,6 +152,7 @@
     "embla-carousel-react": "^8.6.0",
     "exceljs": "^4.4.0",
     "framer-motion": "^11.18.2",
+    "glob": "^13.0.6",
     "gray-matter": "^4.0.3",
     "hotkeys-js": "^3.13.15",
     "html-react-parser": "^5.2.17",
@@ -247,7 +250,7 @@
     "vitest": "^2.1.9"
   },
   "optionalDependencies": {
-    "@next/swc-darwin-arm64": "^16.2.4",
+    "@next/swc-darwin-arm64": "^16.1.6",
     "@next/swc-linux-x64-gnu": "^16.2.4",
     "@next/swc-linux-x64-musl": "^16.2.4",
     "@next/swc-win32-x64-msvc": "^16.2.4"

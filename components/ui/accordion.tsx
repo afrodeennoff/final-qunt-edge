@@ -5,6 +5,7 @@ import * as AccordionPrimitive from "@radix-ui/react-accordion"
 import { ChevronDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { FOCUS_RING } from "@/lib/theme/focus"
 
 const Accordion = AccordionPrimitive.Root
 
@@ -15,7 +16,7 @@ const AccordionItem = React.forwardRef<
  <AccordionPrimitive.Item
  ref={ref}
  data-slot="accordion-item"
- className={cn("border-b border-[oklch(0.65_0.22_260_/_0.06)]", className)}
+ className={cn("border-b border-[rgba(0,0,0,0.04)]", className)}
  {...props}
  />
 ))
@@ -29,7 +30,7 @@ const AccordionTrigger = React.forwardRef<
  <AccordionPrimitive.Trigger
  ref={ref}
  data-slot="accordion-trigger"
- className={cn("type-body-sm flex flex-1 items-center justify-between rounded-lg px-2 py-3 text-foreground/80 transition-[background-color,color] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:bg-[oklch(0.052_0.009_260_/_0.72)] hover:text-foreground [&[data-state=open]>svg]:rotate-180",
+ className={cn("type-body-sm flex flex-1 items-center justify-between rounded-lg px-2 py-3 text-foreground/80 transition-[background-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:bg-[var(--card)] hover:text-foreground [&[data-state=open]>svg]:rotate-180", FOCUS_RING.standard,
  className
  )}
  {...props}

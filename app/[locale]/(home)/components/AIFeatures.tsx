@@ -29,7 +29,7 @@ export default function AIFeatures() {
   }))
 
   return (
-    <MotionSection className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+    <MotionSection className="relative overflow-hidden px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
       <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-8">
         <div className={cn(unifiedSectionPanelClassName, 'p-6 md:p-8')}>
           <p className={unifiedSectionEyebrowClassName}>{t('landing.home.ai.eyebrow')}</p>

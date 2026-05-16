@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
 import {
   Accordion,
   AccordionContent,

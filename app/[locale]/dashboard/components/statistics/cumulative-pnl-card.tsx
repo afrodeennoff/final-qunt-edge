@@ -56,12 +56,12 @@ function CumulativePnlCardInner({ size = 'medium' }: CumulativePnlCardProps) {
  {netPnl === 0 ? (
  <Minus className="h-4 w-4 shrink-0 text-muted-foreground" />
  ) : isPositive ? (
- <TrendingUp className="h-4 w-4 shrink-0 metric-positive" />
+ <TrendingUp className="h-4 w-4 shrink-0 text-success" />
  ) : (
- <TrendingDown className="h-4 w-4 shrink-0 metric-negative" />
+ <TrendingDown className="h-4 w-4 shrink-0 text-destructive" />
  )}
  <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Net</span>
- <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground">
+ <span className="micro-sans tabular-nums shrink-0 text-center text-[32px] font-black leading-none tracking-tight text-foreground">
  {netPnl === 0 ? '' : isPositive ? '+' : '-'}{formatCurrency(netPnl)}
  </span>
  <TooltipProvider>
@@ -82,14 +82,14 @@ function CumulativePnlCardInner({ size = 'medium' }: CumulativePnlCardProps) {
  return (
  <WidgetShell
  title={t('statistics.profitLoss.net')}
- icon={netPnl === 0 ? <Minus className={cn(iconSize,"text-muted-foreground")} /> : isPositive ? <TrendingUp className={cn(iconSize,"metric-positive")} /> : <TrendingDown className={cn(iconSize,"metric-negative")} />}
+ icon={netPnl === 0 ? <Minus className={cn(iconSize,"text-muted-foreground")} /> : isPositive ? <TrendingUp className={cn(iconSize,"text-success")} /> : <TrendingDown className={cn(iconSize,"text-destructive")} />}
  info={t('widgets.cumulativePnl.tooltip')}
  className="h-full"
  contentClassName="flex flex-col justify-center gap-3 p-4"
  >
  <div className={cn("text-center micro-sans font-black tracking-tight tabular-nums",
- netPnl === 0 ?"text-foreground" : isPositive ?"metric-positive" :"metric-negative",
- valueSizeClass === 'text-2xl' ? 'text-3xl' : 'text-xl'
+ netPnl === 0 ?"text-foreground" : isPositive ?"text-success" :"text-destructive",
+ valueSizeClass === 'text-2xl' ? 'text-4xl' : 'text-2xl'
  )}>
  {netPnl === 0 ? '' : isPositive ? '+' : '-'}{formatCurrency(netPnl)}
  </div>

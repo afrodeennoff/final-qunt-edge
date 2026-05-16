@@ -56,6 +56,8 @@ const TRADOVATE_ENVIRONMENTS = {
   }
 }
 
+const MAX_TRADOVATE_TRADES = 5_000
+
 interface TradovateAccount {
   id: number
   name: string
@@ -174,13 +176,13 @@ async function getContractById(accessToken: string, contractId: number): Promise
     })
 
     if (!response.ok) {
-      console.warn(`Failed to fetch contract ${contractId}:`, response.status, response.statusText)
+      logger.warn(`Failed to fetch contract ${contractId}:`, { status: response.status, statusText: response.statusText })
       return null
     }
 
     return await response.json()
   } catch (error) {
-    console.warn(`Error fetching contract ${contractId}:`, error)
+    logger.warn(`Error fetching contract ${contractId}:`, { error })
     return null
   }
 }
@@ -296,14 +298,14 @@ async function getFillPairs(accessToken: string): Promise<TradovateFillPair[]> {
     })
 
     if (!response.ok) {
-      console.warn(`Failed to fetch fill pairs:`, response.status, response.statusText)
+      logger.warn(`Failed to fetch fill pairs:`, { status: response.status, statusText: response.statusText })
       return []
     }
 
     const fillPairs = await response.json()
     return Array.isArray(fillPairs) ? fillPairs : []
   } catch (error) {
-    console.warn(`Error fetching fill pairs:`, error)
+    logger.warn(`Error fetching fill pairs:`, { error })
     return []
   }
 }
@@ -311,8 +313,7 @@ async function getFillPairs(accessToken: string): Promise<TradovateFillPair[]> {
 // Helper function to fetch multiple fills by IDs in batch with fallback
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function getFillsByIds(accessToken: string, fillIds: number[]): Promise<any[]> {
-  console.warn('getFillsByIds')
-  try {
+    try {
     if (fillIds.length === 0) return []
 
     const apiBaseUrl = TRADOVATE_ENVIRONMENTS.demo.api
@@ -325,8 +326,7 @@ async function getFillsByIds(accessToken: string, fillIds: number[]): Promise<an
     for (let i = 0; i < fillIds.length; i += BATCH_SIZE) {
       const batch = fillIds.slice(i, i + BATCH_SIZE)
 
-      console.warn('batch', JSON.stringify(batch))
-      try {
+            try {
         // Use GET with comma-separated IDs as per Tradovate API docs
         const idsParam = batch.join(',')
         const response = await fetch(`${apiBaseUrl}/v1/fill/items?ids=${idsParam}`, {
@@ -419,8 +419,7 @@ async function getOrdersByIds(accessToken: string, orderIds: number[]): Promise<
     if (orderIds.length === 0) return []
 
     const apiBaseUrl = TRADOVATE_ENVIRONMENTS.demo.api
-    console.warn('getOrdersByIds', JSON.stringify(orderIds))
-    const BATCH_SIZE = 5 // Limit batch size to 5 IDs at a time
+        const BATCH_SIZE = 5 // Limit batch size to 5 IDs at a time
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const orders: any[] = []
@@ -428,8 +427,7 @@ async function getOrdersByIds(accessToken: string, orderIds: number[]): Promise<
     // Process in batches of 5 IDs
     for (let i = 0; i < orderIds.length; i += BATCH_SIZE) {
       const batch = orderIds.slice(i, i + BATCH_SIZE)
-      console.warn('batch orders', JSON.stringify(batch))
-
+      
       try {
         // Use GET with comma-separated IDs as per Tradovate API docs
         const idsParam = batch.join(',')
@@ -907,11 +905,11 @@ export async function testTradovateAuth(accessToken: string) {
       return { success: true, userData }
     } else {
       const errorText = await response.text()
-      console.error('Demo user list endpoint failed:', { status: response.status, errorText })
+      logger.error('Demo user list endpoint failed:', { status: response.status, errorText })
       return { success: false, error: errorText }
     }
   } catch (error) {
-    console.error('Error testing auth:', error)
+    logger.error('Error testing auth:', { error })
     return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
   }
 }
@@ -930,7 +928,7 @@ export async function getTradovateAccounts(accessToken: string): Promise<Tradova
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('Failed to fetch accounts:', { status: response.status, errorText })
+      logger.error('Failed to fetch accounts:', { status: response.status, errorText })
       return { error: `Failed to fetch accounts: ${errorText}` }
     }
 
@@ -942,7 +940,7 @@ export async function getTradovateAccounts(accessToken: string): Promise<Tradova
 
     return { accounts }
   } catch (error) {
-    console.error('Failed to get Tradovate accounts:', error)
+    logger.error('Failed to get Tradovate accounts:', { error })
     return { error: 'Failed to get accounts' }
   }
 }
@@ -1334,7 +1332,7 @@ export async function removeTradovateToken(accountId?: string) {
 
     return { deletedCount }
   } catch (error) {
-    console.error('Failed to remove Tradovate token:', error)
+    logger.error('Failed to remove Tradovate token:', { error })
     return { error: 'Failed to remove token' }
   }
 }
@@ -1363,7 +1361,7 @@ export async function getTradovateSynchronizations() {
 
     return { synchronizations }
   } catch (error) {
-    console.error('TRADOVATE SYNC: Failed to get Tradovate synchronizations:', error)
+    logger.error('TRADOVATE SYNC: Failed to get Tradovate synchronizations:', { error })
     return { error: 'Failed to get synchronizations' }
   }
 }
@@ -1414,7 +1412,7 @@ export async function setCustomTradovateToken(
       expiresAt: expirationDate.toISOString()
     }
   } catch (error) {
-    console.error('Failed to set custom Tradovate token:', error)
+    logger.error('Failed to set custom Tradovate token:', { error })
     return { error: 'Failed to set custom token' }
   }
 }
@@ -1515,6 +1513,15 @@ export async function getTradovateTrades(
     logger.info('Fetching fill pairs...')
     const fillPairs = await getFillPairs(accessToken)
     logger.info(`Received ${fillPairs.length} fill pairs from Tradovate`)
+
+    // Apply trade count limit
+    if (fillPairs.length > MAX_TRADOVATE_TRADES) {
+      const originalCount = fillPairs.length
+      // Sort by ID descending and keep most recent pairs
+      const sortedFillPairs = fillPairs.sort((a, b) => b.id - a.id)
+      fillPairs.splice(0, fillPairs.length, ...sortedFillPairs.slice(0, MAX_TRADOVATE_TRADES))
+      logger.warn(`Truncated ${originalCount} fill pairs to ${fillPairs.length} (max allowed: ${MAX_TRADOVATE_TRADES})`)
+    }
 
     // Means there are no trades to import
     if (fillPairs.length === 0) {
@@ -1700,7 +1707,7 @@ export async function updateDailySyncTimeAction(
 
     return { success: true }
   } catch (error) {
-    console.error('Error updating daily sync time:', error)
+    logger.error('Error updating daily sync time:', { error })
     return { success: false, error: 'Failed to update daily sync time' }
   }
 }

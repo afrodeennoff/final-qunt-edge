@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import { AdminDashboard } from '@/app/[locale]/admin/components/dashboard/admin-dashboard';
 import { assertAdminAccess } from '@/server/authz';
 import { getSiteOrigin } from '@/lib/site-url';
-import { RouteLoadingScreen } from '@/components/ui/route-state';
 const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/admin";
 
@@ -44,7 +43,7 @@ export async function generateMetadata({
 export default async function AdminPage() {
   await assertAdminAccess()
   return (
-    <Suspense fallback={<RouteLoadingScreen compact eyebrow="Admin" title="Loading operations workspace" description="Preparing the admin surface and connecting to platform data." fullScreen={false} />}>
+    <Suspense fallback={null}>
       <AdminDashboard />
     </Suspense>
   );

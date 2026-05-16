@@ -332,8 +332,7 @@ if (!connectionString) {
 
   // Log slow queries in production via Prisma event
   if (isProduction && !isNextBuildPhase) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(prisma as any).$on?.('query', (e: { duration: number; query: string }) => {
+        ;(prisma as { $on?: (event: string, handler: (e: { duration: number; query: string }) => void) => void }).$on?.('query', (e: { duration: number; query: string }) => {
       if (e.duration > 1000) {
         logger.warn('[Slow DB Query]', {
           durationMs: e.duration,

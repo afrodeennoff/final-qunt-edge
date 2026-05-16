@@ -46,17 +46,17 @@ export default function Navbar() {
   const currentLayout = layouts || { desktop: [], mobile: [] }
 
   return (
-    <div className="sticky top-0 z-40 w-full px-4 sm:px-6 py-2.5 pointer-events-none bg-background/95">
+    <div className="sticky top-0 z-40 w-full pointer-events-none">
       <motion.nav
         initial={false}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="animate-fade-up-smooth pointer-events-auto flex flex-col rounded-2xl sm:rounded-full border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.05_0.009_260_/_0.88)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_18px_40px_-28px_rgba(0,0,0,0.88)] transition-[opacity,background-color,border-color] duration-300"
+        className="pointer-events-auto flex items-center h-11 w-full px-3 gap-0 bg-[var(--card)] backdrop-blur-[28px] saturate-150 border-b border-[rgba(0,0,0,0.06)] shadow-[0_1px_0_rgba(0,0,0,0.04)]"
       >
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Left Side: Sidebar Toggle & Brand */}
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="-ml-1 h-9 w-9 rounded-xl text-muted-foreground/60 transition-[opacity,background-color,border-color] hover:border-primary/18 hover:bg-primary/8 hover:text-foreground" />
+            <SidebarTrigger className="h-8 w-8 rounded-[7px] text-muted-foreground/55 border border-transparent hover:border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.06)] hover:text-foreground/80" />
             <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
           </div>
 

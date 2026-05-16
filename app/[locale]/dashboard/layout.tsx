@@ -19,6 +19,8 @@ import { cookies } from 'next/headers'
 import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from '@/lib/sidebar-state'
 import { SidebarLayoutShell } from '@/components/ui/sidebar-layout-shell'
 import { MobileBottomNav } from '@/components/mobile-bottom-nav'
+import { GestureProvider } from '@/components/providers/gesture-provider'
+import { PullToRefreshIndicator } from '@/components/pull-to-refresh'
 import { shouldUseServerBootstrap } from '@/lib/feature-flags'
 import type { DashboardBootstrapPayload } from '@/lib/types/bootstrap'
 import { APP_SHELL_SOFT_BORDER_STYLE, WORKSPACE_SHELL_WIDTH } from '@/lib/constants/layout'
@@ -113,14 +115,17 @@ export default async function DashboardLayout({
               backgroundVariant="accent"
               className="selection:bg-primary/20 selection:text-primary"
             >
-              <div
-                className={cn(
-                  'mx-auto flex w-full flex-col',
-                  WORKSPACE_SHELL_WIDTH,
-                )}
-              >
-                <ErrorBoundary>{children}</ErrorBoundary>
-              </div>
+              <GestureProvider>
+                <PullToRefreshIndicator />
+                <div
+                  className={cn(
+                    'mx-auto flex w-full flex-col',
+                    WORKSPACE_SHELL_WIDTH,
+                  )}
+                >
+                  <ErrorBoundary>{children}</ErrorBoundary>
+                </div>
+              </GestureProvider>
             </SidebarLayoutShell>
           </DashboardProvider>
         </DashboardProviders>

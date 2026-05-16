@@ -11,7 +11,6 @@ export default function DashboardPage() {
           <TabsList className="h-auto rounded-xl border border-border/30 bg-background/0.09 p-1">
             <TabsTrigger value="accounts">Accounts</TabsTrigger>
             <TabsTrigger value="trades">Trades</TabsTrigger>
-            {/* <TabsTrigger value="propfirm">Prop Firm</TabsTrigger> */}
           </TabsList>
           <TabsContent value="accounts" className="mt-0">
             <UnifiedSurface>

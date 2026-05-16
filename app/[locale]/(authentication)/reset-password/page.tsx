@@ -1,3 +1,5 @@
+'use client'
+
 import ResetPasswordForm from './reset-password-form'
 import { getStaticParams } from '@/locales/server'
 import { setStaticParamsLocale } from 'next-international/server'

@@ -1,9 +1,0 @@
-/* styles/themes.css */
-/* base tokens used when no theme class is set */
-:root {
-  /* fallback variables — optional */
-  --background: 0 0% 100%;
-  --foreground: 220 15% 10%;
-  --primary: 240 100% 50%;
-  --radius: 0.5rem;
-}

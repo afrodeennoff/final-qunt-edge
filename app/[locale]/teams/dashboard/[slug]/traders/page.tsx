@@ -24,7 +24,7 @@ export default function TeamTradersPage() {
         </p>
       </header>
 
-      <Suspense fallback={<div className={cn(unifiedSectionPanelClassName, 'p-5 text-sm text-muted-foreground')}>Loading trader metrics…</div>}>
+      <Suspense fallback={null}>
         <TeamEquityGridClient teamId={slug} />
       </Suspense>
     </section>

@@ -37,7 +37,7 @@ export default function AudienceSegmentation() {
   ]
 
   return (
-    <MotionSection className="relative overflow-hidden bg-muted/20 px-4 py-12 sm:py-16 lg:py-20 md:px-6 lg:px-8">
+    <MotionSection className="relative overflow-hidden bg-muted/20 px-4 py-8 sm:py-12 lg:py-16 md:px-6 lg:px-8">
       {/* Atmospheric glow orb */}
       <div className="pointer-events-none absolute -left-40 bottom-1/4 h-[440px] w-[440px] rounded-full bg-primary/[0.05] blur-[120px]" />
       <div className="mx-auto max-w-[1360px]">

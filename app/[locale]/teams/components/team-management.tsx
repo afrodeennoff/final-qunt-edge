@@ -69,13 +69,17 @@ import {
  unifiedSectionPanelClassName,
 } from '@/components/layout/unified-page-recipes'
 
+const getDisplayName = (user: { email: string; username?: string | null }) => {
+	return user.username || user.email.split('@')[0]
+}
+
 interface Team {
  id: string
  name: string
  userId: string
  traderIds: string[]
- traders: { id: string; email: string }[]
- managers: { id: string; managerId: string; access: string; email: string }[]
+ traders: { id: string; email: string; username: string | null }[]
+ managers: { id: string; managerId: string; access: string; email: string; username: string | null }[]
  createdAt: Date | string
  updatedAt: Date | string
  userAccess?: string
@@ -304,6 +308,7 @@ export function TeamManagement({
  managerId: 'temp-manager-id', // This will be updated when we reload the data
  access: newManagerAccess,
  email: newManagerEmail.trim(),
+ username: null as string | null,
  }
 
  const updatedSelectedTeam = {
@@ -1006,7 +1011,7 @@ export function TeamManagement({
  <div className="space-y-1">
  {selectedTeam?.traders.map((trader: { id: string; email: string }) => (
  <div key={trader.id} className="flex items-center justify-between bg-muted/50 p-2 rounded-md text-sm">
- <span>{trader.email}</span>
+ <span>{getDisplayName(trader)}</span>
  <div className="flex items-center gap-2">
  <Badge variant="outline">{t('teams.management.member')}</Badge>
  <AlertDialog>
@@ -1019,7 +1024,7 @@ export function TeamManagement({
  <AlertDialogHeader>
  <AlertDialogTitle>{t('teams.management.removeTrader')}</AlertDialogTitle>
  <AlertDialogDescription>
- {t('teams.management.removeTraderConfirm').replace('{email}', trader.email)}
+ {t('teams.management.removeTraderConfirm').replace('{email}', getDisplayName(trader))}
  </AlertDialogDescription>
  </AlertDialogHeader>
  <AlertDialogFooter>
@@ -1073,7 +1078,7 @@ export function TeamManagement({
  <div className="space-y-1">
  {pendingInvitations.map((invitation) => (
  <div key={invitation.id} className="flex items-center justify-between bg-muted/50 p-2 rounded-md text-sm">
- <span>{invitation.email}</span>
+ <span>{getDisplayName(invitation)}</span>
  <div className="flex items-center gap-2">
  <Badge variant="outline">{t('teams.management.pending')}</Badge>
  <AlertDialog>
@@ -1086,7 +1091,7 @@ export function TeamManagement({
  <AlertDialogHeader>
  <AlertDialogTitle>{t('teams.management.cancelInvitation')}</AlertDialogTitle>
  <AlertDialogDescription>
- {t('teams.management.cancelInvitationConfirm').replace('{email}', invitation.email)}
+ {t('teams.management.cancelInvitationConfirm').replace('{email}', getDisplayName(invitation))}
  </AlertDialogDescription>
  </AlertDialogHeader>
  <AlertDialogFooter>
@@ -1124,7 +1129,7 @@ export function TeamManagement({
  <div className="space-y-1">
  {selectedTeam?.managers.map((manager) => (
  <div key={manager.id} className="flex items-center justify-between bg-muted/50 p-2 rounded-md text-sm">
- <span>{manager.email}</span>
+ <span>{getDisplayName(manager)}</span>
  <div className="flex items-center gap-2">
  <Badge variant="outline">
  {manager.access === 'admin' ? t('dashboard.teams.admin') : t('dashboard.teams.viewer')}
@@ -1151,7 +1156,7 @@ export function TeamManagement({
  <AlertDialogHeader>
  <AlertDialogTitle>{t('teams.management.removeManager')}</AlertDialogTitle>
  <AlertDialogDescription>
- {t('teams.management.removeManagerConfirm').replace('{email}', manager.email)}
+ {t('teams.management.removeManagerConfirm').replace('{email}', getDisplayName(manager))}
  </AlertDialogDescription>
  </AlertDialogHeader>
  <AlertDialogFooter>

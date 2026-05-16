@@ -1,11 +1,9 @@
+import { cn } from '@/lib/utils'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { ButtonV2 as Button } from '@/components/ui/v2'
-import {
-  MarketingSection,
-  marketingBodyClassName,
-  marketingSectionTitleClassName,
-} from '@/components/layout/marketing-sections'
+import { unifiedSectionPanelClassName } from '@/components/layout/unified-page-recipes'
 import { getI18n } from '@/locales/server'
 
 interface FinalCTAProps {
@@ -16,7 +14,7 @@ export default async function FinalCTA({ locale }: FinalCTAProps) {
   const t = await getI18n()
 
   return (
-    <section className="relative px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+    <section className="relative px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
       <motion.div
         className="mx-auto max-w-5xl"
         initial={{ opacity: 0, y: 10 }}
@@ -35,14 +33,15 @@ export default async function FinalCTA({ locale }: FinalCTAProps) {
             {t('landing.home.finalCta.titleSuffix')}
           </h2>
 
-        <div className="mt-8">
-          <Button asChild size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
-            <Link href={`/${locale}/authentication?next=dashboard`}>
-              {t('landing.home.finalCta.primary')}
-            </Link>
-          </Button>
+          <div className="mt-8">
+            <Button asChild size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
+              <Link href={`/${locale}/authentication?next=dashboard`}>
+                {t('landing.home.finalCta.primary')}
+              </Link>
+            </Button>
+          </div>
         </div>
-      </div>
-    </MarketingSection>
+      </motion.div>
+    </section>
   )
 }

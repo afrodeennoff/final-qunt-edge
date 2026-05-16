@@ -22,6 +22,29 @@ export const CONTENT_SHELL_WIDTH = 'max-w-[1280px]'
 
 export const READING_SHELL_WIDTH = 'max-w-[800px]'
 
+// Ultra-high resolution container widths for 4K-12K displays
+export const ULTRA_HIGH_RES_WIDTHS = {
+  // Marketing layouts
+  container4k: 'max-w-[3840px]',
+  container8k: 'max-w-[7680px]',
+  container12k: 'max-w-[12288px]',
+
+  // Content layouts
+  content4k: 'max-w-[3600px]',
+  content8k: 'max-w-[7200px]',
+  content12k: 'max-w-[11200px]',
+
+  // Reading layouts
+  reading4k: 'max-w-[3000px]',
+  reading8k: 'max-w-[6000px]',
+  reading12k: 'max-w-[9600px]',
+
+  // Section containers
+  section4k: 'max-w-[3520px]',
+  section8k: 'max-w-[7040px]',
+  section12k: 'max-w-[10880px]',
+}
+
 export const LOCALE_SOFT_BORDER_STYLE: CSSProperties = {
   ['--border' as string]: '214 10% 6%',
   ['--input' as string]: '214 10% 6%',

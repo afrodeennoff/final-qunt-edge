@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/context/theme-provider";
 import type { DashboardTheme } from "@/lib/constants/dashboard-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 import { useEffect } from "react";
 import { AuthTimeout } from "@/components/auth/auth-timeout";
 
@@ -171,6 +172,7 @@ export function RootProviders({
     return (
         <TooltipProvider>
             <ThemeProvider scope={themeScope} initialTheme={initialTheme}>
+                <Toaster />
                 {children}
             </ThemeProvider>
         </TooltipProvider>

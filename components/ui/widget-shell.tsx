@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { AlertCircle, Info } from "lucide-react"
+import { AlertCircle, Info, Inbox } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -52,17 +52,17 @@ export function WidgetShell({
  const renderContent = () => {
  if (state ==="loading") {
  return (
- <div className="gap-[var(--space-3)] p-[var(--space-4)]">
- <Skeleton className="h-4 w-1/3" />
- <Skeleton className="h-28 w-full" />
- <Skeleton className="h-4 w-2/3" />
+ <div className="space-y-3 p-5">
+ <Skeleton className="h-3 w-2/5 animate-pulse rounded-full bg-muted/60" style={{ animationDelay: '0ms' }} />
+ <Skeleton className="h-24 animate-pulse rounded-lg bg-muted/40" style={{ animationDelay: '100ms' }} />
+ <Skeleton className="h-3 w-3/5 animate-pulse rounded-full bg-muted/60" style={{ animationDelay: '200ms' }} />
  </div>
  )
  }
 
  if (state ==="error") {
  return (
- <div className="p-[var(--space-4)]">
+ <div className="p-5">
  <Alert variant="destructive">
  <AlertCircle className="h-4 w-4" />
  <AlertTitle>Widget Error</AlertTitle>
@@ -74,8 +74,11 @@ export function WidgetShell({
 
  if (state ==="empty") {
  return (
- <div className="flex h-full min-h-[160px] items-center justify-center p-[var(--space-4)] text-sm text-muted-foreground">
- {emptyMessage}
+ <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-3 p-5">
+ <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border/40 bg-muted/30">
+ <Inbox className="size-4 text-muted-foreground/50" />
+ </div>
+ <p className="text-center text-[13px] text-muted-foreground/70">{emptyMessage}</p>
  </div>
  )
  }
@@ -86,20 +89,21 @@ export function WidgetShell({
  return (
  <Card
  data-widget-shell="v2"
- className={cn("widget-enter-smooth relative h-full overflow-hidden rounded-[1.15rem] border border-[oklch(0.65_0.22_260_/_0.1)] bg-[linear-gradient(180deg,oklch(0.068_0.012_260_/_0.9)_0%,oklch(0.056_0.01_260_/_0.84)_100%)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_20px_38px_-28px_rgba(0,0,0,0.68)]","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/32 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+ className={cn("widget-enter-smooth relative h-full overflow-hidden rounded-[var(--radius-lg)] border border-border/50 bg-card shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_20px_40px_-28px_rgba(0,0,0,0.70)] focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_0_0_2px_var(--background),0_0_0_4px_var(--ring)/0.45]",
  variant ==="hoverable" &&
+ "transition-[border-color,box-shadow,transform] duration-200 hover:border-border/80 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_20px_36px_-24px_rgba(0,0,0,0.68)] hover:-translate-y-px",
  className
  )}
  >
  {(title || actions || icon || description) && (
- <CardHeader className="border-b border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.06)] px-[var(--space-4)] py-[0.9rem] sm:px-[var(--space-4)] sm:py-[0.9rem]">
+ <CardHeader className="border-b border-border/30 bg-muted/20 px-4 py-2.5 backdrop-blur-sm">
  <div className="flex items-start justify-between gap-[var(--space-3)]">
  <div className="min-w-0 gap-[var(--space-2)]">
  {(title || icon) && (
  <div className="flex items-center gap-[var(--space-2)]">
- {icon ? <span className="text-fg-muted">{icon}</span> : null}
+ {icon ? <span className="size-[15px] text-muted-foreground/50">{icon}</span> : null}
  {title ? (
- <CardTitle className="line-clamp-1 text-sm font-semibold tracking-[-0.01em] text-fg-primary sm:text-[15px]">{title}</CardTitle>
+ <CardTitle className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70">{title}</CardTitle>
  ) : null}
  {info ? (
  <TooltipProvider>
@@ -107,7 +111,7 @@ export function WidgetShell({
  <TooltipTrigger asChild>
  <button
  type="button"
- className="text-fg-muted transition-colors hover:text-fg-primary"
+ className="text-muted-foreground/50 transition-colors hover:text-foreground"
  aria-label="Widget info"
  >
  <Info className="h-3.5 w-3.5" />
@@ -120,7 +124,7 @@ export function WidgetShell({
  </div>
  )}
  {description ? (
- <p className="line-clamp-1 text-[12px] text-fg-muted">{description}</p>
+ <p className="line-clamp-1 text-[12px] text-muted-foreground/60">{description}</p>
  ) : null}
  </div>
  {actions ? <div className="shrink-0">{actions}</div> : null}
@@ -134,8 +138,8 @@ export function WidgetShell({
 
  {footer ? (
  <CardFooter className="flex flex-col p-0">
- <Separator className="-mx-[var(--space-4)] mb-0" />
- <div className="p-[var(--space-4)]">{footer}</div>
+ <Separator className="-mx-5 mb-0" />
+ <div className="p-5">{footer}</div>
  </CardFooter>
  ) : null}
  </Card>

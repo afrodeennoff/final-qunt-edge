@@ -18,7 +18,6 @@ model User {
   username           String?             @unique
   usernameHash       String?             @unique
   email              String              @unique
-  username           String?             @unique
   auth_user_id       String              @unique
   isFirstConnection  Boolean             @default(true)
   isBeta             Boolean             @default(false)

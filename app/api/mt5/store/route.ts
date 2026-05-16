@@ -6,6 +6,7 @@ import { apiError } from '@/lib/api-response'
 import { z } from 'zod'
 import { createRateLimitResponse, rateLimit } from '@/lib/rate-limit'
 import { parseJson } from '@/app/api/_utils/validate'
+import { logger } from '@/lib/logger'
 
 const MAX_MT5_BODY_BYTES = 3 * 1024 * 1024
 const MAX_MT5_TRADES = 5_000
@@ -174,7 +175,7 @@ export async function POST(req: NextRequest) {
       return apiError('PAYLOAD_TOO_LARGE', `Too many trades. Maximum is ${MAX_MT5_TRADES}.`, 413)
     }
     
-    const result = await saveTradesForUserAction(trades as never[], user.id)
+    const result = await saveTradesForUserAction(trades, user.id)
 
     if (result.error && result.error !== 'DUPLICATE_TRADES') {
       return apiError('BAD_REQUEST', result.error, 400, result.details)
@@ -206,7 +207,7 @@ export async function POST(req: NextRequest) {
     })
 
   } catch (error) {
-    console.error('[mt5/store] Error processing request:', error)
+    logger.error('[mt5/store] Error processing request:', { error })
     return apiError('INTERNAL_ERROR', 'Internal server error', 500, { requestId })
   }
 }
@@ -267,7 +268,7 @@ export async function GET(req: NextRequest) {
     })
     
   } catch (error) {
-    console.error('[mt5/store] Error retrieving accounts:', error)
+    logger.error('[mt5/store] Error retrieving accounts:', { error })
     return apiError('INTERNAL_ERROR', 'Failed to retrieve accounts', 500, { requestId })
   }
 }

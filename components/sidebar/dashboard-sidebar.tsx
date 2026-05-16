@@ -32,6 +32,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
     const { refreshAllData } = useDashboardActions()
     const locale = useCurrentLocale()
     const user = useUserStore(state => state.supabaseUser)
+    const prismaUser = useUserStore(state => state.user)
     const timezone = useUserStore(state => state.timezone)
     const setTimezone = useUserStore(state => state.setTimezone)
     const resetUser = useUserStore(state => state.resetUser)
@@ -173,7 +174,8 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             user={{
                 avatar_url: user?.user_metadata?.avatar_url,
                 email: user?.email,
-                full_name: user?.user_metadata?.full_name
+                full_name: user?.user_metadata?.full_name,
+                username: prismaUser?.username,
             }}
             styleVariant="minimal"
             timezone={{

@@ -259,7 +259,7 @@ function NotFoundContent() {
           </Button>
         }
       >
-        <div className="flex flex-col items-center gap-5">
+        <div className="flex flex-col items-center gap-6">
           <div className="rounded-full border border-border/30 bg-background/40 px-6 py-2 text-4xl font-semibold tracking-[-0.06em] text-foreground">
             404
           </div>

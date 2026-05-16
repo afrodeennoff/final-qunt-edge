@@ -72,6 +72,31 @@ export function DashboardHeader() {
   }
 
   const title = getTitle()
+  const subtitle = isDashboardRoot
+    ? 'Your trading command center'
+    : pathname.includes('/dashboard/trades')
+      ? 'Review, tag, and annotate your trade history'
+      : pathname.includes('/dashboard/accounts')
+        ? 'Track account growth, balances, and consistency'
+        : pathname.includes('/dashboard/analytics')
+          ? 'Run what-if scenarios on your trade data'
+          : pathname.includes('strategies')
+            ? 'Build and test trading strategies'
+            : pathname.includes('reports')
+              ? 'Deep-dive analytics and performance reports'
+              : pathname.includes('behavior')
+                ? 'AI-powered behavioral coaching'
+                : pathname.includes('trader-profile')
+                  ? 'Your public trader profile'
+                  : pathname.includes('calendar')
+                    ? 'Calendar view of your trading activity'
+                    : pathname.includes('data')
+                      ? 'Manage your data imports'
+                      : pathname.includes('settings')
+                        ? 'Account and preference settings'
+                        : pathname.includes('billing')
+                          ? 'Manage your subscription'
+                          : ''
   const sectionLabel = 'Dashboard'
   const showSectionLabel = !isDashboardRoot
   const hasActiveFilters =
