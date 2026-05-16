@@ -1,29 +1,59 @@
-import { X, Minus, Square } from 'lucide-react';
+'use client';
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function MacTitleBar() {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleTrafficLightClick = (action: 'close' | 'minimize' | 'maximize') => {
+    // Add your logic: close = sign out, minimize = collapse sidebar, maximize = fullscreen toggle
+    console.log(`Traffic light clicked: ${action}`);
+    // TODO: wire to actual app actions (e.g. signOut, toggleSidebar, toggleFullScreen)
+  };
+
   return (
-    <div className="mac-title-bar h-[52px] bg-[oklch(0.09_0.01_260/0.85)] backdrop-blur-[40px] border-b border-white/10 flex items-center px-4 select-none z-50 sticky top-0">
+    <div 
+      className="mac-title-bar liquid-glass flex items-center px-3 h-11 border-b border-white/10 select-none"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       {/* Traffic Lights */}
       <div className="flex items-center gap-2">
-        <button 
-          onClick={() => window.close()}
-          className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors flex items-center justify-center text-[10px] text-red-900/70"
+        <motion.button
+          whileHover={{ scale: 1.15 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => handleTrafficLightClick('close')}
+          className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 active:bg-red-700 transition-all shadow-inner flex items-center justify-center"
+          title="Close window"
         >
-          <X className="w-2 h-2 opacity-0 hover:opacity-100" />
-        </button>
-        <button className="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors" />
-        <button className="w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors" />
+          {isHovered && <span className="text-[9px] leading-none text-red-950 font-bold">×</span>}
+        </motion.button>
+        
+        <motion.button
+          whileHover={{ scale: 1.15 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => handleTrafficLightClick('minimize')}
+          className="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-600 active:bg-yellow-700 transition-all shadow-inner"
+          title="Minimize / Collapse sidebar"
+        />
+        
+        <motion.button
+          whileHover={{ scale: 1.15 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => handleTrafficLightClick('maximize')}
+          className="w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 active:bg-green-700 transition-all shadow-inner"
+          title="Maximize / Fullscreen mode"
+        />
       </div>
 
-      {/* Window Title */}
-      <div className="flex-1 text-center text-sm font-medium text-white/80 tracking-tight">
+      {/* App Name - SF Pro style */}
+      <div className="flex-1 text-center text-[13px] font-medium text-white/95 tracking-[-0.02em]">
         Qunt Edge
       </div>
 
-      {/* Right side controls */}
-      <div className="flex items-center gap-3 text-white/70">
-        {/* Add any custom controls here */}
-      </div>
+      {/* Right spacer for balance */}
+      <div className="w-[72px]"></div>
     </div>
   );
 }
