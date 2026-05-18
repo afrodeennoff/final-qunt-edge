@@ -340,48 +340,7 @@
      All tokens resolve to macOS-native semantic values.
   ═══════════════════════════════════════════════════════════ */
 
-  /* ── BACKGROUND & SURFACE — macOS Light ── */
-  --background: #F2F2F7;
-  --foreground: #1D1D1F;
-
-  /* ── CARD SURFACES ── */
-  --card: #FFFFFF;
-  --card-foreground: #1D1D1F;
-  --popover: #FFFFFF;
-  --popover-foreground: #1D1D1F;
-
-  /* ── BRAND — Default macOS Blue ── */
-  --primary: #007AFF;
-  --primary-foreground: #FFFFFF;
-
-  /* ── SECONDARY SURFACES ── */
-  --secondary: #F5F5F7;
-  --secondary-foreground: #1D1D1F;
-
-  /* ── MUTED TONES ── */
-  --muted: #EBEBED;
-  --muted-foreground: #6E6E73;
-
-  /* ── ACCENT ── */
-  --accent: #F5F5F7;
-  --accent-foreground: #007AFF;
-
-  /* ── SEMANTIC — Profit Green ── */
-  --success: #1A7F37;
-  --success-foreground: #FFFFFF;
-
-  /* ── SEMANTIC — Amber ── */
-  --warning: #D35400;
-  --warning-foreground: #FFFFFF;
-
-  /* ── SEMANTIC — Loss Red ── */
-  --destructive: #C0392B;
-  --destructive-foreground: #FFFFFF;
-
-  /* ── BORDERS — macOS native ── */
-  --border: rgba(0,0,0,0.13);
-  --input: rgba(0,0,0,0.15);
-  --ring: #007AFF;
+  /* ── Core tokens defined below (dark defaults) — light overrides in .light class ── */
 
   /* ── CHART PALETTE — macOS semantic ── */
   --chart-1: #007AFF;
@@ -393,16 +352,7 @@
   --chart-7: #0E7490;
   --chart-8: #6E6E73;
 
-  /* ── SIDEBAR — macOS native ── */
-  --sidebar: rgba(246,246,248,0.82);
-  --sidebar-background: rgba(246,246,248,0.82);
-  --sidebar-foreground: #1D1D1F;
-  --sidebar-primary: #007AFF;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: rgba(0,0,0,0.05);
-  --sidebar-accent-foreground: #007AFF;
-  --sidebar-border: rgba(0,0,0,0.08);
-  --sidebar-ring: #007AFF;
+  /* ── Sidebar tokens defined below (dark defaults) — light overrides in .light class ── */
 
   /* ── RADIUS — macOS native ── */
   --radius: 0.625rem;
@@ -491,7 +441,6 @@
   /* ── SURFACE TOKENS ── */
   --surface-card: #FFFFFF;
   --surface-popover: #FFFFFF;
-  --surface-overlay: rgba(255,255,255,0.85);
   --surface-hover: #F5F5F7;
   --brand-tint: rgba(0,102,204,0.08);
 
@@ -2291,16 +2240,7 @@
     display: none;
   }
 
-  /* Shimmer animation for AI loading states */
-  @keyframes shimmer {
-    0% {
-      transform: translateX(-100%);
-    }
-
-    100% {
-      transform: translateX(100%);
-    }
-  }
+  /* Shimmer animation — keyframe defined in global scope below */
 
   .animate-shimmer {
     animation: shimmer 2s ease-in-out infinite;
@@ -2321,20 +2261,7 @@
     box-shadow: 0 0 0 1px hsl(var(--border) / 0.45);
   }
 
-  @keyframes float {
-    0% {
-      transform: translateY(0px);
-    }
-
-    50% {
-      transform: translateY(-10px);
-    }
-
-    100% {
-      transform: translateY(0px);
-    }
-  }
-
+  /* float keyframe defined below (unlayered) */
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
@@ -3004,36 +2931,6 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
-  /* ===== SCROLL-TRIGGERED STAGGER REVEALS ===== */
-  .stagger-reveal-smooth > * {
-    opacity: 0;
-    animation: fade-up-smooth 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  }
-  .stagger-reveal-smooth > *:nth-child(1) {
-    animation-delay: 0ms;
-  }
-  .stagger-reveal-smooth > *:nth-child(2) {
-    animation-delay: 60ms;
-  }
-  .stagger-reveal-smooth > *:nth-child(3) {
-    animation-delay: 120ms;
-  }
-  .stagger-reveal-smooth > *:nth-child(4) {
-    animation-delay: 180ms;
-  }
-  .stagger-reveal-smooth > *:nth-child(5) {
-    animation-delay: 240ms;
-  }
-  .stagger-reveal-smooth > *:nth-child(6) {
-    animation-delay: 300ms;
-  }
-  .stagger-reveal-smooth > *:nth-child(7) {
-    animation-delay: 360ms;
-  }
-  .stagger-reveal-smooth > *:nth-child(8) {
-    animation-delay: 420ms;
-  }
-
   /* ===== PREMIUM WIDGET/CHART ENTRANCE ===== */
   .widget-enter-smooth {
     animation: scale-reveal 0.46s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -3115,10 +3012,7 @@
 .stagger-item:nth-child(6) { animation-delay: 300ms; }
 
 /* ===== SHIMMER ANIMATION FOR SKELETONS ===== */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
+/* (shimmer keyframe defined in @layer utilities above) */
 .animate-shimmer-slide {
   position: relative;
   overflow: hidden;
@@ -3159,11 +3053,6 @@
     .hover-glow-smooth:hover,
     .hover-border-glow:hover {
       box-shadow: none !important;
-    }
-
-    .stagger-reveal-smooth > * {
-      animation: none !important;
-      opacity: 1 !important;
     }
 
     .transition-butter,
@@ -4255,72 +4144,37 @@ img[loading='lazy'] {
   animation: animate-out-scale 0.3s ease-in forwards;
 }
 
-/* Stagger Children */
+/* Stagger Children — backward-compat alias for stagger-reveal */
 .stagger-children > * {
   opacity: 0;
   animation: animate-in-slide-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.stagger-children > *:nth-child(1) {
-  animation-delay: 0ms;
-}
-.stagger-children > *:nth-child(2) {
-  animation-delay: 50ms;
-}
-.stagger-children > *:nth-child(3) {
-  animation-delay: 100ms;
-}
-.stagger-children > *:nth-child(4) {
-  animation-delay: 150ms;
-}
-.stagger-children > *:nth-child(5) {
-  animation-delay: 200ms;
-}
-.stagger-children > *:nth-child(6) {
-  animation-delay: 250ms;
-}
-.stagger-children > *:nth-child(7) {
-  animation-delay: 300ms;
-}
-.stagger-children > *:nth-child(8) {
-  animation-delay: 350ms;
-}
-.stagger-children > *:nth-child(9) {
-  animation-delay: 400ms;
-}
-.stagger-children > *:nth-child(10) {
-  animation-delay: 450ms;
-}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 350ms; }
+.stagger-children > *:nth-child(9) { animation-delay: 400ms; }
+.stagger-children > *:nth-child(10) { animation-delay: 450ms; }
 
-.stagger-children-fast > * {
+/* Stagger Reveal Fast — renamed from stagger-children-fast */
+.stagger-reveal-fast > * {
   opacity: 0;
   animation: animate-in-fade 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.stagger-children-fast > *:nth-child(1) {
-  animation-delay: 0ms;
-}
-.stagger-children-fast > *:nth-child(2) {
-  animation-delay: 30ms;
-}
-.stagger-children-fast > *:nth-child(3) {
-  animation-delay: 60ms;
-}
-.stagger-children-fast > *:nth-child(4) {
-  animation-delay: 90ms;
-}
-.stagger-children-fast > *:nth-child(5) {
-  animation-delay: 120ms;
-}
-.stagger-children-fast > *:nth-child(6) {
-  animation-delay: 150ms;
-}
-.stagger-children-fast > *:nth-child(7) {
-  animation-delay: 180ms;
-}
-.stagger-children-fast > *:nth-child(8) {
-  animation-delay: 210ms;
-}
+.stagger-reveal-fast > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-reveal-fast > *:nth-child(2) { animation-delay: 30ms; }
+.stagger-reveal-fast > *:nth-child(3) { animation-delay: 60ms; }
+.stagger-reveal-fast > *:nth-child(4) { animation-delay: 90ms; }
+.stagger-reveal-fast > *:nth-child(5) { animation-delay: 120ms; }
+.stagger-reveal-fast > *:nth-child(6) { animation-delay: 150ms; }
+.stagger-reveal-fast > *:nth-child(7) { animation-delay: 180ms; }
+.stagger-reveal-fast > *:nth-child(8) { animation-delay: 210ms; }
 
 /* Hover Effects */
 .hover-lift {
@@ -4398,7 +4252,7 @@ img[loading='lazy'] {
   }
 
   .stagger-children > *,
-  .stagger-children-fast > * {
+  .stagger-reveal-fast > * {
     animation: none !important;
     opacity: 1 !important;
   }

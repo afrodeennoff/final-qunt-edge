@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState, useRef, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import { getTeamEquityData, exportTeamTradesAction } from '../../actions/stats'
 import { Card } from '@/components/ui/card'
-import { UserEquityChart } from './user-equity-chart'
 import { ExternalLink, Download } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -15,6 +15,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Filter, X } from 'lucide-react'
 import { useTypedI18n } from '@/locales/client'
 import { toast } from 'sonner'
+
+const UserEquityChart = dynamic(() => import('./user-equity-chart').then(m => ({ default: m.UserEquityChart })), {
+  loading: () => <div className="h-32 animate-pulse rounded-lg bg-muted/30" />,
+})
 
 interface UserEquityData {
  userId: string

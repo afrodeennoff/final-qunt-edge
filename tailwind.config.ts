@@ -30,11 +30,6 @@ const config = {
       '2xl': `${BREAKPOINTS['2xl']}px`,
       '3xl': '1920px',
       '4xl': '2560px',
-      '5xl': '3840px',
-      '6xl': '5120px',
-      '7xl': '7680px',
-      '8xl': '10240px',
-      '12k': '12288px',
     },
     extend: {
       fontFamily: {
@@ -71,24 +66,6 @@ const config = {
         'gradient-glow': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
         'gradient-shine':
           'linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)',
-        // ── 12K PREMIUM GRADIENT SURFACES ──
-        'gradient-luxe':
-          'linear-gradient(135deg, color(display-p3 0.45 0.25 0.95 / 0.8) 0%, color(display-p3 0.95 0.72 0.18 / 0.6) 100%)',
-        'gradient-ice':
-          'linear-gradient(135deg, color(display-p3 0.55 0.65 0.98) 0%, color(display-p3 0.75 0.85 0.98) 50%, color(display-p3 0.90 0.92 0.98) 100%)',
-        'gradient-obsidian':
-          'linear-gradient(180deg, oklch(0.06 0.01 297) 0%, oklch(0.03 0.005 297) 100%)',
-        'gradient-cinematic':
-          'radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.60 0.22 297 / 0.12) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 100%, color(display-p3 0.20 0.45 0.98 / 0.06) 0%, transparent 60%)',
-        'gradient-depth':
-          'radial-gradient(ellipse 1200px 800px at 20% 0%, oklch(0.60 0.22 297 / 0.08) 0%, transparent 50%), radial-gradient(ellipse 900px 600px at 80% 100%, oklch(0.4865 0.2423 291.8661 / 0.05) 0%, transparent 50%), radial-gradient(ellipse 600px 400px at 50% 50%, oklch(0.7001 0.1882 313.2907 / 0.03) 0%, transparent 50%)',
-      },
-      backgroundSize: {
-        '300': '300%',
-        '400': '400%',
-      },
-      backgroundPosition: {
-        'gradient-shine': '200% center',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -126,19 +103,6 @@ const config = {
         'fluid-7xl': 'clamp(4.5rem, 3.75rem + 3.75vw, 7.5rem)',
         'fluid-8xl': 'clamp(6rem, 5rem + 5vw, 10rem)',
         'fluid-9xl': 'clamp(7.5rem, 6.25rem + 6.25vw, 12.5rem)',
-        // 12K-ready ultra-fluid typography — scales proportionally to extreme viewports
-        'fluid-10xl': 'clamp(8rem, 5rem + 20vw, 16rem)',
-        'fluid-11xl': 'clamp(9rem, 6rem + 24vw, 20rem)',
-        'fluid-12xl': 'clamp(10rem, 7rem + 28vw, 24rem)',
-        'fluid-ultra-xs': 'clamp(0.625rem, 0.55rem + 0.35vw, 0.875rem)',
-        'fluid-ultra-sm': 'clamp(0.75rem, 0.65rem + 0.5vw, 1rem)',
-        'fluid-ultra-base': 'clamp(0.875rem, 0.75rem + 0.625vw, 1.125rem)',
-        'fluid-ultra-lg': 'clamp(1rem, 0.85rem + 0.75vw, 1.375rem)',
-        'fluid-ultra-xl': 'clamp(1.125rem, 0.95rem + 0.875vw, 1.625rem)',
-        'fluid-ultra-2xl': 'clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem)',
-        'fluid-ultra-3xl': 'clamp(1.875rem, 1.5rem + 1.875vw, 3.5rem)',
-        'fluid-ultra-4xl': 'clamp(2.25rem, 1.8rem + 2.25vw, 4.5rem)',
-        'fluid-ultra-5xl': 'clamp(3rem, 2.2rem + 4vw, 7rem)',
         '2xs': '0.625rem',
         xs: '0.75rem',
         sm: '0.8125rem',
@@ -198,26 +162,6 @@ const config = {
         'container-2xl': '1440px',
         'container-3xl': '1920px',
         'container-4xl': '2560px',
-        // Container refinements - intermediate sizes
-        'container-xs-plus': '360px',
-        'container-sm-plus': '540px',
-        'container-md-plus': '840px',
-        'container-lg-plus': '1120px',
-        'container-xl-plus': '1320px',
-        'container-2xl-plus': '1600px',
-        // Ultra-high resolution containers (12K-ready)
-        'container-5xl': '3840px',
-        'container-6xl': '5120px',
-        'container-7xl': '7680px',
-        'container-8xl': '10240px',
-        'container-12k': '12288px',
-        'container-12k-content': '9600px',
-      },
-      gridTemplateColumns: {
-        '13': 'repeat(13, minmax(0, 1fr))',
-        '14': 'repeat(14, minmax(0, 1fr))',
-        '15': 'repeat(15, minmax(0, 1fr))',
-        '16': 'repeat(16, minmax(0, 1fr))',
       },
       zIndex: {
         '60': '60',
@@ -228,99 +172,11 @@ const config = {
         '9999': '9999',
         ...Object.fromEntries(Object.entries(Z_INDEX).map(([key, value]) => [key, String(value)])),
       },
-      // Refined Shadow Utilities
+      // Shadow Utilities
       boxShadow: {
-        obsidian: '0 4px 20px -8px rgba(0,0,0,0.85), 0 0 0 0.5px rgba(180,210,255,0.07)',
-        'obsidian-hover': '0 8px 32px -10px rgba(0,0,0,0.90), 0 0 0 0.5px rgba(180,210,255,0.11)',
-        'obsidian-elevated':
-          '0 16px 52px -16px rgba(0,0,0,0.92), 0 0 0 0.5px rgba(180,210,255,0.10)',
-        'glow-cobalt': '0 0 24px oklch(0.60 0.22 297 / 0.32), 0 0 8px oklch(0.60 0.22 297 / 0.20)',
-        'glow-emerald': '0 0 20px oklch(0.82 0.185 155 / 0.28)',
-        'glow-crimson': '0 0 20px oklch(0.64 0.255 22 / 0.28)',
-        navbar: '0 0 0 0.5px rgba(180,210,255,0.08), 0 8px 40px -8px rgba(0,0,0,0.75)',
-        'card-luxury': '0 0 0 0.5px rgba(180,210,255,0.06), 0 4px 20px -8px rgba(0,0,0,0.85)',
-        // MiniMax Shadow Tokens
-        'minimax-brand-glow': 'rgba(44, 30, 116, 0.16) 0px 0px 15px',
-        'minimax-elevated': 'rgba(36, 36, 36, 0.08) 0px 12px 16px -4px',
-        'minimax-ambient': 'rgba(0, 0, 0, 0.08) 0px 0px 22.576px',
-        // Layered shadows - small
-        'sm-layered':
-          '0 1px 2px 0 rgb(0 0 0 / 0.05), 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.1)',
-        // Layered shadows - medium
-        'md-layered':
-          '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 6px 8px -4px rgb(0 0 0 / 0.1)',
-        // Layered shadows - large
-        'lg-layered':
-          '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1), 0 20px 25px -5px rgb(0 0 0 / 0.1)',
-        // Layered shadows - xl
-        'xl-layered':
-          '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1), 0 25px 50px -12px rgb(0 0 0 / 0.25)',
-        // Inner shadows
-        'inner-sm': 'inset 0 1px 2px 0 rgb(0 0 0 / 0.05)',
-        'inner-md': 'inset 0 2px 4px 0 rgb(0 0 0 / 0.1)',
-        'inner-lg': 'inset 0 4px 8px 0 rgb(0 0 0 / 0.12)',
-        'inner-xl': 'inset 0 8px 16px 0 rgb(0 0 0 / 0.15)',
-        // Colored shadows - accent glows
         'glow-primary': '0 0 20px rgb(var(--primary) / 0.3), 0 0 40px rgb(var(--primary) / 0.2)',
-        'glow-primary-md': '0 0 30px rgb(var(--primary) / 0.4), 0 0 60px rgb(var(--primary) / 0.3)',
-        'glow-primary-lg': '0 0 40px rgb(var(--primary) / 0.5), 0 0 80px rgb(var(--primary) / 0.4)',
-        'glow-accent': '0 0 20px rgb(var(--accent) / 0.3), 0 0 40px rgb(var(--accent) / 0.2)',
-        'glow-accent-md': '0 0 30px rgb(var(--accent) / 0.4), 0 0 60px rgb(var(--accent) / 0.3)',
-        'glow-accent-lg': '0 0 40px rgb(var(--accent) / 0.5), 0 0 80px rgb(var(--accent) / 0.4)',
-        // Semantic colored shadows
-        'glow-success':
-          '0 0 20px rgb(var(--semantic-success) / 0.3), 0 0 40px rgb(var(--semantic-success) / 0.2)',
-        'glow-warning':
-          '0 0 20px rgb(var(--semantic-warning) / 0.3), 0 0 40px rgb(var(--semantic-warning) / 0.2)',
-        'glow-error':
-          '0 0 20px rgb(var(--semantic-error) / 0.3), 0 0 40px rgb(var(--semantic-error) / 0.2)',
-        'glow-info':
-          '0 0 20px rgb(var(--semantic-info) / 0.3), 0 0 40px rgb(var(--semantic-info) / 0.2)',
-        // Premium soft shadows
-        'soft-sm': '0 2px 8px rgb(0 0 0 / 0.04), 0 1px 3px rgb(0 0 0 / 0.06)',
-        'soft-md': '0 4px 12px rgb(0 0 0 / 0.06), 0 2px 4px rgb(0 0 0 / 0.08)',
-        'soft-lg': '0 8px 24px rgb(0 0 0 / 0.08), 0 4px 8px rgb(0 0 0 / 0.10)',
-        'soft-xl': '0 16px 48px rgb(0 0 0 / 0.10), 0 8px 16px rgb(0 0 0 / 0.12)',
-        // Dramatic shadows
-        'dramatic-sm':
-          '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06), 0 0 0 1px rgb(0 0 0 / 0.05)',
-        'dramatic-md':
-          '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05), 0 0 0 1px rgb(0 0 0 / 0.05)',
-        'dramatic-lg':
-          '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -4px rgb(0 0 0 / 0.04), 0 0 0 1px rgb(0 0 0 / 0.05)',
-        'dramatic-xl':
-          '0 25px 50px -12px rgb(0 0 0 / 0.25), 0 12px 24px -4px rgb(0 0 0 / 0.08), 0 0 0 1px rgb(0 0 0 / 0.05)',
-        // ── 12K ULTRA-RESOLUTION SHADOWS (multi-layer cinematic) ──
-        'ultra-sm':
-          '0 1px 2px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.14), 0 12px 28px rgba(0,0,0,0.10), 0 0 0 0.5px rgba(180,210,255,0.05)',
-        'ultra-md':
-          '0 2px 4px rgba(0,0,0,0.16), 0 8px 20px rgba(0,0,0,0.20), 0 24px 48px rgba(0,0,0,0.18), 0 64px 96px rgba(0,0,0,0.12), 0 0 0 0.5px rgba(180,210,255,0.06)',
-        'ultra-lg':
-          '0 4px 8px rgba(0,0,0,0.14), 0 12px 28px rgba(0,0,0,0.22), 0 32px 64px rgba(0,0,0,0.24), 0 80px 140px rgba(0,0,0,0.18), 0 0 0 0.5px rgba(180,210,255,0.07)',
-        'ultra-xl':
-          '0 8px 16px rgba(0,0,0,0.12), 0 20px 40px rgba(0,0,0,0.20), 0 48px 96px rgba(0,0,0,0.28), 0 96px 192px rgba(0,0,0,0.22), 0 0 0 1px rgba(180,210,255,0.08)',
-        'ultra-2xl':
-          '0 12px 24px rgba(0,0,0,0.10), 0 32px 64px rgba(0,0,0,0.22), 0 64px 128px rgba(0,0,0,0.30), 0 128px 256px rgba(0,0,0,0.24), 0 0 0 1px rgba(180,210,255,0.09)',
-        // ── PREMIUM IRIDESCENT GLOW SHADOWS ──
-        // ── PREMIUM DEPTH LAYERS (for 12K card surfaces) ──
-        'surface-0': '0 0 0 0.5px rgba(180,210,255,0.04)',
-        'surface-1': '0 1px 3px rgba(0,0,0,0.35), 0 0 0 0.5px rgba(180,210,255,0.05)',
-        'surface-2': '0 4px 12px rgba(0,0,0,0.40), 0 1px 3px rgba(0,0,0,0.25), 0 0 0 0.5px rgba(180,210,255,0.06)',
-        'surface-3': '0 8px 24px rgba(0,0,0,0.45), 0 4px 12px rgba(0,0,0,0.30), 0 1px 3px rgba(0,0,0,0.20), 0 0 0 0.5px rgba(180,210,255,0.07)',
-        'surface-4': '0 16px 48px rgba(0,0,0,0.50), 0 8px 24px rgba(0,0,0,0.35), 0 4px 12px rgba(0,0,0,0.25), 0 0 0 1px rgba(180,210,255,0.08)',
       },
-      // Glass & Blur Utilities
-      backdropBlur: {
-        xs: '2px',
-        '3xl': '64px',
-        '4xl': '80px',
-      },
-      // MiniMax Glassmorphism Utilities (Light Mode)
-      backgroundColor: {
-        'glass-minimax': 'hsla(0, 0%, 100%, 0.4)',
-        'glass-minimax-light': 'hsla(0, 0%, 100%, 0.6)',
-        'glass-minimax-border': 'rgba(255, 255, 255, 0.2)',
-      },
+      // Glass & Blur Utilities (handled via CSS custom properties)
       // Premium Border Utilities
       borderColor: {
         glass: 'rgba(255, 255, 255, 0.1)',
@@ -328,47 +184,8 @@ const config = {
         'glow-primary': 'rgb(var(--primary) / 0.5)',
         'glow-accent': 'rgb(var(--accent) / 0.5)',
       },
-      // Enhanced transition utilities
-      transitionTimingFunction: {
-        'spring-smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
-        'spring-bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        'spring-out': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-        'spring-in': 'cubic-bezier(0.36, 0, 0.66, -0.56)',
-        'spring-in-out': 'cubic-bezier(0.68, -0.6, 0.32, 1.6)',
-        'ease-out-back': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-        'ease-in-back': 'cubic-bezier(0.36, 0, 0.66, -0.56)',
-        'ease-out-back-custom': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-        'ease-elastic': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        'ease-overstep': 'cubic-bezier(0.7, 0, 0.3, 1)',
-        // macOS native animation curves
-        macos: 'cubic-bezier(0.25, 0.1, 0.25, 1.0)',
-        'macos-spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.1)',
-        'macos-sheet': 'cubic-bezier(0.32, 0.72, 0, 1)',
-      },
-      transitionDuration: {
-        '400': '400ms',
-        '600': '600ms',
-        '800': '800ms',
-        '1200': '1200ms',
-        '1600': '1600ms',
-        '2000': '2000ms',
-      },
-      // Staggered animation delays
-      animationDelay: {
-        '75': '75ms',
-        '100': '100ms',
-        '150': '150ms',
-        '200': '200ms',
-        '250': '250ms',
-        '300': '300ms',
-        '400': '400ms',
-        '500': '500ms',
-        '600': '600ms',
-        '700': '700ms',
-        '800': '800ms',
-        '900': '900ms',
-        '1000': '1000ms',
-      },
+      // Transition utilities (custom timing handled via inline styles)
+      // Animation delays (handled via inline styles)
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -539,13 +356,6 @@ const config = {
         'cyber-pink': 'hsl(210 100% 40%)',
         'matte-black': 'hsl(var(--legacy-black))',
         obsidian: 'hsl(var(--background))',
-        // macOS Native Brand Colors
-        minimax: {
-          brand: 'hsl(var(--primary))',
-          pink: 'hsl(340 75% 55%)',
-          sky: 'hsl(203 100% 42%)',
-          deep: 'hsl(210 100% 40%)',
-        },
         semantic: {
           success: 'hsl(var(--semantic-success))',
           'success-fg': 'hsl(var(--semantic-success-fg))',
@@ -637,99 +447,6 @@ const config = {
             transform: 'translateX(100%)',
           },
         },
-        // Enhanced Animation System - Spring-based
-        'spring-in': {
-          '0%': {
-            transform: 'scale(0.9)',
-            opacity: '0',
-          },
-          '50%': {
-            transform: 'scale(1.02)',
-          },
-          '100%': {
-            transform: 'scale(1)',
-            opacity: '1',
-          },
-        },
-        'spring-out': {
-          '0%': {
-            transform: 'scale(1)',
-            opacity: '1',
-          },
-          '100%': {
-            transform: 'scale(0.9)',
-            opacity: '0',
-          },
-        },
-        'bounce-in': {
-          '0%': {
-            transform: 'scale(0)',
-            opacity: '0',
-          },
-          '50%': {
-            transform: 'scale(1.1)',
-          },
-          '70%': {
-            transform: 'scale(0.95)',
-          },
-          '100%': {
-            transform: 'scale(1)',
-            opacity: '1',
-          },
-        },
-        'bounce-out': {
-          '0%': {
-            transform: 'scale(1)',
-            opacity: '1',
-          },
-          '30%': {
-            transform: 'scale(1.05)',
-          },
-          '100%': {
-            transform: 'scale(0)',
-            opacity: '0',
-          },
-        },
-        'slide-up-spring': {
-          '0%': {
-            transform: 'translateY(20px)',
-            opacity: '0',
-          },
-          '100%': {
-            transform: 'translateY(0)',
-            opacity: '1',
-          },
-        },
-        'slide-down-spring': {
-          '0%': {
-            transform: 'translateY(-20px)',
-            opacity: '0',
-          },
-          '100%': {
-            transform: 'translateY(0)',
-            opacity: '1',
-          },
-        },
-        'slide-left-spring': {
-          '0%': {
-            transform: 'translateX(20px)',
-            opacity: '0',
-          },
-          '100%': {
-            transform: 'translateX(0)',
-            opacity: '1',
-          },
-        },
-        'slide-right-spring': {
-          '0%': {
-            transform: 'translateX(-20px)',
-            opacity: '0',
-          },
-          '100%': {
-            transform: 'translateX(0)',
-            opacity: '1',
-          },
-        },
         shimmer: {
           '0%': {
             backgroundPosition: '-200% 0',
@@ -748,68 +465,6 @@ const config = {
             boxShadow: '0 0 40px rgb(var(--primary) / 0.6)',
           },
         },
-        float: {
-          '0%, 100%': {
-            transform: 'translateY(0px)',
-          },
-          '50%': {
-            transform: 'translateY(-10px)',
-          },
-        },
-        wiggle: {
-          '0%, 100%': {
-            transform: 'rotate(0deg)',
-          },
-          '25%': {
-            transform: 'rotate(3deg)',
-          },
-          '75%': {
-            transform: 'rotate(-3deg)',
-          },
-        },
-        morph: {
-          '0%, 100%': {
-            borderRadius: '40% 60% 60% 40% / 60% 30% 70% 40%',
-          },
-          '50%': {
-            borderRadius: '30% 60% 70% 40% / 50% 60% 30% 60%',
-          },
-        },
-        // ── PREMIUM 12K ANIMATIONS ──
-        'depth-breathe': {
-          '0%, 100%': {
-            transform: 'scale(1)',
-            boxShadow: '0 0 32px oklch(0.60 0.22 297 / 0.12)',
-          },
-          '50%': {
-            transform: 'scale(1.01)',
-            boxShadow: '0 0 48px oklch(0.60 0.22 297 / 0.20)',
-          },
-        },
-        'iridescent': {
-          '0%': { filter: 'hue-rotate(0deg)' },
-          '100%': { filter: 'hue-rotate(360deg)' },
-        },
-        'cinematic-reveal': {
-          '0%': {
-            opacity: '0',
-            transform: 'translateY(32px) scale(0.97)',
-            filter: 'blur(8px)',
-          },
-          '100%': {
-            opacity: '1',
-            transform: 'translateY(0) scale(1)',
-            filter: 'blur(0px)',
-          },
-        },
-        'premium-pulse': {
-          '0%, 100%': {
-            opacity: '1',
-          },
-          '50%': {
-            opacity: '0.85',
-          },
-        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -819,25 +474,8 @@ const config = {
         'glow-success': 'glow-success 2s ease-in-out infinite',
         'success-pulse': 'success-pulse 3s ease-in-out infinite',
         'success-sweep': 'success-sweep 1.5s ease-in-out forwards',
-        // Enhanced animations
-        'spring-in': 'spring-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        'spring-out': 'spring-out 0.4s cubic-bezier(0.36, 0, 0.66, -0.56)',
-        'bounce-in': 'bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        'bounce-out': 'bounce-out 0.4s cubic-bezier(0.36, 0, 0.66, -0.56)',
-        'slide-up-spring': 'slide-up-spring 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-        'slide-down-spring': 'slide-down-spring 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-        'slide-left-spring': 'slide-left-spring 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-        'slide-right-spring': 'slide-right-spring 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
         shimmer: 'shimmer 2s linear infinite',
         'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
-        float: 'float 3s ease-in-out infinite',
-        wiggle: 'wiggle 0.5s ease-in-out',
-        morph: 'morph 8s ease-in-out infinite',
-        // ── PREMIUM 12K ANIMATIONS ──
-        'depth-breathe': 'depth-breathe 4s ease-in-out infinite',
-        iridescent: 'iridescent 12s linear infinite',
-        'cinematic-reveal': 'cinematic-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-        'premium-pulse': 'premium-pulse 3s ease-in-out infinite',
       },
       typography: {
         DEFAULT: {
