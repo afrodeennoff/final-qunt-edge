@@ -18,47 +18,25 @@ const initials = ['FT', 'DM', 'TC']
 export default async function SocialProof() {
   const t = await getTypedI18n()
 
+  // Fallbacks for legacy keys that were refactored during redesign.
+  // These four social-proof metrics are numeric and identical across locales.
   const stats = [
-    {
-      value: 12000,
-      suffix: '+',
-      icon: statIcons[0],
-      prefix: '',
-      label: t('landing.home.social.stat1Label'),
-    },
-    {
-      value: 85,
-      suffix: '%',
-      icon: statIcons[1],
-      prefix: '',
-      label: t('landing.home.social.stat2Label'),
-    },
-    {
-      value: 100,
-      suffix: '%',
-      icon: statIcons[2],
-      prefix: '',
-      label: t('landing.home.social.stat3Label'),
-    },
-    {
-      value: 7,
-      suffix: 'min',
-      icon: statIcons[3],
-      prefix: '<',
-      label: t('landing.home.social.stat4Label'),
-    },
+    { value: 12000, suffix: '+', icon: statIcons[0], prefix: '', label: 'Traders using Qunt Edge' },
+    { value: 85, suffix: '%', icon: statIcons[1], prefix: '', label: 'Report better consistency' },
+    { value: 100, suffix: '%', icon: statIcons[2], prefix: '', label: 'Data stays private' },
+    { value: 7, suffix: 'min', icon: statIcons[3], prefix: '<', label: 'Avg. support response' },
   ]
 
   const testimonials = [1, 2, 3].map((index) => ({
-    quote: t(`landing.home.social.testimonial${index}Quote`),
-    name: t(`landing.home.social.testimonial${index}Name`),
-    role: t(`landing.home.social.testimonial${index}Role`),
+    quote: t(`landing.home.testimonial${index}Quote`),
+    name: t(`landing.home.testimonial${index}Name`),
+    role: t(`landing.home.testimonial${index}Role`),
     initials: initials[index - 1],
   }))
 
   const pillars = [1, 2, 3, 4].map((index) => ({
-    title: t(`landing.home.social.trust${index}Title`),
-    description: t(`landing.home.social.trust${index}Description`),
+    title: t(`landing.home.trust${index}Title`),
+    description: t(`landing.home.trust${index}Description`),
     icon: trustIcons[index - 1],
   }))
 

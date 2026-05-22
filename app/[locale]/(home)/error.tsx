@@ -11,7 +11,9 @@ export default function HomeError({
   reset: () => void
 }) {
   useEffect(() => {
-    console.error('[home-error]', error.message, error.digest)
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[home-error]', error.message, error.digest)
+    }
   }, [error])
 
   return (

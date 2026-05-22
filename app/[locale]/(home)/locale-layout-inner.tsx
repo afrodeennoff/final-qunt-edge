@@ -1,8 +1,6 @@
-"use client"
-
-import { ErrorBoundary } from "@/components/error-boundary"
-import MarketingLayoutShell from "../(landing)/components/marketing-layout-shell"
-import { PublicRootProviders } from "@/components/providers/root-providers"
+import ErrorBoundary from '@/components/ui/error-boundary'
+import MarketingLayoutShell from '../(landing)/components/marketing-layout-shell'
+import { PublicRootProviders } from '@/components/providers/root-providers'
 
 export default function LocaleLayoutInner({
   children,

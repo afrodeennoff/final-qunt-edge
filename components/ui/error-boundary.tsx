@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { AlertCircle, RefreshCw } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 
 // ============================================
@@ -46,11 +45,10 @@ class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo)
-
-    // Log to external error tracking if needed
-    if (typeof window !== 'undefined' && (window as any).Sentry) {
-      ;(window as any).Sentry.captureException(error, {
+    // Log to external error tracking if available (Sentry is optional at runtime)
+    const sentry = (window as unknown as { Sentry?: { captureException: (e: Error, ctx: unknown) => void } }).Sentry
+    if (sentry) {
+      sentry.captureException(error, {
         contexts: {
           react: {
             componentStack: errorInfo.componentStack,
@@ -63,18 +61,10 @@ class ErrorBoundary extends React.Component<
       errorInfo,
     })
 
-    // Call custom error handler
+    // Call custom error handler (consumer is responsible for any logging)
     if (this.props.onError) {
       this.props.onError(error, errorInfo)
     }
-
-    // Log to console with more details
-    console.error(
-      'ErrorBoundary caught an error:',
-      error,
-      '\nComponent Stack:',
-      errorInfo.componentStack
-    )
   }
 
   handleReset = () => {
