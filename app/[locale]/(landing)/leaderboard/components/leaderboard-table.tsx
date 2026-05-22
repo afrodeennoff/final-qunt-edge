@@ -11,9 +11,9 @@ import {
 } from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
 
-const rowDividerClassName = 'border-border/30'
+const rowDividerClassName = 'border-[oklch(0.65_0.22_260/0.08)]'
 const tableSurfaceClassName =
-  'overflow-hidden rounded-xl border border-border/35 bg-card/80 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
+  'overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260/0.09)] bg-[oklch(0.65_0.22_260/0.03)] shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
 
 interface LeaderboardTableProps {
   entries: LeaderboardEntry[]
@@ -35,9 +35,9 @@ function profileHref(locale: string, userId: string): string {
 
 function rankClasses(rank: number): string {
   if (rank === 1) return 'border-primary/30 bg-primary/10 text-primary'
-  if (rank === 2) return 'border-border/45 bg-card/60 text-muted-foreground'
+  if (rank === 2) return 'border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] text-muted-foreground'
   if (rank === 3) return 'border-warning/28 bg-warning/8 text-warning'
-  return 'border-border/35 bg-background/70 text-muted-foreground'
+  return 'border-[oklch(0.65_0.22_260/0.09)] bg-[oklch(0.65_0.22_260/0.07)] text-muted-foreground'
 }
 
 export function LeaderboardTableSkeleton() {
@@ -162,7 +162,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
 
       {entries.length === 0 ? (
         <div className="px-6 py-12">
-          <div className="rounded-xl border border-dashed border-border/35 bg-background/70 p-8 text-center text-[13px] text-muted-foreground">
+          <div className="rounded-xl border border-dashed border-[oklch(0.65_0.22_260/0.09)] bg-[oklch(0.65_0.22_260/0.07)] p-8 text-center text-[13px] text-muted-foreground">
             No public traders are available yet. Once users opt in from Trader Profile, they will
             appear here.
           </div>

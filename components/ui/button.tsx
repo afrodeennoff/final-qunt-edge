@@ -87,7 +87,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <>
         {isShimmer && isLoading ? (
           <span className="absolute inset-0 overflow-hidden rounded-[inherit]">
-            <span className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+            <span className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-[oklch(0.65_0.22_260/0.15)] to-transparent" />
           </span>
         ) : null}
         {leftIcon && !isLoading ? <span className="shrink-0">{leftIcon}</span> : null}

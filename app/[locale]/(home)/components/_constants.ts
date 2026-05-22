@@ -30,8 +30,8 @@ export const TYPO_EYEBROW = 'text-[0.68rem] font-bold uppercase tracking-[0.2em]
 // ── Surface & Border Tokens ──────────────────────────────────────────────────
 export const SURFACE_CARD = 'bg-[hsl(var(--mk-surface)/0.6)]'
 export const SURFACE_SUBTLE = 'bg-[hsl(var(--mk-surface)/0.3)]'
-export const BORDER_CARD = 'border-border/0.04'
-export const BORDER_SECTION = 'border-y border-border/0.03 bg-card/20'
+export const BORDER_CARD = 'border-[oklch(0.65_0.22_260/0.04)]'
+export const BORDER_SECTION = 'border-y border-[oklch(0.65_0.22_260/0.03)] bg-card/20'
 export const TEXT_SECONDARY = 'text-muted-foreground'
 
 // ── Premium Shadow Tokens ────────────────────────────────────────────────────

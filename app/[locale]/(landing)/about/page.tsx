@@ -57,7 +57,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
   return (
     <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
-      <header className="mb-6 rounded-xl border border-border/30 bg-background/0.11 p-6">
+      <header className="mb-6 rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-6">
         <h1 className="text-3xl font-semibold tracking-tight text-foreground">About Qunt Edge</h1>
         <p className="mt-2 max-w-3xl text-sm text-muted-foreground sm:text-base">
           Built for serious discretionary traders who want better decision quality, tighter risk control, and repeatable performance.
@@ -66,7 +66,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <Link href={`/${locale}/pricing`} className="rounded-full bg-primary px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground">
             View Pricing
           </Link>
-          <Link href={`/${locale}/support`} className="rounded-full border border-border/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-foreground hover:bg-accent/50">
+          <Link href={`/${locale}/support`} className="rounded-full border border-[oklch(0.65_0.22_260/0.08)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-foreground hover:bg-accent/50">
             Contact Support
           </Link>
         </div>
@@ -74,18 +74,18 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {storyCards.map((card) => (
-          <div key={card.title} className="rounded-xl border border-border/30 bg-background/0.11 p-6">
+          <div key={card.title} className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-6">
             <div className="mb-3 text-primary">{card.icon}</div>
             <h3 className="text-xl font-semibold text-foreground">{card.title}</h3>
             <p className="mt-2 text-sm text-muted-foreground">{card.description}</p>
           </div>
         ))}
 
-        <div className="rounded-xl border border-border/30 bg-background/0.11 p-6 md:col-span-2">
+        <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-6 md:col-span-2">
           <h3 className="text-xl font-semibold text-foreground">Founder&apos;s Expertise</h3>
           <div className="mt-4 flex flex-wrap gap-2">
             {founderSkills.map((skill) => (
-              <Badge key={skill.name} variant="secondary" className="flex items-center gap-1 border-border/30 bg-secondary/30 px-2 py-1 text-sm">
+              <Badge key={skill.name} variant="secondary" className="flex items-center gap-1 border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] px-2 py-1 text-sm">
                 {skill.icon}
                 {skill.name}
               </Badge>
@@ -93,7 +93,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           </div>
         </div>
 
-        <div className="rounded-xl border border-border/30 bg-background/0.11 p-6 md:col-span-2">
+        <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-6 md:col-span-2">
           <h3 className="text-xl font-semibold text-foreground">Why Qunt Edge?</h3>
           <ul className="mt-4 list-inside list-disc space-y-2 text-muted-foreground">
             <li>Built by a trader, for traders</li>

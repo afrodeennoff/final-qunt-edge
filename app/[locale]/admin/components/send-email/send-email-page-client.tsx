@@ -486,7 +486,7 @@ function PreviewCard({
  <span className="text-xs text-muted-foreground">
  {t("admin.sendEmail.preview.device.label")}
  </span>
- <div className="inline-flex rounded-md border bg-muted/50 p-1 text-sm">
+  <div className="inline-flex rounded-md border border-[oklch(0.65_0.22_260/0.1)] bg-[oklch(0.65_0.22_260/0.04)] p-1 text-sm">
  <Button 
  type="button"
  variant={previewDevice ==="desktop" ?"secondary" :"ghost"}

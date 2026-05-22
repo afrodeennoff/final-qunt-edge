@@ -32,7 +32,7 @@ function FAQAccordion({
     >
       <button
         onClick={onToggle}
-        className="flex w-full items-center justify-between gap-4 p-5 text-left hover:bg-background/20"
+        className="flex w-full items-center justify-between gap-4 p-5 text-left hover:bg-[oklch(0.65_0.22_260/0.02)]"
         aria-expanded={isOpen}
         data-state={isOpen ? 'open' : 'closed'}
       >

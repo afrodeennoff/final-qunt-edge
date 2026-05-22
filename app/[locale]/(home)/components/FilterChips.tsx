@@ -33,7 +33,7 @@ function ChipGroup({
           className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
             value === option
               ? 'bg-primary text-primary-foreground'
-              : 'border border-[oklch(0.65_0.22_260/0.08)] bg-card/70 text-muted-foreground hover:bg-[oklch(0.65_0.22_260/0.06)]'
+              : 'border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] text-muted-foreground hover:bg-[oklch(0.65_0.22_260/0.06)]'
           }`}
         >
           {option}

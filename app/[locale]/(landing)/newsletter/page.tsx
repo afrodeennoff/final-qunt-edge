@@ -32,7 +32,7 @@ export default async function NewsletterPage(props: {
       <div className="w-full px-4 py-6 sm:px-6 sm:py-8 md:py-12 lg:px-8">
         <div className="mx-auto max-w-2xl space-y-6 sm:space-y-8">
           {isUnsubscribed && (
-            <Card className="border-border/30 dark:border-border/40 bg-background/0.12 dark:bg-background/0.11">
+            <Card className="border-[oklch(0.65_0.22_260/0.08)] dark:border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)] dark:bg-[oklch(0.65_0.22_260/0.03)]">
               <CardHeader className="space-y-3 sm:space-y-4">
                 <div className="flex items-center gap-x-2.5">
                   <CheckCircle2 className="h-5 w-5 text-semantic-success shrink-0" />

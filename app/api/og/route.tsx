@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
   // Generate color from referral code if provided
   const accentColor = ref && ref !== 'Direct' 
     ? generateColorFromString(ref)
-    : '#7c3aed'; // Default purple
+    : '#3fa2ff'; // Default cobalt (oklch(0.65 0.22 260))
 
   // Set canvas size (OG image standard size)
   const width = 1200;
@@ -90,7 +90,7 @@ export async function GET(req: NextRequest) {
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
 
-  // Purple light in bottom-left corner
+  // Cobalt light in bottom-left corner (Obsidian V3)
   const bottomLeftGradient = ctx.createRadialGradient(
     0,
     height,
@@ -99,8 +99,8 @@ export async function GET(req: NextRequest) {
     height,
     Math.max(width, height) * 0.3
   );
-  bottomLeftGradient.addColorStop(0, '#8b5cf6');
-  bottomLeftGradient.addColorStop(0.5, '#7c3aed');
+  bottomLeftGradient.addColorStop(0, '#2a7fd4');
+  bottomLeftGradient.addColorStop(0.5, '#3fa2ff');
   bottomLeftGradient.addColorStop(1, 'rgba(15, 15, 15, 0)');
   ctx.fillStyle = bottomLeftGradient;
   ctx.fillRect(0, 0, width, height);

@@ -1,7 +1,7 @@
 // Minimalist layout components - simplified and cohesive design system
 
 export const minimalPanelClassName =
-  'rounded-lg border border-border/20 bg-card shadow-sm transition-all duration-[200ms] ease-out'
+  'rounded-lg border border-[oklch(0.65_0.22_260/0.05)] bg-card shadow-sm transition-[opacity,background-color,border-color] duration-[200ms] ease-out'
 
 export const minimalSectionHeaderClassName =
   'flex items-center justify-between mb-6'
@@ -13,22 +13,22 @@ export const minimalSectionDescriptionClassName =
   'text-sm text-muted-foreground mt-1'
 
 export const minimalCardClassName =
-  'rounded-lg border border-border/20 bg-card shadow-sm transition-all duration-[200ms] ease-out hover:shadow-md hover:-translate-y-0.5'
+  'rounded-lg border border-[oklch(0.65_0.22_260/0.05)] bg-card shadow-sm transition-[opacity,background-color,border-color] duration-[200ms] ease-out hover:shadow-md hover:-translate-y-0.5'
 
 export const minimalButtonClassName =
-  'inline-flex items-center justify-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition-all duration-[200ms] ease-out focus:outline-none focus:ring-2 focus:ring-ring/50 disabled:opacity-50'
+  'inline-flex items-center justify-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition-[opacity,background-color,border-color] duration-[200ms] ease-out focus:outline-none focus:ring-2 focus:ring-ring/50 disabled:opacity-50'
 
 export const minimalGhostButtonClassName =
-  'inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-all duration-[200ms] ease-out hover:bg-muted hover:text-foreground'
+  'inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-[opacity,background-color,border-color] duration-[200ms] ease-out hover:bg-muted hover:text-foreground'
 
 export const minimalPrimaryButtonClassName =
-  'inline-flex items-center justify-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium text-primary-foreground bg-primary transition-all duration-[200ms] ease-out focus:outline-none focus:ring-2 focus:ring-primary/50 hover:bg-primary/90'
+  'inline-flex items-center justify-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium text-primary-foreground bg-primary transition-[opacity,background-color,border-color] duration-[200ms] ease-out focus:outline-none focus:ring-2 focus:ring-primary/50 hover:bg-primary/90'
 
 export const minimalChipClassName =
-  'inline-flex items-center gap-1 rounded-full border border-border/20 bg-muted/50 px-2.5 py-0.5 text-xs font-medium text-muted-foreground transition-all duration-[200ms] ease-out hover:bg-muted'
+  'inline-flex items-center gap-1 rounded-full border border-[oklch(0.65_0.22_260/0.05)] bg-[oklch(0.65_0.22_260/0.02)] px-2.5 py-0.5 text-xs font-medium text-muted-foreground transition-[opacity,background-color,border-color] duration-[200ms] ease-out hover:bg-muted'
 
 export const minimalToolbarClassName =
-  'rounded-lg border border-border/20 bg-card/50 shadow-sm p-4'
+  'rounded-lg border border-[oklch(0.65_0.22_260/0.05)] bg-card/50 shadow-sm p-4'
 
 export const minimalInfoLabelClassName =
   'text-xs font-medium text-muted-foreground uppercase tracking-[0.05em]'

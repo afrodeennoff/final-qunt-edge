@@ -625,19 +625,11 @@ export function TeamManagement({
  }
  }
 
- const getStatusIndicator = (access: string, isOwner: boolean) => {
- if (isOwner) {
- return 'bg-semantic-warning-bg' // Gold for owner
- }
- switch (access) {
- case 'admin':
- return 'bg-semantic-info-bg' // Blue for admin
- case 'viewer':
- return 'bg-surface-subtle' // Green for viewer
- default:
- return 'bg-background/0.45'
- }
- }
+  const getStatusIndicator = (access: string, isOwner: boolean) => {
+    if (isOwner) return 'bg-[oklch(0.82_0.18_85)]'
+    if (access === 'admin') return 'bg-[oklch(0.65_0.22_260)]'
+    return 'bg-emerald-500/70'
+  }
 
  const getAccessLabel = (access: string, isOwner: boolean) => {
  if (isOwner) {
@@ -718,12 +710,16 @@ export function TeamManagement({
  const access = team.userAccess || (isOwner ? 'admin' : 'viewer')
  const isActive = pathname.includes(`/teams/dashboard/${team.id}`)
 
- return (
- <Card key={team.id} className={cn("cursor-pointer transition-[opacity,background-color,border-color,transform] duration-200 border-border/40 bg-background/72 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:border-primary/24",
- isActive 
- ?"border-primary ring-2 ring-primary/20" 
- :""
- )}>
+  return (
+  <Card
+    key={team.id}
+    variant="glass"
+    hover
+    className={cn(
+      "cursor-pointer",
+      isActive && "ring-2 ring-[oklch(0.65_0.22_260/0.35)] border-[oklch(0.65_0.22_260/0.25)]"
+    )}
+  >
  <CardHeader className="pb-3">
  <div className="flex items-start justify-between">
  <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -865,7 +861,10 @@ export function TeamManagement({
  {filteredTeams.length > 0 && (
  <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
  <DialogTrigger asChild>
- <Card className="cursor-pointer transition-[opacity,background-color,border-color,transform] duration-200 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] border-dashed border-2 border-border/40 hover:border-v2-accent/40 bg-card/30">
+  <Card
+    variant="outlined"
+    className="cursor-pointer border-dashed border-2 border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.015)] hover:border-[oklch(0.65_0.22_260/0.3)] hover:bg-[oklch(0.65_0.22_260/0.03)] transition-[background-color,border-color] duration-200 ease-[0.22,1,0.36,1]"
+  >
  <CardContent className="flex flex-col items-center justify-center h-48 p-6">
  <Plus className="h-12 w-12 text-muted-foreground mb-4" />
  <CardTitle className="text-lg text-center mb-2">
@@ -1010,7 +1009,7 @@ export function TeamManagement({
  ) : (
  <div className="space-y-1">
  {selectedTeam?.traders.map((trader: { id: string; email: string }) => (
- <div key={trader.id} className="flex items-center justify-between bg-muted/50 p-2 rounded-md text-sm">
+ <div key={trader.id} className="flex items-center justify-between bg-[oklch(0.65_0.22_260/0.03)] p-2.5 rounded-xl text-sm border border-[oklch(0.65_0.22_260/0.06)] hover:bg-[oklch(0.65_0.22_260/0.06)] transition-colors duration-150 ease-[0.22,1,0.36,1]">
  <span>{getDisplayName(trader)}</span>
  <div className="flex items-center gap-2">
  <Badge variant="outline">{t('teams.management.member')}</Badge>
@@ -1077,7 +1076,7 @@ export function TeamManagement({
  ) : (
  <div className="space-y-1">
  {pendingInvitations.map((invitation) => (
- <div key={invitation.id} className="flex items-center justify-between bg-muted/50 p-2 rounded-md text-sm">
+ <div key={invitation.id} className="flex items-center justify-between bg-[oklch(0.65_0.22_260/0.03)] p-2.5 rounded-xl text-sm border border-[oklch(0.65_0.22_260/0.06)] hover:bg-[oklch(0.65_0.22_260/0.06)] transition-colors duration-150 ease-[0.22,1,0.36,1]">
  <span>{getDisplayName(invitation)}</span>
  <div className="flex items-center gap-2">
  <Badge variant="outline">{t('teams.management.pending')}</Badge>
@@ -1128,7 +1127,7 @@ export function TeamManagement({
  ) : (
  <div className="space-y-1">
  {selectedTeam?.managers.map((manager) => (
- <div key={manager.id} className="flex items-center justify-between bg-muted/50 p-2 rounded-md text-sm">
+ <div key={manager.id} className="flex items-center justify-between bg-[oklch(0.65_0.22_260/0.03)] p-2.5 rounded-xl text-sm border border-[oklch(0.65_0.22_260/0.06)] hover:bg-[oklch(0.65_0.22_260/0.06)] transition-colors duration-150 ease-[0.22,1,0.36,1]">
  <span>{getDisplayName(manager)}</span>
  <div className="flex items-center gap-2">
  <Badge variant="outline">

@@ -85,7 +85,7 @@ function PricingMetaChip({
   return (
     <div
       className={cn(
-        'rounded-xl border border-border/40 bg-card/55 px-4 py-3 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
+        'rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.02)] px-4 py-3 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
         className,
       )}
     >

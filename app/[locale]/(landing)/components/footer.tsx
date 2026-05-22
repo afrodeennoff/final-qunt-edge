@@ -55,7 +55,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-border/50 bg-black py-12 sm:py-16"
+      className="border-t border-[oklch(0.65_0.22_260/0.08)] bg-black py-12 sm:py-16"
     >
       <h2 id="footer-heading" className="sr-only">
         {t('footer.heading')}
@@ -76,7 +76,7 @@ export default function Footer() {
         >
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border/30 bg-background/40 text-muted-foreground">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] text-muted-foreground">
                 <Logo className="h-5 w-5 fill-current" />
               </div>
               <div className="leading-none">
@@ -141,7 +141,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-border/50 pt-5">
+        <div className="mt-8 border-t border-[oklch(0.65_0.22_260/0.08)] pt-5">
           <p className="text-xs tracking-[-0.005em] text-muted-foreground">
             {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>

@@ -17,7 +17,7 @@ export default function Navigation({ locale }: NavigationProps) {
 
  return (
  <nav className="fixed left-0 right-0 top-0 z-50 px-4 py-3 sm:px-6">
- <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between rounded-[2rem] border border-border/30 bg-black/72 px-4 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_24px_70px_-40px_rgba(0,0,0,0.92)] backdrop-saturate-200 sm:px-5">
+ <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between rounded-[2rem] border border-[oklch(0.65_0.22_260/0.08)] bg-black/72 px-4 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_24px_70px_-40px_rgba(0,0,0,0.92)] backdrop-saturate-200 sm:px-5">
  <Link href={`/${locale}`} className="flex items-center gap-2.5 group">
  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-sm transition-shadow duration-300 group-hover:shadow-sm">
  <span className="text-primary-foreground font-bold text-sm">Q</span>

@@ -93,7 +93,7 @@ export default function Footer() {
  </ul>
  </div>
  </div>
- <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-border/40">
+ <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-[oklch(0.65_0.22_260/0.10)]">
  <p className="text-[0.8rem] text-muted-foreground/60">
  © 2026 Qunt Edge. All rights reserved.
  </p>

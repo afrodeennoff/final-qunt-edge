@@ -36,7 +36,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
     const baseClasses = cn(
       'relative overflow-hidden text-foreground',
-      'transition-all duration-[200ms] ease-out',
+      'transition-[opacity,background-color,border-color] duration-[200ms] ease-out',
       hover && 'hover:shadow-lg hover:-translate-y-px',
       isInteractive && 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
       isLoading && 'pointer-events-none opacity-80'
@@ -71,7 +71,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       >
         {isLoading && (
           <div className="absolute inset-0 z-10 overflow-hidden rounded-[inherit]">
-            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-[oklch(0.65_0.22_260/0.10)] to-transparent" />
           </div>
         )}
         {children}

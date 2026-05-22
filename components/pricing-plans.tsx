@@ -398,7 +398,7 @@ function PlusPlanCard({
                   className={cn(
                     'rounded-xl px-3 py-2 text-xs capitalize transition-[opacity,background-color,border-color,transform]',
                     billingPeriod === option.key
-                      ? 'bg-white text-black font-semibold shadow-[0_8px_20px_-12px_rgba(255,255,255,0.45)]'
+                       ? 'bg-primary text-primary-foreground font-semibold shadow-[0_8px_20px_-12px_oklch(0.65_0.22_260/0.45)]'
                       : 'text-muted-foreground/75 hover:bg-background/0.09 hover:text-foreground',
                   )}
                   onClick={() => setBillingPeriod(option.key)}

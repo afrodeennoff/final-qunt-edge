@@ -32,7 +32,7 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
  <div className="space-y-12 pl-12">
  {completedMilestones.map((milestone) => (
  <div key={milestone.id} className="relative">
- <div className="absolute -left-[44px] flex h-7 w-7 items-center justify-center rounded-full border border-border/30 bg-background/0.14 dark:border-border/32 dark:bg-background/0.14">
+ <div className="absolute -left-[44px] flex h-7 w-7 items-center justify-center rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.05)] dark:border-[oklch(0.65_0.22_260/0.08)] dark:bg-[oklch(0.65_0.22_260/0.05)]">
  <div className="h-3 w-3 rounded-full bg-muted/40 dark:bg-muted/30" />
  </div>
  
@@ -49,7 +49,7 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
  
  {/* Display YouTube video for French locale if available */}
  {locale === 'fr' && milestone.youtubeVideoId && (
- <div className="mt-4 rounded-lg overflow-hidden bg-background/0.11 dark:bg-background/0.12">
+ <div className="mt-4 rounded-lg overflow-hidden bg-[oklch(0.65_0.22_260/0.03)] dark:bg-[oklch(0.65_0.22_260/0.035)]">
  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
  <iframe
  className="absolute top-0 left-0 w-full h-full"
@@ -63,7 +63,7 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
  )}
  
  {milestone.image && !milestone.youtubeVideoId && (
- <div className="mt-4 rounded-lg overflow-hidden bg-background/0.11 dark:bg-background/0.12">
+ <div className="mt-4 rounded-lg overflow-hidden bg-[oklch(0.65_0.22_260/0.03)] dark:bg-[oklch(0.65_0.22_260/0.035)]">
  <Image
  src={milestone.image}
  alt={milestone.title}

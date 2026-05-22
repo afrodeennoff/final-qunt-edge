@@ -137,7 +137,7 @@ export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
                     "h-8 w-8 p-0 text-xs font-medium rounded-md transition-[background-color,border-color,color,opacity] duration-200",
                     currentPage === page
                       ? "bg-primary/15 text-foreground border border-primary/30"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      : "text-muted-foreground hover:text-foreground hover:bg-[oklch(0.65_0.22_260/0.02)]"
                   )}
                 >
                   {page}

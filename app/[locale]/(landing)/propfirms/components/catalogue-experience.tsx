@@ -53,7 +53,7 @@ const RegisteredAccountsChart = dynamic(
   {
     ssr: false,
     loading: () => (
-      <section className={cn(unifiedSectionPanelClassName, 'min-h-[420px] animate-pulse bg-card/45')} />
+      <section className={cn(unifiedSectionPanelClassName, 'min-h-[420px] animate-pulse bg-[oklch(0.65_0.22_260/0.015)]')} />
     ),
   },
 )
@@ -251,7 +251,7 @@ export function PropFirmCatalogueExperience({
                     href={`/${locale}/firm/${firm.slug}`}
                     className={cn(
                       unifiedInsetPanelClassName,
-                      'animate-scale-reveal px-4 py-4 transition-[transform,background-color,border-color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-primary/24 hover:bg-card/75',
+                      'animate-scale-reveal px-4 py-4 transition-[transform,background-color,border-color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.10)] hover:bg-[oklch(0.65_0.22_260/0.03)]',
                       index === 0 && 'animate-scale-reveal-d1',
                       index === 1 && 'animate-scale-reveal-d2',
                       index === 2 && 'animate-scale-reveal-d3',
@@ -293,7 +293,7 @@ export function PropFirmCatalogueExperience({
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search firm..."
-                className="h-10 w-full rounded-full border border-border/40 bg-card/55 pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/55 transition-[border-color,background-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:border-primary/35 focus:bg-card/70 focus:shadow-[0_0_0_1px_hsl(var(--primary)/0.12)]"
+                className="h-10 w-full rounded-full border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.02)] pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/55 transition-[border-color,background-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:border-[oklch(0.65_0.22_260/0.12)] focus:bg-[oklch(0.65_0.22_260/0.025)] focus:shadow-[0_0_0_1px_oklch(0.65 0.22 260 / 0.12)]"
               />
             </div>
             <span className="shrink-0 text-xs text-muted-foreground">
@@ -339,7 +339,7 @@ export function PropFirmCatalogueExperience({
                   href={`/${locale}/firm/${firm.slug}`}
                   className={cn(
                     unifiedInsetPanelClassName,
-                    'group animate-scale-reveal p-4 transition-[transform,background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-primary/24 hover:bg-card/78 hover:shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
+                    'group animate-scale-reveal p-4 transition-[transform,background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.10)] hover:bg-[oklch(0.65_0.22_260/0.05)] hover:shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
                     index % 3 === 0 && 'animate-scale-reveal-d1',
                     index % 3 === 1 && 'animate-scale-reveal-d2',
                     index % 3 === 2 && 'animate-scale-reveal-d3',
@@ -404,7 +404,7 @@ export function PropFirmCatalogueExperience({
               ))}
             </div>
           ) : (
-            <div className="mt-6 rounded-2xl border border-dashed border-border/35 bg-background/65 p-8 text-center text-sm text-muted-foreground">
+            <div className="mt-6 rounded-2xl border border-dashed border-[oklch(0.65_0.22_260/0.09)] bg-[oklch(0.65_0.22_260/0.065)] p-8 text-center text-sm text-muted-foreground">
               No firms match the current search and filter stack.
             </div>
           )}

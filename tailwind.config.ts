@@ -65,7 +65,7 @@ const config = {
           'radial-gradient(at 20% 30%, hsl(var(--primary) / 0.3) 0px, transparent 50%), radial-gradient(at 80% 70%, hsl(var(--accent) / 0.3) 0px, transparent 50%)',
         'gradient-glow': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
         'gradient-shine':
-          'linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)',
+          'linear-gradient(120deg, transparent 30%, oklch(0.65 0.22 260 / 0.25) 50%, transparent 70%)',
       },
       borderRadius: {
         lg: 'var(--radius)',

@@ -366,11 +366,11 @@ interface OrbConfig {
 }
 
 const DEFAULT_ORBS: OrbConfig[] = [
- { size: 300, x:"10%", y:"20%", duration: 20, delay: 0, opacity: 0.15, color:"from-purple-500/30 to-violet-500/30" },
- { size: 400, x:"70%", y:"10%", duration: 25, delay: 5, opacity: 0.12, color:"from-violet-500/20 to-purple-500/20" },
- { size: 250, x:"30%", y:"60%", duration: 18, delay: 2, opacity: 0.18, color:"from-indigo-500/25 to-violet-500/25" },
- { size: 350, x:"80%", y:"50%", duration: 22, delay: 8, opacity: 0.1, color:"from-purple-400/20 to-violet-600/20" },
- { size: 200, x:"50%", y:"80%", duration: 16, delay: 3, opacity: 0.14, color:"from-fuchsia-500/25 to-purple-500/25" },
+  { size: 300, x:"10%", y:"20%", duration: 20, delay: 0, opacity: 0.15, color:"from-[oklch(0.65_0.22_260/0.30)] to-[oklch(0.55_0.18_260/0.30)]" },
+  { size: 400, x:"70%", y:"10%", duration: 25, delay: 5, opacity: 0.12, color:"from-[oklch(0.60_0.18_260/0.20)] to-[oklch(0.65_0.22_260/0.20)]" },
+  { size: 250, x:"30%", y:"60%", duration: 18, delay: 2, opacity: 0.18, color:"from-[oklch(0.58_0.20_260/0.25)] to-[oklch(0.55_0.18_260/0.25)]" },
+  { size: 350, x:"80%", y:"50%", duration: 22, delay: 8, opacity: 0.1, color:"from-[oklch(0.65_0.22_260/0.20)] to-[oklch(0.50_0.16_260/0.20)]" },
+  { size: 200, x:"50%", y:"80%", duration: 16, delay: 3, opacity: 0.14, color:"from-[oklch(0.62_0.20_260/0.25)] to-[oklch(0.65_0.22_260/0.25)]" },
 ]
 
 interface FloatingOrbsProps {

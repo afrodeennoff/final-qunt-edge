@@ -91,7 +91,7 @@ function StatsCardSkeleton({ size ="md", className }: StatsCardSkeletonProps) {
  )}
  >
  {/* Top accent line */}
- <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[oklch(0.65_0.22_260/0.06)] to-transparent" />
  <div className="flex flex-col gap-3">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2 flex-1 min-w-0">

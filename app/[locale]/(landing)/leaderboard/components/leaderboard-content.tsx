@@ -122,7 +122,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
                   onClick={() => updateSort(item.key)}
                   className={cn(
                     currentSort === item.key
-                      ? 'inline-flex items-center justify-center rounded-full border border-primary/24 bg-primary/12 px-4 py-2 text-[13px] font-semibold text-foreground shadow-[0_16px_28px_-20px_hsl(var(--primary)/0.75)]'
+                      ? 'inline-flex items-center justify-center rounded-full border border-[oklch(0.65_0.22_260/0.10)] bg-primary/12 px-4 py-2 text-[13px] font-semibold text-foreground shadow-[0_16px_28px_-20px_oklch(0.65 0.22 260 / 0.18)]'
                       : unifiedGhostActionClassName,
                     'px-4 py-2 text-[13px]',
                   )}

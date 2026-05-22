@@ -98,7 +98,7 @@ export default async function FAQPage({ params }: { params: Promise<{ locale: st
                 <p className="mb-5 text-muted-foreground">We&apos;re here to help you elevate your trading execution.</p>
                 <a
                     href={`/${locale}/support`}
-                    className="inline-flex items-center justify-center rounded-full border border-border/30 bg-primary/[0.03] px-8 py-3 text-xs font-bold uppercase tracking-widest text-foreground transition-colors hover:bg-background/0.11 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border/24 focus-visible:ring-offset-0"
+                    className="inline-flex items-center justify-center rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] px-8 py-3 text-xs font-bold uppercase tracking-widest text-foreground transition-colors hover:bg-[oklch(0.65_0.22_260/0.03)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[oklch(0.65_0.22_260/0.2)] focus-visible:ring-offset-0"
                 >
                     Contact Support
                 </a>

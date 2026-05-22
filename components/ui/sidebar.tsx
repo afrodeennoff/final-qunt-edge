@@ -118,7 +118,7 @@ function SidebarProvider({
             } as React.CSSProperties
           }
           className={cn(
-            'group/sidebar-wrapper flex min-h-svh w-full qe-v2-app-shell has-data-[variant=inset]:bg-sidebar',
+            'group/sidebar-wrapper flex min-h-svh w-full qe-v2-app-shell has-data-[variant=inset]:bg-[oklch(0.03_0.004_260)]',
             className,
           )}
           {...props}
@@ -150,7 +150,7 @@ function Sidebar({
       <div
         data-slot="sidebar"
         className={cn(
-          'flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground',
+          'flex h-full w-(--sidebar-width) flex-col bg-[oklch(0.045_0.006_260/0.98)] text-foreground',
           className,
         )}
         {...props}
@@ -195,7 +195,7 @@ function Sidebar({
       <div
         data-slot="sidebar-gap"
         className={cn(
-          'relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear',
+           'relative w-(--sidebar-width) bg-transparent transition-[width] duration-150 ease-[0.22,1,0.36,1]',
           'group-data-[collapsible=offcanvas]:w-0',
           'group-data-[side=right]:rotate-180',
           variant === 'floating' || variant === 'inset'
@@ -207,7 +207,7 @@ function Sidebar({
         data-slot="sidebar-container"
         data-side={side}
         className={cn(
-          'fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex',
+           'fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-150 ease-[0.22,1,0.36,1] md:flex',
           'data-[side=left]:left-0 data-[side=right]:right-0',
           'data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]',
           'data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
@@ -222,7 +222,7 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
           className={cn(
-            'flex h-full w-full flex-col border border-sidebar-border/35 bg-sidebar/95 shadow-[inset_0_1px_0_hsl(var(--sidebar-foreground)/0.02),0_8px_24px_-12px_rgba(0,0,0,0.5)]',
+            'flex h-full w-full flex-col border border-[oklch(0.14_0.015_260/0.5)] bg-[oklch(0.045_0.006_260/0.98)] shadow-[inset_0_1px_0_oklch(1_0_0/0.03),0_8px_24px_-12px_oklch(0_0_0/0.6)]',
             'group-data-[variant=floating]:rounded-2xl',
             'group-data-[variant=inset]:rounded-2xl',
           )}
@@ -243,7 +243,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       variant="ghost"
       size="icon"
       className={cn(
-        'size-9 rounded-xl border border-sidebar-border/30 bg-sidebar-accent/30 text-foreground/70 shadow-none hover:border-sidebar-border/45 hover:bg-sidebar-accent/50 hover:text-foreground',
+        'size-9 rounded-xl border border-[oklch(0.14_0.015_260/0.5)] bg-[oklch(0.065_0.008_260/0.6)] text-muted-foreground shadow-none hover:border-[oklch(0.65_0.22_260/0.3)] hover:bg-[oklch(0.65_0.22_260/0.08)] hover:text-foreground',
         className,
       )}
       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
@@ -269,7 +269,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<'button'>) {
       onClick={toggleSidebar}
       title="Toggle Sidebar"
       className={cn(
-        'absolute inset-y-0 z-20 hidden w-4 ltr:-translate-x-1/2 rtl:-translate-x-1/2 transition-all duration-200 group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[1px] after:bg-[rgba(255,255,255,0.1)] hover:after:w-[4px] hover:after:bg-[rgba(255,255,255,0.2)] sm:flex',
+        'absolute inset-y-0 z-20 hidden w-4 ltr:-translate-x-1/2 rtl:-translate-x-1/2 transition-[width,background-color,border-color,transform] duration-150 ease-[0.22,1,0.36,1] group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[1px] after:bg-[oklch(0.65_0.22_260/0.15)] hover:after:w-[4px] hover:after:bg-[oklch(0.65_0.22_260/0.3)] sm:flex',
         'in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize',
         '[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize',
         'group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full hover:group-data-[collapsible=offcanvas]:bg-sidebar',
@@ -379,7 +379,7 @@ function SidebarGroupLabel({
       data-slot="sidebar-group-label"
       data-sidebar="group-label"
       className={cn(
-        'flex h-7 shrink-0 items-center rounded-lg px-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-sidebar-foreground/48 outline-hidden transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
+        'flex h-7 shrink-0 items-center rounded-lg px-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70 outline-hidden transition-[margin,opacity] duration-150 ease-[0.22,1,0.36,1] focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.22_260/0.5)] [&>svg]:size-4 [&>svg]:shrink-0',
         'group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0',
         className,
       )}
@@ -399,7 +399,7 @@ function SidebarGroupAction({
       data-slot="sidebar-group-action"
       data-sidebar="group-action"
       className={cn(
-        'absolute top-3.5 right-3 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-hidden transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
+        'absolute top-3.5 right-3 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-muted-foreground outline-hidden transition-transform duration-150 ease-[0.22,1,0.36,1] hover:bg-[oklch(0.65_0.22_260/0.1)] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.22_260/0.5)] [&>svg]:size-4 [&>svg]:shrink-0',
         'after:absolute after:-inset-2 md:after:hidden',
         'group-data-[collapsible=icon]:hidden',
         className,
@@ -443,13 +443,13 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  'peer/menu-button type-body-sm flex w-full items-center gap-2 overflow-hidden rounded-xl border border-transparent p-2.5 text-left ring-sidebar-ring outline-hidden transition-[width,height,padding,background-color,border-color,box-shadow,color] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5! hover:border-sidebar-primary/18 hover:bg-sidebar-accent/55 hover:text-sidebar-foreground focus-visible:ring-2 active:bg-sidebar-accent/70 active:text-sidebar-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-sidebar-primary/28 data-[active=true]:bg-sidebar-primary/12 data-[active=true]:font-medium data-[active=true]:text-sidebar-foreground data-[state=open]:hover:bg-sidebar-accent/70 data-[state=open]:hover:text-sidebar-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-none',
+  'peer/menu-button type-body-sm flex w-full items-center gap-2 overflow-hidden rounded-xl border border-transparent p-2.5 text-left ring-[oklch(0.65_0.22_260)] outline-hidden transition-[width,height,padding,background-color,border-color,box-shadow,color] duration-150 ease-[0.22,1,0.36,1] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5! hover:border-[oklch(0.65_0.22_260/0.18)] hover:bg-[oklch(0.065_0.008_260/0.55)] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.22_260/0.5)] active:bg-[oklch(0.065_0.008_260/0.7)] active:text-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-[oklch(0.65_0.22_260/0.28)] data-[active=true]:bg-[oklch(0.65_0.22_260/0.12)] data-[active=true]:font-medium data-[active=true]:text-foreground data-[state=open]:hover:bg-[oklch(0.065_0.008_260/0.7)] data-[state=open]:hover:text-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-none',
   {
     variants: {
       variant: {
-        default: 'hover:bg-sidebar-accent/65 hover:text-sidebar-foreground',
+        default: 'hover:bg-[oklch(0.065_0.008_260/0.65)] hover:text-foreground',
         outline:
-          'border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.058_0.011_260_/_0.72)] shadow-none hover:border-[oklch(0.65_0.22_260_/_0.1)] hover:bg-[oklch(0.65_0.22_260_/_0.1)] hover:text-sidebar-foreground',
+          'border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.058_0.011_260/0.72)] shadow-none hover:border-[oklch(0.65_0.22_260/0.1)] hover:bg-[oklch(0.65_0.22_260/0.1)] hover:text-foreground',
       },
       size: {
         default: 'h-8 text-sm',

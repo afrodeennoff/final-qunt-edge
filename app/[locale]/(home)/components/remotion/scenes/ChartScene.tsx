@@ -166,7 +166,7 @@ export const ChartScene: React.FC = () => {
             />
           ))}
 
-          {/* Gradient fill under curve — PRIMARY purple */}
+          {/* Gradient fill under curve — PRIMARY cobalt */}
           <defs>
             <linearGradient id="equityAreaGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={PRIMARY} stopOpacity={0.35} />
@@ -181,7 +181,7 @@ export const ChartScene: React.FC = () => {
             opacity={areaOpacity}
           />
 
-          {/* Equity line — PRIMARY purple */}
+          {/* Equity line — PRIMARY cobalt */}
           <path
             d={equityPath}
             fill="none"

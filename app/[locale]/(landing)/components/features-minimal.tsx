@@ -41,7 +41,7 @@ export function MinimalFeatures({ features, className }: MinimalFeaturesProps) {
               <CardTitle className="text-lg font-semibold tracking-tight">
                 {feature.title}
               </CardTitle>
-              <div className="p-2 bg-muted/50 rounded-lg">
+              <div className="p-2 bg-[oklch(0.65_0.22_260/0.02)] rounded-lg">
                 {feature.icon}
               </div>
             </CardHeader>
@@ -55,7 +55,7 @@ export function MinimalFeatures({ features, className }: MinimalFeaturesProps) {
                 </p>
               </div>
 
-              <div className="relative flex items-center justify-center overflow-hidden rounded-lg border border-border/20 bg-muted/30 min-h-[200px]">
+              <div className="relative flex items-center justify-center overflow-hidden rounded-lg border border-[oklch(0.65_0.22_260/0.05)] bg-muted/30 min-h-[200px]">
                 <div className="p-4">
                   {typeof feature.image === "string" ? (
                     <img

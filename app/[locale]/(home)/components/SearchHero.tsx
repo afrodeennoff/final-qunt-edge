@@ -16,7 +16,7 @@ export default function SearchHero({ searchQuery, onSearchChange, totalCount, fi
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
           Prop Firms Explorer
         </p>
-        <span className="rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-muted/50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+        <span className="rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
           {filteredCount}/{totalCount}
         </span>
       </div>

@@ -220,7 +220,7 @@ export default async function Page({ params }: PageProps) {
         />
 
         {meta.image && (
-          <div className="mb-8 rounded-lg overflow-hidden bg-background/0.11 dark:bg-background/0.12">
+          <div className="mb-8 rounded-lg overflow-hidden bg-[oklch(0.65_0.22_260/0.03)] dark:bg-[oklch(0.65_0.22_260/0.035)]">
             <Image
               src={meta.image}
               alt={meta.title}
@@ -236,13 +236,13 @@ export default async function Page({ params }: PageProps) {
         <div
           className="prose dark:prose-invert max-w-none 
           prose-pre:p-0 prose-pre:bg-transparent 
-          prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-background/0.11 prose-code:text-muted-foreground
-          dark:prose-code:bg-background/0.14 dark:prose-code:text-muted-foreground/80
+          prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-[oklch(0.65_0.22_260/0.03)] prose-code:text-muted-foreground
+          dark:prose-code:bg-[oklch(0.65_0.22_260/0.05)] dark:prose-code:text-muted-foreground/80
           prose-table:w-full prose-table:mt-6 prose-table:mb-8
-          prose-thead:border-b prose-thead:border-border/30 dark:prose-thead:border-border/36
+          prose-thead:border-b prose-thead:border-[oklch(0.65_0.22_260/0.08)] dark:prose-thead:border-[oklch(0.65_0.22_260/0.08)]
           prose-th:px-6 prose-th:py-3 prose-th:text-left prose-th:font-semibold
-          prose-td:px-6 prose-td:py-3 prose-td:border-b prose-td:border-border/30 dark:prose-td:border-border/36
-          prose-tr:transition-colors prose-tr:hover:bg-background/0.12 dark:prose-tr:hover:bg-background/0.14"
+          prose-td:px-6 prose-td:py-3 prose-td:border-b prose-td:border-[oklch(0.65_0.22_260/0.08)] dark:prose-td:border-[oklch(0.65_0.22_260/0.08)]
+          prose-tr:transition-colors prose-tr:hover:bg-[oklch(0.65_0.22_260/0.035)] dark:prose-tr:hover:bg-[oklch(0.65_0.22_260/0.05)]"
           itemProp="articleBody"
         >
           {content}

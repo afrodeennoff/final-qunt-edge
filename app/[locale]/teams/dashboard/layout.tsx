@@ -84,7 +84,7 @@ export default async function DashboardLayout({
         <TeamsSidebar />
 
                 <SidebarInset className="qe-v2-app-shell relative h-dvh overflow-hidden selection:bg-primary/20 selection:text-foreground">
-                    <div className="pointer-events-none absolute inset-x-6 top-0 z-0 h-32 rounded-b-2xl border border-border/20 bg-primary/[0.02]" />
+                    <div className="pointer-events-none absolute inset-x-6 top-0 z-0 h-32 rounded-b-2xl border border-[oklch(0.65_0.22_260/0.06)] bg-[oklch(0.65_0.22_260/0.015)]" />
 
                     <div className="relative z-0 flex h-full flex-col">
                         <header
@@ -94,10 +94,10 @@ export default async function DashboardLayout({
                                 <div className={cn(unifiedSectionPanelClassName, 'relative flex min-h-[4.5rem] flex-col gap-4 overflow-hidden rounded-2xl px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between')}>
                                     <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/20 to-transparent" />
                                     <div className="flex min-w-0 items-center gap-3">
-                                        <SidebarTrigger className="-ml-0.5 h-10 w-10 rounded-xl border border-border/30 bg-background/40 text-muted-foreground hover:border-border/50 hover:bg-background/60 hover:text-foreground md:h-9 md:w-9" />
+                                        <SidebarTrigger className="-ml-0.5 h-10 w-10 rounded-xl border border-[oklch(0.14_0.015_260/0.4)] bg-[oklch(0.065_0.008_260/0.7)] text-muted-foreground/70 hover:border-[oklch(0.65_0.22_260/0.25)] hover:bg-[oklch(0.65_0.22_260/0.06)] hover:text-foreground md:h-9 md:w-9" />
                                         <div className="flex min-w-0 flex-1 flex-col">
                                             <div className="flex items-center gap-2.5">
-                                                <span className="hidden rounded-full border border-border/30 bg-background/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground sm:inline-flex">
+                                                <span className="hidden rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.04)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[oklch(0.65_0.22_260)] sm:inline-flex">
                                                     Team
                                                 </span>
                                                 <h1 className="truncate text-sm font-bold uppercase tracking-[0.18em] text-foreground">

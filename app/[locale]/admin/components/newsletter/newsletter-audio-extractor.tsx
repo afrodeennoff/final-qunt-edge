@@ -78,7 +78,7 @@ export function AudioExtractor({ onAudioExtracted }: AudioExtractorProps) {
 
 
  return (
- <div className="p-4 bg-background/0.3 dark:bg-background/0.14">
+ <div className="p-4 bg-[oklch(0.65_0.22_260/0.03)] dark:bg-background/0.14">
  {error && <div className="mb-4 p-3 bg-semantic-error-bg dark:bg-semantic-error-bg/20 border border-semantic-error-border dark:border-semantic-error-border rounded-md text-semantic-error dark:text-semantic-error">{error}</div>}
  
  <div className="relative">
