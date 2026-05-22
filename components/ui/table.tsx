@@ -6,7 +6,7 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
   ({ className, ...props }, ref) => (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-auto overscroll-x-contain rounded-[var(--radius-xl)] border border-border/7 bg-[linear-gradient(180deg,hsl(var(--card)_/_0.84)_0%,hsl(var(--card)_/_0.78)_100%)] shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.02),0_18px_34px_-28px_rgba(0,0,0,0.58)]"
+      className="relative w-full overflow-auto overscroll-x-contain rounded-lg border border-border bg-card"
     >
       <table
         ref={ref}
@@ -27,7 +27,7 @@ const TableHeader = React.forwardRef<
     ref={ref}
     data-slot="table-header"
     className={cn(
-      'sticky top-0 border-b border-border/6 bg-[hsl(var(--card)_/_0.76)] [&_tr]:border-b [&_tr]:border-border/6',
+      'sticky top-0 border-b border-border bg-muted [&_tr]:border-b [&_tr]:border-border',
       className,
     )}
     {...props}
@@ -56,7 +56,7 @@ const TableFooter = React.forwardRef<
     ref={ref}
     data-slot="table-footer"
     className={cn(
-      'border-t border-border/8 bg-[hsl(var(--card)_/_0.74)] font-medium last:[&>tr]:border-b-0',
+      'border-t border-border bg-muted font-medium last:[&>tr]:border-b-0',
       className,
     )}
     {...props}
@@ -70,7 +70,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
       ref={ref}
       data-slot="table-row"
       className={cn(
-        'border-b border-border/5 transition-colors hover:bg-[hsl(var(--card)_/_0.62)] data-[state=selected]:bg-[hsl(var(--foreground)_/_0.05)]',
+        'border-b border-border transition-[background-color] duration-60 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted data-[state=selected]:bg-muted',
         className,
       )}
       {...props}

@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
   // Generate color from referral code if provided
   const accentColor = ref && ref !== 'Direct' 
     ? generateColorFromString(ref)
-    : '#3fa2ff'; // Default cobalt (oklch(0.65 0.22 260))
+    : '#F0B90B'; // Default primary yellow (Binance style)
 
   // Set canvas size (OG image standard size)
   const width = 1200;

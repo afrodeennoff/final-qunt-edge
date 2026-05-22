@@ -44,7 +44,7 @@ const TabsTrigger = React.forwardRef<
     ref={ref}
     data-slot="tabs-trigger"
     className={cn(
-      'type-label inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 ring-offset-background transition-[background-color,color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-primary/8 data-[state=active]:text-foreground data-[state=active]:font-medium hover:bg-muted/40 hover:text-foreground',
+      'type-label inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 ring-offset-background transition-[background-color,color] duration-100 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-primary/8 data-[state=active]:text-foreground data-[state=active]:font-medium hover:bg-muted/40 hover:text-foreground',
       className,
     )}
     {...props}

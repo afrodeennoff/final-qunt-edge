@@ -71,18 +71,20 @@ export default async function DashboardLayout({
 
   // Server dashboard bootstrap — loads all data for first paint when flag is enabled.
   // Falls back to client-side loadData() when flag is disabled or bootstrap fails.
-  let initialBootstrap: DashboardBootstrapPayload | null = null
-  if (shouldUseServerBootstrap(user.id)) {
-    try {
-      // Dynamic import to avoid issues when bootstrap module is not yet stable
-      const { getDashboardBootstrap } = await import('@/server/dashboard-bootstrap')
-      initialBootstrap = await getDashboardBootstrap()
-    } catch (err) {
-      console.warn('[Dashboard] Bootstrap failed, falling back to client loadData:', err)
-    }
-  }
+  // Parallelize with theme fetch for faster SSR.
+  const bootstrapPromise: Promise<DashboardBootstrapPayload | null> = shouldUseServerBootstrap(user.id)
+    ? import('@/server/dashboard-bootstrap')
+        .then(({ getDashboardBootstrap }) => getDashboardBootstrap())
+        .catch((err) => {
+          console.warn('[Dashboard] Bootstrap failed, falling back to client loadData:', err)
+          return null
+        })
+    : Promise.resolve(null)
 
-  const userTheme = normalizeDashboardTheme(await getUserDashboardTheme())
+  const [userTheme, initialBootstrap] = await Promise.all([
+    getUserDashboardTheme().then(normalizeDashboardTheme),
+    bootstrapPromise,
+  ])
   const themeScript = serializeThemeVars(userTheme)
   const cookieStore = await cookies()
   const defaultSidebarOpen = parseSidebarStateCookieValue(

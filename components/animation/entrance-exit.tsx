@@ -3,19 +3,19 @@
 import { useRef, useEffect, useState } from "react"
 import { motion, useReducedMotion, useInView, AnimatePresence } from "motion/react"
 import { cn } from "@/lib/utils"
-import { SPRING_GENTLE, SPRING_BOUNCY } from "./enhanced-motion"
+import { SPRING_SUBTLE, SPRING_SNAPPY } from "./enhanced-motion"
 
-export type VariantType ="fade" |"slide" |"scale" |"bounce"
-export type SlideDirection ="up" |"down" |"left" |"right"
+export type VariantType = 'fade' | 'slide' | 'scale' | 'bounce'
+export type SlideDirection = 'up' | 'down' | 'left' | 'right'
 
 export const SPRING_PRESETS = {
- gentle: SPRING_GENTLE,
- snappy: SPRING_BOUNCY,
- bouncy: { type:"spring" as const, stiffness: 350, damping: 10 },
- smooth: { type:"spring" as const, stiffness: 250, damping: 25 },
+  gentle: SPRING_SUBTLE,
+  snappy: SPRING_SNAPPY,
+  subtle: SPRING_SUBTLE,
+  // bouncy removed — trading UIs stay calm
 } as const
 
-const MOTION_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
+const MOTION_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
 interface AnimateInProps {
  children: React.ReactNode
@@ -30,14 +30,14 @@ interface AnimateInProps {
 }
 
 const getSlideVariants = (direction: SlideDirection) => {
- const distance = 40
- const variants: Record<SlideDirection, { x: number; y: number }> = {
- up: { x: 0, y: distance },
- down: { x: 0, y: -distance },
- left: { x: distance, y: 0 },
- right: { x: -distance, y: 0 },
- }
- return variants[direction]
+  const distance = 6 // minimal for trading terminal calm
+  const variants: Record<SlideDirection, { x: number; y: number }> = {
+    up: { x: 0, y: distance },
+    down: { x: 0, y: -distance },
+    left: { x: distance, y: 0 },
+    right: { x: -distance, y: 0 },
+  }
+  return variants[direction]
 }
 
 export function AnimateIn({
@@ -57,30 +57,30 @@ export function AnimateIn({
 
  const shouldAnimate = triggerOnScroll ? isInView : true
 
- const variants = {
- fade: {
- hidden: { opacity: 0 },
- visible: { opacity: 1 },
- },
- slide: {
- hidden: { opacity: 0, ...getSlideVariants(direction) },
- visible: { opacity: 1, x: 0, y: 0 },
- },
- scale: {
- hidden: { opacity: 0, scale: 0.9 },
- visible: { opacity: 1, scale: 1 },
- },
- bounce: {
- hidden: { opacity: 0, scale: 0.3 },
- visible: { opacity: 1, scale: 1 },
- },
- }
+  const variants = {
+    fade: {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1 },
+    },
+    slide: {
+      hidden: { opacity: 0, ...getSlideVariants(direction) },
+      visible: { opacity: 1, x: 0, y: 0 },
+    },
+    scale: {
+      hidden: { opacity: 0, scale: 0.985 },
+      visible: { opacity: 1, scale: 1 },
+    },
+    bounce: {
+      hidden: { opacity: 0, scale: 0.985 },
+      visible: { opacity: 1, scale: 1 },
+    },
+  }
 
  const transition = prefersReducedMotion
  ? {}
  : variant ==="bounce"
- ? SPRING_PRESETS.bouncy
- : { duration, delay, ease: MOTION_EASE }
+  ? SPRING_PRESETS.snappy
+  : { duration, delay, ease: MOTION_EASE }
 
  const staggerConfig = staggerChildren
  ? {
@@ -128,30 +128,30 @@ export function AnimateInItem({
 }: AnimateInItemProps) {
  const prefersReducedMotion = useReducedMotion()
 
- const variants = {
- fade: {
- hidden: { opacity: 0 },
- visible: { opacity: 1 },
- },
- slide: {
- hidden: { opacity: 0, ...getSlideVariants(direction) },
- visible: { opacity: 1, x: 0, y: 0 },
- },
- scale: {
- hidden: { opacity: 0, scale: 0.95 },
- visible: { opacity: 1, scale: 1 },
- },
- bounce: {
- hidden: { opacity: 0, scale: 0.3 },
- visible: { opacity: 1, scale: 1 },
- },
- }
+  const variants = {
+    fade: {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1 },
+    },
+    slide: {
+      hidden: { opacity: 0, ...getSlideVariants(direction) },
+      visible: { opacity: 1, x: 0, y: 0 },
+    },
+    scale: {
+      hidden: { opacity: 0, scale: 0.985 },
+      visible: { opacity: 1, scale: 1 },
+    },
+    bounce: {
+      hidden: { opacity: 0, scale: 0.985 },
+      visible: { opacity: 1, scale: 1 },
+    },
+  }
 
  const transition = prefersReducedMotion
  ? {}
  : variant ==="bounce"
- ? SPRING_PRESETS.bouncy
- : { duration, ease: MOTION_EASE }
+  ? SPRING_PRESETS.snappy
+  : { duration, ease: MOTION_EASE }
 
  if (prefersReducedMotion) {
  return <div className={className}>{children}</div>

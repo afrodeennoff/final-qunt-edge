@@ -72,7 +72,6 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
       if (!matchesDrawdown(firm, filters.drawdown)) return false
       return true
     })
-
     return next.sort((a, b) => {
       if (b.catalogueStats.accountsCount !== a.catalogueStats.accountsCount) {
         return b.catalogueStats.accountsCount - a.catalogueStats.accountsCount

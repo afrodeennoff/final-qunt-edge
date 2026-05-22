@@ -293,7 +293,7 @@ export function PropFirmCatalogueExperience({
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search firm..."
-                className="h-10 w-full rounded-full border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.02)] pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/55 transition-[border-color,background-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:border-[oklch(0.65_0.22_260/0.12)] focus:bg-[oklch(0.65_0.22_260/0.025)] focus:shadow-[0_0_0_1px_oklch(0.65 0.22 260 / 0.12)]"
+                className="h-10 w-full rounded-lg border border-border bg-card pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/55 transition-colors focus:border-ring focus:ring-1 focus:ring-ring"
               />
             </div>
             <span className="shrink-0 text-xs text-muted-foreground">

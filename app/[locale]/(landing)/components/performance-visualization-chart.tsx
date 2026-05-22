@@ -51,7 +51,7 @@ export function PerformanceVisualizationChart() {
  Performance Viz
  </p>
  </div>
- <div data-chart-surface="modern" className="h-full w-full rounded-xl border bg-[oklch(0.65_0.22_260/0.03)] px-4 py-3 shadow-[inset_0_1px_0_oklch(0.65 0.22 260 / 0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+  <div data-chart-surface="modern" className="h-full w-full rounded-xl border border-border bg-card px-4 py-3">
  <div className="mb-3 flex items-center justify-between text-sm text-foreground/80">
  <div className="flex items-center gap-3">
  <span className="flex items-center gap-1">

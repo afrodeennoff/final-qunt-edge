@@ -1,29 +1,27 @@
-# Qunt Edge Design System — Cobalt Void
+# Qunt Edge Design System — Binance Trading Terminal
 
-> **Aesthetic**: macOS-inspired dark theme with purple/cobalt accents and premium depth.
-> **Goal**: Deep, rich darkness with electric cobalt highlights — trading infrastructure as a refined instrument.
+> **Aesthetic**: Professional, data-dense dark trading interface inspired by Binance.
+> **Goal**: A clean, high-contrast, functional trading platform that feels fast, trustworthy, and focused on data.
 
 ---
 
 ## 1. Philosophy
 
-Qunt Edge is professional trading analytics. The UI feels like a Bloomberg terminal crossed with a premium SaaS product — dark, data-dense, with purple-tinted depth and deliberate refinement.
+Qunt Edge is a **professional trading analytics platform**. The UI should feel like a real trading terminal — fast, clear, and data-first.
 
-**Core DNA:**
-- Void-black backgrounds that anchor all content
-- Purple/cobalt-tinted frost borders — the signature element
-- Layered surface hierarchy with near-black purple tones
-- Premium ultra-deep shadows for elevation
-- Pill-shaped interactive elements for CTAs
-- Glassmorphism effects for overlays and modals
-- 8pt spacing grid for consistent rhythm
+**Core Principles:**
+- Data density over decoration
+- High readability for numbers and tables
+- Strong semantic colors (Green = Profit, Red = Loss)
+- Minimal visual noise
+- Consistent, tight spacing
+- Professional and trustworthy, not "flashy"
+- Excellent performance on both normal and high-resolution screens (up to 12K)
 
-**What we keep from the token system:**
-- CSS custom properties as single source of truth
-- `unified-page-recipes.ts` for shared panel classes
-- `UnifiedPageShell` / `UnifiedSurface` layout primitives
-- CVA-based variant architecture
-- Dark-only surface enforcement via feature flag
+**What we are NOT:**
+- We are not a luxury SaaS with heavy glassmorphism or marketing effects.
+- We are not overly colorful or playful.
+- We avoid large gradients, heavy shadows, glowing orbs, and excessive animation.
 
 ---
 
@@ -32,278 +30,135 @@ Qunt Edge is professional trading analytics. The UI feels like a Bloomberg termi
 ### Base Palette (Dark Theme Only)
 
 ```css
-/* Void — the defining canvas */
---background: #000000;                      /* Pure black base */
-
-/* Surfaces — purple-tinted darkness */
---card: #0e0c1c;                            /* Card surface */
---popover: #110f1f;                         /* Popover surface */
---sidebar: #0c0a18;                         /* Sidebar background */
---muted: #181428;                           /* Muted background */
---secondary: #1e1a2e;                       /* Secondary surface */
-
-/* Interactive surfaces */
---surface-hover: #1c1838;                   /* Hover state */
---surface-overlay: rgba(255,255,255,0.85);  /* Overlay */
+--background: #0A0A0A;           /* Main background */
+--card: #1A1A1A;                 /* Card / panel background */
+--popover: #1F1F1F;              /* Dropdowns, modals, popovers */
+--sidebar: #111111;              /* Sidebar background */
+--muted: #2A2A2A;                /* Muted backgrounds */
+--border: #2F2F2F;               /* Default borders */
+--border-subtle: #252525;        /* Very subtle dividers */
 ```
 
-### Primary & Accent
+### Semantic Colors (Trading Critical)
 
 ```css
-/* Primary — electric purple */
---primary: #8b5cf6;
---primary-foreground: #f8f6ff;
+/* Profit / Positive */
+--success: #0ECB81;
+--success-foreground: #FFFFFF;
 
-/* Ring / focus */
---ring: #7c3aed;
+/* Loss / Negative */
+--destructive: #F6465D;
+--destructive-foreground: #FFFFFF;
+
+/* Warning / Caution */
+--warning: #F0B90B;
+--warning-foreground: #000000;
+
+/* Primary Action (Binance Yellow / Accent) */
+--primary: #F0B90B;
+--primary-foreground: #000000;
+
+/* Text Hierarchy */
+--foreground: #EAEAEA;           /* Primary text */
+--muted-foreground: #888888;     /* Secondary / helper text */
+--subtle-foreground: #666666;    /* Very low priority text */
 ```
 
-### Semantic Colors
+### Accent (Branding)
 
-```css
-/* Success — profit green */
---success: #22c55e;
---success-foreground: #f0fdf4;
-
-/* Warning — amber */
---warning: #f59e0b;
---warning-foreground: #fffbeb;
-
-/* Error / Destructive — red */
---destructive: #dc2626;
---destructive-foreground: #fff1f2;
-
-/* Muted text */
---muted-foreground: #8b82a8;
-
-/* Secondary text */
---secondary-foreground: #c4b8e8;
-```
-
-### Frost Border System (THE SIGNATURE)
-
-Purple-tinted frost borders at low opacity — micro-contrast on dark surfaces.
-
-```css
-/* Frost levels */
---frost-border: rgba(139,92,246,0.04);           /* Subtle — list items */
---frost-border-strong: rgba(139,92,246,0.10);     /* Emphasis, focus */
-
-/* Border defaults */
---border: #1e1a30;                                /* Default structural */
---border-subtle: rgba(0,0,0,0.08);               /* Divider */
-
-/* Frost glow */
---frost-glow: 0 18px 60px -26px rgba(139,92,246,0.2);
-
-/* Ambient glow */
---v2-glow-ambient: 0 18px 60px -26px rgba(139,92,246,0.2);
-```
-
-### Interactive States
-
-```css
-/* Hover — white glass effect */
---hover-glass: rgba(255,255,255,0.08);
---hover-glass-strong: rgba(255,255,255,0.14);
-
-/* Focus ring */
---focus-ring: 0 0 0 2px var(--ring), 0 0 0 8px var(--background);
-```
+We use a **subtle cobalt** (`oklch(0.65 0.22 260)`) only for branding elements, focus states, and non-trading accents. Trading data (P&L, charts) must always use strong green/red.
 
 ---
 
 ## 3. Typography
 
-### Font Stack
-
-```css
-/* 7 Google fonts loaded as CSS variables */
---font-sans: 'Geist', 'DM_Sans', 'Outfit', 'Poppins', system-ui;  /* Body/UI */
---font-serif: 'Cormorant Garamond';                                 /* Display/hero */
---font-mono: 'IBM Plex Mono', 'Roboto Mono', monospace;             /* Code/data */
-```
-
-### Scale
-
-| Role | Size | Weight | Usage |
-|------|------|--------|-------|
-| Display | clamp(2.25rem, 5.4vw, 4.8rem) | 500 | Hero headlines |
-| H1 | 2.5rem / 40px | 600 | Page titles |
-| H2 | 1.75rem / 28px | 600 | Section headings |
-| H3 | 1.25rem / 20px | 600 | Subsection |
-| Body | 0.9375rem / 15px | 450 | Standard text |
-| Body Small | 0.875rem / 14px | 400 | Secondary text |
-| Caption | 0.72rem / 11.5px | 600 | Labels, eyebrows |
-| Code | 0.875rem / 14px | 400 | Inline code |
-
-### Tracking
-
-| Role | Value |
-|------|-------|
-| Display | `-0.04em` |
-| Eyebrow/Label | `0.16em - 0.18em` (uppercase) |
-| Body | `0` |
+- **Font family**: System UI stack (Inter / SF Pro / Segoe UI)
+- Numbers should use **tabular-nums** for alignment.
+- Strong hierarchy:
+  - Large titles: 24–32px, semibold
+  - Section headers: 18–20px, medium
+  - Body / data: 14px
+  - Small labels: 12px
+- High contrast text on dark backgrounds.
 
 ---
 
-## 4. Shadows & Depth
+## 4. Spacing & Layout (8pt Grid)
 
-Layered shadows for premium depth on dark surfaces.
+Follow the existing `SPACING_SYSTEM.md` with these preferences:
 
-```css
-/* Level 0 — Flat */
-shadow: none;
+- Component internal padding: `p-4` (16px) or `p-3` (12px) for dense areas
+- Card to card / section gaps: `gap-4` or `gap-6`
+- Very tight data lists: `gap-1` or `gap-2`
+- Generous breathing only where it improves clarity (not for decoration)
 
-/* Level 1 — Subtle */
---shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
-
-/* Level 2 — Standard */
---shadow: 0 4px 12px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
-
-/* Level 3 — Elevated */
---shadow-lg: 0 8px 24px rgba(0,0,0,0.09), 0 4px 8px rgba(0,0,0,0.04);
-
-/* Level 4 — Ultra premium */
---shadow-ultra-md: 0 2px 4px rgba(0,0,0,0.30), 0 8px 20px rgba(0,0,0,0.28);
-
-/* Level 5 — Deep */
---shadow-ultra-lg: 0 4px 8px rgba(0,0,0,0.25), 0 12px 28px rgba(0,0,0,0.30);
-
-/* Panel shadows (used in unified-page-recipes) */
-shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]   /* Hero panels */
-shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]    /* Section panels */
-
-/* Accent glow */
---frost-glow: 0 18px 60px -26px rgba(139,92,246,0.2);
-```
+On high-resolution screens (8K+), use the 2400px workspace cap + `2xl:` responsive scaling.
 
 ---
 
-## 5. Spacing System
+## 5. Components
 
-Base unit: **4px** (8pt grid)
+### Cards & Panels
+- Background: `--card`
+- Border: subtle (`--border` or `oklch(0.65 0.22 260 / 0.08)` for focus)
+- No heavy shadows or glass effects
+- Rounded: `rounded-lg` (8px) or `rounded-xl` for bigger containers
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--space-1` | 4px | Tight gaps |
-| `--space-2` | 8px | Icon-text gaps |
-| `--space-3` | 12px | Button padding-x |
-| `--space-4` | 16px | Standard padding |
-| `--space-5` | 20px | Comfortable padding |
-| `--space-6` | 24px | Card padding |
-| `--space-8` | 32px | Section gaps |
-| `--space-10` | 40px | Large gaps |
-| `--space-12` | 48px | Hero spacing |
-| `--space-16` | 64px | Section padding-y |
+### Buttons
+- Primary: Binance yellow (`#F0B90B`) with dark text
+- Secondary / Ghost: Subtle borders
+- Destructive: Red
+- All buttons should feel solid and responsive
 
----
+### Tables & Lists
+- Very clean rows with subtle hover (`bg-[#1F1F1F]`)
+- Strong alignment for numbers
+- Green/Red text for P&L columns
 
-## 6. Border Radius Scale
+### Charts
+- Clean lines
+- Green up, Red down
+- Minimal grid lines
+- High readability on large screens
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--radius-sm` | 6px | Inputs, small elements |
-| `--radius` | 10px | Default |
-| `--radius-md` | 10px | Cards |
-| `--radius-lg` | 14px | Large cards |
-| `--radius-xl` | 20px | Feature cards |
-| `--radius-2xl` | 28px | Section containers, hero panels |
-| `--radius-pill` | 9999px | CTAs, badges, chips |
-
----
-
-## 7. Unified Panel Recipes
-
-Shared classes from `components/layout/unified-page-recipes.ts`:
-
-```typescript
-// Hero panel — top-level page header
-unifiedHeroPanelClassName =
-  'relative rounded-2xl border border-border/35 bg-card shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]'
-
-// Section panel — standard content sections
-unifiedSectionPanelClassName =
-  'rounded-2xl border border-border/35 bg-card/80 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
-
-// Inset panel — nested cards within sections
-unifiedInsetPanelClassName =
-  'rounded-xl border border-border/30 bg-background/50'
-
-// Metric panel — stat displays
-unifiedMetricPanelClassName =
-  'rounded-xl border border-border/30 bg-background/40'
-
-// Chip — eyebrow labels
-unifiedChipClassName =
-  'rounded-full border border-primary/14 bg-primary/6'
-
-// Ghost action — secondary CTA
-unifiedGhostActionClassName =
-  'rounded-full border border-border/35 bg-background/40'
-
-// Primary action — main CTA
-unifiedPrimaryActionClassName =
-  'rounded-xl bg-primary text-primary-foreground'
-```
+### Forms & Inputs
+- Clean borders
+- Clear focus states using cobalt
+- Consistent height (usually 40px or 44px)
 
 ---
 
-## 8. Layout Primitives
+## 6. Do's and Don'ts
 
-### UnifiedPageShell
+**Do:**
+- Prioritize readability of numbers and data
+- Use strong green/red for P&L
+- Keep spacing consistent and tight
+- Design for data density
+- Use subtle borders and clean surfaces
 
-Wrapper for all page-level content. Provides max-width, padding, and decorative pseudo-elements.
-
-```tsx
-<UnifiedPageShell widthClassName="max-w-[1360px]" className="py-12">
-  {children}
-</UnifiedPageShell>
-```
-
-- `widthClassName`: Default `WORKSPACE_SHELL_WIDTH`, override for wider pages
-- `density`: `'default' | 'compact' | 'spacious'`
-- `variant`: `'default' | 'refined' | 'minimal'` (minimal skips decorative pseudo-elements)
-
-### UnifiedSurface
-
-Reusable section wrapper with variant support.
-
-```tsx
-<UnifiedSurface variant="glass" hover>
-  {children}
-</UnifiedSurface>
-```
-
-Variants: `'default' | 'glass' | 'gradient-border' | 'elevated' | 'subtle'`
+**Don't:**
+- Add unnecessary glows, gradients, or glassmorphism
+- Use decorative orbs or heavy visual effects
+- Make cards overly "premium" with big shadows
+- Use low-contrast text
+- Over-animate (keep interactions fast and subtle)
+- Stretch content too wide on large screens without proper containers
 
 ---
 
-## 9. Animations
+## 7. Current Direction (2026)
 
-```css
-/* Standard transitions */
-transition-[background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]
+Qunt Edge is moving toward a **clean, professional Binance-style trading terminal** aesthetic:
 
-/* Page enter */
-animate-page-enter
+- Minimal decoration
+- Maximum clarity
+- Strong semantic trading colors
+- Consistent 8pt spacing
+- Excellent experience from 1080p to 12K UHD
 
-/* Fade up */
-animate-fade-up-smooth
-
-/* Scale reveal (staggered) */
-animate-scale-reveal
-animate-scale-reveal-d1   /* +100ms delay */
-animate-scale-reveal-d2   /* +200ms delay */
-animate-scale-reveal-d3   /* +300ms delay */
-```
+This document replaces the previous "Cobalt Void" luxury direction.
 
 ---
 
-## 10. Feature Flags
-
-| Flag | Default | Purpose |
-|------|---------|---------|
-| `DARK_ONLY_SURFACE_ENFORCEMENT` | `true` | Forces dark theme on all surfaces |
-
-Managed in `lib/feature-flags.ts`.
+*Last updated: May 2026*

@@ -29,7 +29,7 @@ export function SharedWidgetCanvas() {
   const layoutMode = isMobile ? 'mobile' : 'desktop'
 
   // Enhanced widget rendering with shared theme
-  const renderWidget = (widget: any) => {
+  const renderWidget = (widget: Widget) => {
     if (!isRegisteredWidgetType(widget.type)) {
       return (
         <WidgetShell
@@ -41,7 +41,7 @@ export function SharedWidgetCanvas() {
     }
 
     const effectiveSize = getEffectiveWidgetSize(widget.type, widget.size, isMobile)
-    const WidgetComponent: any = getWidgetComponent(widget.type, effectiveSize)
+    const widgetElement = getWidgetComponent(widget.type, effectiveSize)
 
     return (
       <WidgetShell
@@ -53,7 +53,7 @@ export function SharedWidgetCanvas() {
         icon={widget.icon}
       >
         <div className="h-full w-full">
-          <WidgetComponent size={effectiveSize} />
+          {widgetElement}
         </div>
       </WidgetShell>
     )
@@ -129,7 +129,7 @@ export function SharedWidgetCanvas() {
             key={widget.i}
             className={cn(
               "widget-enter-smooth",
-              "bg-card/80 backdrop-blur-sm border border-border/30 rounded-lg shadow-sm hover:shadow-md transition-all duration-300",
+              "bg-card border border-border rounded-lg transition-colors hover:bg-muted",
               widget.type.includes('pnl') && "hover:border-success/30",
               widget.type.includes('chart') && "hover:border-primary/30"
             )}

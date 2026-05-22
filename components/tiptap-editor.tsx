@@ -610,7 +610,7 @@ export function TiptapEditor({
 
           {/* Mobile floating toolbar */}
           {isMobile && editor && (
-            <div className="fixed bottom-16 inset-x-0 z-40 flex items-center justify-center gap-1 rounded-t-2xl border-t border-border/50 bg-card/95 backdrop-blur-lg px-2 py-2 pb-safe">
+            <div className="fixed bottom-16 inset-x-0 z-40 flex items-center justify-center gap-1 rounded-t-2xl border-t border-border bg-card px-2 py-2 pb-safe">
               <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleBold().run()}
@@ -682,7 +682,7 @@ export function TiptapEditor({
 
             {/* Mobile floating toolbar */}
             {isMobile && editor && (
-              <div className="fixed bottom-16 inset-x-0 z-40 flex items-center justify-center gap-1 rounded-t-2xl border-t border-border/50 bg-card/95 backdrop-blur-lg px-2 py-2 pb-safe">
+              <div className="fixed bottom-16 inset-x-0 z-40 flex items-center justify-center gap-1 rounded-t-2xl border-t border-border bg-card px-2 py-2 pb-safe">
                 <button
                   type="button"
                   onClick={() => editor.chain().focus().toggleBold().run()}

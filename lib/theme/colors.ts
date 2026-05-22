@@ -100,25 +100,25 @@ export const frostBorders = {
 // ── Semantic Colors ──
 
 export const status = {
-  success: '#22c55e',
-  warning: '#f59e0b',
-  error:   '#dc2626',
-  info:    '#3b82f6',
+  success: '#0ECB81',
+  warning: '#F0B90B',
+  error:   '#F6465D',
+  info:    '#F0B90B',
 } as const
 
-// ── Trading-Specific Semantic ──
+// ── Trading-Specific Semantic (Binance-aligned) ──
 
 export const trading = {
-  positive: '#22c55e', // --profit
-  negative: '#dc2626', // --loss
-  neutral:  '#8b82a8', // --muted-foreground
-  info:     '#3b82f6', // --info
+  positive: '#0ECB81', // --profit
+  negative: '#F6465D', // --loss
+  neutral:  '#888888', // --muted-foreground
+  info:     '#F0B90B', // --info
 } as const
 
 export const tradingBg = {
-  positive: 'rgba(34,197,94,0.12)',
-  negative: 'rgba(220,38,38,0.12)',
-  info:     'rgba(59,130,246,0.12)',
+  positive: 'rgba(14,203,129,0.08)',
+  negative: 'rgba(246,70,93,0.08)',
+  info:     'rgba(240,185,11,0.08)',
 } as const
 
 // ── Marketing Page Tokens ──
@@ -136,11 +136,11 @@ export const marketing = {
     tertiary:  '#71717A',
   },
   accent: {
-    primary: '#8B5CF6',
-    hover:   '#7C3AED',
-    active:  '#6D28D9',
-    subtle:  'rgba(139,92,246,0.12)',
-    border:  'rgba(139,92,246,0.30)',
+    primary: '#F0B90B',
+    hover:   '#D4A00A',
+    active:  '#B38600',
+    subtle:  'rgba(240,185,11,0.08)',
+    border:  'rgba(240,185,11,0.25)',
   },
 } as const
 
@@ -167,14 +167,14 @@ export const p3Accents = {
 // ── Chart Palette ──
 
 export const chartPalette = {
-  1: '#8b5cf6', // Purple
-  2: '#22c55e', // Green
-  3: '#dc2626', // Red
-  4: '#f59e0b', // Amber
-  5: '#3b82f6', // Blue
+  1: '#F0B90B', // Primary yellow
+  2: '#0ECB81', // Profit green
+  3: '#F6465D', // Loss red
+  4: '#F0B90B', // Warning
+  5: '#3b82f6', // Blue (secondary)
   6: '#0e7490', // Teal
-  7: '#6c3483', // Deep purple
-  8: '#8b82a8', // Muted
+  7: '#888888', // Muted
+  8: '#666666', // Subtle
 } as const
 
 // ── Utility Functions ──

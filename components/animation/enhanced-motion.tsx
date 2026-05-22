@@ -4,24 +4,25 @@ import { useRef, useEffect, useState, useMemo } from "react"
 import { motion, useReducedMotion, useInView, useSpring, Variants } from "motion/react"
 import { cn } from "@/lib/utils"
 
-export const SPRING_GENTLE = { type:"spring" as const, stiffness: 280, damping: 26, mass: 0.9 }
-export const SPRING_BOUNCY = { type:"spring" as const, stiffness: 340, damping: 24, mass: 0.9 }
+// Binance Trading Terminal — minimal, fast, professional motion
+export const SPRING_SUBTLE = { type: 'spring' as const, stiffness: 320, damping: 32, mass: 0.8 }
+export const SPRING_SNAPPY = { type: 'spring' as const, stiffness: 400, damping: 38, mass: 0.7 }
 
 // ============================================================================
-// StyleSeed motion tokens
+// Binance motion tokens (fast, data-focused, calm)
 // ============================================================================
 
 export const MOTION_DURATION = {
- fast: 100, // --duration-fast: hover, color changes
- normal: 200, // --duration-normal: enter animations, expand
- slow: 300, // --duration-slow: page transitions, spring
+  instant: 60,
+  fast: 100,
+  normal: 160,
+  slow: 220,
 } as const
 
 export const MOTION_EASE = {
- default: [0.4, 0, 0.2, 1] as const,
- spring: [0.22, 1, 0.36, 1] as const,
- entrance: [0.16, 1, 0.3, 1] as const,
- bounce: [0.68, -0.55, 0.265, 1.55] as const,
+  snappy: [0.16, 1, 0.3, 1] as const,
+  subtle: [0.22, 1, 0.36, 1] as const,
+  default: [0.25, 0.46, 0.45, 0.94] as const,
 } as const
 
 export const STAGED_REVEAL_CLASS_NAMES = [
@@ -36,43 +37,35 @@ export function getStagedRevealClassName(stage = 0) {
 }
 
 // ============================================================================
-// BLUR_ENTRANCE variant
+// Minimal Binance entrance variants (tiny offset, fast, calm)
 // ============================================================================
 
-const BLUR_ENTRANCE: Variants = {
- hidden: { opacity: 0, y: 12 },
- show: {
- opacity: 1,
- y: 0,
- transition: { duration: 0.55, ease: MOTION_EASE.spring }
- }
+const BINANCE_ENTRANCE: Variants = {
+  hidden: { opacity: 0, y: 4 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.16, ease: MOTION_EASE.snappy }
+  }
 }
 
 export const blurIn: Variants = {
- hidden: {
- opacity: 0,
- scale: 0.98,
- },
- visible: {
- opacity: 1,
- scale: 1,
- transition: {
- duration: 0.36,
- ease: [...MOTION_EASE.entrance] as [number, number, number, number],
- },
- },
+  hidden: { opacity: 0, y: 3, scale: 0.995 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.14, ease: MOTION_EASE.snappy },
+  },
 }
 
 export const scaleIn: Variants = {
- hidden: {
- opacity: 0,
- scale: 0.8,
- },
- visible: {
- opacity: 1,
- scale: 1,
- transition: SPRING_GENTLE,
- },
+  hidden: { opacity: 0, scale: 0.985 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: SPRING_SUBTLE,
+  },
 }
 
 // ============================================================================
@@ -83,43 +76,41 @@ interface MotionSectionProps {
  children: React.ReactNode
  className?: string
  delay?: number
- spring?: typeof SPRING_GENTLE
+  spring?: typeof SPRING_SUBTLE
  threshold?: number
 }
 
 export function MotionSection({
- children,
- className,
- delay = 0,
- spring = SPRING_GENTLE,
- threshold = 0.05,
+  children,
+  className,
+  delay = 0,
+  spring = SPRING_SUBTLE,
+  threshold = 0.05,
 }: MotionSectionProps) {
- const ref = useRef<HTMLElement>(null)
- const prefersReducedMotion = useReducedMotion()
- const isInView = useInView(ref, { once: true, amount: threshold })
+  const ref = useRef<HTMLElement>(null)
+  const prefersReducedMotion = useReducedMotion()
+  const isInView = useInView(ref, { once: true, amount: threshold })
 
- if (prefersReducedMotion) {
- return <section className={className}>{children}</section>
- }
+  if (prefersReducedMotion) {
+    return <section className={className}>{children}</section>
+  }
 
- // CSS animation handles entrance — content is always visible even if FM never hydrates.
- // initial={false} prevents FM from setting inline opacity:0 which causes blank pages.
- return (
- <motion.section
- ref={ref}
- className={cn('animate-fade-up-smooth', className)}
- initial={false}
- animate={isInView ? { opacity: 1, y: 0 } : undefined}
- transition={{
- duration: 0.42,
- delay,
- ease: [0.22, 1, 0.36, 1],
- ...spring,
- }}
- >
- {children}
- </motion.section>
- )
+  return (
+    <motion.section
+      ref={ref}
+      className={cn('animate-binance-reveal', className)}
+      initial={false}
+      animate={isInView ? { opacity: 1, y: 0 } : undefined}
+      transition={{
+        duration: 0.16,
+        delay,
+        ease: MOTION_EASE.snappy,
+        ...spring,
+      }}
+    >
+      {children}
+    </motion.section>
+  )
 }
 
 // ============================================================================
@@ -149,27 +140,26 @@ export function MotionStagger({
  return <div className={className}>{children}</div>
  }
 
- // CSS entrance instead of FM initial — content always visible
- return (
- <motion.div
- ref={ref}
- className={cn('animate-fade-up-smooth', className)}
- initial={false}
- animate={isInView ? "visible" : undefined}
- variants={{
- hidden: { opacity: 0 },
- visible: {
- opacity: 1,
- transition: {
- staggerChildren: clampedDelay * staggerSpeed,
- delayChildren: 0.1,
- },
- },
- }}
- >
- {children}
- </motion.div>
- )
+  return (
+    <motion.div
+      ref={ref}
+      className={cn('animate-binance-reveal', className)}
+      initial={false}
+      animate={isInView ? "visible" : undefined}
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: {
+            staggerChildren: clampedDelay * staggerSpeed,
+            delayChildren: 0.04,
+          },
+        },
+      }}
+    >
+      {children}
+    </motion.div>
+  )
 }
 
 // ============================================================================
@@ -189,29 +179,28 @@ export function MotionStaggerItem({ children, className, blur = false }: MotionS
  return <div className={className}>{children}</div>
  }
 
- return (
- <motion.div
- className={className}
- variants={
- blur
- ? BLUR_ENTRANCE
- : {
- hidden: { opacity: 0, y: 8, scale: 0.995 },
- visible: {
- opacity: 1,
- y: 0,
- scale: 1,
- transition: {
- duration: 0.38,
- ease: [0.22, 1, 0.36, 1],
- },
- },
- }
- }
- >
- {children}
- </motion.div>
- )
+  return (
+    <motion.div
+      className={className}
+      variants={
+        blur
+          ? BINANCE_ENTRANCE
+          : {
+              hidden: { opacity: 0, y: 3 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: {
+                  duration: 0.14,
+                  ease: MOTION_EASE.snappy,
+                },
+              },
+            }
+      }
+    >
+      {children}
+    </motion.div>
+  )
 }
 
 interface MotionOrchestratedProps {
@@ -273,20 +262,20 @@ export function MotionPhrase({ children, className, delay = 0 }: MotionPhrasePro
  return <span className={className}>{children}</span>
  }
 
- return (
- <motion.span
- initial={{ opacity: 0, y: 8 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{
- duration: MOTION_DURATION.slow / 1000,
- delay: delay / 1000,
- ease: MOTION_EASE.entrance
- }}
- className={className}
- >
- {children}
- </motion.span>
- )
+  return (
+    <motion.span
+      initial={{ opacity: 0, y: 3 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: MOTION_DURATION.fast / 1000,
+        delay: delay / 1000,
+        ease: MOTION_EASE.snappy
+      }}
+      className={className}
+    >
+      {children}
+    </motion.span>
+  )
 }
 
 // ============================================================================
@@ -314,7 +303,7 @@ export function AnimatedCounter({
  const ref = useRef<HTMLSpanElement>(null)
  const isInView = useInView(ref, { once: true, margin:"-10%" })
 
- const spring = useSpring(0, { stiffness: 100, damping: 30 })
+  const spring = useSpring(0, { stiffness: 280, damping: 32 })
  const [displayValue, setDisplayValue] = useState("0")
 
  const formatter = useMemo(

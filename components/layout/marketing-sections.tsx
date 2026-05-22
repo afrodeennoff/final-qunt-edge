@@ -60,7 +60,7 @@ export function MarketingSectionHeader({
       )}
     >
       {eyebrow ? (
-        <p className="text-[10.5px] font-semibold uppercase tracking-[0.10em] text-[oklch(0.65_0.22_260)]">
+        <p className="text-[10.5px] font-semibold uppercase tracking-[0.10em] text-primary">
           {eyebrow}
         </p>
       ) : null}
@@ -88,8 +88,8 @@ export function MarketingFeatureCard({
   className?: string
 }) {
   return (
-    <Card variant="glass" className={cn('relative overflow-hidden rounded-[12px] border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-5 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_16px_32px_-20px_rgba(0,0,0,0.64)] transition-[border-color,box-shadow,background,transform] duration-200 hover:border-[oklch(0.65_0.22_260/0.12)] hover:bg-[oklch(0.65_0.22_260/0.05)] hover:-translate-y-[2px] hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_20px_40px_-20px_rgba(0,0,0,0.72)]', className)}>
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] text-[oklch(0.65_0.22_260)]">
+    <Card className={cn('rounded-lg border border-border bg-card p-5 transition-colors hover:border-border/80 hover:bg-muted/30', className)}>
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-muted text-muted-foreground">
         {icon}
       </div>
       <div className="mt-4">
@@ -115,7 +115,7 @@ export function MarketingStatBlock({
   className?: string
 }) {
   return (
-    <Card variant="flat" className={cn('p-6 text-center', className)}>
+     <Card className={cn('p-6 text-center', className)}>
       <p className="text-[32px] font-[250] tracking-[-0.05em] tabular-nums text-foreground leading-none">
         {value}
       </p>
@@ -140,12 +140,12 @@ export function MarketingStepCard({
   className?: string
 }) {
   return (
-    <Card variant="glass" className={cn('h-full p-6', className)}>
+    <Card className={cn('h-full p-6', className)}>
       <div className="flex items-center justify-between gap-3">
         <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {step}
         </span>
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] text-[oklch(0.65_0.22_260)]">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-muted text-muted-foreground">
           {icon}
         </span>
       </div>
@@ -182,16 +182,15 @@ export function MarketingPricingCard({
 }) {
   return (
     <Card
-      variant={highlighted ? 'elevated' : 'glass'}
       hover
       className={cn(
-        'relative flex h-full flex-col p-7',
-        highlighted && 'border-[oklch(0.65_0.22_260/0.12)] shadow-[0_0_24px_oklch(0.65_0.22_260/0.35)]',
+        'relative flex h-full flex-col p-7 border border-border bg-card',
+        highlighted && 'border-primary/40 shadow-sm',
         className,
       )}
     >
       {badge ? (
-        <Badge variant="frost-info" className="absolute right-5 top-5">
+        <Badge className="absolute right-5 top-5">
           {badge}
         </Badge>
       ) : null}
@@ -212,14 +211,14 @@ export function MarketingPricingCard({
             key={index}
             className="flex items-start gap-2.5 text-sm leading-6 text-muted-foreground"
           >
-            <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[oklch(0.65_0.22_260/0.06)] text-[oklch(0.65_0.22_260)]">
+            <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-success/10 text-success">
               <Check className="h-3 w-3" />
             </span>
             <span>{feature}</span>
           </li>
         ))}
       </ul>
-      <Button asChild variant={highlighted ? 'solid' : 'outline'} size="lg" className={cn('mt-8 w-full', highlighted && 'rounded-[0.95rem] border border-[oklch(0.65_0.22_260/0.12)] text-primary-foreground shadow-[0_0_24px_oklch(0.65_0.22_260/0.35)] hover:shadow-[0_0_24px_oklch(0.65_0.22_260/0.45)]')} style={highlighted ? { background: 'linear-gradient(135deg, oklch(0.65 0.22 260) 0%, oklch(0.55 0.2 260) 100%)' } : undefined}>
+      <Button asChild variant={highlighted ? 'solid' : 'outline'} size="lg" className={cn('mt-8 w-full', highlighted && 'rounded-lg border border-primary/30')} style={highlighted ? { background: 'var(--primary)' } : undefined}>
         <Link href={href}>{cta}</Link>
       </Button>
     </Card>
@@ -240,14 +239,14 @@ export function MarketingHyperframe({
   className?: string
 }) {
   return (
-    <Card id={id} variant="elevated" className={cn('overflow-hidden p-0', className)}>
-      <div className="flex items-center justify-between border-b border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-4 py-2.5">
+    <Card id={id} className={cn('overflow-hidden p-0 border border-border bg-card', className)}>
+      <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
         <div className="flex items-center gap-1.5 px-2 py-1" aria-hidden>
-          <span className="h-3 w-3 rounded-full bg-destructive/80 opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
-          <span className="h-3 w-3 rounded-full bg-warning/80 opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
-          <span className="h-3 w-3 rounded-full bg-success/80 opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
+          <span className="h-3 w-3 rounded-full bg-destructive/80" />
+          <span className="h-3 w-3 rounded-full bg-warning/80" />
+          <span className="h-3 w-3 rounded-full bg-success/80" />
         </div>
-        <div className="rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
+        <div className="rounded-full border border-border bg-card px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
           {label}
         </div>
         <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80 sm:flex">

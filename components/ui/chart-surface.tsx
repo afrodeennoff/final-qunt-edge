@@ -119,14 +119,14 @@ export function ChartSurface({
   return (
   <div
   data-chart-surface="modern"
-  className={cn("relative flex h-full flex-col overflow-hidden rounded-lg border border-[oklch(0.65_0.22_260/0.06)] bg-card",
+  className={cn("relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card",
   className
   )}
   style={height ? { height } : undefined}
   >
   {hasHeader && (
   <div
-  className={cn("flex shrink-0 items-center border-b border-[oklch(0.65_0.22_260/0.04)] bg-card",
+  className={cn("flex shrink-0 items-center border-b border-border bg-card",
   isSmall ?"h-9 px-2" :"h-10 px-3",
   headerClassName
   )}
@@ -134,17 +134,17 @@ export function ChartSurface({
  <div className="flex w-full items-center justify-between gap-[var(--space-2)]">
  <div className="min-w-0 flex items-center gap-[var(--space-2)]">
  {title ? (
- <span
- className={cn("line-clamp-1 text-fg-primary",
- isSmall ?"text-[13px] font-semibold tracking-[-0.01em]" :"text-sm font-semibold tracking-[-0.01em]"
- )}
- >
+  <span
+  className={cn("line-clamp-1 text-foreground",
+  isSmall ?"text-[13px] font-semibold tracking-[-0.01em]" :"text-sm font-semibold tracking-[-0.01em]"
+  )}
+  >
  {title}
  </span>
  ) : null}
  {info}
  {subtitle ? (
- <span className="hidden text-[11px] text-fg-muted sm:inline">{subtitle}</span>
+  <span className="hidden text-[11px] text-muted-foreground sm:inline">{subtitle}</span>
  ) : null}
  </div>
  {actions ? <div className="shrink-0">{actions}</div> : null}

@@ -121,7 +121,7 @@ export function RegisteredAccountsChart({
                   onClick={() => setActiveMetric(tab.key)}
                   className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                     activeMetric === tab.key
-                      ? 'bg-primary text-primary-foreground shadow-[0_12px_20px_-14px_oklch(0.65 0.22 260 / 0.18)]'
+                      ? 'bg-primary text-primary-foreground'
                       : 'text-muted-foreground hover:bg-[oklch(0.65_0.22_260/0.03)] hover:text-foreground'
                   }`}
                 >

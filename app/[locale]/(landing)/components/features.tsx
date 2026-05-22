@@ -25,7 +25,7 @@ type FeatureCard = {
 function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; index: number; isVisible: boolean }) {
 	return (
 		<div
-			className={cn("group relative overflow-hidden rounded-xl border transition-[transform,opacity,background-color,border-color,box-shadow] duration-500","border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)]","shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] hover:border-[oklch(0.65_0.22_260/0.10)] hover:shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)]","hover:-translate-y-1","opacity-0 translate-y-8",
+			className={cn("group relative overflow-hidden rounded-xl border transition-colors","border-border bg-card","hover:bg-muted","opacity-0 translate-y-8",
 			isVisible &&"opacity-100 translate-y-0",
 			index < 2 ? 'lg:col-span-3' :
 			index === 2 ? 'lg:col-span-4' : 'lg:col-span-2',

@@ -118,7 +118,7 @@ function SidebarProvider({
             } as React.CSSProperties
           }
           className={cn(
-            'group/sidebar-wrapper flex min-h-svh w-full qe-v2-app-shell has-data-[variant=inset]:bg-[oklch(0.03_0.004_260)]',
+            'group/sidebar-wrapper flex min-h-svh w-full qe-v2-app-shell has-data-[variant=inset]:bg-background',
             className,
           )}
           {...props}
@@ -150,7 +150,7 @@ function Sidebar({
       <div
         data-slot="sidebar"
         className={cn(
-          'flex h-full w-(--sidebar-width) flex-col bg-[oklch(0.045_0.006_260/0.98)] text-foreground',
+          'flex h-full w-(--sidebar-width) flex-col bg-sidebar text-foreground',
           className,
         )}
         {...props}
@@ -195,7 +195,7 @@ function Sidebar({
       <div
         data-slot="sidebar-gap"
         className={cn(
-           'relative w-(--sidebar-width) bg-transparent transition-[width] duration-150 ease-[0.22,1,0.36,1]',
+           'relative w-(--sidebar-width) bg-transparent transition-[width] duration-100 ease-[cubic-bezier(0.16,1,0.3,1)]',
           'group-data-[collapsible=offcanvas]:w-0',
           'group-data-[side=right]:rotate-180',
           variant === 'floating' || variant === 'inset'
@@ -207,7 +207,7 @@ function Sidebar({
         data-slot="sidebar-container"
         data-side={side}
         className={cn(
-           'fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-150 ease-[0.22,1,0.36,1] md:flex',
+           'fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-100 ease-[cubic-bezier(0.16,1,0.3,1)] md:flex',
           'data-[side=left]:left-0 data-[side=right]:right-0',
           'data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]',
           'data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
@@ -443,7 +443,7 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  'peer/menu-button type-body-sm flex w-full items-center gap-2 overflow-hidden rounded-xl border border-transparent p-2 text-left ring-[oklch(0.65_0.22_260)] outline-hidden transition-[width,height,padding,background-color,border-color,box-shadow,color] duration-150 ease-[0.22,1,0.36,1] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2! hover:border-[oklch(0.65_0.22_260/0.18)] hover:bg-[oklch(0.065_0.008_260/0.55)] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.22_260/0.5)] active:bg-[oklch(0.065_0.008_260/0.7)] active:text-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-[oklch(0.65_0.22_260/0.28)] data-[active=true]:bg-[oklch(0.65_0.22_260/0.12)] data-[active=true]:font-medium data-[active=true]:text-foreground data-[state=open]:hover:bg-[oklch(0.065_0.008_260/0.7)] data-[state=open]:hover:text-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-none',
+  'peer/menu-button type-body-sm flex w-full items-center gap-2 overflow-hidden rounded-lg border border-transparent p-2 text-left outline-hidden transition-[background-color,border-color] duration-80 ease-[cubic-bezier(0.16,1,0.3,1)] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2! hover:bg-sidebar-accent hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:bg-muted active:text-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-primary/40 data-[active=true]:bg-primary/10 data-[active=true]:font-medium data-[active=true]:text-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-none',
   {
     variants: {
       variant: {

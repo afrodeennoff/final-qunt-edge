@@ -417,9 +417,9 @@ function FactTile({
   value: string
 }) {
   return (
-    <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.05)] bg-[oklch(0.65_0.22_260/0.03)] px-4 py-4">
+    <div className="rounded-xl border border-border bg-card px-4 py-4">
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.02)]">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-muted">
           <Icon className="h-4 w-4 text-v2-accent" />
         </div>
         <div>
@@ -435,10 +435,10 @@ function MetricCard({ label, value, highlight = false }: { label: string; value:
   return (
     <div
       className={cn(
-        'rounded-xl border border-[oklch(0.65_0.22_260/0.05)] px-4 py-4',
+        'rounded-xl border border-border px-4 py-4',
         highlight
           ? 'bg-[linear-gradient(145deg,rgba(20,184,166,0.16),rgba(20,184,166,0.05))]'
-          : 'bg-[oklch(0.65_0.22_260/0.03)]'
+          : 'bg-[var(--card)]'
       )}
     >
       <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
@@ -468,7 +468,7 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
   }
 
   return (
-    <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+    <Card className="rounded-xl border-border bg-card">
       <CardContent className="flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Referral link</p>
@@ -476,11 +476,11 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
           <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
             Use the firm link below if you want to continue from research into signup.
           </CardDescription>
-          <div className="mt-4 flex items-center gap-2 rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.05)] px-3 py-3">
+          <div className="mt-4 flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-3">
             <code className="min-w-0 flex-1 truncate text-xs text-foreground/80">{referralUrl}</code>
             <button
               onClick={handleCopy}
-              className="shrink-0 rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)] p-2 transition-colors hover:bg-[oklch(0.65_0.22_260/0.01)]"
+              className="shrink-0 rounded-xl border border-border bg-card p-2 transition-colors hover:bg-muted"
               title="Copy link"
               type="button"
             >
@@ -516,7 +516,7 @@ function ChallengeCard({
   const dailyLossValue = getDailyLossValue(size)
 
   return (
-    <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+    <Card className="rounded-xl border-border bg-card">
       <CardContent className="p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
@@ -612,7 +612,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
 
   if (entries.length === 0) {
     return (
-      <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+      <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <Target className="h-5 w-5 text-v2-accent" />
@@ -628,7 +628,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
 
   return (
     <div className="space-y-5">
-      <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+      <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <Target className="h-5 w-5 text-v2-accent" />
@@ -653,7 +653,7 @@ function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
   const details = buildAdditionalDetails(firm)
 
   return (
-    <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+    <Card className="rounded-xl border-border bg-card">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <svg className="h-5 w-5 text-v2-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -667,9 +667,9 @@ function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {details.map((detail) => (
-            <div key={detail.label} className="rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+            <div key={detail.label} className="rounded-xl border border-border bg-card px-4 py-4">
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-card">
                   <detail.icon className="h-4 w-4 text-v2-accent" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -693,7 +693,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
 
   return (
     <div className="space-y-5">
-      <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+      <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6 sm:p-8">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Research snapshot</p>
           <CardTitle className="mt-4 text-3xl text-foreground">A quick read on reviews, payouts, and fit.</CardTitle>
@@ -715,7 +715,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {researchSnapshot.map((item) => (
-              <div key={item.label} className="rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+              <div key={item.label} className="rounded-xl border border-border bg-card px-4 py-4">
                 <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{item.label}</p>
                 <p className="mt-2 text-xl font-semibold text-foreground">{item.value}</p>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.helper}</p>
@@ -724,7 +724,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
           </div>
 
           {sourceNotes.length > 0 ? (
-            <div className="mt-6 rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+            <div className="mt-6 rounded-xl border border-border bg-card px-4 py-4">
               <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Official source notes</p>
               <div className="mt-3 space-y-2">
                 {sourceNotes.map((note) => (
@@ -740,7 +740,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
       </Card>
 
       <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-        <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+        <Card className="rounded-xl border-border bg-card">
           <CardContent className="p-6 sm:p-8">
             <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Profile summary</p>
             <CardTitle className="mt-4 text-3xl text-foreground">Firm profile at a glance</CardTitle>
@@ -756,13 +756,13 @@ function OverviewSection({ firm }: { firm: FirmData }) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+        <Card className="rounded-xl border-border bg-card">
           <CardContent className="p-6 sm:p-8">
             <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Trust signals</p>
             <CardTitle className="mt-4 text-3xl text-foreground">What to check before you click out</CardTitle>
             <div className="mt-6 space-y-3">
               {trustChecklist.map((item) => (
-                <div key={item} className="flex items-start gap-3 rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+                <div key={item} className="flex items-start gap-3 rounded-xl border border-border bg-card px-4 py-4">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-v2-accent" />
                   <p className="text-sm leading-7 text-muted-foreground">{item}</p>
                 </div>
@@ -845,7 +845,7 @@ function SocialIcon({ type, url }: { type: 'website' | 'twitter' | 'discord' | '
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex h-9 w-9 items-center justify-center rounded-full border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.01)] text-foreground/80 transition-colors hover:bg-[oklch(0.65_0.22_260/0.01)] hover:text-foreground"
+      className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
     >
       {icons[type]}
     </a>
@@ -856,7 +856,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
   const stats = firm.catalogueStats
   if (!stats) {
     return (
-      <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+      <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-v2-accent" />
@@ -873,7 +873,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
   const avgPayout = stats.paidPayoutCount > 0 ? stats.paidPayoutAmount / stats.paidPayoutCount : 0
 
   return (
-    <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+    <Card className="rounded-xl border-border bg-card">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <DollarSign className="h-5 w-5 text-v2-accent" />
@@ -884,26 +884,26 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
         </CardDescription>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+          <div className="rounded-xl border border-border bg-card px-4 py-4">
             <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Total Paid Out</p>
             <p className="mt-2 text-2xl font-semibold text-v2-success">{formatCompactCurrency(stats.paidPayoutAmount)}</p>
           </div>
-          <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+          <div className="rounded-xl border border-border bg-card px-4 py-4">
             <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Payouts Made</p>
             <p className="mt-2 text-2xl font-semibold text-foreground">{stats.paidPayoutCount.toLocaleString()}</p>
           </div>
-          <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+          <div className="rounded-xl border border-border bg-card px-4 py-4">
             <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Avg Payout</p>
             <p className="mt-2 text-2xl font-semibold text-foreground">{formatCompactCurrency(avgPayout)}</p>
           </div>
-          <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+          <div className="rounded-xl border border-border bg-card px-4 py-4">
             <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Pending</p>
             <p className="mt-2 text-2xl font-semibold text-foreground">{formatCompactCurrency(stats.pendingPayoutAmount)}</p>
           </div>
         </div>
 
         <div className="mt-6">
-          <div className="flex items-center justify-between rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+          <div className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-4">
             <div>
               <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Payout Success Rate</p>
               <p className="mt-1 text-sm text-muted-foreground">Based on {stats.accountsCount.toLocaleString()} tracked accounts</p>
@@ -925,7 +925,7 @@ function ROISection({ firm }: { firm: FirmData }) {
 
   if (accountSizes.length === 0) {
     return (
-      <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+      <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-v2-accent" />
@@ -940,7 +940,7 @@ function ROISection({ firm }: { firm: FirmData }) {
   }
 
   return (
-    <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+    <Card className="rounded-xl border-border bg-card">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-v2-accent" />
@@ -964,7 +964,7 @@ function ROISection({ firm }: { firm: FirmData }) {
               : '0'
 
             return (
-              <div key={key} className="rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+              <div key={key} className="rounded-xl border border-border bg-card px-4 py-4">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="text-sm font-semibold text-foreground">{size.name}</p>
@@ -1005,7 +1005,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
 
   return (
     <div className="space-y-5">
-      <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+      <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-v2-accent" />
@@ -1017,7 +1017,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {rules.map((rule) => (
-              <div key={rule.title} className="rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+              <div key={rule.title} className="rounded-xl border border-border bg-card px-4 py-4">
                 <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{rule.title}</p>
                 <p className="mt-2 text-xl font-semibold text-foreground">{rule.value}</p>
                 <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{rule.description}</p>
@@ -1026,7 +1026,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
           </div>
 
           {sourceNotes.length > 0 ? (
-            <div className="mt-6 rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+            <div className="mt-6 rounded-xl border border-border bg-card px-4 py-4">
               <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Official rule notes</p>
               <div className="mt-3 space-y-2">
                 {sourceNotes.map((note) => (
@@ -1042,7 +1042,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
       </Card>
 
       {accountSizes.length > 0 && (
-        <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+        <Card className="rounded-xl border-border bg-card">
           <CardContent className="p-6">
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-v2-accent" />
@@ -1054,7 +1054,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
 
             <div className="mt-6 grid gap-3 lg:hidden">
               {accountSizes.map(([key, size]) => (
-                <article key={key} className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.05)] p-4">
+                <article key={key} className="rounded-xl border border-border bg-card p-4">
                   <h3 className="text-base font-semibold text-foreground">{size.name}</h3>
                   <dl className="mt-3 grid grid-cols-3 gap-3 text-sm">
                     <div>
@@ -1079,7 +1079,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
             <div className="mt-6 hidden overflow-x-auto lg:block">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-[oklch(0.65_0.22_260/0.10)]">
+                  <tr className="border-b border-border">
                     <th className="px-4 py-3 text-left text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Account</th>
                     <th className="px-4 py-3 text-right text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Daily Loss</th>
                     <th className="px-4 py-3 text-right text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Max Drawdown</th>
@@ -1088,7 +1088,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
                 </thead>
                 <tbody>
                   {accountSizes.map(([key, size]) => (
-                    <tr key={key} className="border-b border-[oklch(0.65_0.22_260/0.05)]">
+                    <tr key={key} className="border-b border-border/60">
                       <td className="px-4 py-3 font-medium text-foreground">{size.name}</td>
                       <td className="px-4 py-3 text-right text-muted-foreground">
                         {size.dailyLoss !== null ? formatCompactCurrency(size.dailyLoss) : 'No limit'}
@@ -1111,7 +1111,7 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
   const stats = firm.catalogueStats
 
   return (
-    <Card className="rounded-xl border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.035)]">
+    <Card className="rounded-xl border-border bg-card">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <Award className="h-5 w-5 text-v2-accent" />
@@ -1123,7 +1123,7 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
 
         {stats && stats.paidPayoutCount > 0 ? (
           <div className="mt-6 space-y-4">
-            <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+            <div className="rounded-xl border border-border bg-card px-4 py-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Verified Payouts</p>
@@ -1136,17 +1136,17 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+              <div className="rounded-xl border border-border bg-card px-4 py-4">
                 <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Total Paid</p>
                 <p className="mt-2 text-2xl font-semibold text-foreground">{formatCompactCurrency(stats.paidPayoutAmount)}</p>
               </div>
-              <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+              <div className="rounded-xl border border-border bg-card px-4 py-4">
                 <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Active Accounts</p>
                 <p className="mt-2 text-2xl font-semibold text-foreground">{stats.accountsCount.toLocaleString()}</p>
               </div>
             </div>
 
-            <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-4">
+            <div className="rounded-xl border border-border bg-card px-4 py-4">
               <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Account Size Distribution</p>
               <p className="mt-2 text-sm text-foreground">{stats.sizeBreakdown}</p>
             </div>
@@ -1190,7 +1190,7 @@ function HeaderRatingSummary({
       {headerMetaItems.map((item) => (
         <span
           key={item}
-          className="rounded-full border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.045)] px-2.5 py-1 text-xs text-muted-foreground"
+          className="rounded-full border border-border bg-card px-2.5 py-1 text-xs text-muted-foreground"
         >
           {item}
         </span>
@@ -1233,7 +1233,7 @@ function HeaderRadarMini({ firm }: { firm: FirmData }) {
 
   return (
     <div className="w-full lg:w-auto">
-      <Card className="w-full rounded-xl border-[oklch(0.65_0.22_260/0.05)] bg-[oklch(0.65_0.22_260/0.03)] lg:w-[276px]">
+      <Card className="w-full rounded-xl border-border bg-card lg:w-[276px]">
         <CardContent className="flex flex-col items-center p-3.5">
           <p className="text-center text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Radar Snapshot</p>
           <ChartContainer
@@ -1278,12 +1278,12 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   const headerMetrics = buildHeaderMetrics(firm)
 
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-5 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] sm:p-7 lg:p-9">
+    <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] sm:p-7 lg:p-9">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.08),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.04),_transparent_40%)]" />
       <div className="relative space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">
           <div className="flex items-start gap-6">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.01)] shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] shadow-foreground/20">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-muted shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] shadow-foreground/20">
               {firm.logoUrl ? (
                 <Image
                   src={firm.logoUrl}
@@ -1351,7 +1351,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
         <FirmHeader firm={firm} />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-          <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-xl border border-[oklch(0.65_0.22_260/0.05)] bg-[oklch(0.65_0.22_260/0.07)] p-2">
+          <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-xl border border-border bg-muted p-2">
             {[
               ['overview', 'Overview'],
               ['challenges', 'Challenges'],
@@ -1367,7 +1367,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
                 value={value}
                 className={cn(
                   'shrink-0 rounded-xl border border-transparent px-4 py-2.5 text-sm text-foreground/80 transition-colors',
-                  'hover:border-[oklch(0.65_0.22_260/0.05)] hover:bg-[oklch(0.65_0.22_260/0.025)]',
+                  'hover:border-border/60 hover:bg-muted',
                   'data-[state=active]:border-v2-accent/30 data-[state=active]:bg-v2-accent data-[state=active]:text-v2-accent-foreground'
                 )}
               >

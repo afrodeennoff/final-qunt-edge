@@ -18,11 +18,11 @@ const BackgroundGlow = React.forwardRef<HTMLDivElement, BackgroundGlowProps>(
         <div
           ref={ref}
           className={cn(
-            "absolute top-0 left-0 w-full h-full pointer-events-none z-0 opacity-20",
+            "absolute top-0 left-0 w-full h-full pointer-events-none z-0 opacity-10",
             className
           )}
         >
-          <div className="absolute inset-0 bg-[linear-gradient(oklch(0.65_0.22_260/0.015)_1px,transparent_1px),linear-gradient(90deg,oklch(0.65_0.22_260/0.015)_1px,transparent_1px)] bg-[length:64px_64px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[length:64px_64px]" />
         </div>
       )
     }
@@ -31,11 +31,11 @@ const BackgroundGlow = React.forwardRef<HTMLDivElement, BackgroundGlowProps>(
       <div
         ref={ref}
         className={cn(
-          "pointer-events-none absolute left-0 top-0 z-0 h-full w-full opacity-10",
+          "pointer-events-none absolute left-0 top-0 z-0 h-full w-full opacity-5",
           className
         )}
       >
-        <div className="absolute inset-0 bg-[linear-gradient(oklch(0.65_0.22_260/0.01)_1px,transparent_1px),linear-gradient(90deg,oklch(0.65_0.22_260/0.01)_1px,transparent_1px)] bg-[length:80px_80px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[length:80px_80px]" />
       </div>
     )
   }

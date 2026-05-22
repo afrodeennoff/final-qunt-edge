@@ -37,7 +37,7 @@ export function PnlPerContractPreview() {
  PnL Per Contract
  </p>
  </div>
- <div className="h-full w-full rounded-xl border bg-[oklch(0.65_0.22_260/0.03)] shadow-[inset_0_1px_0_oklch(0.65 0.22 260 / 0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] pointer-events-none border-t border-[oklch(0.65_0.22_260/0.08)] pt-5">
+  <div className="h-full w-full rounded-xl border border-border bg-card pointer-events-none pt-5">
  <PnLPerContractChartEmbed trades={trades} />
  </div>
  </div>

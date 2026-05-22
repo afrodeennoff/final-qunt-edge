@@ -25,7 +25,7 @@ export interface StatsCardProps extends Omit<CardProps,"size"> {
  animateValue?: boolean
  formatCurrency?: boolean
  locale?: string
- variant?:"default" |"glass" |"elevated" |"flat"
+  variant?:"default" |"flat"
 }
 
 const SIZE_CONFIG = {
@@ -85,7 +85,7 @@ function StatsCardSkeleton({ size ="md", className }: StatsCardSkeletonProps) {
 
  return (
   <div
-  className={cn("rounded-lg border border-[oklch(0.65_0.22_260/0.06)] bg-card",
+   className={cn("rounded-lg border border-border bg-card",
   config.padding,
   className
   )}
@@ -163,7 +163,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
  <CardHeader size={size} className="flex-row items-center justify-between pb-2">
  <div className="flex items-center gap-2 flex-1 min-w-0">
   {renderIcon() && (
-  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[oklch(0.65_0.22_260/0.1)] bg-[oklch(0.65_0.22_260/0.03)] text-[oklch(0.65_0.22_260)]" aria-hidden="true">
+   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground" aria-hidden="true">
   {renderIcon()}
   </div>
   )}

@@ -24,11 +24,9 @@ export const THEME_PRESETS: Record<string, EmbedThemeVars> = {
       '--chart-3': '43 74% 66%',  // yellow
       '--chart-4': '330 70% 60%', // pink
       '--chart-5': '27 87% 67%',  // amber
-      '--chart-win': '120 72% 45%', // green
-      '--chart-loss': '0 72% 45%', // red
-      
-  
-      '--success': '142 72% 29%',
+        '--chart-win': '152 78% 45%', // #0ECB81 green
+        '--chart-loss': '350 82% 55%', // #F6465D red
+        '--success': '142 72% 29%',
       '--success-foreground': '144 80% 10%',
       '--destructive': '0 72% 45%',
       '--destructive-foreground': '0 0% 98%',

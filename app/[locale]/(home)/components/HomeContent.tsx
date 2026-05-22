@@ -1,10 +1,11 @@
 import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
 import Hero from './Hero'
 import LiveStatsStrip from './LiveStatsStrip'
 import SocialProof from './SocialProof'
 import ErrorBoundary from '@/components/ui/error-boundary'
 import type { ReactNode } from 'react'
-import type { UnifiedFirm } from '@/server/deals'
+import { getUnifiedFirms } from '@/server/deals'
 
 function SafeSection({ children }: { children: ReactNode }) {
   return (
@@ -59,12 +60,16 @@ const FinalCTA = dynamic(() => import('./FinalCTA'), {
   loading: () => <SectionSkeleton />,
 })
 
-interface HomeContentProps {
-  locale: string
-  firms?: UnifiedFirm[]
+async function PropFirmsExplorerSection({ locale }: { locale: string }) {
+  const firms = await getUnifiedFirms().catch(() => [])
+  return <PropFirmsExplorer locale={locale} firms={firms} />
 }
 
-export default function HomeContent({ locale, firms }: HomeContentProps) {
+interface HomeContentProps {
+  locale: string
+}
+
+export default function HomeContent({ locale }: HomeContentProps) {
   return (
     <div className="relative min-w-0 overflow-x-clip bg-transparent selection:bg-primary/30 selection:text-foreground">
       <div className="pointer-events-none absolute inset-x-4 top-0 h-48 rounded-b-[2.5rem] bg-[oklch(0.65_0.22_260/0.02)] sm:inset-x-6 lg:inset-x-10" />
@@ -97,7 +102,9 @@ export default function HomeContent({ locale, firms }: HomeContentProps) {
           <AudienceSegmentation />
         </SafeSection>
         <SafeSection>
-          <PropFirmsExplorer locale={locale} firms={firms} />
+          <Suspense fallback={<SectionSkeleton />}>
+            <PropFirmsExplorerSection locale={locale} />
+          </Suspense>
         </SafeSection>
         <SafeSection>
           <PricingSection locale={locale} />

@@ -22,7 +22,7 @@ type UnifiedPageHeaderProps = {
 type UnifiedSurfaceProps = {
   children: ReactNode
   className?: string
-  variant?: 'default' | 'glass' | 'gradient-border' | 'elevated' | 'subtle'
+  variant?: 'default' | 'elevated' | 'subtle'
   hover?: boolean
 }
 
@@ -48,11 +48,6 @@ export function UnifiedPageShell({
         widthClassName,
         CONTENT_PADDING,
         densityClasses,
-        variant !== 'minimal' && [
-          'before:absolute before:inset-x-6 before:top-0 before:h-44 before:pointer-events-none before:z-0 sm:before:inset-x-8 lg:before:inset-x-10 2xl:before:inset-x-12',
-          'before:rounded-b-2xl before:border before:border-[oklch(0.65_0.22_260/0.05)] before:bg-primary/[0.02]',
-          'after:absolute after:inset-x-0 after:top-0 after:h-px after:pointer-events-none after:z-0 after:bg-border/35',
-        ],
         '[&_.scroll-container]:overflow-y-auto [&_.scroll-container]:scrollbar-thin',
         className,
       )}
@@ -73,20 +68,10 @@ export function UnifiedPageHeader({
   return (
     <header
       className={cn(
-        'mb-6 rounded-xl border px-4 py-4 sm:py-6 shadow-sm sm:px-6',
-        'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
-        variant === 'default' && [
-          'border-[oklch(0.65_0.22_260/0.09)] bg-[oklch(0.65_0.22_260/0.03)]',
-          '',
-        ],
-        variant === 'gradient' && [
-          'border-primary/14 bg-[hsl(var(--card)/0.96)]',
-          '',
-        ],
-        variant === 'elevated' && [
-          'border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.03)] shadow-sm',
-          '',
-        ],
+        'mb-6 rounded-xl border border-border bg-card px-4 py-4 sm:py-6 shadow-none sm:px-6',
+        'animate-fade-up-smooth transition-[transform,background-color,border-color,opacity] duration-200 ease-out',
+        variant === 'gradient' && 'border-primary/20',
+        variant === 'elevated' && 'shadow-sm',
         className,
       )}
     >
@@ -127,29 +112,11 @@ export function UnifiedSurface({ children, className, variant = 'default', hover
   return (
     <section
       className={cn(
-        'rounded-xl border p-4 shadow-sm sm:p-6',
-        'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
-        variant === 'default' && [
-          'border-[oklch(0.65_0.22_260/0.09)] bg-[oklch(0.65_0.22_260/0.03)]',
-          hover ? 'hover:border-[oklch(0.65_0.22_260/0.08)]50 hover:bg-card/95' : '',
-        ],
-        variant === 'glass' && [
-          'border-[oklch(0.65_0.22_260/0.08)] bg-primary/4',
-          hover ? 'hover:border-[oklch(0.65_0.22_260/0.10)] hover:bg-primary/6' : '',
-          '',
-        ],
-        variant === 'gradient-border' && [
-          'border-[oklch(0.65_0.22_260/0.09)] bg-[oklch(0.65_0.22_260/0.025)]',
-          hover ? 'hover:border-[oklch(0.65_0.22_260/0.08)]45' : '',
-        ],
-        variant === 'elevated' && [
-          'border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.03)] shadow-sm',
-          hover ? 'hover:border-[oklch(0.65_0.22_260/0.08)]50 hover:bg-card/95' : '',
-        ],
-        variant === 'subtle' && [
-          'border-[oklch(0.65_0.22_260/0.09)] bg-[hsl(var(--background)/0.62)] shadow-none',
-          hover ? 'hover:border-[oklch(0.65_0.22_260/0.10)] hover:bg-[oklch(0.65_0.22_260/0.08)]' : '',
-        ],
+        'rounded-xl border border-border bg-card p-4 shadow-none sm:p-6',
+        'transition-[background-color,border-color,opacity] duration-150 ease-out',
+        hover && 'hover:bg-muted/30 hover:border-border/80',
+        variant === 'elevated' && 'shadow-sm',
+        variant === 'subtle' && 'bg-muted border-border/60',
         className,
       )}
     >

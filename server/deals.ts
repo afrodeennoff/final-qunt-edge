@@ -546,8 +546,29 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
       getPropfirmCatalogueData('allTime'),
       prisma.propFirm.findMany({
         where: { isActive: true },
-        include: {
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          description: true,
+          shortDesc: true,
+          referralUrl: true,
+          logoUrl: true,
+          category: true,
+          platform: true,
+          payoutModel: true,
+          drawdownType: true,
+          profitSplit: true,
+          maxAllocation: true,
           coupons: {
+            select: {
+              id: true,
+              code: true,
+              discountPercent: true,
+              challengeFee: true,
+              expiresAt: true,
+              claimUrl: true,
+            },
             where: {
               isActive: true,
               ...buildPublicCouponWindowWhere(now),

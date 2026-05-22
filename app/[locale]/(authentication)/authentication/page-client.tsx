@@ -159,14 +159,14 @@ export default function AuthenticationPageClient() {
                     {t('authentication.termsAndPrivacy.prefix')}{' '}
                     <Link
                       href={`/${locale}/terms`}
-                      className="text-foreground underline decoration-[oklch(0.65_0.22_260/0.5)] underline-offset-4 hover:text-[oklch(0.65_0.22_260)]"
+                      className="text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
                     >
                       {t('authentication.termsAndPrivacy.terms')}
                     </Link>{' '}
                     {t('authentication.termsAndPrivacy.and')}{' '}
                     <Link
                       href={`/${locale}/privacy`}
-                      className="text-foreground underline decoration-[oklch(0.65_0.22_260/0.5)] underline-offset-4 hover:text-[oklch(0.65_0.22_260)]"
+                      className="text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
                     >
                       {t('authentication.termsAndPrivacy.privacy')}
                     </Link>

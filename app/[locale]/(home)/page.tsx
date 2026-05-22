@@ -2,7 +2,6 @@ import { setStaticParamsLocale } from 'next-international/server'
 import { Metadata } from 'next'
 import { getI18n, getStaticParams } from '@/locales/server'
 import dynamic from 'next/dynamic'
-import { getUnifiedFirms } from '@/server/deals'
 import {
   buildBreadcrumbSchema,
   buildOrganizationSchema,
@@ -36,8 +35,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   const { locale } = await params
   setStaticParamsLocale(locale)
 
-  const firms = await getUnifiedFirms().catch(() => [])
-
   const softwareSchema = buildSoftwareApplicationSchema(locale, '/')
   const organizationSchema = buildOrganizationSchema()
   const breadcrumbSchema = buildBreadcrumbSchema(locale, [{ name: 'Home', path: '/' }])
@@ -56,7 +53,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <HomeContent locale={locale} firms={firms} />
+      <HomeContent locale={locale} />
     </>
   )
 }

@@ -22,7 +22,7 @@ export default function ErrorBoundary({
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background/0 to-muted/10 p-4">
-      <Card className="w-full max-w-lg border-border/50 bg-card/80 backdrop-blur-sm shadow-lg">
+       <Card className="w-full max-w-lg border-border bg-card">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center">
             <AlertCircle className="h-6 w-6 text-destructive" />

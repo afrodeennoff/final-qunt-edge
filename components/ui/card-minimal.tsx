@@ -43,9 +43,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     )
 
     const variantClasses = {
-      default: 'rounded-lg border border-border/50 bg-card shadow-sm',
-      flat: 'rounded-lg border border-border/20 bg-card shadow-none',
-      embedded: 'rounded-lg border-0 bg-card shadow-md',
+      default: 'rounded-lg border border-border bg-card shadow-none',
+      flat: 'rounded-lg border-transparent bg-transparent shadow-none',
+      embedded: 'rounded-lg border border-border/50 bg-card shadow-none',
     }
 
     const sizeClasses = {
@@ -71,7 +71,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       >
         {isLoading && (
           <div className="absolute inset-0 z-10 overflow-hidden rounded-[inherit]">
-            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-[oklch(0.65_0.22_260/0.10)] to-transparent" />
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
           </div>
         )}
         {children}
