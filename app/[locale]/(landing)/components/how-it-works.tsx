@@ -29,15 +29,15 @@ export default function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="relative overflow-hidden border-t border-[oklch(0.65_0.22_260/0.08)] bg-background px-4 py-24 sm:px-6 sm:py-24 lg:px-8"
+      className="relative overflow-hidden border-t border-border bg-background px-4 py-24 sm:px-6 sm:py-24 lg:px-8"
     >
-      <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
+      <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-border bg-muted/20 p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-6"
+            className="rounded-xl border border-border bg-muted/20 p-6"
           >
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
               Optimization Pipeline
@@ -63,13 +63,13 @@ export default function HowItWorks() {
           </motion.div>
 
           <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 sm:grid sm:grid-cols-2 lg:grid lg:grid-cols-5 lg:gap-4 lg:overflow-visible lg:pb-0 relative">
-            <div className="hidden lg:block absolute top-8 left-[8%] w-[84%] h-px z-0 bg-[oklch(0.65_0.22_260/0.035)]" />
+            <div className="hidden lg:block absolute top-8 left-[8%] w-[84%] h-px z-0 bg-muted/20" />
             <motion.div
               initial={{ width: 0 }}
               whileInView={{ width: '84%' }}
               viewport={{ once: true }}
               transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-              className="hidden lg:block absolute top-8 left-[8%] h-px z-0 bg-gradient-to-r from-[oklch(0.65_0.22_260/0.08)] via-primary/40 to-[oklch(0.65_0.22_260/0.08)]"
+              className="hidden lg:block absolute top-8 left-[8%] h-px z-0 bg-gradient-to-r from-primary via-primary/40 to-[hsl(var(--primary))]"
             />
 
             {steps.map((step, i) => (
@@ -79,10 +79,10 @@ export default function HowItWorks() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.15 }}
-                className="relative z-10 min-w-[280px] flex-shrink-0 snap-center rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4 lg:min-w-0"
+                className="relative z-10 min-w-[280px] flex-shrink-0 snap-center rounded-xl border border-border bg-muted/20 p-4 lg:min-w-0"
               >
                 <div className="mb-6 flex items-center justify-between gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-[oklch(0.65_0.22_260/0.09)] bg-black/50">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-black/50">
                     <span className="font-mono text-xs font-bold text-foreground sm:text-sm">
                       0{i + 1}
                     </span>

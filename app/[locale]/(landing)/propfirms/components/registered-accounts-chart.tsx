@@ -102,7 +102,7 @@ export function RegisteredAccountsChart({
 
   return (
     <Card className={cn(unifiedSectionPanelClassName, 'overflow-hidden')}>
-      <CardHeader className="border-b border-[oklch(0.65_0.22_260/0.09)] bg-[linear-gradient(180deg,hsl(var(--card)/0.58)_0%,transparent_100%)] px-6 pb-3 pt-4">
+      <CardHeader className="border-b border-border bg-[linear-gradient(180deg,hsl(var(--card)/0.58)_0%,transparent_100%)] px-6 pb-3 pt-4">
         <div className="flex flex-col gap-2">
           <div className="min-w-0">
             <CardTitle className="text-[clamp(1.2rem,2.4vw,1.55rem)] leading-tight tracking-tight">
@@ -113,7 +113,7 @@ export function RegisteredAccountsChart({
             <span className="shrink-0 text-xs text-muted-foreground">
               {registeredAccountsChartConfig[activeMetric].label}
             </span>
-            <div className="inline-flex shrink-0 rounded-full border border-[oklch(0.65_0.22_260/0.09)] bg-[oklch(0.65_0.22_260/0.02)] p-1">
+            <div className="inline-flex shrink-0 rounded-full border border-border bg-muted/10 p-1">
               {metricTabs.map((tab) => (
                 <button
                   key={tab.key}
@@ -122,7 +122,7 @@ export function RegisteredAccountsChart({
                   className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                     activeMetric === tab.key
                       ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:bg-[oklch(0.65_0.22_260/0.03)] hover:text-foreground'
+                      : 'text-muted-foreground hover:bg-muted/20 hover:text-foreground'
                   }`}
                 >
                   {tab.label}
@@ -179,7 +179,7 @@ export function RegisteredAccountsChart({
             </ChartContainer>
           </div>
         ) : (
-          <div className="rounded-xl border border-dashed border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] px-4 py-6 text-sm text-muted-foreground">
+          <div className="rounded-xl border border-dashed border-border bg-muted/30 px-4 py-6 text-sm text-muted-foreground">
             No account registrations available yet.
           </div>
         )}

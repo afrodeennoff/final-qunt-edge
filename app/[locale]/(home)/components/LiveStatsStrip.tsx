@@ -1,6 +1,6 @@
 import { getTypedI18n } from '@/locales/server'
 import { Users, Building2, Bot, Zap } from 'lucide-react'
-import { MarketingSection, MarketingStatBlock } from '@/components/layout/marketing-sections'
+import { MarketingSection } from '@/components/layout/marketing-sections'
 import { CardV2 as Card } from '@/components/ui/v2'
 
 export default async function LiveStatsStrip() {
@@ -14,8 +14,8 @@ export default async function LiveStatsStrip() {
   ]
 
   return (
-    <MarketingSection className="py-4 sm:py-6 border-y border-border" innerClassName="max-w-[1280px]">
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+    <MarketingSection className="py-8 sm:py-12" innerClassName="max-w-[1280px]">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         {stats.map((stat, index) => {
           const Icon = stat.icon
           return (

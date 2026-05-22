@@ -1,6 +1,6 @@
-# Qunt Edge Design System — Binance Trading Terminal
+# Qunt Edge Design System — Professional Trading Terminal
 
-> **Aesthetic**: Professional, data-dense dark trading interface inspired by Binance.
+> **Aesthetic**: Professional, data-dense dark trading interface with Deep Purple accents on pure black.
 > **Goal**: A clean, high-contrast, functional trading platform that feels fast, trustworthy, and focused on data.
 
 ---
@@ -30,13 +30,12 @@ Qunt Edge is a **professional trading analytics platform**. The UI should feel l
 ### Base Palette (Dark Theme Only)
 
 ```css
---background: #0A0A0A;           /* Main background */
---card: #1A1A1A;                 /* Card / panel background */
---popover: #1F1F1F;              /* Dropdowns, modals, popovers */
---sidebar: #111111;              /* Sidebar background */
---muted: #2A2A2A;                /* Muted backgrounds */
---border: #2F2F2F;               /* Default borders */
---border-subtle: #252525;        /* Very subtle dividers */
+--background: #000000;           /* Main background */
+--card: #000000;                 /* Card / panel background */
+--popover: #000000;              /* Dropdowns, modals, popovers */
+--sidebar: #000000;              /* Sidebar background */
+--muted: hsl(260, 20%, 8%);     /* Muted backgrounds */
+--border: hsl(260, 20%, 15%);   /* Default borders */
 ```
 
 ### Semantic Colors (Trading Critical)
@@ -51,11 +50,11 @@ Qunt Edge is a **professional trading analytics platform**. The UI should feel l
 --destructive-foreground: #FFFFFF;
 
 /* Warning / Caution */
---warning: #F0B90B;
+--warning: hsl(263, 85%, 65%);
 --warning-foreground: #000000;
 
-/* Primary Action (Binance Yellow / Accent) */
---primary: #F0B90B;
+/* Primary Action (Deep Purple Accent) */
+--primary: hsl(263, 85%, 65%);
 --primary-foreground: #000000;
 
 /* Text Hierarchy */
@@ -66,7 +65,7 @@ Qunt Edge is a **professional trading analytics platform**. The UI should feel l
 
 ### Accent (Branding)
 
-We use a **subtle cobalt** (`oklch(0.65 0.22 260)`) only for branding elements, focus states, and non-trading accents. Trading data (P&L, charts) must always use strong green/red.
+We use **Deep Purple** (`hsl(263, 85%, 65%)`) for branding elements, focus states, and non-trading accents. Trading data (P&L, charts) must always use strong green/red.
 
 ---
 
@@ -105,7 +104,7 @@ On high-resolution screens (8K+), use the 2400px workspace cap + `2xl:` responsi
 - Rounded: `rounded-lg` (8px) or `rounded-xl` for bigger containers
 
 ### Buttons
-- Primary: Binance yellow (`#F0B90B`) with dark text
+- Primary: Deep Purple (`hsl(263, 85%, 65%)`) with dark text
 - Secondary / Ghost: Subtle borders
 - Destructive: Red
 - All buttons should feel solid and responsive
@@ -149,15 +148,14 @@ On high-resolution screens (8K+), use the 2400px workspace cap + `2xl:` responsi
 
 ## 7. Current Direction (2026)
 
-Qunt Edge is moving toward a **clean, professional Binance-style trading terminal** aesthetic:
+Qunt Edge uses a **clean, professional trading terminal** aesthetic:
 
 - Minimal decoration
 - Maximum clarity
 - Strong semantic trading colors
+- Deep Purple accents on pure black
 - Consistent 8pt spacing
 - Excellent experience from 1080p to 12K UHD
-
-This document replaces the previous "Cobalt Void" luxury direction.
 
 ---
 

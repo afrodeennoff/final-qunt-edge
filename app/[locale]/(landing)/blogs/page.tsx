@@ -25,7 +25,7 @@ export default async function BlogsPage() {
 
   return (
     <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
-      <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-6">
+      <div className="rounded-xl border border-border bg-muted/20 p-6">
         <div className="mb-6">
           <h1 className="text-3xl font-semibold text-foreground">{t('blogs.title')}</h1>
           <p className="mt-1 text-muted-foreground">{t('blogs.description')}</p>

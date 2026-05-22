@@ -61,14 +61,14 @@ interface PostComment {
 const typeColors: Record<PostType, string> = {
   [PostType.FEATURE_REQUEST]: 'bg-semantic-info-bg text-semantic-info dark:bg-semantic-info-bg dark:text-semantic-info',
   [PostType.BUG_REPORT]: 'bg-semantic-error-bg text-semantic-error dark:bg-semantic-error-bg dark:text-semantic-error',
-  [PostType.DISCUSSION]: 'border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] text-secondary-foreground',
+  [PostType.DISCUSSION]: 'border border-border bg-muted/20 text-secondary-foreground',
 }
 
 const statusColors: Record<PostStatus, string> = {
-  [PostStatus.OPEN]: 'border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] text-secondary-foreground',
+  [PostStatus.OPEN]: 'border border-border bg-muted/20 text-secondary-foreground',
   [PostStatus.IN_PROGRESS]: 'bg-semantic-warning-bg text-semantic-warning dark:bg-semantic-warning-bg dark:text-semantic-warning',
   [PostStatus.COMPLETED]: 'bg-semantic-info-bg text-semantic-info dark:bg-semantic-info-bg dark:text-semantic-info',
-  [PostStatus.CLOSED]: 'border border-[oklch(0.65_0.22_260/0.08)] bg-background/25 text-muted-foreground',
+  [PostStatus.CLOSED]: 'border border-border bg-background/25 text-muted-foreground',
 }
 
 export function PostCard({ post, isExpanded = false, isAuthor }: Props) {

@@ -36,14 +36,14 @@ export default function TrustAndProof() {
  <section className="relative bg-gradient-to-b from-card/5 to-background px-4 py-12 sm:py-16 lg:py-20 sm:px-6 lg:px-8">
  <div className="mx-auto max-w-6xl">
  <div className="mb-10 text-center sm:mb-14">
- <Badge variant="outline" className="border-[oklch(0.65_0.22_260/0.12)] bg-primary/10 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
+ <Badge variant="outline" className="border-border bg-primary/10 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
  Trust Architecture
  </Badge>
  <h2 className="mt-3 text-[clamp(2rem,4.8vw,3.4rem)] font-semibold leading-[0.92] tracking-[-0.02em] [font-family:var(--home-display)]">
  Built like a trading system:
  <span className="block text-foreground">secure, observable, and review-ready</span>
  </h2>
- <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-[1.78] text-foreground/80 [font-family:var(--home-copy)]">
+  <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-[1.78] text-foreground/80 [font-family:var(--home-copy)]">
  Trust is not a slogan. It is enforced boundaries, predictable failure modes, and a review loop you can audit week after week.
  </p>
  </div>
@@ -84,7 +84,7 @@ export default function TrustAndProof() {
  </article>
  </div>
 
- <div className="mt-5 flex items-center justify-center gap-2 text-xs text-foreground/80 [font-family:var(--home-copy)]">
+  <div className="mt-4 flex items-center justify-center gap-2 text-xs text-foreground/80 [font-family:var(--home-copy)]">
  <ShieldCheck className="h-4 w-4 text-foreground" />
  <span>Transparent quality bar: secure data boundaries, disciplined review loops, and production-grade reliability.</span>
  </div>

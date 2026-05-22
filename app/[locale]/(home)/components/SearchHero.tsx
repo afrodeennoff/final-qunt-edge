@@ -16,7 +16,7 @@ export default function SearchHero({ searchQuery, onSearchChange, totalCount, fi
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
           Prop Firms Explorer
         </p>
-        <span className="rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+        <span className="rounded-full border border-border bg-muted/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
           {filteredCount}/{totalCount}
         </span>
       </div>
@@ -32,7 +32,7 @@ export default function SearchHero({ searchQuery, onSearchChange, totalCount, fi
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search prop firms..."
-          className="h-10 w-full rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-primary/30"
+          className="h-10 w-full rounded-lg border border-border bg-muted/30 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-primary/30"
         />
       </div>
     </div>

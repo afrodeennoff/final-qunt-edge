@@ -75,7 +75,7 @@ const HomeContent = dynamic(() => import('./components/HomeContent'), {
         {/* Live stats skeleton */}
         <div className="mt-16 grid grid-cols-2 gap-6 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-24 rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] animate-pulse" />
+            <div key={i} className="h-24 rounded-xl border border-border bg-muted/30 animate-pulse" />
           ))}
         </div>
       </main>

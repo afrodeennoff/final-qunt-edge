@@ -268,7 +268,7 @@ export function CommentSection({
 
   if (!user) {
     return (
-      <div className="rounded-lg border bg-[oklch(0.65_0.22_260/0.02)] p-6 text-center text-muted-foreground">
+      <div className="rounded-lg border bg-muted/10 p-6 text-center text-muted-foreground">
         {t('community.comments.signInPrompt')}
       </div>
     )

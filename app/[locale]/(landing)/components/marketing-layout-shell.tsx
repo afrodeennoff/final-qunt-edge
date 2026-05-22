@@ -18,7 +18,7 @@ type MarketingLayoutShellProps = Readonly<{
 }>
 
 const MiniMaxNavbarWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  return <div className="w-full border-b border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)]">{children}</div>
+  return <div className="w-full border-b border-border bg-muted/20">{children}</div>
 }
 
 export default function MarketingLayoutShell({
@@ -39,8 +39,7 @@ export default function MarketingLayoutShell({
         className,
       )}
     >
-      {/* Minimal clean foundation — no orbs, no radials for professional calm */}
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-px bg-[oklch(0.65_0.22_260/0.04)]" />
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-px bg-border/30" />
       <div className="flex min-h-screen w-full">
         {/* Full-width content: no sidebar column */}
         <div className="flex-1 min-h-0 min-w-0 bg-transparent">

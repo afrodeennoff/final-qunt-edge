@@ -43,15 +43,15 @@ export default function DashboardPreview() {
       role="img"
       aria-label={String(t('landing.home.preview.ariaLabel'))}
     >
-      <div className="flex h-full min-h-[560px] flex-col overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-black/80 p-4 sm:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[oklch(0.65_0.22_260/0.08)] pb-4">
+      <div className="flex h-full min-h-[560px] flex-col overflow-hidden rounded-2xl border border-border bg-black/80 p-4 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
           <div className="flex items-center gap-2">
             <div className="flex gap-1.5">
               <div className="h-2.5 w-2.5 rounded-full bg-destructive/80" />
               <div className="h-2.5 w-2.5 rounded-full bg-warning/80" />
               <div className="h-2.5 w-2.5 rounded-full bg-success/80" />
             </div>
-            <span className="rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            <span className="rounded-full border border-border bg-muted/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               {t('landing.home.preview.demo')}
             </span>
           </div>
@@ -103,7 +103,7 @@ export default function DashboardPreview() {
                 </div>
               </div>
 
-              <div className="relative h-[190px] overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)]">
+              <div className="relative h-[190px] overflow-hidden rounded-xl border border-border bg-muted/10">
                 <div className="absolute inset-x-0 top-0 flex h-full items-end justify-around gap-1 px-3 pb-3 sm:px-4 sm:pb-4">
                   {bars.map((height, index) => (
                     <span
@@ -125,10 +125,10 @@ export default function DashboardPreview() {
               </div>
 
               <div className="mt-4 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                <span className="rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-3 py-1">
+                <span className="rounded-full border border-border bg-muted/10 px-3 py-1">
                   2.34 {t('landing.home.preview.profitFactorChip')}
                 </span>
-                <span className="rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-3 py-1">
+                <span className="rounded-full border border-border bg-muted/10 px-3 py-1">
                   review cadence: live
                 </span>
               </div>
@@ -140,7 +140,7 @@ export default function DashboardPreview() {
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.preview.recentTrades')}
               </p>
-              <span className="rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              <span className="rounded-full border border-border bg-muted/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                 3 filled
               </span>
             </div>
@@ -149,7 +149,7 @@ export default function DashboardPreview() {
               {trades.map((trade) => (
                 <div
                   key={`${trade.symbol}-${trade.time}`}
-                  className="rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-4 py-3"
+                  className="rounded-lg border border-border bg-muted/10 px-4 py-3"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div>
@@ -179,7 +179,7 @@ export default function DashboardPreview() {
             </div>
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] p-3.5">
+              <div className="rounded-lg border border-border bg-muted/10 p-3.5">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   Risk channel
                 </p>
@@ -187,7 +187,7 @@ export default function DashboardPreview() {
                   controlled exposure
                 </p>
               </div>
-              <div className="rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] p-3.5">
+              <div className="rounded-lg border border-border bg-muted/10 p-3.5">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   Active review
                 </p>

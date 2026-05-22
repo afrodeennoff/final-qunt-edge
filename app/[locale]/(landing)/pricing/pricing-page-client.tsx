@@ -19,7 +19,7 @@ export function PricingPageClient() {
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(540px_220px_at_88%_6%,rgba(255,255,255,0.045),transparent_74%)]" />
 
           <div className="relative grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.72fr)] xl:items-end">
-            <header className="space-y-4 lg:space-y-5">
+            <header className="space-y-4 lg:space-y-6">
               <span className={unifiedChipClassName}>
                 <Sparkles className="h-3.5 w-3.5" />
                 Pricing plans
@@ -85,7 +85,7 @@ function PricingMetaChip({
   return (
     <div
       className={cn(
-        'rounded-xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.02)] px-4 py-3 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
+        'rounded-xl border border-border bg-muted/10 px-4 py-3 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
         className,
       )}
     >

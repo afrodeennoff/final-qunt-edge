@@ -13,15 +13,17 @@ export default async function FeaturesBento() {
     title: t(`landing.home.features.feature${index}Title`),
     description: t(`landing.home.features.feature${index}Description`),
     icon: featureIcons[index - 1],
-    highlighted: index === 2, // Only feature 2 is highlighted
-    colSpan: index === 1 ? 'lg:col-span-2' : '', // First feature spans 2 columns
+    highlighted: index === 2,
+    colSpan: index === 1 ? 'lg:col-span-2' : '',
   }))
 
   return (
-    <MarketingSection className="py-8 sm:py-10" innerClassName="max-w-[1280px]">
+    <MarketingSection className="py-8 sm:py-12 lg:py-16" innerClassName="max-w-[1280px]">
       <div className="space-y-4">
         <Card className="p-6">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">{t('landing.home.features.eyebrow')}</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
+            {t('landing.home.features.eyebrow')}
+          </p>
           <div className="mt-3 grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-end">
             <div>
               <h2 className="text-balance text-[clamp(1.9rem,4vw,2.8rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-foreground">
@@ -29,19 +31,13 @@ export default async function FeaturesBento() {
                 <span className="block text-primary">{t('landing.home.features.highlight')}</span>
               </h2>
             </div>
-            <p className="text-[14px] leading-relaxed text-muted-foreground max-w-2xl">
+            <p className="max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
               {t('landing.home.features.description')}
             </p>
           </div>
         </Card>
 
-        <div>
-          <span className="inline-flex items-center rounded-full border border-border bg-muted px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-            {t('landing.home.features.listLabel')}
-          </span>
-        </div>
-
-        <div className="grid gap-3 lg:grid-cols-4">
+        <div className="grid gap-4 lg:grid-cols-4">
           {features.map((feature) => {
             const Icon = feature.icon
             return (
@@ -57,7 +53,7 @@ export default async function FeaturesBento() {
                     {t('landing.home.features.feature2Badge')}
                   </span>
                 ) : null}
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <h3 className="text-[14px] font-semibold tracking-[-0.01em] text-foreground">
                     {feature.title}
                   </h3>

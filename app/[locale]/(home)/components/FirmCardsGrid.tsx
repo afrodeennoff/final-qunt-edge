@@ -12,7 +12,7 @@ interface FirmCardsGridProps {
 export default function FirmCardsGrid({ firms, locale }: FirmCardsGridProps) {
   if (firms.length === 0) {
     return (
-      <div className="mt-6 rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] p-8 text-center">
+      <div className="mt-6 rounded-lg border border-border bg-muted/30 p-8 text-center">
         <p className="text-sm text-muted-foreground">
           No firms match your current filters. Try adjusting your search.
         </p>
@@ -21,11 +21,11 @@ export default function FirmCardsGrid({ firms, locale }: FirmCardsGridProps) {
   }
 
   return (
-    <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {firms.slice(0, 6).map((firm) => (
         <div
           key={firm.id}
-          className="group rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] p-4 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.12)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32)]"
+          className="group rounded-lg border border-border bg-muted/40 p-4 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-lg"
         >
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">

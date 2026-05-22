@@ -55,7 +55,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-[oklch(0.65_0.22_260/0.08)] bg-black py-12 sm:py-16"
+      className="border-t border-border bg-black py-12 sm:py-16"
     >
       <h2 id="footer-heading" className="sr-only">
         {t('footer.heading')}
@@ -70,13 +70,13 @@ export default function Footer() {
       >
         <div
           className={cn(
-            'rounded-2xl border border-[oklch(0.65_0.22_260_/_0.09)] bg-[linear-gradient(180deg,oklch(0.062_0.012_260_/_0.82)_0%,oklch(0.054_0.01_260_/_0.76)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_32px_-26px_rgba(0,0,0,0.62)]',
+            'rounded-2xl border border-border bg-black shadow-lg',
             'grid gap-8 p-7 sm:p-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)] lg:p-10',
           )}
         >
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] text-muted-foreground">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-muted/20 text-muted-foreground">
                 <Logo className="h-5 w-5 fill-current" />
               </div>
               <div className="leading-none">
@@ -125,7 +125,7 @@ export default function Footer() {
                   viewport={{ once: true }}
                   transition={{ delay: 0.08 + index * 0.05, duration: 0.35 }}
                   className={cn(
-                    'flex h-9 w-9 items-center justify-center rounded-full border border-[oklch(0.65_0.22_260_/_0.075)] bg-[oklch(0.056_0.01_260_/_0.74)] text-muted-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04)] transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-[oklch(0.65_0.22_260_/_0.13)] hover:bg-[oklch(0.06_0.011_260_/_0.82)] hover:text-primary',
+                    'flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted/10 text-muted-foreground shadow-lg transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-border hover:bg-muted/20 hover:text-primary',
                   )}
                 >
                   <item.icon className="size-[18px]" />
@@ -141,7 +141,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-[oklch(0.65_0.22_260/0.08)] pt-5">
+        <div className="mt-8 border-t border-border pt-5">
           <p className="text-xs tracking-[-0.005em] text-muted-foreground">
             {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
@@ -162,7 +162,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
       <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-foreground/70">
         {title}
       </h3>
-      <ul className="space-y-2.5">
+      <ul className="space-y-2">
         {links.map((item, index) => (
           <motion.li
             key={item.name}
@@ -174,7 +174,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
             <Link
               href={`/${locale}${item.href}`}
               prefetch={false}
-              className="inline-flex rounded-lg px-2 py-1 text-sm text-muted-foreground/80 transition-[color,background-color] duration-200 hover:bg-[oklch(0.65_0.22_260_/_0.04)] hover:text-foreground"
+              className="inline-flex rounded-lg px-2 py-1 text-sm text-muted-foreground/80 transition-[color,background-color] duration-200 hover:bg-muted/60 hover:text-foreground"
             >
               {item.name}
             </Link>

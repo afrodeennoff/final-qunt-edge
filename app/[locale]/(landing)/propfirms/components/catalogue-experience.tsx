@@ -53,7 +53,7 @@ const RegisteredAccountsChart = dynamic(
   {
     ssr: false,
     loading: () => (
-      <section className={cn(unifiedSectionPanelClassName, 'min-h-[420px] animate-pulse bg-[oklch(0.65_0.22_260/0.015)]')} />
+      <section className={cn(unifiedSectionPanelClassName, 'min-h-[420px] animate-pulse bg-muted/10')} />
     ),
   },
 )
@@ -251,7 +251,7 @@ export function PropFirmCatalogueExperience({
                     href={`/${locale}/firm/${firm.slug}`}
                     className={cn(
                       unifiedInsetPanelClassName,
-                      'animate-scale-reveal px-4 py-4 transition-[transform,background-color,border-color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.10)] hover:bg-[oklch(0.65_0.22_260/0.03)]',
+                      'animate-scale-reveal px-4 py-4 transition-[transform,background-color,border-color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border hover:bg-muted/20',
                       index === 0 && 'animate-scale-reveal-d1',
                       index === 1 && 'animate-scale-reveal-d2',
                       index === 2 && 'animate-scale-reveal-d3',
@@ -339,7 +339,7 @@ export function PropFirmCatalogueExperience({
                   href={`/${locale}/firm/${firm.slug}`}
                   className={cn(
                     unifiedInsetPanelClassName,
-                    'group animate-scale-reveal p-4 transition-[transform,background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.10)] hover:bg-[oklch(0.65_0.22_260/0.05)] hover:shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
+                    'group animate-scale-reveal p-4 transition-[transform,background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border hover:bg-muted/30 hover:shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
                     index % 3 === 0 && 'animate-scale-reveal-d1',
                     index % 3 === 1 && 'animate-scale-reveal-d2',
                     index % 3 === 2 && 'animate-scale-reveal-d3',
@@ -404,7 +404,7 @@ export function PropFirmCatalogueExperience({
               ))}
             </div>
           ) : (
-            <div className="mt-6 rounded-2xl border border-dashed border-[oklch(0.65_0.22_260/0.09)] bg-[oklch(0.65_0.22_260/0.065)] p-8 text-center text-sm text-muted-foreground">
+            <div className="mt-6 rounded-2xl border border-dashed border-border bg-muted/40 p-8 text-center text-sm text-muted-foreground">
               No firms match the current search and filter stack.
             </div>
           )}

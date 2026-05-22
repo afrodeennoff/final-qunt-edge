@@ -627,7 +627,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6">
         <div className="flex items-center gap-2">
@@ -692,7 +692,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
   const sourceNotes = getFirmSourceNotes().overview
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6 sm:p-8">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Research snapshot</p>
@@ -1004,7 +1004,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
   const sourceNotes = getFirmSourceNotes().rules
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">

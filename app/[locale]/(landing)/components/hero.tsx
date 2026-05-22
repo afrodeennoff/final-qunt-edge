@@ -57,7 +57,7 @@ export default function Hero({ }: HeroProps) {
 					className="mt-8"
 				>
 					<h1 className="mb-6 text-[clamp(2rem,6vw,5.625rem)] font-[350] leading-[1.06] tracking-[-0.045em] text-foreground [font-family:var(--font-geist,sans-serif)]">
-						Qunt <span className="bg-gradient-to-r from-[oklch(0.98_0.003_260)] via-[oklch(0.98_0.003_260)] to-[oklch(0.98_0.003_260/0.60)] bg-clip-text text-transparent">Edge.</span>
+						Qunt <span className="bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">Edge.</span>
 					</h1>
 
 					<p className="text-[15px] max-w-lg mx-auto mb-12 leading-[1.65] font-[350] px-2 text-muted-foreground tracking-[-0.01em]">
@@ -81,7 +81,7 @@ export default function Hero({ }: HeroProps) {
 
 					<Link
 						href={`/${locale}/updates`}
-						className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] px-8 text-center text-[13px] font-medium text-foreground/80 tracking-[-0.01em] transition-[transform,background-color,opacity,border-color] hover:border-[oklch(0.65_0.22_260/0.08)] hover:bg-[oklch(0.65_0.22_260/0.03)] hover:text-foreground sm:w-auto"
+						className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-full border border-border bg-muted/20 px-8 text-center text-[13px] font-medium text-foreground/80 tracking-[-0.01em] transition-[transform,background-color,opacity,border-color] hover:border-border hover:bg-muted/20 hover:text-foreground sm:w-auto"
 					>
 						View Product Updates
 						<svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
@@ -92,7 +92,7 @@ export default function Hero({ }: HeroProps) {
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					transition={{ duration: 0.6, delay: 0.6 }}
-					className="mt-20 border-t border-[oklch(0.65_0.22_260/0.08)] px-4 pt-10 opacity-50 transition-[opacity] duration-700 hover:opacity-100 sm:mt-24 sm:pt-12"
+					className="mt-20 border-t border-border px-4 pt-10 opacity-50 transition-[opacity] duration-700 hover:opacity-100 sm:mt-24 sm:pt-12"
 				>
 					<div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 lg:gap-8">
 						<span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-[color,letter-spacing] duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">TRADOVATE</span>

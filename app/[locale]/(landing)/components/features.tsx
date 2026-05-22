@@ -40,7 +40,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
 			<div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
 
 			<div className="relative h-full">
-				<CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-[oklch(0.65_0.22_260/0.08)] pb-4">
+				<CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-border pb-4">
 					<CardTitle className="text-base font-medium tracking-[-0.02em] text-foreground sm:text-lg">{feature.title}</CardTitle>
 					<div className="relative">
 						<div className="absolute inset-0 rounded-full bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -58,7 +58,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
 							</p>
 						</div>
 						<div
-							className={cn("relative flex w-full items-center justify-center overflow-hidden rounded-xl","border border-[oklch(0.65_0.22_260/0.08)] bg-background/25","group-hover:border-[oklch(0.65_0.22_260/0.09)] group-hover:bg-[oklch(0.65_0.22_260/0.035)] transition-[transform,opacity,background-color,border-color,box-shadow] duration-500",
+							className={cn("relative flex w-full items-center justify-center overflow-hidden rounded-xl","border border-border bg-background/25","group-hover:border-border group-hover:bg-muted/20 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500",
 							feature.wrapperClass ??"h-[250px] sm:h-[300px] md:h-[350px]"
 							)}
 						>
@@ -186,14 +186,14 @@ export default function Features() {
 						{features.map((feature, index) => (
 							<div
 								key={feature.id}
-								className={cn("rounded-xl border border-[oklch(0.65_0.22_260/0.09)] bg-[oklch(0.65_0.22_260/0.04)] p-6 sm:p-6 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]","hover:-translate-y-1","opacity-0",
+								className={cn("rounded-xl border border-border bg-muted/20 p-6 sm:p-6 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]","hover:-translate-y-1","opacity-0",
 								isVisible &&"opacity-100"
 								)}
 								style={{
 									transitionDelay: isVisible ? `${index * 100}ms` : '0ms',
 								}}
 							>
-								<div className="mb-4 flex size-8 items-center justify-center rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)]">
+								<div className="mb-4 flex size-8 items-center justify-center rounded-lg border border-border bg-muted/20">
 									{feature.icon}
 								</div>
 								<p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-foreground/70">

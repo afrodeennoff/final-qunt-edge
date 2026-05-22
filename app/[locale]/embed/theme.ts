@@ -21,7 +21,7 @@ export const THEME_PRESETS: Record<string, EmbedThemeVars> = {
   
       '--chart-1': '12 76% 61%', // orange
       '--chart-2': '343 83% 45%', // raspberry
-      '--chart-3': '43 74% 66%',  // yellow
+      '--chart-3': '12 76% 61%',  // warm orange
       '--chart-4': '330 70% 60%', // pink
       '--chart-5': '27 87% 67%',  // amber
         '--chart-win': '152 78% 45%', // #0ECB81 green

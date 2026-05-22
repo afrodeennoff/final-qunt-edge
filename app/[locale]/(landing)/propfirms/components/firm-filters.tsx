@@ -48,7 +48,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
   const hasActiveFilters = search || payoutFilter || sort !== "accounts"
 
   return (
-    <div className="space-y-4 rounded-xl border border-[oklch(0.65_0.22_260/0.04)] bg-[oklch(0.65_0.22_260/0.02)] p-4 sm:p-6">
+    <div className="space-y-4 rounded-xl border border-border bg-muted/10 p-4 sm:p-6">
       {/* Search Bar */}
       <div className="relative">
         <svg
@@ -69,7 +69,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
           placeholder="Search prop firms..."
           defaultValue={search}
           onChange={(e) => updateParams("q", e.target.value)}
-          className="h-12 rounded-xl border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.07)] pl-10 placeholder:text-muted-foreground/40 focus-visible:ring-1 focus-visible:ring-[oklch(0.65_0.22_260/0.2)] focus-visible:ring-offset-0"
+          className="h-12 rounded-xl border-border bg-muted/40 pl-10 placeholder:text-muted-foreground/40 focus-visible:ring-1 focus-visible:ring-[hsl(var(--primary))] focus-visible:ring-offset-0"
         />
       </div>
 
@@ -90,7 +90,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
                 "h-8 rounded-full border px-3 text-[11px] font-medium transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
                 payoutFilter === value
                   ? "border-primary/40 bg-primary/10 text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground hover:bg-[oklch(0.65_0.22_260/0.02)]"
+                  : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/10"
               )}
             >
               {value === "" ? "All" : value === "high-paid" ? "High Paid" : "Low Refused"}
@@ -121,7 +121,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
                 "h-8 rounded-full border px-3 text-[11px] font-medium transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
                 sort === value
                   ? "border-primary/40 bg-primary/10 text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground hover:bg-[oklch(0.65_0.22_260/0.02)]"
+                  : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/10"
               )}
             >
               {label}

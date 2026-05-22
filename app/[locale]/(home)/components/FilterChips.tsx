@@ -33,7 +33,7 @@ function ChipGroup({
           className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
             value === option
               ? 'bg-primary text-primary-foreground'
-              : 'border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] text-muted-foreground hover:bg-[oklch(0.65_0.22_260/0.06)]'
+              : 'border border-border bg-muted/30 text-muted-foreground hover:bg-muted'
           }`}
         >
           {option}
@@ -45,7 +45,7 @@ function ChipGroup({
 
 export default function FilterChips({ filters, onFilterChange }: FilterChipsProps) {
   return (
-    <div className="mt-5 flex flex-col gap-3 rounded-md border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] p-4">
+    <div className="mt-4 flex flex-col gap-3 rounded-md border border-border bg-muted/30 p-4">
       <ChipGroup
         label="Platform"
         options={platformOptions}

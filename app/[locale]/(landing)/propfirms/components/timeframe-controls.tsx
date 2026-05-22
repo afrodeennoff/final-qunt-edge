@@ -41,11 +41,11 @@ export function TimeframeControls({ timeframeLabel, timeframeOptions }: Timefram
       <Select value={currentTimeframe} onValueChange={handleTimeframeChange}>
         <SelectTrigger
           id="timeframe-select"
-          className="w-[200px] border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] text-foreground shadow-none transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[oklch(0.65_0.22_260/0.025)] focus-visible:ring-1 focus-visible:ring-[oklch(0.65_0.22_260/0.2)] focus-visible:ring-offset-0"
+          className="w-[200px] border border-border bg-muted/10 text-foreground shadow-none transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-muted/20 focus-visible:ring-1 focus-visible:ring-[hsl(var(--primary))] focus-visible:ring-offset-0"
         >
           <SelectValue />
         </SelectTrigger>
-        <SelectContent className="border border-[oklch(0.65_0.22_260/0.08)] bg-background text-foreground shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+        <SelectContent className="border border-border bg-background text-foreground shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
           <SelectItem value="currentMonth">{timeframeOptions.currentMonth}</SelectItem>
           <SelectItem value="last3Months">{timeframeOptions.last3Months}</SelectItem>
           <SelectItem value="last6Months">{timeframeOptions.last6Months}</SelectItem>

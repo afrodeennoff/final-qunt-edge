@@ -30,7 +30,7 @@ const socialLinks = [
 
 export default function Footer() {
  return (
- <footer className="border-t border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.01)]">
+  <footer className="border-t border-border bg-black">
   <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
   <div className="grid grid-cols-2 md:grid-cols-5 gap-6 lg:gap-10 mb-8">
  <div className="col-span-2">
@@ -93,7 +93,7 @@ export default function Footer() {
  </ul>
  </div>
  </div>
- <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-[oklch(0.65_0.22_260/0.10)]">
+  <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-border">
  <p className="text-[0.8rem] text-muted-foreground/60">
  © 2026 Qunt Edge. All rights reserved.
  </p>

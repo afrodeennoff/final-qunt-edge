@@ -2212,8 +2212,8 @@
 @layer utilities {
   .marketing-shell {
     position: relative;
-    background: hsl(var(--mk-bg-1));
-    color: hsl(var(--mk-text));
+    background: var(--background);
+    color: var(--foreground);
   }
 
   .home-borderless :is(*, *::before, *::after) {
@@ -3113,18 +3113,7 @@ img[loading='lazy'] {
 
   .qe-v2-app-shell {
     position: relative;
-    background:
-      radial-gradient(
-        1200px 720px at 8% -8%,
-        oklch(0.7001 0.1882 313.2907 / 0.1),
-        transparent 56%
-      ),
-      radial-gradient(
-        900px 640px at 92% 105%,
-        oklch(0.4865 0.2423 291.8661 / 0.08),
-        transparent 56%
-      ),
-      linear-gradient(180deg, oklch(0.1091 0.0091 301.6956) 0%, oklch(0.097 0.008 301.4) 46%, oklch(0.093 0.007 300.8) 100%);
+    background-color: var(--background);
   }
 
   .qe-v2-card {
@@ -4206,16 +4195,20 @@ img[loading='lazy'] {
 
 /* === PUBLIC PAGES: PURE BLACK CANVAS + LOCKED DEEP PURPLE DEFAULT === */
 /* Applied on home, marketing, auth, landing, etc. — dashboard/teams keep user theme */
-:root.public,
-html.public,
-body.public-page {
+/* .public-page is set on the shell div (home/landing/auth layouts) and cascades to all children */
+.public-page,
+.public-page .marketing-shell,
+.public-page .qe-v2-app-shell {
   --background: #000000 !important;
   --card: #000000 !important;
   --popover: #000000 !important;
   --sidebar: #000000 !important;
+  --sidebar-background: #000000 !important;
   --muted: hsl(260, 20%, 8%) !important;
   --border: hsl(260, 20%, 15%) !important;
   --input: hsl(260, 20%, 12%) !important;
+  /* Pure black surface fallback */
+  background: #000000 !important;
 
   /* Locked Deep Purple accents from default palette (cmlh0x713000104jrgmds6vcd) */
   --primary: hsl(263, 85%, 65%) !important;
@@ -4223,6 +4216,8 @@ body.public-page {
   --ring: hsl(263, 85%, 65%) !important;
   --accent: hsl(263, 60%, 15%) !important;
   --accent-foreground: hsl(263, 85%, 65%) !important;
+  --warning: hsl(263, 85%, 65%) !important;
+  --warning-foreground: #000000 !important;
   --chart-1: hsl(263, 85%, 65%) !important;
   --chart-2: hsl(190, 80%, 55%) !important;
   --chart-3: hsl(150, 70%, 50%) !important;

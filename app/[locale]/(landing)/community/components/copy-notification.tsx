@@ -9,7 +9,7 @@ interface CopyNotificationProps {
 export function CopyNotification({ show, message }: CopyNotificationProps) {
   return (
     <div className={cn(
-      'fixed inset-0 z-50 flex items-center justify-center bg-[oklch(0.65_0.22_260/0.07)] transition-opacity duration-200',
+      'fixed inset-0 z-50 flex items-center justify-center bg-muted/40 transition-opacity duration-200',
       show ? 'opacity-100' : 'opacity-0 pointer-events-none'
     )}>
       <div className={cn(

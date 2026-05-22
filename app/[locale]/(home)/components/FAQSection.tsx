@@ -1,10 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'motion/react'
-import { ChevronDown, HelpCircle } from 'lucide-react'
+import { HelpCircle } from 'lucide-react'
 import { BadgeV2 as Badge } from '@/components/ui/v2'
-import { CardV2 as Card, CardContent } from '@/components/ui/v2'
+import { CardV2 as Card } from '@/components/ui/v2'
 import { cn } from '@/lib/utils'
 import { useTypedI18n } from '@/locales/client'
 import { MarketingSection } from '@/components/layout/marketing-sections'
@@ -14,47 +13,16 @@ interface FAQItem {
   answer: string
 }
 
-function FAQAccordion({
-  item,
-  isOpen,
-  onToggle,
-}: {
-  item: FAQItem
-  isOpen: boolean
-  onToggle: () => void
-}) {
+function FAQAccordion({ item, isOpen, onToggle }: { item: FAQItem; isOpen: boolean; onToggle: () => void }) {
   return (
-    <Card
-      className={cn(
-        'overflow-hidden rounded-lg border bg-[oklch(0.65_0.22_260/0.03)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-colors',
-        isOpen ? 'border-primary/30' : 'border-[oklch(0.65_0.22_260/0.08)]',
-      )}
-    >
+    <Card className={cn('overflow-hidden rounded-lg border', isOpen ? 'border-primary/30' : 'border-border')}>
       <button
         onClick={onToggle}
-        className="flex w-full items-center justify-between gap-4 p-4 text-left hover:bg-[oklch(0.65_0.22_260/0.02)]"
+        className="flex w-full items-center justify-between gap-4 p-4 text-left hover:bg-muted/10"
         aria-expanded={isOpen}
         data-state={isOpen ? 'open' : 'closed'}
       >
-        <div className="flex items-start gap-4">
-          <span
-            className={cn(
-              'mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-semibold uppercase tracking-[0.12em]',
-              isOpen
-                ? 'border-primary/30 bg-primary/10 text-primary'
-                : 'border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] text-muted-foreground',
-            )}
-          >
-            Q
-          </span>
-          <span className="type-h4 pr-4 text-foreground">{item.question}</span>
-        </div>
-        <ChevronDown
-          className={cn(
-            'h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200',
-            isOpen && 'rotate-180',
-          )}
-        />
+        <span className="type-h4 text-foreground">{item.question}</span>
       </button>
       <div
         className={cn(
@@ -63,9 +31,9 @@ function FAQAccordion({
         )}
       >
         <div className="overflow-hidden">
-          <CardContent className="border-t border-[oklch(0.65_0.22_260/0.08)] p-4 pt-4">
-            <p className="pl-12 text-sm leading-relaxed text-muted-foreground">{item.answer}</p>
-          </CardContent>
+          <div className="border-t border-border p-4">
+            <p className="text-sm leading-relaxed text-muted-foreground">{item.answer}</p>
+          </div>
         </div>
       </div>
     </Card>
@@ -84,22 +52,19 @@ export default function FAQSection() {
   return (
     <MarketingSection id="faq" className="py-8 sm:py-12 lg:py-16" innerClassName="max-w-[1360px]">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
-        <Card variant="glass" className="p-6 lg:sticky lg:top-28">
-          <Badge
-            variant="frost-info"
-            className="rounded-full px-3 py-1 text-xs uppercase tracking-[0.18em]"
-          >
+        <Card className="p-6">
+          <Badge variant="outline" className="rounded-full px-3 py-1 text-xs uppercase tracking-[0.18em]">
             <HelpCircle className="mr-1.5 h-3 w-3" />
             {t('landing.home.faq.badge')}
           </Badge>
-          <h2 className="mt-5 text-balance text-foreground text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.02em]">
+          <h2 className="mt-4 text-balance text-3xl font-semibold tracking-[-0.02em] text-foreground sm:text-4xl lg:text-5xl">
             {t('landing.home.faq.title')}
           </h2>
-          <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
+          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
             {t('landing.home.faq.description')}
           </p>
 
-          <Card variant="flat" className="mt-8 p-6 border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)]">
+          <Card className="mt-8 border border-border p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
               {t('landing.home.faq.bestForTitle')}
             </p>
@@ -109,7 +74,7 @@ export default function FAQSection() {
           </Card>
         </Card>
 
-        <Card variant="glass" className="p-4 sm:p-6">
+        <Card className="p-4 sm:p-6">
           <div className="mb-4 flex items-center justify-between gap-3 px-1">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
               {t('landing.home.faq.commonQuestions')}
@@ -118,25 +83,14 @@ export default function FAQSection() {
               {t('landing.home.faq.answersLabel', { count: faqs.length })}
             </p>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {faqs.map((faq, index) => (
-              <motion.div
+              <FAQAccordion
                 key={faq.question}
-                initial={false}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.35,
-                  delay: index * 0.05,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-              >
-                <FAQAccordion
-                  item={faq}
-                  isOpen={openIndex === index}
-                  onToggle={() => setOpenIndex(openIndex === index ? null : index)}
-                />
-              </motion.div>
+                item={faq}
+                isOpen={openIndex === index}
+                onToggle={() => setOpenIndex(openIndex === index ? null : index)}
+              />
             ))}
           </div>
         </Card>

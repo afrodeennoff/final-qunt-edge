@@ -3,16 +3,16 @@ import { MarketingSection, MarketingSectionHeader } from '@/components/layout/ma
 
 export default function ProblemStatement() {
   const pains = [
-    { title: "Scattered Data", desc: "Trades across 4 brokers, 12 spreadsheets, and zero single source of truth." },
-    { title: "Blind Spots", desc: "You know you’re profitable but have no idea which setups actually generate your edge." },
-    { title: "No Real Review", desc: "End-of-day journaling is a joke. You repeat the same expensive mistakes weekly." },
+    { title: 'Scattered Data', desc: 'Trades across 4 brokers, 12 spreadsheets, and zero single source of truth.' },
+    { title: 'Blind Spots', desc: 'You know you&rsquo;re profitable but have no idea which setups actually generate your edge.' },
+    { title: 'No Real Review', desc: 'End-of-day journaling is a joke. You repeat the same expensive mistakes weekly.' },
   ]
 
   return (
-    <MarketingSection className="py-8 sm:py-10" innerClassName="max-w-[1280px]">
+    <MarketingSection className="py-8 sm:py-12 lg:py-16" innerClassName="max-w-[1280px]">
       <MarketingSectionHeader
         eyebrow="The Problem"
-        title="Trading is hard enough. Your tools shouldn’t make it harder."
+        title="Trading is hard enough. Your tools shouldn&rsquo;t make it harder."
         align="center"
       />
       <div className="mt-8 grid gap-4 md:grid-cols-3">

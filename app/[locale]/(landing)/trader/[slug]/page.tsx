@@ -177,7 +177,7 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
   return (
     <div className="min-h-[calc(100vh-72px)] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <div className="mx-auto max-w-[1120px]">
-        <div className="rounded-2xl border border-[oklch(0.65_0.22_260/0.10)] bg-[oklch(0.65_0.22_260/0.03)] p-8">
+        <div className="rounded-2xl border border-border bg-muted/20 p-8">
           <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">Trader profile</p>
           <h1 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-foreground">{slug}</h1>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
@@ -186,7 +186,7 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
           <div className="mt-8 flex flex-wrap gap-2">
             <Link
               href={`/${locale}/leaderboard`}
-              className="inline-flex items-center gap-2 rounded-full border border-[oklch(0.65_0.22_260/0.10)] bg-transparent px-4 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-[oklch(0.65_0.22_260/0.06)]"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-transparent px-4 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted/30"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Leaderboard
@@ -239,10 +239,10 @@ export default async function TraderProfilePage({
       />
       <div className="mx-auto grid max-w-[1180px] gap-6 xl:grid-cols-[minmax(0,1.28fr)_minmax(340px,0.72fr)]">
         <section className="space-y-6">
-          <div className="overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.78)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_24px_70px_-44px_rgba(0,0,0,0.95)]">
+          <div className="overflow-hidden rounded-2xl border border-border bg-muted/10 shadow-lg">
             <div className="flex flex-col gap-6 p-6 sm:p-8 lg:flex-row lg:items-start lg:justify-between">
               <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start">
-                <Avatar className="h-20 w-20 shrink-0 rounded-3xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.65_0.22_260/0.07)] sm:h-24 sm:w-24">
+                <Avatar className="h-20 w-20 shrink-0 rounded-3xl border border-border bg-muted/40 sm:h-24 sm:w-24">
                   <AvatarFallback className="bg-background text-lg font-semibold text-foreground">
                     {snapshot.username.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
@@ -254,7 +254,7 @@ export default async function TraderProfilePage({
                       <Zap className="h-3 w-3" />
                       Public trader
                     </span>
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-[oklch(0.65_0.22_260_/_0.1)] bg-[oklch(0.65_0.22_260/0.04)] px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted/20 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
                       <Lock className="h-3 w-3" />
                       Live profile
                     </span>
@@ -273,7 +273,7 @@ export default async function TraderProfilePage({
               <div className="flex flex-wrap gap-2 lg:justify-end">
                 <Link
                   href={`/${locale}/leaderboard`}
-                  className="inline-flex items-center gap-2 rounded-full border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.65_0.22_260/0.045)] px-4 py-2 text-sm font-medium text-foreground transition-[background-color,border-color,color] hover:bg-[oklch(0.65_0.22_260/0.07)]"
+                  className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/30 px-4 py-2 text-sm font-medium text-foreground transition-[background-color,border-color,color] hover:bg-muted/40"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" />
                   Leaderboard
@@ -288,13 +288,13 @@ export default async function TraderProfilePage({
               </div>
             </div>
 
-            <div className="grid border-t border-[oklch(0.65_0.22_260_/_0.08)] sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid border-t border-border sm:grid-cols-2 xl:grid-cols-4">
               {publicStats.map((stat) => {
                 const Icon = stat.icon
                 return (
                   <div
                     key={stat.label}
-                    className="border-t border-[oklch(0.65_0.22_260_/_0.08)] p-6 first:border-t-0 sm:[&:nth-child(-n+2)]:border-t-0 xl:border-l xl:border-t-0 xl:first:border-l-0"
+                    className="border-t border-border p-6 first:border-t-0 sm:[&:nth-child(-n+2)]:border-t-0 xl:border-l xl:border-t-0 xl:first:border-l-0"
                   >
                     <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
                       <Icon className="h-3.5 w-3.5" />
@@ -310,7 +310,7 @@ export default async function TraderProfilePage({
             </div>
           </div>
 
-          <div className="rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.72)] p-6 shadow-[0_16px_48px_-36px_rgba(0,0,0,0.95)] sm:p-6">
+          <div className="rounded-2xl border border-border bg-muted/10 p-6 shadow-[0_16px_48px_-36px_rgba(0,0,0,0.95)] sm:p-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
@@ -333,7 +333,7 @@ export default async function TraderProfilePage({
                   return (
                     <div
                       key={trade.id}
-                      className="flex flex-col gap-2 rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260/0.045)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                      className="flex flex-col gap-2 rounded-xl border border-border bg-muted/30 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                     >
                       <div className="min-w-0">
                         <p className="truncate text-sm font-medium text-foreground">
@@ -361,7 +361,7 @@ export default async function TraderProfilePage({
                   )
                 })
               ) : (
-                <div className="rounded-xl border border-dashed border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-6 text-sm text-muted-foreground">
+                <div className="rounded-xl border border-dashed border-border bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
                   No public closed trades are available yet.
                 </div>
               )}
@@ -369,8 +369,8 @@ export default async function TraderProfilePage({
           </div>
         </section>
 
-        <aside className="space-y-5 xl:sticky xl:top-24 xl:self-start">
-          <div className="rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.72)] p-6 shadow-[0_16px_48px_-36px_rgba(0,0,0,0.95)]">
+        <aside className="space-y-4 xl:sticky xl:top-24 xl:self-start">
+          <div className="rounded-2xl border border-border bg-muted/10 p-6 shadow-[0_16px_48px_-36px_rgba(0,0,0,0.95)]">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
@@ -400,7 +400,7 @@ export default async function TraderProfilePage({
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260/0.045)] p-3">
+                <div className="rounded-xl border border-border bg-muted/30 p-3">
                   <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                     Avg trade
                   </p>
@@ -413,7 +413,7 @@ export default async function TraderProfilePage({
                     {formatSigned(snapshot.avgPnl)}
                   </p>
                 </div>
-                <div className="rounded-xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260/0.045)] p-3">
+                <div className="rounded-xl border border-border bg-muted/30 p-3">
                   <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                     Status
                   </p>
@@ -423,7 +423,7 @@ export default async function TraderProfilePage({
             </div>
           </div>
 
-          <div className="rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.72)] p-6 shadow-[0_16px_48px_-36px_rgba(0,0,0,0.95)]">
+          <div className="rounded-2xl border border-border bg-muted/10 p-6 shadow-[0_16px_48px_-36px_rgba(0,0,0,0.95)]">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">

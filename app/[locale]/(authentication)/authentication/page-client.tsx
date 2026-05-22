@@ -98,7 +98,7 @@ export default function AuthenticationPageClient() {
                 <h1 className="mt-8 text-balance text-4xl font-medium leading-[0.98] tracking-[-0.05em] text-foreground sm:text-5xl lg:text-6xl">
                   Welcome back to your trading command center.
                 </h1>
-                <p className={cn(unifiedBodyCopyClassName, 'mt-5 max-w-xl text-foreground/60')}>
+                <p className={cn(unifiedBodyCopyClassName, 'mt-4 max-w-xl text-foreground/60')}>
                   {t('authentication.description')}
                 </p>
 

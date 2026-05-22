@@ -29,7 +29,7 @@ export default function ForgotPasswordForm({ locale }: { locale: string }) {
  if (isSubmitted) {
  return (
  <div className="flex min-h-screen items-center justify-center p-4">
- <div className="w-full max-w-md rounded-2xl border border-border/50 bg-card p-6 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_16px_32px_-26px_rgba(0,0,0,0.62)] sm:p-8">
+ <div className="w-full max-w-md rounded-2xl border border-border/50 bg-card p-6 shadow-lg sm:p-8">
  <div className="flex flex-col items-center gap-4 text-center">
  <h2 className="text-2xl font-semibold tracking-tight text-foreground">Check your email</h2>
  <p className="text-sm text-muted-foreground max-w-sm">
@@ -49,7 +49,7 @@ export default function ForgotPasswordForm({ locale }: { locale: string }) {
 
  return (
  <div className="flex min-h-screen items-center justify-center p-4">
- <div className="w-full max-w-md rounded-2xl border border-border/50 bg-card p-6 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_16px_32px_-26px_rgba(0,0,0,0.62)] sm:p-8">
+ <div className="w-full max-w-md rounded-2xl border border-border/50 bg-card p-6 shadow-lg sm:p-8">
  <div className="flex flex-col gap-6">
  <div className="text-center">
  <h2 className="text-2xl font-semibold tracking-tight text-foreground">Forgot your password?</h2>

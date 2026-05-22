@@ -106,7 +106,7 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                         {t('support.contactInformationDescription')}
                     </DialogDescription>
                 </DialogHeader>
-                <form onSubmit={handleFormSubmit} className="space-y-5">
+                <form onSubmit={handleFormSubmit} className="space-y-4">
                     <div>
                         <Label htmlFor="summary" className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{t('support.form.summary')}</Label>
                         <Textarea

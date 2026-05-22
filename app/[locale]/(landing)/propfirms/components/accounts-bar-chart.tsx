@@ -113,7 +113,7 @@ export function AccountsBarChart({
   )
 
   return (
-    <Card data-chart-surface="modern" className="border-[oklch(0.65_0.22_260/0.04)] bg-[oklch(0.65_0.22_260/0.02)] shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+    <Card data-chart-surface="modern" className="border-border bg-muted/10 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
       <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <CardTitle>{chartTitle}</CardTitle>
@@ -126,10 +126,10 @@ export function AccountsBarChart({
             aria-pressed={showPayoutBars}
             onClick={() => setShowPayoutBars((v) => !v)}
             className={cn(
-              "h-7 px-2 border-[oklch(0.65_0.22_260/0.04)] text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "h-7 px-2 border-border text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showPayoutBars
                 ? "border-primary/60 bg-primary/20 text-foreground"
-                : "text-foreground/80 hover:bg-[oklch(0.65_0.22_260/0.035)] hover:text-foreground"
+                : "text-foreground/80 hover:bg-muted/20 hover:text-foreground"
             )}
           >
             Payouts
@@ -140,10 +140,10 @@ export function AccountsBarChart({
             aria-pressed={showAccountValue}
             onClick={() => setShowAccountValue((v) => !v)}
             className={cn(
-              "h-7 px-2 border-[oklch(0.65_0.22_260/0.04)] text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "h-7 px-2 border-border text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showAccountValue
                 ? "border-primary/60 bg-primary/20 text-foreground"
-                : "text-foreground/80 hover:bg-[oklch(0.65_0.22_260/0.035)] hover:text-foreground"
+                : "text-foreground/80 hover:bg-muted/20 hover:text-foreground"
             )}
           >
             Value
@@ -154,10 +154,10 @@ export function AccountsBarChart({
             aria-pressed={showRegistered}
             onClick={() => setShowRegistered((v) => !v)}
             className={cn(
-              "h-7 px-2 border-[oklch(0.65_0.22_260/0.04)] text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "h-7 px-2 border-border text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showRegistered
                 ? "border-primary/60 bg-primary/20 text-foreground"
-                : "text-foreground/80 hover:bg-[oklch(0.65_0.22_260/0.035)] hover:text-foreground"
+                : "text-foreground/80 hover:bg-muted/20 hover:text-foreground"
             )}
           >
             Reg
@@ -168,10 +168,10 @@ export function AccountsBarChart({
             aria-pressed={showSized}
             onClick={() => setShowSized((v) => !v)}
             className={cn(
-              "h-7 px-2 border-[oklch(0.65_0.22_260/0.04)] text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "h-7 px-2 border-border text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showSized
                 ? "border-primary/60 bg-primary/20 text-foreground"
-                : "text-foreground/80 hover:bg-[oklch(0.65_0.22_260/0.035)] hover:text-foreground"
+                : "text-foreground/80 hover:bg-muted/20 hover:text-foreground"
             )}
           >
             Sized
@@ -182,17 +182,17 @@ export function AccountsBarChart({
             aria-pressed={showZeroFirms}
             onClick={() => setShowZeroFirms((v) => !v)}
             className={cn(
-              "h-7 px-2 border-[oklch(0.65_0.22_260/0.04)] text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "h-7 px-2 border-border text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showZeroFirms
                 ? "border-primary/60 bg-primary/20 text-foreground"
-                : "text-foreground/80 hover:bg-[oklch(0.65_0.22_260/0.035)] hover:text-foreground"
+                : "text-foreground/80 hover:bg-muted/20 hover:text-foreground"
             )}
           >
             {showZeroFirms ? "Zeros: On" : "Zeros: Off"}
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="border-t border-[oklch(0.65_0.22_260/0.04)] pt-4">
+      <CardContent className="border-t border-border pt-4">
         <ChartContainer config={chartConfig} className="h-[380px] w-full">
           <ComposedChart
             data={visibleData}
@@ -268,7 +268,7 @@ export function AccountsBarChart({
               cursor={{ stroke: "hsl(var(--chart-axis) / 0.8)", strokeWidth: 1, strokeDasharray: "4 8" }}
               content={
                 <ChartTooltipContent
-                  className="border-[oklch(0.65_0.22_260/0.04)] bg-background/96 text-foreground shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
+                  className="border-border bg-background/96 text-foreground shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
                   labelFormatter={(label) => <span className="font-semibold text-foreground">{String(label)}</span>}
                   formatter={(value, name, item) => {
                     const key = String(name)

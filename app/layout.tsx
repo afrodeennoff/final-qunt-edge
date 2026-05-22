@@ -115,7 +115,7 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
   themeColor: [
     { media: '(prefers-color-scheme: dark)', color: 'var(--card)' },
-    { media: '(prefers-color-scheme: light)', color: 'oklch(0.9838 0.0035 247.8583)' },
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
   ],
   // 12K-specific properties for high-DPI displays
   colorScheme: 'dark light',
@@ -141,7 +141,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning
-      style={{ backgroundColor: 'oklch(0 0 0)', color: 'oklch(0.97 0.005 260)' }}
+      style={{ backgroundColor: '#000000', color: '#f7f7f7' }}
     >
       <head>
         {/* Resource Hinting for Performance */}

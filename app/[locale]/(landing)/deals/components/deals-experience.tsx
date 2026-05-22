@@ -1161,7 +1161,7 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
         'grid gap-6 overflow-hidden p-6 lg:grid-cols-[1.1fr_0.9fr] lg:p-8',
       )}
     >
-      <div className="space-y-5">
+      <div className="space-y-4">
         <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-primary/10 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
           <Sparkles className="h-3.5 w-3.5 text-primary" />
           Verified prop firm discounts

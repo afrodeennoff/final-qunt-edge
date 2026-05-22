@@ -59,9 +59,16 @@ export function ThemeProvider({
   const resolved = resolveTheme(initialTheme)
   const [theme, setThemeState] = useState<DashboardTheme>(resolved)
 
+  const isDashboard = scope === 'dashboard'
+
   useEffect(() => {
-    applyTheme(resolved)
-  }, [resolved])
+    // Only apply theme CSS variables on dashboard/teams. On public pages
+    // (fixed-purple), the CSS defaults in globals.css provide pure #000000
+    // background with Deep Purple accent tokens — no runtime override needed.
+    if (isDashboard) {
+      applyTheme(resolved)
+    }
+  }, [resolved, isDashboard])
 
   const setTheme = useCallback((newTheme: DashboardTheme) => {
     if (!VALID_DASHBOARD_THEMES.includes(newTheme)) return
@@ -75,8 +82,6 @@ export function ThemeProvider({
     const nextIndex = (currentIndex + 1) % VALID_DASHBOARD_THEMES.length
     setTheme(VALID_DASHBOARD_THEMES[nextIndex])
   }, [theme, setTheme])
-
-  const isDashboard = scope === 'dashboard'
 
   const contextValue: ThemeContextType = {
     theme,

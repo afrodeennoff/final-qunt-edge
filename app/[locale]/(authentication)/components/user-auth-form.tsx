@@ -512,7 +512,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  return (
  <div className={cn("grid gap-6", className)} {...props}>
  {alreadySignedIn && (
- <div className="flex items-center justify-between gap-3 rounded-2xl border border-success/30 bg-success/10 px-4 py-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.03)]">
+ <div className="flex items-center justify-between gap-3 rounded-2xl border border-success/30 bg-success/10 px-4 py-3 shadow-lg">
  <div className="flex items-center gap-3">
  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-success/15">
  <svg className="h-4 w-4 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -721,7 +721,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  />
  <Link
  href={withLocalePrefix("/authentication/forgot-password", locale)}
-  className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground hover:text-[oklch(0.65_0.22_260)] underline-offset-4 hover:underline"
+  className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
  >
  Forgot your password?
  </Link>

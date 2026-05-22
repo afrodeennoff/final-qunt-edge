@@ -37,11 +37,11 @@ export function SortControls({ sortLabel, sortOptions }: SortControlsProps) {
       <Select value={currentSort} onValueChange={handleSortChange}>
         <SelectTrigger
           id="sort-select"
-          className="w-[200px] border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.035)] text-foreground shadow-none hover:bg-[oklch(0.65_0.22_260/0.03)] focus-visible:ring-1 focus-visible:ring-[oklch(0.65_0.22_260/0.2)] focus-visible:ring-offset-0"
+          className="w-[200px] border border-border bg-muted/20 text-foreground shadow-none hover:bg-muted/20 focus-visible:ring-1 focus-visible:ring-[hsl(var(--primary))] focus-visible:ring-offset-0"
         >
           <SelectValue />
         </SelectTrigger>
-        <SelectContent className="border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] text-foreground shadow-xl">
+        <SelectContent className="border border-border bg-muted/20 text-foreground shadow-xl">
           <SelectItem value="accounts">{sortOptions.accounts}</SelectItem>
           <SelectItem value="paidPayout">{sortOptions.paidPayout}</SelectItem>
           <SelectItem value="refusedPayout">{sortOptions.refusedPayout}</SelectItem>

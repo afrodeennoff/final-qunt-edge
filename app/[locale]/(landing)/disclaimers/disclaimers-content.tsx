@@ -19,7 +19,7 @@ DISCLAIMER: Futures and forex trading contain substantial risk and is not for ev
         description="Risk disclosures and legal notices for Qunt Edge trading analytics."
       />
       <div className="space-y-6">
-        <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.05)]">
+        <Card className="border-border bg-muted/30">
           <CardHeader>
             <CardTitle>{t('disclaimer.risk.title')}</CardTitle>
           </CardHeader>
@@ -30,7 +30,7 @@ DISCLAIMER: Futures and forex trading contain substantial risk and is not for ev
           </CardContent>
         </Card>
 
-        <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.05)]">
+        <Card className="border-border bg-muted/30">
           <CardHeader>
             <CardTitle>{t('disclaimer.hypothetical.title')}</CardTitle>
           </CardHeader>
@@ -41,7 +41,7 @@ DISCLAIMER: Futures and forex trading contain substantial risk and is not for ev
           </CardContent>
         </Card>
 
-        <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.05)]">
+        <Card className="border-border bg-muted/30">
           <CardHeader>
             <CardTitle>Extended Risk Disclosure</CardTitle>
           </CardHeader>
