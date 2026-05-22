@@ -1,28 +1,28 @@
-import { cn } from '@/lib/utils'
-import { motion } from 'framer-motion'
+'use client'
+
+import { motion } from 'motion/react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { ButtonV2 as Button } from '@/components/ui/v2'
-import { unifiedSectionPanelClassName } from '@/components/layout/unified-page-recipes'
-import { getI18n } from '@/locales/server'
+import { ButtonV2 as Button, CardV2 as Card } from '@/components/ui/v2'
+import { MarketingSection } from '@/components/layout/marketing-sections'
+import { useTypedI18n } from '@/locales/client'
 
 interface FinalCTAProps {
   locale: string
 }
 
-export default async function FinalCTA({ locale }: FinalCTAProps) {
-  const t = await getI18n()
+export default function FinalCTA({ locale }: FinalCTAProps) {
+  const t = useTypedI18n()
 
   return (
-    <section className="relative px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+    <MarketingSection className="py-8 sm:py-12 lg:py-16" innerClassName="max-w-5xl">
       <motion.div
-        className="mx-auto max-w-5xl"
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className={cn(unifiedSectionPanelClassName, 'px-6 py-10 text-center md:px-10 md:py-14')}>
+        <Card variant="elevated" className="px-6 py-10 text-center md:px-10 md:py-14">
           <h2 className="text-balance text-[clamp(2.2rem,4.6vw,3.8rem)] font-medium leading-[1.02] tracking-[-0.05em] text-foreground">
             {t('landing.home.finalCta.titlePrefix')}{' '}
             <span className="line-through decoration-muted-foreground/40 decoration-2">
@@ -40,8 +40,8 @@ export default async function FinalCTA({ locale }: FinalCTAProps) {
               </Link>
             </Button>
           </div>
-        </div>
+        </Card>
       </motion.div>
-    </section>
+    </MarketingSection>
   )
 }

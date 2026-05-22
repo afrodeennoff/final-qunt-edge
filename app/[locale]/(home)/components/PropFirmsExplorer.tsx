@@ -9,6 +9,8 @@ import SearchHero from './SearchHero'
 import FilterChips from './FilterChips'
 import FirmCardsGrid from './FirmCardsGrid'
 import type { FilterState } from './prop-firm-utils'
+import { CardV2 as Card } from '@/components/ui/v2'
+import { MarketingSection } from '@/components/layout/marketing-sections'
 
 interface PropFirmsExplorerProps {
   locale: string
@@ -80,8 +82,8 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
   }, [deferredQuery, filters, firms])
 
   return (
-    <section className="px-4 py-8 sm:py-12 lg:py-16 md:px-6 lg:px-8">
-      <div className="mx-auto rounded-lg border border-border/0.04 bg-card/80 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:max-w-[1360px] md:p-6 lg:p-8">
+    <MarketingSection className="py-8 sm:py-12 lg:py-16" innerClassName="max-w-[1360px]">
+      <Card variant="glass" className="p-5 md:p-6 lg:p-8">
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_320px]">
           <SearchHero
             searchQuery={searchQuery}
@@ -90,7 +92,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
             filteredCount={filteredFirms.length}
           />
 
-          <div className="flex h-full flex-col justify-between rounded-lg border border-border/0.04 bg-background/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+          <div className="flex h-full flex-col justify-between rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] p-5 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                 {t('landing.home.explorer.explorerBriefTitle')}
@@ -104,7 +106,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
             </div>
 
             <div className="mt-6 space-y-3">
-              <div className="rounded-md border border-border/0.04 bg-card/70 px-4 py-3">
+              <div className="rounded-md border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] px-4 py-3">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   {t('landing.home.explorer.liveViewTitle')}
                 </p>
@@ -135,7 +137,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
         <FirmCardsGrid firms={filteredFirms} locale={locale} />
 
         <div className="pt-6">
-          <div className="flex flex-col gap-4 rounded-lg border border-border/0.04 bg-background/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:flex-row md:items-end md:justify-between md:p-6">
+          <div className="flex flex-col gap-4 rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] p-5 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:flex-row md:items-end md:justify-between md:p-6">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                 {t('landing.home.explorer.needFullBoardTitle')}
@@ -149,14 +151,14 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
             </div>
             <Link
               href={`/${locale}/propfirms`}
-              className="inline-flex items-center gap-2 rounded-full border border-border/0.04 bg-card/70 px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-card"
+              className="inline-flex items-center gap-2 rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-[oklch(0.65_0.22_260/0.06)]"
             >
               {t('landing.home.explorer.exploreAll')}
               <ArrowRight className="h-4 w-4" />
             </Link>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
+           </div>
+         </div>
+       </Card>
+     </MarketingSection>
+   )
+ }

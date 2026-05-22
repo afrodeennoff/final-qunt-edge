@@ -32,7 +32,7 @@ export default function ProductDemoPlayer() {
 
   if (hasError) {
     return (
-      <div className="flex h-full w-full items-center justify-center rounded-lg border border-border/10 bg-card/50 p-8">
+      <div className="flex h-full w-full items-center justify-center rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-8">
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
             Unable to load product demo.

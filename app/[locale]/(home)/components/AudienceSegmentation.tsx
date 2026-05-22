@@ -1,13 +1,13 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { ArrowRight, Target, TrendingUp } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import { BadgeV2 as Badge, CardV2 as Card } from '@/components/ui/v2'
 import {
-  MotionSection,
   MotionStagger,
   MotionStaggerItem,
 } from '@/components/animation/enhanced-motion'
+import { MarketingSection } from '@/components/layout/marketing-sections'
 import { useTypedI18n } from '@/locales/client'
 
 const audienceIcons = [Target, TrendingUp]
@@ -37,9 +37,9 @@ export default function AudienceSegmentation() {
   ]
 
   return (
-    <MotionSection className="relative overflow-hidden bg-muted/20 px-4 py-8 sm:py-12 lg:py-16 md:px-6 lg:px-8">
-      {/* Atmospheric glow orb */}
-      <div className="pointer-events-none absolute -left-40 bottom-1/4 h-[440px] w-[440px] rounded-full bg-primary/[0.05] blur-[120px]" />
+    <MarketingSection className="relative overflow-hidden py-8 sm:py-12 lg:py-16" innerClassName="max-w-[1360px]">
+      {/* Atmospheric glow orb — static radial no blur */}
+      <div className="pointer-events-none absolute -left-40 bottom-1/4 h-[440px] w-[440px] rounded-full bg-[radial-gradient(circle,oklch(0.65_0.22_260/0.06)_0%,transparent_70%)]" />
       <div className="mx-auto max-w-[1360px]">
         <motion.div
           className="mb-10 text-center md:mb-14"
@@ -51,9 +51,9 @@ export default function AudienceSegmentation() {
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
             {t('landing.home.audience.eyebrow')}
           </p>
-          <h2 className="type-h2 mt-4 text-balance text-foreground lg:text-h1">
+          <h2 className="mt-4 text-balance text-foreground text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.02em]">
             {t('landing.home.audience.title')}{' '}
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[oklch(0.65_0.22_260)] to-[oklch(0.72_0.18_260)] bg-clip-text text-transparent">
               {t('landing.home.audience.highlight')}
             </span>
           </h2>
@@ -63,9 +63,9 @@ export default function AudienceSegmentation() {
           {audiences.map((audience) => {
             const Icon = audience.icon
             return (
-              <MotionStaggerItem key={String(audience.title)}>
-                <article className="flex h-full flex-col rounded-lg border-border/0.04 bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/0.08 hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
-                  <div className="mb-5 flex items-start justify-between gap-4">
+                <MotionStaggerItem key={String(audience.title)}>
+                  <Card variant="glass" className="flex h-full flex-col p-6 transition-[border-color] duration-200 hover:border-[oklch(0.65_0.22_260/0.12)]">
+                    <div className="mb-5 flex items-start justify-between gap-4">
                     <div>
                       <Badge
                         variant="outline"
@@ -100,12 +100,12 @@ export default function AudienceSegmentation() {
                     {audience.cta}
                     <ArrowRight className="h-4 w-4" />
                   </div>
-                </article>
-              </MotionStaggerItem>
+                  </Card>
+                </MotionStaggerItem>
             )
           })}
         </MotionStagger>
       </div>
-    </MotionSection>
+    </MarketingSection>
   )
 }

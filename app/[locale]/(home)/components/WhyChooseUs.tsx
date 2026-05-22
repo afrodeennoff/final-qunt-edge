@@ -39,7 +39,7 @@ const socialProof = [
 
 export default function WhyChooseUs() {
  return (
- <section id="why-us" className="relative border-y border-border/30 bg-background/0.01 px-4 py-12 sm:py-16 lg:py-20 sm:px-6 lg:px-8">
+ <section id="why-us" className="relative border-y border-[oklch(0.65_0.22_260/0.08)] bg-background px-4 py-12 sm:py-16 lg:py-20 sm:px-6 lg:px-8">
  <div className="mx-auto max-w-6xl space-y-10">
  <div className="text-center">
  <Badge variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">

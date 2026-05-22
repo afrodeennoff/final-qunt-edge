@@ -1,4 +1,4 @@
-import { ArrowRight, Download, BarChart3, Users, Shield, FileText, Brain } from 'lucide-react'
+import { Download, BarChart3, Users, Shield, FileText, Brain } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
   unifiedBodyCopyClassName,
@@ -8,7 +8,8 @@ import {
   unifiedSectionPanelClassName,
 } from '@/components/layout/unified-page-recipes'
 import { MarketingSection } from '@/components/layout/marketing-sections'
-import { MotionSection, MotionStagger, MotionStaggerItem } from '@/components/animation/enhanced-motion'
+import { CardV2 as Card } from '@/components/ui/v2'
+import { MotionStagger, MotionStaggerItem } from '@/components/animation/enhanced-motion'
 import { getTypedI18n } from '@/locales/server'
 
 const featureIcons = [Download, BarChart3, Users, Shield, FileText, Brain]
@@ -27,7 +28,7 @@ export default async function FeaturesBento() {
   return (
     <MarketingSection className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
       <div className="mx-auto max-w-[1360px] space-y-6">
-        <div className={cn(unifiedSectionPanelClassName, 'p-6 sm:p-8')}>
+        <Card variant="glass" className="p-6 sm:p-8">
           <p className={unifiedSectionEyebrowClassName}>{t('landing.home.features.eyebrow')}</p>
           <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-end">
             <div>
@@ -40,7 +41,7 @@ export default async function FeaturesBento() {
               {t('landing.home.features.description')}
             </p>
           </div>
-        </div>
+        </Card>
 
                 <div className="px-1">
           <span className={cn(unifiedChipClassName, 'px-3 py-1.5 text-foreground/80')}>
@@ -53,14 +54,11 @@ export default async function FeaturesBento() {
             const Icon = feature.icon
             return (
               <MotionStaggerItem key={String(feature.title)} className={feature.colSpan}>
-                <article
-                  className={cn(
-                    feature.highlighted ? unifiedSectionPanelClassName : unifiedInsetPanelClassName,
-                    'flex h-full flex-col gap-4 p-6',
-                    feature.highlighted && 'border-primary/16',
-                  )}
+                <Card
+                  variant={feature.highlighted ? 'elevated' : 'glass'}
+                  className={cn('flex h-full flex-col gap-4 p-6', feature.highlighted && 'border-primary/16')}
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-primary/18 bg-primary/10 text-primary">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] text-[oklch(0.65_0.22_260)]">
                     <Icon className="h-5 w-5" />
                   </div>
                   {feature.highlighted ? (
@@ -74,7 +72,7 @@ export default async function FeaturesBento() {
                     </h3>
                     <p className="text-sm leading-[1.65] text-muted-foreground">{feature.description}</p>
                   </div>
-                </article>
+                </Card>
               </MotionStaggerItem>
             )
           })}

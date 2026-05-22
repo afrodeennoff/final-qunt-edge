@@ -1,9 +1,9 @@
 export default function HomeContentLoading() {
   return (
-    <div className="home-borderless relative min-w-0 overflow-x-hidden bg-transparent selection:bg-primary/30 selection:text-foreground">
-      <div className="pointer-events-none absolute inset-x-4 top-0 h-48 rounded-b-[2.5rem] border border-border/40 bg-background/40 sm:inset-x-6 lg:inset-x-10" />
+    <div className="relative min-w-0 overflow-x-hidden bg-transparent selection:bg-primary/30 selection:text-foreground">
+      <div className="pointer-events-none absolute inset-x-4 top-0 h-48 rounded-b-[2.5rem] bg-[oklch(0.65_0.22_260/0.02)] sm:inset-x-6 lg:inset-x-10" />
       <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-5 lg:block" />
-      <div className="pointer-events-none absolute inset-x-0 top-[22%] h-px bg-border/50" />
+      <div className="pointer-events-none absolute inset-x-0 top-[22%] h-px bg-[oklch(0.65_0.22_260/0.08)]" />
 
       <main className="relative z-10 mx-auto w-full max-w-[1400px] min-w-0 px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Hero loading */}

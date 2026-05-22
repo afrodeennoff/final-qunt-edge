@@ -4,6 +4,7 @@ import LiveStatsStrip from './LiveStatsStrip'
 import SocialProof from './SocialProof'
 import ErrorBoundary from '@/components/ui/error-boundary'
 import type { ReactNode } from 'react'
+import type { UnifiedFirm } from '@/server/deals'
 
 function SafeSection({ children }: { children: ReactNode }) {
   return (
@@ -16,7 +17,7 @@ function SafeSection({ children }: { children: ReactNode }) {
 function SectionSkeleton() {
   return (
     <div className="py-8 sm:py-12 lg:py-16">
-      <div className="animate-pulse rounded-xl border border-border/10 bg-card/40 p-8">
+      <div className="animate-pulse rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-8">
         <div className="mx-auto max-w-md space-y-4">
           <div className="h-4 w-24 rounded bg-muted/60" />
           <div className="h-8 w-full rounded bg-muted/60" />
@@ -60,14 +61,15 @@ const FinalCTA = dynamic(() => import('./FinalCTA'), {
 
 interface HomeContentProps {
   locale: string
+  firms?: UnifiedFirm[]
 }
 
-export default function HomeContent({ locale }: HomeContentProps) {
+export default function HomeContent({ locale, firms }: HomeContentProps) {
   return (
-    <div className="home-borderless relative min-w-0 overflow-x-clip bg-transparent selection:bg-primary/30 selection:text-foreground">
-      <div className="pointer-events-none absolute inset-x-4 top-0 h-48 rounded-b-[2.5rem] border border-border/40 bg-background/40 sm:inset-x-6 lg:inset-x-10" />
+    <div className="relative min-w-0 overflow-x-clip bg-transparent selection:bg-primary/30 selection:text-foreground">
+      <div className="pointer-events-none absolute inset-x-4 top-0 h-48 rounded-b-[2.5rem] bg-[oklch(0.65_0.22_260/0.02)] sm:inset-x-6 lg:inset-x-10" />
       <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-5 lg:block" />
-      <div className="pointer-events-none absolute inset-x-0 top-[22%] h-px bg-border/50" />
+      <div className="pointer-events-none absolute inset-x-0 top-[22%] h-px bg-[oklch(0.65_0.22_260/0.08)]" />
 
       <main className="relative z-10 mx-auto w-full max-w-[1400px] min-w-0 px-4 sm:px-6 lg:px-8">
         {/* Above the fold - critical, always render */}
@@ -95,7 +97,7 @@ export default function HomeContent({ locale }: HomeContentProps) {
           <AudienceSegmentation />
         </SafeSection>
         <SafeSection>
-          <PropFirmsExplorer locale={locale} />
+          <PropFirmsExplorer locale={locale} firms={firms} />
         </SafeSection>
         <SafeSection>
           <PricingSection locale={locale} />

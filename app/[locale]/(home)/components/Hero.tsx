@@ -9,9 +9,9 @@ export default async function Hero({ locale }: { locale: string }) {
 
   return (
     <MarketingSection className="relative pt-16 pb-12 sm:pt-20 sm:pb-16 lg:pt-24 lg:pb-20 overflow-hidden" innerClassName="max-w-[1280px]">
-      {/* Static cobalt ambient glows — no animation per Obsidian V3 rules */}
-      <div className="pointer-events-none absolute -top-24 -right-32 h-[520px] w-[520px] rounded-full bg-[oklch(0.65_0.22_260/0.08)] blur-[160px]" />
-      <div className="pointer-events-none absolute -bottom-32 -left-24 h-[380px] w-[380px] rounded-full bg-[oklch(0.65_0.22_260/0.05)] blur-[140px]" />
+      {/* Static cobalt ambient glows — no blur per Obsidian V3 rules, use radial for soft edge */}
+      <div className="pointer-events-none absolute -top-32 -right-40 h-[620px] w-[620px] rounded-full bg-[radial-gradient(circle,oklch(0.65_0.22_260/0.09)_0%,transparent_65%)]" />
+      <div className="pointer-events-none absolute -bottom-40 -left-32 h-[460px] w-[460px] rounded-full bg-[radial-gradient(circle,oklch(0.65_0.22_260/0.06)_0%,transparent_65%)]" />
 
       <div className="relative grid items-center gap-12 lg:grid-cols-2">
         {/* Left: Command messaging */}
@@ -21,7 +21,7 @@ export default async function Hero({ locale }: { locale: string }) {
           </div>
 
           <h1 className="mt-6 text-balance text-[56px] font-[250] leading-[0.96] tracking-[-0.04em] text-foreground sm:text-[72px] lg:text-[88px]">
-            The <span className="bg-gradient-to-r from-[oklch(0.65_0.22_260)] via-white to-[oklch(0.65_0.22_260)] bg-clip-text text-transparent">command center</span><br />for serious traders.
+            The <span className="bg-gradient-to-r from-[oklch(0.65_0.22_260)] to-[oklch(0.72_0.18_260)] bg-clip-text text-transparent">command center</span><br />for serious traders.
           </h1>
 
           <p className="mt-6 max-w-[520px] text-[15px] leading-relaxed text-muted-foreground/90">
@@ -36,7 +36,7 @@ export default async function Hero({ locale }: { locale: string }) {
               </Link>
             </Button>
 
-            <Button asChild size="lg" variant="outline" className="h-12 border-white/15 bg-white/5 px-6 text-[15px] hover:bg-white/10">
+            <Button asChild size="lg" variant="outline" className="h-12 border-[oklch(0.65_0.22_260/0.15)] bg-[oklch(0.65_0.22_260/0.03)] px-6 text-[15px] hover:bg-[oklch(0.65_0.22_260/0.08)]">
               <Link href={`/${locale}/deals`}>
                 <Play className="mr-2 h-4 w-4" /> Watch 60s Demo
               </Link>
@@ -62,34 +62,34 @@ export default async function Hero({ locale }: { locale: string }) {
 
         {/* Right: Premium static terminal preview */}
         <div className="relative hidden lg:block">
-          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0f] shadow-[0_0_0_1px_oklch(0.65_0.22_260/0.12),0_40px_120px_-20px_rgb(0,0,0)]">
+          <div className="relative overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] shadow-[0_0_0_1px_oklch(0.65_0.22_260/0.12),0_40px_120px_-20px_rgb(0,0,0)]">
             {/* Fake terminal header */}
-            <div className="flex items-center gap-2 border-b border-white/10 bg-white/5 px-4 py-3 text-[10px] text-white/60">
+            <div className="flex items-center gap-2 border-b border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-4 py-3 text-[10px] text-muted-foreground">
               <div className="flex gap-1.5">
-                <div className="h-2 w-2 rounded-full bg-red-500/80" />
-                <div className="h-2 w-2 rounded-full bg-yellow-500/80" />
-                <div className="h-2 w-2 rounded-full bg-emerald-500/80" />
+                <div className="h-2 w-2 rounded-full bg-destructive/80" />
+                <div className="h-2 w-2 rounded-full bg-warning/80" />
+                <div className="h-2 w-2 rounded-full bg-success/80" />
               </div>
               <span className="ml-3 font-mono tracking-widest">QUNT EDGE — LIVE SESSION</span>
             </div>
 
             {/* Metrics grid */}
-            <div className="grid grid-cols-3 gap-px bg-white/5 p-px">
+            <div className="grid grid-cols-3 gap-px bg-[oklch(0.65_0.22_260/0.03)] p-px">
               {[
                 { label: 'TODAY PNL', value: '+$4,872', change: '+18.4%', good: true },
                 { label: 'WIN RATE', value: '74%', change: '+6%', good: true },
                 { label: 'EDGE SCORE', value: '91', change: '+3', good: true },
               ].map((m, i) => (
-                <div key={i} className="bg-[#0a0a0f] p-5">
-                  <div className="text-[10px] font-medium tracking-[0.12em] text-white/50">{m.label}</div>
-                  <div className="mt-3 text-[28px] font-semibold tabular-nums tracking-[-0.02em] text-white">{m.value}</div>
-                  <div className="mt-1 text-[12px] font-medium text-emerald-400">{m.change}</div>
+                <div key={i} className="bg-[oklch(0.65_0.22_260/0.03)] p-5">
+                  <div className="text-[10px] font-medium tracking-[0.12em] text-muted-foreground/70">{m.label}</div>
+                  <div className="mt-3 text-[28px] font-semibold tabular-nums tracking-[-0.02em] text-foreground">{m.value}</div>
+                  <div className="mt-1 text-[12px] font-medium text-success">{m.change}</div>
                 </div>
               ))}
             </div>
 
             {/* Static mini equity line (pure CSS, no JS) */}
-            <div className="relative h-[110px] border-t border-white/10 bg-[#07070b] px-5 py-6">
+            <div className="relative h-[110px] border-t border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-5 py-6">
               <svg viewBox="0 0 600 80" className="h-full w-full" preserveAspectRatio="none">
                 <defs>
                   <linearGradient id="cobalt" x1="0" y1="0" x2="0" y2="1">
@@ -109,7 +109,7 @@ export default async function Hero({ locale }: { locale: string }) {
                   fill="url(#cobalt)"
                 />
               </svg>
-              <div className="absolute right-5 top-4 rounded bg-white/5 px-2 py-px text-[9px] font-mono text-white/60">LIVE</div>
+              <div className="absolute right-5 top-4 rounded bg-[oklch(0.65_0.22_260/0.03)] px-2 py-px text-[9px] font-mono text-muted-foreground/70">LIVE</div>
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { Check } from 'lucide-react'
 import {
   unifiedBodyCopyClassName,
@@ -88,7 +88,7 @@ export default function PricingSection({ locale }: { locale: string }) {
             {t('landing.pricingNew.subheadline')}
           </p>
 
-          <div className="mt-8 inline-flex items-center gap-1 rounded-full border border-border/35 bg-background/70 p-1">
+          <div className="mt-8 inline-flex items-center gap-1 rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] p-1">
             <button
               type="button"
               onClick={() => setIsAnnual(false)}

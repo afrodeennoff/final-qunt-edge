@@ -3,10 +3,11 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
 import { ChevronDown, HelpCircle } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
+import { BadgeV2 as Badge } from '@/components/ui/v2'
+import { CardV2 as Card, CardContent } from '@/components/ui/v2'
 import { cn } from '@/lib/utils'
 import { useTypedI18n } from '@/locales/client'
+import { MarketingSection } from '@/components/layout/marketing-sections'
 
 interface FAQItem {
   question: string
@@ -25,8 +26,8 @@ function FAQAccordion({
   return (
     <Card
       className={cn(
-        'overflow-hidden rounded-lg border bg-card/80 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-colors',
-        isOpen ? 'border-primary/30' : 'border-border/0.04',
+        'overflow-hidden rounded-lg border bg-[oklch(0.65_0.22_260/0.03)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-colors',
+        isOpen ? 'border-primary/30' : 'border-[oklch(0.65_0.22_260/0.08)]',
       )}
     >
       <button
@@ -41,7 +42,7 @@ function FAQAccordion({
               'mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-semibold uppercase tracking-[0.12em]',
               isOpen
                 ? 'border-primary/30 bg-primary/10 text-primary'
-                : 'border-border/0.04 bg-background/70 text-muted-foreground',
+                : 'border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] text-muted-foreground',
             )}
           >
             Q
@@ -62,7 +63,7 @@ function FAQAccordion({
         )}
       >
         <div className="overflow-hidden">
-          <CardContent className="border-t border-border/0.04 p-5 pt-4">
+          <CardContent className="border-t border-[oklch(0.65_0.22_260/0.08)] p-5 pt-4">
             <p className="pl-12 text-sm leading-relaxed text-muted-foreground">{item.answer}</p>
           </CardContent>
         </div>
@@ -81,46 +82,34 @@ export default function FAQSection() {
   }))
 
   return (
-    <section id="faq" className="px-4 py-8 sm:py-12 lg:py-16 md:px-6 lg:px-8">
-      <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
-        <motion.div
-          className="rounded-lg border border-border/0.04 bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] lg:sticky lg:top-28"
-          initial={false}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
-        >
+    <MarketingSection id="faq" className="py-8 sm:py-12 lg:py-16" innerClassName="max-w-[1360px]">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
+        <Card variant="glass" className="p-6 lg:sticky lg:top-28">
           <Badge
-            variant="outline"
-            className="rounded-full border-primary/30 bg-primary/10 px-3 py-1 text-xs uppercase tracking-[0.18em] text-primary"
+            variant="frost-info"
+            className="rounded-full px-3 py-1 text-xs uppercase tracking-[0.18em]"
           >
             <HelpCircle className="mr-1.5 h-3 w-3" />
             {t('landing.home.faq.badge')}
           </Badge>
-          <h2 className="type-h2 mt-5 text-balance text-foreground lg:text-h1">
+          <h2 className="mt-5 text-balance text-foreground text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.02em]">
             {t('landing.home.faq.title')}
           </h2>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
+          <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
             {t('landing.home.faq.description')}
           </p>
 
-          <div className="mt-8 rounded-md border border-border/0.04 bg-background/70 p-5">
+          <Card variant="flat" className="mt-8 p-5 border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)]">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
               {t('landing.home.faq.bestForTitle')}
             </p>
             <p className="mt-3 text-sm leading-relaxed text-foreground">
               {t('landing.home.faq.bestForDescription')}
             </p>
-          </div>
-        </motion.div>
+          </Card>
+        </Card>
 
-        <motion.div
-          className="rounded-lg border border-border/0.04 bg-card/70 p-4 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] sm:p-5"
-          initial={false}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
-        >
+        <Card variant="glass" className="p-4 sm:p-5">
           <div className="mb-4 flex items-center justify-between gap-3 px-1">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
               {t('landing.home.faq.commonQuestions')}
@@ -150,8 +139,8 @@ export default function FAQSection() {
               </motion.div>
             ))}
           </div>
-        </motion.div>
+        </Card>
       </div>
-    </section>
+    </MarketingSection>
   )
 }

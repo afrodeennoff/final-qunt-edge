@@ -1,3 +1,6 @@
+import { CardV2 as Card } from '@/components/ui/v2'
+import { MarketingSection, MarketingSectionHeader } from '@/components/layout/marketing-sections'
+
 export default function ProblemStatement() {
   const pains = [
     { title: "Scattered Data", desc: "Trades across 4 brokers, 12 spreadsheets, and zero single source of truth." },
@@ -6,24 +9,20 @@ export default function ProblemStatement() {
   ]
 
   return (
-    <section className="relative border-b border-white/10 bg-[#050505] py-16">
-      <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[oklch(0.65_0.22_260)]">The Problem</div>
-          <h2 className="mt-4 text-balance text-[42px] font-[260] tracking-[-0.03em] text-white sm:text-[52px]">
-            Trading is hard enough.<br />Your tools shouldn’t make it harder.
-          </h2>
-        </div>
-
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {pains.map((pain, i) => (
-            <div key={i} className="rounded-2xl border border-white/10 bg-[#0a0a0f] p-7">
-              <div className="text-[15px] font-semibold tracking-tight text-white">{pain.title}</div>
-              <p className="mt-3 text-[14px] leading-relaxed text-white/70">{pain.desc}</p>
-            </div>
-          ))}
-        </div>
+    <MarketingSection className="border-b border-[oklch(0.65_0.22_260/0.08)] py-12 sm:py-16" innerClassName="max-w-[1280px]">
+      <MarketingSectionHeader
+        eyebrow="The Problem"
+        title="Trading is hard enough. Your tools shouldn’t make it harder."
+        align="center"
+      />
+      <div className="mt-10 grid gap-6 md:grid-cols-3">
+        {pains.map((pain, i) => (
+          <Card key={i} variant="frost" className="p-7">
+            <div className="text-[15px] font-semibold tracking-tight text-foreground">{pain.title}</div>
+            <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">{pain.desc}</p>
+          </Card>
+        ))}
       </div>
-    </section>
+    </MarketingSection>
   )
 }

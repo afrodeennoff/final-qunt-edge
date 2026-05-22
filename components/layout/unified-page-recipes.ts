@@ -1,20 +1,20 @@
 export const unifiedHeroPanelClassName =
-  'relative rounded-2xl border border-border/35 bg-card shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]'
+  'relative rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_8px_32px_-12px_rgba(0,0,0,0.6)]'
 
 export const unifiedSectionPanelClassName =
-  'rounded-2xl border border-border/35 bg-card/80 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
+  'rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-8px_rgba(0,0,0,0.5)]'
 
 export const unifiedInsetPanelClassName =
-  'rounded-xl border border-border/30 bg-background/50'
+  'rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)]'
 
 export const unifiedMetricPanelClassName =
-  'rounded-xl border border-border/30 bg-background/40 p-4'
+  'rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4'
 
 export const unifiedChipClassName =
-  'inline-flex items-center gap-2 rounded-full border border-primary/14 bg-primary/6 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground'
+  'inline-flex items-center gap-2 rounded-full border border-[oklch(0.65_0.22_260/0.14)] bg-[oklch(0.65_0.22_260/0.06)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground'
 
 export const unifiedGhostActionClassName =
-  'inline-flex items-center justify-center gap-2 rounded-full border border-border/35 bg-background/40 px-4 py-2 text-sm font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-border/50 hover:bg-muted/40 hover:text-foreground'
+  'inline-flex items-center justify-center gap-2 rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-4 py-2 text-sm font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[oklch(0.65_0.22_260/0.12)] hover:bg-[oklch(0.65_0.22_260/0.06)] hover:text-foreground'
 
 export const unifiedPrimaryActionClassName =
   'inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-[background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-primary/90'
@@ -34,4 +34,4 @@ export const unifiedInfoValueClassName =
   'text-sm font-medium tracking-[-0.01em] text-foreground sm:text-[15px]'
 
 export const unifiedStatePanelClassName =
-  'relative overflow-hidden rounded-2xl border border-border/35 bg-card/80 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]'
+  'relative overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_8px_32px_-12px_rgba(0,0,0,0.6)]'

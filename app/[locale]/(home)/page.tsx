@@ -2,6 +2,7 @@ import { setStaticParamsLocale } from 'next-international/server'
 import { Metadata } from 'next'
 import { getI18n, getStaticParams } from '@/locales/server'
 import dynamic from 'next/dynamic'
+import { getUnifiedFirms } from '@/server/deals'
 import {
   buildBreadcrumbSchema,
   buildOrganizationSchema,
@@ -35,6 +36,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   const { locale } = await params
   setStaticParamsLocale(locale)
 
+  const firms = await getUnifiedFirms().catch(() => [])
+
   const softwareSchema = buildSoftwareApplicationSchema(locale, '/')
   const organizationSchema = buildOrganizationSchema()
   const breadcrumbSchema = buildBreadcrumbSchema(locale, [{ name: 'Home', path: '/' }])
@@ -53,17 +56,17 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <HomeContent locale={locale} />
+      <HomeContent locale={locale} firms={firms} />
     </>
   )
 }
 
 const HomeContent = dynamic(() => import('./components/HomeContent'), {
   loading: () => (
-    <div className="home-borderless relative min-w-0 overflow-x-hidden bg-transparent">
-      <div className="pointer-events-none absolute inset-x-4 top-0 h-48 rounded-b-[2.5rem] border border-border/40 bg-background/40 sm:inset-x-6 lg:inset-x-10" />
+    <div className="relative min-w-0 overflow-x-hidden bg-transparent">
+      <div className="pointer-events-none absolute inset-x-4 top-0 h-48 rounded-b-[2.5rem] bg-[oklch(0.65_0.22_260/0.02)] sm:inset-x-6 lg:inset-x-10" />
       <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-5 lg:block" />
-      <div className="pointer-events-none absolute inset-x-0 top-[22%] h-px bg-border/50" />
+      <div className="pointer-events-none absolute inset-x-0 top-[22%] h-px bg-[oklch(0.65_0.22_260/0.08)]" />
 
       <main className="relative z-10 mx-auto w-full max-w-[1400px] min-w-0 px-4 sm:px-6 lg:px-8">
         <div className="pt-24 sm:pt-32 lg:pt-40">
@@ -79,7 +82,7 @@ const HomeContent = dynamic(() => import('./components/HomeContent'), {
         {/* Live stats skeleton */}
         <div className="mt-16 grid grid-cols-2 gap-6 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-24 rounded-xl border border-border/30 bg-card/40 animate-pulse" />
+            <div key={i} className="h-24 rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] animate-pulse" />
           ))}
         </div>
       </main>
