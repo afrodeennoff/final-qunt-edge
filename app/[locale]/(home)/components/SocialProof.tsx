@@ -43,71 +43,68 @@ export default async function SocialProof() {
   }))
 
   return (
-    <MarketingSection className="py-8 sm:py-12 lg:py-16" innerClassName="max-w-[1360px]">
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-end">
-        <Card variant="glass" className="p-6 md:p-8">
-          <Badge
-            variant="frost-info"
-            className="rounded-full px-3 py-1 text-xs uppercase tracking-[0.18em]"
-          >
+    <MarketingSection className="py-8 sm:py-10" innerClassName="max-w-[1280px]">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-end">
+        <Card className="p-5">
+          <Badge variant="accent" className="rounded-full px-2.5 py-0.5 text-[10px] uppercase tracking-[0.14em]">
             {t('landing.home.social.badge')}
           </Badge>
-          <h2 className="mt-5 text-balance text-foreground text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.02em]">
+          <h2 className="mt-4 text-balance text-foreground text-[28px] sm:text-[34px] lg:text-[40px] font-semibold tracking-[-0.02em]">
             {t('landing.home.social.title')}
           </h2>
-          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
+          <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-muted-foreground">
             {t('landing.home.social.description')}
           </p>
         </Card>
 
-        <div className="grid min-w-0 grid-cols-2 gap-4">
+        <div className="grid min-w-0 grid-cols-2 gap-3">
           {stats.map((stat) => {
             const Icon = stat.icon
             return (
-              <Card key={String(stat.label)} variant="glass" className="p-5">
-                <div className="flex h-10 w-10 items-center justify-center rounded-md border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] text-primary">
-                  <Icon className="h-5 w-5" />
+              <Card key={String(stat.label)} className="p-4">
+                <div className="flex h-8 w-8 items-center justify-center rounded border border-border bg-muted text-muted-foreground">
+                  <Icon className="h-4 w-4" />
                 </div>
-                <div className="mt-4 tabular-nums text-3xl font-semibold tracking-tight text-foreground">
+                <div className="mt-3 tabular-nums text-[26px] font-semibold tracking-tight text-foreground">
                   {stat.prefix}
                   {stat.value.toLocaleString('en-US')}
                   {stat.suffix}
                 </div>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{stat.label}</p>
+                <p className="mt-1 text-[12px] leading-relaxed text-muted-foreground">{stat.label}</p>
               </Card>
             )
           })}
         </div>
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
-        <div className="space-y-4">
-          <Card variant="flat" className="p-5 border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)]">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+      <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+        <div className="space-y-3">
+          <Card className="p-4 border-border">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">
               {t('landing.home.social.onDeskFeedbackTitle')}
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
               {t('landing.home.social.onDeskFeedbackDescription')}
             </p>
           </Card>
 
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             {testimonials.map((testimonial) => (
-              <Card key={String(testimonial.name)} variant="glass" className="flex h-full flex-col p-6">
-                <div className="mb-4 inline-flex w-fit rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              <Card key={String(testimonial.name)} className="flex h-full flex-col p-4">
+                <div className="mb-3 inline-flex w-fit rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                   {t('landing.home.social.traderVoice')}
                 </div>
-                <MessageSquare className="mb-4 h-5 w-5 text-primary/60" />
-                <blockquote className="mb-6 text-sm leading-relaxed text-foreground/80">
+                <MessageSquare className="mb-3 h-4 w-4 text-muted-foreground" />
+                <blockquote className="mb-4 text-[13px] leading-relaxed text-foreground/90">
                   &ldquo;{testimonial.quote}&rdquo;
                 </blockquote>
-                <div className="mt-auto flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-md border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] text-sm font-semibold text-primary">
+                <div className="mt-auto flex items-center gap-2">
+                  <div className="flex h-9 w-9 items-center justify-center rounded border border-border bg-muted text-xs font-semibold text-foreground">
                     {testimonial.initials}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-foreground">{testimonial.name}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                    <p className="text-[13px] font-semibold text-foreground">{testimonial.name}</p>
+                    <p className="text-xs text-muted-foreground">{testimonial.role}</p>
                   </div>
                 </div>
               </Card>
@@ -115,28 +112,28 @@ export default async function SocialProof() {
           </div>
         </div>
 
-        <div className="space-y-4">
-          <Card variant="flat" className="p-5 border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)]">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+        <div className="space-y-3">
+          <Card className="p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">
               {t('landing.home.social.trustFoundationTitle')}
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
               {t('landing.home.social.trustFoundationDescription')}
             </p>
           </Card>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             {pillars.map((pillar) => {
               const Icon = pillar.icon
               return (
-                <Card key={String(pillar.title)} variant="glass" className="p-5">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-md border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] text-primary">
-                    <Icon className="h-5 w-5" />
+                <Card key={String(pillar.title)} className="p-4">
+                  <div className="flex h-8 w-8 items-center justify-center rounded border border-border bg-muted text-muted-foreground">
+                    <Icon className="h-4 w-4" />
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold tracking-tight text-foreground">
+                  <h3 className="mt-3 text-[15px] font-semibold tracking-tight text-foreground">
                     {pillar.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
                     {pillar.description}
                   </p>
                 </Card>

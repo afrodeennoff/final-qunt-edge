@@ -277,9 +277,8 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  }}
  selectedDate={selectedDate}
  // Look up dayData using the selectedDate formatted back into a YYYY-MM-DD string *in the target timezone*
- dayData={selectedDate ? calendarData[formatInTimeZone(selectedDate, timezone, 'yyyy-MM-dd')] : undefined}
- isLoading={isLoading}
- />
+  dayData={selectedDate ? calendarData[formatInTimeZone(selectedDate, timezone, 'yyyy-MM-dd')] : undefined}
+  />
  </Card>
  )
 }

@@ -9,17 +9,17 @@ export default function ProblemStatement() {
   ]
 
   return (
-    <MarketingSection className="border-b border-[oklch(0.65_0.22_260/0.08)] py-12 sm:py-16" innerClassName="max-w-[1280px]">
+    <MarketingSection className="py-8 sm:py-10" innerClassName="max-w-[1280px]">
       <MarketingSectionHeader
         eyebrow="The Problem"
         title="Trading is hard enough. Your tools shouldn’t make it harder."
         align="center"
       />
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
+      <div className="mt-8 grid gap-4 md:grid-cols-3">
         {pains.map((pain, i) => (
-          <Card key={i} variant="frost" className="p-7">
-            <div className="text-[15px] font-semibold tracking-tight text-foreground">{pain.title}</div>
-            <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">{pain.desc}</p>
+          <Card key={i} className="p-5">
+            <div className="text-[14px] font-semibold tracking-tight text-foreground">{pain.title}</div>
+            <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{pain.desc}</p>
           </Card>
         ))}
       </div>

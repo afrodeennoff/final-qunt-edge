@@ -674,7 +674,7 @@ function DealsTabSections({
             </div>
           </div>
           <EvalCostCalculator />
-          <div className={cn(dealsPanelClassName, 'mt-6 p-5 sm:p-6')}>
+          <div className={cn(dealsPanelClassName, 'mt-6 p-4 sm:p-5')}>
             <h3 className="text-lg font-bold text-foreground">Interpretation tips</h3>
             <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
               <li className={cn(dealsInsetPanelClassName, 'px-3 py-2')}>
@@ -823,7 +823,7 @@ function BiggestDealsCarousel({
     <section
       className={cn(
         dealsPanelClassName,
-        'relative overflow-hidden p-5 sm:p-6 lg:p-8',
+        'relative overflow-hidden p-4 sm:p-5 lg:p-8',
       )}
       onMouseEnter={() => setIsAutoSlidePaused(true)}
       onMouseLeave={() => setIsAutoSlidePaused(false)}
@@ -1115,7 +1115,7 @@ function BrowseDealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
-    <section className={cn(dealsPanelClassName, 'overflow-hidden p-5 sm:p-6')}>
+    <section className={cn(dealsPanelClassName, 'overflow-hidden p-4 sm:p-5')}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
@@ -1429,7 +1429,7 @@ function DealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
-    <section className={cn(dealsPanelClassName, 'overflow-hidden p-5 sm:p-6')}>
+    <section className={cn(dealsPanelClassName, 'overflow-hidden p-4 sm:p-5')}>
       <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
         {title}
       </p>

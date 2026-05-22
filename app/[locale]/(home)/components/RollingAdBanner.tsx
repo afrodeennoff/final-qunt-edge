@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils'
 import { listPropFirmBannerItems } from '@/server/prop-firms'
 import { useCurrentLocale } from '@/locales/client'
 import { useEffect, useState } from 'react'
+import type { PropFirmBannerItem } from '@/server/prop-firms'
 
 const edgeFadeMask = {
   maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
@@ -13,15 +14,13 @@ const edgeFadeMask = {
 }
 
 export default function RollingAdBanner() {
-  const [items, setItems] = useState<any[]>([])
-  const [locale, setLocale] = useState<string>('en')
+  const currentLocale = useCurrentLocale()
+  const [items, setItems] = useState<PropFirmBannerItem[]>([])
 
   useEffect(() => {
     async function loadData() {
       const data = await listPropFirmBannerItems()
       setItems(data)
-      // Note: useCurrentLocale will return the current locale from context
-      // In a real app, we might need to get this from URL params or initial props
     }
     loadData()
   }, [])
@@ -39,7 +38,7 @@ export default function RollingAdBanner() {
           {repeatedItems.map((item, idx) => (
             <Link
               key={`${item.id}-${idx}`}
-              href={`/${locale === 'en' ? '' : locale}/firm/${item.firmSlug}`}
+              href={`/${currentLocale === 'en' ? '' : currentLocale}/firm/${item.firmSlug}`}
               className={cn(
                 'inline-flex items-center gap-2.5 px-4 text-[0.8rem] font-medium tracking-wide transition-opacity duration-300 hover:opacity-80',
               )}

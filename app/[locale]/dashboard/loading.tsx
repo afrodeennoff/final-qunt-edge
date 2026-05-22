@@ -25,7 +25,7 @@ function StatsGridSkeleton() {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {[1, 2, 3, 4].map((i) => (
-        <div key={i} className={cn(unifiedInsetPanelClassName, 'p-5')}>
+        <div key={i} className={cn(unifiedInsetPanelClassName, 'p-4')}>
           <Skeleton className="h-4 w-20 mb-2" />
           <Skeleton className="h-8 w-24" />
           <Skeleton className="h-3 w-16 mt-2" />
@@ -37,7 +37,7 @@ function StatsGridSkeleton() {
 
 function ChartSkeleton() {
   return (
-    <div className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6 lg:col-span-4')}>
+    <div className={cn(unifiedSectionPanelClassName, 'p-4 sm:p-5 lg:col-span-4')}>
       <Skeleton className="h-6 w-32 mb-4" />
       <Skeleton className="h-[350px] w-full rounded-lg" />
     </div>

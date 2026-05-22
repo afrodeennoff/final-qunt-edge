@@ -43,20 +43,9 @@ export function SharedWidgetCanvas() {
     const effectiveSize = getEffectiveWidgetSize(widget.type, widget.size, isMobile)
     const widgetElement = getWidgetComponent(widget.type, effectiveSize)
 
-    return (
-      <WidgetShell
-        key={widget.i}
-        className="widget-enter-smooth"
-        contentClassName="h-full"
-        state="ready"
-        title={widget.title || 'Widget'}
-        icon={widget.icon}
-      >
-        <div className="h-full w-full">
-          {widgetElement}
-        </div>
-      </WidgetShell>
-    )
+    // Return inner widget directly (it provides its own WidgetShell + title)
+    // to avoid double-wrapping and since Widget type has no title/icon
+    return widgetElement
   }
 
   // Enhanced shared layout with empty state
@@ -75,6 +64,11 @@ export function SharedWidgetCanvas() {
 
     return layoutItems
   }, [activeLayout, layoutMode, sharedParams])
+
+  const responsiveLayouts = useMemo(
+    () => generateResponsiveLayouts(transformedLayout),
+    [transformedLayout]
+  )
 
   // Check if any accounts are selected
   const hasSelectedAccounts = accountNumbers.length > 0
@@ -114,11 +108,11 @@ export function SharedWidgetCanvas() {
     <div className="relative">
       <ResponsiveGridLayout
         className="layout-enter-smooth"
-        layouts={[[{i: '1', x: 0, y: 0, w: 6, h: 4}, {i: '2', x: 6, y: 0, w: 6, h: 4}]] as any}
-        cols={isMobile ? 1 : 12 as any}
-        rowHeight={isMobile ? 80 : 60 as any}
-        width={1200 as any}
-        isResizable={false as any}
+        layouts={responsiveLayouts}
+        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+        cols={{ lg: 12, md: 12, sm: 12, xs: 12, xxs: 12 }}
+        rowHeight={isMobile ? 80 : 60}
+        isResizable={false}
         isDraggable={false}
         compactType={null}
         margin={[8, 8]}

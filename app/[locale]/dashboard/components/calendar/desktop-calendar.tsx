@@ -752,9 +752,8 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  if (!open) setSelectedDate(null)
  }}
  selectedDate={selectedDate}
- dayData={selectedDate ? calendarData[format(selectedDate, 'yyyy-MM-dd', { locale: dateLocale })] : undefined}
- isLoading={isLoading}
- />
+  dayData={selectedDate ? calendarData[format(selectedDate, 'yyyy-MM-dd', { locale: dateLocale })] : undefined}
+  />
  <WeeklyModal
  isOpen={selectedWeekDate !== null}
  onOpenChange={(open) => {

@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
   // Generate color from referral code if provided
   const accentColor = ref && ref !== 'Direct' 
     ? generateColorFromString(ref)
-    : '#F0B90B'; // Default primary yellow (Binance style)
+    : 'oklch(0.65 0.22 260)'; // Unified Electric Cobalt primary
 
   // Set canvas size (OG image standard size)
   const width = 1200;

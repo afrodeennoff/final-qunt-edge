@@ -163,48 +163,39 @@ export function AccountConfigurator({
  })
  return null
  }
- }
+  }
 
- const isSaveDisabled = !pendingChanges || 
- Object.keys(pendingChanges).length === 0 || 
- (pendingChanges?.startingBalance !== undefined && toNumber(pendingChanges.startingBalance) <= 0) ||
- (pendingChanges?.profitTarget !== undefined && toNumber(pendingChanges.profitTarget) <= 0) ||
- (pendingChanges?.drawdownThreshold !== undefined && toNumber(pendingChanges.drawdownThreshold) <= 0) ||
- (pendingChanges?.consistencyPercentage !== undefined && toNumber(pendingChanges.consistencyPercentage) < 0) ||
- (pendingChanges?.trailingDrawdown && pendingChanges?.trailingStopProfit !== undefined && toNumber(pendingChanges.trailingStopProfit) <= 0) ||
- isSaving
-
- // Filter prop firms and account sizes based on search query
- const filteredPropFirms = Object.entries(propFirms).filter(([firmKey, firm]) => {
- if (!searchQuery.trim()) return true
- 
- const query = searchQuery.toLowerCase().trim()
- const firmNameMatch = firm.name.toLowerCase().includes(query)
- 
- // Check if any account size matches
- const hasMatchingAccountSize = Object.entries(firm.accountSizes).some(([sizeKey, accountSize]) => {
- const sizeNameMatch = accountSize.name.toLowerCase().includes(query)
- const balanceMatch = accountSize.balance.toString().includes(query)
- const targetMatch = accountSize.target.toString().includes(query)
- return sizeNameMatch || balanceMatch || targetMatch
- })
- 
- return firmNameMatch || hasMatchingAccountSize
- })
+  // Filter prop firms and account sizes based on search query
+  const filteredPropFirms = Object.entries(propFirms).filter(([, firm]) => {
+  if (!searchQuery.trim()) return true
+  
+  const query = searchQuery.toLowerCase().trim()
+  const firmNameMatch = firm.name.toLowerCase().includes(query)
+  
+  // Check if any account size matches
+  const hasMatchingAccountSize = Object.entries(firm.accountSizes).some(([, accountSize]) => {
+  const sizeNameMatch = accountSize.name.toLowerCase().includes(query)
+  const balanceMatch = accountSize.balance.toString().includes(query)
+  const targetMatch = accountSize.target.toString().includes(query)
+  return sizeNameMatch || balanceMatch || targetMatch
+  })
+  
+  return firmNameMatch || hasMatchingAccountSize
+  })
 
  // Filter account sizes within each firm
- const getFilteredAccountSizes = (firm: typeof propFirms[string]) => {
- if (!searchQuery.trim()) return Object.entries(firm.accountSizes)
- 
- const query = searchQuery.toLowerCase().trim()
- return Object.entries(firm.accountSizes).filter(([sizeKey, accountSize]) => {
- const sizeNameMatch = accountSize.name.toLowerCase().includes(query)
- const balanceMatch = accountSize.balance.toString().includes(query)
- const targetMatch = accountSize.target.toString().includes(query)
- const firmNameMatch = firm.name.toLowerCase().includes(query)
- return sizeNameMatch || balanceMatch || targetMatch || firmNameMatch
- })
- }
+  const getFilteredAccountSizes = (firm: typeof propFirms[string]) => {
+  if (!searchQuery.trim()) return Object.entries(firm.accountSizes)
+  
+  const query = searchQuery.toLowerCase().trim()
+  return Object.entries(firm.accountSizes).filter(([, accountSize]) => {
+  const sizeNameMatch = accountSize.name.toLowerCase().includes(query)
+  const balanceMatch = accountSize.balance.toString().includes(query)
+  const targetMatch = accountSize.target.toString().includes(query)
+  const firmNameMatch = firm.name.toLowerCase().includes(query)
+  return sizeNameMatch || balanceMatch || targetMatch || firmNameMatch
+  })
+  }
 
  return (
  <div className="space-y-6">

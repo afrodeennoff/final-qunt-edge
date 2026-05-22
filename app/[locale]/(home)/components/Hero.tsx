@@ -8,11 +8,8 @@ export default async function Hero({ locale }: { locale: string }) {
   const t = await getI18n()
 
   return (
-    <MarketingSection className="relative pt-16 pb-12 sm:pt-20 sm:pb-16 lg:pt-24 lg:pb-20 overflow-hidden" innerClassName="max-w-[1280px]">
-      {/* Static cobalt ambient glows — no blur per Obsidian V3 rules, use radial for soft edge */}
-      {/* subtle background accents removed per minimal terminal design */}
-
-      <div className="relative grid items-center gap-12 lg:grid-cols-2">
+    <MarketingSection className="pt-12 pb-10 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-16" innerClassName="max-w-[1280px]">
+      <div className="relative grid items-center gap-10 lg:grid-cols-2">
         {/* Left: Command messaging */}
         <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
@@ -43,7 +40,7 @@ export default async function Hero({ locale }: { locale: string }) {
           </div>
 
           {/* Trust strip */}
-          <div className="mt-9 flex items-center gap-8 text-[11px] text-muted-foreground/70">
+          <div className="mt-8 flex items-center gap-6 text-[11px] text-muted-foreground/70">
             <div className="flex items-center gap-1.5">
               <Target className="h-3.5 w-3.5 text-primary" />
               <span>12,400+ traders</span>
@@ -59,56 +56,46 @@ export default async function Hero({ locale }: { locale: string }) {
           </div>
         </div>
 
-        {/* Right: Premium static terminal preview */}
+        {/* Right: Clean terminal preview (Binance-style) */}
         <div className="relative hidden lg:block">
-          <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-            {/* Fake terminal header */}
-            <div className="flex items-center gap-2 border-b border-border bg-muted/50 px-4 py-3 text-[10px] text-muted-foreground">
-              <div className="flex gap-1.5">
-                <div className="h-2 w-2 rounded-full bg-destructive/80" />
-                <div className="h-2 w-2 rounded-full bg-warning/80" />
-                <div className="h-2 w-2 rounded-full bg-success/80" />
+          <div className="overflow-hidden rounded-lg border border-border bg-card">
+            {/* Terminal header - tight, functional */}
+            <div className="flex items-center gap-2 border-b border-border bg-muted/60 px-3 py-2 text-[10px] text-muted-foreground">
+              <div className="flex gap-1">
+                <div className="h-1.5 w-1.5 rounded-full bg-destructive" />
+                <div className="h-1.5 w-1.5 rounded-full bg-warning" />
+                <div className="h-1.5 w-1.5 rounded-full bg-success" />
               </div>
-              <span className="ml-3 font-mono tracking-widest">QUNT EDGE — LIVE SESSION</span>
+              <span className="ml-2 font-mono tracking-[0.08em]">LIVE SESSION • QUNT EDGE</span>
             </div>
 
-            {/* Metrics grid */}
-            <div className="grid grid-cols-3 gap-px bg-muted p-px">
+            {/* Metrics grid - dense, clean */}
+            <div className="grid grid-cols-3 gap-px bg-border">
               {[
-                { label: 'TODAY PNL', value: '+$4,872', change: '+18.4%', good: true },
-                { label: 'WIN RATE', value: '74%', change: '+6%', good: true },
-                { label: 'EDGE SCORE', value: '91', change: '+3', good: true },
+                { label: 'TODAY PNL', value: '+$4,872', change: '+18.4%' },
+                { label: 'WIN RATE', value: '74%', change: '+6%' },
+                { label: 'EDGE SCORE', value: '91', change: '+3' },
               ].map((m, i) => (
-                <div key={i} className="bg-card p-5">
-                  <div className="text-[10px] font-medium tracking-[0.12em] text-muted-foreground/70">{m.label}</div>
-                  <div className="mt-3 text-[28px] font-semibold tabular-nums tracking-[-0.02em] text-foreground">{m.value}</div>
-                  <div className="mt-1 text-[12px] font-medium text-success">{m.change}</div>
+                <div key={i} className="bg-card p-4">
+                  <div className="text-[9px] font-medium tracking-[0.1em] text-muted-foreground/70">{m.label}</div>
+                  <div className="mt-2 text-[26px] font-semibold tabular-nums tracking-[-0.02em] text-foreground">{m.value}</div>
+                  <div className="mt-0.5 text-[11px] font-medium text-success">{m.change}</div>
                 </div>
               ))}
             </div>
 
-            {/* Static mini equity line (pure CSS, no JS) */}
-            <div className="relative h-[110px] border-t border-border bg-card px-5 py-6">
+            {/* Mini equity chart - clean line only */}
+            <div className="relative h-24 border-t border-border bg-card px-4 py-4">
               <svg viewBox="0 0 600 80" className="h-full w-full" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="brand" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#F0B90B" stopOpacity="0.9" />
-                    <stop offset="100%" stopColor="#F0B90B" stopOpacity="0.15" />
-                  </linearGradient>
-                </defs>
                 <path
                   d="M0,62 Q60,48 110,52 T210,34 T310,41 T410,22 T500,28 T600,12"
                   fill="none"
-                  stroke="#F0B90B"
-                  strokeWidth="2.5"
+                  stroke="oklch(0.65 0.22 260)"
+                  strokeWidth="2"
                   strokeLinecap="round"
                 />
-                <path
-                  d="M0,62 Q60,48 110,52 T210,34 T310,41 T410,22 T500,28 T600,12 L600,80 L0,80 Z"
-                  fill="url(#brand)"
-                />
               </svg>
-              <div className="absolute right-5 top-4 rounded bg-muted px-2 py-px text-[9px] font-mono text-muted-foreground/70">LIVE</div>
+              <div className="absolute right-3 top-2 rounded bg-muted px-1.5 py-px text-[9px] font-mono text-muted-foreground/70">LIVE</div>
             </div>
           </div>
         </div>

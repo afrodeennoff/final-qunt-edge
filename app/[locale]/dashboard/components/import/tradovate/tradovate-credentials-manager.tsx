@@ -312,18 +312,18 @@ export function TradovateCredentialsManager() {
  {account.accountId}
  </TableCell>
  <TableCell>
- <span
- className={`px-2 py-1 rounded text-xs ${
- (account as any).environment === 'live'
- ?"bg-semantic-success-bg text-semantic-success dark:bg-semantic-success-bg dark:text-semantic-success"
- :"bg-semantic-info-bg text-semantic-info dark:bg-semantic-info-bg dark:text-semantic-info"
- }`}
- >
-	 {(account as any).environment === 'live'
-	   ? t("tradovateSync.multiAccount.environmentLive")
-	   : t("tradovateSync.multiAccount.environmentDemo")
-	 }
- </span>
+  <span
+  className={`px-2 py-1 rounded text-xs ${
+  ((account as { environment?: 'live' | 'demo' }).environment ?? 'demo') === 'live'
+  ?"bg-semantic-success-bg text-semantic-success dark:bg-semantic-success-bg dark:text-semantic-success"
+  :"bg-semantic-info-bg text-semantic-info dark:bg-semantic-info-bg dark:text-semantic-info"
+  }`}
+  >
+ 	 {((account as { environment?: 'live' | 'demo' }).environment ?? 'demo') === 'live'
+ 	   ? t("tradovateSync.multiAccount.environmentLive")
+ 	   : t("tradovateSync.multiAccount.environmentDemo")
+ 	 }
+  </span>
  </TableCell>
  <TableCell>{formatDate(account.lastSyncedAt.toISOString())}</TableCell>
  <TableCell>

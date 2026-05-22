@@ -10,7 +10,7 @@ export function MetricsSkeleton() {
   return (
     <aside className="space-y-4">
       {/* Benchmark skeleton */}
-      <UnifiedSurface variant="elevated" className="p-5 sm:p-6">
+      <UnifiedSurface variant="elevated" className="p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="h-3 w-20 animate-pulse rounded-lg bg-muted/30" />
           <div className="h-5 w-14 animate-pulse rounded-md bg-muted/30" />
@@ -22,7 +22,7 @@ export function MetricsSkeleton() {
       </UnifiedSurface>
 
       {/* Capital snapshot skeleton */}
-      <UnifiedSurface className="p-5 sm:p-6">
+      <UnifiedSurface className="p-4 sm:p-5">
         <div className="flex items-center gap-2">
           <div className="h-4 w-4 animate-pulse rounded bg-muted/30" />
           <div className="h-3 w-28 animate-pulse rounded bg-muted/30" />
@@ -47,7 +47,7 @@ export function MetricsSkeleton() {
       </UnifiedSurface>
 
       {/* Execution quality skeleton */}
-      <UnifiedSurface className="p-5 sm:p-6">
+      <UnifiedSurface className="p-4 sm:p-5">
         <div className="flex items-center gap-2">
           <div className="h-4 w-4 animate-pulse rounded bg-muted/30" />
           <div className="h-3 w-32 animate-pulse rounded bg-muted/30" />
@@ -78,7 +78,7 @@ export function MetricsSkeleton() {
 
 export function TableSkeleton() {
   return (
-    <UnifiedSurface className="p-5 sm:p-6">
+    <UnifiedSurface className="p-4 sm:p-5">
       <div className="flex items-center justify-between gap-2">
         <div className="h-3 w-24 animate-pulse rounded-lg bg-muted/30" />
         <div className="h-5 w-16 animate-pulse rounded-md bg-muted/30" />

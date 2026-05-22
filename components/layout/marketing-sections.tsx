@@ -27,7 +27,7 @@ export function MarketingSection({
   return (
     <section
       id={id}
-      className={cn('scroll-smooth-butter px-4 py-16 sm:px-6 lg:px-8 lg:py-20', className)}
+      className={cn('scroll-smooth-butter px-4 py-8 sm:px-6 lg:px-8 sm:py-10', className)}
     >
       <div className={cn('mx-auto w-full', MARKETING_SHELL_WIDTH, innerClassName)}>{children}</div>
     </section>
@@ -54,7 +54,7 @@ export function MarketingSectionHeader({
   return (
     <header
       className={cn(
-        'space-y-4',
+        'space-y-3',
         align === 'center' ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl',
         className,
       )}

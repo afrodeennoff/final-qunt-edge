@@ -695,7 +695,7 @@ export function TeamManagement({
  return (
  <div className="mx-auto py-4">
  {/* Header */}
- <div className={cn(unifiedSectionPanelClassName, 'mb-6 p-5 sm:p-6')}>
+  <div className={cn(unifiedSectionPanelClassName, 'mb-5 p-4 sm:p-5')}>
  <h1 className="text-2xl font-bold tracking-tight text-foreground">{t('teams.management.component.title')}</h1>
  <p className="text-muted-foreground mt-2 text-sm">{t('teams.management.component.description')}</p>
  </div>

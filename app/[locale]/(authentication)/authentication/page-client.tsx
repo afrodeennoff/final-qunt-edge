@@ -102,7 +102,7 @@ export default function AuthenticationPageClient() {
                   {t('authentication.description')}
                 </p>
 
-                <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
                   {VALUE_POINTS.map((point) => (
                     <div key={point.title} className={cn(unifiedMetricPanelClassName, 'p-4')}>
                       <div className="flex items-start gap-3">
@@ -124,9 +124,9 @@ export default function AuthenticationPageClient() {
               </div>
             </section>
 
-            <section className="flex items-center justify-center border-t border-primary/10 p-6 sm:p-8 lg:border-t-0 lg:p-10 xl:p-12">
+            <section className="flex items-center justify-center border-t border-border p-5 sm:p-6 lg:border-t-0 lg:p-8">
               <div className="auth-entrance-2 mx-auto w-full max-w-[560px]">
-                <div className={cn(unifiedSectionPanelClassName, 'p-4 sm:p-6')}>
+                <div className={cn(unifiedSectionPanelClassName, 'p-4')}>
                   <div className="mb-4 flex items-start justify-between gap-4">
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/35">

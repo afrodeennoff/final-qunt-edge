@@ -27,7 +27,7 @@ export default function MarketingLayoutShell({
   className,
   showRollingBanner = true,
   topSpacingClassName = 'pt-16 sm:pt-20 lg:pt-24',
-  contentSpacingClassName = 'space-y-8 pb-24 pt-6 sm:pt-8 lg:pt-10',
+  contentSpacingClassName = 'space-y-6 pb-16 pt-4 sm:pt-6 lg:pt-8',
   shellVariant = 'black',
   fullWidth = false,
   showSidebar: _showSidebar = true,

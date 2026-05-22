@@ -14,17 +14,17 @@ export default async function LiveStatsStrip() {
   ]
 
   return (
-    <MarketingSection className="py-6 sm:py-8 border-y border-[oklch(0.65_0.22_260/0.08)] bg-background/95" innerClassName="max-w-[1280px]">
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+    <MarketingSection className="py-5 sm:py-6 border-y border-border" innerClassName="max-w-[1280px]">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {stats.map((stat, index) => {
           const Icon = stat.icon
           return (
-            <Card key={index} variant="glass" className="flex flex-col items-center gap-3 p-6 text-center">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] text-[oklch(0.65_0.22_260)]">
+            <Card key={index} className="flex flex-col items-center gap-2 p-4 text-center">
+              <div className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground">
                 <Icon className="h-4 w-4" />
               </div>
-              <p className="text-[32px] font-[250] tracking-[-0.05em] tabular-nums text-foreground leading-none">{stat.value}</p>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{stat.label}</p>
+              <p className="text-[28px] font-semibold tracking-[-0.04em] tabular-nums text-foreground leading-none">{stat.value}</p>
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{stat.label}</p>
             </Card>
           )
         })}

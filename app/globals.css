@@ -569,17 +569,17 @@
   --muted-foreground: #888888;
   --subtle-foreground: #666666;
 
-  /* ── BRAND (Binance Yellow primary, Cobalt light for focus only) ── */
-  --primary: #F0B90B;
-  --primary-foreground: #000000;
-  --accent: #F0B90B;
-  --accent-foreground: #000000;
+  /* ── BRAND (Unified Electric Cobalt across entire app) ── */
+  --primary: oklch(0.65 0.22 260);
+  --primary-foreground: white;
+  --accent: oklch(0.65 0.22 260);
+  --accent-foreground: white;
 
   /* ── SEMANTIC TRADING COLORS (strong, high contrast) ── */
   --success: #0ECB81;
   --success-foreground: #FFFFFF;
-  --warning: #F0B90B;
-  --warning-foreground: #000000;
+  --warning: oklch(0.65 0.22 260);
+  --warning-foreground: white;
   --destructive: #F6465D;
   --destructive-foreground: #FFFFFF;
 
@@ -708,17 +708,17 @@
   --muted-foreground: #888888;
   --subtle-foreground: #666666;
 
-  /* Brand: Binance Yellow primary, Cobalt used lightly only for focus/branding */
-  --primary: #F0B90B;
-  --primary-foreground: #000000;
-  --accent: #F0B90B;
-  --accent-foreground: #000000;
+  /* Brand: Unified Electric Cobalt (purple) across entire app */
+  --primary: oklch(0.65 0.22 260);
+  --primary-foreground: white;
+  --accent: oklch(0.65 0.22 260);
+  --accent-foreground: white;
 
   /* Strong semantic trading colors */
   --success: #0ECB81;
   --success-foreground: #FFFFFF;
-  --warning: #F0B90B;
-  --warning-foreground: #000000;
+  --warning: oklch(0.65 0.22 260);
+  --warning-foreground: white;
   --destructive: #F6465D;
   --destructive-foreground: #FFFFFF;
 
@@ -741,7 +741,7 @@
   --profit-bg: rgba(14, 203, 129, 0.08);
   --loss: #F6465D;
   --loss-bg: rgba(246, 70, 93, 0.08);
-  --info: #F0B90B;
+  --info: oklch(0.65 0.22 260);
   --info-bg: rgba(240, 185, 11, 0.08);
 
   /* Legacy compat (minimal) */

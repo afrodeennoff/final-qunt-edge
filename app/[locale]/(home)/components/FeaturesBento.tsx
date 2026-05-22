@@ -1,15 +1,7 @@
 import { Download, BarChart3, Users, Shield, FileText, Brain } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import {
-  unifiedBodyCopyClassName,
-  unifiedChipClassName,
-  unifiedInsetPanelClassName,
-  unifiedSectionEyebrowClassName,
-  unifiedSectionPanelClassName,
-} from '@/components/layout/unified-page-recipes'
 import { MarketingSection } from '@/components/layout/marketing-sections'
 import { CardV2 as Card } from '@/components/ui/v2'
-import { MotionStagger, MotionStaggerItem } from '@/components/animation/enhanced-motion'
 import { getTypedI18n } from '@/locales/server'
 
 const featureIcons = [Download, BarChart3, Users, Shield, FileText, Brain]
@@ -26,57 +18,55 @@ export default async function FeaturesBento() {
   }))
 
   return (
-    <MarketingSection className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-      <div className="mx-auto max-w-[1360px] space-y-6">
-        <Card variant="glass" className="p-6 sm:p-8">
-          <p className={unifiedSectionEyebrowClassName}>{t('landing.home.features.eyebrow')}</p>
-          <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-end">
+    <MarketingSection className="py-8 sm:py-10" innerClassName="max-w-[1280px]">
+      <div className="space-y-5">
+        <Card className="p-5">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">{t('landing.home.features.eyebrow')}</p>
+          <div className="mt-3 grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-end">
             <div>
-              <h2 className="text-balance text-[clamp(2.2rem,4.8vw,4.3rem)] font-medium leading-[0.96] tracking-[-0.05em] text-foreground">
+              <h2 className="text-balance text-[clamp(1.9rem,4vw,2.8rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-foreground">
                 {t('landing.home.features.title')}
                 <span className="block text-primary">{t('landing.home.features.highlight')}</span>
               </h2>
             </div>
-            <p className={cn(unifiedBodyCopyClassName, 'max-w-2xl')}>
+            <p className="text-[14px] leading-relaxed text-muted-foreground max-w-2xl">
               {t('landing.home.features.description')}
             </p>
           </div>
         </Card>
 
-                <div className="px-1">
-          <span className={cn(unifiedChipClassName, 'px-3 py-1.5 text-foreground/80')}>
+        <div>
+          <span className="inline-flex items-center rounded-full border border-border bg-muted px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             {t('landing.home.features.listLabel')}
           </span>
         </div>
 
-        <MotionStagger className="grid gap-4 lg:grid-cols-4" delay={0.08}>
+        <div className="grid gap-3 lg:grid-cols-4">
           {features.map((feature) => {
             const Icon = feature.icon
             return (
-              <MotionStaggerItem key={String(feature.title)} className={feature.colSpan}>
-                <Card
-                  variant={feature.highlighted ? 'elevated' : 'glass'}
-                  className={cn('flex h-full flex-col gap-4 p-6', feature.highlighted && 'border-primary/16')}
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] text-[oklch(0.65_0.22_260)]">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  {feature.highlighted ? (
-                    <span className={cn(unifiedChipClassName, 'w-fit px-3 py-1.5')}>
-                      {t('landing.home.features.feature2Badge')}
-                    </span>
-                  ) : null}
-                  <div className="space-y-2">
-                    <h3 className="text-[1.06rem] font-semibold tracking-[-0.02em] text-foreground">
-                      {feature.title}
-                    </h3>
-                    <p className="text-sm leading-[1.65] text-muted-foreground">{feature.description}</p>
-                  </div>
-                </Card>
-              </MotionStaggerItem>
+              <Card
+                key={String(feature.title)}
+                className={cn('flex h-full flex-col gap-3 p-4', feature.colSpan)}
+              >
+                <div className="flex h-9 w-9 items-center justify-center rounded border border-border bg-muted text-muted-foreground">
+                  <Icon className="h-4 w-4" />
+                </div>
+                {feature.highlighted ? (
+                  <span className="w-fit rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-primary">
+                    {t('landing.home.features.feature2Badge')}
+                  </span>
+                ) : null}
+                <div className="space-y-1.5">
+                  <h3 className="text-[14px] font-semibold tracking-[-0.01em] text-foreground">
+                    {feature.title}
+                  </h3>
+                  <p className="text-[13px] leading-[1.55] text-muted-foreground">{feature.description}</p>
+                </div>
+              </Card>
             )
           })}
-        </MotionStagger>
+        </div>
       </div>
     </MarketingSection>
   )
