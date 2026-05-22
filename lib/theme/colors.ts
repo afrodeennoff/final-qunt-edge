@@ -101,9 +101,9 @@ export const frostBorders = {
 
 export const status = {
   success: '#0ECB81',
-  warning: '#F0B90B',
+  warning: 'hsl(263, 85%, 65%)',
   error:   '#F6465D',
-  info:    '#F0B90B',
+  info:    'hsl(263, 85%, 65%)',
 } as const
 
 // ── Trading-Specific Semantic (Binance-aligned) ──
@@ -112,23 +112,23 @@ export const trading = {
   positive: '#0ECB81', // --profit
   negative: '#F6465D', // --loss
   neutral:  '#888888', // --muted-foreground
-  info:     '#F0B90B', // --info
+  info:     'hsl(263, 85%, 65%)', // --info (Deep Purple)
 } as const
 
 export const tradingBg = {
   positive: 'rgba(14,203,129,0.08)',
   negative: 'rgba(246,70,93,0.08)',
-  info:     'rgba(240,185,11,0.08)',
+  info:     'hsla(263, 85%, 65%, 0.08)',
 } as const
 
 // ── Marketing Page Tokens ──
 
 export const marketing = {
   bg: {
-    base:     '#09090B',
-    surface:  '#111113',
-    elevated: '#18181B',
-    overlay:  '#27272A',
+    base:     '#000000',
+    surface:  '#000000',
+    elevated: '#000000',
+    overlay:  '#000000',
   },
   text: {
     primary:   '#FAFAFA',
@@ -136,11 +136,11 @@ export const marketing = {
     tertiary:  '#71717A',
   },
   accent: {
-    primary: '#F0B90B',
-    hover:   '#D4A00A',
-    active:  '#B38600',
-    subtle:  'rgba(240,185,11,0.08)',
-    border:  'rgba(240,185,11,0.25)',
+    primary: 'hsl(263, 85%, 65%)',
+    hover:   'hsl(263, 80%, 55%)',
+    active:  'hsl(263, 75%, 40%)',
+    subtle:  'hsla(263, 85%, 65%, 0.08)',
+    border:  'hsla(263, 85%, 65%, 0.25)',
   },
 } as const
 
@@ -167,10 +167,10 @@ export const p3Accents = {
 // ── Chart Palette ──
 
 export const chartPalette = {
-  1: '#F0B90B', // Primary yellow
+  1: 'hsl(263, 85%, 65%)', // Primary Deep Purple
   2: '#0ECB81', // Profit green
   3: '#F6465D', // Loss red
-  4: '#F0B90B', // Warning
+  4: 'hsl(190, 80%, 55%)', // Cyan (info)
   5: '#3b82f6', // Blue (secondary)
   6: '#0e7490', // Teal
   7: '#888888', // Muted

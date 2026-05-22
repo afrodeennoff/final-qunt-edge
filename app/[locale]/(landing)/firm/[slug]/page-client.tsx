@@ -1278,7 +1278,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   const headerMetrics = buildHeaderMetrics(firm)
 
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] sm:p-7 lg:p-9">
+    <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] sm:p-7 lg:p-9">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.08),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.04),_transparent_40%)]" />
       <div className="relative space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">

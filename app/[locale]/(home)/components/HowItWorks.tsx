@@ -18,8 +18,8 @@ export default function HowItWorks() {
 
   return (
     <MarketingSection id="how-it-works" className="py-8 sm:py-10" innerClassName="max-w-[1280px]">
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-        <Card className="p-5 lg:sticky lg:top-24 lg:h-fit">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+        <Card className="p-6 lg:sticky lg:top-24 lg:h-fit">
           <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">{t('landing.home.workflow.eyebrow')}</p>
           <h2 className="mt-3 text-balance text-[clamp(1.85rem,4vw,2.55rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-foreground">
             {t('landing.home.workflow.title')}

@@ -44,7 +44,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         {/* Header */}
-        <div className="border-b border-[oklch(0.65_0.22_260/0.05)] p-5 pb-4">
+        <div className="border-b border-[oklch(0.65_0.22_260/0.05)] p-6 pb-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
               <h3 className="truncate text-xl font-semibold tracking-tight text-foreground">

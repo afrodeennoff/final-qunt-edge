@@ -227,7 +227,7 @@ export function PropFirmCatalogueExperience({
             <section
               className={cn(
                 unifiedSectionPanelClassName,
-                'animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6',
+                'animate-fade-up-smooth animate-fade-up-smooth-d2 p-6 sm:p-6',
               )}
             >
               <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -314,7 +314,7 @@ export function PropFirmCatalogueExperience({
         <section
           className={cn(
             unifiedSectionPanelClassName,
-            'animate-fade-up-smooth animate-fade-up-smooth-d4 p-5 sm:p-6',
+            'animate-fade-up-smooth animate-fade-up-smooth-d4 p-6 sm:p-6',
           )}
         >
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">

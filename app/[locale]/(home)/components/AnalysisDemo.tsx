@@ -47,8 +47,6 @@ export default function AnalysisDemo() {
 
   return (
     <MarketingSection className="relative overflow-hidden py-8 sm:py-12 lg:py-16" innerClassName="max-w-[1360px]">
-      {/* Atmospheric glow orb — static radial, no blur */}
-      <div className="pointer-events-none absolute right-0 top-1/3 h-[460px] w-[460px] rounded-full bg-[radial-gradient(circle,oklch(0.65_0.22_260/0.06)_0%,transparent_70%)]" />
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -72,7 +70,7 @@ export default function AnalysisDemo() {
 
         <Card variant="gradient-border" className="overflow-hidden p-0">
           <div className="grid lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,0.75fr)]">
-            <div className="border-b border-[oklch(0.65_0.22_260/0.08)] p-5 md:p-6 lg:border-b-0 lg:border-r lg:border-[oklch(0.65_0.22_260/0.08)]">
+            <div className="border-b border-[oklch(0.65_0.22_260/0.08)] p-6 md:p-6 lg:border-b-0 lg:border-r lg:border-[oklch(0.65_0.22_260/0.08)]">
               <div className="mb-6 flex items-center justify-between gap-4">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
@@ -97,7 +95,7 @@ export default function AnalysisDemo() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-4 p-5 md:p-6">
+            <div className="flex flex-col gap-4 p-6 md:p-6">
               <div className="flex items-center justify-between gap-3">
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
                   {t('landing.home.analysis.journalSignals')}

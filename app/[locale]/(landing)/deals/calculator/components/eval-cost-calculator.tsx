@@ -38,7 +38,7 @@ export function EvalCostCalculator() {
   }, [evaluationFee, expectedResets, resetCost, monthlyPlatformFees, targetPayout])
 
   return (
-    <section className="qe-soft-panel mt-6 rounded-2xl p-5 sm:p-6">
+    <section className="qe-soft-panel mt-6 rounded-2xl p-6">
       <div className="qe-soft-surface mb-4 rounded-xl p-3">
         <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Planner Inputs</p>
         <p className="mt-1 text-sm text-foreground">Adjust values to simulate realistic month-one evaluation economics.</p>

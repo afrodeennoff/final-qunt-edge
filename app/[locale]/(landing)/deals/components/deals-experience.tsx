@@ -605,7 +605,7 @@ function DealsTabSections({
             <div
               className={cn(
                 dealsInsetPanelClassName,
-                'p-5 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80',
+                'p-6 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80',
               )}
             >
               <h3 className="text-base font-bold text-foreground">1. Set max month-one spend</h3>
@@ -616,7 +616,7 @@ function DealsTabSections({
             <div
               className={cn(
                 dealsInsetPanelClassName,
-                'p-5 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80',
+                'p-6 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80',
               )}
             >
               <h3 className="text-base font-bold text-foreground">2. Pick executable drawdown</h3>
@@ -627,7 +627,7 @@ function DealsTabSections({
             <div
               className={cn(
                 dealsInsetPanelClassName,
-                'p-5 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80',
+                'p-6 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80',
               )}
             >
               <h3 className="text-base font-bold text-foreground">3. Align payout cadence</h3>
@@ -674,7 +674,7 @@ function DealsTabSections({
             </div>
           </div>
           <EvalCostCalculator />
-          <div className={cn(dealsPanelClassName, 'mt-6 p-4 sm:p-5')}>
+          <div className={cn(dealsPanelClassName, 'mt-6 p-4 sm:p-6')}>
             <h3 className="text-lg font-bold text-foreground">Interpretation tips</h3>
             <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
               <li className={cn(dealsInsetPanelClassName, 'px-3 py-2')}>
@@ -823,7 +823,7 @@ function BiggestDealsCarousel({
     <section
       className={cn(
         dealsPanelClassName,
-        'relative overflow-hidden p-4 sm:p-5 lg:p-8',
+        'relative overflow-hidden p-4 sm:p-6 lg:p-8',
       )}
       onMouseEnter={() => setIsAutoSlidePaused(true)}
       onMouseLeave={() => setIsAutoSlidePaused(false)}
@@ -1115,7 +1115,7 @@ function BrowseDealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
-    <section className={cn(dealsPanelClassName, 'overflow-hidden p-4 sm:p-5')}>
+    <section className={cn(dealsPanelClassName, 'overflow-hidden p-4 sm:p-6')}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
@@ -1158,7 +1158,7 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
     <section
       className={cn(
         dealsPanelClassName,
-        'grid gap-6 overflow-hidden p-5 lg:grid-cols-[1.1fr_0.9fr] lg:p-8',
+        'grid gap-6 overflow-hidden p-6 lg:grid-cols-[1.1fr_0.9fr] lg:p-8',
       )}
     >
       <div className="space-y-5">
@@ -1231,7 +1231,7 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
             icon={Banknote}
           />
         </div>
-        <div className={cn(dealsInsetPanelClassName, 'p-4 sm:p-5')}>
+        <div className={cn(dealsInsetPanelClassName, 'p-4 sm:p-6')}>
           <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
             Board rhythm
           </p>
@@ -1287,7 +1287,7 @@ function DealsFilterPanel({
 }) {
   return (
     <section className="grid gap-6 overflow-hidden lg:grid-cols-[1.2fr_0.8fr]">
-      <div className={cn(dealsPanelClassName, 'overflow-hidden p-5')}>
+      <div className={cn(dealsPanelClassName, 'overflow-hidden p-6')}>
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
           <div className="relative">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -1359,7 +1359,7 @@ function DealsFilterPanel({
         ) : null}
       </div>
 
-      <div className={cn(dealsPanelClassName, 'overflow-hidden p-5')}>
+      <div className={cn(dealsPanelClassName, 'overflow-hidden p-6')}>
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
           Board snapshot
         </p>
@@ -1429,7 +1429,7 @@ function DealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
-    <section className={cn(dealsPanelClassName, 'overflow-hidden p-4 sm:p-5')}>
+    <section className={cn(dealsPanelClassName, 'overflow-hidden p-4 sm:p-6')}>
       <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
         {title}
       </p>
@@ -1575,7 +1575,7 @@ function RadarRow({ label, value }: { label: string; value: string }) {
 
 function InsightCard({ label, value, helper }: { label: string; value: string; helper: string }) {
   return (
-    <div className={cn(dealsPanelClassName, 'overflow-hidden p-5')}>
+    <div className={cn(dealsPanelClassName, 'overflow-hidden p-6')}>
       <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
         {label}
       </p>

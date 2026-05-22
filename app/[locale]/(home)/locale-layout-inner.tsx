@@ -11,7 +11,7 @@ export default function LocaleLayoutInner({
     <ErrorBoundary>
       <PublicRootProviders>
         <MarketingLayoutShell
-          className="home-borderless-shell dark"
+          className="home-borderless-shell dark public-page"
           contentClassName="w-full"
           showRollingBanner={true}
           topSpacingClassName=""

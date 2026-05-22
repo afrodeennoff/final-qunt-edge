@@ -294,7 +294,7 @@ export default async function TraderProfilePage({
                 return (
                   <div
                     key={stat.label}
-                    className="border-t border-[oklch(0.65_0.22_260_/_0.08)] p-5 first:border-t-0 sm:[&:nth-child(-n+2)]:border-t-0 xl:border-l xl:border-t-0 xl:first:border-l-0"
+                    className="border-t border-[oklch(0.65_0.22_260_/_0.08)] p-6 first:border-t-0 sm:[&:nth-child(-n+2)]:border-t-0 xl:border-l xl:border-t-0 xl:first:border-l-0"
                   >
                     <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
                       <Icon className="h-3.5 w-3.5" />
@@ -310,7 +310,7 @@ export default async function TraderProfilePage({
             </div>
           </div>
 
-          <div className="rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.72)] p-5 shadow-[0_16px_48px_-36px_rgba(0,0,0,0.95)] sm:p-6">
+          <div className="rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.72)] p-6 shadow-[0_16px_48px_-36px_rgba(0,0,0,0.95)] sm:p-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
@@ -370,7 +370,7 @@ export default async function TraderProfilePage({
         </section>
 
         <aside className="space-y-5 xl:sticky xl:top-24 xl:self-start">
-          <div className="rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.72)] p-5 shadow-[0_16px_48px_-36px_rgba(0,0,0,0.95)]">
+          <div className="rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.72)] p-6 shadow-[0_16px_48px_-36px_rgba(0,0,0,0.95)]">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
@@ -423,7 +423,7 @@ export default async function TraderProfilePage({
             </div>
           </div>
 
-          <div className="rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.72)] p-5 shadow-[0_16px_48px_-36px_rgba(0,0,0,0.95)]">
+          <div className="rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.72)] p-6 shadow-[0_16px_48px_-36px_rgba(0,0,0,0.95)]">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">

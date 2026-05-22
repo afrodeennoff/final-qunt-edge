@@ -186,7 +186,7 @@ export default function Features() {
 						{features.map((feature, index) => (
 							<div
 								key={feature.id}
-								className={cn("rounded-xl border border-[oklch(0.65_0.22_260/0.09)] bg-[oklch(0.65_0.22_260/0.04)] p-5 sm:p-6 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]","hover:-translate-y-1","opacity-0",
+								className={cn("rounded-xl border border-[oklch(0.65_0.22_260/0.09)] bg-[oklch(0.65_0.22_260/0.04)] p-6 sm:p-6 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]","hover:-translate-y-1","opacity-0",
 								isVisible &&"opacity-100"
 								)}
 								style={{

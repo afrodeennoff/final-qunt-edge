@@ -48,7 +48,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
   const hasActiveFilters = search || payoutFilter || sort !== "accounts"
 
   return (
-    <div className="space-y-4 rounded-xl border border-[oklch(0.65_0.22_260/0.04)] bg-[oklch(0.65_0.22_260/0.02)] p-4 sm:p-5">
+    <div className="space-y-4 rounded-xl border border-[oklch(0.65_0.22_260/0.04)] bg-[oklch(0.65_0.22_260/0.02)] p-4 sm:p-6">
       {/* Search Bar */}
       <div className="relative">
         <svg

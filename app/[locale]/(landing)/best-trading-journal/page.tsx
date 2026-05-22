@@ -104,7 +104,7 @@ export default async function BestTradingJournalPage({
         </section>
 
         <section className="grid gap-4 lg:grid-cols-2">
-          <article className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-5">
+          <article className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-6">
             <h2 className="text-xl font-semibold text-foreground">Why traders outgrow spreadsheets</h2>
             <ul className="mt-4 space-y-2 text-sm leading-6 text-muted-foreground">
               <li>Manual rows capture outcomes but usually miss execution context.</li>
@@ -112,7 +112,7 @@ export default async function BestTradingJournalPage({
               <li>Cross-session consistency breaks when templates drift over time.</li>
             </ul>
           </article>
-          <article className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-5">
+          <article className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-6">
             <h2 className="text-xl font-semibold text-foreground">What Qunt Edge adds</h2>
             <ul className="mt-4 space-y-2 text-sm leading-6 text-muted-foreground">
               <li>Centralized journal + chart + behavior review workflows.</li>
@@ -122,7 +122,7 @@ export default async function BestTradingJournalPage({
           </article>
         </section>
 
-        <section className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-5">
+        <section className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-6">
           <h2 className="text-2xl font-semibold text-foreground">Feature Evidence From Existing Product Capabilities</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <article className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4">
@@ -152,7 +152,7 @@ export default async function BestTradingJournalPage({
           </div>
         </section>
 
-        <section className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-5">
+        <section className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-6">
           <h2 className="text-2xl font-semibold text-foreground">Trust Signals Backed by Internal Product Data</h2>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
             Qunt Edge publishes connected public surfaces (leaderboard, community, support, and firm/deal datasets) so users can validate workflow context.
@@ -175,7 +175,7 @@ export default async function BestTradingJournalPage({
           </div>
         </section>
 
-        <section className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-5">
+        <section className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-6">
           <h2 className="text-2xl font-semibold text-foreground">Frequently Asked Questions</h2>
           <div className="mt-4 space-y-3">
             {FAQ_ITEMS.map((item) => (
@@ -187,7 +187,7 @@ export default async function BestTradingJournalPage({
           </div>
         </section>
 
-        <section className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-5 text-center">
+        <section className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-6 text-center">
           <h2 className="text-2xl font-semibold text-foreground">Build a Repeatable Review System</h2>
           <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
             Move from fragmented logs to a workflow that supports consistent execution review and better decision quality.

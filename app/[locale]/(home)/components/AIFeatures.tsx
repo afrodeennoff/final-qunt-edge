@@ -19,8 +19,8 @@ export default function AIFeatures() {
 
   return (
     <section className="py-8 sm:py-10">
-      <div className="mx-auto grid max-w-[1280px] gap-5 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]">
-        <Card className="p-5">
+      <div className="mx-auto grid max-w-[1280px] gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]">
+        <Card className="p-6">
           <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">{t('landing.home.ai.eyebrow')}</p>
           <h2 className="mt-3 text-balance text-[clamp(1.85rem,4vw,2.6rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-foreground">
             {t('landing.home.ai.title')}

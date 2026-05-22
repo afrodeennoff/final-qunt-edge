@@ -17,7 +17,7 @@ export default function ProblemStatement() {
       />
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         {pains.map((pain, i) => (
-          <Card key={i} className="p-5">
+          <Card key={i} className="p-6">
             <div className="text-[14px] font-semibold tracking-tight text-foreground">{pain.title}</div>
             <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{pain.desc}</p>
           </Card>

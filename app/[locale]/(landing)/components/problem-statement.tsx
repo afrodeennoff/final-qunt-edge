@@ -63,7 +63,7 @@ export default function ProblemStatement() {
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true }}
  transition={{ duration: 0.5, delay: i * 0.1 }}
- className="group relative rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-5 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 hover:border-[oklch(0.65_0.22_260/0.10)]"
+ className="group relative rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-6 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 hover:border-[oklch(0.65_0.22_260/0.10)]"
  >
  <div className="relative h-full overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-black/25 p-4 transition-colors group-hover:border-[oklch(0.65_0.22_260/0.10)] sm:p-6">
  <div className="absolute right-3 top-3 text-[8px] font-mono text-foreground/80 transition-colors group-hover:text-fg-primary sm:right-4 sm:top-4 sm:text-[9px]">

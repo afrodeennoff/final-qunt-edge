@@ -124,7 +124,7 @@ export default function AuthenticationPageClient() {
               </div>
             </section>
 
-            <section className="flex items-center justify-center border-t border-border p-5 sm:p-6 lg:border-t-0 lg:p-8">
+            <section className="flex items-center justify-center border-t border-border p-6 sm:p-6 lg:border-t-0 lg:p-8">
               <div className="auth-entrance-2 mx-auto w-full max-w-[560px]">
                 <div className={cn(unifiedSectionPanelClassName, 'p-4')}>
                   <div className="mb-4 flex items-start justify-between gap-4">

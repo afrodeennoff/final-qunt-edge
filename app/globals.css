@@ -400,9 +400,9 @@
   --p3-sapphire: color(display-p3 0.20 0.45 0.98);
   --p3-sapphire-subtle: color(display-p3 0.20 0.45 0.98 / 0.12);
   --p3-sapphire-border: color(display-p3 0.20 0.45 0.98 / 0.25);
-  --p3-gold: color(display-p3 0.95 0.72 0.18);
-  --p3-gold-subtle: color(display-p3 0.95 0.72 0.18 / 0.12);
-  --p3-gold-border: color(display-p3 0.95 0.72 0.18 / 0.25);
+  --p3-gold: hsl(263, 85%, 65%);
+  --p3-gold-subtle: hsla(263, 85%, 65%, 0.12);
+  --p3-gold-border: hsla(263, 85%, 65%, 0.25);
 
   /* Minimal shadows only */
   --shadow-ultra-sm: 0 1px 2px rgba(0,0,0,0.2);
@@ -556,49 +556,49 @@
   --easing-enter: cubic-bezier(0.4, 0, 1, 1); /* Elements entering */
   --easing-leave: cubic-bezier(0, 0, 0.2, 1); /* Elements leaving */
 
-  /* ── BACKGROUND & SURFACE — Binance Trading Terminal (Dark) ── */
-  --background: #0A0A0A;
+  /* ── BACKGROUND & SURFACE — Pure Black Canvas (Public) ── */
+  --background: #000000;
   --foreground: #EAEAEA;
-  --card: #1A1A1A;
+  --card: #000000;
   --card-foreground: #EAEAEA;
-  --popover: #1F1F1F;
+  --popover: #000000;
   --popover-foreground: #EAEAEA;
-  --sidebar: #111111;
-  --sidebar-background: #111111;
-  --muted: #2A2A2A;
+  --sidebar: #000000;
+  --sidebar-background: #000000;
+  --muted: #0D0D0D;
   --muted-foreground: #888888;
   --subtle-foreground: #666666;
 
-  /* ── BRAND (Unified Electric Cobalt across entire app) ── */
-  --primary: oklch(0.65 0.22 260);
-  --primary-foreground: white;
-  --accent: oklch(0.65 0.22 260);
-  --accent-foreground: white;
+  /* ── BRAND (Deep Purple — default palette locked for public pages) ── */
+  --primary: hsl(263, 85%, 65%);
+  --primary-foreground: #000000;
+  --accent: hsl(263, 60%, 15%);
+  --accent-foreground: hsl(263, 85%, 65%);
 
   /* ── SEMANTIC TRADING COLORS (strong, high contrast) ── */
   --success: #0ECB81;
   --success-foreground: #FFFFFF;
-  --warning: oklch(0.65 0.22 260);
-  --warning-foreground: white;
+  --warning: hsl(263, 85%, 65%);
+  --warning-foreground: #000000;
   --destructive: #F6465D;
   --destructive-foreground: #FFFFFF;
 
-  /* ── BORDER & RING — clean minimal — Cobalt only for focus/ring lightly ── */
-  --border: #2F2F2F;
-  --border-subtle: #252525;
-  --input: #1A1A1A;
-  --ring: oklch(0.65 0.22 260); /* subtle cobalt focus only */
+  /* ── BORDER & RING — Deep Purple only for focus/ring ── */
+  --border: hsl(260, 20%, 15%);
+  --border-subtle: hsl(260, 20%, 12%);
+  --input: hsl(260, 20%, 12%);
+  --ring: hsl(263, 85%, 65%);
 
-  /* ── SIDEBAR (aligned to new terminal) — will be overridden in .dark */
-  --sidebar: #111111;
-  --sidebar-background: #111111;
+  /* ── SIDEBAR */
+  --sidebar: #000000;
+  --sidebar-background: #000000;
   --sidebar-foreground: #EAEAEA;
-  --sidebar-primary: #F0B90B;
+  --sidebar-primary: hsl(263, 85%, 65%);
   --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #1F1F1F;
-  --sidebar-accent-foreground: #F0B90B;
-  --sidebar-border: #2F2F2F;
-  --sidebar-ring: oklch(0.65 0.22 260);
+  --sidebar-accent: hsl(263, 60%, 12%);
+  --sidebar-accent-foreground: hsl(263, 85%, 65%);
+  --sidebar-border: hsl(260, 20%, 12%);
+  --sidebar-ring: hsl(263, 85%, 65%);
 
   /* ── COMPATIBILITY BRIDGE — neutral dark grays for legacy code */
   --legacy-50: 0 0% 6%;
@@ -660,28 +660,27 @@
   --type-metric-tracking: -0.02em;
 
   /* ═══════════════════════════════════════════════════════════
-      MARKETING / LANDING TOKENS — Clean Professional (Binance-inspired)
-      No heavy purple luxury. Dark, readable, yellow accents lightly.
+      MARKETING / LANDING TOKENS — Pure Black + Deep Purple
    ═══════════════════════════════════════════════════════════ */
-  --mkt-bg-base:        #0A0A0A;
-  --mkt-bg-surface:     #1A1A1A;
-  --mkt-bg-elevated:    #1F1F1F;
-  --mkt-bg-overlay:     #111111;
+  --mkt-bg-base:        #000000;
+  --mkt-bg-surface:     #000000;
+  --mkt-bg-elevated:    #000000;
+  --mkt-bg-overlay:     #000000;
 
   --mkt-text-primary:   #EAEAEA;
   --mkt-text-secondary: #888888;
   --mkt-text-tertiary:  #666666;
 
-  --mkt-accent:           #F0B90B;
-  --mkt-accent-hover:     #D4A00A;
-  --mkt-accent-active:    #B38600;
-  --mkt-accent-subtle:    rgba(240,185,11,0.08);
-  --mkt-accent-border:    rgba(240,185,11,0.25);
+  --mkt-accent:           hsl(263, 85%, 65%);
+  --mkt-accent-hover:     hsl(263, 80%, 55%);
+  --mkt-accent-active:    hsl(263, 75%, 45%);
+  --mkt-accent-subtle:    hsla(263, 85%, 65%, 0.08);
+  --mkt-accent-border:    hsla(263, 85%, 65%, 0.25);
 
-  --mkt-border-subtle:    #2F2F2F;
-  --mkt-border-default:   #2F2F2F;
-  --mkt-border-strong:    #3A3A3A;
-  --mkt-border-accent:    #F0B90B;
+  --mkt-border-subtle:    hsl(260, 20%, 15%);
+  --mkt-border-default:   hsl(260, 20%, 15%);
+  --mkt-border-strong:    hsl(260, 20%, 20%);
+  --mkt-border-accent:    hsl(263, 85%, 65%);
 
   /* Clean no-glow marketing surfaces */
   --mkt-gradient-hero: none;
@@ -695,54 +694,54 @@
 
 
 .dark {
-  /* Binance Trading Terminal — Professional Data-Dense Dark */
-  --background: #0A0A0A;
+  /* Public default — Pure Black + Deep Purple (overridden by dashboardTheme on dashboard/teams) */
+  --background: #000000;
   --foreground: #EAEAEA;
-  --card: #1A1A1A;
+  --card: #000000;
   --card-foreground: #EAEAEA;
-  --popover: #1F1F1F;
+  --popover: #000000;
   --popover-foreground: #EAEAEA;
-  --sidebar: #111111;
-  --sidebar-background: #111111;
-  --muted: #2A2A2A;
+  --sidebar: #000000;
+  --sidebar-background: #000000;
+  --muted: #0D0D0D;
   --muted-foreground: #888888;
   --subtle-foreground: #666666;
 
-  /* Brand: Unified Electric Cobalt (purple) across entire app */
-  --primary: oklch(0.65 0.22 260);
-  --primary-foreground: white;
-  --accent: oklch(0.65 0.22 260);
-  --accent-foreground: white;
+  /* Brand: Deep Purple (default) */
+  --primary: hsl(263, 85%, 65%);
+  --primary-foreground: #000000;
+  --accent: hsl(263, 60%, 15%);
+  --accent-foreground: hsl(263, 85%, 65%);
 
   /* Strong semantic trading colors */
   --success: #0ECB81;
   --success-foreground: #FFFFFF;
-  --warning: oklch(0.65 0.22 260);
-  --warning-foreground: white;
+  --warning: hsl(263, 85%, 65%);
+  --warning-foreground: #000000;
   --destructive: #F6465D;
   --destructive-foreground: #FFFFFF;
 
   /* Clean minimal borders */
-  --border: #2F2F2F;
-  --border-subtle: #252525;
-  --input: #1A1A1A;
-  --ring: oklch(0.65 0.22 260); /* light cobalt for focus rings only */
+  --border: hsl(260, 20%, 15%);
+  --border-subtle: hsl(260, 20%, 12%);
+  --input: hsl(260, 20%, 12%);
+  --ring: hsl(263, 85%, 65%);
 
   --sidebar-foreground: #EAEAEA;
-  --sidebar-primary: #F0B90B;
+  --sidebar-primary: hsl(263, 85%, 65%);
   --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #1F1F1F;
-  --sidebar-accent-foreground: #F0B90B;
-  --sidebar-border: #2F2F2F;
-  --sidebar-ring: oklch(0.65 0.22 260);
+  --sidebar-accent: hsl(263, 60%, 12%);
+  --sidebar-accent-foreground: hsl(263, 85%, 65%);
+  --sidebar-border: hsl(260, 20%, 12%);
+  --sidebar-ring: hsl(263, 85%, 65%);
 
   /* Trading P&L semantics (strong, no tint bg unless needed) */
   --profit: #0ECB81;
   --profit-bg: rgba(14, 203, 129, 0.08);
   --loss: #F6465D;
   --loss-bg: rgba(246, 70, 93, 0.08);
-  --info: oklch(0.65 0.22 260);
-  --info-bg: rgba(240, 185, 11, 0.08);
+  --info: hsl(263, 85%, 65%);
+  --info-bg: hsla(263, 85%, 65%, 0.08);
 
   /* Legacy compat (minimal) */
   --legacy-50: 0 0% 6%;
@@ -796,15 +795,14 @@
   }
 
   .text-gradient-cobalt {
-    background: linear-gradient(135deg, var(--primary) 0%, #D4A00A 100%);
+    background: linear-gradient(135deg, hsl(263, 85%, 65%) 0%, hsl(263, 70%, 55%) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .border-gradient-cobalt {
-    border-image: linear-gradient(135deg, var(--primary) 0%, rgba(240,185,11,0.3) 100%) 1
-      1;
+    border-image: linear-gradient(135deg, hsl(263, 85%, 65%) 0%, hsl(263, 60%, 50%) 100%) 1;
   }
 
   /* ═══════════════════════════════════════════════════════════
@@ -834,7 +832,7 @@
   }
 
   .text-gradient-gold {
-    background: linear-gradient(135deg, color(display-p3 0.95 0.72 0.18) 0%, color(display-p3 0.98 0.90 0.55) 100%);
+    background: linear-gradient(135deg, hsl(263, 85%, 65%) 0%, hsl(263, 70%, 50%) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -4204,4 +4202,30 @@ img[loading='lazy'] {
   .group:hover .surface-premium-hover {
     border-color: var(--border);
   }
+}
+
+/* === PUBLIC PAGES: PURE BLACK CANVAS + LOCKED DEEP PURPLE DEFAULT === */
+/* Applied on home, marketing, auth, landing, etc. — dashboard/teams keep user theme */
+:root.public,
+html.public,
+body.public-page {
+  --background: #000000 !important;
+  --card: #000000 !important;
+  --popover: #000000 !important;
+  --sidebar: #000000 !important;
+  --muted: hsl(260, 20%, 8%) !important;
+  --border: hsl(260, 20%, 15%) !important;
+  --input: hsl(260, 20%, 12%) !important;
+
+  /* Locked Deep Purple accents from default palette (cmlh0x713000104jrgmds6vcd) */
+  --primary: hsl(263, 85%, 65%) !important;
+  --primary-foreground: hsl(260, 25%, 2%) !important;
+  --ring: hsl(263, 85%, 65%) !important;
+  --accent: hsl(263, 60%, 15%) !important;
+  --accent-foreground: hsl(263, 85%, 65%) !important;
+  --chart-1: hsl(263, 85%, 65%) !important;
+  --chart-2: hsl(190, 80%, 55%) !important;
+  --chart-3: hsl(150, 70%, 50%) !important;
+  --chart-4: hsl(280, 80%, 70%) !important;
+  --chart-5: hsl(330, 90%, 65%) !important;
 }

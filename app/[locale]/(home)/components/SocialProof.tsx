@@ -45,7 +45,7 @@ export default async function SocialProof() {
   return (
     <MarketingSection className="py-8 sm:py-10" innerClassName="max-w-[1280px]">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-end">
-        <Card className="p-5">
+        <Card className="p-6">
           <Badge variant="accent" className="rounded-full px-2.5 py-0.5 text-[10px] uppercase tracking-[0.14em]">
             {t('landing.home.social.badge')}
           </Badge>
@@ -77,7 +77,7 @@ export default async function SocialProof() {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+      <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <div className="space-y-3">
           <Card className="p-4 border-border">
             <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">

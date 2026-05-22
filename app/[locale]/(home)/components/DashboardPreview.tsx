@@ -43,7 +43,7 @@ export default function DashboardPreview() {
       role="img"
       aria-label={String(t('landing.home.preview.ariaLabel'))}
     >
-      <div className="flex h-full min-h-[560px] flex-col overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-black/80 p-4 sm:p-5">
+      <div className="flex h-full min-h-[560px] flex-col overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-black/80 p-4 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[oklch(0.65_0.22_260/0.08)] pb-4">
           <div className="flex items-center gap-2">
             <div className="flex gap-1.5">
@@ -88,7 +88,7 @@ export default function DashboardPreview() {
               ))}
             </div>
 
-            <div className={cn(unifiedInsetPanelClassName, 'relative min-h-[270px] overflow-hidden p-4 sm:p-5')}>
+            <div className={cn(unifiedInsetPanelClassName, 'relative min-h-[270px] overflow-hidden p-4 sm:p-6')}>
               <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   Session curve
@@ -135,7 +135,7 @@ export default function DashboardPreview() {
             </div>
           </div>
 
-          <div className={cn(unifiedInsetPanelClassName, 'flex flex-col p-4 sm:p-5')}>
+          <div className={cn(unifiedInsetPanelClassName, 'flex flex-col p-4 sm:p-6')}>
             <div className="mb-3 flex items-center justify-between gap-2">
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.preview.recentTrades')}
@@ -149,7 +149,7 @@ export default function DashboardPreview() {
               {trades.map((trade) => (
                 <div
                   key={`${trade.symbol}-${trade.time}`}
-                  className="rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-3.5 py-3"
+                  className="rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-4 py-3"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div>

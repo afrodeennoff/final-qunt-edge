@@ -70,7 +70,7 @@ export default function PricingSection({ locale }: { locale: string }) {
 
   return (
     <section id="pricing" className="px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-      <div className="mx-auto max-w-[1280px] space-y-5">
+      <div className="mx-auto max-w-[1280px] space-y-4">
         <motion.div
           className={cn(unifiedSectionPanelClassName, 'p-6 text-center md:p-8')}
           initial={{ opacity: 0, y: 14 }}

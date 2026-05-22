@@ -19,8 +19,8 @@ export default async function FeaturesBento() {
 
   return (
     <MarketingSection className="py-8 sm:py-10" innerClassName="max-w-[1280px]">
-      <div className="space-y-5">
-        <Card className="p-5">
+      <div className="space-y-4">
+        <Card className="p-6">
           <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">{t('landing.home.features.eyebrow')}</p>
           <div className="mt-3 grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-end">
             <div>

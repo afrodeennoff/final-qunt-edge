@@ -45,6 +45,7 @@ export default async function RootLayout(
         contentSpacingClassName="pb-safe"
         shellVariant="black"
         fullWidth
+        className="public-page"
       >
         {children}
       </MarketingLayoutShell>

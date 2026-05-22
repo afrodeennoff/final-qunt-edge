@@ -14,7 +14,7 @@ export default async function LiveStatsStrip() {
   ]
 
   return (
-    <MarketingSection className="py-5 sm:py-6 border-y border-border" innerClassName="max-w-[1280px]">
+    <MarketingSection className="py-4 sm:py-6 border-y border-border" innerClassName="max-w-[1280px]">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {stats.map((stat, index) => {
           const Icon = stat.icon

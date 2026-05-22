@@ -32,7 +32,7 @@ function FAQAccordion({
     >
       <button
         onClick={onToggle}
-        className="flex w-full items-center justify-between gap-4 p-5 text-left hover:bg-[oklch(0.65_0.22_260/0.02)]"
+        className="flex w-full items-center justify-between gap-4 p-4 text-left hover:bg-[oklch(0.65_0.22_260/0.02)]"
         aria-expanded={isOpen}
         data-state={isOpen ? 'open' : 'closed'}
       >
@@ -63,7 +63,7 @@ function FAQAccordion({
         )}
       >
         <div className="overflow-hidden">
-          <CardContent className="border-t border-[oklch(0.65_0.22_260/0.08)] p-5 pt-4">
+          <CardContent className="border-t border-[oklch(0.65_0.22_260/0.08)] p-4 pt-4">
             <p className="pl-12 text-sm leading-relaxed text-muted-foreground">{item.answer}</p>
           </CardContent>
         </div>
@@ -99,7 +99,7 @@ export default function FAQSection() {
             {t('landing.home.faq.description')}
           </p>
 
-          <Card variant="flat" className="mt-8 p-5 border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)]">
+          <Card variant="flat" className="mt-8 p-6 border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)]">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
               {t('landing.home.faq.bestForTitle')}
             </p>
@@ -109,7 +109,7 @@ export default function FAQSection() {
           </Card>
         </Card>
 
-        <Card variant="glass" className="p-4 sm:p-5">
+        <Card variant="glass" className="p-4 sm:p-6">
           <div className="mb-4 flex items-center justify-between gap-3 px-1">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
               {t('landing.home.faq.commonQuestions')}

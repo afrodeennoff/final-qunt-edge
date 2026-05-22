@@ -13,7 +13,7 @@ export function PricingPageClient() {
     <UnifiedPageShell widthClassName="max-w-[1320px]" className="py-12 sm:py-16">
       <div className="space-y-6">
         <section
-          className={cn(unifiedHeroPanelClassName, 'animate-fade-up-smooth p-5 sm:p-8 lg:p-10')}
+          className={cn(unifiedHeroPanelClassName, 'animate-fade-up-smooth p-6 sm:p-8 lg:p-10')}
         >
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(700px_260px_at_12%_6%,rgba(255,255,255,0.07),transparent_72%)]" />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(540px_220px_at_88%_6%,rgba(255,255,255,0.045),transparent_74%)]" />

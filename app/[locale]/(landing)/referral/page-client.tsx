@@ -147,7 +147,7 @@ export default function ReferralPage() {
           id="referral-how-it-works"
           className={cn(
             unifiedSectionPanelClassName,
-            'animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6',
+            'animate-fade-up-smooth animate-fade-up-smooth-d2 p-6',
           )}
         >
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -171,7 +171,7 @@ export default function ReferralPage() {
                 key={title}
                 className={cn(
                   unifiedInsetPanelClassName,
-                  'animate-scale-reveal p-5',
+                  'animate-scale-reveal p-6',
                   index === 0 && 'animate-scale-reveal-d1',
                   index === 1 && 'animate-scale-reveal-d2',
                   index === 2 && 'animate-scale-reveal-d3',
@@ -191,7 +191,7 @@ export default function ReferralPage() {
           <section
             className={cn(
               unifiedSectionPanelClassName,
-              'animate-fade-up-smooth animate-fade-up-smooth-d3 p-5 sm:p-6',
+              'animate-fade-up-smooth animate-fade-up-smooth-d3 p-6',
             )}
           >
             <div>
@@ -243,7 +243,7 @@ export default function ReferralPage() {
           <section
             className={cn(
               unifiedSectionPanelClassName,
-              'animate-fade-up-smooth animate-fade-up-smooth-d4 p-5 sm:p-6',
+              'animate-fade-up-smooth animate-fade-up-smooth-d4 p-6',
             )}
           >
             <div>
@@ -263,7 +263,7 @@ export default function ReferralPage() {
                     key={tier.count}
                     className={cn(
                       unifiedInsetPanelClassName,
-                      'animate-scale-reveal flex flex-col items-center p-5 text-center',
+                      'animate-scale-reveal flex flex-col items-center p-6 text-center',
                       index === 0 && 'animate-scale-reveal-d1',
                       index === 1 && 'animate-scale-reveal-d2',
                       index === 2 && 'animate-scale-reveal-d3',
@@ -288,7 +288,7 @@ export default function ReferralPage() {
         <section
           className={cn(
             unifiedSectionPanelClassName,
-            'animate-fade-up-smooth animate-fade-up-smooth-d4 p-5 sm:p-6',
+              'animate-fade-up-smooth animate-fade-up-smooth-d4 p-6',
           )}
         >
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">

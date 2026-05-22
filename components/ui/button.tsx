@@ -10,21 +10,21 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        solid: 'border-transparent bg-primary text-primary-foreground hover:bg-[#D4A00A]',
+        solid: 'border-transparent bg-primary text-primary-foreground hover:bg-[hsl(263,75%,55%)]',
         outline: 'border-border bg-transparent text-foreground hover:bg-muted hover:border-border/80',
         ghost: 'border-transparent text-muted-foreground hover:bg-muted hover:text-foreground',
         error: 'border-transparent bg-destructive text-destructive-foreground hover:bg-[#c53030]',
         destructive: 'border-transparent bg-destructive text-destructive-foreground hover:bg-[#c53030]',
         link: 'border-transparent text-primary underline-offset-2 hover:underline p-0 h-auto min-h-0',
-        default: 'border-transparent bg-primary text-primary-foreground hover:bg-[#D4A00A]',
+        default: 'border-transparent bg-primary text-primary-foreground hover:bg-[hsl(263,75%,55%)]',
         secondary: 'border-border bg-muted text-foreground hover:bg-card',
         mono: 'border-border bg-card text-foreground font-mono hover:bg-muted',
         pill: 'rounded-full border-border bg-card text-foreground hover:bg-muted',
-        'pill-solid': 'rounded-full border-transparent bg-primary text-primary-foreground hover:bg-[#D4A00A]',
+        'pill-solid': 'rounded-full border-transparent bg-primary text-primary-foreground hover:bg-[hsl(263,75%,55%)]',
         'pill-ghost': 'rounded-full border-transparent text-muted-foreground hover:bg-muted hover:text-foreground',
-        'gradient-primary': 'border-transparent bg-primary text-primary-foreground hover:bg-[#D4A00A]',
+        'gradient-primary': 'border-transparent bg-primary text-primary-foreground hover:bg-[hsl(263,75%,55%)]',
         'gradient-secondary': 'border-border bg-muted text-foreground hover:bg-card',
-        shimmer: 'border-transparent bg-primary text-primary-foreground hover:bg-[#D4A00A]',
+        shimmer: 'border-transparent bg-primary text-primary-foreground hover:bg-[hsl(263,75%,55%)]',
       },
       size: {
         sm: 'h-8 min-h-[36px] min-w-[28px] px-2.5 text-xs',

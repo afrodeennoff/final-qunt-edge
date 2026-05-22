@@ -36,5 +36,9 @@ export default function AuthenticationLayout({
  }
  }, [locale, router]);
 
- return <RootProviders>{children}</RootProviders>;
+  return (
+    <div className="public-page">
+      <RootProviders>{children}</RootProviders>
+    </div>
+  );
 }

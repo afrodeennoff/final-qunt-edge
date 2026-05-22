@@ -21,7 +21,7 @@ export default function FAQ() {
  The essentials traders ask before they connect accounts, switch workflows, or evaluate the platform for team use.
  </p>
  </div>
- <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-black/20 p-5">
+ <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-black/20 p-6">
  <div className="space-y-4">
  <details className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-4">
  <summary className="cursor-pointer font-semibold text-foreground">

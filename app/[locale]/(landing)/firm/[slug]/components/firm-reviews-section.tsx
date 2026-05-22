@@ -140,7 +140,7 @@ function formatRelativeTime(date: Date): string {
 
 function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFlag: (id: string) => void; canFlag: boolean }) {
   return (
-    <div className="group rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-5 transition-[opacity,background-color,border-color,transform] duration-200 hover:border-[oklch(0.65_0.22_260/0.08)] hover:bg-[oklch(0.65_0.22_260/0.035)]">
+    <div className="group rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-6 transition-[opacity,background-color,border-color,transform] duration-200 hover:border-[oklch(0.65_0.22_260/0.08)] hover:bg-[oklch(0.65_0.22_260/0.035)]">
       <div className="flex items-start gap-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-v2-accent/20 to-v2-accent/5 border border-v2-accent/20">
           <span className="text-sm font-semibold text-v2-accent">
@@ -200,7 +200,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
 
 function ReviewSkeleton() {
   return (
-    <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-5">
+    <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-6">
       <div className="flex items-start gap-4">
         <Skeleton className="h-10 w-10 rounded-full" />
         <div className="flex-1 gap-3">
@@ -487,7 +487,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Not authenticated message */}
           {isAuthenticated === false && (
-            <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-5 text-center">
+            <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-6 text-center">
               <p className="text-sm text-muted-foreground">
                 Please <Link href={`/${locale}/authentication`} className="text-v2-accent hover:underline">sign in</Link> to write a review
               </p>
@@ -496,7 +496,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Already reviewed message */}
           {hasUserReviewed && (
-            <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-5">
+            <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.025)] p-6">
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 text-v2-success" />
                 <p className="text-sm text-muted-foreground">

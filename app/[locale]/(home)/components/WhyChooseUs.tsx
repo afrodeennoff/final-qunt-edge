@@ -58,7 +58,7 @@ export default function WhyChooseUs() {
  {proofStats.map((stat) => (
  <div
  key={stat.label}
- className="liquid-panel-premium rounded-xl p-5"
+ className="liquid-panel-premium rounded-xl p-6"
  >
  <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">{stat.label}</p>
  <p className="mt-2 text-3xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">{stat.value}</p>

@@ -9,7 +9,7 @@ export default async function Hero({ locale }: { locale: string }) {
 
   return (
     <MarketingSection className="pt-12 pb-10 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-16" innerClassName="max-w-[1280px]">
-      <div className="relative grid items-center gap-10 lg:grid-cols-2">
+      <div className="relative grid items-center gap-8 lg:grid-cols-2">
         {/* Left: Command messaging */}
         <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
@@ -17,7 +17,7 @@ export default async function Hero({ locale }: { locale: string }) {
           </div>
 
           <h1 className="mt-6 text-balance text-[56px] font-[250] leading-[0.96] tracking-[-0.04em] text-foreground sm:text-[72px] lg:text-[88px]">
-            The <span className="bg-gradient-to-r from-primary to-[#D4A00A] bg-clip-text text-transparent">command center</span><br />for serious traders.
+            The <span className="bg-gradient-to-r from-[hsl(263,85%,65%)] to-[hsl(263,70%,55%)] bg-clip-text text-transparent">command center</span><br />for serious traders.
           </h1>
 
           <p className="mt-6 max-w-[520px] text-[15px] leading-relaxed text-muted-foreground/90">
