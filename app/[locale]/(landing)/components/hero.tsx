@@ -24,7 +24,7 @@ export default function Hero({ }: HeroProps) {
 	return (
 		<section
 			ref={ref}
-			className="relative isolate flex flex-col items-center justify-center overflow-hidden bg-background px-4 py-16 text-center sm:px-6 sm:py-24 lg:px-8 lg:py-40"
+			className="relative isolate flex flex-col items-center justify-center overflow-hidden bg-background px-4 pt-[88px] pb-16 text-center sm:px-6 sm:pb-20 lg:px-8 lg:pb-24"
 		>
 			<motion.div
 				initial={false}
@@ -74,7 +74,7 @@ export default function Hero({ }: HeroProps) {
 				>
 					<Link
 						href={`/${locale}/authentication?next=dashboard`}
-						className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center rounded-full bg-white px-8 text-center text-[13px] font-semibold text-black tracking-[-0.01em] transition-[transform,background-color,opacity,border-color] hover:bg-white/90 hover:scale-[1.02] active:scale-[0.98] sm:w-auto shadow-[0_0_32px_rgba(255,255,255,0.15)]"
+						className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center rounded-full bg-white px-8 text-center text-[13px] font-semibold text-black tracking-[-0.01em] transition-[background-color,opacity] hover:bg-white/90 sm:w-auto"
 					>
 						<span className="relative z-10">Start Free Audit</span>
 					</Link>

@@ -116,21 +116,21 @@ export function ChartSurface({
  return children
  }
 
- return (
- <div
- data-chart-surface="modern"
- className={cn("relative flex h-full flex-col overflow-hidden rounded-[var(--radius-xl)] border","border-border/10","bg-[linear-gradient(180deg,hsl(var(--card)_/_0.92)_0%,hsl(var(--card)_/_0.86)_100%)]","shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03),0_20px_38px_-28px_rgba(0,0,0,0.68)]","","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.32] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
- className
- )}
- style={height ? { height } : undefined}
- >
- {hasHeader && (
- <div
- className={cn("flex shrink-0 items-center border-b border-border/8 bg-[hsl(var(--foreground)_/_0.04)]",
- isSmall ?"h-10 px-2.5" :"h-12 px-3.5",
- headerClassName
- )}
- >
+  return (
+  <div
+  data-chart-surface="modern"
+  className={cn("relative flex h-full flex-col overflow-hidden rounded-lg border border-[oklch(0.65_0.22_260/0.06)] bg-card",
+  className
+  )}
+  style={height ? { height } : undefined}
+  >
+  {hasHeader && (
+  <div
+  className={cn("flex shrink-0 items-center border-b border-[oklch(0.65_0.22_260/0.04)] bg-card",
+  isSmall ?"h-9 px-2" :"h-10 px-3",
+  headerClassName
+  )}
+  >
  <div className="flex w-full items-center justify-between gap-[var(--space-2)]">
  <div className="min-w-0 flex items-center gap-[var(--space-2)]">
  {title ? (
@@ -153,7 +153,7 @@ export function ChartSurface({
  )}
  <div
  className={cn("flex flex-col flex-1 min-h-0",
- shouldPadBody ? (isSmall ?"p-1.5" :"p-2.5 sm:p-3") :"p-0",
+  shouldPadBody ? (isSmall ?"p-2" :"p-3") :"p-0",
  bodyClassName
  )}
  >
@@ -162,7 +162,7 @@ export function ChartSurface({
  {hasFooter && (
  <div
  className={cn("flex shrink-0 items-center border-t border-border/10",
- isSmall ?"h-8 px-2.5" :"h-10 px-3.5",
+  isSmall ?"h-8 px-3" :"h-10 px-3",
  footerClassName
  )}
  >

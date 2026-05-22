@@ -69,7 +69,7 @@ export function AnimatedBeamDemo() {
  className="relative flex w-full max-w-md mx-auto justify-self-center items-center justify-center overflow-hidden rounded-lg border bg-background p-10 md:shadow-xl"
  ref={containerRef}
  >
- <div className="flex h-full w-full flex-col items-stretch justify-between gap-10">
+  <div className="flex h-full w-full flex-col items-stretch justify-between gap-8">
  <div className="flex flex-row justify-between">
  <Circle ref={div1Ref}>
  <Icons.user />

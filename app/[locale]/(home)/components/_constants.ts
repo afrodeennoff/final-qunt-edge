@@ -13,7 +13,7 @@ export const STAGGER_CARD = 0.08
 export const STAGGER_LIST = 0.06
 
 // ── Section Layout ───────────────────────────────────────────────────────────
-export const SECTION_PY = 'py-20 sm:py-24 lg:py-32'
+export const SECTION_PY = 'py-16 sm:py-20 lg:py-24'
 export const SECTION_PY_LIGHT = 'py-16 sm:py-20 lg:py-24'
 export const HEADER_MB = 'mb-3 lg:mb-4'
 

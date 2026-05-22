@@ -34,7 +34,7 @@ const SIZE_CONFIG = {
  value:"text-lg",
  title:"text-xs",
  trend:"text-xs",
- padding:"p-3.5",
+  padding:"p-4",
  cardTitleSize:"sm" as const,
  },
  md: {
@@ -42,7 +42,7 @@ const SIZE_CONFIG = {
  value:"text-2xl",
  title:"text-sm",
  trend:"text-sm",
- padding:"p-5",
+  padding:"p-4",
  cardTitleSize:"md" as const,
  },
  lg: {
@@ -84,14 +84,12 @@ function StatsCardSkeleton({ size ="md", className }: StatsCardSkeletonProps) {
  const config = SIZE_CONFIG[size]
 
  return (
- <div
- className={cn("relative overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.07_0.013_260_/_0.92)_0%,oklch(0.058_0.011_260_/_0.86)_100%)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_18px_38px_-26px_rgba(0,0,0,0.78)]",
- config.padding,
- className
- )}
- >
- {/* Top accent line */}
-  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[oklch(0.65_0.22_260/0.06)] to-transparent" />
+  <div
+  className={cn("rounded-lg border border-[oklch(0.65_0.22_260/0.06)] bg-card",
+  config.padding,
+  className
+  )}
+  >
  <div className="flex flex-col gap-3">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -164,11 +162,11 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
  {(title || Icon || trend) && (
  <CardHeader size={size} className="flex-row items-center justify-between pb-2">
  <div className="flex items-center gap-2 flex-1 min-w-0">
- {renderIcon() && (
- <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 border border-primary/15 text-primary group-hover:bg-primary/15 " aria-hidden="true">
- {renderIcon()}
- </div>
- )}
+  {renderIcon() && (
+  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[oklch(0.65_0.22_260/0.1)] bg-[oklch(0.65_0.22_260/0.03)] text-[oklch(0.65_0.22_260)]" aria-hidden="true">
+  {renderIcon()}
+  </div>
+  )}
  <h3 className={cn("font-semibold text-muted-foreground/80 truncate micro-sans",
  config.title
  )}>

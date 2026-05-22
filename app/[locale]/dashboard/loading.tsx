@@ -62,7 +62,7 @@ function SidebarSkeleton() {
           <Skeleton key={i} className="h-9 w-full" />
         ))}
       </div>
-      <div className="pt-4 border-t border-[rgba(0,0,0,0.06)] space-y-2">
+        <div className="pt-4 border-t border-[oklch(0.65_0.22_260/0.08)] space-y-2">
         {[1, 2, 3].map((i) => (
           <Skeleton key={i} className="h-8 w-full" />
         ))}
@@ -74,11 +74,11 @@ function SidebarSkeleton() {
 export default function DashboardLoading() {
   return (
     <div className="flex h-full">
-      <aside className="hidden lg:block w-64 border-r border-[rgba(0,0,0,0.06)] p-4">
+      <aside className="hidden lg:block w-64 border-r border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] p-4">
         <SidebarSkeleton />
       </aside>
 
-      <main className="flex-1 p-4 lg:p-6 overflow-auto">
+      <main className="flex-1 p-4 lg:p-6 overflow-auto max-w-[2400px] mx-auto">
         <DashboardHeaderSkeleton />
         <StatsGridSkeleton />
 

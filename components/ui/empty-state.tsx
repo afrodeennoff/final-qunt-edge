@@ -16,7 +16,7 @@ export function EmptyState({ icon, title, description, action, className, size =
       'flex flex-col items-center justify-center text-center',
       size === 'sm' && 'gap-3 p-6',
       size === 'md' && 'gap-4 p-8',
-      size === 'lg' && 'gap-5 p-12',
+      size === 'lg' && 'gap-6 p-12',
       className
     )}>
       {icon && (

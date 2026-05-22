@@ -160,7 +160,7 @@ export default function ImportCallbackPageClient() {
   }
 
   return (
-    <UnifiedPageShell density="compact" widthClassName="max-w-[1280px]">
+    <UnifiedPageShell density="compact" widthClassName="max-w-[1600px]">
       <div className="mx-auto w-full max-w-md">
         <Card>
           <CardHeader>

@@ -232,16 +232,16 @@ export default async function TraderProfilePage({
   const publicStats = buildPublicStats(snapshot)
 
   return (
-    <div className="min-h-[calc(100vh-72px)] px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+    <div className="min-h-[calc(100vh-72px)] px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }}
       />
-      <div className="mx-auto grid max-w-[1180px] gap-5 xl:grid-cols-[minmax(0,1.28fr)_minmax(340px,0.72fr)]">
-        <section className="space-y-5">
+      <div className="mx-auto grid max-w-[1180px] gap-6 xl:grid-cols-[minmax(0,1.28fr)_minmax(340px,0.72fr)]">
+        <section className="space-y-6">
           <div className="overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.052_0.009_260_/_0.78)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_24px_70px_-44px_rgba(0,0,0,0.95)]">
             <div className="flex flex-col gap-6 p-6 sm:p-8 lg:flex-row lg:items-start lg:justify-between">
-              <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-start">
+              <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start">
                 <Avatar className="h-20 w-20 shrink-0 rounded-3xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[oklch(0.65_0.22_260/0.07)] sm:h-24 sm:w-24">
                   <AvatarFallback className="bg-background text-lg font-semibold text-foreground">
                     {snapshot.username.slice(0, 2).toUpperCase()}

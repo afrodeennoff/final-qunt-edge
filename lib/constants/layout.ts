@@ -10,11 +10,11 @@ export const HEADER_BORDER = 'border-b border-[oklch(0.60_0.22_297_/_0.07)]'
 export const HEADER_BG = 'bg-[oklch(0.05_0.01_297_/_0.94)]'
 
 // Content padding constants
-export const CONTENT_PADDING = 'px-4 sm:px-6 lg:px-8 xl:px-10'
+export const CONTENT_PADDING = 'px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12'
 
 export const CONTENT_PADDING_Y = 'py-6 sm:py-8 lg:py-8'
 
-export const WORKSPACE_SHELL_WIDTH = 'max-w-[1800px]'
+export const WORKSPACE_SHELL_WIDTH = 'max-w-[2400px]'
 
 export const MARKETING_SHELL_WIDTH = 'max-w-[1360px]'
 

@@ -52,7 +52,7 @@ export function WidgetShell({
  const renderContent = () => {
  if (state ==="loading") {
  return (
- <div className="space-y-3 p-5">
+  <div className="space-y-3 p-4">
  <Skeleton className="h-3 w-2/5 animate-pulse rounded-full bg-muted/60" style={{ animationDelay: '0ms' }} />
  <Skeleton className="h-24 animate-pulse rounded-lg bg-muted/40" style={{ animationDelay: '100ms' }} />
  <Skeleton className="h-3 w-3/5 animate-pulse rounded-full bg-muted/60" style={{ animationDelay: '200ms' }} />
@@ -60,10 +60,10 @@ export function WidgetShell({
  )
  }
 
- if (state ==="error") {
- return (
- <div className="p-5">
- <Alert variant="destructive">
+  if (state ==="error") {
+  return (
+  <div className="p-4">
+  <Alert variant="destructive">
  <AlertCircle className="h-4 w-4" />
  <AlertTitle>Widget Error</AlertTitle>
  <AlertDescription>{errorMessage}</AlertDescription>
@@ -74,7 +74,7 @@ export function WidgetShell({
 
  if (state ==="empty") {
  return (
- <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-3 p-5">
+  <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-3 p-4">
  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border/40 bg-muted/30">
  <Inbox className="size-4 text-muted-foreground/50" />
  </div>
@@ -87,16 +87,15 @@ export function WidgetShell({
  }
 
  return (
- <Card
- data-widget-shell="v2"
-className={cn("widget-enter-smooth relative h-full overflow-hidden rounded-[var(--radius-lg)] border border-border/50 bg-card shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_20px_40px_-28px_rgba(0,0,0,0.70)] focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_0_0_2px_var(--background),0_0_0_4px_var(--ring)/0.45]",
-  variant ==="hoverable" &&
-  "transition-[border-color,box-shadow,transform] duration-200 hover:border-border/80 hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_20px_36px_-24px_rgba(0,0,0,0.68)] hover:-translate-y-px",
-  className
-  )}
- >
- {(title || actions || icon || description) && (
-  <CardHeader className="border-b border-border/30 bg-[oklch(0.65_0.22_260/0.04)] px-4 py-2.5">
+  <Card
+  data-widget-shell="v2"
+ className={cn("relative h-full overflow-hidden rounded-lg border border-[oklch(0.65_0.22_260/0.06)] bg-card",
+   variant ==="hoverable" && "transition-[border-color,background-color] duration-120 hover:border-[oklch(0.65_0.22_260/0.12)] hover:bg-[#0c0c12]",
+   className
+   )}
+  >
+  {(title || actions || icon || description) && (
+   <CardHeader className="border-b border-[oklch(0.65_0.22_260/0.04)] bg-card px-4 py-2">
  <div className="flex items-start justify-between gap-[var(--space-3)]">
  <div className="min-w-0 gap-[var(--space-2)]">
  {(title || icon) && (
@@ -138,8 +137,8 @@ className={cn("widget-enter-smooth relative h-full overflow-hidden rounded-[var(
 
  {footer ? (
  <CardFooter className="flex flex-col p-0">
- <Separator className="-mx-5 mb-0" />
- <div className="p-5">{footer}</div>
+  <Separator className="-mx-4 mb-0" />
+  <div className="p-4">{footer}</div>
  </CardFooter>
  ) : null}
  </Card>

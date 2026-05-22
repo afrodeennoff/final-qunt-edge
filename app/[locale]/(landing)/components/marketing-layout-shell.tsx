@@ -39,11 +39,8 @@ export default function MarketingLayoutShell({
         className,
       )}
     >
-      {/* Static Electric Obsidian V3 ambient cobalt orbs — no animation, no blur, GPU friendly */}
-      <div className="pointer-events-none fixed -top-40 -right-32 h-[680px] w-[680px] rounded-full bg-[radial-gradient(circle,oklch(0.65_0.22_260/0.07)_0%,transparent_62%)]" />
-      <div className="pointer-events-none fixed -bottom-48 -left-28 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,oklch(0.65_0.22_260/0.05)_0%,transparent_68%)]" />
-      <div className="pointer-events-none fixed inset-0 opacity-[0.04] [background-image:radial-gradient(circle_at_30%_20%,oklch(0.65_0.22_260/0.10)_0%,transparent_55%)]" />
-      <div className="pointer-events-none fixed inset-x-8 top-0 z-0 h-40 rounded-b-2xl border-b border-[oklch(0.65_0.22_260/0.06)] bg-[oklch(0.65_0.22_260/0.02)]" />
+      {/* Minimal clean foundation — no orbs, no radials for professional calm */}
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-px bg-[oklch(0.65_0.22_260/0.04)]" />
       <div className="flex min-h-screen w-full">
         {/* Full-width content: no sidebar column */}
         <div className="flex-1 min-h-0 min-w-0 bg-transparent">

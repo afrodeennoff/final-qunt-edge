@@ -55,18 +55,18 @@ function RouteStateShell({
         <div
           className={cn(
             unifiedStatePanelClassName,
-            'w-full max-w-[min(40rem,100%)] px-6 py-7 sm:px-8 sm:py-9',
+            'w-full max-w-[min(40rem,100%)] px-6 py-6 sm:px-8 sm:py-8',
             compact && 'max-w-[min(32rem,100%)] px-5 py-6',
             contentClassName,
           )}
         >
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/15 to-transparent" />
           <div className="flex flex-col items-center text-center">
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-border/30 bg-background/40 text-muted-foreground">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-border/30 bg-background/40 text-muted-foreground">
               <Logo className="size-5 fill-current" />
             </div>
             <span className={unifiedChipClassName}>{eyebrow}</span>
-            <h1 className="mt-5 text-balance text-3xl font-medium tracking-[-0.05em] text-foreground sm:text-4xl">
+            <h1 className="mt-4 text-balance text-3xl font-medium tracking-[-0.05em] text-foreground sm:text-4xl">
               {title}
             </h1>
             <p className={cn(unifiedBodyCopyClassName, 'mt-4 max-w-xl text-center')}>{description}</p>

@@ -302,7 +302,7 @@ function SidebarInput({ className, ...props }: React.ComponentProps<'input'>) {
       data-slot="sidebar-input"
       data-sidebar="input"
       className={cn(
-        'type-body-sm flex h-[38px] w-full rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.058_0.011_260_/_0.74)] px-3.5 text-sidebar-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05)] ring-sidebar-ring file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-sidebar-foreground/46 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.22_260_/_0.2)] disabled:cursor-not-allowed disabled:opacity-50',
+        'type-body-sm flex h-[38px] w-full rounded-[0.95rem] border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.058_0.011_260_/_0.74)] px-4 text-sidebar-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05)] ring-sidebar-ring file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-sidebar-foreground/46 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.22_260_/_0.2)] disabled:cursor-not-allowed disabled:opacity-50',
         className,
       )}
       {...props}
@@ -315,7 +315,7 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="sidebar-header"
       data-sidebar="header"
-      className={cn('flex flex-col gap-2 p-3.5', className)}
+      className={cn('flex flex-col gap-2 p-4', className)}
       {...props}
     />
   )
@@ -326,7 +326,7 @@ function SidebarFooter({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="sidebar-footer"
       data-sidebar="footer"
-      className={cn('flex flex-col gap-2 p-3.5', className)}
+      className={cn('flex flex-col gap-2 p-4', className)}
       {...props}
     />
   )
@@ -425,7 +425,7 @@ function SidebarMenu({ className, ...props }: React.ComponentProps<'ul'>) {
     <ul
       data-slot="sidebar-menu"
       data-sidebar="menu"
-      className={cn('flex w-full min-w-0 flex-col gap-0.5', className)}
+      className={cn('flex w-full min-w-0 flex-col gap-1', className)}
       {...props}
     />
   )
@@ -443,7 +443,7 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  'peer/menu-button type-body-sm flex w-full items-center gap-2 overflow-hidden rounded-xl border border-transparent p-2.5 text-left ring-[oklch(0.65_0.22_260)] outline-hidden transition-[width,height,padding,background-color,border-color,box-shadow,color] duration-150 ease-[0.22,1,0.36,1] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5! hover:border-[oklch(0.65_0.22_260/0.18)] hover:bg-[oklch(0.065_0.008_260/0.55)] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.22_260/0.5)] active:bg-[oklch(0.065_0.008_260/0.7)] active:text-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-[oklch(0.65_0.22_260/0.28)] data-[active=true]:bg-[oklch(0.65_0.22_260/0.12)] data-[active=true]:font-medium data-[active=true]:text-foreground data-[state=open]:hover:bg-[oklch(0.065_0.008_260/0.7)] data-[state=open]:hover:text-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-none',
+  'peer/menu-button type-body-sm flex w-full items-center gap-2 overflow-hidden rounded-xl border border-transparent p-2 text-left ring-[oklch(0.65_0.22_260)] outline-hidden transition-[width,height,padding,background-color,border-color,box-shadow,color] duration-150 ease-[0.22,1,0.36,1] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2! hover:border-[oklch(0.65_0.22_260/0.18)] hover:bg-[oklch(0.065_0.008_260/0.55)] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.22_260/0.5)] active:bg-[oklch(0.065_0.008_260/0.7)] active:text-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-[oklch(0.65_0.22_260/0.28)] data-[active=true]:bg-[oklch(0.65_0.22_260/0.12)] data-[active=true]:font-medium data-[active=true]:text-foreground data-[state=open]:hover:bg-[oklch(0.065_0.008_260/0.7)] data-[state=open]:hover:text-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-none',
   {
     variants: {
       variant: {
@@ -587,7 +587,7 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<'ul'>) {
       data-slot="sidebar-menu-sub"
       data-sidebar="menu-sub"
       className={cn(
-        'mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-[oklch(0.65_0.22_260_/_0.08)] px-2.5 py-0.5',
+        'mx-4 flex min-w-0 translate-x-px flex-col gap-1 border-l border-[oklch(0.65_0.22_260_/_0.08)] px-2 py-1',
         'group-data-[collapsible=icon]:hidden',
         className,
       )}

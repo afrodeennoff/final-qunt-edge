@@ -31,10 +31,10 @@ const socialLinks = [
 export default function Footer() {
  return (
  <footer className="border-t border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.01)]">
- <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
- <div className="grid grid-cols-2 md:grid-cols-5 gap-6 lg:gap-10 mb-10">
+  <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+  <div className="grid grid-cols-2 md:grid-cols-5 gap-6 lg:gap-10 mb-8">
  <div className="col-span-2">
- <Link href="/" className="flex items-center gap-2.5 mb-4 group">
+  <Link href="/" className="flex items-center gap-2 mb-4 group">
  <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-[0_0_16px_-4px_hsl(var(--primary)/0.5)] transition-shadow duration-300 group-hover:shadow-[0_0_24px_-4px_hsl(var(--primary)/0.65)]">
  <span className="text-primary-foreground font-bold text-sm">Q</span>
  </div>

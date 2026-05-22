@@ -549,7 +549,7 @@ export default function WidgetCanvas() {
  if (!layouts) {
  return (
  <div className="relative mt-0 w-full min-h-0" role="status" aria-label="Loading dashboard">
- <div className="rounded-xl border border-border/12 bg-card/40 p-5 space-y-3" aria-hidden="true">
+  <div className="rounded-xl border border-border/12 bg-card/40 p-4 space-y-3" aria-hidden="true">
  <Skeleton className="h-4 w-48" />
  <Skeleton className="h-3 w-80 max-w-full" />
  <div className="flex gap-2 pt-2">
@@ -575,7 +575,7 @@ export default function WidgetCanvas() {
  <div className="mt-2 text-sm text-muted-foreground leading-relaxed">
  {translate("widgets.emptyLayoutDescription") ||"Restore the default layout to show charts and stats, or switch to Edit mode to add widgets."}
  </div>
- <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+  <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
  <Button 
  onClick={restoreDefaultLayout}
  className="bg-v2-accent text-v2-accent-foreground hover:bg-v2-accent-hover font-semibold rounded-lg"

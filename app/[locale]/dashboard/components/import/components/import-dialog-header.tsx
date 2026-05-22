@@ -24,7 +24,7 @@ export function ImportDialogHeader({ step, importType }: ImportDialogHeaderProps
  const progress = totalSteps > 1 ? (currentStepIndex / (totalSteps - 1)) * 100 : 100
 
  return (
- <DialogHeader className="flex-none border-b border-border px-6 py-5 gap-3">
+  <DialogHeader className="flex-none border-b border-border px-6 py-4 gap-2">
  <div className="flex items-center gap-3">
  {platform.logo.path && (
  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/50 bg-background/80 p-1.5">

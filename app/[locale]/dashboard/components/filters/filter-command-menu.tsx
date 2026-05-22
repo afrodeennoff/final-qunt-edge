@@ -551,7 +551,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  <SheetTrigger asChild>
  {MobileTriggerButton}
  </SheetTrigger>
- <SheetContent side="right" className="w-[90vw] sm:max-w-[640px] flex flex-col h-dvh overflow-hidden p-0">
+  <SheetContent side="right" className="w-[90vw] sm:max-w-[640px] 2xl:max-w-[780px] flex flex-col h-dvh overflow-hidden p-0">
  <SheetHeader className="px-4 pt-4">
  <SheetTitle>{t('filters.title')}</SheetTitle>
  </SheetHeader>

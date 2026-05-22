@@ -4,7 +4,7 @@ import { UnifiedSurface } from '@/components/layout/unified-page-shell'
 import { cn } from '@/lib/utils'
 
 const insetPanelClassName =
-  'rounded-xl border border-border/30 bg-background/50 shadow-none'
+  'rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] shadow-none'
 
 export function MetricsSkeleton() {
   return (
@@ -112,10 +112,10 @@ export function CalendarSkeleton() {
     <div
       className={cn(
         insetPanelClassName,
-        'min-h-[30rem] overflow-x-auto p-2 sm:p-3 lg:min-h-[36rem] animate-pulse',
+        'min-h-[30rem] overflow-x-auto p-2 sm:p-3 lg:min-h-[36rem] 2xl:min-h-[42rem] animate-pulse',
       )}
     >
-      <div className="flex min-h-[26rem] flex-col gap-4 lg:min-h-[31rem]">
+        <div className="flex min-h-[26rem] flex-col gap-4 lg:min-h-[31rem] 2xl:min-h-[38rem]">
         {/* Month header skeleton */}
         <div className="flex items-center justify-center gap-2 pt-1">
           <div className="h-4 w-28 rounded bg-muted/30" />

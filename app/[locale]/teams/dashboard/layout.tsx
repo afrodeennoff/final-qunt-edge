@@ -111,7 +111,7 @@ export default async function DashboardLayout({
                                     </div>
 
                                     <div className="grid gap-2 sm:grid-cols-2 lg:w-auto">
-                                        <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2.5')}>
+                                        <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2')}>
                                             <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                                                 Focus
                                             </span>
@@ -119,7 +119,7 @@ export default async function DashboardLayout({
                                                 Members and process visibility
                                             </span>
                                         </div>
-                                        <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2.5')}>
+                                        <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2')}>
                                             <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                                                 Surface
                                             </span>

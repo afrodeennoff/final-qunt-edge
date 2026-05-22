@@ -6,45 +6,32 @@ import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'type-body-sm inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border border-transparent select-none overflow-hidden font-medium tracking-normal transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 min-h-[44px]',
+  'type-body-sm inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border select-none font-medium tracking-normal transition-[background-color,border-color,color] duration-120 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 min-h-[40px] rounded-lg',
   {
     variants: {
       variant: {
-        solid:
-          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
-        outline:
-          'rounded-xl border-border/40 bg-background/50 text-foreground hover:border-border/55 hover:bg-primary/6 active:scale-[0.98]',
-        ghost:
-          'rounded-xl text-muted-foreground hover:bg-muted/50 hover:text-foreground active:scale-[0.98]',
-        error:
-          'rounded-xl border-destructive/20 bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 active:scale-[0.98]',
-        destructive:
-          'rounded-xl border-destructive/20 bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 active:scale-[0.98]',
-        link: 'rounded-xl text-primary underline-offset-4 hover:underline',
-        'gradient-primary':
-          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
-        'gradient-secondary':
-          'rounded-xl border-border/40 bg-background/50 text-foreground hover:border-border/55 hover:bg-primary/6 active:scale-[0.98]',
-        shimmer:
-          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
-        default:
-          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
-        secondary:
-          'rounded-xl border-border/40 bg-secondary/70 text-secondary-foreground hover:border-border/55 hover:bg-secondary/80 active:scale-[0.98]',
-        mono:
-          'rounded-xl border-border/40 bg-background text-foreground hover:bg-muted/50 font-mono',
-        pill: 'rounded-full border-border/40 bg-background/50 text-foreground hover:border-border/55 hover:bg-primary/6 active:scale-[0.98]',
-        'pill-solid':
-          'rounded-full border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
-        'pill-ghost':
-          'rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground active:scale-[0.98]',
+        solid: 'border-transparent bg-primary text-primary-foreground hover:bg-[oklch(0.60_0.20_260)]',
+        outline: 'border-[oklch(0.65_0.22_260/0.15)] bg-transparent text-foreground hover:bg-[oklch(0.65_0.22_260/0.04)] hover:border-[oklch(0.65_0.22_260/0.25)]',
+        ghost: 'border-transparent text-muted-foreground hover:bg-[oklch(0.65_0.22_260/0.04)] hover:text-foreground',
+        error: 'border-transparent bg-destructive text-destructive-foreground hover:bg-[#b91c1c]',
+        destructive: 'border-transparent bg-destructive text-destructive-foreground hover:bg-[#b91c1c]',
+        link: 'border-transparent text-primary underline-offset-2 hover:underline p-0 h-auto min-h-0',
+        default: 'border-transparent bg-primary text-primary-foreground hover:bg-[oklch(0.60_0.20_260)]',
+        secondary: 'border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] text-foreground hover:bg-[oklch(0.65_0.22_260/0.06)]',
+        mono: 'border-[oklch(0.65_0.22_260/0.08)] bg-card text-foreground font-mono hover:bg-[oklch(0.65_0.22_260/0.04)]',
+        pill: 'rounded-full border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.02)] text-foreground hover:bg-[oklch(0.65_0.22_260/0.06)]',
+        'pill-solid': 'rounded-full border-transparent bg-primary text-primary-foreground hover:bg-[oklch(0.60_0.20_260)]',
+        'pill-ghost': 'rounded-full border-transparent text-muted-foreground hover:bg-[oklch(0.65_0.22_260/0.04)] hover:text-foreground',
+        'gradient-primary': 'border-transparent bg-primary text-primary-foreground hover:bg-[oklch(0.60_0.20_260)]',
+        'gradient-secondary': 'border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] text-foreground hover:bg-[oklch(0.65_0.22_260/0.06)]',
+        shimmer: 'border-transparent bg-primary text-primary-foreground hover:bg-[oklch(0.60_0.20_260)]',
       },
       size: {
-        sm: 'h-8 min-h-[44px] min-w-[32px] px-3 rounded-xl',
-        default: 'h-9 min-h-[44px] min-w-[36px] px-4 rounded-xl',
-        md: 'h-10 min-h-[44px] min-w-[40px] px-5 rounded-xl',
-        lg: 'h-11 min-h-[44px] min-w-[44px] px-6 text-sm rounded-xl',
-        icon: 'h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl',
+        sm: 'h-8 min-h-[36px] min-w-[28px] px-2.5 text-xs',
+        default: 'h-9 min-h-[40px] min-w-[32px] px-3.5',
+        md: 'h-10 min-h-[40px] min-w-[36px] px-4',
+        lg: 'h-11 min-h-[44px] min-w-[40px] px-5 text-sm',
+        icon: 'h-9 w-9 min-h-[36px] min-w-[36px] p-0',
       },
     },
     defaultVariants: {
@@ -81,15 +68,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const Comp = asChild ? Slot : 'button'
-    const isShimmer = variant === 'shimmer'
 
     const content = (
       <>
-        {isShimmer && isLoading ? (
-          <span className="absolute inset-0 overflow-hidden rounded-[inherit]">
-            <span className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-[oklch(0.65_0.22_260/0.15)] to-transparent" />
-          </span>
-        ) : null}
         {leftIcon && !isLoading ? <span className="shrink-0">{leftIcon}</span> : null}
         {isLoading ? (
           <>

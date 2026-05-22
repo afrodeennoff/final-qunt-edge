@@ -1347,7 +1347,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
 
   return (
     <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,rgba(10,10,10,0.96)_24%,hsl(var(--background))_100%)]">
-      <div className="mx-auto w-full max-w-[1240px] flex-1 overflow-y-auto px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+      <div className="mx-auto w-full max-w-[1240px] flex-1 overflow-y-auto px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         <FirmHeader firm={firm} />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">

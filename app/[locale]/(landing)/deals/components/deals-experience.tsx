@@ -482,7 +482,7 @@ function DealsBoard({
         <UnifiedPageShell
           widthClassName="max-w-[1360px]"
           density="compact"
-          className="py-8 sm:py-10"
+          className="py-6 sm:py-8"
         >
           <div className="space-y-6 lg:space-y-8">
             {spotlightDeals.length > 0 ? (
@@ -874,11 +874,11 @@ function BiggestDealsCarousel({
         <div
           className={cn(
             dealsInsetPanelClassName,
-            'relative mx-auto w-full max-w-[1080px] overflow-hidden px-6 py-7 sm:px-8 sm:py-8',
+            'relative mx-auto w-full max-w-[1080px] overflow-hidden px-6 py-6 sm:px-8 sm:py-8',
           )}
         >
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] lg:items-start">
-            <div className="space-y-5">
+            <div className="space-y-6">
               <div className="flex flex-wrap items-center gap-2">
                 <span
                   className={cn(

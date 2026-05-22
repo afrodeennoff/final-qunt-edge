@@ -980,7 +980,7 @@ export default async function AdminCouponsPage({
       >
         {coupons.length === 0 ? (
           <Card variant="frost" className="border-border/40 bg-background/80">
-            <CardContent size="sm" className="py-10 text-center text-sm text-muted-foreground">
+            <CardContent size="sm" className="py-8 text-center text-sm text-muted-foreground">
               No coupons yet. Create the first one above.
             </CardContent>
           </Card>

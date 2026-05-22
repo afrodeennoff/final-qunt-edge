@@ -57,23 +57,20 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onClick={isInteractive ? onClick : undefined}
         className={cn(
           'group relative overflow-hidden text-foreground',
-          'rounded-xl border border-border/40 bg-card/95 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.6)]',
-          variant === 'glass' && 'border-primary/10 bg-primary/6',
-          variant === 'elevated' &&
-            'border-border/50 bg-card shadow-[inset_0_1px_0_hsl(var(--foreground)/0.04),0_12px_32px_-16px_rgba(0,0,0,0.72)]',
-          variant === 'outlined' && 'bg-transparent shadow-none',
+          'rounded-lg border border-[oklch(0.65_0.22_260/0.06)] bg-card shadow-none',
+          variant === 'glass' && 'border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.015)]',
+          variant === 'elevated' && 'border-[oklch(0.65_0.22_260/0.08)] bg-card',
+          variant === 'outlined' && 'bg-transparent border-[oklch(0.65_0.22_260/0.06)] shadow-none',
           variant === 'flat' && 'border-transparent bg-transparent shadow-none',
-          variant === 'gradient-border' &&
-            'border-primary/14 bg-card/95 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03),0_8px_24px_-12px_rgba(0,0,0,0.64)]',
-          variant === 'frost' && 'border-border/40 bg-background/60 shadow-[0_8px_20px_-12px_rgba(0,0,0,0.5)]',
+          variant === 'gradient-border' && 'border-[oklch(0.65_0.22_260/0.06)] bg-card',
+          variant === 'frost' && 'border-[oklch(0.65_0.22_260/0.06)] bg-card',
           accent && accentClassMap[accent],
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',
           size === 'lg' && 'type-body-lg',
-          hover &&
-            'transition-[background-color,border-color,box-shadow] duration-200 hover:border-border/55 hover:shadow-[0_8px_24px_-12px_rgba(0,0,0,0.7)]',
+          hover && 'transition-[border-color,background-color] duration-120 hover:border-[oklch(0.65_0.22_260/0.12)] hover:bg-[#0c0c12]',
           isInteractive &&
-            'cursor-pointer transition-[background-color,border-color,box-shadow,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+            'cursor-pointer transition-[border-color,background-color] duration-120 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[oklch(0.65_0.22_260/0.3)] focus-visible:ring-offset-1 focus-visible:ring-offset-background',
           isLoading && 'pointer-events-none opacity-80',
           className,
         )}
@@ -86,17 +83,17 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ) : null}
 
         {status ? (
-          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-border/40 bg-background/70 px-2.5 py-1 shadow-sm">
+          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-[oklch(0.65_0.22_260/0.06)] bg-card px-2 py-0.5">
             <div
               className={cn(
-                'h-1.5 w-1.5 rounded-full',
-                status === 'live' && 'bg-success animate-pulse',
+                'h-1 w-1 rounded-full',
+                status === 'live' && 'bg-success',
                 status === 'synced' && 'bg-primary',
                 status === 'idle' && 'bg-muted-foreground/50',
                 (status === 'destructive' || status === 'error') && 'bg-destructive',
               )}
             />
-            <span className="type-label text-muted-foreground">{status}</span>
+            <span className="type-label text-[10px] text-muted-foreground">{status}</span>
           </div>
         ) : null}
 
@@ -119,8 +116,8 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
       className={cn(
         'relative flex flex-col gap-3',
         {
-          'p-4 pb-0': size === 'sm',
-          'p-5 pb-0': size === 'md',
+          'p-3 pb-0': size === 'sm',
+          'p-4 pb-0': size === 'md',
           'p-6 pb-0': size === 'lg',
         },
         className,
@@ -141,7 +138,7 @@ export interface CardStatusDotProps extends React.HTMLAttributes<HTMLSpanElement
 
 const CardStatusDot = React.forwardRef<HTMLSpanElement, CardStatusDotProps>(
   ({ className, tone = 'idle', label, ...props }, ref) => (
-    <span className="inline-flex items-center gap-2.5 text-muted-foreground/80">
+    <span className="inline-flex items-center gap-2 text-muted-foreground/80">
       <span
         ref={ref}
         className={cn(
@@ -212,8 +209,8 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
       className={cn(
         'type-body text-foreground',
         {
-          'p-4': size === 'sm',
-          'p-5': size === 'md',
+          'p-3': size === 'sm',
+          'p-4': size === 'md',
           'p-6': size === 'lg',
         },
         className,
@@ -233,10 +230,10 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-3 border-t border-border/40',
+        'flex items-center gap-3 border-t border-[oklch(0.65_0.22_260/0.06)]',
         {
-          'p-4': size === 'sm',
-          'p-5': size === 'md',
+          'p-3': size === 'sm',
+          'p-4': size === 'md',
           'p-6': size === 'lg',
         },
         className,

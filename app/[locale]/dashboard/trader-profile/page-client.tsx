@@ -49,7 +49,7 @@ import { TraderProfileShareButton } from './components/trader-profile-share-butt
 
 const RadarChartCard = dynamic(() => import('./components/RadarChartCard'), {
   loading: () => (
-    <div className="rounded-xl border border-border/30 bg-card/40 p-3">
+    <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-3">
       <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
     </div>
   ),
@@ -91,7 +91,7 @@ type DateFilterPreset =
 type StatTone = 'default' | 'positive' | 'negative'
 
 const insetPanelClassName =
-  'rounded-xl border border-border/30 bg-background/50 shadow-none'
+  'rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] shadow-none'
 
 function clamp(value: number, min = 0, max = 100) {
   return Math.min(max, Math.max(min, value))
@@ -809,9 +809,9 @@ export default function TraderProfilePageClient() {
   }, [dateFilterPreset, customDateRange?.from, customDateRange?.to, closedTrades.length])
 
   return (
-    <UnifiedPageShell density="compact" widthClassName="max-w-[1720px]">
+    <UnifiedPageShell density="compact" widthClassName="max-w-[2400px]">
       <div className="animate-page-enter space-y-4 sm:space-y-5">
-        <div className="grid gap-3.5 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.92fr)] xl:gap-5">
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.6fr)_minmax(380px,0.95fr)] 2xl:grid-cols-[minmax(0,1.8fr)_minmax(420px,1fr)] 2xl:gap-8">
           <section className="min-w-0 space-y-3.5 sm:space-y-4">
             <UnifiedSurface
               variant="elevated"
@@ -836,7 +836,7 @@ export default function TraderProfilePageClient() {
                     </div>
 
                     <div className="space-y-2">
-                      <h2 className="truncate text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+                      <h2 className="truncate text-3xl font-semibold tracking-tight text-foreground sm:text-4xl 2xl:text-5xl">
                         {profileName}
                       </h2>
 
@@ -897,7 +897,7 @@ export default function TraderProfilePageClient() {
                           {reviewWindowSummary}
                         </p>
                       </div>
-                      <div className="rounded-2xl border border-border/20 bg-background/45 p-3.5">
+                      <div className="rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-3.5">
                         <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                           Active session
                         </p>
@@ -912,7 +912,7 @@ export default function TraderProfilePageClient() {
                         value={dateFilterPreset}
                         onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
                       >
-                        <SelectTrigger className="h-10 w-full border-border/35 bg-background/70 text-sm text-foreground">
+                        <SelectTrigger className="h-10 w-full border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] text-sm text-foreground">
                           <SelectValue placeholder="Select range" />
                         </SelectTrigger>
                         <SelectContent>
@@ -930,7 +930,7 @@ export default function TraderProfilePageClient() {
                           <Button
                             type="button"
                             variant="outline"
-                            className="h-10 justify-start border-border/35 bg-background/70 text-sm text-foreground hover:bg-background/85"
+                            className="h-10 justify-start border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] text-sm text-foreground hover:bg-background/85"
                           >
                             <CalendarIcon className="h-4 w-4" />
                             {dateFilterLabel ?? 'Custom Range'}
@@ -965,14 +965,14 @@ export default function TraderProfilePageClient() {
                 <Badge variant="secondary">{activeAccountsCount} active</Badge>
               </div>
 
-              <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.92fr)]">
+              <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.92fr)] 2xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,1fr)]">
                 <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
                   {activeAccountLabels.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                       {activeAccountLabels.map((accountLabel) => (
                         <span
                           key={accountLabel}
-                          className="rounded-full border border-border/35 bg-background/70 px-3 py-1.5 text-xs font-medium text-foreground"
+                          className="rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] px-3 py-1.5 text-xs font-medium text-foreground"
                         >
                           {accountLabel}
                         </span>
@@ -1029,7 +1029,7 @@ export default function TraderProfilePageClient() {
               <div
                 className={cn(
                   insetPanelClassName,
-                  'mt-4 min-h-[30rem] overflow-x-auto p-2 sm:p-3 lg:min-h-[36rem]',
+                  'mt-4 min-h-[30rem] overflow-x-auto p-2 sm:p-3 lg:min-h-[36rem] 2xl:min-h-[42rem]',
                 )}
               >
                 <CalendarWidget
@@ -1131,7 +1131,7 @@ export default function TraderProfilePageClient() {
             </div>
 
             {isLoading ? (
-              <div className="mt-5 space-y-2">
+            <div className="mt-4 space-y-2">
                 {[1, 2, 3].map((index) => (
                   <div
                     key={index}
@@ -1155,7 +1155,7 @@ export default function TraderProfilePageClient() {
 
             <div className="mt-5 space-y-2">
               {paginatedClosedTrades.length === 0 ? (
-                <div className={cn(insetPanelClassName, 'px-4 py-5 text-sm text-muted-foreground')}>
+                 <div className={cn(insetPanelClassName, 'px-4 py-4 text-sm text-muted-foreground')}>
                   No closed trades in the current range yet.
                 </div>
               ) : (

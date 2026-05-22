@@ -219,7 +219,7 @@ export const AddWidgetSheet = forwardRef<HTMLButtonElement, AddWidgetSheetProps>
  )}
  </Button>
  </SheetTrigger>
- <SheetContent side="right" className="w-[90vw] sm:max-w-[640px] flex flex-col h-dvh overflow-hidden">
+  <SheetContent side="right" className="w-[90vw] sm:max-w-[640px] 2xl:max-w-[780px] flex flex-col h-dvh overflow-hidden">
  <SheetHeader>
  <SheetTitle>{t('widgets.addWidget')}</SheetTitle>
  </SheetHeader>

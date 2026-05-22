@@ -35,21 +35,21 @@ export function UnifiedPageShell({
 }: UnifiedPageShellProps) {
   const densityClasses =
     density === 'compact'
-      ? 'py-4 sm:py-5 lg:py-6'
+      ? 'py-4 sm:py-6 lg:py-8 2xl:py-10'
       : density === 'spacious'
-        ? 'py-8 sm:py-10 lg:py-12'
-        : 'py-5 sm:py-7 lg:py-8'
+        ? 'py-8 sm:py-10 lg:py-12 2xl:py-14'
+        : 'py-6 sm:py-8 lg:py-10 2xl:py-12'
 
   return (
     <div
       className={cn(
         'scroll-smooth-butter animate-page-enter relative mx-auto w-full',
-        widthClassName === 'max-w-none' && 'max-w-[1800px]',
+        widthClassName === 'max-w-none' && 'max-w-[2400px]',
         widthClassName,
         CONTENT_PADDING,
         densityClasses,
         variant !== 'minimal' && [
-          'before:absolute before:inset-x-6 before:top-0 before:h-44 before:pointer-events-none before:z-0',
+          'before:absolute before:inset-x-6 before:top-0 before:h-44 before:pointer-events-none before:z-0 sm:before:inset-x-8 lg:before:inset-x-10 2xl:before:inset-x-12',
           'before:rounded-b-2xl before:border before:border-[oklch(0.65_0.22_260/0.05)] before:bg-primary/[0.02]',
           'after:absolute after:inset-x-0 after:top-0 after:h-px after:pointer-events-none after:z-0 after:bg-border/35',
         ],
@@ -57,7 +57,7 @@ export function UnifiedPageShell({
         className,
       )}
     >
-      <div className="relative z-10 flex flex-col gap-4 sm:gap-5 lg:gap-6">{children}</div>
+      <div className="relative z-10 flex flex-col gap-4 sm:gap-6 lg:gap-8 2xl:gap-10">{children}</div>
     </div>
   )
 }
@@ -73,7 +73,7 @@ export function UnifiedPageHeader({
   return (
     <header
       className={cn(
-        'mb-8 rounded-xl border px-5 py-6 shadow-sm sm:px-6',
+        'mb-6 rounded-xl border px-4 py-4 sm:py-6 shadow-sm sm:px-6',
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
           'border-[oklch(0.65_0.22_260/0.09)] bg-[oklch(0.65_0.22_260/0.03)]',
@@ -117,7 +117,7 @@ export function UnifiedPageHeader({
             </p>
           )}
         </div>
-        {actions && <div className="flex flex-wrap items-center gap-2.5">{actions}</div>}
+        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
     </header>
   )

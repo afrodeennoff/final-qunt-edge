@@ -390,26 +390,8 @@ export function FloatingOrbs({
  return null
  }
 
- return (
- <div ref={containerRef} className={cn("absolute inset-0 overflow-hidden pointer-events-none", className)}>
- {orbs.map((orb, index) => {
- return (
- <motion.div
- key={index}
- className={cn("absolute rounded-full blur-3xl", orb.color)}
-
- style={{
- width: orb.size,
- height: orb.size,
- left: orb.x,
- top: orb.y,
- opacity: orb.opacity,
- }}
- />
- )
- })}
- </div>
- )
+  // Minimal static — no blur, no motion orbs for clean professional look
+  return null
 }
 
 // ============================================================================
