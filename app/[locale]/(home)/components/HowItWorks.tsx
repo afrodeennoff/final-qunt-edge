@@ -1,75 +1,66 @@
 'use client'
 
-import { CardV2 as Card } from '@/components/ui/v2'
-import { MarketingSection } from '@/components/layout/marketing-sections'
-import { useTypedI18n } from '@/locales/client'
+import { ArrowRight, Plug, BarChart3, Brain } from 'lucide-react'
 
 const steps = [
-  { name: 'Connect', description: 'Link your broker and import your trading history automatically.' },
-  { name: 'Analyze', description: 'AI-powered analytics surface patterns in your execution.' },
-  { name: 'Journal', description: 'Structured debriefs turn every session into actionable insight.' },
-  { name: 'Improve', description: 'Track behavioral metrics and refine your edge over time.' },
-  { name: 'Scale', description: 'Build consistency and graduate to larger allocations.' },
+  {
+    number: '01',
+    icon: Plug,
+    title: 'Connect your broker',
+    desc: 'One-click sync with Tradovate, Rithmic, or MT5. Your trades flow in automatically — no CSVs, no delays.',
+  },
+  {
+    number: '02',
+    icon: BarChart3,
+    title: 'See the truth instantly',
+    desc: 'Every session visualized. Win rate, expectancy, heatmaps, drawdowns. Brutal clarity on what actually works.',
+  },
+  {
+    number: '03',
+    icon: Brain,
+    title: 'Get AI that understands edge',
+    desc: 'Qunt spots your real patterns, flags leaks, and tells you exactly what to fix before the next session.',
+  },
 ]
 
-export default function HowItWorks() {
-  const t = useTypedI18n()
-
+export function HowItWorks() {
   return (
-    <MarketingSection id="how-it-works" className="py-8 sm:py-12 lg:py-16" innerClassName="max-w-[1280px]">
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-        <Card className="p-6">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
-            {t('landing.home.workflow.eyebrow')}
-          </p>
-          <h2 className="mt-3 text-balance text-[clamp(1.85rem,4vw,2.55rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-foreground">
-            {t('landing.home.workflow.title')}
-          </h2>
-          <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-muted-foreground">
-            {t('landing.home.workflow.description')}
-          </p>
+    <section className="border-t border-white/5 py-20">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="mb-12 text-center">
+          <div className="mb-2 text-[10px] font-mono tracking-[3px] text-primary/70">HOW IT WORKS</div>
+          <h2 className="text-balance text-4xl font-light tracking-tight sm:text-5xl">Three steps. Zero friction.</h2>
+          <p className="mt-3 text-muted-foreground">From connected to dangerous in under two minutes.</p>
+        </div>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <Card className="space-y-1 p-4">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
-                {t('landing.home.workflow.signalTitle')}
-              </p>
-              <p className="text-[13px] leading-relaxed text-foreground">
-                {t('landing.home.workflow.signalDescription')}
-              </p>
-            </Card>
-            <Card className="space-y-1 p-4">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
-                {t('landing.home.workflow.cadenceTitle')}
-              </p>
-              <p className="text-[13px] leading-relaxed text-foreground">
-                {t('landing.home.workflow.cadenceDescription')}
-              </p>
-            </Card>
-          </div>
-        </Card>
-
-        <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-5">
-          {steps.map((step, index) => (
-            <Card key={step.name} className="flex h-full flex-col p-4">
-              <div className="mb-4 flex items-center justify-between gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded border border-border bg-muted text-[12px] font-semibold text-muted-foreground">
-                  0{index + 1}
+        <div className="grid gap-6 md:grid-cols-3">
+          {steps.map((step, index) => {
+            const Icon = step.icon
+            return (
+              <div
+                key={index}
+                className="group relative rounded-2xl border border-white/10 bg-white/[0.015] p-8 transition hover:border-primary/30"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary/20 bg-primary/5 text-sm font-mono tracking-[1px] text-primary">
+                    {step.number}
+                  </div>
+                  <Icon className="h-5 w-5 text-primary/70 transition group-hover:text-primary" />
                 </div>
-                <span className="text-[9px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                  {t('landing.home.workflow.stage')} {index + 1}
-                </span>
+
+                <h3 className="mt-6 text-xl font-medium tracking-tight">{step.title}</h3>
+                <p className="mt-3 text-[14.5px] leading-relaxed text-muted-foreground/90">{step.desc}</p>
+
+                {index < 2 && (
+                  <div className="absolute -right-3 top-10 hidden text-primary/30 md:block">
+                    <ArrowRight className="h-4 w-4" />
+                  </div>
+                )}
               </div>
-              <h3 className="text-[13px] font-semibold tracking-[-0.01em] text-foreground">
-                {step.name}
-              </h3>
-              <p className="mt-2 text-[12px] leading-[1.5] text-muted-foreground">
-                {step.description}
-              </p>
-            </Card>
-          ))}
+            )
+          })}
         </div>
       </div>
-    </MarketingSection>
+    </section>
   )
 }
