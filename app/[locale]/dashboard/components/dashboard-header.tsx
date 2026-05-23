@@ -116,11 +116,11 @@ export function DashboardHeader() {
       data-dashboard-header="true"
     >
       <div className={cn('relative mx-auto', WORKSPACE_SHELL_WIDTH)}>
-        <div className="pointer-events-none absolute inset-x-4 top-0 h-16 rounded-b-2xl border border-border/25 bg-background/40" />
+        <div className="macos-frost-toolbar pointer-events-none absolute inset-x-4 top-0 h-16 rounded-b-2xl" />
         <div
           className={cn(
-            unifiedSectionPanelClassName,
-            'relative flex min-h-[5rem] items-center justify-between gap-3 overflow-hidden px-3 py-3 transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4',
+            'macos-frost-toolbar',
+            'relative flex min-h-[5rem] items-center justify-between gap-3 overflow-hidden rounded-2xl px-3 py-3 transition-all duration-300 sm:gap-4 sm:px-4 shadow-lg',
           )}
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/8 to-transparent" />

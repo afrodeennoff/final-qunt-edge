@@ -398,13 +398,16 @@ function SidebarGroupAction({
     <Comp
       data-slot="sidebar-group-action"
       data-sidebar="group-action"
-      className={cn(
-        'absolute top-3.5 right-3 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-muted-foreground outline-hidden transition-transform duration-150 ease-[0.22,1,0.36,1] hover:bg-[oklch(0.65_0.22_260/0.1)] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.22_260/0.5)] [&>svg]:size-4 [&>svg]:shrink-0',
-        'after:absolute after:-inset-2 md:after:hidden',
-        'group-data-[collapsible=icon]:hidden',
-        className,
-      )}
-      {...props}
+        className={cn(
+          'flex h-full w-[var(--sidebar-width)] flex-col',
+          'macos-frost-sidebar text-sidebar-foreground',
+          groupDataCollapsible === 'offcanvas' && 'fixed inset-y-0 z-50 shadow-2xl',
+          className,
+        )}
+        data-sidebar="sidebar"
+        data-variant={variant}
+        ref={ref}
+        {...props}
     />
   )
 }
@@ -443,7 +446,7 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  'peer/menu-button type-body-sm flex w-full items-center gap-2 overflow-hidden rounded-lg border border-transparent p-2 text-left outline-hidden transition-[background-color,border-color] duration-80 ease-[cubic-bezier(0.16,1,0.3,1)] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2! hover:bg-sidebar-accent hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:bg-[oklch(0.65_0.22_260/0.03)] active:text-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-primary/40 data-[active=true]:bg-primary/10 data-[active=true]:font-medium data-[active=true]:text-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-none',
+  'peer/menu-button type-body-sm flex w-full items-center gap-2 overflow-hidden rounded-lg border border-transparent p-2 text-left outline-hidden transition-[background-color,border-color] duration-80 ease-[cubic-bezier(0.16,1,0.3,1)] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2! hover:bg-sidebar-accent hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:macos-frost-heavy active:text-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-primary/40 data-[active=true]:bg-primary/10 data-[active=true]:font-medium data-[active=true]:text-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-none',
   {
     variants: {
       variant: {

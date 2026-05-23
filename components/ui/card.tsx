@@ -57,18 +57,20 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onClick={isInteractive ? onClick : undefined}
         className={cn(
           'group relative overflow-hidden text-foreground',
-          'rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] shadow-none',
-          variant === 'outlined' && 'bg-transparent border-[oklch(0.65_0.22_260/0.08)]',
-          variant === 'flat' && 'border-transparent bg-transparent shadow-none',
-          variant === 'glass' && 'bg-[oklch(0.65_0.22_260/0.04)] border-[oklch(0.65_0.22_260/0.1)]',
-          variant === 'frost' && 'bg-[oklch(0.65_0.22_260/0.06)] border-[oklch(0.65_0.22_260/0.12)]',
+          'rounded-xl macos-card',
+          variant === 'outlined' && 'bg-transparent border-[oklch(0.65_0.22_260/0.12)] shadow-none backdrop-filter-none',
+          variant === 'flat' && 'border-transparent bg-transparent shadow-none backdrop-filter-none',
+          variant === 'glass' && 'macos-card macos-card-hover',
+          variant === 'frost' && 'macos-frost-heavy',
+          variant === 'default' && 'macos-card macos-card-hover',
+          variant === 'elevated' && 'macos-frost macos-card-hover',
           accent && accentClassMap[accent],
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',
           size === 'lg' && 'type-body-lg',
-          hover && 'transition-colors hover:border-[oklch(0.65_0.22_260/0.18)] hover:bg-[oklch(0.65_0.22_260/0.05)]',
+          hover && 'macos-card-hover',
           isInteractive &&
-            'cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[oklch(0.65_0.22_260/0.2)] focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+            'cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[oklch(0.65_0.22_260/0.3)] focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           isLoading && 'pointer-events-none opacity-80',
           className,
         )}
@@ -81,7 +83,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ) : null}
 
         {status ? (
-            <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] px-2 py-0.5">
+            <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full macos-frost-heavy px-2 py-0.5">
             <div
               className={cn(
                 'h-1 w-1 rounded-full',
