@@ -105,7 +105,7 @@ function TeamSettingsCard({
   const hasTeams = userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0
 
   return (
-    <Card className="border-border/35 bg-popover/45 shadow-sm">
+    <Card className="border-border/30 bg-card/50 shadow-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Building2 className="h-5 w-5" />
@@ -121,7 +121,7 @@ function TeamSettingsCard({
               {userTeams.ownedTeams.map((team) => (
                 <div
                   key={team.id}
-                  className="flex items-center justify-between p-3 border-border/45 rounded-lg"
+                  className="flex items-center justify-between p-3 border-border/30 rounded-lg"
                 >
                   <div>
                     <p className="font-medium">{team.name}</p>
@@ -134,7 +134,7 @@ function TeamSettingsCard({
               {userTeams.joinedTeams.map((team) => (
                 <div
                   key={team.id}
-                  className="flex items-center justify-between p-3 border-border/45 rounded-lg"
+                  className="flex items-center justify-between p-3 border-border/30 rounded-lg"
                 >
                   <div>
                     <p className="font-medium">{team.name}</p>
@@ -226,7 +226,7 @@ function PasswordSettingsCard({
   onUpdatePassword: () => Promise<void>
 }) {
   return (
-    <Card className="border-border/35 bg-popover/45 shadow-sm">
+    <Card className="border-border/30 bg-card/50 shadow-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="h-5 w-5" />
@@ -411,7 +411,7 @@ export default function SettingsPage() {
     <UnifiedPageShell density="compact">
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Profile Section */}
-        <Card className="border-border/35 bg-popover/45 shadow-sm">
+        <Card className="border-border/30 bg-card/50 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <User className="h-5 w-5" />
@@ -480,7 +480,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Preferences Section */}
-        <Card className="border-border/35 bg-popover/45 shadow-sm">
+        <Card className="border-border/30 bg-card/50 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5" />
@@ -605,7 +605,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Notifications Section */}
-        <Card className="border-border/35 bg-popover/45 shadow-sm">
+        <Card className="border-border/30 bg-card/50 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
@@ -693,7 +693,7 @@ export default function SettingsPage() {
         />
 
         {/* Account Management Section */}
-        <Card className="border-border/35 bg-popover/45 shadow-sm">
+        <Card className="border-border/30 bg-card/50 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />

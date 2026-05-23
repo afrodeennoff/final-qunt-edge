@@ -73,7 +73,7 @@ export default function ForgotPasswordForm({ locale }: { locale: string }) {
  <Button
  type="submit"
  disabled={isLoading || !email.trim()}
- className="h-11 rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
+ className="h-11 font-semibold px-5"
  >
  {isLoading ? 'Sending...' : 'Send reset link'}
  </Button>

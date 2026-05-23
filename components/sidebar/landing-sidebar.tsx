@@ -16,6 +16,7 @@ import {
 
 import { UnifiedSidebar } from "@/components/ui/unified-sidebar"
 import { useI18n } from "@/locales/client"
+import { NAV_ICON_SIZE } from "@/lib/constants/sidebar"
 
 export function LandingSidebar() {
     const locale = useI18n()
@@ -23,62 +24,62 @@ export function LandingSidebar() {
     const navItems = React.useMemo(() => [
         {
             href: `/${locale}/`,
-            icon: <Home className="size-4" />,
+            icon: <Home className={NAV_ICON_SIZE} />,
             label: "Home",
             exact: true,
             group: "Overview",
         },
         {
             href: `/${locale}/propfirms`,
-            icon: <Building2 className="size-4" />,
+            icon: <Building2 className={NAV_ICON_SIZE} />,
             label: "Prop Firms",
             group: "Explore",
         },
         {
             href: `/${locale}/deals`,
-            icon: <TrendingUp className="size-4" />,
+            icon: <TrendingUp className={NAV_ICON_SIZE} />,
             label: "Deals",
             group: "Explore",
         },
         {
             href: `/${locale}/leaderboard`,
-            icon: <BarChart3 className="size-4" />,
+            icon: <BarChart3 className={NAV_ICON_SIZE} />,
             label: "Leaderboard",
             group: "Explore",
         },
         {
             href: `/${locale}/pricing`,
-            icon: <CreditCard className="size-4" />,
+            icon: <CreditCard className={NAV_ICON_SIZE} />,
             label: "Pricing",
             group: "Account",
         },
         {
             href: `/${locale}/updates`,
-            icon: <BookOpen className="size-4" />,
+            icon: <BookOpen className={NAV_ICON_SIZE} />,
             label: "Updates",
             group: "Resources",
         },
         {
             href: `/${locale}/community`,
-            icon: <Users className="size-4" />,
+            icon: <Users className={NAV_ICON_SIZE} />,
             label: "Community",
             group: "Resources",
         },
         {
             href: `/${locale}/about`,
-            icon: <Globe className="size-4" />,
+            icon: <Globe className={NAV_ICON_SIZE} />,
             label: "About",
             group: "Resources",
         },
         {
             href: `/${locale}/support`,
-            icon: <MessageSquare className="size-4" />,
+            icon: <MessageSquare className={NAV_ICON_SIZE} />,
             label: "Support",
             group: "Help",
         },
         {
             href: `/${locale}/settings`,
-            icon: <Settings className="size-4" />,
+            icon: <Settings className={NAV_ICON_SIZE} />,
             label: "Settings",
             group: "Help",
         },

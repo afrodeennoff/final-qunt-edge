@@ -7,6 +7,7 @@ import { ArrowBigDown, ArrowBigUp, MessageSquare, ImageIcon, Pencil, ExternalLin
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useI18n, useCurrentLocale } from '@/locales/client'
+import { cn } from '@/lib/utils'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { ExtendedPost } from '../types'
@@ -59,8 +60,8 @@ interface PostComment {
 }
 
 const typeColors: Record<PostType, string> = {
-  [PostType.FEATURE_REQUEST]: 'bg-semantic-info-bg text-semantic-info dark:bg-semantic-info-bg dark:text-semantic-info',
-  [PostType.BUG_REPORT]: 'bg-semantic-error-bg text-semantic-error dark:bg-semantic-error-bg dark:text-semantic-error',
+  [PostType.FEATURE_REQUEST]: 'bg-semantic-info-bg text-semantic-info border-semantic-info/20',
+  [PostType.BUG_REPORT]: 'bg-semantic-error-bg text-semantic-error border-semantic-error/20',
   [PostType.DISCUSSION]: 'border border-border bg-muted/20 text-secondary-foreground',
 }
 
@@ -226,7 +227,7 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
         <CardHeader className="flex-row items-start justify-between gap-0">
            <div className="space-y-1">
              <div className="flex items-center gap-x-2">
-               <Badge variant="secondary" className={typeColors[post.type as PostType]}>
+               <Badge className={cn('text-[10px]', typeColors[post.type as PostType])}>
                 {(post.type as string).replace('_', ' ')}
               </Badge>
               <Badge variant="outline" className={statusColors[post.status as PostStatus]}>

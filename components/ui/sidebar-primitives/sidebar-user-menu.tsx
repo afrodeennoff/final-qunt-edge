@@ -56,7 +56,7 @@ export function SidebarUserMenu({
                       {initials}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-sidebar bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]" />
+                  <div className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-sidebar bg-success shadow-[0_0_6px_hsl(var(--success)/0.5)]" />
                 </div>
                 <div className="grid min-w-0 flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                   <span className="truncate font-semibold text-sidebar-foreground">
@@ -116,7 +116,7 @@ export function SidebarUserMenu({
             {onLogout && (
               <DropdownMenuItem
                 onClick={onLogout}
-                className="text-destructive focus:bg-destructive/15 focus:text-destructive cursor-pointer my-1.5 mx-1.5 rounded-lg transition-[opacity,background-color,border-color] duration-200 hover:bg-destructive/10"
+                className="text-destructive focus-visible:bg-destructive/15 focus-visible:text-destructive cursor-pointer my-1.5 mx-1.5 rounded-lg transition-[opacity,background-color,border-color] duration-200 hover:bg-destructive/10"
               >
                 <LogOut className="mr-2 size-4" />
                 <span className="font-medium">Log out</span>

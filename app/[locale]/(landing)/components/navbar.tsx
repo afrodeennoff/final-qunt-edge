@@ -70,7 +70,7 @@ export default function Navbar() {
                 key={link.href}
                 href={`/${locale}${link.href}`}
                 className={cn(
-                  'rounded-lg px-3.5 py-2 text-[13px] font-medium transition-[background-color,color] duration-150 min-h-[36px] inline-flex items-center',
+                  'rounded-lg px-3.5 py-2 text-[13px] font-medium transition-[background-color,color] duration-150 min-h-[36px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                   isActive(link.href)
                     ? 'bg-primary/10 text-primary'
                     : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground',

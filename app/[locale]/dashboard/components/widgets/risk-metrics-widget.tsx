@@ -59,19 +59,19 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  <div className="flex-1 flex flex-col justify-center gap-2.5">
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Sharpe</span>
- <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeSharpeRatio > 1 ?"bg-[oklch(0.82_0.185_155/0.10)] text-[oklch(0.82_0.185_155)] border-[oklch(0.82_0.185_155/0.20)]" :"bg-background/30 text-foreground/70 border-border/30")}>
+ <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeSharpeRatio > 1 ?"bg-semantic-success-bg text-semantic-success border-semantic-success/30" :"bg-background/30 text-foreground/70 border-border/30")}>
  {safeSharpeRatio.toFixed(2)}
  </span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Sortino</span>
- <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeSortinoRatio > 1.5 ?"bg-[oklch(0.82_0.185_155/0.10)] text-[oklch(0.82_0.185_155)] border-[oklch(0.82_0.185_155/0.20)]" :"bg-background/30 text-foreground/70 border-border/30")}>
+ <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeSortinoRatio > 1.5 ?"bg-semantic-success-bg text-semantic-success border-semantic-success/30" :"bg-background/30 text-foreground/70 border-border/30")}>
  {safeSortinoRatio.toFixed(2)}
  </span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Calmar</span>
- <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeCalmarRatio > 1 ?"bg-[oklch(0.82_0.185_155/0.10)] text-[oklch(0.82_0.185_155)] border-[oklch(0.82_0.185_155/0.20)]" :"bg-background/30 text-foreground/70 border-border/30")}>
+ <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeCalmarRatio > 1 ?"bg-semantic-success-bg text-semantic-success border-semantic-success/30" :"bg-background/30 text-foreground/70 border-border/30")}>
  {safeCalmarRatio.toFixed(2)}
  </span>
  </div>
@@ -86,19 +86,19 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  <div className="flex-1 flex flex-col justify-center gap-2.5">
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs text-balance">Kelly Half</span>
- <span className={cn("text-[15px] font-semibold tracking-[-0.03em] tabular-nums", safeKellyHalf > 0 ?"text-[oklch(0.82_0.185_155)]" :"text-[oklch(0.74_0.255_22)]")}>
+ <span className={cn("text-[15px] font-semibold tracking-[-0.03em] tabular-nums", safeKellyHalf > 0 ?"text-semantic-success" :"text-semantic-error")}>
  {(safeKellyHalf * 100).toFixed(1)}%
  </span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Optimal</span>
- <span className={cn("text-[15px] font-semibold tracking-[-0.03em] tabular-nums", safeKellyFull > 0 ?"text-[oklch(0.82_0.185_155)]" :"text-[oklch(0.74_0.255_22)]")}>
+ <span className={cn("text-[15px] font-semibold tracking-[-0.03em] tabular-nums", safeKellyFull > 0 ?"text-semantic-success" :"text-semantic-error")}>
  {(safeKellyFull * 100).toFixed(1)}%
  </span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Conservative</span>
- <span className={cn("text-[15px] font-semibold tracking-[-0.03em] tabular-nums", safeKellyHalf > 0 ?"text-[oklch(0.82_0.185_155)]" :"text-[oklch(0.74_0.255_22)]")}>
+ <span className={cn("text-[15px] font-semibold tracking-[-0.03em] tabular-nums", safeKellyHalf > 0 ?"text-semantic-success" :"text-semantic-error")}>
  {((safeKellyHalf / 2) * 100).toFixed(1)}%
  </span>
  </div>

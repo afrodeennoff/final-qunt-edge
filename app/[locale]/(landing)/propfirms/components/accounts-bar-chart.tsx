@@ -113,7 +113,7 @@ export function AccountsBarChart({
   )
 
   return (
-    <Card data-chart-surface="modern" className="border-border bg-muted/10 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+    <Card data-chart-surface="modern" className="border-border bg-muted/10 shadow-lg">
       <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <CardTitle>{chartTitle}</CardTitle>

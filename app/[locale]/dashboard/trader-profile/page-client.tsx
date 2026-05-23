@@ -181,7 +181,7 @@ export function StatTile({
 }) {
   return (
     <div className={cn(insetPanelClassName, 'px-4 py-3.5', className)}>
-      <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
+      <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
       <p
         className={cn(
           'mt-1.5 text-xl font-semibold tabular-nums tracking-tight text-foreground',
@@ -210,7 +210,7 @@ function MeterRow({
   return (
     <div className={cn(insetPanelClassName, 'px-4 py-3')}>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
+        <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
         <p className="text-sm font-semibold tabular-nums text-foreground">{value}</p>
       </div>
       <div className="mt-2.5 h-1.5 rounded-full bg-border/25">
@@ -239,7 +239,7 @@ function SignalTile({
 }) {
   return (
     <div className={cn(insetPanelClassName, 'px-4 py-3')}>
-      <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
+      <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
       <p
         className={cn(
           'mt-1.5 text-lg font-semibold tabular-nums tracking-tight text-foreground',
@@ -271,7 +271,7 @@ export function StripMetric({
 }) {
   return (
     <div className={cn(insetPanelClassName, 'p-3.5', className)}>
-      <p className="text-[9px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
       <p
         className={cn(
           'mt-1.5 font-semibold tracking-tight text-foreground',
@@ -819,7 +819,7 @@ export default function TraderProfilePageClient() {
             >
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start">
-                  <Avatar className="h-20 w-20 shrink-0 rounded-3xl border border-border bg-muted/20 sm:h-24 sm:w-24">
+                  <Avatar className="h-20 w-20 shrink-0 rounded-2xl border border-border bg-background/70 sm:h-24 sm:w-24">
                     <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
                     <AvatarFallback className="bg-background text-lg font-semibold text-foreground">
                       {profileInitials}
@@ -857,7 +857,7 @@ export default function TraderProfilePageClient() {
               </div>
             </UnifiedSurface>
 
-            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-4 sm:p-5">
+            <UnifiedSurface className="animate-fade-up-smooth-d1 p-4 sm:p-5">
               <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.9fr)]">
                 <div className="space-y-3">
                   <div className="grid gap-3 md:grid-cols-3">
@@ -1061,7 +1061,7 @@ export default function TraderProfilePageClient() {
 
           <UnifiedSurface
             variant="elevated"
-            className="animate-fade-up-smooth animate-fade-up-smooth-d1 space-y-6 p-5 sm:p-6 xl:sticky xl:top-24 xl:self-start"
+            className="animate-fade-up-smooth-d1 space-y-6 p-5 sm:p-6 xl:sticky xl:top-24 xl:self-start"
           >
             <RadarChartCard
               radarData={radarData}

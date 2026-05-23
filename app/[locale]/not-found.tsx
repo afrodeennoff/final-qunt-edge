@@ -16,7 +16,7 @@ export default function LocaleNotFound() {
       title="Page not found"
       description="The page you're looking for doesn't exist or has been moved."
       actions={
-        <Button asChild className="rounded-[0.95rem] border border-primary/18 bg-primary px-5 text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92">
+        <Button asChild className="px-5">
           <Link href="/en">
             <Home className="mr-2 h-4 w-4" />
             Go back home

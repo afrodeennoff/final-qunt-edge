@@ -534,16 +534,16 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </div>
  )}
  <Tabs value={tab} onValueChange={(v) => { setTab(v as 'magic' | 'password'); setLastAuthPreference(v as 'magic' | 'password'); }}>
- <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/0.04 bg-background/0.08 p-1">
+ <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/0.04 bg-muted/20 p-1">
  <TabsTrigger
  value="magic"
- className="h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_1px_2px_rgba(0,0,0,0.14)]"
+ className="h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
  >
  <span className="truncate">{t('auth.tabs.magic')}</span>
  </TabsTrigger>
  <TabsTrigger
  value="password"
- className="relative h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_1px_2px_rgba(0,0,0,0.14)]"
+ className="relative h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
  >
  <span className="truncate">{t('auth.tabs.password')}</span>
  <Badge
@@ -585,7 +585,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <Button
  disabled={isLoading || countdown > 0 || authMethod === 'discord' || authMethod === 'google'}
  type="submit"
- className="h-11 rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
+ className="h-11 font-semibold px-5"
  >
  {isLoading && authMethod === 'email' && (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -659,7 +659,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  />
  <Button
  type="submit"
- className="h-11 w-full rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
+ className="h-11 w-full font-semibold px-5"
  disabled={isLoading}
  >
  {isLoading ? (
@@ -728,7 +728,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <Button
  disabled={isLoading}
  type="submit"
- className="h-11 rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
+ className="h-11 font-semibold px-5"
  >
  {isLoading && authMethod === 'email' && (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

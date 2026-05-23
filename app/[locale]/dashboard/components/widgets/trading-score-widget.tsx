@@ -33,7 +33,7 @@ export default function TradingScoreWidget({ size }: { size?: string }) {
  <div className="flex-1 flex flex-col items-center justify-center p-4">
  <div className="relative flex items-center justify-center">
  <div className="text-[28px] font-[250] tracking-[-0.04em] text-foreground tabular-nums mb-1">
- <span className={score >= 80 ?"text-[oklch(0.82_0.185_155)]" :"text-[oklch(0.74_0.255_22)] font-normal"}>
+ <span className={score >= 80 ?"text-semantic-success" :"text-semantic-error font-normal"}>
  {score}
  </span>
  <span className="text-base text-foreground/35 ml-1">/ 100</span>

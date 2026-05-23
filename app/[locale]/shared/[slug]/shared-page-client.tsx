@@ -117,7 +117,7 @@ export function SharedPageClient() {
   if (isLoading) {
     return (
       <div className="qe-v2-app-shell flex flex-col items-center justify-center px-4 pt-28 sm:pt-32">
-        <div className="flex w-full max-w-lg flex-col items-center gap-3 rounded-[2rem] border border-border/30 bg-[oklch(0.038_0_0)] px-6 py-8 text-center shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_18px_44px_-30px_rgba(0,0,0,0.9)]">
+        <div className="flex w-full max-w-lg flex-col items-center gap-3 rounded-[2rem] border border-border/30 bg-card px-6 py-8 text-center shadow-lg">
           <Loader2 className="h-8 w-8 animate-spin text-foreground/60" />
           <p className="text-sm text-muted-foreground">{t('shared.loading')}</p>
         </div>
@@ -144,7 +144,7 @@ export function SharedPageClient() {
     <div className="container-fluid qe-v2-app-shell flex-1 pt-24 sm:pt-28">
       <main className="w-full py-6 lg:py-8">
         <MotionSection delay={0.04}>
-          <Card className="mb-6 w-full overflow-hidden border-border/30 bg-[oklch(0.038_0_0)] shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_26px_70px_-38px_rgba(0,0,0,0.92)]">
+          <Card className="mb-6 w-full overflow-hidden border-border/30 bg-card shadow-lg">
             <CardContent className="p-4 sm:p-5 lg:p-6">
               <div className="grid gap-4 xl:grid-cols-[minmax(0,1.12fr)_340px] xl:gap-6">
                 <div className="rounded-2xl border border-border/30 bg-background/30 p-5 sm:p-6">

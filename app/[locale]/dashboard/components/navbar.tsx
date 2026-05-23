@@ -51,7 +51,7 @@ export default function Navbar() {
         initial={false}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="pointer-events-auto flex items-center h-11 w-full px-3 gap-0 bg-card border-b border-border"
+        className="pointer-events-auto flex items-center h-14 w-full px-3 gap-0 bg-card border-b border-border"
       >
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Left Side: Sidebar Toggle & Brand */}
@@ -139,7 +139,7 @@ export default function Navbar() {
                 )}
               </div>
 
-              <div className="mx-1 hidden h-6 w-px bg-border/50 sm:block" />
+              <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
 
               {/* Real-time Actions */}
               <div className="flex items-center gap-2 rounded-xl border border-border/35 bg-background/55 p-1.5 shadow-inner">
@@ -148,7 +148,7 @@ export default function Navbar() {
                   size="icon"
                   onClick={handleRefresh}
                   disabled={isLoading}
-                  className="h-8 w-8 rounded-xl text-fg-muted transition-[opacity,background-color,border-color] active:scale-90"
+                  className="h-8 w-8 rounded-xl text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/10 transition-[opacity,background-color,border-color] active:scale-90"
                   aria-label="Refresh dashboard data"
                 >
                   <RefreshCw

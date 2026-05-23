@@ -91,7 +91,7 @@ export function PnLSummary({ className }: PnLSummaryProps) {
       aria-live="polite"
       aria-label="Daily PnL quick summary"
       className={cn(
-        'flex items-center gap-1 divide-x divide-border/35 overflow-x-auto rounded-xl border border-border/45 bg-background/55 px-2 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/60 shadow-sm',
+        'flex items-center gap-1 divide-x divide-border/35 overflow-x-auto rounded-xl border border-border/30 bg-background/55 px-2 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/60 shadow-sm',
         className,
       )}
     >
@@ -113,8 +113,8 @@ export function PnLSummary({ className }: PnLSummaryProps) {
             <span
               className={cn(
                 'text-[15px] font-semibold tracking-[-0.03em] tabular-nums',
-                item.accent === 'metric-positive' && 'text-[oklch(0.82_0.185_155)]',
-                item.accent === 'metric-negative' && 'text-[oklch(0.74_0.255_22)]',
+                item.accent === 'metric-positive' && 'text-semantic-success',
+                item.accent === 'metric-negative' && 'text-semantic-error',
                 !item.accent && 'text-foreground',
               )}
             >
