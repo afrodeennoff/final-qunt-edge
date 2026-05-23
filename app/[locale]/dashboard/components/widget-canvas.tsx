@@ -134,10 +134,10 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  </div>
  {isCustomizing && (
  <>
- <div className="absolute inset-0 rounded-xl border border-border/25 border-dashed" />
+  <div className="absolute inset-0 rounded-xl border border-border border-dashed" />
  <div className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.12),hsl(var(--background)/0.8)_62%)] opacity-100" />
  <div className="absolute inset-0 flex items-center justify-center opacity-100 drag-handle cursor-grab active:cursor-grabbing">
- <div className="flex flex-col items-center gap-2 rounded-xl border border-border/15 bg-card/70 px-4 py-3 text-foreground shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]">
+  <div className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-foreground shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]">
  <GripVertical className="h-6 w-4" />
  <p className="text-sm font-medium">{t('widgets.dragToMove')}</p>
  </div>
@@ -148,13 +148,13 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  <Button 
  variant="outline"
  size="icon"
- className="h-8 w-8 rounded-full border-border/20 bg-card/70 text-foreground hover:bg-background/80 hover:border-border/35"
+  className="h-8 w-8 rounded-full border-border bg-card text-foreground hover:bg-accent/10 hover:border-border"
  aria-label="Change widget size"
  >
  <Maximize2 className="h-4 w-4" />
  </Button>
  </PopoverTrigger>
- <PopoverContent className="w-56 border-border/15 bg-card/90 p-2 text-foreground">
+  <PopoverContent className="w-56 border-border bg-card p-2 text-foreground">
  <div className="flex flex-col gap-1">
  {isMobile ? (
  <>
@@ -319,7 +319,7 @@ function DebugDataBadge() {
  Boolean(dateRange?.from || dateRange?.to);
 
  return (
- <div className="absolute left-2 top-2 z-30 rounded-md border border-border/12 bg-card/80 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+  <div className="absolute left-2 top-2 z-30 rounded-md border border-border bg-card px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
  T:{trades.length} F:{formattedTrades.length}
  {isFiltered && (
  <span className="ml-2 text-muted-foreground">filtered</span>
@@ -549,7 +549,7 @@ export default function WidgetCanvas() {
  if (!layouts) {
  return (
  <div className="relative mt-0 w-full min-h-0" role="status" aria-label="Loading dashboard">
-  <div className="rounded-xl border border-border/12 bg-card/40 p-4 space-y-3" aria-hidden="true">
+   <div className="rounded-xl border border-border bg-card p-4 space-y-3" aria-hidden="true">
  <Skeleton className="h-4 w-48" />
  <Skeleton className="h-3 w-80 max-w-full" />
  <div className="flex gap-2 pt-2">
@@ -565,8 +565,8 @@ export default function WidgetCanvas() {
  if (currentLayout.length === 0) {
  return (
  <div className="relative mt-0 w-full min-h-0" role="status">
- <div className="mx-auto mt-8 max-w-lg rounded-xl border border-border/15 bg-card/50 p-6 text-center shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]" role="alert">
- <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-border/15 bg-card/90 text-muted-foreground">
+  <div className="mx-auto mt-8 max-w-lg rounded-xl border border-border bg-card p-6 text-center shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]" role="alert">
+  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground">
  <Maximize2 className="h-5 w-5" />
  </div>
  <div className="text-sm font-semibold tracking-tight text-foreground">
@@ -585,7 +585,7 @@ export default function WidgetCanvas() {
  <Button 
  variant="outline"
  onClick={() => setIsCustomizing(true)}
- className="border-border/15 bg-transparent text-foreground hover:bg-background/80 hover:text-foreground rounded-lg"
+  className="border-border bg-transparent text-foreground hover:bg-accent/10 hover:text-foreground rounded-lg"
  >
  {translate("widgets.edit") ||"Edit"}
  </Button>
@@ -654,7 +654,7 @@ export default function WidgetCanvas() {
  <div
  className={cn("relative h-full w-full overflow-hidden rounded-xl transition-[opacity,background-color,border-color] duration-300 group/widget",
  isCustomizing
- ?"border border-v2-accent/30 bg-card/95 shadow-[var(--v2-glow-ambient)]"
+ ?"border border-border bg-card shadow-[var(--v2-glow-ambient)]"
  :"border border-transparent bg-transparent"
  )}
  >

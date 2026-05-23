@@ -136,7 +136,7 @@ function TagsColumnHeader() {
               </div>
 
               {/* Search input */}
-              <div className="flex items-center gap-2 bg-muted/30 rounded-md px-2">
+              <div className="flex items-center gap-2 bg-muted rounded-md px-2">
                 <Search className="h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder={t('widgets.tags.searchPlaceholder')}
@@ -153,7 +153,7 @@ function TagsColumnHeader() {
                     {filteredTags.map((tag) => (
                       <div
                         key={tag.id}
-                        className="flex items-center justify-between rounded-md hover:bg-muted/50 transition-colors p-1.5"
+                        className="flex items-center justify-between rounded-md hover:bg-muted transition-colors p-1.5"
                       >
                         <div className="flex items-center gap-2 min-w-0 flex-1">
                           <Checkbox
@@ -705,7 +705,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                       {accounts.map((account) => (
                         <div
                           key={`account-${account}`}
-                          className="type-body-sm cursor-default px-3 py-2 hover:bg-muted/50"
+                          className="type-body-sm cursor-default px-3 py-2 hover:bg-muted"
                         >
                           {account}
                         </div>
@@ -1297,11 +1297,11 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
 
   return (
     <Card
-      className="flex h-full w-full flex-col overflow-hidden rounded-lg border border-border/70 bg-card/95 shadow-sm"
+      className="flex h-full w-full flex-col overflow-hidden rounded-lg border border-border bg-card shadow-sm"
       style={cardStyle}
     >
       {showHeader && (
-        <CardHeader className="shrink-0 border-b border-border/70 bg-muted/20 px-4 py-4 sm:px-6">
+        <CardHeader className="shrink-0 border-b border-border bg-muted px-4 py-4 sm:px-6">
           <div className="flex w-full flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-2">
               <CardTitle size="xl" className="line-clamp-1">
@@ -1440,16 +1440,16 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
         ) : (
           <div className="relative w-full min-w-fit">
           <table className="type-body-sm w-full table-auto border-separate border-spacing-0 caption-bottom tabular-nums">
-            <thead className="sticky top-0 z-10 border-b border-border/70 bg-card/95 [&_tr]:border-b">
+            <thead className="sticky top-0 z-10 border-b border-border bg-card [&_tr]:border-b">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr
                   key={headerGroup.id}
-                  className="border-b border-border/60 transition-colors hover:bg-muted/40 data-[state=selected]:bg-accent/40"
+                  className="border-b border-border transition-colors hover:bg-muted data-[state=selected]:bg-accent/40"
                 >
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="type-label h-12 whitespace-nowrap border-r border-border/60 bg-card/95 px-3 py-2 text-left align-middle text-muted-foreground last:border-r-0 first:border-l [&:has([role=checkbox])]:pr-0"
+                      className="type-label h-12 whitespace-nowrap border-r border-border bg-card px-3 py-2 text-left align-middle text-muted-foreground last:border-r-0 first:border-l [&:has([role=checkbox])]:pr-0"
                       style={{ width: header.getSize() }}
                     >
                       {header.isPlaceholder
@@ -1478,23 +1478,23 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                         <tr
                           data-state={row.getIsSelected() && 'selected'}
                           className={cn(
-                            'group border-b border-border/60 transition-[background-color,border-color] duration-75 hover:bg-muted/30',
+                            'group border-b border-border transition-[background-color,border-color] duration-75 hover:bg-muted',
                             row.getIsSelected() &&
                               'bg-accent/40 hover:bg-accent/40 data-[state=selected]:bg-accent/40',
                             row.getIsExpanded()
                               ? 'bg-muted/60'
                               : row.getCanExpand()
                                 ? 'bg-background'
-                                : 'bg-muted/30',
-                            rowIndex % 2 === 1 && !row.getIsSelected() && 'bg-muted/20',
+                                : 'bg-muted',
+                            rowIndex % 2 === 1 && !row.getIsSelected() && 'bg-muted',
                           )}
                         >
                           {row.getVisibleCells().map((cell) => (
                             <td
                               key={cell.id}
                               className={cn(
-                                'whitespace-nowrap border-r border-border/40 px-3 py-2 text-sm align-middle first:border-l last:border-r-0 group-hover:border-border/60 [&:has([role=checkbox])]:pr-0',
-                                row.getIsSelected() && 'border-border/60',
+                                'whitespace-nowrap border-r border-border/40 px-3 py-2 text-sm align-middle first:border-l last:border-r-0 group-hover:border-border [&:has([role=checkbox])]:pr-0',
+                                row.getIsSelected() && 'border-border',
                               )}
                               style={{ width: cell.column.getSize() }}
                             >
@@ -1538,7 +1538,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                 </tr>
               )}
             </tbody>
-            <tfoot className="sticky bottom-0 z-10 border-t border-border/70 bg-card/95">
+            <tfoot className="sticky bottom-0 z-10 border-t border-border bg-card">
               <tr className="border-b transition-colors">
                 {visibleColumns.map((column, index) => {
                   const columnId = column.id || (column as ColumnAccessor).accessorKey
@@ -1646,7 +1646,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
         </div>
         )}
       </CardContent>
-      <CardFooter className="flex flex-col gap-3 border-t border-border/70 bg-muted/20 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <CardFooter className="flex flex-col gap-3 border-t border-border bg-muted px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="type-body-sm text-muted-foreground">
           {t('trade-table.totalTrades', { count: totalTradeCount })}
         </div>

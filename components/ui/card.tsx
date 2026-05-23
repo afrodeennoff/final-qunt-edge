@@ -64,7 +64,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',
           size === 'lg' && 'type-body-lg',
-          hover && 'transition-colors hover:border-border/80 hover:bg-muted/30',
+          hover && 'transition-colors hover:border-border/60 hover:bg-accent/10',
           isInteractive &&
             'cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           isLoading && 'pointer-events-none opacity-80',
@@ -74,12 +74,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       >
         {isLoading ? (
           <div className="absolute inset-0 z-20 overflow-hidden rounded-[inherit]">
-            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
           </div>
         ) : null}
 
         {status ? (
-          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-border bg-card px-2 py-0.5">
+          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-border bg-popover px-2 py-0.5">
             <div
               className={cn(
                 'h-1 w-1 rounded-full',

@@ -49,8 +49,8 @@ import { TraderProfileShareButton } from './components/trader-profile-share-butt
 
 const RadarChartCard = dynamic(() => import('./components/RadarChartCard'), {
   loading: () => (
-    <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-3">
-      <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+      <div className="h-64 w-full animate-pulse rounded-lg bg-muted" />
     </div>
   ),
 })
@@ -91,7 +91,7 @@ type DateFilterPreset =
 type StatTone = 'default' | 'positive' | 'negative'
 
 const insetPanelClassName =
-  'rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] shadow-none'
+  'rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-none'
 
 function clamp(value: number, min = 0, max = 100) {
   return Math.min(max, Math.max(min, value))
@@ -897,7 +897,7 @@ export default function TraderProfilePageClient() {
                           {reviewWindowSummary}
                         </p>
                       </div>
-                      <div className="rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] p-3.5">
+                      <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-3.5">
                         <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                           Active session
                         </p>
@@ -912,7 +912,7 @@ export default function TraderProfilePageClient() {
                         value={dateFilterPreset}
                         onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
                       >
-                        <SelectTrigger className="h-10 w-full border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] text-sm text-foreground">
+                        <SelectTrigger className="h-10 w-full border-[var(--border)] bg-[var(--card)] text-sm text-foreground">
                           <SelectValue placeholder="Select range" />
                         </SelectTrigger>
                         <SelectContent>
@@ -930,7 +930,7 @@ export default function TraderProfilePageClient() {
                           <Button
                             type="button"
                             variant="outline"
-                            className="h-10 justify-start border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] text-sm text-foreground hover:bg-background/85"
+                            className="h-10 justify-start border-[var(--border)] bg-[var(--card)] text-sm text-foreground hover:bg-background/85"
                           >
                             <CalendarIcon className="h-4 w-4" />
                             {dateFilterLabel ?? 'Custom Range'}
@@ -972,7 +972,7 @@ export default function TraderProfilePageClient() {
                       {activeAccountLabels.map((accountLabel) => (
                         <span
                           key={accountLabel}
-                          className="rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] px-3 py-1.5 text-xs font-medium text-foreground"
+                          className="rounded-full border border-[var(--border)] bg-[var(--card)] px-3 py-1.5 text-xs font-medium text-foreground"
                         >
                           {accountLabel}
                         </span>
@@ -1141,13 +1141,13 @@ export default function TraderProfilePageClient() {
                     )}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="h-3 w-3 rounded-full bg-muted/30" />
+                      <div className="h-3 w-3 rounded-full bg-muted" />
                       <div className="space-y-1.5">
-                        <div className="h-3 w-24 rounded bg-muted/30" />
-                        <div className="h-2.5 w-36 rounded bg-muted/20" />
+                        <div className="h-3 w-24 rounded bg-muted" />
+                        <div className="h-2.5 w-36 rounded bg-muted" />
                       </div>
                     </div>
-                    <div className="h-3 w-14 rounded bg-muted/30" />
+                    <div className="h-3 w-14 rounded bg-muted" />
                   </div>
                 ))}
               </div>
