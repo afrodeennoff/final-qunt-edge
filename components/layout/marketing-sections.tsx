@@ -88,8 +88,8 @@ export function MarketingFeatureCard({
   className?: string
 }) {
   return (
-    <Card className={cn('rounded-lg border border-border bg-card p-5 transition-colors hover:border-border/80 hover:bg-muted/30', className)}>
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-muted text-muted-foreground">
+    <Card className={cn('rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] p-5 transition-colors hover:border-[oklch(0.65_0.22_260/0.18)] hover:bg-[oklch(0.65_0.22_260/0.04)]', className)}>
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] text-muted-foreground">
         {icon}
       </div>
       <div className="mt-4">
@@ -145,7 +145,7 @@ export function MarketingStepCard({
         <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {step}
         </span>
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-muted text-muted-foreground">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] text-muted-foreground">
           {icon}
         </span>
       </div>
@@ -184,7 +184,7 @@ export function MarketingPricingCard({
     <Card
       hover
       className={cn(
-        'relative flex h-full flex-col p-7 border border-border bg-card',
+        'relative flex h-full flex-col p-7 border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)]',
         highlighted && 'border-primary/40 shadow-sm',
         className,
       )}
@@ -239,14 +239,14 @@ export function MarketingHyperframe({
   className?: string
 }) {
   return (
-    <Card id={id} className={cn('overflow-hidden p-0 border border-border bg-card', className)}>
-      <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-2.5">
+    <Card id={id} className={cn('overflow-hidden p-0 border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)]', className)}>
+      <div className="flex items-center justify-between border-b border-[oklch(0.65_0.22_260/0.06)] bg-[oklch(0.65_0.22_260/0.03)] px-4 py-2.5">
         <div className="flex items-center gap-1.5 px-2 py-1" aria-hidden>
           <span className="h-3 w-3 rounded-full bg-destructive/80" />
           <span className="h-3 w-3 rounded-full bg-warning/80" />
           <span className="h-3 w-3 rounded-full bg-success/80" />
         </div>
-        <div className="rounded-full border border-border bg-card px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
+        <div className="rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
           {label}
         </div>
         <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80 sm:flex">

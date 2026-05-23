@@ -132,7 +132,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const isVercelRuntime = process.env.VERCEL === '1'
   const enableVercelInsights = isProduction && isVercelRuntime
   const uiVariant = getUiVariant()
-  const darkRootClass = shouldEnforceDarkOnlySurfaces() ? 'dark' : ''
+  const darkRootClass = 'dark' // Enforced: Electric Obsidian is dark-only. Prevents sidebar + surface color conflicts on theme toggle.
 
   return (
     <html

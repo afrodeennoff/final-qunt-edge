@@ -199,7 +199,7 @@ export default function FileUpload({
           "hover:border-primary/50 group relative",
           isDragActive
             ? "border-primary bg-primary/5 scale-[0.99]"
-            : "border-gray-300 hover:bg-gray-50/50 dark:hover:bg-gray-900/50",
+            : "border-[oklch(0.65_0.22_260/0.12)] hover:bg-[oklch(0.65_0.22_260/0.03)]",
           "cursor-pointer flex items-center justify-center"
         )}
       >
@@ -243,8 +243,8 @@ export default function FileUpload({
               key={index}
               className={cn(
                 "flex items-center justify-between",
-                "bg-gray-100 dark:bg-gray-800 rounded-lg",
-                "p-3 hover:bg-gray-200 dark:hover:bg-gray-700",
+                "bg-[oklch(0.65_0.22_260/0.02)] rounded-lg",
+                "p-3 hover:bg-[oklch(0.65_0.22_260/0.04)]",
                 "transition-all duration-200 ease-in-out",
                 "animate-in slide-in-from-bottom fade-in",
                 "group"
