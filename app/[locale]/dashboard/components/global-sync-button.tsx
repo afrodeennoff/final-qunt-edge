@@ -115,7 +115,7 @@ export function GlobalSyncButton() {
  type="button"
  className={cn("group relative flex h-9 items-center gap-2 rounded-full border px-3.5 transition-[opacity,background-color,border-color] duration-200",
  isAnySyncing
- ?"cursor-wait border-v2-accent/20 bg-v2-accent/10 text-foreground"
+ ?"cursor-wait border-primary/20 bg-primary/10 text-foreground"
  :"border-transparent bg-transparent text-muted-foreground hover:bg-background/80/70 hover:text-foreground"
  )}
  >

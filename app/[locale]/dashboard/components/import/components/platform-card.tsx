@@ -21,9 +21,9 @@ interface PlatformCardProps {
 }
 
 const categoryBadgeColors: Record<string, { variant:"default" |"secondary" |"outline" |"accent" |"success" |"warning" |"error"; className: string }> = {
- 'Direct Account Sync': { variant: 'accent', className: 'bg-v2-accent-subtle text-v2-accent' },
- 'Intelligent Import': { variant: 'outline', className: 'bg-card/90 text-muted-foreground' },
- 'Platform CSV Import': { variant: 'success', className: 'bg-v2-success-subtle text-v2-success' },
+'Direct Account Sync': { variant: 'accent', className: 'bg-primary/10 text-primary' },
+  'Intelligent Import': { variant: 'outline', className: 'bg-card/90 text-muted-foreground' },
+  'Platform CSV Import': { variant: 'success', className: 'bg-emerald-500/10 text-emerald-400' },
  'Manual Entry': { variant: 'secondary', className: 'bg-card/90 text-muted-foreground' },
 };
 
@@ -71,11 +71,11 @@ function PlatformCardInner({
  size="sm"
  onClick={isInteractive ? handleSelect : undefined}
  className={cn("group relative flex h-full min-h-[13.5rem] flex-col items-start gap-3 rounded-xl border-border/70 bg-card/75 text-left transition-[opacity,background-color,border-color] duration-300",
- isSelected &&"border-v2-accent shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] shadow-v2-accent/20",
+ isSelected &&"border-primary shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] shadow-primary/20",
  (platform.isDisabled || platform.isComingSoon) &&"cursor-not-allowed opacity-60 grayscale-[0.5]"
  )}
  >
- <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-v2-accent/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-2xl" />
+ <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-2xl" />
 
  {isMultiSelectMode && (
  <div
@@ -85,7 +85,7 @@ function PlatformCardInner({
  <Checkbox
  checked={isChecked}
  onCheckedChange={handleCheckChange}
- className="h-5 w-5 border-2 border-border data-[state=checked]:bg-v2-accent data-[state=checked]:border-v2-accent data-[state=checked]:text-v2-bg-base transition-[opacity,background-color,border-color]"
+ className="h-5 w-5 border-2 border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground transition-[opacity,background-color,border-color]"
  />
  </div>
  )}
@@ -93,16 +93,16 @@ function PlatformCardInner({
  <div
  className={cn("absolute right-2.5 top-2.5 z-20 flex h-6 w-6 items-center justify-center rounded-full border-2 transition-[opacity,background-color,border-color]",
  isSelected
- ?"border-v2-accent bg-v2-accent shadow-[0_0_16px_rgba(var(--v2-accent-rgb),0.4)]"
- :"border-border/50 group-hover:border-v2-accent/50 group-hover:shadow-[0_0_12px_rgba(var(--v2-accent-rgb),0.2)]","opacity-0 group-hover:opacity-100",
+ ?"border-primary bg-primary shadow-[0_0_16px_hsl(var(--primary)/0.4)]"
+ :"border-border/50 group-hover:border-primary/50 group-hover:shadow-[0_0_12px_hsl(var(--primary)/0.2)]","opacity-0 group-hover:opacity-100",
  isSelected &&"opacity-100",
  isMultiSelectMode &&"opacity-0 pointer-events-none"
  )}
  >
  {isSelected ? (
- <CheckCircle2 className="h-4 w-4 text-v2-bg-base" />
+ <CheckCircle2 className="h-4 w-4 text-primary-foreground" />
  ) : (
- <div className="h-2 w-2 rounded-full bg-transparent group-hover:bg-v2-accent/50 transition-colors" />
+ <div className="h-2 w-2 rounded-full bg-transparent group-hover:bg-primary/50 transition-colors" />
  )}
  </div>
 

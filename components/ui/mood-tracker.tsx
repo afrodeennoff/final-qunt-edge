@@ -106,7 +106,7 @@ const Tracker = React.forwardRef<HTMLDivElement, TrackerProps>(
  }
 
  if (blockIndex > activeIndex) {
- return"bg-[hsl(var(--chart-1)/0.22)]"
+ return"bg-chart-1/20"
  }
 
  const safeIndex = activeIndex <= 0 ? 0 : activeIndex

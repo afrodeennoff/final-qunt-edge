@@ -60,7 +60,7 @@ const formatCurrency = (value: number) =>
  `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 // Reduced color array for better performance
-const ACCOUNT_COLORS = ["hsl(var(--chart-loss))","hsl(var(--chart-2))","hsl(var(--chart-win))","hsl(var(--chart-4))","hsl(var(--chart-5))","hsl(var(--chart-6))","hsl(var(--chart-7))","hsl(var(--chart-8))",
+const ACCOUNT_COLORS = ["hsl(var(--chart-3))","hsl(var(--chart-2))","hsl(var(--chart-1))","hsl(var(--chart-4))","hsl(var(--chart-5))","hsl(var(--chart-6))","hsl(var(--chart-7))","hsl(var(--chart-8))",
 ] as const;
 
 // Color map function
@@ -182,8 +182,8 @@ const getPayoutColor = (status: string) => {
  return"hsl(var(--chart-4))";
  case"REFUSED":
  return"hsl(var(--destructive))";
- case"PAID":
- return"hsl(var(--chart-win))";
+case"PAID":
+  return"hsl(var(--chart-2))";
  default:
  return"hsl(var(--muted-foreground))";
  }

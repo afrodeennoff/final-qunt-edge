@@ -143,8 +143,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
         // Determine colors based on performance
         const isPositive = totalPnl >= 0
-         const primaryColor = isPositive ? "hsl(var(--success))" : "hsl(var(--destructive))"
-         const secondaryColor = isPositive ? "hsl(var(--success) / 0.8)" : "hsl(var(--destructive) / 0.8)"
+         const primaryColor = isPositive ? "#0ECB81" : "#F6465D"
+         const secondaryColor = isPositive ? "#0ECB81" : "#F6465D"
 
         const element = (
             <div
@@ -201,15 +201,15 @@ export default async function Image({ params }: { params: { slug: string } }) {
                                     }}
                                 >
                                     <svg viewBox="0 0 255 255" xmlns="http://www.w3.org/2000/svg" style={{ width: "24px", height: "24px" }}>
-                                         <path fillRule="evenodd" clipRule="evenodd" d="M159 63L127.5 0V255H255L236.5 218H159V63Z" fill="hsl(var(--muted) / 0.98)" />
-                                         <path fillRule="evenodd" clipRule="evenodd" d="M-3.05176e-05 255L127.5 -5.96519e-06L127.5 255L-3.05176e-05 255ZM64 217L121 104L121 217L64 217Z" fill="hsl(var(--muted) / 0.98)" />
+                                         <path fillRule="evenodd" clipRule="evenodd" d="M159 63L127.5 0V255H255L236.5 218H159V63Z" fill="#0D0D0D" />
+                                         <path fillRule="evenodd" clipRule="evenodd" d="M-3.05176e-05 255L127.5 -5.96519e-06L127.5 255L-3.05176e-05 255ZM64 217L121 104L121 217L64 217Z" fill="#0D0D0D" />
                                     </svg>
                                 </div>
                                 <span
                                     style={{
                                         fontSize: "20px",
                                         fontWeight: "700",
-                                        color: "#F8FAFC",
+                                        color: "#EAEAEA",
                                         marginRight: "16px",
                                     }}
                                 >
@@ -230,7 +230,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                                 style={{
                                     fontSize: "32px",
                                     fontWeight: "700",
-                                    color: "#F8FAFC",
+                                    color: "#EAEAEA",
                                     margin: "0",
                                     letterSpacing: "-0.025em",
                                 }}
@@ -241,7 +241,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                         <p
                             style={{
                                 fontSize: "16px",
-                                color: "#94A3B8",
+                                color: "#888888",
                                 margin: "0",
                                 fontWeight: "500",
                             }}
@@ -273,7 +273,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                             <p
                                 style={{
                                     fontSize: "12px",
-                                    color: "#94A3B8",
+                                    color: "#888888",
                                     margin: "0 0 6px 0",
                                     fontWeight: "600",
                                     textTransform: "uppercase",
@@ -310,7 +310,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                             <p
                                 style={{
                                     fontSize: "12px",
-                                    color: "#94A3B8",
+                                    color: "#888888",
                                     margin: "0 0 6px 0",
                                     fontWeight: "600",
                                     textTransform: "uppercase",
@@ -323,7 +323,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                                 style={{
                                     fontSize: "28px",
                                     fontWeight: "800",
-                                    color: "#F8FAFC",
+                                    color: "#EAEAEA",
                                     margin: "0",
                                     letterSpacing: "-0.025em",
                                 }}
@@ -348,7 +348,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                         <p
                             style={{
                                 fontSize: "14px",
-                                color: "#94A3B8",
+                                color: "#888888",
                                 margin: "0 0 16px 0",
                                 fontWeight: "600",
                                 textTransform: "uppercase",
@@ -479,7 +479,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                         <p
                             style={{
                                 fontSize: "14px",
-                                color: "#94A3B8",
+                                color: "#888888",
                                 margin: "0 0 16px 0",
                                 fontWeight: "600",
                                 textTransform: "uppercase",
@@ -506,12 +506,12 @@ export default async function Image({ params }: { params: { slug: string } }) {
                             >
                                 {/* Win segment */}
                                  {winPercentage > 0 && (
-                                 <path d={winPath} fill="hsl(var(--success))" stroke="rgba(15, 23, 42, 0.2)" strokeWidth="2" />
+                                 <path d={winPath} fill="#0ECB81" stroke="rgba(15, 23, 42, 0.2)" strokeWidth="2" />
                                  )}
 
                                 {/* Loss segment */}
                                  {lossPercentage > 0 && (
-                                 <path d={lossPath} fill="hsl(var(--destructive))" stroke="rgba(15, 23, 42, 0.2)" strokeWidth="2" />
+                                 <path d={lossPath} fill="#F6465D" stroke="rgba(15, 23, 42, 0.2)" strokeWidth="2" />
                                  )}
                             </svg>
                         </div>
@@ -537,14 +537,14 @@ export default async function Image({ params }: { params: { slug: string } }) {
                                         width: "12px",
                                         height: "12px",
                                         borderRadius: "50%",
-                                        backgroundColor: "#10B981",
+                                        backgroundColor: "#0ECB81",
                                         display: "flex",
                                     }}
                                 />
                                 <span
                                     style={{
                                         fontSize: "12px",
-                                        color: "#94A3B8",
+                                        color: "#888888",
                                         fontWeight: "600",
                                     }}
                                 >
@@ -563,14 +563,14 @@ export default async function Image({ params }: { params: { slug: string } }) {
                                         width: "12px",
                                         height: "12px",
                                         borderRadius: "50%",
-                                        backgroundColor: "#EF4444",
+                                        backgroundColor: "#F6465D",
                                         display: "flex",
                                     }}
                                 />
                                 <span
                                     style={{
                                         fontSize: "12px",
-                                        color: "#94A3B8",
+                                        color: "#888888",
                                         fontWeight: "600",
                                     }}
                                 >
@@ -601,7 +601,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                             <p
                                 style={{
                                     fontSize: "12px",
-                                    color: "#94A3B8",
+                                    color: "#888888",
                                     margin: "0 0 4px 0",
                                     fontWeight: "600",
                                     textTransform: "uppercase",
@@ -614,7 +614,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                                    style={{
                                      fontSize: "20px",
                                      fontWeight: "700",
-                                     color: "hsl(var(--success))",
+                                     color: "#0ECB81",
                                      margin: "0",
                                    }}
                                  >
@@ -634,7 +634,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                             <p
                                 style={{
                                     fontSize: "12px",
-                                    color: "#94A3B8",
+                                    color: "#888888",
                                     margin: "0 0 4px 0",
                                     fontWeight: "600",
                                     textTransform: "uppercase",
@@ -647,7 +647,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                                    style={{
                                      fontSize: "20px",
                                      fontWeight: "700",
-                                     color: "hsl(var(--destructive))",
+                                     color: "#F6465D",
                                      margin: "0",
                                    }}
                                  >

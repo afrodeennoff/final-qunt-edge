@@ -18,11 +18,11 @@ const chartConfig = {
   },
   target: {
     label: "Profit Target",
-    color: "hsl(var(--chart-win))",
+    color: "hsl(var(--chart-2))",
   },
   drawdown: {
     label: "Drawdown Level",
-    color: "hsl(var(--chart-loss))",
+    color: "hsl(var(--chart-4))",
   },
 } satisfies ChartConfig
 
@@ -221,7 +221,7 @@ export function AccountEquityChart({
         case 'PENDING': return 'hsl(var(--muted-foreground))'
         case 'VALIDATED': return 'hsl(var(--chart-4))'
         case 'REFUSED': return 'hsl(var(--destructive))'
-        case 'PAID': return 'hsl(var(--chart-win))'
+        case 'PAID': return 'hsl(var(--chart-2))'
         default: return 'hsl(var(--muted-foreground))'
       }
     }
@@ -293,7 +293,7 @@ export function AccountEquityChart({
                           "text-muted-foreground": data.payoutStatus === 'PENDING',
                           "text-[hsl(var(--chart-4))]": data.payoutStatus === 'VALIDATED',
                           "text-destructive": data.payoutStatus === 'REFUSED',
-                          "text-[hsl(var(--chart-win))]": data.payoutStatus === 'PAID',
+                          "text-[hsl(var(--chart-2))]": data.payoutStatus === 'PAID',
                         }
                       )}>
                         Payout ({data.payoutStatus.toLowerCase()})

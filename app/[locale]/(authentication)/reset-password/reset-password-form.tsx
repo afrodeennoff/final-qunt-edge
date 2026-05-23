@@ -106,10 +106,10 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  autoComplete="new-password"
  data-testid="reset-password-confirm"
  disabled={isLoading}
- className="h-11 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20"
+ className="h-11 rounded-xl border border-border bg-card px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20"
  />
 
- <div className="space-y-1.5 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] p-3 shadow-[inset_0_1px_0_rgba(0,0,0,0.03)]">
+ <div className="space-y-1.5 rounded-xl border border-border bg-card p-3 shadow-[inset_0_1px_0_rgba(0,0,0,0.03)]">
  {requirements.map((req) => (
  <div
  key={req.key}

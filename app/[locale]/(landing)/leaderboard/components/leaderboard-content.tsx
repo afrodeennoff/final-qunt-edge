@@ -222,12 +222,12 @@ const ACCENT = {
   },
   green: {
     icon: 'text-success',
-    badge: 'border-emerald-500/18 bg-success/8',
+    badge: 'border-success/18 bg-success/8',
     text: 'text-success',
   },
   blue: {
     icon: 'text-primary',
-    badge: 'border-blue-500/20 bg-blue-500/10',
+    badge: 'border-primary/20 bg-primary/10',
     text: 'text-primary',
   },
 } as const

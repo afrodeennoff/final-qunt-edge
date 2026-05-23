@@ -626,9 +626,9 @@ export function TeamManagement({
  }
 
   const getStatusIndicator = (access: string, isOwner: boolean) => {
-    if (isOwner) return 'bg-[oklch(0.82_0.18_85)]'
+    if (isOwner) return 'bg-warning'
     if (access === 'admin') return 'bg-[oklch(0.65_0.22_260)]'
-    return 'bg-emerald-500/70'
+    return 'bg-success'
   }
 
  const getAccessLabel = (access: string, isOwner: boolean) => {
@@ -728,7 +728,7 @@ export function TeamManagement({
  )} />
  <div className="min-w-0 flex-1">
  <CardTitle className={cn("text-sm truncate flex items-center gap-2 text-foreground",
- isActive &&"text-v2-accent"
+ isActive &&"text-primary"
  )}>
  {team.name}
  {isActive && (

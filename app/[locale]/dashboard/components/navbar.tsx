@@ -56,7 +56,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Left Side: Sidebar Toggle & Brand */}
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="h-8 w-8 rounded-[7px] text-muted-foreground/55 border border-transparent hover:border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.06)] hover:text-foreground/80" />
+            <SidebarTrigger className="h-8 w-8 rounded-[7px] text-muted-foreground/55 border border-transparent hover:border-border/30 hover:bg-muted/40 hover:text-foreground/80" />
             <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
           </div>
 
@@ -77,7 +77,7 @@ export default function Navbar() {
                 className={cn(
                   'h-9 w-auto px-3 sm:px-4 gap-2 rounded-xl transition-[opacity,background-color,border-color] duration-500',
                   isCustomizing
-                    ? 'bg-primary text-white shadow-[0_0_16px_hsl(var(--primary)/0.45)] font-semibold'
+                    ? 'bg-primary text-primary-foreground shadow-[0_0_16px_hsl(var(--primary)/0.45)] font-semibold'
                     : 'text-muted-foreground/70 hover:bg-primary/8 hover:text-foreground',
                 )}
               >

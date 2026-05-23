@@ -78,7 +78,7 @@ export default React.memo(function ContractQuantityChart({
 
  const getColor = (count: number) => {
  const intensity = Math.max(0.2, count / maxTradeCount);
- return `hsl(var(--chart-loss) / ${intensity})`;
+ return `hsl(var(--chart-3) / ${intensity})`;
  };
 
  // Custom tooltip component - using flexible typing for Recharts payload

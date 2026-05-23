@@ -58,7 +58,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         className={cn(
           'group relative overflow-hidden text-foreground',
           'rounded-xl macos-card',
-          variant === 'outlined' && 'bg-transparent border-[oklch(0.65_0.22_260/0.12)] shadow-none backdrop-filter-none',
+          variant === 'outlined' && 'bg-transparent border-border shadow-none backdrop-filter-none',
           variant === 'flat' && 'border-transparent bg-transparent shadow-none backdrop-filter-none',
           variant === 'glass' && 'macos-card macos-card-hover',
           variant === 'frost' && 'macos-frost-heavy',
@@ -70,7 +70,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           size === 'lg' && 'type-body-lg',
           hover && 'macos-card-hover hover-lift',
           isInteractive &&
-            'cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[oklch(0.65_0.22_260/0.3)] focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+            'cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           isLoading && 'pointer-events-none opacity-80',
           className,
         )}
@@ -230,7 +230,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-3 border-t border-[oklch(0.65_0.22_260/0.06)]',
+        'flex items-center gap-3 border-t border-border',
         {
           'p-3': size === 'sm',
           'p-4': size === 'md',

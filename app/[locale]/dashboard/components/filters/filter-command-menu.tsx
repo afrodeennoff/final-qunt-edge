@@ -342,7 +342,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  className={cn(
  variant ==="navbar"
  ?"h-9 w-full rounded-full border border-transparent bg-background/20 pl-9 pr-20 text-foreground shadow-none transition-[opacity,background-color,border-color] hover:bg-background/80/60 focus-visible:border-border/15 focus-visible:bg-background/80/70 focus-visible:ring-0"
- :"w-full rounded-full border-border/20 bg-background/60 pl-9 pr-20 text-foreground shadow-none transition-[opacity,background-color,border-color] hover:border-border/35 hover:bg-background/80 focus-visible:ring-1 focus-visible:ring-v2-border/20",
+ :"w-full rounded-full border-border/20 bg-background/60 pl-9 pr-20 text-foreground shadow-none transition-[opacity,background-color,border-color] hover:border-border/35 hover:bg-background/80 focus-visible:ring-1 focus-visible:ring-border/20",
  variant ==="toolbar" &&"h-10 rounded-full",
  isParsingDate &&"opacity-50",
  isParsingDate &&"border-primary ring-2 ring-primary ring-offset-2 animate-pulse"

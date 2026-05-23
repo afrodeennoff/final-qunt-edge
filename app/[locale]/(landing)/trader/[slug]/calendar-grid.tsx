@@ -26,7 +26,7 @@ export function CalendarGrid({ dayPnl }: { dayPnl: Map<string, number> }) {
                 ? 'border-semantic-success/20 bg-semantic-success/8 hover:bg-semantic-success/14 hover:border-semantic-success/30'
                 : value < 0
                   ? 'border-semantic-error/20 bg-semantic-error/8 hover:bg-semantic-error/14 hover:border-semantic-error/30'
-                  : 'border-[rgba(0,0,0,0.05)] bg-[var(--card)] hover:bg-[var(--card)]',
+                  : 'border-border bg-card hover:bg-card',
             )}
           >
             <p className="text-[10px] leading-none text-muted-foreground/60">{format(day, 'd')}</p>

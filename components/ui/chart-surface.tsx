@@ -56,8 +56,8 @@ export function ChartSurface({
  <Skeleton className="h-3.5 w-16 animate-shimmer" />
  </div>
  <div className="relative">
- <Skeleton className="h-[220px] w-full animate-shimmer" />
- <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(var(--foreground)_/_0.03)] to-transparent animate-shimmer" />
+<Skeleton className="h-[220px] w-full animate-shimmer" />
+  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/5 to-transparent animate-shimmer" />
  </div>
  <div className="flex items-center justify-between mt-3">
  <Skeleton className="h-2.5 w-20 animate-shimmer" />

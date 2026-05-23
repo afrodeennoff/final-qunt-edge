@@ -132,7 +132,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  <div
  className={cn("grid h-full overflow-hidden",
  "grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_340px]",
- showDesktopDetailPanel && "lg:divide-x lg:divide-v2-border",
+ showDesktopDetailPanel && "lg:divide-x lg:divide-border",
  )}
  >
  {/* Left Side: Grid of options */}
@@ -154,7 +154,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  size="sm"
  onClick={() => setIsCompareMode(!isCompareMode)}
  className={cn("shrink-0 gap-2",
- isCompareMode &&"bg-v2-accent text-v2-bg-base hover:bg-v2-accent/90"
+ isCompareMode &&"bg-primary text-primary-foreground hover:bg-primary/90"
  )}
  >
  <GitCompare className="h-4 w-4" />
@@ -167,7 +167,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  <TabsList className="bg-transparent p-0 h-auto gap-2">
  <TabsTrigger
  value="all"
- className="data-[state=active]:bg-v2-accent/10 data-[state=active]:text-v2-accent border border-transparent data-[state=active]:border-v2-accent/20 rounded-full px-4 h-8"
+ className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-full px-4 h-8"
  >
  <LayoutGrid className="h-3 w-3 mr-2" />
  All
@@ -176,7 +176,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  <TabsTrigger
  key={cat}
  value={cat}
- className="data-[state=active]:bg-v2-accent/10 data-[state=active]:text-v2-accent border border-transparent data-[state=active]:border-v2-accent/20 rounded-full px-4 h-8"
+ className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-full px-4 h-8"
  >
  {categoryIcons[cat]}
  <span className="ml-2">{getTranslatedCategory(cat)}</span>
@@ -228,7 +228,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  {isCompareMode && selectedPlatforms.length >= 2 && (
  <div className="absolute bottom-4 left-4 right-4 z-20"
  >
- <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-card/95 border border-border shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] shadow-v2-bg-base/50">
+ <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-card/95 border border-border shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] shadow-black/10">
  <div className="flex items-center gap-2 text-sm text-muted-foreground">
  <span>{selectedPlatforms.length} platforms selected</span>
  </div>
@@ -253,7 +253,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
    }
    setSelectedPlatforms([])
  }}
- className="bg-v2-accent text-v2-bg-base hover:bg-v2-accent/90 gap-2"
+ className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2"
  >
  Import
  </Button>
@@ -361,7 +361,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl bg-card border-border p-0">
  {/* Drag Handle */}
  <div className="flex justify-center py-3">
- <div className="h-1.5 w-12 rounded-full bg-v2-border" />
+ <div className="h-1.5 w-12 rounded-full bg-border" />
  </div>
  <SheetHeader className="px-4 pb-2">
  <SheetTitle className="text-foreground">

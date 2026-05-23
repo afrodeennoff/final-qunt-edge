@@ -63,9 +63,9 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
         </div>
         
         {flaggedCount > 0 && (
-          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-v2-error/10 border border-v2-error/30">
-            <AlertTriangle className="h-5 w-5 text-v2-error" />
-            <span className="font-medium text-v2-error">{flaggedCount} pending</span>
+          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-destructive/10 border border-destructive/30">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+            <span className="font-medium text-destructive">{flaggedCount} pending</span>
           </div>
         )}
       </div>
@@ -197,7 +197,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                       value="dismissed"
                       variant="solid"
                       size="sm"
-                      className="w-32 bg-v2-success hover:bg-v2-success/80"
+                      className="w-32 bg-success hover:bg-success/80"
                     >
                       <CheckCircle2 className="h-4 w-4 mr-1" />
                       Keep

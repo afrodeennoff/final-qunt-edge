@@ -420,7 +420,7 @@ function FactTile({
     <div className="rounded-xl border border-border bg-card px-4 py-4">
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-muted">
-          <Icon className="h-4 w-4 text-v2-accent" />
+          <Icon className="h-4 w-4 text-primary" />
         </div>
         <div>
           <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
@@ -437,12 +437,12 @@ function MetricCard({ label, value, highlight = false }: { label: string; value:
       className={cn(
         'rounded-xl border border-border px-4 py-4',
         highlight
-          ? 'bg-[linear-gradient(145deg,rgba(20,184,166,0.16),rgba(20,184,166,0.05))]'
-          : 'bg-[var(--card)]'
+          ? 'bg-[linear-gradient(145deg,hsl(var(--success)/0.16),hsl(var(--success)/0.05))]'
+          : 'bg-card'
       )}
     >
       <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
-      <p className={`mt-2 text-2xl font-semibold tracking-[-0.03em] ${highlight ? 'text-v2-success' : 'text-foreground'}`}>{value}</p>
+      <p className={`mt-2 text-2xl font-semibold tracking-[-0.03em] ${highlight ? 'text-success' : 'text-foreground'}`}>{value}</p>
     </div>
   )
 }
@@ -484,7 +484,7 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
               title="Copy link"
               type="button"
             >
-              {copied ? <Check className="h-4 w-4 text-v2-accent" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
+              {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
             </button>
           </div>
         </div>
@@ -493,7 +493,7 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
           href={referralUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-v2-accent px-6 py-3 text-sm font-semibold text-v2-accent-foreground transition-colors hover:bg-v2-accent-hover"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
         >
           Visit Firm
           <ExternalLink className="h-4 w-4" />
@@ -615,7 +615,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
       <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-v2-accent" />
+            <Target className="h-5 w-5 text-primary" />
             <CardTitle className="text-2xl text-foreground">Challenge sizes</CardTitle>
           </div>
           <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
@@ -631,7 +631,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
       <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6">
         <div className="flex items-center gap-2">
-          <Target className="h-5 w-5 text-v2-accent" />
+          <Target className="h-5 w-5 text-primary" />
           <CardTitle className="text-2xl text-foreground">Challenge sizes</CardTitle>
         </div>
         <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
@@ -656,7 +656,7 @@ function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
     <Card className="rounded-xl border-border bg-card">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
-          <svg className="h-5 w-5 text-v2-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <CardTitle className="text-2xl text-foreground">Additional Details</CardTitle>
@@ -670,7 +670,7 @@ function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
             <div key={detail.label} className="rounded-xl border border-border bg-card px-4 py-4">
               <div className="flex items-start gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-card">
-                  <detail.icon className="h-4 w-4 text-v2-accent" />
+                  <detail.icon className="h-4 w-4 text-primary" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{detail.label}</p>
@@ -729,7 +729,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
               <div className="mt-3 space-y-2">
                 {sourceNotes.map((note) => (
                   <div key={note} className="flex items-start gap-2 text-sm leading-6 text-muted-foreground">
-                    <Check className="mt-1 h-4 w-4 shrink-0 text-v2-accent" />
+                    <Check className="mt-1 h-4 w-4 shrink-0 text-primary" />
                     <p>{note}</p>
                   </div>
                 ))}
@@ -763,7 +763,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
             <div className="mt-6 space-y-3">
               {trustChecklist.map((item) => (
                 <div key={item} className="flex items-start gap-3 rounded-xl border border-border bg-card px-4 py-4">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-v2-accent" />
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                   <p className="text-sm leading-7 text-muted-foreground">{item}</p>
                 </div>
               ))}
@@ -859,7 +859,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
       <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
-            <DollarSign className="h-5 w-5 text-v2-accent" />
+            <DollarSign className="h-5 w-5 text-primary" />
             <CardTitle className="text-2xl text-foreground">Payout History</CardTitle>
           </div>
           <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
@@ -876,7 +876,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
     <Card className="rounded-xl border-border bg-card">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
-          <DollarSign className="h-5 w-5 text-v2-accent" />
+          <DollarSign className="h-5 w-5 text-primary" />
           <CardTitle className="text-2xl text-foreground">Payout History</CardTitle>
         </div>
         <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
@@ -886,7 +886,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-xl border border-border bg-card px-4 py-4">
             <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Total Paid Out</p>
-            <p className="mt-2 text-2xl font-semibold text-v2-success">{formatCompactCurrency(stats.paidPayoutAmount)}</p>
+            <p className="mt-2 text-2xl font-semibold text-success">{formatCompactCurrency(stats.paidPayoutAmount)}</p>
           </div>
           <div className="rounded-xl border border-border bg-card px-4 py-4">
             <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Payouts Made</p>
@@ -909,7 +909,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
               <p className="mt-1 text-sm text-muted-foreground">Based on {stats.accountsCount.toLocaleString()} tracked accounts</p>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-semibold text-v2-success">
+              <p className="text-2xl font-semibold text-success">
                 {stats.accountsCount > 0 ? Math.min(100, Math.round((stats.paidPayoutCount / stats.accountsCount) * 100)) : 0}%
               </p>
             </div>
@@ -928,7 +928,7 @@ function ROISection({ firm }: { firm: FirmData }) {
       <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-v2-accent" />
+            <TrendingUp className="h-5 w-5 text-primary" />
             <CardTitle className="text-2xl text-foreground">ROI Analysis</CardTitle>
           </div>
           <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
@@ -943,7 +943,7 @@ function ROISection({ firm }: { firm: FirmData }) {
     <Card className="rounded-xl border-border bg-card">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-v2-accent" />
+          <TrendingUp className="h-5 w-5 text-primary" />
           <CardTitle className="text-2xl text-foreground">ROI Analysis</CardTitle>
         </div>
         <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
@@ -983,7 +983,7 @@ function ROISection({ firm }: { firm: FirmData }) {
                     </div>
                     <div>
                       <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">ROI Potential</p>
-                      <p className={`mt-1 text-lg font-semibold ${roiPotential > 200 ? 'text-v2-success' : 'text-foreground'}`}>
+                      <p className={`mt-1 text-lg font-semibold ${roiPotential > 200 ? 'text-success' : 'text-foreground'}`}>
                         {roiPotential > 0 ? `${roiPotential}%` : 'N/A'}
                       </p>
                     </div>
@@ -1008,7 +1008,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
       <Card className="rounded-xl border-border bg-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-v2-accent" />
+            <FileText className="h-5 w-5 text-primary" />
             <CardTitle className="text-2xl text-foreground">Trading Rules</CardTitle>
           </div>
           <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
@@ -1031,7 +1031,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
               <div className="mt-3 space-y-2">
                 {sourceNotes.map((note) => (
                   <div key={note} className="flex items-start gap-2 text-sm leading-6 text-muted-foreground">
-                    <Check className="mt-1 h-4 w-4 shrink-0 text-v2-accent" />
+                    <Check className="mt-1 h-4 w-4 shrink-0 text-primary" />
                     <p>{note}</p>
                   </div>
                 ))}
@@ -1045,7 +1045,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
         <Card className="rounded-xl border-border bg-card">
           <CardContent className="p-6">
             <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-v2-accent" />
+              <Shield className="h-5 w-5 text-primary" />
               <CardTitle className="text-2xl text-foreground">Risk Parameters</CardTitle>
             </div>
             <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
@@ -1114,7 +1114,7 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
     <Card className="rounded-xl border-border bg-card">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
-          <Award className="h-5 w-5 text-v2-accent" />
+          <Award className="h-5 w-5 text-primary" />
           <CardTitle className="text-2xl text-foreground">Payout Proof</CardTitle>
         </div>
         <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
@@ -1127,10 +1127,10 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Verified Payouts</p>
-                  <p className="mt-2 text-3xl font-semibold text-v2-success">{stats.paidPayoutCount.toLocaleString()}</p>
+                  <p className="mt-2 text-3xl font-semibold text-success">{stats.paidPayoutCount.toLocaleString()}</p>
                 </div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-v2-success/10">
-                  <Check className="h-6 w-6 text-v2-success" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10">
+                  <Check className="h-6 w-6 text-success" />
                 </div>
               </div>
             </div>
@@ -1212,7 +1212,7 @@ function HeaderActions({ referralUrl }: { referralUrl?: string | null }) {
         href={referralUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-5 py-2.5 text-sm font-semibold text-v2-accent-foreground transition-colors hover:bg-v2-accent-hover"
+        className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
       >
         Visit Official Website
         <ExternalLink className="h-4 w-4" />
@@ -1293,7 +1293,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
                   className="object-contain p-2"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-v2-accent">
+                <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-primary">
                   {firmInitials(firm.name)}
                 </div>
               )}
@@ -1311,7 +1311,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
               <h1 className="mt-3 text-[clamp(2.2rem,5.8vw,4.85rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground">
                 {firm.name}
                 {spotlightPromoText && (
-                  <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-v2-accent px-2 py-0.5 align-middle text-[10px] font-semibold uppercase tracking-wider text-v2-accent-foreground">
+                  <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 align-middle text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
                     {spotlightPromoText}
                   </span>
                 )}
@@ -1368,7 +1368,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
                 className={cn(
                   'shrink-0 rounded-xl border border-transparent px-4 py-2.5 text-sm text-foreground/80 transition-colors',
                   'hover:border-border/60 hover:bg-muted',
-                  'data-[state=active]:border-v2-accent/30 data-[state=active]:bg-v2-accent data-[state=active]:text-v2-accent-foreground'
+                  'data-[state=active]:border-primary/30 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                 )}
               >
                 {label}

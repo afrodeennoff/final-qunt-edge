@@ -1033,7 +1033,7 @@ function CouponEditorCard({
               </Badge>
             ) : null}
             {timing.isScheduled ? (
-              <Badge variant="outline" className="border-sky-500/40 text-sky-300">
+              <Badge variant="outline" className="border-info/40 text-info">
                 Scheduled
               </Badge>
             ) : null}
@@ -1043,7 +1043,7 @@ function CouponEditorCard({
               </Badge>
             ) : null}
             {timing.isExpiringSoon ? (
-              <Badge variant="outline" className="border-amber-500/40 text-amber-300">
+              <Badge variant="outline" className="border-warning/40 text-warning">
                 Expires soon
               </Badge>
             ) : null}

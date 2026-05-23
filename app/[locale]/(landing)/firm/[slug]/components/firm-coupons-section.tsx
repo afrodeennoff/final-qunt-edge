@@ -33,7 +33,7 @@ export function FirmCouponsSection({
   return (
     <Card className="rounded-xl border-border bg-muted/20 p-6">
       <div className="mb-2 flex items-center gap-2">
-        <DealsIcon size={18} className="text-v2-accent" />
+        <DealsIcon size={18} className="text-primary" />
         <span className="text-lg font-semibold text-foreground">Current coupons</span>
         <span className="text-xs text-muted-foreground">({coupons.length})</span>
       </div>
@@ -55,7 +55,7 @@ export function FirmCouponsSection({
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <Link
               href={`${localePrefix}/deals`}
-              className="rounded-full bg-v2-accent px-4 py-2 text-xs font-semibold text-v2-accent-foreground transition-colors hover:bg-v2-accent-hover"
+              className="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Browse Deals
             </Link>
@@ -76,7 +76,7 @@ export function FirmCouponsSection({
           {coupons.map((coupon) => (
             <div key={coupon.id} className="rounded-xl border border-border bg-muted/20 p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="font-mono text-sm font-bold text-v2-accent bg-v2-accent-subtle px-2 py-1 rounded">
+                <span className="font-mono text-sm font-bold text-primary bg-primary/10 px-2 py-1 rounded">
                   {coupon.code}
                 </span>
                 <Badge variant="default">{coupon.discountPercent}% off</Badge>
@@ -96,7 +96,7 @@ export function FirmCouponsSection({
                   href={coupon.claimUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 inline-block text-xs text-v2-accent hover:underline"
+                  className="mt-2 inline-block text-xs text-primary hover:underline"
                 >
                   Claim coupon →
                 </a>

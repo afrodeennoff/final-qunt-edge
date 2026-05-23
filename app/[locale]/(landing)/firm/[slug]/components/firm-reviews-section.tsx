@@ -53,7 +53,7 @@ function InteractiveStarRating({
           onMouseEnter={() => !disabled && setHoverRating(star)}
           onMouseLeave={() => setHoverRating(0)}
           className={cn(
-            "transition-[opacity,background-color,border-color,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-v2-accent rounded",
+            "transition-[opacity,background-color,border-color,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded",
             disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:scale-110"
           )}
         >
@@ -112,7 +112,7 @@ function RatingDistributionBar({
       <Star className="h-3 w-3 fill-warning text-warning" />
       <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted/20">
         <div
-          className="h-full rounded-full bg-emerald-500/80 transition-[opacity,background-color,border-color,transform] duration-500"
+          className="h-full rounded-full bg-success transition-[opacity,background-color,border-color,transform] duration-500"
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -142,8 +142,8 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
   return (
     <div className="group rounded-xl border border-border bg-muted/20 p-6 transition-[opacity,background-color,border-color,transform] duration-200 hover:border-border hover:bg-muted/20">
       <div className="flex items-start gap-4">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-v2-accent/20 to-v2-accent/5 border border-v2-accent/20">
-          <span className="text-sm font-semibold text-v2-accent">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
+          <span className="text-sm font-semibold text-primary">
             {review.userId ? review.userId.charAt(0).toUpperCase() : 'U'}
           </span>
         </div>
@@ -168,7 +168,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
                   className="rounded p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-muted/20"
                   title="Report this review"
                 >
-                  <Flag className="h-3.5 w-3.5 text-muted-foreground transition-colors hover:text-v2-error" />
+                  <Flag className="h-3.5 w-3.5 text-muted-foreground transition-colors hover:text-destructive" />
                 </button>
               )}
               <span className="text-xs text-muted-foreground">
@@ -410,7 +410,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       <Card className="rounded-xl border-border bg-muted/20">
         <CardContent className="p-6">
           <div className="flex items-center gap-2 mb-6">
-            <ReviewsIcon size={20} className="text-v2-accent" />
+            <ReviewsIcon size={20} className="text-primary" />
             <CardTitle className="text-2xl text-foreground">User reviews & ratings</CardTitle>
           </div>
           <CardDescription className="mb-6 max-w-2xl text-sm leading-6 text-muted-foreground">
@@ -449,20 +449,20 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       
       {/* Success Message */}
       {submitSuccess && (
-        <div className="flex items-center gap-3 rounded-xl border border-v2-success/30 bg-v2-success-subtle/50 px-5 py-4">
-          <CheckCircle2 className="h-5 w-5 text-v2-success shrink-0" />
-          <p className="text-sm text-v2-success">Your review has been submitted successfully!</p>
+        <div className="flex items-center gap-3 rounded-xl border border-success/30 bg-success/10 px-5 py-4">
+          <CheckCircle2 className="h-5 w-5 text-success shrink-0" />
+          <p className="text-sm text-success">Your review has been submitted successfully!</p>
         </div>
       )}
       
       {/* Error Message */}
       {error && (
-        <div className="flex items-center gap-3 rounded-xl border border-v2-error/30 bg-v2-error-subtle/50 px-5 py-4">
-          <AlertCircle className="h-5 w-5 text-v2-error shrink-0" />
-          <p className="text-sm text-v2-error">{error}</p>
+        <div className="flex items-center gap-3 rounded-xl border border-destructive/30 bg-destructive/10 px-5 py-4">
+          <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
+          <p className="text-sm text-destructive">{error}</p>
           <button
             onClick={() => setError(null)}
-            className="ml-auto shrink-0 text-v2-error/60 hover:text-v2-error"
+            className="ml-auto shrink-0 text-destructive/60 hover:text-destructive"
           >
             <XCircle className="h-4 w-4" />
           </button>
@@ -489,7 +489,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           {isAuthenticated === false && (
             <div className="rounded-xl border border-border bg-muted/20 p-6 text-center">
               <p className="text-sm text-muted-foreground">
-                Please <Link href={`/${locale}/authentication`} className="text-v2-accent hover:underline">sign in</Link> to write a review
+                Please <Link href={`/${locale}/authentication`} className="text-primary hover:underline">sign in</Link> to write a review
               </p>
             </div>
           )}
@@ -498,7 +498,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           {hasUserReviewed && (
             <div className="rounded-xl border border-border bg-muted/20 p-6">
               <div className="flex items-center gap-3">
-                <CheckCircle2 className="h-5 w-5 text-v2-success" />
+                <CheckCircle2 className="h-5 w-5 text-success" />
                 <p className="text-sm text-muted-foreground">
                   You have already reviewed this firm. Thank you for your feedback!
                 </p>
@@ -512,7 +512,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
               {/* Rating Selection */}
               <div>
                 <label className="mb-2 block text-sm font-medium text-muted-foreground">
-                  Your Rating <span className="text-v2-error">*</span>
+                  Your Rating <span className="text-destructive">*</span>
                 </label>
                 <InteractiveStarRating
                   rating={rating}
@@ -524,14 +524,14 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                   size="lg"
                 />
                 {ratingError && (
-                  <p className="mt-1.5 text-xs text-v2-error">{ratingError}</p>
+                  <p className="mt-1.5 text-xs text-destructive">{ratingError}</p>
                 )}
               </div>
               
               {/* Title Input */}
               <div>
                 <label className="mb-2 block text-sm font-medium text-muted-foreground">
-                  Review Title <span className="text-v2-error">*</span>
+                  Review Title <span className="text-destructive">*</span>
                 </label>
                 <Input
                   placeholder="Summarize your experience..."
@@ -546,7 +546,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                 />
                 <div className="mt-1.5 flex items-center justify-between">
                   {titleError ? (
-                    <p className="text-xs text-v2-error">{titleError}</p>
+                    <p className="text-xs text-destructive">{titleError}</p>
                   ) : (
                     <p className="text-xs text-muted-foreground">Min 3 characters</p>
                   )}
@@ -608,7 +608,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           {/* Loading state for auth check */}
           {isAuthenticated === null && (
             <div className="flex items-center justify-center py-8">
-              <Spinner size={24} className="text-v2-accent" />
+              <Spinner size={24} className="text-primary" />
             </div>
           )}
         </CardContent>
@@ -616,9 +616,9 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       
       {/* Success Message for flag */}
       {flagSuccess && (
-        <div className="flex items-center gap-3 rounded-xl border border-v2-success/30 bg-v2-success-subtle/50 px-5 py-4">
-          <CheckCircle2 className="h-5 w-5 text-v2-success shrink-0" />
-          <p className="text-sm text-v2-success">Thank you for reporting this review. Our team will review it shortly.</p>
+        <div className="flex items-center gap-3 rounded-xl border border-success/30 bg-success/10 px-5 py-4">
+          <CheckCircle2 className="h-5 w-5 text-success shrink-0" />
+          <p className="text-sm text-success">Thank you for reporting this review. Our team will review it shortly.</p>
         </div>
       )}
       
@@ -638,7 +638,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                 <select
                   value={flagReason}
                   onChange={(e) => setFlagReason(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-muted/20 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-v2-accent focus:outline-none"
+                  className="w-full rounded-xl border border-border bg-muted/20 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
                   required
                 >
                   <option value="">Select a reason</option>
@@ -691,7 +691,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                   setSortBy(e.target.value as ReviewSortOption)
                   setCurrentPage(1)
                 }}
-                className="rounded-lg border border-border bg-muted/20 px-3 py-1.5 text-sm text-foreground focus:border-v2-accent focus:outline-none"
+                className="rounded-lg border border-border bg-muted/20 px-3 py-1.5 text-sm text-foreground focus:border-primary focus:outline-none"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>

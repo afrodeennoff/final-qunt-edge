@@ -158,7 +158,7 @@ export function TradeProgressChart({
  case 'PENDING': return 'hsl(var(--chart-axis))'
  case 'VALIDATED': return 'hsl(var(--chart-4))'
  case 'REFUSED': return 'hsl(var(--destructive))'
- case 'PAID': return 'hsl(var(--chart-win))'
+ case 'PAID': return 'hsl(var(--chart-2))'
  default: return 'hsl(var(--chart-axis))'
  }
  }

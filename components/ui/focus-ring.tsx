@@ -13,7 +13,7 @@ export const FocusRing = React.forwardRef<HTMLDivElement, FocusRingProps>(
  return (
  <div
  ref={ref}
- className={cn("focus-visible:outline-none","focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))]","focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
+ className={cn("focus-visible:outline-none","focus-visible:ring-2 focus-visible:ring-ring","focus-visible:ring-offset-2 focus-visible:ring-offset-background",
  className
  )}
  {...props}

@@ -32,12 +32,12 @@ export default function HeroMinimal({ }: HeroProps) {
                     </div>
                     <div className="flex items-baseline gap-2">
                       <span className="text-4xl font-bold">3.8M</span>
-                      <span className="text-lg font-semibold text-green-500">+</span>
+                      <span className="text-lg font-semibold text-success">+</span>
                     </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="flex items-center gap-1 text-green-500">
+                  <div className="flex items-center gap-1 text-success">
                     <TrendingUp className="h-4 w-4" />
                     <span className="text-sm font-medium">+12.4%</span>
                   </div>

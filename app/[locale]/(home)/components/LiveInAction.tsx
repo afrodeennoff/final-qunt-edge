@@ -23,7 +23,7 @@ export function LiveInAction() {
 
       {/* Cinematic video surface */}
       <div className="group relative mx-auto mt-10 max-w-5xl overflow-hidden rounded-3xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.065_0.008_260/0.92)] shadow-2xl">
-        <div className="aspect-video w-full bg-[linear-gradient(180deg,#0a0a0a_0%,#000_100%)] flex items-center justify-center relative">
+        <div className="aspect-video w-full bg-[linear-gradient(180deg,var(--background)_0%,var(--background)_100%)] flex items-center justify-center relative">
           <div className="absolute inset-0 bg-[radial-gradient(#1a1a1a_0.8px,transparent_1px)] bg-[length:4px_4px] opacity-40" />
 
           <button
@@ -46,7 +46,7 @@ export function LiveInAction() {
 
       {/* Working Video Modal */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-5xl p-0 overflow-hidden border-[oklch(0.65_0.22_260/0.12)] bg-[#0a0a0a]">
+        <DialogContent className="max-w-5xl p-0 overflow-hidden border-[oklch(0.65_0.22_260/0.12)] bg-background">
           <DialogTitle className="sr-only">Product Demo Video</DialogTitle>
           <div className="relative aspect-video w-full bg-black">
             <video
