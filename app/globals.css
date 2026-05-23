@@ -926,6 +926,29 @@
   .gap-ultra-xl { gap: clamp(1rem, 0.8rem + 1vw, 3rem); }
 
   .m-ultra-auto { margin-inline: auto; max-width: clamp(320px, 90vw, 9600px); }
+
+  /* ── PAGE TRANSITIONS ── */
+  .animate-page-enter {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .animate-content-reveal {
+    animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Reduced motion for all animations */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-page-enter,
+    .animate-content-reveal,
+    .animate-fade-up-smooth,
+    .animate-fade-up-smooth-d1,
+    .animate-fade-up-smooth-d2,
+    .widget-enter-smooth {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
 }
 
 /* ===== macOS NATIVE LIGHT THEME ===== */

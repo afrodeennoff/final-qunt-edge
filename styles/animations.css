@@ -1,6 +1,9 @@
-/* Minimalist Animation System */
+/* ── MICRO-INTERACTION SYSTEM ──
+   Lightweight. GPU-friendly. respects prefers-reduced-motion.
+   All animations use opacity + transform only (no layout thrash).
+   ============================== */
 
-/* Fade animations */
+/* ── KEYFRAMES ── */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -9,7 +12,7 @@
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -20,7 +23,7 @@
 @keyframes fadeInDown {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-12px);
   }
   to {
     opacity: 1;
@@ -28,11 +31,10 @@
   }
 }
 
-/* Slide animations */
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -43,7 +45,7 @@
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-30px);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
@@ -51,33 +53,10 @@
   }
 }
 
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Scale animations */
 @keyframes scaleIn {
   from {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.92);
   }
   to {
     opacity: 1;
@@ -85,18 +64,23 @@
   }
 }
 
-@keyframes gentlePulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
-/* Animation classes */
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+/* ── ENTRANCE ANIMATIONS ── */
 .animate-fade-in {
   animation: fadeIn 0.2s ease-out forwards;
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.3s ease-out forwards;
+  animation: fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-fade-in-down {
@@ -104,7 +88,7 @@
 }
 
 .animate-slide-up {
-  animation: slideUp 0.3s ease-out forwards;
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-slide-down {
@@ -112,82 +96,117 @@
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.3s ease-out forwards;
+  animation: scaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-gentle-pulse {
-  animation: gentlePulse 2s ease-in-out infinite;
+/* Stagger entrance — apply to each child with incremental delay */
+.animate-stagger > * {
+  opacity: 0;
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Transition utilities */
-.transition-all-smooth {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transition-duration: 200ms;
-}
+.animate-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.animate-stagger > *:nth-child(2) { animation-delay: 60ms; }
+.animate-stagger > *:nth-child(3) { animation-delay: 120ms; }
+.animate-stagger > *:nth-child(4) { animation-delay: 180ms; }
+.animate-stagger > *:nth-child(5) { animation-delay: 240ms; }
+.animate-stagger > *:nth-child(6) { animation-delay: 300ms; }
+.animate-stagger > *:nth-child(7) { animation-delay: 360ms; }
+.animate-stagger > *:nth-child(8) { animation-delay: 420ms; }
 
-.transition-background {
-  transition-property: background-color;
-  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transition-duration: 200ms;
-}
+/* ── MICRO-INTERACTIONS ── */
 
-.transition-transform {
-  transition-property: transform;
-  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transition-duration: 200ms;
-}
-
-.transition-opacity {
-  transition-property: opacity;
-  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transition-duration: 200ms;
-}
-
-/* Hover states with smooth transitions */
+/* Card hover lift — subtle upward motion + enhanced shadow */
 .hover-lift {
-  transition: all 0.2s ease-out;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
 .hover-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .hover-lift:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-/* Focus states */
-.focus-ring {
-  transition: all 0.2s ease-out;
+/* Button press scale — tactile feedback */
+.press-scale {
+  transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
-.focus-ring:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
+.press-scale:active:not(:disabled) {
+  transform: scale(0.96);
 }
 
-/* Loading states */
-.loading-skeleton {
+/* Subtle hover brighten for interactive elements */
+.hover-brighten {
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.hover-brighten:hover {
+  filter: brightness(1.08);
+}
+
+.hover-brighten:active {
+  filter: brightness(0.95);
+}
+
+/* ── SKELETON / LOADING ── */
+.skeleton-pulse {
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+  will-change: opacity;
+}
+
+.shimmer-sweep {
   position: relative;
   overflow: hidden;
 }
 
-.loading-skeleton::after {
+.shimmer-sweep::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  animation: shimmer 1.5s ease-in-out infinite;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 40%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 60%,
+    transparent 100%
+  );
+  animation: shimmer 1.2s ease-in-out infinite;
+  pointer-events: none;
 }
 
-@keyframes shimmer {
-  to {
-    left: 100%;
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .animate-fade-in-down,
+  .animate-slide-up,
+  .animate-slide-down,
+  .animate-scale-in,
+  .animate-stagger > *,
+  .hover-lift,
+  .hover-brighten,
+  .shimmer-sweep::after {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .press-scale:active:not(:disabled) {
+    transform: none !important;
+  }
+
+  .skeleton-pulse {
+    animation: none !important;
+    opacity: 0.5 !important;
   }
 }
