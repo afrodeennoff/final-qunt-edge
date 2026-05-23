@@ -66,7 +66,7 @@ export function TraderProfileShareButton() {
       <DialogTrigger asChild>
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 rounded-full border border-border/35 bg-background/70 px-3 py-1.5 text-xs font-medium text-foreground transition-[background-color,border-color] hover:bg-background/90 hover:border-border/50"
+          className="inline-flex items-center gap-1.5 rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-background/70 px-3 py-1.5 text-xs font-medium text-foreground transition-[background-color,border-color] hover:bg-background/90 hover:border-[oklch(0.65_0.22_260/0.12)]"
         >
           <Share2 className="h-3.5 w-3.5" />
           {t('share.traderProfile.button')}
@@ -104,7 +104,7 @@ export function TraderProfileShareButton() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border/35 bg-muted/30 p-3">
+          <div className="rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)]/30 p-3">
             <p className="text-xs text-muted-foreground">
               {t('share.traderProfile.privacyNote')}
             </p>

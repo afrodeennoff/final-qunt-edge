@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 const insetPanelClassName =
-  'rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-none'
+  'rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)] shadow-none'
 
 interface RadarChartDataPoint {
   metric: string
@@ -21,7 +21,7 @@ interface RadarChartCardProps {
 function RadarChartSkeleton() {
   return (
     <div className={cn(insetPanelClassName, 'p-3')}>
-      <div className="h-64 w-full 2xl:h-80 animate-pulse rounded-lg bg-muted" />
+      <div className="h-64 w-full 2xl:h-80 animate-pulse rounded-lg bg-[oklch(0.65_0.22_260/0.03)]" />
     </div>
   )
 }
@@ -44,7 +44,7 @@ export default function RadarChartCard({
         <div className="h-64 2xl:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={radarData}>
-              <PolarGrid stroke="hsl(var(--border) / 0.45)" />
+              <PolarGrid stroke="oklch(0.65 0.22 260 / 0.25)" />
               <PolarAngleAxis
                 dataKey="metric"
                 tick={{
