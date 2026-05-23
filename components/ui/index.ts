@@ -194,6 +194,6 @@ export {
   HoverLift,
   PressFeedback,
   Shimmer,
-  PulseGlow,
+
   StaggerContainer,
 } from "./micro-interactions"

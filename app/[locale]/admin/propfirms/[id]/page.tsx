@@ -463,7 +463,7 @@ export default async function PropFirmEditPage({
 
       <form action={handleAction}>
         <Card
-          variant="frost"
+          variant="elevated"
           className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
         >
           <CardHeader className="space-y-1 border-b border-border/30">
@@ -657,7 +657,7 @@ function ReviewsSection({
 }) {
   return (
     <Card
-      variant="frost"
+      variant="elevated"
       className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
       <CardHeader className="space-y-3 border-b border-border/30">
@@ -819,7 +819,7 @@ function CouponsSection({
 
   return (
     <Card
-      variant="frost"
+      variant="elevated"
       className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
       <CardHeader className="space-y-3 border-b border-border/30">

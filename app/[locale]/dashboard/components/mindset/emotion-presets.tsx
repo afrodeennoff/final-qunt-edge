@@ -73,7 +73,7 @@ export function EmotionPresets({ value, onChange }: EmotionPresetsProps) {
  <button
  key={preset.value}
  onClick={() => onChange(preset.value)}
- className={cn("journal-glass flex flex-col items-center gap-1 rounded-lg border p-2 transition-[opacity,background-color,border-color] duration-200",
+ className={cn("flex flex-col items-center gap-1 rounded-lg border p-2 transition-[opacity,background-color,border-color] duration-200",
  active ?"ring-2 ring-primary/50" :"hover:opacity-90"
  )}
  style={{

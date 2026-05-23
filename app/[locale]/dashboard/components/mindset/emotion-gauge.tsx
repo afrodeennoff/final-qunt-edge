@@ -29,7 +29,7 @@ export function EmotionGauge({ value, onChange }: EmotionGaugeProps) {
  }
 
  return (
- <div className="journal-glass mb-4 rounded-xl border border-border/30 bg-background/0.11 p-4">
+ <div className="mb-4 rounded-xl border border-border/30 bg-card p-4">
  <div>
  <div className="text-center">
  <p className="text-sm font-medium text-foreground">{t("mindset.emotion.title")}</p>

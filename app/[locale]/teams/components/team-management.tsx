@@ -713,7 +713,7 @@ export function TeamManagement({
   return (
   <Card
     key={team.id}
-    variant="glass"
+    variant="default"
     hover
     className={cn(
       "cursor-pointer",

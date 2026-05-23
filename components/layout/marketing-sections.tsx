@@ -88,8 +88,8 @@ export function MarketingFeatureCard({
   className?: string
 }) {
   return (
-    <Card className={cn('macos-card macos-card-hover p-5', className)}>
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl macos-frost-heavy text-muted-foreground">
+    <Card className={cn('p-5', className)}>
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-muted-foreground">
         {icon}
       </div>
       <div className="mt-4">
@@ -145,7 +145,7 @@ export function MarketingStepCard({
         <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {step}
         </span>
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl macos-frost-heavy text-muted-foreground">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-muted-foreground">
           {icon}
         </span>
       </div>
@@ -184,7 +184,7 @@ export function MarketingPricingCard({
     <Card
       hover
       className={cn(
-        'relative flex h-full flex-col p-7 macos-card',
+        'relative flex h-full flex-col p-7',
         highlighted && 'border-primary/40 shadow-sm',
         className,
       )}
@@ -239,14 +239,14 @@ export function MarketingHyperframe({
   className?: string
 }) {
   return (
-    <Card id={id} className={cn('overflow-hidden p-0 macos-card', className)}>
-      <div className="flex items-center justify-between border-b border-white/5 macos-frost-heavy px-4 py-2.5">
+    <Card id={id} className={cn('overflow-hidden p-0', className)}>
+      <div className="flex items-center justify-between border-b border-white/5 bg-muted/50 px-4 py-2.5">
         <div className="flex items-center gap-1.5 px-2 py-1" aria-hidden>
           <span className="h-3 w-3 rounded-full bg-destructive/80" />
           <span className="h-3 w-3 rounded-full bg-warning/80" />
           <span className="h-3 w-3 rounded-full bg-success/80" />
         </div>
-        <div className="rounded-full macos-frost-heavy px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
+        <div className="rounded-full bg-muted/50 border border-border/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
           {label}
         </div>
         <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80 sm:flex">

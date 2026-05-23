@@ -85,7 +85,7 @@ function StatsCardSkeleton({ size ="md", className }: StatsCardSkeletonProps) {
 
  return (
   <div
-   className={cn("rounded-xl macos-frost-heavy",
+   className={cn("rounded-xl bg-card border border-border/30",
   config.padding,
   className
   )}
@@ -163,7 +163,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
  <CardHeader size={size} className="flex-row items-center justify-between pb-2">
  <div className="flex items-center gap-2 flex-1 min-w-0">
   {renderIcon() && (
-   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md macos-frost-heavy text-muted-foreground" aria-hidden="true">
+   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted/50 border border-border/30 text-muted-foreground" aria-hidden="true">
   {renderIcon()}
   </div>
   )}

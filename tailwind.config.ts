@@ -58,14 +58,6 @@ const config = {
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         // Premium Gradient Utilities
         'gradient-premium': 'linear-gradient(135deg, var(--tw-gradient-stops))',
-        'gradient-mesh': 'radial-gradient(at 20% 30%, var(--tw-gradient-stops))',
-        'gradient-mesh-2': 'radial-gradient(at 80% 20%, var(--tw-gradient-stops))',
-        'gradient-mesh-3': 'radial-gradient(at 40% 80%, var(--tw-gradient-stops))',
-        'gradient-mesh-complex':
-          'radial-gradient(at 20% 30%, hsl(var(--primary) / 0.3) 0px, transparent 50%), radial-gradient(at 80% 70%, hsl(var(--accent) / 0.3) 0px, transparent 50%)',
-        'gradient-glow': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
-        'gradient-shine':
-          'linear-gradient(120deg, transparent 30%, oklch(0.65 0.22 260 / 0.25) 50%, transparent 70%)',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -175,14 +167,6 @@ const config = {
       // Shadow Utilities
       boxShadow: {
         'glow-primary': '0 0 20px rgb(var(--primary) / 0.3), 0 0 40px rgb(var(--primary) / 0.2)',
-      },
-      // Glass & Blur Utilities (handled via CSS custom properties)
-      // Premium Border Utilities
-      borderColor: {
-        glass: 'rgba(255, 255, 255, 0.1)',
-        'glass-dark': 'rgba(0, 0, 0, 0.1)',
-        'glow-primary': 'rgb(var(--primary) / 0.5)',
-        'glow-accent': 'rgb(var(--accent) / 0.5)',
       },
       // Transition utilities (custom timing handled via inline styles)
       // Animation delays (handled via inline styles)
@@ -406,28 +390,6 @@ const config = {
             top: '0%',
           },
         },
-        'glow-subtle': {
-          '0%': {
-            opacity: '0.5',
-          },
-          '50%': {
-            opacity: '0.7',
-          },
-          '100%': {
-            opacity: '0.5',
-          },
-        },
-        'glow-success': {
-          '0%': {
-            opacity: '0.5',
-          },
-          '50%': {
-            opacity: '0.8',
-          },
-          '100%': {
-            opacity: '0.5',
-          },
-        },
         'success-pulse': {
           '0%': {
             opacity: '0',
@@ -455,27 +417,14 @@ const config = {
             backgroundPosition: '200% 0',
           },
         },
-        'pulse-glow': {
-          '0%, 100%': {
-            opacity: '1',
-            boxShadow: '0 0 20px rgb(var(--primary) / 0.4)',
-          },
-          '50%': {
-            opacity: '0.8',
-            boxShadow: '0 0 40px rgb(var(--primary) / 0.6)',
-          },
-        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'scanner-smooth': 'scanner-smooth 8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'glow-subtle': 'glow-subtle 3s ease-in-out infinite',
-        'glow-success': 'glow-success 2s ease-in-out infinite',
         'success-pulse': 'success-pulse 3s ease-in-out infinite',
         'success-sweep': 'success-sweep 1.5s ease-in-out forwards',
         shimmer: 'shimmer 2s linear infinite',
-        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
       },
       typography: {
         DEFAULT: {

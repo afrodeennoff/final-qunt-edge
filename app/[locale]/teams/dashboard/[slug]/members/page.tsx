@@ -46,7 +46,7 @@ export default function TeamMembersPage() {
         </div>
       </header>
 
-      <Card variant="glass" className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)]">
+      <Card variant="default" className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.02)]">
         <CardContent className="p-2 sm:p-3">
           <TeamManagement />
         </CardContent>

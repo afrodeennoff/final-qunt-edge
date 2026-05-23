@@ -280,7 +280,7 @@ function CouponEditCard({
 
   return (
     <Card
-      variant="frost"
+      variant="elevated"
       hover
       className="overflow-hidden border-border/45 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
@@ -489,7 +489,7 @@ function CouponSuggestionCard({
 }) {
   return (
     <Card
-      variant="frost"
+      variant="elevated"
       hover
       className="overflow-hidden border-border/45 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
@@ -979,7 +979,7 @@ export default async function AdminCouponsPage({
         badge={<Badge variant="secondary">{activeCount} active</Badge>}
       >
         {coupons.length === 0 ? (
-          <Card variant="frost" className="border-border/40 bg-background/80">
+          <Card variant="elevated" className="border-border/40 bg-background/80">
             <CardContent size="sm" className="py-8 text-center text-sm text-muted-foreground">
               No coupons yet. Create the first one above.
             </CardContent>

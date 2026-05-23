@@ -400,7 +400,7 @@ function SidebarGroupAction({
       data-sidebar="group-action"
         className={cn(
           'flex h-full w-[var(--sidebar-width)] flex-col',
-          'macos-frost-sidebar text-sidebar-foreground',
+          'bg-sidebar text-sidebar-foreground',
           groupDataCollapsible === 'offcanvas' && 'fixed inset-y-0 z-50 shadow-2xl',
           className,
         )}
@@ -446,7 +446,7 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  'peer/menu-button type-body-sm flex w-full items-center gap-2 overflow-hidden rounded-lg border border-transparent p-2 text-left outline-hidden transition-[background-color,border-color] duration-80 ease-[cubic-bezier(0.16,1,0.3,1)] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2! hover:bg-sidebar-accent hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:macos-frost-heavy active:text-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-primary/40 data-[active=true]:bg-primary/10 data-[active=true]:font-medium data-[active=true]:text-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-none',
+  'peer/menu-button type-body-sm flex w-full items-center gap-2 overflow-hidden rounded-lg border border-transparent p-2 text-left outline-hidden transition-[background-color,border-color] duration-80 ease-[cubic-bezier(0.16,1,0.3,1)] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2! hover:bg-sidebar-accent hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:bg-sidebar-accent active:text-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-primary/40 data-[active=true]:bg-primary/10 data-[active=true]:font-medium data-[active=true]:text-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-none',
   {
     variants: {
       variant: {

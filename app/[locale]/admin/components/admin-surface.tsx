@@ -51,7 +51,7 @@ type AdminStatCardProps = {
 export function AdminStatCard({ label, value, hint, icon }: AdminStatCardProps) {
   return (
     <Card
-      variant="frost"
+      variant="elevated"
       hover
       className={`${sectionBorder} ${surfaceBg} ${subtleShadow}`}
     >
@@ -90,7 +90,7 @@ export function AdminSection({
 }: AdminSectionProps) {
   return (
     <Card
-      variant="frost"
+      variant="elevated"
       className={cn(
         `overflow-hidden ${sectionBorder} ${surfaceBg} ${subtleShadow}`,
         className,
