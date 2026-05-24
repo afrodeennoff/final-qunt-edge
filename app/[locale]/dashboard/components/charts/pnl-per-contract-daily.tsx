@@ -155,7 +155,7 @@ export default React.memo(function PnLPerContractDailyChart({
  const data = payload[0]?.payload as ChartDatum | undefined;
  if (!data) return null;
  return (
- <div className="bg-card/96 p-3 border border-border/50 rounded-xl shadow-xl min-w-[140px]">
+ <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm min-w-[140px]">
  <div className="flex justify-between items-center mb-2 border-b border-border/40 pb-1">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.date")}</span>
  <span className="font-semibold text-foreground text-sm uppercase">{data.date}</span>

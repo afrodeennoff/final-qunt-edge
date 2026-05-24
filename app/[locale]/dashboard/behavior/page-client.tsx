@@ -182,10 +182,10 @@ export default function DashboardBehaviorPage() {
       <Card className="rounded-xl border border-border/30 bg-card/50 shadow-sm">
         <CardHeader className="pb-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="space-y-2">
+            <div>
               <div className="flex items-center gap-2">
                 <Brain className="h-5 w-5 text-foreground" />
-                <CardTitle className="text-xl md:text-2xl">Behavior AI Hub</CardTitle>
+                <CardTitle className="text-xl md:text-2xl font-semibold">Behavior AI Hub</CardTitle>
                 <Badge variant="secondary" className="border-border/30 text-foreground">
                   <Sparkles className="mr-1 h-3.5 w-3.5" />
                   AI

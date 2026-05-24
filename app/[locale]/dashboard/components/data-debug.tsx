@@ -41,13 +41,13 @@ export function DataDebug() {
  variant="outline"
  size="icon"
  onClick={() => setIsOpen(true)}
- className="rounded-full bg-background/80 border-border/14 hover:bg-foreground/10 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+ className="rounded-full bg-background/80 border-border/30 hover:bg-foreground/10 shadow-sm"
  >
  <Bug className="h-4 w-4 text-primary" />
  </Button>
  ) : (
- <div className="w-80 bg-background/90 border border-border/14 rounded-xl p-4 shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-300">
- <div className="flex items-center justify-between mb-4 border-b border-border/8 pb-2">
+ <div className="w-80 bg-background/90 border border-border/30 rounded-xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
+ <div className="flex items-center justify-between mb-4 border-b border-border/30 pb-2">
  <div className="flex items-center gap-2">
  <Bug className="h-4 w-4 text-primary" />
  <span className="text-xs font-bold uppercase tracking-widest text-foreground">Debug Dashboard</span>
@@ -96,7 +96,7 @@ export function DataDebug() {
  size="sm"
  onClick={() => refreshAllData({ force: true })}
  disabled={isLoading}
- className="h-8 text-[9px] font-bold uppercase tracking-widest border-border/8 bg-foreground/5 hover:bg-foreground/10"
+ className="h-8 text-[9px] font-bold uppercase tracking-widest border-border/30 bg-foreground/5 hover:bg-foreground/10"
  >
  <RefreshCw className={cn("h-3 w-3 mr-2", isLoading &&"animate-spin")} />
  Sync Now

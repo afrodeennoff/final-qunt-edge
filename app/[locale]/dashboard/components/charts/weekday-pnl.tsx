@@ -134,7 +134,7 @@ export default React.memo(function WeekdayPNLChart({
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-card/96 p-3 border border-border/50 rounded-xl shadow-xl min-w-[140px]">
+ <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm min-w-[140px]">
  <div className="flex flex-col mb-2">
  <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">
  {t("weekdayPnl.tooltip.day")}

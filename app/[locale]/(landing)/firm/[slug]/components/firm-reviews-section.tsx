@@ -625,7 +625,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       {/* Flag Report Dialog */}
       {showFlagDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-muted/40">
-          <div className="w-full max-w-md rounded-xl border border-border bg-muted/20 p-6 shadow-2xl">
+          <div className="w-full max-w-md rounded-xl border border-border/30 bg-muted/20 p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-foreground">Report Review</h3>
               <button onClick={() => setShowFlagDialog(false)} className="rounded p-1 hover:bg-muted/20">

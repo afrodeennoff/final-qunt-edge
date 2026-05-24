@@ -117,8 +117,8 @@ function formatPlanAmount(
 function getPlanCardClassName(popular: boolean): string {
   return cn(
     'relative flex w-full flex-col overflow-hidden transition-[opacity,background-color,border-color,transform] duration-300 hover:-translate-y-1',
-    !popular && 'rounded-2xl border border-border/0.06 bg-card shadow-lg',
-    popular && 'relative rounded-2xl border border-primary/35 bg-card shadow-[0_0_0_0.5px_hsl(var(--primary)/0.30),0_0_40px_hsl(var(--primary)/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
+    !popular && 'rounded-2xl border border-border/30 bg-card shadow-sm',
+    popular && 'relative rounded-2xl border border-primary/35 bg-card shadow-sm shadow-primary/10',
   )
 }
 
@@ -133,7 +133,7 @@ function PlanPopularBadge({ popular }: { popular: boolean }) {
   if (!popular) return null
 
   return (
-    <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary shadow-lg shadow-primary/10">
+    <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary shadow-sm">
       <Sparkles className="h-3 w-3" />
       <span>Popular</span>
     </div>

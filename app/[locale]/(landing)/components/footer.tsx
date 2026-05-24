@@ -70,7 +70,7 @@ export default function Footer() {
       >
         <div
           className={cn(
-            'rounded-2xl border border-border bg-background shadow-lg',
+            'rounded-2xl border border-border/30 bg-background shadow-sm',
             'grid gap-8 p-7 sm:p-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)] lg:p-10',
           )}
         >
@@ -125,7 +125,7 @@ export default function Footer() {
                   viewport={{ once: true }}
                   transition={{ delay: 0.08 + index * 0.05, duration: 0.35 }}
                   className={cn(
-                    'flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted/10 text-muted-foreground shadow-lg transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-border hover:bg-muted/20 hover:text-primary',
+                    'flex h-9 w-9 items-center justify-center rounded-full border border-border/30 bg-muted/10 text-muted-foreground shadow-sm transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-border/50 hover:bg-muted/20 hover:text-primary',
                   )}
                 >
                   <item.icon className="size-[18px]" />

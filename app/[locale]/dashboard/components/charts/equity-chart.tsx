@@ -308,7 +308,7 @@ const OptimizedTooltip = React.memo(
  });
 
  return (
- <div className="bg-card/96 p-3 border border-border/50 rounded-xl shadow-xl min-w-[140px]">
+ <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm min-w-[140px]">
  <div className="grid gap-2">
  <div className="flex justify-between items-center border-b border-border/40 pb-1">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">

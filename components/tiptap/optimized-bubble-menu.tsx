@@ -51,7 +51,7 @@ export function OptimizedBubbleMenu({
   return (
     <BubbleMenu
       editor={editor}
-      className="flex items-center flex-wrap gap-1 p-2 bg-background border rounded-lg shadow-lg max-w-[90vw] overflow-visible"
+      className="flex items-center flex-wrap gap-1 p-2 bg-background border border-border/30 rounded-lg shadow-sm max-w-[90vw] overflow-visible"
     >
       <Button 
         variant="ghost"

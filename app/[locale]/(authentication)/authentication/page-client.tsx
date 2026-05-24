@@ -83,7 +83,7 @@ export default function AuthenticationPageClient() {
 
               <div className="auth-entrance-1 mt-10 max-w-[39rem] lg:mt-14">
                 <span className={unifiedSectionEyebrowClassName}>Qunt Edge</span>
-                <div className="mt-4 inline-flex items-center gap-3 rounded-xl border border-border/30 bg-background/30 px-4 py-3 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]">
+                <div className="mt-4 inline-flex items-center gap-3 rounded-xl border border-border/30 bg-background/30 px-4 py-3 shadow-sm">
                   <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-primary/16 bg-primary/10 text-primary">
                     <Logo className="h-4.5 w-4.5 fill-current" />
                   </div>

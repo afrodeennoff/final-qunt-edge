@@ -98,7 +98,7 @@ export function UsernameSearch({ onSelectUser }: UsernameSearchProps) {
       )}
 
       {results.length > 0 && (
-        <div className="absolute z-50 mt-1 w-full rounded-lg border border-input bg-background shadow-lg max-h-80 overflow-auto">
+        <div className="absolute z-50 mt-1 w-full rounded-lg border border-border/30 bg-background shadow-sm max-h-80 overflow-auto">
           {results.map((user, index) => (
             <button
               key={user.id}

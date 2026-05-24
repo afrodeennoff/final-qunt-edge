@@ -121,7 +121,7 @@ function TeamSettingsCard({
               {userTeams.ownedTeams.map((team) => (
                 <div
                   key={team.id}
-                  className="flex items-center justify-between p-3 border-border/30 rounded-lg"
+                  className="flex items-center justify-between rounded-lg border border-border/30 p-3"
                 >
                   <div>
                     <p className="font-medium">{team.name}</p>
@@ -134,7 +134,7 @@ function TeamSettingsCard({
               {userTeams.joinedTeams.map((team) => (
                 <div
                   key={team.id}
-                  className="flex items-center justify-between p-3 border-border/30 rounded-lg"
+                  className="flex items-center justify-between rounded-lg border border-border/30 p-3"
                 >
                   <div>
                     <p className="font-medium">{team.name}</p>
@@ -496,7 +496,7 @@ export default function SettingsPage() {
                 Accent Color
               </Label>
               <div className="mt-2">
-                <div className="rounded-md border border-border/20 bg-background/30 p-3">
+                <div className="rounded-md border border-border/30 bg-muted/20 p-3">
                   <p className="mb-3 text-sm text-muted-foreground">
                     Choose your dashboard accent color
                   </p>

@@ -112,7 +112,7 @@ export default React.memo(function TimeOfDayTradeChart({
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-card/96 p-3 border border-border/50 rounded-xl shadow-xl min-w-[140px]">
+ <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm min-w-[140px]">
  <div className="flex justify-between items-center mb-2 border-b border-border/40 pb-1">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnlTime.tooltip.time")}</span>
  <span className="font-bold text-foreground text-sm uppercase">{`${label}:00 - ${(label + 1) % 24}:00`}</span>

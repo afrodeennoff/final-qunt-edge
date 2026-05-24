@@ -41,7 +41,7 @@ export function SortControls({ sortLabel, sortOptions }: SortControlsProps) {
         >
           <SelectValue />
         </SelectTrigger>
-        <SelectContent className="border border-border bg-muted/20 text-foreground shadow-xl">
+        <SelectContent className="border border-border/30 bg-muted/20 text-foreground shadow-sm">
           <SelectItem value="accounts">{sortOptions.accounts}</SelectItem>
           <SelectItem value="paidPayout">{sortOptions.paidPayout}</SelectItem>
           <SelectItem value="refusedPayout">{sortOptions.refusedPayout}</SelectItem>

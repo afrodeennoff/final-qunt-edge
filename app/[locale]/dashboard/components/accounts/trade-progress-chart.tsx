@@ -241,7 +241,7 @@ export function TradeProgressChart({
  if (active && payload && payload.length) {
  const data = payload[0].payload as ChartDataPoint;
  return (
- <div className="bg-card/96 p-3 border border-border/50 rounded-xl shadow-xl text-[10px] space-y-2 min-w-[140px]">
+ <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm text-[10px] space-y-2 min-w-[140px]">
  <div className="flex items-center justify-between border-b border-border/40 pb-1">
  <span className="font-bold text-foreground">TRADE #{data.tradeIndex}</span>
  <span className="text-muted-foreground">{data.date}</span>

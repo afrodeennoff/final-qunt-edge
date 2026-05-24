@@ -622,7 +622,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </Form>
  {showOtpInput && (
  <Form {...otpForm}>
- <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-xl border border-border/30 bg-background/0.06 p-4">
+ <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-xl border border-border/30 bg-background/30 p-4">
  <FormField
  control={otpForm.control}
  name="otp"
@@ -745,7 +745,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <span className="w-full border-t border-border/30" />
  </div>
  <div className="relative flex justify-center text-[10px] uppercase tracking-[0.14em]">
- <span className="bg-primary/[0.03] px-2 text-muted-foreground">
+ <span className="bg-primary/5 px-2 text-muted-foreground">
  {t('auth.continueWith')}
  </span>
  </div>

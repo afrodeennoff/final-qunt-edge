@@ -44,15 +44,15 @@ export default function TradingScoreWidget({ size }: { size?: string }) {
  {normalizedLabel}
  </div>
  <div className="mt-6 grid grid-cols-3 gap-2 w-full text-center">
- <div className="flex flex-col p-2.5 bg-background/25 rounded-xl border border-border/0.05">
+ <div className="flex flex-col p-2.5 bg-background/25 rounded-xl border border-border/10">
  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/35">Win Rate</span>
  <span className="mt-0.5 text-[15px] font-semibold tracking-[-0.03em] tabular-nums text-foreground">{metrics.winRate.toFixed(1)}%</span>
  </div>
- <div className="flex flex-col p-2.5 bg-background/25 rounded-xl border border-border/0.05">
+ <div className="flex flex-col p-2.5 bg-background/25 rounded-xl border border-border/10">
  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/35">P. Factor</span>
  <span className="mt-0.5 text-[15px] font-semibold tracking-[-0.03em] tabular-nums text-foreground">{metrics.profitFactor.toFixed(2)}</span>
  </div>
- <div className="flex flex-col p-2.5 bg-background/25 rounded-xl border border-border/0.05">
+ <div className="flex flex-col p-2.5 bg-background/25 rounded-xl border border-border/10">
  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/35">Trades</span>
  <span className="mt-0.5 text-[15px] font-semibold tracking-[-0.03em] tabular-nums text-foreground">{metrics.totalTrades}</span>
  </div>

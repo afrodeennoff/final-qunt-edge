@@ -451,7 +451,7 @@ export function DailySummaryModal() {
  <motion.div
  initial={{ scale: 0.95, opacity: 0 }}
  animate={{ scale: 1, opacity: 1 }}
- className="w-full aspect-[7/4] bg-background text-foreground rounded-2xl overflow-hidden border border-border/30 relative flex flex-col sm:shadow-2xl"
+ className="w-full aspect-[7/4] bg-background text-foreground rounded-2xl overflow-hidden border border-border/30 relative flex flex-col sm:shadow-sm"
  ref={cardRef}
  >
  {/* Refined Background Mesh */}
@@ -577,7 +577,7 @@ export function DailySummaryModal() {
  <div className="col-span-12 lg:col-span-5 flex flex-col gap-4 h-full justify-center">
  {/* Streak - Refined */}
  <div className="flex-1 bg-gradient-to-br from-card/70 to-muted/40 border border-border/14 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:border-border/30 transition-[opacity,background-color,border-color]">
- <div className="text-6xl font-black tracking-tighter text-foreground mb-2 relative z-10 drop-shadow-2xl">{stats.currentStreak}</div>
+ <div className="text-6xl font-black tracking-tighter text-foreground mb-2 relative z-10">{stats.currentStreak}</div>
  <div className="text-[9px] text-fg-muted uppercase tracking-[0.3em] font-bold relative z-10">Win Streak</div>
  <Zap className="absolute -bottom-6 -right-6 w-32 h-32 text-foreground/[0.03] group-hover:text-foreground/[0.05] transition-colors" />
  </div>

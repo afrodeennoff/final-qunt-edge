@@ -239,7 +239,7 @@ export default async function TraderProfilePage({
       />
       <div className="mx-auto grid max-w-[1180px] gap-6 xl:grid-cols-[minmax(0,1.28fr)_minmax(340px,0.72fr)]">
         <section className="space-y-6">
-          <div className="overflow-hidden rounded-2xl border border-border bg-muted/10 shadow-lg">
+          <div className="overflow-hidden rounded-2xl border border-border/30 bg-muted/10 shadow-sm">
             <div className="flex flex-col gap-6 p-6 sm:p-8 lg:flex-row lg:items-start lg:justify-between">
               <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start">
                 <Avatar className="h-20 w-20 shrink-0 rounded-3xl border border-border bg-muted/40 sm:h-24 sm:w-24">

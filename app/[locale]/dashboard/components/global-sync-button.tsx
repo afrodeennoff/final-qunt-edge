@@ -139,7 +139,7 @@ export function GlobalSyncButton() {
  )}
  </button>
  </DropdownMenuTrigger>
- <DropdownMenuContent align="end" className="w-72 rounded-xl border border-border/20 bg-card/95 text-popover-foreground shadow-xl shadow-black/20">
+ <DropdownMenuContent align="end" className="w-72 rounded-xl border border-border/30 bg-card/95 text-popover-foreground shadow-sm">
  <DropdownMenuLabel className="flex items-center justify-between">
  <span className="text-xs font-bold uppercase tracking-widest">Sync Status</span>
  {isAnySyncing ? (
