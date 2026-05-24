@@ -71,14 +71,14 @@ export function SidebarUserMenu({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-xl border border-sidebar-border/35 bg-sidebar/98 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)]"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-xl border border-sidebar-border/35 bg-sidebar/98 shadow-md"
             side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={6}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2.5 bg-gradient-to-r from-sidebar-primary/18 to-sidebar-accent/10 px-3 py-2.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-xl shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+                <Avatar className="h-8 w-8 rounded-xl shadow-sm">
                   <AvatarImage src={user?.avatar_url} alt={displayName} />
                   <AvatarFallback className="rounded-lg bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
                     {initials}

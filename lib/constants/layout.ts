@@ -48,7 +48,6 @@ export const ULTRA_HIGH_RES_WIDTHS = {
 export const LOCALE_SOFT_BORDER_STYLE: CSSProperties = {
   ['--border' as string]: '214 10% 6%',
   ['--input' as string]: '214 10% 6%',
-  ['--sidebar-border' as string]: '214 10% 5%',
   ['--v2-border' as string]: '214 10% 6%',
   ['--v2-border-subtle' as string]: '214 9% 4%',
   ['--frost-border' as string]: 'rgba(24, 30, 37, 0.14)',
@@ -66,5 +65,4 @@ export const LOCALE_SOFT_BORDER_STYLE: CSSProperties = {
 
 export const APP_SHELL_SOFT_BORDER_STYLE: CSSProperties = {
   ...LOCALE_SOFT_BORDER_STYLE,
-  ['--sidebar-border' as string]: '214 10% 4%',
 }

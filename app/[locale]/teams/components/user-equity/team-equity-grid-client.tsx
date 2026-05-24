@@ -17,7 +17,7 @@ import { useTypedI18n } from '@/locales/client'
 import { toast } from 'sonner'
 
 const UserEquityChart = dynamic(() => import('./user-equity-chart').then(m => ({ default: m.UserEquityChart })), {
-  loading: () => <div className="h-32 animate-pulse rounded-lg bg-[oklch(0.65_0.22_260/0.04)]" />,
+  loading: () => <div className="h-32 animate-pulse rounded-lg bg-muted/40" />,
 })
 
 interface UserEquityData {
@@ -199,7 +199,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  if (isInitialLoading) {
  return (
  <div className="flex justify-center items-center py-8">
- <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[oklch(0.65_0.22_260/0.5)]"></div>
+ <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary/50"></div>
  </div>
  )
  }
@@ -443,7 +443,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  <div ref={loadingRef} className="flex justify-center py-4">
  {isLoadingMore ? (
  <div className="animate-pulse">
- <div className="h-8 bg-[oklch(0.65_0.22_260/0.03)] rounded-xl w-32"></div>
+ <div className="h-8 bg-muted/40 rounded-xl w-32"></div>
  </div>
  ) : (
  <div className="text-sm text-muted-foreground">{t('teams.equity.scrollToLoadMore')}</div>

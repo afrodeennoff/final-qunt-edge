@@ -18,7 +18,7 @@ const ITEM_BUTTON_CLASS =
   'pointer-events-auto rounded-xl font-medium hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground transition-[opacity,background-color,border-color,box-shadow] duration-150'
 const INACTIVE_ITEM_CLASS = 'text-sidebar-foreground/68'
 const ACTIVE_ITEM_CLASS =
-  'border-sidebar-primary/28 bg-sidebar-primary/12 text-sidebar-foreground shadow-[0_18px_32px_-28px_rgba(0,0,0,0.88)]'
+  'border-sidebar-primary/28 bg-sidebar-primary/12 text-sidebar-foreground shadow-sm'
 
 function isItemPending(
   item: UnifiedSidebarItem,

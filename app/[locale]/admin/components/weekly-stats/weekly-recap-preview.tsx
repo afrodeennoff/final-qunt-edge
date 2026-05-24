@@ -318,7 +318,7 @@ export function WeeklyRecapPreview() {
  </div>
 
  {/* Preview - Shows loading animation, error, or iframe */}
- <div className="relative bg-[oklch(0.65_0.22_260/0.04)] overflow-hidden">
+ <div className="relative bg-primary/5 overflow-hidden">
  {loadingState !=="complete" ? (
  <EmailPreviewLoading stage={loadingState ==="analyzing" ?"analyzing" :"generating"} />
  ) : error ? (

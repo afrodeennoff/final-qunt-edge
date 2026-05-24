@@ -25,7 +25,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="border-t border-[oklch(0.65_0.22_260/0.04)] py-20">
+    <section className="border-t border-border/10 py-20">
       <div className="mx-auto max-w-5xl px-6">
         <div className="mb-12 text-center">
           <div className="mb-2 text-[10px] font-mono tracking-[3px] text-primary/70">HOW IT WORKS</div>
@@ -39,7 +39,7 @@ export function HowItWorks() {
             return (
               <div
                 key={index}
-                className="group relative rounded-2xl border border-[oklch(0.65_0.22_260/0.06)] bg-[oklch(0.65_0.22_260/0.02)] p-8 transition hover:border-[oklch(0.65_0.22_260/0.18)]"
+                className="group relative rounded-2xl border border-primary/10 bg-primary/5 p-8 transition hover:border-primary/30"
               >
                 <div className="flex items-center gap-3">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary/20 bg-primary/5 text-sm font-mono tracking-[1px] text-primary">

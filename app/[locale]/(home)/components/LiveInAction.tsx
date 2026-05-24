@@ -8,7 +8,7 @@ export function LiveInAction() {
   const [open, setOpen] = useState(false)
 
   return (
-    <section className="py-20 border-t border-[oklch(0.65_0.22_260/0.04)]">
+    <section className="py-20 border-t border-border/10">
       <div className="mx-auto max-w-4xl px-6 text-center">
         <div className="mb-3 inline-block rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-mono tracking-[3px] text-primary">
           LIVE IN ACTION
@@ -22,13 +22,13 @@ export function LiveInAction() {
       </div>
 
       {/* Cinematic video surface */}
-      <div className="group relative mx-auto mt-10 max-w-5xl overflow-hidden rounded-3xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.065_0.008_260/0.92)] shadow-2xl">
+      <div className="group relative mx-auto mt-10 max-w-5xl overflow-hidden rounded-3xl border border-primary/15 bg-card shadow-2xl">
         <div className="aspect-video w-full bg-[linear-gradient(180deg,var(--background)_0%,var(--background)_100%)] flex items-center justify-center relative">
           <div className="absolute inset-0 bg-[radial-gradient(#1a1a1a_0.8px,transparent_1px)] bg-[length:4px_4px] opacity-40" />
 
           <button
             onClick={() => setOpen(true)}
-            className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full border border-[oklch(0.65_0.22_260/0.15)] bg-[oklch(0.65_0.22_260/0.04)] transition-all duration-200 group-hover:border-primary/60 group-hover:bg-primary/10 active:scale-[0.985]"
+            className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full border border-primary/25 bg-primary/10 transition-all duration-200 group-hover:border-primary/60 group-hover:bg-primary/15 active:scale-[0.985]"
             aria-label="Play demo video"
           >
             <Play className="h-7 w-7 text-white/90 ml-0.5" />
@@ -46,7 +46,7 @@ export function LiveInAction() {
 
       {/* Working Video Modal */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-5xl p-0 overflow-hidden border-[oklch(0.65_0.22_260/0.12)] bg-background">
+        <DialogContent className="max-w-5xl p-0 overflow-hidden border-primary/20 bg-background">
           <DialogTitle className="sr-only">Product Demo Video</DialogTitle>
           <div className="relative aspect-video w-full bg-black">
             <video

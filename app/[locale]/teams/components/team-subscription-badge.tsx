@@ -25,7 +25,7 @@ export async function TeamSubscriptionBadge({
  return (
  <Badge
  variant="secondary"
- className={cn("px-2 py-0.5 text-xs whitespace-nowrap","border-[oklch(0.14_0.015_260/0.4)] bg-[oklch(0.065_0.008_260/0.8)] text-muted-foreground",
+ className={cn("px-2 py-0.5 text-xs whitespace-nowrap","border-border/40 bg-muted text-muted-foreground",
  className
  )}
  >

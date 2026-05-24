@@ -222,7 +222,7 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
           className={cn(
-            'flex h-full w-full flex-col border border-[oklch(0.14_0.015_260/0.5)] bg-[oklch(0.045_0.006_260/0.98)] shadow-[inset_0_1px_0_oklch(1_0_0/0.03),0_8px_24px_-12px_oklch(0_0_0/0.6)]',
+            'flex h-full w-full flex-col border border-sidebar-border bg-sidebar shadow-sm',
             'group-data-[variant=floating]:rounded-2xl',
             'group-data-[variant=inset]:rounded-2xl',
           )}
@@ -302,7 +302,7 @@ function SidebarInput({ className, ...props }: React.ComponentProps<'input'>) {
       data-slot="sidebar-input"
       data-sidebar="input"
       className={cn(
-        'type-body-sm flex h-[38px] w-full rounded-[0.95rem] border border-sidebar-border bg-sidebar-accent px-4 text-sidebar-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05)] ring-sidebar-ring file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-sidebar-foreground/46 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-primary/20 disabled:cursor-not-allowed disabled:opacity-50',
+        'type-body-sm flex h-[38px] w-full rounded-[0.95rem] border border-sidebar-border bg-sidebar-accent px-4 text-sidebar-foreground ring-sidebar-ring file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-sidebar-foreground/46 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-primary/20 disabled:cursor-not-allowed disabled:opacity-50',
         className,
       )}
       {...props}

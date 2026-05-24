@@ -6,7 +6,7 @@ import { ButtonV2 as Button } from '@/components/ui/v2'
 
 export function FinalCTA() {
   return (
-    <section className="border-t border-[oklch(0.65_0.22_260/0.04)] py-20">
+    <section className="border-t border-border/10 py-20">
       <div className="mx-auto max-w-3xl px-6 text-center">
         <div className="mx-auto mb-4 inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-4 py-1 text-[10px] font-mono tracking-[2.5px] text-primary">
           START TODAY

@@ -34,7 +34,7 @@ export function AuthProfileButton() {
  <div className="relative inline-block cursor-pointer">
  <Avatar className="h-8 w-8">
  <AvatarImage src={user?.user_metadata.avatar_url} />
- <AvatarFallback className="uppercase text-xs bg-[oklch(0.65_0.22_260/0.08)] text-[oklch(0.65_0.22_260)] border border-[oklch(0.65_0.22_260/0.15)]">
+ <AvatarFallback className="uppercase text-xs bg-primary/10 text-primary border border-primary/25">
  {user?.email?.[0]}
  </AvatarFallback>
  </Avatar>

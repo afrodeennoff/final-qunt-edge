@@ -88,7 +88,7 @@ export default async function Hero({ locale }: { locale: string }) {
                 <path
                   d="M0,62 Q60,48 110,52 T210,34 T310,41 T410,22 T500,28 T600,12"
                   fill="none"
-                  stroke="hsl(263, 85%, 65%)"
+                  stroke="hsl(var(--primary))"
                   strokeWidth="2"
                   strokeLinecap="round"
                 />

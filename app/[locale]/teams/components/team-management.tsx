@@ -627,7 +627,7 @@ export function TeamManagement({
 
   const getStatusIndicator = (access: string, isOwner: boolean) => {
     if (isOwner) return 'bg-warning'
-    if (access === 'admin') return 'bg-[oklch(0.65_0.22_260)]'
+    if (access === 'admin') return 'bg-primary'
     return 'bg-success'
   }
 
@@ -717,7 +717,7 @@ export function TeamManagement({
     hover
     className={cn(
       "cursor-pointer",
-      isActive && "ring-2 ring-[oklch(0.65_0.22_260/0.35)] border-[oklch(0.65_0.22_260/0.25)]"
+      isActive && "ring-2 ring-primary/35 border-primary/25"
     )}
   >
  <CardHeader className="pb-3">
@@ -863,7 +863,7 @@ export function TeamManagement({
  <DialogTrigger asChild>
   <Card
     variant="outlined"
-    className="cursor-pointer border-dashed border-2 border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.015)] hover:border-[oklch(0.65_0.22_260/0.3)] hover:bg-[oklch(0.65_0.22_260/0.03)] transition-[background-color,border-color] duration-200 ease-[0.22,1,0.36,1]"
+    className="cursor-pointer border-dashed border-2 border-primary/12 bg-primary/5 hover:border-primary/30 hover:bg-primary/8 transition-[background-color,border-color] duration-200 ease-[0.22,1,0.36,1]"
   >
  <CardContent className="flex flex-col items-center justify-center h-48 p-6">
  <Plus className="h-12 w-12 text-muted-foreground mb-4" />
@@ -1009,7 +1009,7 @@ export function TeamManagement({
  ) : (
  <div className="space-y-1">
  {selectedTeam?.traders.map((trader: { id: string; email: string }) => (
- <div key={trader.id} className="flex items-center justify-between bg-[oklch(0.65_0.22_260/0.03)] p-2.5 rounded-xl text-sm border border-[oklch(0.65_0.22_260/0.06)] hover:bg-[oklch(0.65_0.22_260/0.06)] transition-colors duration-150 ease-[0.22,1,0.36,1]">
+ <div key={trader.id} className="flex items-center justify-between bg-primary/5 p-2.5 rounded-xl text-sm border border-primary/10 hover:bg-primary/10 transition-colors duration-150 ease-[0.22,1,0.36,1]">
  <span>{getDisplayName(trader)}</span>
  <div className="flex items-center gap-2">
  <Badge variant="outline">{t('teams.management.member')}</Badge>
@@ -1076,7 +1076,7 @@ export function TeamManagement({
  ) : (
  <div className="space-y-1">
  {pendingInvitations.map((invitation) => (
- <div key={invitation.id} className="flex items-center justify-between bg-[oklch(0.65_0.22_260/0.03)] p-2.5 rounded-xl text-sm border border-[oklch(0.65_0.22_260/0.06)] hover:bg-[oklch(0.65_0.22_260/0.06)] transition-colors duration-150 ease-[0.22,1,0.36,1]">
+ <div key={invitation.id} className="flex items-center justify-between bg-primary/5 p-2.5 rounded-xl text-sm border border-primary/10 hover:bg-primary/10 transition-colors duration-150 ease-[0.22,1,0.36,1]">
  <span>{getDisplayName(invitation)}</span>
  <div className="flex items-center gap-2">
  <Badge variant="outline">{t('teams.management.pending')}</Badge>
@@ -1127,7 +1127,7 @@ export function TeamManagement({
  ) : (
  <div className="space-y-1">
  {selectedTeam?.managers.map((manager) => (
- <div key={manager.id} className="flex items-center justify-between bg-[oklch(0.65_0.22_260/0.03)] p-2.5 rounded-xl text-sm border border-[oklch(0.65_0.22_260/0.06)] hover:bg-[oklch(0.65_0.22_260/0.06)] transition-colors duration-150 ease-[0.22,1,0.36,1]">
+ <div key={manager.id} className="flex items-center justify-between bg-primary/5 p-2.5 rounded-xl text-sm border border-primary/10 hover:bg-primary/10 transition-colors duration-150 ease-[0.22,1,0.36,1]">
  <span>{getDisplayName(manager)}</span>
  <div className="flex items-center gap-2">
  <Badge variant="outline">

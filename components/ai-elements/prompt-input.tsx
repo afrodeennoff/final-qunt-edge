@@ -81,7 +81,7 @@ export function PromptInputAttachment({ data, className, ...props }: PromptInput
   return (
     <div
       className={cn(
-        'group relative h-14 w-14 rounded-xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[oklch(0.052_0.009_260_/_0.68)]',
+        'group relative h-14 w-14 rounded-xl border border-primary/12 bg-muted/70',
         className,
       )}
       key={data.id}
@@ -412,7 +412,7 @@ export const PromptInput = ({
       />
       <form
         className={cn(
-          'w-full divide-y divide-[oklch(0.65_0.22_260_/_0.07)] overflow-hidden rounded-2xl border border-[oklch(0.65_0.22_260_/_0.07)] bg-[linear-gradient(180deg,oklch(0.06_0.01_260_/_0.84)_0%,oklch(0.05_0.009_260_/_0.78)_100%)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.05),0_16px_34px_-26px_rgba(0,0,0,0.76)]',
+          'w-full divide-y divide-border overflow-hidden rounded-2xl border border-primary/12 bg-card shadow-[inset_0_1px_0_hsl(var(--primary)/0.05),0_16px_34px_-26px_rgba(0,0,0,0.76)]',
           className,
         )}
         onSubmit={handleSubmit}

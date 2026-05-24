@@ -94,8 +94,8 @@ function TabItem({ item }: { item: MobileNavItem }) {
       </span>
       {active && (
         <>
-          <div className="absolute inset-0 rounded-2xl border border-[oklch(0.2505_0.0293_299.5707/0.9)] bg-[oklch(0.6083_0.2172_297.1153/0.10)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_0_0_0.5px_oklch(0.65_0.22_260/0.22),0_18px_32px_-24px_oklch(0.65_0.22_260/0.45)]" />
-          <div className="absolute left-1/2 top-1.5 h-[2px] w-6 -translate-x-1/2 rounded-full bg-sidebar-primary shadow-[0_0_14px_oklch(0.6083_0.2172_297.1153/0.45)]" />
+          <div className="absolute inset-0 rounded-2xl border border-sidebar-primary/90 bg-sidebar-primary/10 shadow-[inset_0_1px_0_hsl(var(--sidebar-primary)/0.08),0_0_0_0.5px_hsl(var(--sidebar-primary)/0.22),0_18px_32px_-24px_hsl(var(--sidebar-primary)/0.45)]" />
+          <div className="absolute left-1/2 top-1.5 h-[2px] w-6 -translate-x-1/2 rounded-full bg-sidebar-primary shadow-[0_0_14px_hsl(var(--sidebar-primary)/0.45)]" />
         </>
       )}
     </Link>
@@ -114,7 +114,7 @@ function MobileBottomNav({ items }: { items?: MobileNavItem[] }) {
       className={cn('fixed inset-x-0 bottom-0 z-40 md:hidden', 'px-3 pb-safe mobile-landscape-compact transition-[opacity,background-color,border-color,transform] duration-200')}
       aria-label="Dashboard navigation"
     >
-      <div className="flex h-[4.35rem] items-center justify-around rounded-2xl border border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.046_0.008_260_/_0.94)] px-2 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.04),0_18px_40px_-24px_rgba(0,0,0,0.84)]">
+      <div className="flex h-[4.35rem] items-center justify-around rounded-2xl border border-border/30 bg-card/95 px-2 shadow-[inset_0_1px_0_hsl(var(--primary)/0.04),0_18px_40px_-24px_rgba(0,0,0,0.84)]">
         {navItems.map((item) => (
           <TabItem key={item.label} item={item} />
         ))}

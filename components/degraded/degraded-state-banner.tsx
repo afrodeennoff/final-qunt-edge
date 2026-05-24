@@ -43,7 +43,7 @@ export function DegradedStateBanner() {
       <ul className="mt-1 space-y-0.5">
         {services.map((s) => (
           <li key={s.service} className="flex items-center gap-2">
-            <span className={s.status === "down" ? "text-destructive" : "text-[oklch(0.75_0.15_85)]"}>●</span>
+            <span className={s.status === "down" ? "text-destructive" : "text-warning"}>●</span>
             <span>{s.service}</span>
           </li>
         ))}
