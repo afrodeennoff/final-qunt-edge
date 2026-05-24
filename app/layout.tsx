@@ -6,7 +6,6 @@ import {
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import ScrollLockFixLazy from '@/components/lazy/scroll-lock-fix-lazy'
-import { shouldEnforceDarkOnlySurfaces } from '@/lib/feature-flags'
 import { getUiVariant } from '@/lib/ui-v2'
 import { getSiteOrigin } from '@/lib/site-url'
 

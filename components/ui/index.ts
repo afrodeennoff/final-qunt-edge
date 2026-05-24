@@ -1,10 +1,10 @@
 export { Button, Button as ButtonV2, buttonVariants } from "./button"
-export { Card, Card as CardV2, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, CardAction, CardStatusDot } from "./card"
+export { Card, Card as CardV2, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from "./card"
 export { Badge, Badge as BadgeV2, badgeVariants } from "./badge"
-export { Input, Input as InputV2 } from "./input"
-export { Textarea, Textarea as TextareaV2 } from "./textarea"
+export { Input } from "./input"
+export { Textarea } from "./textarea"
 export { Label } from "./label"
-export { Skeleton, Skeleton as SkeletonV2, SpinnerV2 } from "./skeleton"
+export { Skeleton } from "./skeleton"
 
 export {
   Sidebar,
@@ -17,23 +17,16 @@ export {
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSkeleton,
-  SidebarSeparator,
   SidebarTrigger,
 } from "./sidebar"
 export {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "./navigation-menu"
 export {
   Breadcrumb,
@@ -117,17 +110,15 @@ export {
 export { Toaster } from "./sonner"
 
 export { Separator } from "./separator"
-export { ScrollArea, ScrollBar } from "./scroll-area"
+export { ScrollArea } from "./scroll-area"
 export { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./resizable"
-export { Collapsible, CollapsibleTrigger, CollapsibleContent } from "./collapsible"
+
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "./accordion"
 
 export {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -162,23 +153,15 @@ export {
 } from "./select"
 export { Checkbox } from "./checkbox"
 export { RadioGroup, RadioGroupItem } from "./radio-group"
-export { Slider } from "./slider"
+
 export { Switch } from "./switch"
-export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "./input-otp"
-export { Dropzone, DropzoneContent, DropzoneEmptyState, useDropzoneContext } from "./dropzone"
 
 export { Alert, AlertTitle, AlertDescription } from "./alert"
 
-export { GlassCard } from "./glass-card"
-export { MediaCard } from "./media-card"
-export { ActionCard } from "./action-card"
-export { StatsCard } from "./stats-card"
-export { OptimizedVirtualTable as OptimizedTable } from "./optimized-table"
-export { OptimizedInput } from "./optimized-input"
 export { UnifiedSidebar } from "./unified-sidebar"
 export { WidgetShell } from "./widget-shell"
 export { LanguageSelector } from "./language-selector"
-export { Tracker as MoodTracker } from "./mood-tracker"
+
 export { ColumnConfigDialog } from "./column-config-dialog"
 export {
   Carousel,
@@ -188,12 +171,4 @@ export {
   CarouselPrevious,
 } from "./carousel"
 
-export { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "./command"
-
-export {
-  HoverLift,
-  PressFeedback,
-  Shimmer,
-
-  StaggerContainer,
-} from "./micro-interactions"
+export { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "./command"
