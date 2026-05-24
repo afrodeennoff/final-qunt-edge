@@ -22,7 +22,7 @@ export function LiveInAction() {
       </div>
 
       {/* Cinematic video surface */}
-      <div className="group relative mx-auto mt-10 max-w-5xl overflow-hidden rounded-3xl border border-primary/15 bg-card shadow-2xl">
+      <div className="group relative mx-auto mt-10 max-w-5xl overflow-hidden rounded-2xl border border-primary/15 bg-card shadow-sm">
         <div className="aspect-video w-full bg-[linear-gradient(180deg,var(--background)_0%,var(--background)_100%)] flex items-center justify-center relative">
           <div className="absolute inset-0 bg-[radial-gradient(#1a1a1a_0.8px,transparent_1px)] bg-[length:4px_4px] opacity-40" />
 

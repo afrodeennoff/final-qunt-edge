@@ -21,18 +21,18 @@ export function Problem() {
   ]
 
   return (
-    <section className="py-20 border-b border-border/40">
+    <section className="py-20 border-b border-border/30">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-12">
           <h2 className="text-3xl font-semibold tracking-tight">The real problem with trading tools today</h2>
-          <p className="mt-3 text-muted-foreground">Most platforms add noise instead of clarity.</p>
+          <p className="mt-4 text-muted-foreground text-base">Most platforms add noise instead of clarity.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
           {problems.map((p, i) => (
-            <div key={i} className="rounded-xl border border-border/60 p-6 hover:border-border transition-colors">
+            <div key={i} className="rounded-xl border border-border/30 p-6 transition-colors hover:border-border/50">
               <div className="font-semibold text-lg mb-2">{p.title}</div>
-              <p className="text-muted-foreground leading-relaxed">{p.desc}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
             </div>
           ))}
         </div>

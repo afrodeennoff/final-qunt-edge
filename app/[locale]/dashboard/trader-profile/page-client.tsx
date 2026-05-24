@@ -812,252 +812,259 @@ export default function TraderProfilePageClient() {
     <UnifiedPageShell density="compact" widthClassName="max-w-[2400px]">
       <div className="animate-page-enter space-y-4 sm:space-y-5">
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1.6fr)_minmax(380px,0.95fr)] 2xl:grid-cols-[minmax(0,1.8fr)_minmax(420px,1fr)] 2xl:gap-8">
-          <section className="min-w-0 space-y-3.5 sm:space-y-4">
-            <UnifiedSurface
-              variant="elevated"
-              className="animate-fade-up-smooth overflow-hidden p-5 sm:p-6 lg:p-[1.75rem]"
-            >
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start">
-                  <Avatar className="h-20 w-20 shrink-0 rounded-2xl border border-border bg-background/70 sm:h-24 sm:w-24">
-                    <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
-                    <AvatarFallback className="bg-background text-lg font-semibold text-foreground">
-                      {profileInitials}
-                    </AvatarFallback>
-                  </Avatar>
+          {/* LEFT COLUMN - Single unified card */}
+          <UnifiedSurface
+            variant="elevated"
+            className="animate-fade-up-smooth overflow-hidden p-0"
+          >
+            <section className="min-w-0 divide-y divide-border/20">
+              {/* Section 1: Profile Header */}
+              <div className="p-5 sm:p-6 lg:p-[1.75rem]">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start">
+                    <Avatar className="h-20 w-20 shrink-0 rounded-2xl border border-border bg-background/70 sm:h-24 sm:w-24">
+                      <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
+                      <AvatarFallback className="bg-background text-lg font-semibold text-foreground">
+                        {profileInitials}
+                      </AvatarFallback>
+                    </Avatar>
 
-                  <div className="min-w-0 flex-1 space-y-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="secondary" className="gap-1.5">
-                        <Sparkles className="h-3.5 w-3.5" />
-                        Trader Profile
-                      </Badge>
-                      <TraderProfileShareButton />
-                    </div>
-
-                    <div className="space-y-2">
-                      <h2 className="truncate text-3xl font-semibold tracking-tight text-foreground sm:text-4xl 2xl:text-5xl">
-                        {profileName}
-                      </h2>
-
-                      <p className="max-w-2xl text-sm text-muted-foreground sm:text-[0.95rem]">
-                        Performance board for reviewing consistency, session rhythm, and active
-                        account health in one place.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <ProfileVisibilityPanel
-                  isOwnProfile={isOwnProfile}
-                  showOnLeaderboard={showOnLeaderboard}
-                  isTogglingVisibility={isTogglingVisibility}
-                  onToggle={handleToggleLeaderboard}
-                />
-              </div>
-            </UnifiedSurface>
-
-            <UnifiedSurface className="animate-fade-up-smooth-d1 p-4 sm:p-5">
-              <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.9fr)]">
-                <div className="space-y-3">
-                  <div className="grid gap-3 md:grid-cols-3">
-                    {primaryStripMetrics.map((metric) => (
-                      <StripMetric
-                        key={metric.label}
-                        label={metric.label}
-                        value={metric.value}
-                        tone={metric.tone}
-                        emphasis
-                        className="h-full"
-                      />
-                    ))}
-                  </div>
-
-                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                    {secondaryStripMetrics.map((metric) => (
-                      <StripMetric
-                        key={metric.label}
-                        label={metric.label}
-                        value={metric.value}
-                        tone={metric.tone}
-                        className="h-full"
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <div className={cn(insetPanelClassName, 'p-4 sm:p-4')}>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="space-y-1">
-                        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                          Review controls
-                        </p>
-                        <p className="text-sm font-semibold text-foreground">
-                          {reviewWindowSummary}
-                        </p>
+                    <div className="min-w-0 flex-1 space-y-3">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge variant="secondary" className="gap-1.5">
+                          <Sparkles className="h-3.5 w-3.5" />
+                          Trader Profile
+                        </Badge>
+                        <TraderProfileShareButton />
                       </div>
-                      <div className="rounded-2xl border border-border bg-muted/20 p-3.5">
-                        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                          Active session
-                        </p>
-                        <p className="mt-2 text-sm font-semibold text-foreground">
-                          {selectedDayLabel}
+
+                      <div className="space-y-2">
+                        <h2 className="truncate text-3xl font-semibold tracking-tight text-foreground sm:text-4xl 2xl:text-5xl">
+                          {profileName}
+                        </h2>
+
+                        <p className="max-w-2xl text-sm text-muted-foreground sm:text-[0.95rem]">
+                          Performance board for reviewing consistency, session rhythm, and active
+                          account health in one place.
                         </p>
                       </div>
                     </div>
-
-                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-                      <Select
-                        value={dateFilterPreset}
-                        onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
-                      >
-                        <SelectTrigger className="h-10 w-full border-border bg-muted/20 text-sm text-foreground">
-                          <SelectValue placeholder="Select range" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="last_week">Last Week</SelectItem>
-                          <SelectItem value="last_month">Last Month</SelectItem>
-                          <SelectItem value="last_3_months">Last 3 Months</SelectItem>
-                          <SelectItem value="last_6_months">Last 6 Months</SelectItem>
-                          <SelectItem value="last_year">Last Year</SelectItem>
-                          <SelectItem value="custom">Custom</SelectItem>
-                        </SelectContent>
-                      </Select>
-
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            className="h-10 justify-start border-border bg-muted/20 text-sm text-foreground hover:bg-background/85"
-                          >
-                            <CalendarIcon className="h-4 w-4" />
-                            {dateFilterLabel ?? 'Custom Range'}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-2" align="start">
-                          <Calendar
-                            mode="range"
-                            selected={customDateRange}
-                            onSelect={setCustomDateRange}
-                            numberOfMonths={isMobile ? 1 : 2}
-                            className="p-0"
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
                   </div>
+
+                  <ProfileVisibilityPanel
+                    isOwnProfile={isOwnProfile}
+                    showOnLeaderboard={showOnLeaderboard}
+                    isTogglingVisibility={isTogglingVisibility}
+                    onToggle={handleToggleLeaderboard}
+                  />
                 </div>
               </div>
-            </UnifiedSurface>
 
-            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    Active accounts
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Linked accounts contributing to the selected review window.
-                  </p>
-                </div>
-                <Badge variant="secondary">{activeAccountsCount} active</Badge>
-              </div>
-
-              <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.92fr)] 2xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,1fr)]">
-                <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
-                  {activeAccountLabels.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {activeAccountLabels.map((accountLabel) => (
-                        <span
-                          key={accountLabel}
-                          className="rounded-full border border-border bg-muted/20 px-3 py-1.5 text-xs font-medium text-foreground"
-                        >
-                          {accountLabel}
-                        </span>
+              {/* Section 2: Metrics Strip + Review Controls */}
+              <div className="p-4 sm:p-5">
+                <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.9fr)]">
+                  <div className="space-y-3">
+                    <div className="grid gap-3 md:grid-cols-3">
+                      {primaryStripMetrics.map((metric) => (
+                        <StripMetric
+                          key={metric.label}
+                          label={metric.label}
+                          value={metric.value}
+                          tone={metric.tone}
+                          emphasis
+                          className="h-full"
+                        />
                       ))}
                     </div>
-                  ) : (
-                    <div className={cn(insetPanelClassName, 'p-4 text-sm text-muted-foreground')}>
-                      No linked accounts yet.
+
+                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                      {secondaryStripMetrics.map((metric) => (
+                        <StripMetric
+                          key={metric.label}
+                          label={metric.label}
+                          value={metric.value}
+                          tone={metric.tone}
+                          className="h-full"
+                        />
+                      ))}
                     </div>
+                  </div>
+
+                  <div className={cn(insetPanelClassName, 'p-4 sm:p-4')}>
+                    <div className="flex flex-col gap-4">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="space-y-1">
+                          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                            Review controls
+                          </p>
+                          <p className="text-sm font-semibold text-foreground">
+                            {reviewWindowSummary}
+                          </p>
+                        </div>
+                        <div className="rounded-2xl border border-border bg-muted/20 p-3.5">
+                          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                            Active session
+                          </p>
+                          <p className="mt-2 text-sm font-semibold text-foreground">
+                            {selectedDayLabel}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                        <Select
+                          value={dateFilterPreset}
+                          onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
+                        >
+                          <SelectTrigger className="h-10 w-full border-border bg-muted/20 text-sm text-foreground">
+                            <SelectValue placeholder="Select range" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="last_week">Last Week</SelectItem>
+                            <SelectItem value="last_month">Last Month</SelectItem>
+                            <SelectItem value="last_3_months">Last 3 Months</SelectItem>
+                            <SelectItem value="last_6_months">Last 6 Months</SelectItem>
+                            <SelectItem value="last_year">Last Year</SelectItem>
+                            <SelectItem value="custom">Custom</SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              className="h-10 justify-start border-border bg-muted/20 text-sm text-foreground hover:bg-background/85"
+                            >
+                              <CalendarIcon className="h-4 w-4" />
+                              {dateFilterLabel ?? 'Custom Range'}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-2" align="start">
+                            <Calendar
+                              mode="range"
+                              selected={customDateRange}
+                              onSelect={setCustomDateRange}
+                              numberOfMonths={isMobile ? 1 : 2}
+                              className="p-0"
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Section 3: Active Accounts */}
+              <div className="p-5 sm:p-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                      Active accounts
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Linked accounts contributing to the selected review window.
+                    </p>
+                  </div>
+                  <Badge variant="secondary">{activeAccountsCount} active</Badge>
+                </div>
+
+                <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.92fr)] 2xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,1fr)]">
+                  <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
+                    {activeAccountLabels.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {activeAccountLabels.map((accountLabel) => (
+                          <span
+                            key={accountLabel}
+                            className="rounded-full border border-border bg-muted/20 px-3 py-1.5 text-xs font-medium text-foreground"
+                          >
+                            {accountLabel}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className={cn(insetPanelClassName, 'p-4 text-sm text-muted-foreground')}>
+                        No linked accounts yet.
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 2xl:grid-cols-3">
+                    <SignalTile
+                      label="Total capital"
+                      value={formatCapitalCompact(totalCapitalAllAccounts)}
+                      tone={totalCapitalAllAccounts >= 0 ? 'positive' : 'negative'}
+                    />
+                    <SignalTile
+                      label="Total withdraw"
+                      value={formatCapitalCompact(totalWithdrawAllAccounts)}
+                    />
+                    <SignalTile
+                      label="Active days"
+                      value={String(tradeCalendarDays.length)}
+                      tone={tradeCalendarDays.length > 0 ? 'positive' : 'default'}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Section 4: Daily Session Pattern */}
+              <div className="p-5 sm:p-6">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                      Daily session pattern
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Review day-by-day trading rhythm and the currently selected session result.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px]">
+                    <StatTile label="Selected day" value={selectedDayLabel} className="p-3" />
+                    <StatTile
+                      label="Selected PnL"
+                      value={formatSigned(selectedPnl)}
+                      tone={selectedPnl >= 0 ? 'positive' : 'negative'}
+                      className="p-3"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  className={cn(
+                    insetPanelClassName,
+                    'mt-4 min-h-[30rem] overflow-x-auto p-2 sm:p-3 lg:min-h-[36rem] 2xl:min-h-[42rem]',
                   )}
-                </div>
+                >
+                  <CalendarWidget
+                    selectedDay={selectedCalendarDay}
+                    latestTradeDay={latestTradeDay}
+                    onSelectDay={setSelectedCalendarDay}
+                    positivePnlDays={positivePnlDays}
+                    negativePnlDays={negativePnlDays}
+                    tradePnlByDay={tradePnlByDay}
+                  />
 
-                <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 2xl:grid-cols-3">
-                  <SignalTile
-                    label="Total capital"
-                    value={formatCapitalCompact(totalCapitalAllAccounts)}
-                    tone={totalCapitalAllAccounts >= 0 ? 'positive' : 'negative'}
-                  />
-                  <SignalTile
-                    label="Total withdraw"
-                    value={formatCapitalCompact(totalWithdrawAllAccounts)}
-                  />
-                  <SignalTile
-                    label="Active days"
-                    value={String(tradeCalendarDays.length)}
-                    tone={tradeCalendarDays.length > 0 ? 'positive' : 'default'}
-                  />
+                  <div className="mt-4 flex flex-wrap items-center gap-3 px-1 text-[11px] text-muted-foreground">
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className="h-2 w-2 rounded-full bg-semantic-success-bg/50" />
+                      Profit day
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className="h-2 w-2 rounded-full bg-semantic-error-border" />
+                      Loss day
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className="h-2 w-2 rounded-full bg-primary/30" />
+                      No trades
+                    </span>
+                  </div>
                 </div>
               </div>
-            </UnifiedSurface>
-
-            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 overflow-hidden p-5 sm:p-6">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    Daily session pattern
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Review day-by-day trading rhythm and the currently selected session result.
-                  </p>
-                </div>
-
-                <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px]">
-                  <StatTile label="Selected day" value={selectedDayLabel} className="p-3" />
-                  <StatTile
-                    label="Selected PnL"
-                    value={formatSigned(selectedPnl)}
-                    tone={selectedPnl >= 0 ? 'positive' : 'negative'}
-                    className="p-3"
-                  />
-                </div>
-              </div>
-
-              <div
-                className={cn(
-                  insetPanelClassName,
-                  'mt-4 min-h-[30rem] overflow-x-auto p-2 sm:p-3 lg:min-h-[36rem] 2xl:min-h-[42rem]',
-                )}
-              >
-                <CalendarWidget
-                  selectedDay={selectedCalendarDay}
-                  latestTradeDay={latestTradeDay}
-                  onSelectDay={setSelectedCalendarDay}
-                  positivePnlDays={positivePnlDays}
-                  negativePnlDays={negativePnlDays}
-                  tradePnlByDay={tradePnlByDay}
-                />
-
-                <div className="mt-4 flex flex-wrap items-center gap-3 px-1 text-[11px] text-muted-foreground">
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-semantic-success-bg/50" />
-                    Profit day
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-semantic-error-border" />
-                    Loss day
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-primary/30" />
-                    No trades
-                  </span>
-                </div>
-              </div>
-            </UnifiedSurface>
-          </section>
+            </section>
+          </UnifiedSurface>
 
           <UnifiedSurface
             variant="elevated"

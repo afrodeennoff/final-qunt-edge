@@ -2,7 +2,7 @@
 
 export function TrustBar() {
   return (
-    <div className="border-b border-border/40 py-6">
+    <div className="border-b border-border/30 py-6">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center gap-3 text-center">
           <div className="text-sm text-muted-foreground">
