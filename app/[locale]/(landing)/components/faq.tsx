@@ -7,7 +7,7 @@ export default function FAQ() {
 
  return (
  <section className="py-12 sm:py-16 lg:py-24">
- <div className="mx-6 overflow-hidden rounded-3xl border border-border bg-black p-6 shadow-2xl">
+ <div className="mx-6 overflow-hidden rounded-3xl border border-border bg-background p-6 shadow-2xl">
  <div className="container mx-auto px-4">
  <div className="grid gap-6 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]">
  <div className="rounded-xl border border-border bg-muted/20 p-6">
@@ -21,7 +21,7 @@ export default function FAQ() {
  The essentials traders ask before they connect accounts, switch workflows, or evaluate the platform for team use.
  </p>
  </div>
- <div className="rounded-xl border border-border bg-black/20 p-6">
+ <div className="rounded-xl border border-border bg-background/20 p-6">
  <div className="space-y-4">
  <details className="rounded-xl border border-border bg-muted/20 p-4">
  <summary className="cursor-pointer font-semibold text-foreground">

@@ -65,7 +65,7 @@ export default function ProblemStatement() {
  transition={{ duration: 0.5, delay: i * 0.1 }}
  className="group relative rounded-xl border border-border bg-muted/20 p-6 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 hover:border-border"
  >
- <div className="relative h-full overflow-hidden rounded-xl border border-border bg-black/25 p-4 transition-colors group-hover:border-border sm:p-6">
+ <div className="relative h-full overflow-hidden rounded-xl border border-border bg-background/25 p-4 transition-colors group-hover:border-border sm:p-6">
  <div className="absolute right-3 top-3 text-[8px] font-mono text-foreground/80 transition-colors group-hover:text-fg-primary sm:right-4 sm:top-4 sm:text-[9px]">
  {item.code}
  </div>

@@ -68,7 +68,7 @@ export function UnifiedPageHeader({
   return (
     <header
       className={cn(
-        'mb-6 rounded-xl border border-border bg-card px-4 py-4 sm:py-6 shadow-none sm:px-6',
+        'mb-6 rounded-xl border border-border/30 bg-card px-4 py-4 sm:py-6 shadow-none sm:px-6',
         'animate-fade-up-smooth transition-[transform,background-color,border-color,opacity] duration-200 ease-out',
         variant === 'gradient' && 'border-primary/20',
         variant === 'elevated' && 'shadow-sm',
@@ -78,7 +78,7 @@ export function UnifiedPageHeader({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
         <div className="space-y-2">
           {eyebrow && (
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground mb-2">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-2">
               {eyebrow}
             </p>
           )}
@@ -112,9 +112,9 @@ export function UnifiedSurface({ children, className, variant = 'default', hover
   return (
     <section
       className={cn(
-        'rounded-xl border border-border bg-card p-4 shadow-none sm:p-6',
+        'rounded-xl border border-border/30 bg-card p-4 shadow-none sm:p-6',
         'transition-[background-color,border-color,opacity] duration-150 ease-out',
-        hover && 'hover:bg-muted/30 hover:border-border/80',
+        hover && 'hover:bg-muted/30 hover:border-border/50',
         variant === 'elevated' && 'shadow-sm',
         variant === 'subtle' && 'bg-muted border-border/60',
         className,

@@ -240,7 +240,7 @@ export function MarketingHyperframe({
 }) {
   return (
     <Card id={id} className={cn('overflow-hidden p-0', className)}>
-      <div className="flex items-center justify-between border-b border-white/5 bg-muted/50 px-4 py-2.5">
+      <div className="flex items-center justify-between border-b border-foreground/5 bg-muted/50 px-4 py-2.5">
         <div className="flex items-center gap-1.5 px-2 py-1" aria-hidden>
           <span className="h-3 w-3 rounded-full bg-destructive/80" />
           <span className="h-3 w-3 rounded-full bg-warning/80" />

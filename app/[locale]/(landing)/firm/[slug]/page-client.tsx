@@ -1279,7 +1279,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
 
   return (
     <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] sm:p-7 lg:p-9">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.08),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.04),_transparent_40%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_hsl(var(--foreground)/0.08),_transparent_34%),radial-gradient(circle_at_bottom_right,_hsl(var(--foreground)/0.04),_transparent_40%)]" />
       <div className="relative space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">
           <div className="flex items-start gap-6">
@@ -1346,7 +1346,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
   const visibleCouponCount = getVisibleCouponCount(firm)
 
   return (
-    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,rgba(10,10,10,0.96)_24%,hsl(var(--background))_100%)]">
+    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.05),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--background)/0.96)_24%,hsl(var(--background))_100%)]">
       <div className="mx-auto w-full max-w-[1240px] flex-1 overflow-y-auto px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         <FirmHeader firm={firm} />
 

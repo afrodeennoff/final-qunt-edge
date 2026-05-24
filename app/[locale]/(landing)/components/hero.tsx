@@ -57,7 +57,7 @@ export default function Hero({ }: HeroProps) {
 					className="mt-8"
 				>
 					<h1 className="mb-6 text-[clamp(2rem,6vw,5.625rem)] font-[350] leading-[1.06] tracking-[-0.045em] text-foreground [font-family:var(--font-geist,sans-serif)]">
-						Qunt <span className="bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">Edge.</span>
+						Qunt <span className="bg-gradient-to-r from-foreground via-foreground to-foreground/60 bg-clip-text text-transparent">Edge.</span>
 					</h1>
 
 					<p className="text-[15px] max-w-lg mx-auto mb-12 leading-[1.65] font-[350] px-2 text-muted-foreground tracking-[-0.01em]">
@@ -74,7 +74,7 @@ export default function Hero({ }: HeroProps) {
 				>
 					<Link
 						href={`/${locale}/authentication?next=dashboard`}
-						className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center rounded-full bg-white px-8 text-center text-[13px] font-semibold text-black tracking-[-0.01em] transition-[background-color,opacity] hover:bg-white/90 sm:w-auto"
+						className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center rounded-full bg-foreground px-8 text-center text-[13px] font-semibold text-background tracking-[-0.01em] transition-[background-color,opacity] hover:bg-foreground/90 sm:w-auto"
 					>
 						<span className="relative z-10">Start Free Audit</span>
 					</Link>

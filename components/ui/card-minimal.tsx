@@ -37,21 +37,21 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const baseClasses = cn(
       'relative overflow-hidden text-foreground',
       'transition-[opacity,background-color,border-color] duration-[200ms] ease-out',
-      hover && 'hover:shadow-lg hover:-translate-y-px',
-      isInteractive && 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
+      hover && 'hover:shadow-sm',
+      isInteractive && 'cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/30',
       isLoading && 'pointer-events-none opacity-80'
     )
 
     const variantClasses = {
-      default: 'rounded-lg border border-border bg-card shadow-none',
-      flat: 'rounded-lg border-transparent bg-transparent shadow-none',
-      embedded: 'rounded-lg border border-border/50 bg-card shadow-none',
+      default: 'rounded-xl border border-border/30 bg-card shadow-none',
+      flat: 'rounded-xl border-transparent bg-transparent shadow-none',
+      embedded: 'rounded-xl border border-border/40 bg-card shadow-none',
     }
 
     const sizeClasses = {
-      sm: 'p-3 text-sm',
+      sm: 'p-3 type-body-sm',
       md: 'p-4',
-      lg: 'p-6 text-lg',
+      lg: 'p-6 type-body-lg',
     }
 
     return (

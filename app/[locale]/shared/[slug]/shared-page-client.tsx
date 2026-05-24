@@ -96,7 +96,7 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
               className={cn(
                 'mr-1.5 h-2.5 w-2.5 shrink-0 rounded-full xs:mr-2',
                 accountNumbers.includes(account)
-                  ? 'bg-primary shadow-[0_0_12px_rgba(56,189,248,0.7)]'
+                  ? 'bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.7)]'
                   : 'bg-foreground/20',
               )}
             />

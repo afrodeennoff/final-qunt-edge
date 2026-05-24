@@ -213,7 +213,7 @@ export async function syncTradeTagsToTagTableAction() {
         data: tagsToCreate.map(tag => ({
           name: tag,
           userId,
-          color: '#CBD5E1', // Default color
+          color: 'hsl(var(--muted-foreground))', // Default color (theme token)
         })),
         skipDuplicates: true,
       })

@@ -82,7 +82,7 @@ export default function HowItWorks() {
                 className="relative z-10 min-w-[280px] flex-shrink-0 snap-center rounded-xl border border-border bg-muted/20 p-4 lg:min-w-0"
               >
                 <div className="mb-6 flex items-center justify-between gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-black/50">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-background/50">
                     <span className="font-mono text-xs font-bold text-foreground sm:text-sm">
                       0{i + 1}
                     </span>

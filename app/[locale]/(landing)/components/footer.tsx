@@ -55,7 +55,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-border bg-black py-12 sm:py-16"
+      className="border-t border-border bg-background py-12 sm:py-16"
     >
       <h2 id="footer-heading" className="sr-only">
         {t('footer.heading')}
@@ -70,7 +70,7 @@ export default function Footer() {
       >
         <div
           className={cn(
-            'rounded-2xl border border-border bg-black shadow-lg',
+            'rounded-2xl border border-border bg-background shadow-lg',
             'grid gap-8 p-7 sm:p-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)] lg:p-10',
           )}
         >

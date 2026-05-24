@@ -29,7 +29,7 @@ export function InteractiveWrapper({
  magnetic = false,
  draggable = false,
  onDragEnd,
- glowColor ="rgba(41, 98, 255, 0.25)",
+ glowColor ="hsl(var(--primary) / 0.25)",
 }: InteractiveWrapperProps) {
  const prefersReducedMotion = useReducedMotion()
  const ref = useRef<HTMLDivElement>(null)
@@ -229,7 +229,7 @@ interface GlowOnHoverProps {
 export function GlowOnHover({
  children,
  className,
- glowColor ="rgba(41, 98, 255, 0.4)",
+ glowColor ="hsl(var(--primary) / 0.4)",
  glowSize = 20,
 }: GlowOnHoverProps) {
  const prefersReducedMotion = useReducedMotion()

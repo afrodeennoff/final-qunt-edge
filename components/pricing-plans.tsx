@@ -390,7 +390,7 @@ function PlusPlanCard({
               {t('pricing.billingPeriod')}
             </span>
 
-            <div className="grid grid-cols-3 gap-1 rounded-[1rem] border border-border/0.04 bg-black/25 p-1">
+            <div className="grid grid-cols-3 gap-1 rounded-[1rem] border border-border/0.04 bg-background/25 p-1">
               {recurringBillingOptions.map((option) => (
                 <button
                   key={option.key}

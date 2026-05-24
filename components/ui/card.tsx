@@ -61,7 +61,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           variant === 'outlined' && 'bg-transparent border-border shadow-none',
           variant === 'flat' && 'border-transparent bg-transparent shadow-none',
           variant === 'default' && 'bg-card border border-border/30 shadow-none',
-          variant === 'elevated' && 'bg-card border border-border/30 shadow-sm',
+          variant === 'elevated' && 'bg-card border border-border/40 shadow-sm',
           accent && accentClassMap[accent],
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',
