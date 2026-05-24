@@ -46,8 +46,8 @@ export default function TeamMembersPage() {
         </div>
       </header>
 
-      <Card variant="default" className="border-primary/15 bg-primary/5">
-        <CardContent className="p-2 sm:p-3">
+      <Card variant="default" className="border-border/30">
+        <CardContent className="p-4 sm:p-5">
           <TeamManagement />
         </CardContent>
       </Card>

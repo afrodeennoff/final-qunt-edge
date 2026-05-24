@@ -183,8 +183,8 @@ export default function TeamAnalyticsPage() {
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="h-28 animate-pulse rounded-xl border border-border/30 bg-card/50" />
-        <div className="h-80 animate-pulse rounded-xl border border-border/30 bg-card/50" />
+        <div className="h-28 animate-pulse rounded-xl border border-border/30 bg-card" />
+        <div className="h-80 animate-pulse rounded-xl border border-border/30 bg-card" />
       </div>
     )
   }
@@ -203,7 +203,7 @@ export default function TeamAnalyticsPage() {
           </p>
         </header>
 
-        <Card className="border-border/30 bg-card/50">
+        <Card className="border-border/30 bg-card">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <BarChart3 className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">No analytics data yet</h3>
@@ -230,7 +230,7 @@ export default function TeamAnalyticsPage() {
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="border-border/30 bg-card/50">
+        <Card className="border-border/30 bg-card">
           <CardHeader className="pb-2">
             <CardDescription>Total PnL</CardDescription>
             <CardTitle className={cn('text-xl', summary.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}>
@@ -239,21 +239,21 @@ export default function TeamAnalyticsPage() {
           </CardHeader>
         </Card>
 
-        <Card className="border-border/30 bg-card/50">
+        <Card className="border-border/30 bg-card">
           <CardHeader className="pb-2">
             <CardDescription>Win Rate</CardDescription>
             <CardTitle className="text-xl">{summary.winRate.toFixed(1)}%</CardTitle>
           </CardHeader>
         </Card>
 
-        <Card className="border-border/30 bg-card/50">
+        <Card className="border-border/30 bg-card">
           <CardHeader className="pb-2">
             <CardDescription>Total Trades</CardDescription>
             <CardTitle className="text-xl">{summary.trades}</CardTitle>
           </CardHeader>
         </Card>
 
-        <Card className="border-border/30 bg-card/50">
+        <Card className="border-border/30 bg-card">
           <CardHeader className="pb-2">
             <CardDescription>Profit Factor</CardDescription>
             <CardTitle className="text-xl">{summary.profitFactor.toFixed(2)}</CardTitle>
@@ -262,7 +262,7 @@ export default function TeamAnalyticsPage() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-12">
-        <Card data-chart-surface="modern" className="border-border/30 bg-card/50 xl:col-span-8">
+        <Card data-chart-surface="modern" className="border-border/30 bg-card xl:col-span-8">
           <CardHeader>
             <CardTitle className="text-lg">Cumulative Equity</CardTitle>
             <CardDescription>Rolling team performance over time</CardDescription>
@@ -303,7 +303,7 @@ export default function TeamAnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-border/30 bg-card/50 xl:col-span-4">
+        <Card className="border-border/30 bg-card xl:col-span-4">
           <CardHeader>
             <CardTitle className="text-lg">Member Breakdown</CardTitle>
             <CardDescription>Per-trader contribution</CardDescription>
@@ -337,7 +337,7 @@ export default function TeamAnalyticsPage() {
         </Card>
       </div>
 
-      <Card className="border-border/30 bg-card/50">
+      <Card className="border-border/30 bg-card">
         <CardHeader>
           <CardTitle className="inline-flex items-center gap-2 text-lg">
             <TrendingUp className="h-5 w-5 text-primary" />

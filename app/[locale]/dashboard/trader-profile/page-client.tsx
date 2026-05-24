@@ -91,7 +91,7 @@ type DateFilterPreset =
 type StatTone = 'default' | 'positive' | 'negative'
 
 const insetPanelClassName =
-  'rounded-xl border border-border bg-muted/20 shadow-none'
+  'rounded-md border border-border/30 bg-muted/40 shadow-none'
 
 function clamp(value: number, min = 0, max = 100) {
   return Math.min(max, Math.max(min, value))
