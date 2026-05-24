@@ -222,7 +222,7 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
           className={cn(
-            'flex h-full w-full flex-col border border-sidebar-border bg-sidebar shadow-sm',
+            'flex h-full w-full flex-col bg-sidebar',
             'group-data-[variant=floating]:rounded-2xl',
             'group-data-[variant=inset]:rounded-2xl',
           )}
@@ -243,7 +243,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       variant="ghost"
       size="icon"
       className={cn(
-        'size-9 rounded-xl border border-sidebar-border bg-sidebar text-muted-foreground shadow-none hover:border-sidebar-primary/30 hover:bg-sidebar-primary/8 hover:text-foreground',
+        'size-9 rounded-xl border border-sidebar-border/50 bg-sidebar text-muted-foreground shadow-none hover:border-sidebar-primary/30 hover:bg-sidebar-primary/8 hover:text-foreground',
         className,
       )}
       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
@@ -452,7 +452,7 @@ const sidebarMenuButtonVariants = cva(
       variant: {
         default: 'hover:bg-sidebar-accent/65 hover:text-foreground',
         outline:
-          'border border-sidebar-border bg-sidebar-accent shadow-none hover:border-sidebar-primary/10 hover:bg-sidebar-primary/10 hover:text-foreground',
+          'border border-sidebar-border/40 bg-sidebar-accent/50 shadow-none hover:border-sidebar-primary/12 hover:bg-sidebar-primary/8 hover:text-foreground',
       },
       size: {
         default: 'h-8 text-sm',
@@ -590,7 +590,7 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<'ul'>) {
       data-slot="sidebar-menu-sub"
       data-sidebar="menu-sub"
       className={cn(
-        'mx-4 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2 py-1',
+        'mx-4 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border/40 px-2 py-1',
         'group-data-[collapsible=icon]:hidden',
         className,
       )}

@@ -2777,7 +2777,7 @@ img[loading='lazy'] {
 
 /* Active nav items — custom indicator */
 [data-sidebar='menu-item'][data-active='true']::before {
-  background: oklch(0.6083 0.2172 297.1153 / 0.6);
+  background: hsl(var(--sidebar-primary) / 0.6);
 }
 
 /* ===== HOME PAGE ANIMATIONS ===== */

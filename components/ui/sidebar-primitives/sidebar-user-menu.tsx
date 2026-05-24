@@ -102,7 +102,7 @@ export function SidebarUserMenu({
                   <SelectTrigger className="w-full border-sidebar-border/24 bg-sidebar-accent/20 text-sm hover:border-sidebar-primary/18 hover:bg-sidebar-accent/34 data-[placeholder]:text-sidebar-foreground/40">
                     <SelectValue placeholder="Select timezone" />
                   </SelectTrigger>
-                  <SelectContent className="border-sidebar-border/24 bg-sidebar/98 text-popover-foreground">
+                  <SelectContent className="border-sidebar-border/24 bg-sidebar/98 text-sidebar-foreground">
                     {timezone.options.map((tz) => (
                       <SelectItem key={tz} value={tz}>
                         {tz}

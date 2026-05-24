@@ -1069,7 +1069,7 @@ export default function TraderProfilePageClient() {
               benchmarkSampleSize={benchmark?.sampleSize}
             />
 
-            <div className="border-t border-border" />
+            <div className="border-t border-border/25" />
 
             <div>
               <div className="flex items-center gap-2">
