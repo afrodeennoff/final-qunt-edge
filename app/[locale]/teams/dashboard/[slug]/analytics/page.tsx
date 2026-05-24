@@ -232,8 +232,8 @@ export default function TeamAnalyticsPage() {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Card className="border-border/30 bg-card">
           <CardHeader className="pb-2">
-            <CardDescription>Total PnL</CardDescription>
-            <CardTitle className={cn('text-xl', summary.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}>
+            <CardDescription className="text-[11px] font-semibold uppercase tracking-[0.12em]">Total PnL</CardDescription>
+            <CardTitle className={cn('text-xl font-black', summary.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}>
               {formatCurrency(summary.totalPnL)}
             </CardTitle>
           </CardHeader>
@@ -241,22 +241,22 @@ export default function TeamAnalyticsPage() {
 
         <Card className="border-border/30 bg-card">
           <CardHeader className="pb-2">
-            <CardDescription>Win Rate</CardDescription>
-            <CardTitle className="text-xl">{summary.winRate.toFixed(1)}%</CardTitle>
+            <CardDescription className="text-[11px] font-semibold uppercase tracking-[0.12em]">Win Rate</CardDescription>
+            <CardTitle className="text-xl font-black">{summary.winRate.toFixed(1)}%</CardTitle>
           </CardHeader>
         </Card>
 
         <Card className="border-border/30 bg-card">
           <CardHeader className="pb-2">
-            <CardDescription>Total Trades</CardDescription>
-            <CardTitle className="text-xl">{summary.trades}</CardTitle>
+            <CardDescription className="text-[11px] font-semibold uppercase tracking-[0.12em]">Total Trades</CardDescription>
+            <CardTitle className="text-xl font-black">{summary.trades}</CardTitle>
           </CardHeader>
         </Card>
 
         <Card className="border-border/30 bg-card">
           <CardHeader className="pb-2">
-            <CardDescription>Profit Factor</CardDescription>
-            <CardTitle className="text-xl">{summary.profitFactor.toFixed(2)}</CardTitle>
+            <CardDescription className="text-[11px] font-semibold uppercase tracking-[0.12em]">Profit Factor</CardDescription>
+            <CardTitle className="text-xl font-black">{summary.profitFactor.toFixed(2)}</CardTitle>
           </CardHeader>
         </Card>
       </div>
@@ -264,8 +264,8 @@ export default function TeamAnalyticsPage() {
       <div className="grid gap-4 xl:grid-cols-12">
         <Card data-chart-surface="modern" className="border-border/30 bg-card xl:col-span-8">
           <CardHeader>
-            <CardTitle className="text-lg">Cumulative Equity</CardTitle>
-            <CardDescription>Rolling team performance over time</CardDescription>
+            <CardTitle className="text-lg font-semibold">Cumulative Equity</CardTitle>
+            <CardDescription className="text-[13px] leading-[1.55]">Rolling team performance over time</CardDescription>
           </CardHeader>
           <CardContent className="h-[320px] sm:h-[380px]">
             {data?.chartData?.length ? (
@@ -305,8 +305,8 @@ export default function TeamAnalyticsPage() {
 
         <Card className="border-border/30 bg-card xl:col-span-4">
           <CardHeader>
-            <CardTitle className="text-lg">Member Breakdown</CardTitle>
-            <CardDescription>Per-trader contribution</CardDescription>
+            <CardTitle className="text-lg font-semibold">Member Breakdown</CardTitle>
+            <CardDescription className="text-[13px] leading-[1.55]">Per-trader contribution</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {data?.membersPerformance?.length ? (
@@ -339,7 +339,7 @@ export default function TeamAnalyticsPage() {
 
       <Card className="border-border/30 bg-card">
         <CardHeader>
-          <CardTitle className="inline-flex items-center gap-2 text-lg">
+          <CardTitle className="inline-flex items-center gap-2 text-lg font-semibold">
             <TrendingUp className="h-5 w-5 text-primary" />
             Recommendations
           </CardTitle>

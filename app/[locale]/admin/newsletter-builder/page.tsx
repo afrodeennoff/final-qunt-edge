@@ -25,15 +25,15 @@ export default async function AdminPage({
   }
 
   return (
-    <div className="w-full px-4 py-6 space-y-8 sm:px-6 lg:px-8">
+    <div className="w-full px-4 py-6 space-y-6 sm:px-6 lg:px-8">
       <NewsletterProvider>
         {/* Editor and Preview */}
         <ResizablePanelGroup
           direction="horizontal"
-          className="min-h-[600px] rounded-lg border"
+          className="min-h-[600px] rounded-xl border border-border/30"
         >
           <ResizablePanel defaultSize={50}>
-            <div className="h-full p-4">
+            <div className="h-full p-5">
               <Suspense fallback={null}>
                 <NewsletterEditor />
               </Suspense>
@@ -43,7 +43,7 @@ export default async function AdminPage({
           <ResizableHandle withHandle />
 
           <ResizablePanel defaultSize={50}>
-            <div className="h-full p-4">
+            <div className="h-full p-5">
               <Suspense fallback={null}>
                 <NewsletterPreview />
               </Suspense>
@@ -52,11 +52,20 @@ export default async function AdminPage({
         </ResizablePanelGroup>
 
         {/* Subscribers Table */}
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">Subscribers</h2>
-          <Suspense fallback={null}>
-            <SubscriberTable />
-          </Suspense>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <h2 className="text-2xl font-black tracking-tight">Subscribers</h2>
+              <p className="text-sm text-muted-foreground">
+                Manage newsletter subscribers and view subscriber data
+              </p>
+            </div>
+          </div>
+          <div className="rounded-xl border border-border/30 bg-background/40 p-6">
+            <Suspense fallback={null}>
+              <SubscriberTable />
+            </Suspense>
+          </div>
         </div>
       </NewsletterProvider>
     </div>

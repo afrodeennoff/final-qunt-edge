@@ -94,10 +94,10 @@ export default async function TeamManageLayout({
                 <div className="flex items-center gap-3">
                   <SidebarTrigger className="-ml-1" />
                   <div className="flex flex-col">
-                    <h1 className="text-sm font-bold tracking-wide text-foreground">
+                    <h1 className="text-sm font-black tracking-wide text-foreground">
                       Team Management
                     </h1>
-                    <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                    <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
                       Unified Workspace
                     </span>
                   </div>

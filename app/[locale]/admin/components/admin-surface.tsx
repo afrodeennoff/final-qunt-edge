@@ -29,9 +29,9 @@ export function AdminPageHeader({
       )}
     >
       <div className="max-w-3xl space-y-2">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary/80">{eyebrow}</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.12em] text-primary/80">{eyebrow}</p>
         <div className="space-y-1">
-          <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+          <h1 className="text-2xl font-black tracking-tight">{title}</h1>
           <p className="max-w-2xl text-sm text-muted-foreground">{description}</p>
         </div>
       </div>

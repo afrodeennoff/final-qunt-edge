@@ -3,6 +3,7 @@ import { setStaticParamsLocale } from 'next-international/server'
 import Link from 'next/link'
 import { BookOpen, Brain, Cable, Code2 } from 'lucide-react'
 import { buildPublicMetadata } from '@/lib/seo'
+import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
 
 export async function generateMetadata({
   params,
@@ -24,45 +25,92 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
   setStaticParamsLocale(locale)
 
   return (
-    <div className="w-full py-12 px-4 sm:px-6 sm:py-16 lg:px-8">
-      <header className="mb-12">
-        <h1 className="text-4xl font-extrabold tracking-tight text-foreground mb-4">Documentation</h1>
-        <p className="text-xl text-muted-foreground">Everything you need to master Qunt Edge workflows.</p>
-      </header>
+    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+      <UnifiedSurface className="space-y-6">
+        <header className="space-y-3">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Documentation</p>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            Documentation
+          </h1>
+          <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+            Everything you need to master Qunt Edge workflows.
+          </p>
+        </header>
 
-      <div className="grid gap-8 md:grid-cols-2">
-        <div className="p-6 rounded-xl bg-muted/20 border border-border hover:border-border transition-colors group">
-          <BookOpen className="h-5 w-5 mb-3 text-primary" />
-          <h2 className="text-lg font-bold text-foreground mb-2">Getting Started</h2>
-          <p className="text-muted-foreground text-sm mb-4">New to Qunt Edge? Learn the basics and set up your institutional-grade dashboard in minutes.</p>
-          <span className="text-foreground text-xs font-bold uppercase tracking-widest">Coming Soon</span>
+        <div className="grid gap-6 md:grid-cols-2">
+          <UnifiedSurface variant="subtle">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-primary">
+              <BookOpen className="h-5 w-5" />
+            </div>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground mb-2">Getting Started</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+              New to Qunt Edge? Learn the basics and set up your institutional-grade dashboard in minutes.
+            </p>
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Coming Soon
+            </span>
+          </UnifiedSurface>
+
+          <UnifiedSurface variant="subtle">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-primary">
+              <Cable className="h-5 w-5" />
+            </div>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground mb-2">Data Connectors</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+              Detailed guides on connecting Tradovate, Rithmic, IBKR, and more to your intelligence layer.
+            </p>
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Coming Soon
+            </span>
+          </UnifiedSurface>
+
+          <UnifiedSurface variant="subtle">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-primary">
+              <Brain className="h-5 w-5" />
+            </div>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground mb-2">AI Journaling</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+              How to leverage our unique AI models to audit your behavioral execution, not just your PnL.
+            </p>
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Coming Soon
+            </span>
+          </UnifiedSurface>
+
+          <UnifiedSurface variant="subtle">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-primary">
+              <Code2 className="h-5 w-5" />
+            </div>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground mb-2">API Reference</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+              For power users and institutions looking to integrate Qunt Edge analytics into their custom workflows.
+            </p>
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Coming Soon
+            </span>
+          </UnifiedSurface>
         </div>
 
-        <div className="p-6 rounded-xl bg-muted/20 border border-border hover:border-border transition-colors group">
-          <Cable className="h-5 w-5 mb-3 text-primary" />
-          <h2 className="text-lg font-bold text-foreground mb-2">Data Connectors</h2>
-          <p className="text-muted-foreground text-sm mb-4">Detailed guides on connecting Tradovate, Rithmic, IBKR, and more to your intelligence layer.</p>
-          <span className="text-foreground text-xs font-bold uppercase tracking-widest">Coming Soon</span>
-        </div>
-
-        <div className="p-6 rounded-xl bg-muted/20 border border-border hover:border-border transition-colors group">
-          <Brain className="h-5 w-5 mb-3 text-primary" />
-          <h2 className="text-lg font-bold text-foreground mb-2">AI Journaling</h2>
-          <p className="text-muted-foreground text-sm mb-4">How to leverage our unique AI models to audit your behavioral execution, not just your PnL.</p>
-          <span className="text-foreground text-xs font-bold uppercase tracking-widest">Coming Soon</span>
-        </div>
-
-        <div className="p-6 rounded-xl bg-muted/20 border border-border hover:border-border transition-colors group">
-          <Code2 className="h-5 w-5 mb-3 text-primary" />
-          <h2 className="text-lg font-bold text-foreground mb-2">API Reference</h2>
-          <p className="text-muted-foreground text-sm mb-4">For power users and institutions looking to integrate Qunt Edge analytics into their custom workflows.</p>
-          <span className="text-foreground text-xs font-bold uppercase tracking-widest">Coming Soon</span>
-        </div>
-      </div>
-
-      <footer className="mt-24 pt-8 border-t border-border text-center">
-        <p className="text-muted-foreground text-sm">Need immediate help? Visit our <Link href={`/${locale}/support`} className="text-foreground hover:underline">Support Center</Link> or join our <a href="https://discord.gg/efHDc43M" className="text-foreground hover:underline">Discord</a>.</p>
-      </footer>
-    </div>
+        <footer className="pt-6 border-t border-border/30 text-center">
+          <p className="text-sm text-muted-foreground">
+            Need immediate help? Visit our{' '}
+            <Link
+              href={`/${locale}/support`}
+              className="text-primary underline underline-offset-4 transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
+            >
+              Support Center
+            </Link>{' '}
+            or join our{' '}
+            <a
+              href="https://discord.gg/efHDc43M"
+              className="text-primary underline underline-offset-4 transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
+            >
+              Discord
+            </a>
+            .
+          </p>
+        </footer>
+      </UnifiedSurface>
+    </UnifiedPageShell>
   )
 }

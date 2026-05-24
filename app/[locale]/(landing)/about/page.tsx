@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BookOpen, Code, GraduationCap, LineChart } from 'lucide-react'
 import { ButtonV2 as Button, BadgeV2 as Badge } from '@/components/ui/v2'
+import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
 import { buildPublicMetadata } from '@/lib/seo'
 
 export async function generateMetadata({
@@ -56,54 +57,67 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   ]
 
   return (
-    <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
-      <header className="mb-6 rounded-xl border border-border bg-muted/20 p-6">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">About Qunt Edge</h1>
-        <p className="mt-2 max-w-3xl text-sm text-muted-foreground sm:text-base">
-          Built for serious discretionary traders who want better decision quality, tighter risk control, and repeatable performance.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <Link href={`/${locale}/pricing`} className="rounded-full bg-primary px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground">
-            View Pricing
-          </Link>
-          <Link href={`/${locale}/support`} className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-foreground hover:bg-accent/50">
-            Contact Support
-          </Link>
-        </div>
-      </header>
-
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {storyCards.map((card) => (
-          <div key={card.title} className="rounded-xl border border-border bg-muted/20 p-6">
-            <div className="mb-3 text-primary">{card.icon}</div>
-            <h3 className="text-xl font-semibold text-foreground">{card.title}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{card.description}</p>
+    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+      <UnifiedSurface className="space-y-8">
+        <header className="space-y-3">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">About Us</p>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            About Qunt Edge
+          </h1>
+          <p className="max-w-3xl text-sm text-muted-foreground sm:text-base leading-relaxed">
+            Built for serious discretionary traders who want better decision quality, tighter risk control, and repeatable performance.
+          </p>
+          <div className="flex flex-wrap gap-3 pt-2">
+            <Link
+              href={`/${locale}/pricing`}
+              className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
+            >
+              View Pricing
+            </Link>
+            <Link
+              href={`/${locale}/support`}
+              className="inline-flex items-center justify-center rounded-full border border-border/30 bg-card px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-foreground transition-all hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
+            >
+              Contact Support
+            </Link>
           </div>
-        ))}
+        </header>
 
-        <div className="rounded-xl border border-border bg-muted/20 p-6 md:col-span-2">
-          <h3 className="text-xl font-semibold text-foreground">Founder&apos;s Expertise</h3>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {founderSkills.map((skill) => (
-              <Badge key={skill.name} variant="secondary" className="flex items-center gap-1 border-border bg-muted/20 px-2 py-1 text-sm">
-                {skill.icon}
-                {skill.name}
-              </Badge>
-            ))}
-          </div>
-        </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {storyCards.map((card) => (
+            <UnifiedSurface key={card.title} variant="subtle">
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-foreground">
+                {card.icon}
+              </div>
+              <h3 className="text-lg font-semibold tracking-tight text-foreground">{card.title}</h3>
+              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{card.description}</p>
+            </UnifiedSurface>
+          ))}
 
-        <div className="rounded-xl border border-border bg-muted/20 p-6 md:col-span-2">
-          <h3 className="text-xl font-semibold text-foreground">Why Qunt Edge?</h3>
-          <ul className="mt-4 list-inside list-disc space-y-2 text-muted-foreground">
-            <li>Built by a trader, for traders</li>
-            <li>Advanced analytics powered by real-world trading experience</li>
-            <li>Comprehensive backtesting using your actual trade history</li>
-            <li>AI-driven insights to improve your trading psychology</li>
-            <li>Tailored to serious traders looking to elevate their performance</li>
-          </ul>
+          <UnifiedSurface variant="subtle" className="md:col-span-2">
+            <h3 className="text-lg font-semibold tracking-tight text-foreground">Founder&apos;s Expertise</h3>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {founderSkills.map((skill) => (
+                <Badge key={skill.name} variant="secondary" className="flex items-center gap-1 border-border/30 bg-muted/20 px-2.5 py-1 text-sm">
+                  {skill.icon}
+                  {skill.name}
+                </Badge>
+              ))}
+            </div>
+          </UnifiedSurface>
+
+          <UnifiedSurface variant="subtle" className="md:col-span-2">
+            <h3 className="text-lg font-semibold tracking-tight text-foreground">Why Qunt Edge?</h3>
+            <ul className="mt-4 list-inside list-disc space-y-2 text-sm text-muted-foreground">
+              <li>Built by a trader, for traders</li>
+              <li>Advanced analytics powered by real-world trading experience</li>
+              <li>Comprehensive backtesting using your actual trade history</li>
+              <li>AI-driven insights to improve your trading psychology</li>
+              <li>Tailored to serious traders looking to elevate their performance</li>
+            </ul>
+          </UnifiedSurface>
         </div>
-      </div>
-    </div>
+      </UnifiedSurface>
+    </UnifiedPageShell>
   )
 }

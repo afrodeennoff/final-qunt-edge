@@ -193,35 +193,39 @@ export default function NotesPageClient() {
             maxSize={35}
             className="border-r border-border/15"
           >
-            <NotesList
-              traders={traders}
-              selectedTrader={selectedTrader}
-              notes={visibleNotes}
-              activeNoteId={activeNoteId}
-              filter={filter}
-              searchQuery={searchQuery}
-              onNoteSelect={handleNoteSelect}
-              onNewNote={handleNewNote}
-              onFilterChange={handleFilterChange}
-              onSearchChange={setSearchQuery}
-              onTraderSelect={setSelectedTrader}
-              isLoading={isLoading}
-            />
+            <div className="h-full rounded-xl border border-border/30 bg-card p-4 shadow-sm sm:p-6">
+              <NotesList
+                traders={traders}
+                selectedTrader={selectedTrader}
+                notes={visibleNotes}
+                activeNoteId={activeNoteId}
+                filter={filter}
+                searchQuery={searchQuery}
+                onNoteSelect={handleNoteSelect}
+                onNewNote={handleNewNote}
+                onFilterChange={handleFilterChange}
+                onSearchChange={setSearchQuery}
+                onTraderSelect={setSelectedTrader}
+                isLoading={isLoading}
+              />
+            </div>
           </ResizablePanel>
 
           <ResizableHandle className="bg-border/10" />
 
           {/* Middle Pane - Editor (flexible) */}
           <ResizablePanel defaultSize={53} minSize={30}>
-            <NoteEditor
-              note={activeNote}
-              onNoteUpdate={updateNote}
-              onTogglePin={togglePin}
-              onToggleArchive={toggleArchive}
-              onDeleteNote={deleteNote}
-              onAddTag={addTag}
-              onRemoveTag={removeTag}
-            />
+            <div className="h-full rounded-xl border border-border/30 bg-card p-4 shadow-sm sm:p-6">
+              <NoteEditor
+                note={activeNote}
+                onNoteUpdate={updateNote}
+                onTogglePin={togglePin}
+                onToggleArchive={toggleArchive}
+                onDeleteNote={deleteNote}
+                onAddTag={addTag}
+                onRemoveTag={removeTag}
+              />
+            </div>
           </ResizablePanel>
 
           <ResizableHandle className="bg-border/10" />
@@ -233,12 +237,14 @@ export default function NotesPageClient() {
             maxSize={35}
             className="border-l border-border/15"
           >
-            <NoteInspector
-              note={activeNote}
-              onApplyTemplate={handleApplyTemplate}
-              onToggleChecklistItem={handleToggleChecklistItem}
-              onAddChecklistItem={handleAddChecklistItem}
-            />
+            <div className="h-full rounded-xl border border-border/30 bg-card p-4 shadow-sm sm:p-6">
+              <NoteInspector
+                note={activeNote}
+                onApplyTemplate={handleApplyTemplate}
+                onToggleChecklistItem={handleToggleChecklistItem}
+                onAddChecklistItem={handleAddChecklistItem}
+              />
+            </div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -257,33 +263,35 @@ export default function NotesPageClient() {
             maxSize={40}
             className="border-r border-border/15"
           >
-            <NotesList
-              traders={traders}
-              selectedTrader={selectedTrader}
-              notes={visibleNotes}
-              activeNoteId={activeNoteId}
-              filter={filter}
-              searchQuery={searchQuery}
-              onNoteSelect={handleNoteSelect}
-              onNewNote={handleNewNote}
-              onFilterChange={handleFilterChange}
-              onSearchChange={setSearchQuery}
-              onTraderSelect={setSelectedTrader}
-              isLoading={isLoading}
-            />
+            <div className="h-full rounded-xl border border-border/30 bg-card p-4 shadow-sm sm:p-6">
+              <NotesList
+                traders={traders}
+                selectedTrader={selectedTrader}
+                notes={visibleNotes}
+                activeNoteId={activeNoteId}
+                filter={filter}
+                searchQuery={searchQuery}
+                onNoteSelect={handleNoteSelect}
+                onNewNote={handleNewNote}
+                onFilterChange={handleFilterChange}
+                onSearchChange={setSearchQuery}
+                onTraderSelect={setSelectedTrader}
+                isLoading={isLoading}
+              />
+            </div>
           </ResizablePanel>
 
           <ResizableHandle className="bg-border/10" />
 
           {/* Right Pane - Editor */}
           <ResizablePanel defaultSize={72}>
-            <div className="h-full flex flex-col relative">
+            <div className="h-full flex flex-col rounded-xl border border-border/30 bg-card p-4 shadow-sm sm:p-6 relative">
               {/* Inspector Toggle */}
-              <div className="absolute top-2.5 right-3 z-10">
+              <div className="absolute top-3 right-4 z-10">
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-7 w-7 p-0 rounded-md text-muted-foreground hover:text-foreground"
+                  className="h-8 w-8 p-0 rounded-md text-muted-foreground hover:text-foreground transition-all"
                   onClick={() => setShowInspector(!showInspector)}
                 >
                   <PanelRight className="h-4 w-4" />
@@ -310,7 +318,7 @@ export default function NotesPageClient() {
 
   // Mobile layout (single pane with navigation)
   return (
-    <div className="h-full flex flex-col bg-background">
+    <div className="h-full flex flex-col rounded-xl border border-border/30 bg-card p-4 shadow-sm sm:p-6 bg-background">
       {viewMode === 'list' ? (
           <NotesList
             traders={traders}
@@ -329,14 +337,14 @@ export default function NotesPageClient() {
       ) : (
         <div className="h-full flex flex-col relative">
           {/* Back Button */}
-          <div className="flex items-center justify-between px-2 py-1.5 border-b border-border/15">
+          <div className="flex items-center justify-between px-3 py-2.5 border-b border-border/30">
             <Button
               variant="ghost"
               size="sm"
               onClick={handleBackToList}
-              className="gap-1.5 h-7 text-xs rounded-md text-primary"
+              className="gap-1.5 h-8 text-sm rounded-md text-primary"
             >
-              <ArrowLeft className="h-3.5 w-3.5" />
+              <ArrowLeft className="h-4 w-4" />
               Notes
             </Button>
 
@@ -344,7 +352,7 @@ export default function NotesPageClient() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 w-7 p-0 rounded-md text-muted-foreground hover:text-foreground"
+                className="h-8 w-8 p-0 rounded-md text-muted-foreground hover:text-foreground transition-all"
                 onClick={() => setShowInspector(true)}
               >
                 <PanelRight className="h-4 w-4" />

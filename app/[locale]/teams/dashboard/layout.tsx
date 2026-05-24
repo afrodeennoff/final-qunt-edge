@@ -97,10 +97,10 @@ export default async function DashboardLayout({
                                         <SidebarTrigger className="-ml-0.5 h-10 w-10 rounded-xl border border-border/40 bg-muted/70 text-muted-foreground/70 hover:border-primary/25 hover:bg-primary/10 hover:text-foreground md:h-9 md:w-9" />
                                         <div className="flex min-w-0 flex-1 flex-col">
                                             <div className="flex items-center gap-2.5">
-                                                <span className="hidden rounded-full border border-primary/20 bg-primary/8 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-primary sm:inline-flex">
+                                                <span className="hidden rounded-full border border-primary/20 bg-primary/8 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-primary sm:inline-flex">
                                                     Team
                                                 </span>
-                                                <h1 className="truncate text-sm font-bold uppercase tracking-[0.18em] text-foreground">
+                                                <h1 className="truncate text-sm font-black uppercase tracking-[0.18em] text-foreground">
                                                     Team Command
                                                 </h1>
                                             </div>
@@ -115,7 +115,7 @@ export default async function DashboardLayout({
                                             <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                                                 Focus
                                             </span>
-                                            <span className="block pt-1 text-sm text-foreground/60">
+                                            <span className="block pt-1 text-sm text-foreground">
                                                 Members and process visibility
                                             </span>
                                         </div>
@@ -123,7 +123,7 @@ export default async function DashboardLayout({
                                             <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                                                 Surface
                                             </span>
-                                            <span className="block pt-1 text-sm text-foreground/60">
+                                            <span className="block pt-1 text-sm text-foreground">
                                                 Shared team operating layer
                                             </span>
                                         </div>

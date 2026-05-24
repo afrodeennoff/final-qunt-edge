@@ -394,7 +394,7 @@ export default async function PropFirmEditPage({
           </Button>
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-3xl font-semibold tracking-tight">
+              <h1 className="text-2xl font-black tracking-tight">
                 {isNew ? 'Add Prop Firm' : (firm?.name ?? 'Edit Prop Firm')}
               </h1>
               {!isNew && firm ? (

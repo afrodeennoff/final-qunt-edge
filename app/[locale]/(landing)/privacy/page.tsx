@@ -31,16 +31,20 @@ export async function generateMetadata({
 export default function PrivacyPolicy() {
   return (
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
-      <UnifiedSurface className="space-y-8 text-fg-muted">
-        <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground">Privacy Policy</h1>
-          <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
+      <UnifiedSurface className="space-y-6 text-muted-foreground">
+        <header className="space-y-3">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Legal</p>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            Privacy Policy
+          </h1>
+          <p className="max-w-3xl text-sm text-muted-foreground sm:text-base leading-relaxed">
             This policy explains what data we collect and how we use it to provide the Qunt Edge platform.
           </p>
         </header>
-        <section className="space-y-3">
-          <h2 className="text-2xl font-semibold text-fg-primary">1. Introduction</h2>
-          <p className="text-[15px] leading-relaxed">
+
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">1. Introduction</h2>
+          <p className="text-sm leading-relaxed">
             Qunt Edge (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) is committed to
             protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and
             safeguard your information when you use our service.
@@ -48,20 +52,20 @@ export default function PrivacyPolicy() {
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-fg-primary">2. Information We Collect</h2>
-          <p className="text-[15px] leading-relaxed">We collect information when you create an account, including:</p>
-          <ul className="list-disc pl-6 text-[15px] leading-relaxed space-y-1.5">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">2. Information We Collect</h2>
+          <p className="text-sm leading-relaxed">We collect information when you create an account, including:</p>
+          <ul className="list-disc pl-6 text-sm leading-relaxed space-y-2">
             <li>Email address</li>
             <li>Name</li>
             <li>Discord profile picture URL (if you sign up using Discord OAuth)</li>
           </ul>
-          <p className="text-[15px] leading-relaxed">We also collect and store trades data that you provide to us for analysis purposes.</p>
+          <p className="text-sm leading-relaxed">We also collect and store trades data that you provide to us for analysis purposes.</p>
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-fg-primary">3. How We Use Your Information</h2>
-          <p className="text-[15px] leading-relaxed">We use the collected information for various purposes, including:</p>
-          <ul className="list-disc pl-6 text-[15px] leading-relaxed space-y-1.5">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">3. How We Use Your Information</h2>
+          <p className="text-sm leading-relaxed">We use the collected information for various purposes, including:</p>
+          <ul className="list-disc pl-6 text-sm leading-relaxed space-y-2">
             <li>Providing and maintaining our service</li>
             <li>Notifying you about changes to our service</li>
             <li>Allowing you to participate in interactive features of our service</li>
@@ -73,8 +77,8 @@ export default function PrivacyPolicy() {
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-fg-primary">4. Data Storage and Security</h2>
-          <p className="text-[15px] leading-relaxed">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">4. Data Storage and Security</h2>
+          <p className="text-sm leading-relaxed">
             We use Supabase, a SOC 2 compliant service, to store your data. We implement appropriate
             data collection, storage and processing practices and security measures to protect
             against unauthorized access, alteration, disclosure or destruction of your personal
@@ -83,8 +87,8 @@ export default function PrivacyPolicy() {
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-fg-primary">5. Cookies</h2>
-          <p className="text-[15px] leading-relaxed">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">5. Cookies</h2>
+          <p className="text-sm leading-relaxed">
             We use &quot;cookies&quot; to collect information. Cookies are small data files stored
             on your hard drive by a website. We may use both session cookies and persistent cookies
             to provide you with a more personal and interactive experience.
@@ -92,8 +96,8 @@ export default function PrivacyPolicy() {
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-fg-primary">6. Third-Party Services</h2>
-          <p className="text-[15px] leading-relaxed">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">6. Third-Party Services</h2>
+          <p className="text-sm leading-relaxed">
             We do not use third-party analytics services. Our service may contain links to other
             sites that are not operated by us. We strongly advise you to review the privacy policy
             of every site you visit.
@@ -101,8 +105,8 @@ export default function PrivacyPolicy() {
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-fg-primary">7. GDPR Compliance</h2>
-          <p className="text-[15px] leading-relaxed">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">7. GDPR Compliance</h2>
+          <p className="text-sm leading-relaxed">
             We comply with the General Data Protection Regulation (GDPR). You have the right to
             access, update or delete your personal information. Please contact us to exercise these
             rights.
@@ -110,10 +114,10 @@ export default function PrivacyPolicy() {
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-fg-primary">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">
             8. Changes to This Privacy Policy
           </h2>
-          <p className="text-[15px] leading-relaxed">
+          <p className="text-sm leading-relaxed">
             We may update our Privacy Policy from time to time. We will notify you of any changes by
             posting the new Privacy Policy on this page and updating the &quot;Last updated&quot;
             date.
@@ -121,12 +125,12 @@ export default function PrivacyPolicy() {
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-fg-primary">9. Contact Us</h2>
-          <p className="text-[15px] leading-relaxed">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">9. Contact Us</h2>
+          <p className="text-sm leading-relaxed">
             If you have any questions about this Privacy Policy, please contact us at{' '}
             <a
               href="mailto:contact@qunt-edge.com"
-              className="text-primary underline underline-offset-4 transition-colors duration-200 hover:text-primary/80"
+              className="text-primary underline underline-offset-4 transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
             >
               contact@qunt-edge.com
             </a>
@@ -134,7 +138,7 @@ export default function PrivacyPolicy() {
           </p>
         </section>
 
-        <p className="border-t border-border pt-5 text-xs uppercase tracking-[0.12em] text-fg-muted">
+        <p className="border-t border-border/30 pt-5 text-xs uppercase tracking-[0.12em] text-muted-foreground">
           Last updated: {LAST_UPDATED}
         </p>
       </UnifiedSurface>

@@ -237,7 +237,7 @@ export default function TeamJoinPage() {
               <div className="flex items-center gap-3">
                 {getStatusIcon(invitation.status)}
                 <div>
-                  <p className="font-medium">{t('teams.join.status.title')}</p>
+                  <p className="text-sm font-medium text-foreground">{t('teams.join.status.title')}</p>
                   <p className="text-sm text-muted-foreground">
                     {invitation.status === 'pending' && !isExpired
                       ? t('teams.join.status.ready')
@@ -261,19 +261,19 @@ export default function TeamJoinPage() {
 
               <div className="grid gap-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">{t('teams.join.details.invitedEmail')}</span>
-                  <span className="font-medium">{invitation.email}</span>
+                  <span className="text-sm text-muted-foreground">{t('teams.join.details.invitedEmail')}</span>
+                  <span className="text-sm font-medium text-foreground">{invitation.email}</span>
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">{t('teams.join.details.invitedOn')}</span>
-                  <span className="text-sm">{formatDate(invitation.createdAt)}</span>
+                  <span className="text-sm text-muted-foreground">{t('teams.join.details.invitedOn')}</span>
+                  <span className="text-sm text-foreground">{formatDate(invitation.createdAt)}</span>
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">{t('teams.join.details.expiresOn')}</span>
+                  <span className="text-sm text-muted-foreground">{t('teams.join.details.expiresOn')}</span>
                   <span className={cn(
-                    "text-sm",
+                    "text-sm font-medium",
                     isExpired ? "text-semantic-error" : "text-foreground"
                   )}>
                     {formatDate(invitation.expiresAt)}

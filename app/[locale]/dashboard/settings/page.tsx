@@ -226,13 +226,13 @@ function PasswordSettingsCard({
   onUpdatePassword: () => Promise<void>
 }) {
   return (
-    <Card className="border-border/30 bg-card/50 shadow-sm">
+    <Card className="rounded-xl border border-border/30 bg-card/50 shadow-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="h-5 w-5" />
           {t('auth.setPassword')}
         </CardTitle>
-        <CardDescription>{t('auth.setPasswordDescription')}</CardDescription>
+        <CardDescription className="text-sm">{t('auth.setPasswordDescription')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid gap-4">
@@ -411,13 +411,13 @@ export default function SettingsPage() {
     <UnifiedPageShell density="compact">
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Profile Section */}
-        <Card className="border-border/30 bg-card/50 shadow-sm">
+        <Card className="rounded-xl border border-border/30 bg-card/50 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <User className="h-5 w-5" />
               {t('dashboard.profile')}
             </CardTitle>
-            <CardDescription>Manage your personal information and account details</CardDescription>
+            <CardDescription className="text-sm">Manage your personal information and account details</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
@@ -480,13 +480,13 @@ export default function SettingsPage() {
         </Card>
 
         {/* Preferences Section */}
-        <Card className="border-border/30 bg-card/50 shadow-sm">
+        <Card className="rounded-xl border border-border/30 bg-card/50 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5" />
               Preferences
             </CardTitle>
-            <CardDescription>Customize your dashboard appearance and behavior</CardDescription>
+            <CardDescription className="text-sm">Customize your dashboard appearance and behavior</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Accent Color Settings */}
@@ -605,13 +605,13 @@ export default function SettingsPage() {
         </Card>
 
         {/* Notifications Section */}
-        <Card className="border-border/30 bg-card/50 shadow-sm">
+        <Card className="rounded-xl border border-border/30 bg-card/50 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
               Notifications
             </CardTitle>
-            <CardDescription>Configure how you receive notifications and alerts</CardDescription>
+            <CardDescription className="text-sm">Configure how you receive notifications and alerts</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
@@ -693,13 +693,13 @@ export default function SettingsPage() {
         />
 
         {/* Account Management Section */}
-        <Card className="border-border/30 bg-card/50 shadow-sm">
+        <Card className="rounded-xl border border-border/30 bg-card/50 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
               Account Management
             </CardTitle>
-            <CardDescription>Manage your account settings and data</CardDescription>
+            <CardDescription className="text-sm">Manage your account settings and data</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4">

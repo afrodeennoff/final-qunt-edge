@@ -72,7 +72,7 @@ export default function AuthenticationPageClient() {
                   href={`/${locale}`}
                   className={cn(
                     unifiedGhostActionClassName,
-                    'px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-foreground/60',
+                    'px-4 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-foreground/60',
                   )}
                 >
                   <ArrowLeft className="h-3.5 w-3.5" />
@@ -95,14 +95,14 @@ export default function AuthenticationPageClient() {
                   </div>
                 </div>
 
-                <h1 className="mt-8 text-balance text-4xl font-medium leading-[0.98] tracking-[-0.05em] text-foreground sm:text-5xl lg:text-6xl">
+                <h1 className="mt-8 text-balance text-2xl font-black tracking-tight text-foreground sm:text-3xl lg:text-4xl">
                   Welcome back to your trading command center.
                 </h1>
                 <p className={cn(unifiedBodyCopyClassName, 'mt-4 max-w-xl text-foreground/60')}>
                   {t('authentication.description')}
                 </p>
 
-                <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                <div className="mt-6 grid gap-4 sm:grid-cols-3">
                   {VALUE_POINTS.map((point) => (
                     <div key={point.title} className={cn(unifiedMetricPanelClassName, 'p-4')}>
                       <div className="flex items-start gap-3">
@@ -129,10 +129,10 @@ export default function AuthenticationPageClient() {
                 <div className={cn(unifiedSectionPanelClassName, 'p-4')}>
                   <div className="mb-4 flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/35">
+                      <p className="text-[10px] font-black uppercase tracking-[0.12em] text-foreground/35">
                         Account access
                       </p>
-                      <h2 className="pt-2 text-2xl font-semibold tracking-tight text-foreground">
+                      <h2 className="pt-2 text-2xl font-black tracking-tight text-foreground">
                         Sign in to continue
                       </h2>
                       <p className="pt-2 text-sm text-foreground/35">

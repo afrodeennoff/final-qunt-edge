@@ -23,26 +23,30 @@ export default async function MaintenancePage() {
   const t = await getI18n()
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-semantic-warning" />
-            {t('maintenance.title')}
-          </CardTitle>
-          <CardDescription>
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md border-border/30 shadow-sm">
+        <CardHeader className="space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-warning/10 border border-warning/20 text-warning">
+              <AlertCircle className="h-6 w-6" />
+            </div>
+            <CardTitle className="text-xl">{t('maintenance.title')}</CardTitle>
+          </div>
+          <CardDescription className="text-sm leading-relaxed">
             {t('maintenance.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Alert>
-            <AlertTitle>{t('maintenance.inMaintenance')}</AlertTitle>
-            <AlertDescription>
+          <div className="rounded-xl border border-warning/20 bg-warning/5 p-5">
+            <AlertTitle className="text-sm font-semibold text-warning mb-2">
+              {t('maintenance.inMaintenance')}
+            </AlertTitle>
+            <AlertDescription className="text-sm text-muted-foreground leading-relaxed">
               {t('maintenance.message')}
             </AlertDescription>
-          </Alert>
+          </div>
         </CardContent>
       </Card>
     </div>
   )
-} 
+}

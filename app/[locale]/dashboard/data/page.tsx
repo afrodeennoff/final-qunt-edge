@@ -13,12 +13,12 @@ export default function DashboardPage() {
             <TabsTrigger value="trades">Trades</TabsTrigger>
           </TabsList>
           <TabsContent value="accounts" className="mt-0">
-            <UnifiedSurface>
+            <UnifiedSurface className="rounded-xl border border-border/30 shadow-sm">
               <DataManagementCard />
             </UnifiedSurface>
           </TabsContent>
           <TabsContent value="trades" className="mt-0 h-[calc(100dvh-var(--navbar-height)-var(--tabs-height)-16px)] pb-[max(env(safe-area-inset-bottom),0.5rem)]">
-            <UnifiedSurface className="h-full">
+            <UnifiedSurface className="h-full rounded-xl border border-border/30 shadow-sm">
               <TradeTableReview />
             </UnifiedSurface>
           </TabsContent>

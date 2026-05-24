@@ -50,13 +50,13 @@ export default async function AdminBlogsPage({ params }: PageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 border-b border-border/30 pb-6 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-3 border-b border-border/30 pb-6 md:flex-row md:items-end md:justify-between">
         <div className="space-y-2">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary/80">
             Admin Content
           </p>
           <div className="space-y-1">
-            <h1 className="text-3xl font-semibold tracking-tight">Blog Management</h1>
+            <h1 className="text-2xl font-black tracking-tight">Blog Management</h1>
             <p className="max-w-2xl text-sm text-muted-foreground">
               Create, edit, publish, and manage blog posts from one central admin workspace.
             </p>
@@ -64,7 +64,7 @@ export default async function AdminBlogsPage({ params }: PageProps) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Button variant="solid" asChild>
+          <Button asChild>
             <Link href={`/${locale}/admin/blogs/new`}>
               <Plus className="h-4 w-4" />
               New Post

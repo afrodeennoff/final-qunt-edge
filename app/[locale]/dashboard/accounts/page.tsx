@@ -24,5 +24,5 @@ export async function generateMetadata({
 }
 
 export default function AccountsPage() {
-  return <AccountsOverview size="large" surface="embedded" />;
+  return <AccountsOverview size="large" />;
 }

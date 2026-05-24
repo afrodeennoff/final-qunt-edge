@@ -57,11 +57,18 @@ export default async function WeeklyRecapPage({
   return (
     <WeeklyRecapProvider>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Weekly Recap Preview</h1>
-          <p className="text-muted-foreground">
-            Preview and customize the weekly recap email that will be sent to traders.
-          </p>
+        <div className="flex flex-col gap-3 border-b border-border/30 pb-6 md:flex-row md:items-end md:justify-between">
+          <div className="space-y-2">
+            <p className="text-[10px] font-black uppercase tracking-[0.12em] text-primary/80">
+              Email Management
+            </p>
+            <div className="space-y-1">
+              <h1 className="text-2xl font-black tracking-tight">Weekly Recap Preview</h1>
+              <p className="max-w-2xl text-sm text-muted-foreground">
+                Preview and customize the weekly recap email that will be sent to traders.
+              </p>
+            </div>
+          </div>
         </div>
       <WeeklyRecapPreview />
       </div>
