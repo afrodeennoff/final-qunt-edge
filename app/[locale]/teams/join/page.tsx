@@ -237,7 +237,7 @@ export default function TeamJoinPage() {
               <div className="flex items-center gap-3">
                 {getStatusIcon(invitation.status)}
                 <div>
-                  <p className="text-sm font-medium text-foreground">{t('teams.join.status.title')}</p>
+                  <p className="text-sm font-medium tracking-tight text-foreground">{t('teams.join.status.title')}</p>
                   <p className="text-sm text-muted-foreground">
                     {invitation.status === 'pending' && !isExpired
                       ? t('teams.join.status.ready')

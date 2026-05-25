@@ -88,19 +88,19 @@ export default async function DashboardLayout({
 
                     <div className="relative z-0 flex h-full flex-col">
                         <header
-                            className={`sticky top-0 ${HEADER_Z_INDEX} px-3 pb-2 pt-3 sm:px-4 sm:pb-3 sm:pt-4`}
+                            className={`sticky top-0 ${HEADER_Z_INDEX} p-3 sm:p-4`}
                         >
                             <div className="mx-auto w-full max-w-[1800px]">
-                                <div className={cn(unifiedSectionPanelClassName, 'relative flex min-h-[4.5rem] flex-col gap-4 overflow-hidden rounded-2xl px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between')}>
+                                <div className={cn(unifiedSectionPanelClassName, 'relative flex min-h-[4.5rem] flex-col gap-4 overflow-hidden rounded-2xl p-3 sm:p-4 lg:flex-row lg:items-center lg:justify-between')}>
                                     <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/20 to-transparent" />
                                     <div className="flex min-w-0 items-center gap-3">
                                         <SidebarTrigger className="-ml-0.5 h-10 w-10 rounded-xl border border-border/40 bg-muted/70 text-muted-foreground/70 hover:border-primary/25 hover:bg-primary/10 hover:text-foreground md:h-9 md:w-9" />
                                         <div className="flex min-w-0 flex-1 flex-col">
                                             <div className="flex items-center gap-2.5">
-                                                <span className="hidden rounded-full border border-primary/20 bg-primary/8 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-primary sm:inline-flex">
+                                                <span className="hidden rounded-full border border-primary/20 bg-primary/8 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-primary sm:inline-flex">
                                                     Team
                                                 </span>
-                                                <h1 className="truncate text-sm font-black uppercase tracking-[0.18em] text-foreground">
+                                                <h1 className="truncate text-sm font-black uppercase tracking-tight text-foreground">
                                                     Team Command
                                                 </h1>
                                             </div>

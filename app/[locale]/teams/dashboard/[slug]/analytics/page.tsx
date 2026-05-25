@@ -132,7 +132,7 @@ function CustomTooltip({
 
   return (
     <div className={cn(unifiedInsetPanelClassName, 'p-3')}>
-      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+      <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
         {new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
       </p>
       <p className={cn('mt-1 text-sm font-black', value >= 0 ? 'text-primary' : 'text-destructive')}>
