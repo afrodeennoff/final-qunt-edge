@@ -7,7 +7,7 @@ export default function PrivacyToggle() {
     <div className="mb-4 flex items-center gap-2">
       <span className="text-[13px] text-foreground">Profile: {isPublic ? 'Public' : 'Private'}</span>
       <button
-        className="rounded-full border border-border/35 bg-transparent px-4 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted/30"
+        className="rounded-full border border-border/30 bg-transparent px-4 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted/30"
         onClick={() => setIsPublic((s) => !s)}
       >
         {isPublic ? 'Set Private' : 'Set Public'}

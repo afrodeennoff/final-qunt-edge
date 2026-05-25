@@ -37,7 +37,7 @@ export default function ForgotPasswordForm({ locale }: { locale: string }) {
  </p>
  <Link
  href={`/${locale}/authentication`}
- className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+ className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
  >
  Back to sign in
  </Link>
@@ -81,7 +81,7 @@ export default function ForgotPasswordForm({ locale }: { locale: string }) {
 
  <Link
  href={`/${locale}/authentication`}
- className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline text-center"
+ className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline text-center"
  >
  Back to sign in
  </Link>

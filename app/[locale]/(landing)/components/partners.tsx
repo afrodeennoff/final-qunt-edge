@@ -13,7 +13,7 @@ export default function Partners() {
  <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-foreground">
  {t('landing.partners.title')}
  </h2>
- <p className="mx-auto max-w-[700px] leading-relaxed text-foreground/60 text-lg">
+ <p className="mx-auto max-w-[700px] leading-relaxed text-foreground text-lg">
  {t('landing.partners.description')}
  </p>
  </div>

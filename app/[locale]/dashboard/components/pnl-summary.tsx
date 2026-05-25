@@ -100,7 +100,7 @@ export function PnLSummary({ className }: PnLSummaryProps) {
           key={item.label}
           className="flex flex-col items-center px-4 gap-0.5 min-w-[110px] group"
         >
-          <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/35">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             {item.label}
           </span>
           <div className="flex items-center gap-2">
@@ -112,7 +112,7 @@ export function PnLSummary({ className }: PnLSummaryProps) {
             />
             <span
               className={cn(
-                'text-[15px] font-semibold tracking-[-0.03em] tabular-nums',
+                'text-[15px] font-semibold tracking-tight tabular-nums',
                 item.accent === 'metric-positive' && 'text-semantic-success',
                 item.accent === 'metric-negative' && 'text-semantic-error',
                 !item.accent && 'text-foreground',

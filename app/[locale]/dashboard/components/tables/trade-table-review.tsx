@@ -1556,7 +1556,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                       <td
                         key={columnId || index}
                         className={cn(
-                          'p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l',
+                          'p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold border-r border-border/30 last:border-r-0 first:border-l',
                         )}
                         style={{ width: column.getSize() }}
                       >
@@ -1571,7 +1571,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                       <td
                         key={columnId || index}
                         className={cn(
-                          'p-4 align-middle whitespace-nowrap px-3 py-3 text-sm border-r border-border/20 last:border-r-0',
+                          'p-4 align-middle whitespace-nowrap px-3 py-3 text-sm border-r border-border/30 last:border-r-0',
                         )}
                         style={{ width: column.getSize() }}
                       />
@@ -1584,7 +1584,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                       <td
                         key={columnId}
                         className={cn(
-                          'p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold text-right border-r border-border/20 last:border-r-0',
+                          'p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold text-right border-r border-border/30 last:border-r-0',
                         )}
                         style={{ width: column.getSize() }}
                       >
@@ -1606,7 +1606,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                       <td
                         key={columnId}
                         className={cn(
-                          'p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold text-right border-r border-border/20 last:border-r-0',
+                          'p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold text-right border-r border-border/30 last:border-r-0',
                         )}
                         style={{ width: column.getSize() }}
                       >
@@ -1620,7 +1620,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                       <td
                         key={columnId}
                         className={cn(
-                          'p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold text-right border-r border-border/20 last:border-r-0',
+                          'p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold text-right border-r border-border/30 last:border-r-0',
                         )}
                         style={{ width: column.getSize() }}
                       >
@@ -1634,7 +1634,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                     <td
                       key={columnId || index}
                       className={cn(
-                        'p-4 align-middle whitespace-nowrap px-3 py-3 text-sm border-r border-border/20 last:border-r-0',
+                        'p-4 align-middle whitespace-nowrap px-3 py-3 text-sm border-r border-border/30 last:border-r-0',
                       )}
                       style={{ width: column.getSize() }}
                     />

@@ -147,7 +147,7 @@ function ChartPreviewSkeleton({ title }: { title: string }) {
 
 function StatPreviewSkeleton({ height = 100 }: { height?: number }) {
   return (
-    <div className="h-[300px] rounded-xl border border-border/20 bg-card p-4 animate-pulse">
+    <div className="h-[300px] rounded-xl border border-border/30 bg-card p-4 animate-pulse">
       <div className="space-y-3">
         <div className="h-3 w-20 rounded bg-muted" />
         <div className="h-8 w-28 rounded bg-muted" />
@@ -193,7 +193,7 @@ function createTablePreview(type: 'tradeTableReview' | 'consistencyTable') {
             ))}
           </div>
           {[...Array(4)].map((_, rowIndex) => (
-            <div key={rowIndex} className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 border border-border/20 rounded-md">
+            <div key={rowIndex} className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 border border-border/30 rounded-md">
               {Array(type === 'tradeTableReview' ? 4 : 5).fill(0).map((_, i) => (
                 <div key={i} className={cn(
                   "h-3 bg-muted rounded",

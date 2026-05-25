@@ -707,7 +707,7 @@ export default function AtasProcessor({
  {/* Commissions Section - Only show for selected accounts */}
  {selectedAccountInstrumentPairs.length > 0 && (
  <div
- className="flex-none bg-background/0.12 border border-border/20 text-muted-foreground p-4 rounded-md"
+ className="flex-none bg-background/0.12 border border-border/30 text-muted-foreground p-4 rounded-md"
  role="alert"
  >
  <p className="font-bold">{t("import.commission.title")}</p>
@@ -756,7 +756,7 @@ export default function AtasProcessor({
 
  {allProcessedTrades.length === 0 && (
  <div
- className="flex-none bg-background/0.12 border border-border/20 text-muted-foreground p-4 rounded-md"
+ className="flex-none bg-background/0.12 border border-border/30 text-muted-foreground p-4 rounded-md"
  role="alert"
  >
  <p className="font-bold">{t("import.error.duplicateTrades")}</p>
@@ -767,7 +767,7 @@ export default function AtasProcessor({
  {currentSelectedAccounts.length === 0 &&
  allProcessedTrades.length > 0 && (
  <div
- className="flex-none bg-background/0.12 border border-border/20 text-muted-foreground p-4 rounded-md"
+ className="flex-none bg-background/0.12 border border-border/30 text-muted-foreground p-4 rounded-md"
  role="alert"
  >
  <p className="font-bold">{t("import.account.selectAccount")}</p>

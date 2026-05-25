@@ -306,7 +306,7 @@ export function AccountTable({
  <div className="space-y-8">
  {resetDate && metricsBeforeReset.length > 0 && (
  <div>
- <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+ <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
  {t('propFirm.beforeReset')}
  </div>
  <div className="rounded-md border-border/30">
@@ -344,7 +344,7 @@ export function AccountTable({
 
  <div>
  {resetDate && (
- <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+ <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
  {t('propFirm.afterReset')}
  </div>
  )}

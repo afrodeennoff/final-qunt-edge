@@ -29,7 +29,7 @@ function AveragePositionTimeCardInner({ size = 'medium' }: AveragePositionTimeCa
  >
  <div className="mx-auto inline-flex items-center justify-center gap-2.5 text-center">
  <Clock className="h-4 w-4 shrink-0 metric-positive" />
- <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Avg Time</span>
+ <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">Avg Time</span>
  <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground">{averagePositionTime}</span>
  <TooltipProvider>
  <Tooltip>
@@ -54,7 +54,7 @@ function AveragePositionTimeCardInner({ size = 'medium' }: AveragePositionTimeCa
  >
  <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-background/30 px-3 py-1">
  <Clock className="h-3 w-3 metric-positive" />
- <span className="micro-sans font-bold text-[11px] uppercase tracking-[0.18em] metric-positive">{averagePositionTime} Avg Time</span>
+ <span className="micro-sans font-bold text-[11px] uppercase tracking-[0.12em] metric-positive">{averagePositionTime} Avg Time</span>
  </div>
  </WidgetShell>
  )

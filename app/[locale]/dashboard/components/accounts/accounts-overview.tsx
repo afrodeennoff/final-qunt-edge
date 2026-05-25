@@ -457,7 +457,7 @@ function PayoutDialog({
             </div>
 
             {/* Selected Date Display */}
-            <div className="rounded-lg border border-border/70 bg-muted/20 p-3">
+            <div className="rounded-lg border border-border/70 bg-muted/40 p-3">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium">{t('propFirm.payout.selectedDate')}</p>
@@ -472,7 +472,7 @@ function PayoutDialog({
             {/* Inline Calendar with Custom Header */}
             <div className="flex max-h-[400px] flex-col rounded-lg border border-border/70 bg-background">
               {/* Custom Month/Year Header */}
-              <div className="p-3 border-b bg-muted/20 shrink-0">
+              <div className="p-3 border-b bg-muted/40 shrink-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Button
@@ -1121,7 +1121,7 @@ function AccountsOverviewComponent({
     >
       <CardHeader
         className={cn(
-          'shrink-0 border-b border-border/70 bg-muted/20 px-4 py-4 sm:px-6',
+          'shrink-0 border-b border-border/70 bg-muted/40 px-4 py-4 sm:px-6',
           size === 'small' && 'px-3 py-3',
         )}
       >
@@ -1296,7 +1296,7 @@ function AccountsOverviewComponent({
 
       {/* Unconfigured accounts banner */}
       {unconfiguredAccounts.length > 0 && !isLoading && (
-        <div className="border-b border-border/70 bg-muted/20 px-4 py-4 sm:px-6">
+        <div className="border-b border-border/70 bg-muted/40 px-4 py-4 sm:px-6">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />

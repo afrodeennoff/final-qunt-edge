@@ -177,9 +177,9 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
   return (
     <div className="min-h-[calc(100vh-72px)] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <div className="mx-auto max-w-[1120px]">
-        <div className="rounded-2xl border border-border bg-muted/20 p-8">
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">Trader profile</p>
-          <h1 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-foreground">{slug}</h1>
+        <div className="rounded-2xl border border-border bg-muted/40 p-8">
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Trader profile</p>
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-foreground">{slug}</h1>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
             This profile is not available yet. Once the trader has public stats or the database is connected, it will appear here.
           </p>
@@ -254,13 +254,13 @@ export default async function TraderProfilePage({
                       <Zap className="h-3 w-3" />
                       Public trader
                     </span>
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted/20 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted/40 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
                       <Lock className="h-3 w-3" />
                       Live profile
                     </span>
                   </div>
 
-                  <h1 className="mt-4 truncate text-3xl font-semibold tracking-[-0.035em] text-foreground sm:text-5xl">
+                  <h1 className="mt-4 truncate text-3xl font-semibold tracking-tight text-foreground sm:text-5xl">
                     {snapshot.username}
                   </h1>
                   <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -313,7 +313,7 @@ export default async function TraderProfilePage({
           <div className="rounded-2xl border border-border bg-muted/10 p-6 shadow-[0_16px_48px_-36px_rgba(0,0,0,0.95)] sm:p-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
                   Recent execution
                 </p>
                 <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
@@ -361,7 +361,7 @@ export default async function TraderProfilePage({
                   )
                 })
               ) : (
-                <div className="rounded-xl border border-dashed border-border bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
+                <div className="rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6 text-sm text-muted-foreground">
                   No public closed trades are available yet.
                 </div>
               )}

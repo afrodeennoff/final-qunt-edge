@@ -75,7 +75,7 @@ export function NoteEditor({
     return (
       <div className="h-full flex flex-col items-center justify-center p-8 bg-background/40">
         <div className="text-center space-y-3 max-w-sm">
-          <div className="h-14 w-14 rounded-2xl mx-auto flex items-center justify-center bg-card/50 border border-border/20">
+          <div className="h-14 w-14 rounded-2xl mx-auto flex items-center justify-center bg-card border border-border/30">
             <svg
               className="h-6 w-6 text-muted-foreground/50"
               fill="none"

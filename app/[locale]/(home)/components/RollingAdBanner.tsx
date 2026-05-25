@@ -32,7 +32,7 @@ export default function RollingAdBanner() {
   const repeatedItems = [...items, ...items, ...items]
 
   return (
-    <div className="relative w-full max-w-full overflow-hidden rounded-xl bg-muted/20">
+    <div className="relative w-full max-w-full overflow-hidden rounded-xl bg-muted/40">
       <div className="w-full max-w-full overflow-hidden" style={edgeFadeMask}>
         <div className="flex min-w-max animate-scroll whitespace-nowrap py-2">
           {repeatedItems.map((item, idx) => (

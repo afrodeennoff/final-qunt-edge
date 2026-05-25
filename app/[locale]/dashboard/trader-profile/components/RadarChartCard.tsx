@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 const insetPanelClassName =
-  'rounded-xl border border-border bg-muted/20 shadow-none'
+  'rounded-xl border border-border bg-muted/40 shadow-none'
 
 interface RadarChartDataPoint {
   metric: string
@@ -34,7 +34,7 @@ export default function RadarChartCard({
   return (
     <>
       <div className="flex items-start justify-between gap-3">
-        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Benchmark</p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Benchmark</p>
         <Badge variant={isBenchmarkLoading ? 'outline' : 'success'}>
           {isBenchmarkLoading ? 'Refreshing' : 'Live'}
         </Badge>

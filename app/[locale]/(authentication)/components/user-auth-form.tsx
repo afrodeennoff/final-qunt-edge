@@ -534,7 +534,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </div>
  )}
  <Tabs value={tab} onValueChange={(v) => { setTab(v as 'magic' | 'password'); setLastAuthPreference(v as 'magic' | 'password'); }}>
- <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/40 bg-muted/20 p-1 hover:bg-muted/30 transition-colors duration-200">
+ <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/40 bg-muted/40 p-1 hover:bg-muted/30 transition-colors duration-200">
  <TabsTrigger
  value="magic"
  className="h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground active:scale-[0.97]"
@@ -628,7 +628,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  name="otp"
  render={({ field }) => (
  <FormItem className="space-y-2">
- <FormLabel className="block text-center text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+ <FormLabel className="block text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
  {t('auth.verificationCode')}
  </FormLabel>
  <FormControl>
@@ -721,7 +721,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  />
  <Link
  href={withLocalePrefix("/authentication/forgot-password", locale)}
-  className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
+  className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
  >
  Forgot your password?
  </Link>

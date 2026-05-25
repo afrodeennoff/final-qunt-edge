@@ -391,7 +391,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  >
  <Share className="h-4 w-4 shrink-0" />
  {!isMobile && (
- <span className="text-[10px] font-semibold uppercase tracking-[0.18em]">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">
  {t("share.button")}
  </span>
  )}

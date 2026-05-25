@@ -243,7 +243,7 @@ export default function FileUpload({
               key={index}
               className={cn(
                 "flex items-center justify-between",
-                "bg-muted/20 rounded-lg",
+                "bg-muted/40 rounded-lg",
                 "p-3 hover:bg-muted/30",
                 "transition-all duration-200 ease-in-out",
                 "animate-in slide-in-from-bottom fade-in",

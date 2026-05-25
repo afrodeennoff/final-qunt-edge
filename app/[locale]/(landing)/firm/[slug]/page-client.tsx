@@ -442,7 +442,7 @@ function MetricCard({ label, value, highlight = false }: { label: string; value:
       )}
     >
       <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
-      <p className={`mt-2 text-2xl font-semibold tracking-[-0.03em] ${highlight ? 'text-success' : 'text-foreground'}`}>{value}</p>
+      <p className={`mt-2 text-2xl font-semibold tracking-tight ${highlight ? 'text-success' : 'text-foreground'}`}>{value}</p>
     </div>
   )
 }
@@ -1308,7 +1308,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
                 )}
               </div>
               
-              <h1 className="mt-3 text-[clamp(2.2rem,5.8vw,4.85rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground">
+              <h1 className="mt-3 text-[clamp(2.2rem,5.8vw,4.85rem)] font-bold leading-[0.96] tracking-tight text-foreground">
                 {firm.name}
                 {spotlightPromoText && (
                   <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 align-middle text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">

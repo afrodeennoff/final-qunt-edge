@@ -271,7 +271,7 @@ export function StripMetric({
 }) {
   return (
     <div className={cn(insetPanelClassName, 'p-3.5', className)}>
-      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+      <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
       <p
         className={cn(
           'mt-1.5 font-semibold tracking-tight text-foreground',
@@ -307,7 +307,7 @@ function ProfileVisibilityPanel({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="space-y-1">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+          <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
             Public visibility
           </p>
           <Badge
@@ -822,7 +822,7 @@ export default function TraderProfilePageClient() {
               <div className="p-5 sm:p-6 lg:p-[1.75rem]">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start">
-                    <Avatar className="h-20 w-20 shrink-0 rounded-2xl border border-border bg-background/70 sm:h-24 sm:w-24">
+                    <Avatar className="h-20 w-20 shrink-0 rounded-2xl border border-border bg-muted sm:h-24 sm:w-24">
                       <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
                       <AvatarFallback className="bg-background text-lg font-semibold text-foreground">
                         {profileInitials}
@@ -960,7 +960,7 @@ export default function TraderProfilePageClient() {
               <div className="p-5 sm:p-6">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="space-y-1">
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                       Active accounts
                     </p>
                     <p className="text-sm text-muted-foreground">
@@ -1013,7 +1013,7 @@ export default function TraderProfilePageClient() {
               <div className="p-5 sm:p-6">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="space-y-1">
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                       Daily session pattern
                     </p>
                     <p className="text-sm text-muted-foreground">
@@ -1076,12 +1076,12 @@ export default function TraderProfilePageClient() {
               benchmarkSampleSize={benchmark?.sampleSize}
             />
 
-            <div className="border-t border-border/25" />
+            <div className="border-t border-border/30" />
 
             <div>
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                   Execution quality
                 </p>
               </div>

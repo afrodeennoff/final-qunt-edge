@@ -46,7 +46,7 @@ export function PlatformItem({
  disabled={platform.isDisabled || platform.isComingSoon}
  >
  <div className="flex items-center py-1">
- <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border/20 bg-background/50 shrink-0">
+ <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border/30 bg-background/50 shrink-0">
  {platform.logo.path && (
  <Image
  src={platform.logo.path}

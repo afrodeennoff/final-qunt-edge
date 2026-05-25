@@ -110,7 +110,7 @@ function RatingDistributionBar({
     <div className="flex items-center gap-2">
       <span className="w-3 text-xs text-muted-foreground">{rating}</span>
       <Star className="h-3 w-3 fill-warning text-warning" />
-      <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted/20">
+      <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted/40">
         <div
           className="h-full rounded-full bg-success transition-[opacity,background-color,border-color,transform] duration-500"
           style={{ width: `${percentage}%` }}
@@ -140,7 +140,7 @@ function formatRelativeTime(date: Date): string {
 
 function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFlag: (id: string) => void; canFlag: boolean }) {
   return (
-    <div className="group rounded-xl border border-border bg-muted/20 p-6 transition-[opacity,background-color,border-color,transform] duration-200 hover:border-border hover:bg-muted/20">
+    <div className="group rounded-xl border border-border bg-muted/40 p-6 transition-[opacity,background-color,border-color,transform] duration-200 hover:border-border hover:bg-muted/40">
       <div className="flex items-start gap-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
           <span className="text-sm font-semibold text-primary">
@@ -165,7 +165,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
               {canFlag && (
                 <button
                   onClick={() => onFlag(review.id)}
-                  className="rounded p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-muted/20"
+                  className="rounded p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-muted/40"
                   title="Report this review"
                 >
                   <Flag className="h-3.5 w-3.5 text-muted-foreground transition-colors hover:text-destructive" />
@@ -200,7 +200,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
 
 function ReviewSkeleton() {
   return (
-    <div className="rounded-xl border border-border bg-muted/20 p-6">
+    <div className="rounded-xl border border-border bg-muted/40 p-6">
       <div className="flex items-start gap-4">
         <Skeleton className="h-10 w-10 rounded-full" />
         <div className="flex-1 gap-3">
@@ -407,7 +407,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
   return (
     <div className="space-y-6">
       {/* Statistics Card */}
-      <Card className="rounded-xl border-border bg-muted/20">
+      <Card className="rounded-xl border-border bg-muted/40">
         <CardContent className="p-6">
           <div className="flex items-center gap-2 mb-6">
             <ReviewsIcon size={20} className="text-primary" />
@@ -419,7 +419,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
             {/* Average Rating Display */}
-            <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-muted/20 p-6">
+            <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-muted/40 p-6">
               <div className="text-5xl font-bold tracking-tight text-foreground">
                 {stats.average > 0 ? stats.average.toFixed(1) : '—'}
               </div>
@@ -470,7 +470,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Review Form Section */}
-      <Card className="rounded-xl border-border bg-muted/20">
+      <Card className="rounded-xl border-border bg-muted/40">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-foreground">Write a Review</h3>
@@ -487,7 +487,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Not authenticated message */}
           {isAuthenticated === false && (
-            <div className="rounded-xl border border-border bg-muted/20 p-6 text-center">
+            <div className="rounded-xl border border-border bg-muted/40 p-6 text-center">
               <p className="text-sm text-muted-foreground">
                 Please <Link href={`/${locale}/authentication`} className="text-primary hover:underline">sign in</Link> to write a review
               </p>
@@ -496,7 +496,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Already reviewed message */}
           {hasUserReviewed && (
-            <div className="rounded-xl border border-border bg-muted/20 p-6">
+            <div className="rounded-xl border border-border bg-muted/40 p-6">
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 text-success" />
                 <p className="text-sm text-muted-foreground">
@@ -625,10 +625,10 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       {/* Flag Report Dialog */}
       {showFlagDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-muted/40">
-          <div className="w-full max-w-md rounded-xl border border-border/30 bg-muted/20 p-6 shadow-sm">
+          <div className="w-full max-w-md rounded-xl border border-border/30 bg-muted/40 p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-foreground">Report Review</h3>
-              <button onClick={() => setShowFlagDialog(false)} className="rounded p-1 hover:bg-muted/20">
+              <button onClick={() => setShowFlagDialog(false)} className="rounded p-1 hover:bg-muted/40">
                 <XCircle className="h-5 w-5 text-muted-foreground" />
               </button>
             </div>
@@ -638,7 +638,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                 <select
                   value={flagReason}
                   onChange={(e) => setFlagReason(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-muted/20 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                  className="w-full rounded-xl border border-border bg-muted/40 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
                   required
                 >
                   <option value="">Select a reason</option>
@@ -672,7 +672,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Reviews List */}
-      <Card className="rounded-xl border-border bg-muted/20">
+      <Card className="rounded-xl border-border bg-muted/40">
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
             <h3 className="text-lg font-semibold text-foreground">
@@ -691,7 +691,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                   setSortBy(e.target.value as ReviewSortOption)
                   setCurrentPage(1)
                 }}
-                className="rounded-lg border border-border bg-muted/20 px-3 py-1.5 text-sm text-foreground focus:border-primary focus:outline-none"
+                className="rounded-lg border border-border bg-muted/40 px-3 py-1.5 text-sm text-foreground focus:border-primary focus:outline-none"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
@@ -712,7 +712,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
             ) : reviews.length === 0 ? (
               // Empty state
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-border bg-muted/20">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-border bg-muted/40">
                   <ReviewsIcon size={28} className="text-muted-foreground" />
                 </div>
                 <p className="text-sm font-medium text-muted-foreground">No reviews yet</p>

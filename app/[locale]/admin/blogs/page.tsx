@@ -52,7 +52,7 @@ export default async function AdminBlogsPage({ params }: PageProps) {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 border-b border-border/30 pb-6 md:flex-row md:items-end md:justify-between">
         <div className="space-y-2">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary/80">
+          <p className="text-xs font-medium uppercase tracking-[0.12em] text-primary/80">
             Admin Content
           </p>
           <div className="space-y-1">

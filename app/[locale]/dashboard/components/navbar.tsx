@@ -100,7 +100,7 @@ export default function Navbar() {
               )}
 
               {!autoSaveStatus.hasPending && isCustomizing && (
-                <div className="hidden sm:flex items-center gap-2 px-3 text-foreground/60">
+                <div className="hidden sm:flex items-center gap-2 px-3 text-foreground">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span className="text-[10px] font-black uppercase tracking-widest">Saved</span>
                 </div>
@@ -129,7 +129,7 @@ export default function Navbar() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-9 gap-2 rounded-xl border border-primary/18 bg-primary/8 px-5 text-[10px] font-black uppercase tracking-[0.2em] text-foreground shadow-none transition-[opacity,background-color,border-color] duration-500 hover:border-primary/26 hover:bg-primary/12"
+                      className="h-9 gap-2 rounded-xl border border-primary/18 bg-primary/8 px-5 text-[10px] font-black uppercase tracking-[0.12em] text-foreground shadow-none transition-[opacity,background-color,border-color] duration-500 hover:border-primary/26 hover:bg-primary/12"
                       aria-label="Upgrade to Elite plan"
                     >
                       <Sparkles className="w-3.5 h-3.5 animate-pulse" aria-hidden="true" />
@@ -142,7 +142,7 @@ export default function Navbar() {
               <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
 
               {/* Real-time Actions */}
-              <div className="flex items-center gap-2 rounded-xl border border-border/35 bg-background/55 p-1.5 shadow-inner">
+              <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-background/55 p-1.5 shadow-inner">
                 <Button
                   variant="ghost"
                   size="icon"

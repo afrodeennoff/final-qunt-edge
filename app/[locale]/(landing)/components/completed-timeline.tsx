@@ -49,7 +49,7 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
  
  {/* Display YouTube video for French locale if available */}
  {locale === 'fr' && milestone.youtubeVideoId && (
- <div className="mt-4 rounded-lg overflow-hidden bg-muted/20 dark:bg-muted/20">
+ <div className="mt-4 rounded-lg overflow-hidden bg-muted/40 dark:bg-muted/40">
  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
  <iframe
  className="absolute top-0 left-0 w-full h-full"
@@ -63,7 +63,7 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
  )}
  
  {milestone.image && !milestone.youtubeVideoId && (
- <div className="mt-4 rounded-lg overflow-hidden bg-muted/20 dark:bg-muted/20">
+ <div className="mt-4 rounded-lg overflow-hidden bg-muted/40 dark:bg-muted/40">
  <Image
  src={milestone.image}
  alt={milestone.title}

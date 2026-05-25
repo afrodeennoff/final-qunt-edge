@@ -183,7 +183,7 @@ export default async function Page({ params }: PageProps) {
         {/* Back link */}
         <Link
           href={`/${locale}/updates`}
-          className="mb-6 inline-flex items-center gap-2 rounded-lg border border-border bg-muted/10 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-muted/20 hover:text-foreground"
+          className="mb-6 inline-flex items-center gap-2 rounded-lg border border-border bg-muted/10 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-muted/40 hover:text-foreground"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           All Updates
@@ -220,7 +220,7 @@ export default async function Page({ params }: PageProps) {
         />
 
         {meta.image && (
-          <div className="mb-8 rounded-lg overflow-hidden bg-muted/20 dark:bg-muted/20">
+          <div className="mb-8 rounded-lg overflow-hidden bg-muted/40 dark:bg-muted/40">
             <Image
               src={meta.image}
               alt={meta.title}
@@ -236,13 +236,13 @@ export default async function Page({ params }: PageProps) {
         <div
           className="prose dark:prose-invert max-w-none 
           prose-pre:p-0 prose-pre:bg-transparent 
-          prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-muted/20 prose-code:text-muted-foreground
+          prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-muted/40 prose-code:text-muted-foreground
           dark:prose-code:bg-muted/30 dark:prose-code:text-muted-foreground/80
           prose-table:w-full prose-table:mt-6 prose-table:mb-8
           prose-thead:border-b prose-thead:border-border dark:prose-thead:border-border
           prose-th:px-6 prose-th:py-3 prose-th:text-left prose-th:font-semibold
           prose-td:px-6 prose-td:py-3 prose-td:border-b prose-td:border-border dark:prose-td:border-border
-          prose-tr:transition-colors prose-tr:hover:bg-muted/20 dark:prose-tr:hover:bg-muted/30"
+          prose-tr:transition-colors prose-tr:hover:bg-muted/40 dark:prose-tr:hover:bg-muted/30"
           itemProp="articleBody"
         >
           {content}

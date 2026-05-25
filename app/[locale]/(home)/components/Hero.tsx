@@ -14,11 +14,11 @@ export default async function Hero({ locale }: { locale: string }) {
     >
       <div className="relative grid items-center gap-8 lg:grid-cols-2">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">
             {t('landing.hero.badge')}
           </div>
 
-          <h1 className="mt-6 text-balance text-[56px] font-[250] leading-[0.96] tracking-[-0.04em] text-foreground sm:text-[72px] lg:text-[88px]">
+          <h1 className="mt-6 text-balance text-[56px] font-[250] leading-[0.96] tracking-tight text-foreground sm:text-[72px] lg:text-[88px]">
             The <span className="text-primary">command center</span>
             <br />for serious traders.
           </h1>
@@ -76,8 +76,8 @@ export default async function Hero({ locale }: { locale: string }) {
                 { label: 'EDGE SCORE', value: '91', change: '+3' },
               ].map((m, i) => (
                 <div key={i} className="bg-card p-4">
-                  <div className="text-[9px] font-medium tracking-[0.1em] text-muted-foreground/70">{m.label}</div>
-                  <div className="mt-2 text-[26px] font-semibold tabular-nums tracking-[-0.02em] text-foreground">{m.value}</div>
+                  <div className="text-[9px] font-medium tracking-[0.12em] text-muted-foreground/70">{m.label}</div>
+                  <div className="mt-2 text-[26px] font-semibold tabular-nums tracking-tight text-foreground">{m.value}</div>
                   <div className="mt-0.5 text-[11px] font-medium text-success">{m.change}</div>
                 </div>
               ))}

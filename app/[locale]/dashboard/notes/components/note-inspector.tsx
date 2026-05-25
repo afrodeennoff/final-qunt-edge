@@ -180,7 +180,7 @@ export function NoteInspector({
           <Button
             variant="outline"
             size="sm"
-            className="flex-1 h-7 text-[11px] rounded-md border-border/25 bg-card/30 text-foreground/70 hover:bg-card/50 hover:text-foreground"
+            className="flex-1 h-7 text-[11px] rounded-md border-border/30 bg-card/30 text-foreground/70 hover:bg-card hover:text-foreground"
             onClick={handleExportNote}
           >
             <Download className="h-3 w-3 mr-1" />
@@ -189,7 +189,7 @@ export function NoteInspector({
           <Button
             variant="outline"
             size="sm"
-            className="flex-1 h-7 text-[11px] rounded-md border-border/25 bg-card/30 text-foreground/70 hover:bg-card/50 hover:text-foreground"
+            className="flex-1 h-7 text-[11px] rounded-md border-border/30 bg-card/30 text-foreground/70 hover:bg-card hover:text-foreground"
             title="Generate AI Summary"
             onClick={handleAiSummary}
             disabled={isLoading || !note.content || note.content.trim().length < 10}

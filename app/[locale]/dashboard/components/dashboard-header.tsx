@@ -133,14 +133,14 @@ export function DashboardHeader() {
                   {showSectionLabel && (
                     <span
                       className={cn(
-                        'hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em]',
+                        'hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em]',
                         'border-border/40 bg-background/60 text-muted-foreground',
                       )}
                     >
                       {sectionLabel}
                     </span>
                   )}
-                  <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground sm:text-sm sm:uppercase sm:tracking-[0.18em]">
+                  <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground sm:text-sm sm:uppercase sm:tracking-[0.12em]">
                     {title}
                   </h1>
                 </div>

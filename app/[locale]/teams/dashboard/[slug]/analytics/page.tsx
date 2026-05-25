@@ -195,7 +195,7 @@ export default function TeamAnalyticsPage() {
         <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
           <div className="flex items-center gap-2 text-muted-foreground">
             <BarChart3 className="h-4 w-4 text-primary" />
-            <p className="text-[10px] font-black uppercase tracking-[0.2em]">Team Intelligence</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.12em]">Team Intelligence</p>
           </div>
           <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Analytics</h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
@@ -221,7 +221,7 @@ export default function TeamAnalyticsPage() {
       <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
         <div className="flex items-center gap-2 text-muted-foreground">
           <BarChart3 className="h-4 w-4 text-primary" />
-          <p className="text-[10px] font-black uppercase tracking-[0.2em]">Team Intelligence</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.12em]">Team Intelligence</p>
         </div>
         <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Analytics</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">

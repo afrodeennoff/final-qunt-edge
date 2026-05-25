@@ -178,7 +178,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
                 'animate-scale-reveal animate-scale-reveal-d3 p-4 sm:col-span-2',
               )}
             >
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/70">
+              <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground/70">
                 Methodology
               </p>
               <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">

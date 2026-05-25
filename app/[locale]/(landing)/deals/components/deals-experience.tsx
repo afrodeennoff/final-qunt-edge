@@ -883,7 +883,7 @@ function BiggestDealsCarousel({
                 <span
                   className={cn(
                     dealsChipClassName,
-                    'px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground',
+                    'px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground',
                   )}
                 >
                   {activeDeal.category}
@@ -891,7 +891,7 @@ function BiggestDealsCarousel({
                 <span
                   className={cn(
                     dealsChipClassName,
-                    'px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground',
+                    'px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground',
                   )}
                 >
                   {activeDeal.platform}
@@ -899,7 +899,7 @@ function BiggestDealsCarousel({
               </div>
 
               <div className="space-y-3">
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                   Lead spotlight
                 </p>
                 <h3 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
@@ -914,7 +914,7 @@ function BiggestDealsCarousel({
               </div>
 
               <div className={cn(dealsInsetPanelClassName, 'p-4')}>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                   Coupon code
                 </p>
                 <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -1020,16 +1020,16 @@ function BackgroundDealTeaser({ deal, align }: { deal: DealItem; align: 'left' |
     >
       <div className="space-y-4">
         <div>
-          <p className="text-4xl font-bold text-foreground/60">{deal.discountPercent}% off</p>
-          <p className="mt-2 text-lg text-foreground/60">{deal.firmName}</p>
+          <p className="text-4xl font-bold text-foreground">{deal.discountPercent}% off</p>
+          <p className="mt-2 text-lg text-foreground">{deal.firmName}</p>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className={cn(dealsInsetPanelClassName, 'p-3')}>
-            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Coupon</p>
+            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Coupon</p>
             <p className="mt-1 text-sm font-semibold text-foreground/70">{deal.couponCode}</p>
           </div>
           <div className={cn(dealsInsetPanelClassName, 'p-3')}>
-            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Fee</p>
+            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Fee</p>
             <p className="mt-1 text-sm font-semibold text-foreground/70">
               {formatPrice(deal.challengeFee)}
             </p>
@@ -1166,7 +1166,7 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
           <Sparkles className="h-3.5 w-3.5 text-primary" />
           Verified prop firm discounts
         </div>
-        <h1 className="mt-5 text-balance text-[clamp(2.25rem,5.4vw,4.8rem)] font-extrabold leading-[0.98] tracking-[-0.04em] text-foreground">
+        <h1 className="mt-5 text-balance text-[clamp(2.25rem,5.4vw,4.8rem)] font-extrabold leading-[0.98] tracking-tight text-foreground">
           Open current promos without losing the firm context.
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -1175,13 +1175,13 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
         </p>
         <div className={cn(dealsInsetPanelClassName, 'grid gap-3 p-4 sm:grid-cols-3')}>
           <div className="space-y-1">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
               1. Scan the board
             </p>
             <p className="text-sm font-semibold text-foreground">Find live pricing fast</p>
           </div>
           <div className="space-y-1">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
               2. Validate fit
             </p>
             <p className="text-sm font-semibold text-foreground">
@@ -1189,7 +1189,7 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
             </p>
           </div>
           <div className="space-y-1">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
               3. Move with context
             </p>
             <p className="text-sm font-semibold text-foreground">Compare firms before you claim</p>
@@ -1232,7 +1232,7 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
           />
         </div>
         <div className={cn(dealsInsetPanelClassName, 'p-4 sm:p-6')}>
-          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+          <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
             Board rhythm
           </p>
           <h2 className="mt-2 text-lg font-semibold text-foreground">

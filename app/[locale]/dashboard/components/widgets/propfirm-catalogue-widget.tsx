@@ -65,7 +65,7 @@ export default function PropfirmCatalogueWidget() {
  >
  <div className="relative rounded-xl border border-border/10 bg-card/60 shadow-sm overflow-hidden transition-[opacity,background-color,border-color] duration-300 hover:border-border/30 hover:shadow-sm flex items-center justify-between p-3 cursor-pointer">
  <div className="flex flex-col gap-1 min-w-0">
- <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/35 truncate">{stat.propfirmName}</span>
+ <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground truncate">{stat.propfirmName}</span>
  <div className="flex items-center gap-3">
  <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
  <Users className="w-3 h-3 text-muted-foreground" />
@@ -78,12 +78,12 @@ export default function PropfirmCatalogueWidget() {
  </div>
  </div>
  <div className="text-right shrink-0">
- <div className="text-[28px] font-[250] tracking-[-0.04em] text-foreground tabular-nums leading-none">
+ <div className="text-[28px] font-[250] tracking-tight text-foreground tabular-nums leading-none">
  ${stat.payouts.paidAmount > 1000
  ? `${(stat.payouts.paidAmount / 1000).toFixed(1)}k`
  : stat.payouts.paidAmount.toLocaleString()}
  </div>
- <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/35">
+ <div className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
  Paid
  </div>
  </div>

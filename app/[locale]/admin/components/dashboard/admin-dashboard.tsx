@@ -150,7 +150,7 @@ export function AdminDashboard() {
 			<Card className={cn(unifiedSectionPanelClassName, 'p-6')}>
 				<div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
 					<div className="space-y-1">
-						<p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">Admin Tools</p>
+						<p className="text-sm uppercase tracking-[0.12em] text-muted-foreground">Admin Tools</p>
 						<h2 className="text-2xl font-semibold tracking-tight">Operations hub</h2>
 						<p className="text-sm text-muted-foreground">
 							Fast access to the same internal admin workflows used for newsletters, recap emails, and platform management.
@@ -210,7 +210,7 @@ export function AdminDashboard() {
 								className={cn(unifiedInsetPanelClassName, 'group p-4 transition-[opacity,background-color,border-color,transform,box-shadow] hover:-translate-y-0.5 hover:border-primary/18 hover:bg-background/78 hover:shadow-[0_18px_30px_-24px_hsl(var(--foreground)/0.45)]')}
 							>
 								<div className="flex items-start gap-3">
-									<div className="rounded-lg border border-border/35 bg-background/70 p-2 text-foreground transition-colors group-hover:bg-foreground group-hover:text-background">
+									<div className="rounded-lg border border-border/30 bg-muted p-2 text-foreground transition-colors group-hover:bg-foreground group-hover:text-background">
 										<Icon className="h-4 w-4" />
 									</div>
 									<div className="space-y-1">
@@ -255,7 +255,7 @@ export function AdminDashboard() {
 			</div>
 
 			<Tabs defaultValue="overview" className="w-full">
-				<TabsList className="border border-border/35 bg-background/70 p-1 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+				<TabsList className="border border-border/30 bg-muted p-1 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
 					<TabsTrigger value="overview">Overview</TabsTrigger>
 					<TabsTrigger value="users">Users</TabsTrigger>
 					<TabsTrigger value="payments">Payments</TabsTrigger>

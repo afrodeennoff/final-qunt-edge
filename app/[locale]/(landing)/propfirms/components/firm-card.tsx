@@ -39,7 +39,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
 
   return (
     <Link href={`/${locale}/firm/${slug}`} className="block group">
-      <article className="relative overflow-hidden rounded-xl border border-border bg-muted/30 transition-[transform,opacity,background-color,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-border hover:bg-muted/20">
+      <article className="relative overflow-hidden rounded-xl border border-border bg-muted/30 transition-[transform,opacity,background-color,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-border hover:bg-muted/40">
         {/* Top accent line */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 

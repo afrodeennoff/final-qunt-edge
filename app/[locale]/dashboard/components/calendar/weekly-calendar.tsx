@@ -105,7 +105,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
  ?"text-foreground dark:text-foreground bg-secondary/30 dark:bg-secondary/22" 
  : monthlyPnl < 0 
  ?"text-semantic-error dark:text-semantic-error/90 bg-semantic-error-bg/50 dark:bg-semantic-error-bg/30" 
- :"text-muted-foreground bg-muted/20"
+ :"text-muted-foreground bg-muted/40"
  )}>
  {formatCurrency(monthlyPnl)}
  </div>
@@ -165,7 +165,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
  ?"bg-secondary/30 dark:bg-secondary/22 text-foreground dark:text-foreground border-border/65 dark:border-border/55" 
  : pnl < 0 
  ?"bg-semantic-error-bg/60 dark:bg-semantic-error-bg/30 text-semantic-error dark:text-semantic-error/90 border-semantic-error-border/80 dark:border-semantic-error-border/40" 
- :"bg-muted/20 dark:bg-muted/10 text-muted-foreground border-border/30"
+ :"bg-muted/40 dark:bg-muted/10 text-muted-foreground border-border/30"
  )}
  >
  <div className="text-[10px] font-medium opacity-80">{t('calendar.week')} {getWeek(weekStart, { locale: dateLocale })}</div>

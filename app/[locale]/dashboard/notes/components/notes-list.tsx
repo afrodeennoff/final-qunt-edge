@@ -118,7 +118,7 @@ export function NotesList({
             placeholder="Search notes..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-8 h-8 text-xs rounded-md bg-card/30 border-border/20 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-primary/30"
+            className="pl-8 h-8 text-xs rounded-md bg-card/30 border-border/30 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-primary/30"
           />
         </div>
 

@@ -28,7 +28,7 @@ export function PnlPerContractPreview() {
  )
 
  return (
- <div className="mx-6 rounded-xl p-6 bg-muted/20 shadow-card">
+ <div className="mx-6 rounded-xl p-6 bg-muted/40 shadow-card">
  <div className="flex items-center gap-3 mb-4">
  <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
  <BarChart3 className="size-[18px] text-primary" strokeWidth={2} />

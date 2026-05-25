@@ -592,7 +592,7 @@ export default function ImportButton() {
  onMouseLeave={() => uploadIconRef.current?.stopAnimation()}
  >
  <UploadIcon ref={uploadIconRef} className="h-4 w-4" />
- <span className="hidden md:block text-[10px] font-semibold uppercase tracking-[0.18em]">{t("import.button")}</span>
+ <span className="hidden md:block text-[10px] font-semibold uppercase tracking-[0.12em]">{t("import.button")}</span>
  </Button>
 
  <Dialog

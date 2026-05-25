@@ -260,7 +260,7 @@ function NotFoundContent() {
         }
       >
         <div className="flex flex-col items-center gap-6">
-          <div className="rounded-full border border-border/30 bg-background/40 px-6 py-2 text-4xl font-semibold tracking-[-0.06em] text-foreground">
+          <div className="rounded-full border border-border/30 bg-background/40 px-6 py-2 text-4xl font-semibold tracking-tight text-foreground">
             404
           </div>
         </div>
@@ -276,7 +276,7 @@ function NotFoundContent() {
       actions={primaryActions}
     >
       <div className="flex flex-col items-center gap-6">
-        <div className="rounded-full border border-border/30 bg-background/40 px-6 py-2 text-4xl font-semibold tracking-[-0.06em] text-foreground">
+        <div className="rounded-full border border-border/30 bg-background/40 px-6 py-2 text-4xl font-semibold tracking-tight text-foreground">
           404
         </div>
 
@@ -341,7 +341,7 @@ function NotFoundContent() {
                             'block rounded-[0.95rem] px-3 py-2 text-sm transition-[background-color,color,border-color] duration-200',
                             idx === selectedIndex
                               ? 'bg-primary/10 text-foreground'
-                              : 'text-muted-foreground hover:bg-background/70 hover:text-foreground',
+                              : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                           )}
                         >
                           {displayLabel(route)}

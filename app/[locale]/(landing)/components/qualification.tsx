@@ -5,14 +5,14 @@ import { motion } from 'motion/react';
 export default function Qualification() {
  return (
  <section className="border-t border-border bg-background px-6 py-16 sm:py-20 lg:py-24">
- <div className="mx-6 rounded-xl p-6 bg-muted/20 shadow-card">
+ <div className="mx-6 rounded-xl p-6 bg-muted/40 shadow-card">
  <div className="max-w-6xl mx-auto">
  <div className="grid md:grid-cols-2 gap-2 bg-muted/10 border border-border p-2 rounded-sm overflow-hidden">
  <motion.div 
  initial={{ opacity: 0, x: -20 }}
  whileInView={{ opacity: 1, x: 0 }}
  viewport={{ once: true }}
- className="p-16 bg-muted/20"
+ className="p-16 bg-muted/40"
  >
  <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-foreground mb-10 mono">Ideal Candidate</h3>
  <ul className="space-y-6">

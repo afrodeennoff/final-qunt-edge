@@ -304,7 +304,7 @@ function AccountsTableSection({
  {headerGroup.headers.map((header) => (
  <th
  key={header.id}
- className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-background/0.14 border-r border-border/20 last:border-r-0 first:border-l align-middle text-foreground/80"
+ className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-background/0.14 border-r border-border/30 last:border-r-0 first:border-l align-middle text-foreground/80"
  style={{ width: header.getSize() }}
  >
  {header.isPlaceholder
@@ -329,7 +329,7 @@ function AccountsTableSection({
  {table.getVisibleLeafColumns().map((column) => (
  <td
  key={`${entry.summary.id}-${column.id}`}
- className="px-3 py-2 text-sm border-r border-border/20 last:border-r-0 first:border-l align-middle"
+ className="px-3 py-2 text-sm border-r border-border/30 last:border-r-0 first:border-l align-middle"
  style={{ width: column.getSize() }}
  >
  {renderSummaryCell(column.id, entry.summary)}
@@ -360,7 +360,7 @@ function AccountsTableSection({
  {row.getVisibleCells().map((cell) => (
  <td
  key={cell.id}
- className={cn("px-3 py-2 text-sm border-r border-border/20 last:border-r-0 first:border-l align-middle",
+ className={cn("px-3 py-2 text-sm border-r border-border/30 last:border-r-0 first:border-l align-middle",
  row.depth > 0 && cell.column.id ==="account" &&"pl-6"
  )}
  style={{ width: cell.column.getSize() }}

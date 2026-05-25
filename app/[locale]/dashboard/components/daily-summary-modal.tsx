@@ -24,7 +24,7 @@ const THEMES: Record<string, Theme> = {
  obsidian: { name: 'Obsidian', primary: 'text-foreground', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/10', pattern: 'radial-gradient(circle at 1.5px 1.5px, hsl(var(--foreground) / 0.35) 1px, transparent 0)' },
  graphite: { name: 'Graphite', primary: 'text-foreground/80', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/5', pattern: 'linear-gradient(hsl(var(--foreground) / 0.35) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground) / 0.35) 1px, transparent 1px)' },
  silver: { name: 'Silver', primary: 'text-foreground', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/15', pattern: 'radial-gradient(hsl(var(--foreground) / 0.35) 2px, transparent 0)' },
- ghost: { name: 'Ghost', primary: 'text-foreground/60', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/5', pattern: 'repeating-linear-gradient(45deg, hsl(var(--foreground) / 0.35) 0, hsl(var(--foreground) / 0.35) 1px, transparent 0, transparent 50%)' }
+ ghost: { name: 'Ghost', primary: 'text-foreground', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/5', pattern: 'repeating-linear-gradient(45deg, hsl(var(--foreground) / 0.35) 0, hsl(var(--foreground) / 0.35) 1px, transparent 0, transparent 50%)' }
 }
 
 const THEME_KEYS = ['obsidian', 'graphite', 'silver', 'ghost'] as const
@@ -256,7 +256,7 @@ const formatHeroPnlValue = (pnl: number, mode: 'currency' | 'percent', totalAcco
 const getTimeframeLabel = (timeframe: Timeframe): string => (timeframe === 'total' ? 'Lifetime' : timeframe)
 const getDisplaySuffix = (mode: 'currency' | 'percent'): string => (mode === 'percent' ? '%' : '')
 const getSignSymbol = (isPositive: boolean): string => (isPositive ? '+' : '-')
-const getHeroWrapperClass = (isPositive: boolean): string => (isPositive ?"text-foreground" :"text-foreground/60")
+const getHeroWrapperClass = (isPositive: boolean): string => (isPositive ?"text-foreground" :"text-foreground")
 const getHeroSignClass = (isPositive: boolean): string => (isPositive ?"text-foreground/70" :"text-muted-foreground/75")
 
 const getDisplayModeButtonClass = (mode: 'currency' | 'percent', currentMode: 'currency' | 'percent') => cn("px-2.5 py-1 rounded-sm text-[10px] font-bold transition-[opacity,background-color,border-color]",
@@ -270,7 +270,7 @@ const getBlurCardClass = (isActive: boolean) => cn("group border rounded-xl p-4 
 )
 
 const getBlurIcon = (isActive: boolean): React.ReactElement => (
- isActive ? <Eye className="w-3 h-3 text-foreground/60" /> : <EyeOff className="w-3 h-3 text-muted-foreground/70" />
+ isActive ? <Eye className="w-3 h-3 text-foreground" /> : <EyeOff className="w-3 h-3 text-muted-foreground/70" />
 )
 
 const getStatTextClass = (value: number): string => (value >= 0 ?"text-foreground" :"text-muted-foreground/70")
@@ -288,7 +288,7 @@ const formatIntervalDisplayValue = (
  return `${percentValue}%`
 }
 
-const getGoalTextClass = (value: number): string => (value < 0 ?"text-foreground/60" :"text-foreground")
+const getGoalTextClass = (value: number): string => (value < 0 ?"text-foreground" :"text-foreground")
 const getGoalBarClass = (value: number): string => (value < 0 ?"bg-foreground/20 shadow-none" :"bg-gradient-to-r from-foreground/60 via-foreground/70 to-foreground/80 shadow-none")
 
 const getDownloadLabel = (isExporting: boolean): string => (isExporting ?"Saving..." :"Download Image")
@@ -324,11 +324,11 @@ const EditableTarget = ({ customTarget, isEditing, onStartEditing, onFinishEditi
  if (isEditing) {
  return (
  <div className="flex items-baseline relative z-50">
- <span className="text-sm mr-1 text-foreground/60 font-bold">$</span>
+ <span className="text-sm mr-1 text-foreground font-bold">$</span>
  <input
  autoFocus
  type="number"
- className="w-24 border-b border-border/0.03 bg-transparent text-sm font-bold text-foreground placeholder:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
+ className="w-24 border-b border-border/0.03 bg-transparent text-sm font-bold text-foreground placeholder:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
  defaultValue={customTarget}
  onBlur={(e) => {
  const val = parseFloat(e.target.value)
@@ -442,7 +442,7 @@ export function DailySummaryModal() {
  className="group flex h-9 items-center gap-2 rounded-full border border-transparent bg-transparent px-3.5 text-muted-foreground shadow-none transition-colors hover:bg-background/80/70 hover:text-foreground md:px-4"
  >
  <BarChart3 className="w-4 h-4 group-hover:rotate-12 transition-transform" />
- <span className="hidden md:inline text-[10px] font-semibold uppercase tracking-[0.18em]">PnL Summary</span>
+ <span className="hidden md:inline text-[10px] font-semibold uppercase tracking-[0.12em]">PnL Summary</span>
  </Button>
  </DialogTrigger>
  <DialogContent className="sm:max-w-4xl bg-transparent border-none shadow-none p-0 overflow-visible flex flex-col items-center [&>button]:hidden">
@@ -510,7 +510,7 @@ export function DailySummaryModal() {
  <div className="flex-1 flex flex-col justify-center items-center text-center">
  <div className="mb-4 flex items-center gap-3">
  <span className="w-1.5 h-1.5 rounded-full bg-background/25-foreground/70" />
- <span className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">{timeframeLabel} PnL</span>
+ <span className="text-xs font-bold text-muted-foreground uppercase tracking-[0.12em]">{timeframeLabel} PnL</span>
 
  <div className="ml-auto flex items-center gap-2">
  <select
@@ -585,11 +585,11 @@ export function DailySummaryModal() {
  <div className="grid grid-cols-2 gap-4">
  <div className="bg-background/0.08 border border-border/14 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors">
  <div className="text-2xl font-black text-foreground mb-1">{scoreVal}</div>
- <div className="text-[9px] text-fg-muted uppercase tracking-[0.2em] font-bold">Score</div>
+ <div className="text-[9px] text-fg-muted uppercase tracking-[0.12em] font-bold">Score</div>
  </div>
  <div className="bg-background/0.08 border border-border/14 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors">
  <div className="text-2xl font-black text-foreground mb-1">{stats.winRate}%</div>
- <div className="text-[9px] text-fg-muted uppercase tracking-[0.2em] font-bold">Win Rate</div>
+ <div className="text-[9px] text-fg-muted uppercase tracking-[0.12em] font-bold">Win Rate</div>
  </div>
  </div>
  </div>
@@ -599,7 +599,7 @@ export function DailySummaryModal() {
  <div className="mt-auto pt-8">
  <div className="flex justify-between items-end mb-3">
  <div className="flex items-center gap-3">
- <span className="text-[10px] font-bold text-foreground/60 uppercase tracking-[0.2em]">Total Goal</span>
+ <span className="text-[10px] font-bold text-foreground uppercase tracking-[0.12em]">Total Goal</span>
  <EditableTarget
  customTarget={customTarget}
  isEditing={isEditingTarget}

@@ -55,7 +55,7 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  <div className={cn("flex flex-col border-r border-b border-border/30",
  size === 'tiny' ?"p-1.5" :"p-4"
  )}>
- <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] mb-3 text-foreground/35">Ratios</h3>
+ <h3 className="text-[11px] font-bold uppercase tracking-[0.12em] mb-3 text-muted-foreground">Ratios</h3>
  <div className="flex-1 flex flex-col justify-center gap-2.5">
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Sharpe</span>
@@ -82,23 +82,23 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  <div className={cn("flex flex-col border-b border-border/30",
  size === 'tiny' ?"p-1.5" :"p-4"
  )}>
- <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] mb-3 text-foreground/35">Position sizing</h3>
+ <h3 className="text-[11px] font-bold uppercase tracking-[0.12em] mb-3 text-muted-foreground">Position sizing</h3>
  <div className="flex-1 flex flex-col justify-center gap-2.5">
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs text-balance">Kelly Half</span>
- <span className={cn("text-[15px] font-semibold tracking-[-0.03em] tabular-nums", safeKellyHalf > 0 ?"text-semantic-success" :"text-semantic-error")}>
+ <span className={cn("text-[15px] font-semibold tracking-tight tabular-nums", safeKellyHalf > 0 ?"text-semantic-success" :"text-semantic-error")}>
  {(safeKellyHalf * 100).toFixed(1)}%
  </span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Optimal</span>
- <span className={cn("text-[15px] font-semibold tracking-[-0.03em] tabular-nums", safeKellyFull > 0 ?"text-semantic-success" :"text-semantic-error")}>
+ <span className={cn("text-[15px] font-semibold tracking-tight tabular-nums", safeKellyFull > 0 ?"text-semantic-success" :"text-semantic-error")}>
  {(safeKellyFull * 100).toFixed(1)}%
  </span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Conservative</span>
- <span className={cn("text-[15px] font-semibold tracking-[-0.03em] tabular-nums", safeKellyHalf > 0 ?"text-semantic-success" :"text-semantic-error")}>
+ <span className={cn("text-[15px] font-semibold tracking-tight tabular-nums", safeKellyHalf > 0 ?"text-semantic-success" :"text-semantic-error")}>
  {((safeKellyHalf / 2) * 100).toFixed(1)}%
  </span>
  </div>
@@ -111,7 +111,7 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  )}>
  <div className="flex justify-between items-end mb-2">
  <div className="flex flex-col">
- <span className="text-[28px] font-[250] tracking-[-0.04em] text-foreground tabular-nums">
+ <span className="text-[28px] font-[250] tracking-tight text-foreground tabular-nums">
  {formatCurrency(safeMaxDrawdown)}
  </span>
  </div>

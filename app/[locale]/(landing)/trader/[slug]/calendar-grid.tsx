@@ -10,7 +10,7 @@ export function CalendarGrid({ dayPnl }: { dayPnl: Map<string, number> }) {
   return (
     <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
       {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
-        <div key={d} className="pb-1.5 text-center text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground/50">
+        <div key={d} className="pb-1.5 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/50">
           {d}
         </div>
       ))}

@@ -102,15 +102,15 @@ export function EvalCostCalculator() {
 
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
         <article className="qe-soft-surface rounded-xl p-4">
-          <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Expected Cost</p>
+          <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Expected Cost</p>
           <p className="mt-2 text-2xl font-semibold text-foreground">${values.expectedTotalCost.toFixed(0)}</p>
         </article>
         <article className="qe-soft-surface rounded-xl p-4">
-          <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Net After Costs</p>
+          <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Net After Costs</p>
           <p className="mt-2 text-2xl font-semibold text-foreground">${values.netTargetAfterCosts.toFixed(0)}</p>
         </article>
         <article className="qe-soft-surface rounded-xl p-4">
-          <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Cost-to-Payout Ratio</p>
+          <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Cost-to-Payout Ratio</p>
           <p className="mt-2 text-2xl font-semibold text-foreground">{values.minReturnNeeded.toFixed(1)}%</p>
           <p className="mt-2">
             <Badge variant={values.riskBand === 'high' ? 'error' : values.riskBand === 'mid' ? 'default' : 'secondary'}>

@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils'
 
 const rowDividerClassName = 'border-border'
 const tableSurfaceClassName =
-  'overflow-hidden rounded-xl border border-border bg-muted/20 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
+  'overflow-hidden rounded-xl border border-border bg-muted/40 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
 
 interface LeaderboardTableProps {
   entries: LeaderboardEntry[]
@@ -87,7 +87,7 @@ export function LeaderboardTableSkeleton() {
                 <th
                   key={heading}
                   className={cn(
-                    'border-b px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/70',
+                    'border-b px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground/70',
                     rowDividerClassName,
                   )}
                 >
@@ -147,7 +147,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
         )}
       >
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/70">
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground/70">
             Leaderboard table
           </p>
           <h3 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
@@ -192,7 +192,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
                     <th
                       key={heading}
                       className={cn(
-                        'border-b px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/70',
+                        'border-b px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground/70',
                         rowDividerClassName,
                       )}
                     >

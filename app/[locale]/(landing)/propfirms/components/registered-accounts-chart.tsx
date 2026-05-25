@@ -122,7 +122,7 @@ export function RegisteredAccountsChart({
                   className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                     activeMetric === tab.key
                       ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:bg-muted/20 hover:text-foreground'
+                      : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground'
                   }`}
                 >
                   {tab.label}

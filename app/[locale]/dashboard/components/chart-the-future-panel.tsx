@@ -148,7 +148,7 @@ function AssistantPanel() {
  return (
  <aside className="flex min-h-[500px] flex-col rounded-xl border border-border/30 bg-primary/[0.03] overflow-hidden">
  <div className="flex items-center justify-between border-b border-border/30 p-4">
- <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground">AI Assistant</h3>
+ <h3 className="text-[10px] font-bold uppercase tracking-[0.12em] text-foreground">AI Assistant</h3>
  <Bot className="size-4 text-primary" />
  </div>
 
@@ -168,7 +168,7 @@ function AssistantPanel() {
  </div>
 
  <div className="border-t border-border/30 p-3">
- <div className="flex items-center gap-2 rounded-lg border border-border/30 bg-muted/20 px-2 py-1.5 focus-within:border-primary/50 transition-colors">
+ <div className="flex items-center gap-2 rounded-lg border border-border/30 bg-muted/40 px-2 py-1.5 focus-within:border-primary/50 transition-colors">
  <input
  value={draft}
  onChange={(event) => setDraft(event.target.value)}

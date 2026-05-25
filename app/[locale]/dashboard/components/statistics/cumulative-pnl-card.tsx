@@ -60,7 +60,7 @@ function CumulativePnlCardInner({ size = 'medium' }: CumulativePnlCardProps) {
  ) : (
  <TrendingDown className="h-4 w-4 shrink-0 text-destructive" />
  )}
- <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Net</span>
+ <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">Net</span>
  <span className="micro-sans tabular-nums shrink-0 text-center text-[32px] font-black leading-none tracking-tight text-foreground">
  {netPnl === 0 ? '' : isPositive ? '+' : '-'}{formatCurrency(netPnl)}
  </span>

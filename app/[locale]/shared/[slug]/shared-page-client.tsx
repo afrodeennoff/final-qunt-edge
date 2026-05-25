@@ -48,14 +48,14 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
   return (
     <div className="flex flex-col">
       <div className="mb-2 flex flex-col justify-between gap-2 xs:flex-row xs:items-center xs:gap-0">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">{t('shared.tradingAccounts')}</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">{t('shared.tradingAccounts')}</p>
         <div className="flex flex-wrap items-center gap-1.5 w-full xs:w-auto justify-end">
           {accounts.length > 2 && (
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
-              className="h-7 min-w-0 gap-1 text-xs text-foreground/60 hover:text-foreground"
+              className="h-7 min-w-0 gap-1 text-xs text-foreground hover:text-foreground"
             >
               {isExpanded
                 ? t('shared.showLessAccounts')
@@ -72,7 +72,7 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
             variant="ghost"
             size="sm"
             onClick={toggleAll}
-            className="h-7 min-w-0 whitespace-nowrap text-xs text-foreground/60 hover:text-foreground"
+            className="h-7 min-w-0 whitespace-nowrap text-xs text-foreground hover:text-foreground"
           >
             {accountNumbers.length === accounts.length
               ? t('shared.deselectAll')
@@ -118,7 +118,7 @@ export function SharedPageClient() {
     return (
       <div className="qe-v2-app-shell flex flex-col items-center justify-center px-4 pt-28 sm:pt-32">
         <div className="flex w-full max-w-lg flex-col items-center gap-3 rounded-[2rem] border border-border/30 bg-card px-6 py-8 text-center shadow-sm">
-          <Loader2 className="h-8 w-8 animate-spin text-foreground/60" />
+          <Loader2 className="h-8 w-8 animate-spin text-foreground" />
           <p className="text-sm text-muted-foreground">{t('shared.loading')}</p>
         </div>
       </div>
@@ -153,7 +153,7 @@ export function SharedPageClient() {
                       Shared Report
                     </div>
                     <div className="flex flex-col gap-2">
-                      <CardTitle className="text-xl font-[350] tracking-[-0.04em] sm:text-2xl lg:text-3xl">
+                      <CardTitle className="text-xl font-[350] tracking-tight sm:text-2xl lg:text-3xl">
                         {sharedParams.title || t('shared.title')}
                       </CardTitle>
                       <CardDescription className="max-w-3xl text-sm leading-[1.7] text-muted-foreground sm:text-base">

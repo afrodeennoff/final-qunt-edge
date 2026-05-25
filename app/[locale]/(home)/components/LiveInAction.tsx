@@ -13,7 +13,7 @@ export function LiveInAction() {
         <div className="mb-3 inline-block rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-mono tracking-[3px] text-primary">
           LIVE IN ACTION
         </div>
-        <h2 className="text-balance text-4xl font-light tracking-[-0.02em] sm:text-5xl">
+        <h2 className="text-balance text-4xl font-light tracking-tight sm:text-5xl">
           See it work on real trades.
         </h2>
         <p className="mx-auto mt-4 max-w-md text-[15px] text-muted-foreground">

@@ -54,12 +54,12 @@ export default function Navbar() {
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/30 to-transparent" />
           <Link
             href={`/${locale}`}
-            className="flex items-center gap-2 rounded-lg px-2 py-2 min-h-[44px] min-w-[44px] transition-colors hover:bg-muted/20"
+            className="flex items-center gap-2 rounded-lg px-2 py-2 min-h-[44px] min-w-[44px] transition-colors hover:bg-muted/40"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-muted text-muted-foreground">
               <Logo className="h-4 w-4 fill-current" />
             </div>
-            <span className="hidden text-sm font-semibold tracking-[-0.02em] text-foreground sm:inline-flex">
+            <span className="hidden text-sm font-semibold tracking-tight text-foreground sm:inline-flex">
               Qunt Edge
             </span>
           </Link>

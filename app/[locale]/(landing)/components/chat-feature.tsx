@@ -250,7 +250,7 @@ export default function TradingChatAssistant({ className ="", maxMessages = 3 }:
  }
 
  return (
- <div className="mx-6 rounded-xl p-6 bg-muted/20 shadow-card">
+ <div className="mx-6 rounded-xl p-6 bg-muted/40 shadow-card">
  <div className="flex items-center gap-3 mb-4">
  <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
  <MessageSquare className="size-[18px] text-primary" strokeWidth={2} />
@@ -261,13 +261,13 @@ export default function TradingChatAssistant({ className ="", maxMessages = 3 }:
  </div>
  <div
  ref={containerRef}
- className={`relative w-full h-full min-h-0 bg-muted/20 transition-colors duration-500 ${className}`}
+ className={`relative w-full h-full min-h-0 bg-muted/40 transition-colors duration-500 ${className}`}
  style={{
  contain:"layout style paint",
  isolation:"isolate",
  }}
  >
- <div className="h-full w-full overflow-hidden rounded-lg border border-border bg-muted/20 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] transition-[opacity,transform,max-height] duration-500">
+ <div className="h-full w-full overflow-hidden rounded-lg border border-border bg-muted/40 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] transition-[opacity,transform,max-height] duration-500">
  <div className="p-4 h-full flex flex-col min-h-0">
  <div className="mb-4 flex shrink-0 items-center gap-2 border-b border-border pb-2 transition-colors duration-300">
  <Bot className="h-4 w-4 text-foreground transition-colors duration-300" />

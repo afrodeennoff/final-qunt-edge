@@ -150,7 +150,7 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
  {getIcon(insight.type)}
  </div>
  <div>
- <h4 className="text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/35">{insight.title}</h4>
+ <h4 className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">{insight.title}</h4>
  <span className="text-[10px] text-muted-foreground">
  {formatInsightDate(insight.timestamp)}
  </span>

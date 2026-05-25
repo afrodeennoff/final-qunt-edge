@@ -54,7 +54,7 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  <p className="text-sm text-muted-foreground">
  Your password has been successfully updated. Redirecting to dashboard...
  </p>
- <Link href={`/${locale}/dashboard`} className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline">
+ <Link href={`/${locale}/dashboard`} className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline">
  Go to dashboard
  </Link>
  </div>

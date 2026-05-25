@@ -75,7 +75,7 @@ export function SharedWidgetCanvas() {
 
   if (!hasSelectedAccounts) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] bg-card/50 rounded-xl border border-dashed border-border/30 p-8">
+      <div className="flex flex-col items-center justify-center min-h-[400px] bg-card rounded-xl border border-dashed border-border/30 p-8">
         <EmptyState
           icon={<div className="h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center">
             <BarChart3 className="h-6 w-6 text-muted-foreground/50" />
@@ -94,7 +94,7 @@ export function SharedWidgetCanvas() {
 
   if (transformedLayout.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] bg-card/50 rounded-xl border border-dashed border-border/30">
+      <div className="flex flex-col items-center justify-center min-h-[400px] bg-card rounded-xl border border-dashed border-border/30">
         <EmptyState
           icon={<BarChart3 className="h-12 w-12 text-muted-foreground/50" />}
           title="No Widgets Available"

@@ -25,7 +25,7 @@ export function PricingPageClient() {
                 Pricing plans
               </span>
 
-              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.3rem)] font-medium leading-[0.98] tracking-[-0.035em] text-foreground">
+              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.3rem)] font-medium leading-[0.98] tracking-tight text-foreground">
                 Pick a plan that matches your execution cadence.
               </h1>
 

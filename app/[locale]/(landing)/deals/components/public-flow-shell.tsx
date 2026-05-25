@@ -74,7 +74,7 @@ export function PublicFlowShell({
                           'rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition-colors',
                           active
                             ? 'border-primary bg-primary text-primary-foreground'
-                            : 'border-border bg-muted/30 text-foreground hover:border-border hover:bg-muted/20'
+                            : 'border-border bg-muted/30 text-foreground hover:border-border hover:bg-muted/40'
                         )}
                       >
                         {link.label}

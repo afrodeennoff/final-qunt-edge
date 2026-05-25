@@ -61,7 +61,7 @@ function RiskRewardRatioCardInner({ size = 'tiny' }: RiskRewardRatioCardProps) {
  >
  <div className="mx-auto inline-flex items-center justify-center gap-2.5 text-center">
  <Scale className="h-4 w-4 shrink-0 text-foreground" />
- <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">RR</span>
+ <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">RR</span>
  <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground">
  {riskRewardRatio.toFixed(2)}
  </span>
@@ -89,7 +89,7 @@ function RiskRewardRatioCardInner({ size = 'tiny' }: RiskRewardRatioCardProps) {
  contentClassName="flex flex-col justify-between gap-2 p-3"
  >
  <div className="flex items-end justify-center gap-2 px-1">
- <span className="micro-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">RR</span>
+ <span className="micro-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">RR</span>
  <span className="micro-sans text-[24px] font-black leading-none tracking-tight text-foreground">
  {riskRewardRatio.toFixed(2)}
  </span>

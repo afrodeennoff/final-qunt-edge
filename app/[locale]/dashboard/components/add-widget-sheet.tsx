@@ -213,7 +213,7 @@ export const AddWidgetSheet = forwardRef<HTMLButtonElement, AddWidgetSheetProps>
  >
  <Plus className="h-4 w-4 shrink-0" />
  {(!isMobile || showLabelOnMobile) && (
- <span className="text-[10px] font-semibold uppercase tracking-[0.18em]">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">
  {t('widgets.addWidget')}
  </span>
  )}

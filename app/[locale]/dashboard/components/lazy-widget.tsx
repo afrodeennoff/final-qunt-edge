@@ -20,7 +20,7 @@ type WidgetComponentProps = {
 
 const loadingShell = (
  <div
- className="h-full w-full animate-pulse rounded-xl border border-border/35 bg-[radial-gradient(circle_at_12%_0%,hsl(var(--foreground)/0.12),hsl(var(--background)/0.85)_58%)]"
+ className="h-full w-full animate-pulse rounded-xl border border-border/30 bg-[radial-gradient(circle_at_12%_0%,hsl(var(--foreground)/0.12),hsl(var(--background)/0.85)_58%)]"
  aria-hidden="true"
  />
 )

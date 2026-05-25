@@ -289,7 +289,7 @@ export default function EmbedPage() {
                     Embed Library
                   </div>
                   <div className="pt-4">
-                    <h1 className="text-xl font-[350] tracking-[-0.04em] text-foreground lg:text-2xl">
+                    <h1 className="text-xl font-[350] tracking-tight text-foreground lg:text-2xl">
                       Qunt Edge chart modules
                     </h1>
                     <p className="max-w-3xl pt-2 text-sm leading-[1.75] text-muted-foreground">
@@ -300,13 +300,13 @@ export default function EmbedPage() {
                 <MotionStagger className="grid gap-2 text-xs text-muted-foreground/80 sm:grid-cols-2 lg:grid-cols-1">
                   <MotionStaggerItem>
                     <div className="rounded-xl border border-border/30 bg-background/30 px-3 py-2.5">
-                      <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Preset</span>
+                      <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">Preset</span>
                       <span className="block pt-1 text-sm font-medium text-foreground">{preset ?? 'Default'}</span>
                     </div>
                   </MotionStaggerItem>
                   <MotionStaggerItem>
                     <div className="rounded-xl border border-border/30 bg-background/30 px-3 py-2.5">
-                      <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Charts</span>
+                      <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">Charts</span>
                       <span className="block pt-1 text-sm font-medium text-foreground">
                         {selectedCharts ? Array.from(selectedCharts).length : 'All'}
                       </span>

@@ -310,7 +310,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  <div className="flex items-center justify-around w-full px-4 py-3 bg-secondary/22 rounded-lg border border-border/55">
  <div className="flex flex-col items-center gap-1">
  <span
- className={cn("text-muted-foreground uppercase tracking-[0.2em] font-black",
+ className={cn("text-muted-foreground uppercase tracking-[0.12em] font-black",
  size ==="small" ?"text-[8px]" :"text-[9px]"
  )}
  >
@@ -334,7 +334,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
 
  <div className="flex flex-col items-center gap-1">
  <span
- className={cn("text-muted-foreground uppercase tracking-[0.2em] font-black",
+ className={cn("text-muted-foreground uppercase tracking-[0.12em] font-black",
  size ==="small" ?"text-[8px]" :"text-[9px]"
  )}
  >

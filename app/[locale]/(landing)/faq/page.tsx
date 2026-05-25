@@ -86,7 +86,7 @@ export default async function FAQPage({ params }: { params: Promise<{ locale: st
                 </header>
                 <Accordion type="single" collapsible className="w-full">
                     {faqs.map((faq, index) => (
-                        <AccordionItem key={index} value={`item-${index}`} className="mb-3 rounded-xl bg-muted/20 px-5">
+                        <AccordionItem key={index} value={`item-${index}`} className="mb-3 rounded-xl bg-muted/40 px-5">
                             <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline">
                                 {faq.question}
                             </AccordionTrigger>

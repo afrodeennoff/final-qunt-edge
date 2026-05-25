@@ -52,38 +52,38 @@ export function DataDebug() {
  <Bug className="h-4 w-4 text-primary" />
  <span className="text-xs font-bold uppercase tracking-widest text-foreground">Debug Dashboard</span>
  </div>
- <button onClick={() => setIsOpen(false)} className="text-foreground/60 hover:text-foreground transition-colors">
+ <button onClick={() => setIsOpen(false)} className="text-foreground hover:text-foreground transition-colors">
  <X className="h-4 w-4" />
  </button>
  </div>
 
  <div className="space-y-3">
  <div className="flex justify-between items-center text-[10px]">
- <span className="text-foreground/60 uppercase font-black tracking-tighter">Trades in Store</span>
+ <span className="text-foreground uppercase font-black tracking-tighter">Trades in Store</span>
  <span className="text-foreground font-mono">{trades.length}</span>
  </div>
  <div className="flex justify-between items-center text-[10px]">
- <span className="text-foreground/60 uppercase font-black tracking-tighter">Filtered Trades</span>
+ <span className="text-foreground uppercase font-black tracking-tighter">Filtered Trades</span>
  <span className="text-foreground font-mono">{formattedTrades.length}</span>
  </div>
  <div className="flex justify-between items-center text-[10px]">
- <span className="text-foreground/60 uppercase font-black tracking-tighter">Accounts</span>
+ <span className="text-foreground uppercase font-black tracking-tighter">Accounts</span>
  <span className="text-foreground font-mono">{accounts.length}</span>
  </div>
  <div className="flex justify-between items-center text-[10px]">
- <span className="text-foreground/60 uppercase font-black tracking-tighter">Environment</span>
+ <span className="text-foreground uppercase font-black tracking-tighter">Environment</span>
  <span className={cn("font-mono", process.env.NODE_ENV === 'development' ?"text-semantic-success" :"text-semantic-warning")}>
  {process.env.NODE_ENV}
  </span>
  </div>
  <div className="flex justify-between items-center text-[10px]">
- <span className="text-foreground/60 uppercase font-black tracking-tighter">Data Logic</span>
+ <span className="text-foreground uppercase font-black tracking-tighter">Data Logic</span>
  <span className={cn("font-mono px-1.5 py-0.5 rounded text-[8px]", isMock ?"bg-semantic-warning-bg/10 text-semantic-warning" :"bg-semantic-success-bg/10 text-semantic-success")}>
  {isMock ?"MOCK (Fallback)" :"LIVE (Synced)"}
  </span>
  </div>
  <div className="flex justify-between items-center text-[10px]">
- <span className="text-foreground/60 uppercase font-black tracking-tighter">User ID</span>
+ <span className="text-foreground uppercase font-black tracking-tighter">User ID</span>
  <span className="text-foreground font-mono truncate max-w-[120px]">
  {user?.id || supabaseUser?.id ||"None"}
  </span>

@@ -28,9 +28,9 @@ export async function TraderInfo({ slug }: { slug: string }) {
     <div>
       <div className="mb-3 flex items-center gap-2">
         <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Trader Profile</span>
+        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Trader Profile</span>
       </div>
-      <h2 className="text-lg font-semibold tracking-[-0.01em]">Trader Information</h2>
+      <h2 className="text-lg font-semibold tracking-tight">Trader Information</h2>
       <p className="mt-1 text-sm text-muted-foreground">
         Email: {traderInfoResponse?.email ? (
           <span className="font-medium text-foreground">{traderInfoResponse.email}</span>
@@ -41,9 +41,9 @@ export async function TraderInfo({ slug }: { slug: string }) {
     <div>
       <div className="mb-3 flex items-center gap-2">
         <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Risk Metrics</span>
+        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Risk Metrics</span>
       </div>
-      <h3 className="text-base font-semibold tracking-[-0.01em]">1-Day Value at Risk</h3>
+      <h3 className="text-base font-semibold tracking-tight">1-Day Value at Risk</h3>
 
  {summary ? (
  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

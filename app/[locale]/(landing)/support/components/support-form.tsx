@@ -108,7 +108,7 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                 </DialogHeader>
                 <form onSubmit={handleFormSubmit} className="space-y-4">
                     <div>
-                        <Label htmlFor="summary" className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{t('support.form.summary')}</Label>
+                        <Label htmlFor="summary" className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{t('support.form.summary')}</Label>
                         <Textarea
                             id="summary"
                             value={summary}
@@ -118,7 +118,7 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                         />
                     </div>
                     <div>
-                        <Label htmlFor="name" className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{t('support.form.name')}</Label>
+                        <Label htmlFor="name" className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{t('support.form.name')}</Label>
                         <Input
                             id="name"
                             value={name}
@@ -128,7 +128,7 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                         />
                     </div>
                     <div>
-                        <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{t('support.form.email')}</Label>
+                        <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{t('support.form.email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -139,7 +139,7 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                         />
                     </div>
                     <div>
-                        <Label htmlFor="additionalInfo" className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{t('support.form.additionalInfo')}</Label>
+                        <Label htmlFor="additionalInfo" className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{t('support.form.additionalInfo')}</Label>
                         <Textarea
                             id="additionalInfo"
                             value={additionalInfo}

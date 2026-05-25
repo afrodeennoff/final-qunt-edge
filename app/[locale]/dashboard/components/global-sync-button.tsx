@@ -124,7 +124,7 @@ export function GlobalSyncButton() {
  )} />
 
  <div className="hidden items-center gap-1 xl:flex">
- <span className="text-[10px] font-semibold uppercase tracking-[0.18em]">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">
  {isAnySyncing ?"Syncing" :"Sync"}
  </span>
  {!isAnySyncing && (rithmicAutoEnabled || tradovate.enableAutoSync) && (
@@ -192,7 +192,7 @@ export function GlobalSyncButton() {
  type="button"
  onClick={handleGlobalSync}
  disabled={isAnySyncing}
- className="flex h-9 w-full items-center justify-center gap-2 rounded-full border border-border/20 bg-background/70 text-[10px] font-bold uppercase tracking-[0.18em] text-foreground transition-[opacity,background-color,border-color] hover:border-border/35 hover:bg-background/80 disabled:opacity-50"
+ className="flex h-9 w-full items-center justify-center gap-2 rounded-full border border-border/30 bg-muted text-[10px] font-bold uppercase tracking-[0.12em] text-foreground transition-[opacity,background-color,border-color] hover:border-border/30 hover:bg-background/80 disabled:opacity-50"
  >
  <RefreshCw className={cn("w-3.5 h-3.5", isAnySyncing &&"animate-spin")} />
  <span>Force Sync Now</span>

@@ -307,7 +307,7 @@ export function HourlyFinancialTimeline({
  return (
  <div className={cn("flex flex-col h-full border rounded-lg overflow-hidden relative", className)}>
  {/* Header with date */}
- <div className="p-2 text-center font-medium border-b bg-muted/20">{formattedDate}</div>
+ <div className="p-2 text-center font-medium border-b bg-muted/40">{formattedDate}</div>
 
  {/* Timeline content */}
  <div 

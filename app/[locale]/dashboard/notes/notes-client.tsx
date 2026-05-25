@@ -168,7 +168,7 @@ export default function NotesPageClient() {
     <Sheet open={showInspector} onOpenChange={setShowInspector}>
       <SheetContent
         side="right"
-        className="w-72 p-0 bg-background border-l border-border/20"
+        className="w-72 p-0 bg-background border-l border-border/30"
       >
         <NoteInspector
           note={activeNote}

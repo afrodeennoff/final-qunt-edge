@@ -81,7 +81,7 @@ export function StatsSummaryRow() {
         >
           <div className="flex items-center gap-2">
             <span className={`h-2 w-2 rounded-full ${item.dot}`} />
-            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{item.label}</p>
+            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{item.label}</p>
           </div>
           <p className={`mt-2 text-xl font-semibold tabular-nums ${item.text}`}>{item.value}</p>
         </div>

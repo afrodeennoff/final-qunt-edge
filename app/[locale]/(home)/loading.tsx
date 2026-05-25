@@ -6,7 +6,7 @@ export default function HomeLoading() {
         <div className="pt-24 sm:pt-32 lg:pt-40">
           <div className="mx-auto max-w-3xl space-y-8 text-center">
             <div className="h-16 w-96 animate-pulse bg-muted/30 rounded mx-auto" />
-            <div className="h-4 w-64 animate-pulse bg-muted/20 rounded mx-auto" />
+            <div className="h-4 w-64 animate-pulse bg-muted/40 rounded mx-auto" />
           </div>
         </div>
       </main>
