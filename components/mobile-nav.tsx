@@ -137,7 +137,7 @@ export function UnifiedMobileNav({
               {groups.map((group, groupIndex) => (
                 <div key={groupIndex}>
                   {group.title && (
-                    <h3 className="mb-2 px-3 text-[9px] font-bold uppercase tracking-[0.18em] text-sidebar-foreground/35">
+                    <h3 className="mb-2 px-3 text-[9px] font-black uppercase tracking-[0.12em] text-sidebar-foreground/35">
                       {group.title}
                     </h3>
                   )}

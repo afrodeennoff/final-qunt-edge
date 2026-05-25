@@ -550,7 +550,7 @@ export function DailySummaryModal() {
  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
  {weeklyIcon}
  </div>
- <span className="text-[9px] text-fg-muted uppercase tracking-[0.15em] mb-1 font-bold group-hover:text-foreground/80 transition-colors">Weekly</span>
+ <span className="text-[9px] text-fg-muted uppercase tracking-[0.12em] mb-1 font-black group-hover:text-foreground/80 transition-colors">Weekly</span>
  <div className={cn("text-xl font-bold tracking-tight", weeklyStatColor)}>
  {weeklyValueText}
  </div>
@@ -578,7 +578,7 @@ export function DailySummaryModal() {
  {/* Streak - Refined */}
  <div className="flex-1 bg-gradient-to-br from-card/70 to-muted/40 border border-border/14 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:border-border/30 transition-[opacity,background-color,border-color]">
  <div className="text-6xl font-black tracking-tighter text-foreground mb-2 relative z-10">{stats.currentStreak}</div>
- <div className="text-[9px] text-fg-muted uppercase tracking-[0.3em] font-bold relative z-10">Win Streak</div>
+ <div className="text-[9px] text-fg-muted uppercase tracking-[0.12em] font-black relative z-10">Win Streak</div>
  <Zap className="absolute -bottom-6 -right-6 w-32 h-32 text-foreground/[0.03] group-hover:text-foreground/[0.05] transition-colors" />
  </div>
 

@@ -95,7 +95,7 @@ export function SidebarUserMenu({
             <DropdownMenuSeparator className="bg-sidebar-border/12" />
             {timezone && (
               <div className="px-2.5 py-2.5">
-                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-sidebar-foreground/40 px-1 mb-2">
+                <p className="text-[9px] font-black uppercase tracking-[0.12em] text-sidebar-foreground/40 px-1 mb-2">
                   Timezone
                 </p>
                 <Select value={timezone.value} onValueChange={timezone.onChange}>

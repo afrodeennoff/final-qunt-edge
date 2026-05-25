@@ -37,7 +37,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <AlertCircle className="h-6 w-6 text-destructive/70" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-foreground">
+            <h3 className="text-[15px] font-black tracking-[-0.01em] text-foreground">
               Something went wrong
             </h3>
             <p className="text-[13px] text-muted-foreground">

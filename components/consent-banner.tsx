@@ -175,7 +175,7 @@ export function ConsentBanner() {
           <>
             {showDetails && <div className="fixed inset-0 z-[98] bg-foreground/20" />}
             <Dialog open={showDetails} onOpenChange={setShowDetails}>
-              <DialogContent className="fixed left-[50%] top-[50%] z-[99] max-h-[80vh] w-[90vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-lg border border-border/30 bg-card shadow-sm">
+              <DialogContent className="fixed left-[50%] top-[50%] z-[99] max-h-[80vh] w-[90vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-xl border border-border/30 bg-card shadow-sm">
                 <DialogHeader className="p-6 pb-4">
                   <DialogTitle className="text-lg font-medium text-foreground">
                     {t('landing.consent.preferences.title')}
@@ -246,7 +246,7 @@ export function ConsentBanner() {
                   <div className="mt-6">
                     <Button 
                       onClick={handleSavePreferences}
-                      className="h-11 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+                      className="h-11 w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
                     >
                       {t('landing.consent.preferences.done')}
                     </Button>
@@ -330,7 +330,7 @@ export function ConsentBanner() {
                 <DrawerFooter className="px-6 pb-6">
                   <Button
                     onClick={handleSavePreferences}
-                    className="h-11 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+                    className="h-11 w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     {t('landing.consent.preferences.done')}
                   </Button>

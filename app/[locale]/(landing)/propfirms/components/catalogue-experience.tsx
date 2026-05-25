@@ -232,7 +232,7 @@ export function PropFirmCatalogueExperience({
             >
               <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                  <p className="text-[11px] font-black uppercase tracking-[0.12em] text-muted-foreground">
                     Leaders
                   </p>
                   <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
@@ -293,7 +293,7 @@ export function PropFirmCatalogueExperience({
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search firm..."
-                className="h-10 w-full rounded-lg border border-border bg-card pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/55 transition-colors focus:border-ring focus:ring-1 focus:ring-ring"
+                className="h-10 w-full rounded-xl border border-border bg-card pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/55 transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40"
               />
             </div>
             <span className="shrink-0 text-xs text-muted-foreground">
@@ -319,7 +319,7 @@ export function PropFirmCatalogueExperience({
         >
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+              <p className="text-[11px] font-black uppercase tracking-[0.12em] text-muted-foreground">
                 Catalogue board
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">

@@ -34,7 +34,7 @@ export function LiveInAction() {
             <Play className="h-7 w-7 text-white/90 ml-0.5" />
           </button>
 
-          <div className="absolute bottom-5 right-5 rounded bg-black/60 px-2.5 py-0.5 text-[10px] font-mono tracking-[2px] text-white/50">
+          <div className="absolute bottom-5 right-5 rounded hsl(var(--background)/0.6) px-2.5 py-0.5 text-[10px] font-mono tracking-[2px] text-white/50">
             2:14 • REAL SESSION
           </div>
         </div>
@@ -59,7 +59,7 @@ export function LiveInAction() {
             </video>
             <button
               onClick={() => setOpen(false)}
-              className="absolute right-4 top-4 z-50 rounded-full bg-black/60 p-2 text-white/80 hover:bg-black/80 hover:text-white"
+              className="absolute right-4 top-4 z-50 rounded-full hsl(var(--background)/0.6) p-2 text-white/80 hover:hsl(var(--background)/0.8) hover:text-white"
             >
               <X className="h-5 w-5" />
             </button>

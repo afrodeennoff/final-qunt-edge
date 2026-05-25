@@ -174,7 +174,7 @@ export default function Features() {
 					<div className={cn("transition-[transform,opacity] duration-700","opacity-0 translate-y-4",
 					isVisible &&"opacity-100 translate-y-0"
 					)}>
-						<p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground [font-family:var(--home-copy)]">Platform Weapons</p>
+						<p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground [font-family:var(--home-copy)]">Platform Weapons</p>
 						<h2 className="mt-3 text-[clamp(1.95rem,4.9vw,3.4rem)] font-[350] leading-[0.92] tracking-[-0.045em] text-foreground [font-family:var(--home-display)]">
 							{t("landing.features.heading")}
 						</h2>
@@ -196,7 +196,7 @@ export default function Features() {
 								<div className="mb-4 flex size-8 items-center justify-center rounded-lg border border-border bg-muted/40">
 									{feature.icon}
 								</div>
-								<p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-foreground/70">
+								<p className="text-[12px] font-black uppercase tracking-[0.12em] text-foreground/70">
 									{feature.title}
 								</p>
 							</div>

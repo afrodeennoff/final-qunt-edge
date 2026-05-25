@@ -78,13 +78,13 @@ export function UnifiedPageHeader({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
         <div className="space-y-2">
           {eyebrow && (
-            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-2">
+            <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground mb-2">
               {eyebrow}
             </p>
           )}
           <h1
             className={cn(
-              'font-semibold tracking-tight text-foreground sm:tracking-tight',
+              'font-black tracking-tight text-foreground sm:tracking-tight',
               'text-3xl sm:text-4xl',
               variant === 'gradient' && 'text-foreground',
             )}

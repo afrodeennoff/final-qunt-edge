@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
   ref={ref}
   data-slot="dialog-overlay"
-  className={cn("fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+  className={cn("fixed inset-0 z-50 hsl(var(--background)/0.8) data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
   className
   )}
   {...props}
@@ -44,7 +44,7 @@ const DialogContent = React.forwardRef<
   {...props}
   >
   {children}
- <DialogPrimitive.Close className="absolute right-4 top-4 rounded-xl border border-border/35 bg-background/50 p-1.5 opacity-70 ring-offset-background transition-[opacity,background-color,border-color] duration-200 hover:bg-background/70 hover:opacity-100 hover:border-border/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:text-muted-foreground">
+ <DialogPrimitive.Close className="absolute right-4 top-4 rounded-xl border border-border/35 bg-background/50 p-1.5 opacity-70 ring-offset-background transition-[opacity,background-color,border-color] duration-150 active:scale-[0.95] hover:bg-background/70 hover:opacity-100 hover:border-border/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:text-muted-foreground">
  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
  </DialogPrimitive.Close>
  </DialogPrimitive.Content>

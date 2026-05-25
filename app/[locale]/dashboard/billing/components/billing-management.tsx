@@ -172,7 +172,7 @@ export default function BillingManagement() {
                   <div>
                     {subscription?.plan?.interval === 'lifetime' ? (
                       <div className="space-y-1">
-                        <div className="text-2xl font-bold text-foreground">
+                        <div className="text-2xl font-black text-foreground">
                           {t('pricing.lifetimeAccess')}
                         </div>
                         <p className="text-sm text-muted-foreground">
@@ -181,7 +181,7 @@ export default function BillingManagement() {
                       </div>
                     ) : subscription?.promotion ? (
                       <div className="space-y-1">
-                        <div className="text-2xl font-bold flex items-center gap-2">
+                        <div className="text-2xl font-black flex items-center gap-2">
                           <span className="text-muted-foreground line-through">
                             {formatAmount(subscription.plan.amount)}
                           </span>
@@ -231,7 +231,7 @@ export default function BillingManagement() {
                         </div>
                       </div>
                     ) : (
-                      <div className="text-2xl font-bold">
+                      <div className="text-2xl font-black">
                         {subscription?.plan?.amount ? (
                           <>
                             {formatAmount(subscription.plan.amount)}

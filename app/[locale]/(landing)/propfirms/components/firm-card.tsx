@@ -63,10 +63,10 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
 
             {/* Registered count badge */}
             <div className="flex-shrink-0 text-right">
-              <div className="text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground/70">
+              <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground/70">
                 Registered
               </div>
-              <div className="text-2xl font-bold text-foreground tabular-nums leading-tight">
+              <div className="text-2xl font-black text-foreground tabular-nums leading-tight">
                 {accountsCount.toLocaleString()}
               </div>
             </div>

@@ -18,7 +18,7 @@ export function SectionCard({
       data-slot="section-card"
     >
       {title && (
-        <h3 className="text-[18px] font-bold text-foreground mb-6">
+        <h3 className="text-[18px] font-black text-foreground mb-6">
           {title}
         </h3>
       )}

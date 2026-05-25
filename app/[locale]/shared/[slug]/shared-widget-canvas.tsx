@@ -123,7 +123,7 @@ export function SharedWidgetCanvas() {
             key={widget.i}
             className={cn(
               "widget-enter-smooth",
-              "bg-card border border-border rounded-lg transition-colors hover:bg-muted",
+              "bg-card border border-border rounded-xl transition-colors hover:bg-muted",
               widget.type.includes('pnl') && "hover:border-success/30",
               widget.type.includes('chart') && "hover:border-primary/30"
             )}

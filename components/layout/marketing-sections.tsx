@@ -60,7 +60,7 @@ export function MarketingSectionHeader({
       )}
     >
       {eyebrow ? (
-        <p className="text-[10.5px] font-semibold uppercase tracking-[0.10em] text-primary">
+        <p className="text-[10.5px] font-black uppercase tracking-[0.12em] text-primary">
           {eyebrow}
         </p>
       ) : null}
@@ -93,11 +93,11 @@ export function MarketingFeatureCard({
         {icon}
       </div>
       <div className="mt-4">
-        <h3 className="text-base font-semibold tracking-tight text-foreground">{title}</h3>
+        <h3 className="text-base font-black tracking-tight text-foreground">{title}</h3>
         <p className={cn(marketingBodyClassName, 'mt-2 line-clamp-2 text-sm')}>{description}</p>
       </div>
       {footer ? (
-        <div className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+        <div className="mt-4 text-xs font-black uppercase tracking-[0.12em] text-muted-foreground">
           {footer}
         </div>
       ) : null}
@@ -149,7 +149,7 @@ export function MarketingStepCard({
           {icon}
         </span>
       </div>
-      <h3 className="mt-6 text-base font-semibold tracking-[-0.01em] text-foreground">{title}</h3>
+      <h3 className="mt-6 text-base font-black tracking-[-0.01em] text-foreground">{title}</h3>
       <p className={cn(marketingBodyClassName, 'mt-2 text-sm')}>{description}</p>
     </Card>
   )
@@ -195,11 +195,11 @@ export function MarketingPricingCard({
         </Badge>
       ) : null}
       <div className={cn(badge && 'pr-24')}>
-        <h3 className="text-base font-semibold tracking-[-0.01em] text-foreground">{name}</h3>
+        <h3 className="text-base font-black tracking-[-0.01em] text-foreground">{name}</h3>
         <p className={cn(marketingBodyClassName, 'mt-2 text-sm')}>{description}</p>
       </div>
       <div className="mt-8 flex items-end gap-3">
-        <span className="text-5xl font-semibold leading-none tracking-[-0.05em] text-foreground">
+        <span className="text-5xl font-black leading-none tracking-[-0.05em] text-foreground">
           {price}
         </span>
         {period ? <span className="pb-1 text-sm text-muted-foreground">{period}</span> : null}
@@ -246,10 +246,10 @@ export function MarketingHyperframe({
           <span className="h-3 w-3 rounded-full bg-warning/80" />
           <span className="h-3 w-3 rounded-full bg-success/80" />
         </div>
-        <div className="rounded-full bg-muted/50 border border-border/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
+        <div className="rounded-full bg-muted/50 border border-border/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {label}
         </div>
-        <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80 sm:flex">
+        <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/80 sm:flex">
           {status}
         </div>
       </div>

@@ -31,7 +31,7 @@ export default function HowItWorks() {
       id="how-it-works"
       className="relative overflow-hidden border-t border-border bg-background px-4 py-24 sm:px-6 sm:py-24 lg:px-8"
     >
-      <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-border bg-muted/40 p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
+      <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-border bg-muted/40 p-6 shadow-[0_0_0_0.5px_hsl(var(--primary)/0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
           <motion.div
             initial={{ opacity: 0, y: 8 }}
@@ -39,7 +39,7 @@ export default function HowItWorks() {
             viewport={{ once: true }}
             className="rounded-xl border border-border bg-muted/40 p-6"
           >
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+            <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
               Optimization Pipeline
             </p>
             <motion.h2
@@ -93,7 +93,7 @@ export default function HowItWorks() {
                 </div>
 
                 <div className="px-1">
-                  <h3 className="mb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground/70">
+                  <h3 className="mb-3 text-[10px] font-black uppercase tracking-[0.12em] text-foreground/70">
                     {step.name}
                   </h3>
                   <p className="text-sm leading-[1.8] text-foreground">{step.desc}</p>

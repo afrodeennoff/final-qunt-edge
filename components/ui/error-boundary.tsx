@@ -128,7 +128,7 @@ export function ErrorFallback({ error, errorInfo, onReset }: ErrorFallbackProps)
       </div>
 
       <div className="space-y-2 max-w-md">
-        <h2 className="type-heading-lg font-semibold text-foreground">Something went wrong</h2>
+        <h2 className="type-heading-lg font-black text-foreground">Something went wrong</h2>
         <p className="type-body-sm text-muted-foreground">
           An unexpected error occurred. Please try again or contact support if the problem persists.
         </p>

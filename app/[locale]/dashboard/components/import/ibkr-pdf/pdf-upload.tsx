@@ -124,7 +124,7 @@ export default function PdfUpload({
  <div className="flex-none mb-4">
  <div
  {...getRootProps()}
- className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors
+ className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-colors
  ${isDragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25 hover:border-primary/50'}`}
  >
  <input {...getInputProps()} />

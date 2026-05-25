@@ -49,7 +49,7 @@ const Dropzone = ({
  <div
  {...getRootProps({
  className: cn(
- 'border-2 border-border/30 rounded-lg p-6 text-center bg-primary/[0.03] transition-colors duration-300 text-foreground',
+ 'border-2 border-border/30 rounded-xl p-6 text-center bg-primary/[0.03] transition-colors duration-300 text-foreground',
  className,
  isSuccess ? 'border-solid' : 'border-dashed',
  isActive && 'border-primary bg-primary/10',

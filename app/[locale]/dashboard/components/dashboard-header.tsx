@@ -177,7 +177,7 @@ export function DashboardHeader() {
                     <button
                       className={cn(
                         unifiedPrimaryActionClassName,
-                        'group h-9 px-4 text-[10px] uppercase tracking-[0.22em]',
+                        'group h-9 px-4 text-[10px] uppercase tracking-[0.12em]',
                       )}
                     >
                       <Sparkles className="h-3.5 w-3.5" />

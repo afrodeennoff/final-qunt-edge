@@ -22,7 +22,7 @@ export function BriefingCarousel({
   return (
     <div className={cn('w-full', className)} data-slot="briefing-carousel">
       {title && (
-        <h3 className="text-[18px] font-semibold text-foreground mb-4 px-6">
+        <h3 className="text-[18px] font-black text-foreground mb-4 px-6">
           {title}
         </h3>
       )}

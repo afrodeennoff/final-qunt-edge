@@ -14,7 +14,7 @@ export default function Qualification() {
  viewport={{ once: true }}
  className="p-16 bg-muted/40"
  >
- <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-foreground mb-10 mono">Ideal Candidate</h3>
+ <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-foreground mb-10 mono">Ideal Candidate</h3>
  <ul className="space-y-6">
  {["Discretionary traders seeking institutional structure","Prop firm applicants targeting 100% consistency","Funded traders protecting existing capital edges","Traders tired of self-deception and PnL noise"
  ].map((item, i) => (
@@ -31,7 +31,7 @@ export default function Qualification() {
  viewport={{ once: true }}
  className="p-16 bg-muted/30"
  >
- <h3 className="mb-10 text-xs font-bold uppercase tracking-[0.3em] text-foreground mono">Hard Refusals</h3>
+ <h3 className="mb-10 text-xs font-bold uppercase tracking-[0.12em] text-foreground mono">Hard Refusals</h3>
  <ul className="space-y-6">
  {["Signal seekers or copy-trading accounts","Social traders chasing dopamine and clout","Casual dabblers trading for excitement","Motivation chasers seeking 'mindset' coaches"
  ].map((item, i) => (

@@ -11,11 +11,12 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import { BarChart3, Target, TrendingUp, Zap } from 'lucide-react'
+import { AlertTriangle, BarChart3, RefreshCw, Target, TrendingUp, Zap } from 'lucide-react'
 import {
   unifiedInsetPanelClassName,
   unifiedSectionPanelClassName,
 } from '@/components/layout/unified-page-recipes'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { getTeamAnalyticsDataAction } from '../../../actions/analytics'
@@ -148,28 +149,40 @@ export default function TeamAnalyticsPage() {
 
   const [data, setData] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [retryKey, setRetryKey] = useState(0)
 
   useEffect(() => {
+    let isMounted = true
+
     async function fetchData() {
       if (!slug) {
         return
       }
 
       setLoading(true)
+      setError(null)
       try {
         const result = await getTeamAnalyticsDataAction(slug)
+        if (!isMounted) return
         if (result.success && result.data) {
           setData(normalizeAnalyticsData(result.data))
+        } else if ('error' in result && result.error) {
+          setError(result.error as string)
         }
-      } catch (error) {
-        console.error('Failed to fetch team analytics:', error)
+      } catch (err) {
+        if (!isMounted) return
+        setError(err instanceof Error ? err.message : 'Failed to load analytics')
       } finally {
-        setLoading(false)
+        if (isMounted) setLoading(false)
       }
     }
 
     fetchData()
-  }, [slug])
+    return () => {
+      isMounted = false
+    }
+  }, [slug, retryKey])
 
   const summary = useMemo(() => {
     return {
@@ -186,6 +199,36 @@ export default function TeamAnalyticsPage() {
         <div className="h-28 animate-pulse rounded-xl border border-border/30 bg-card" />
         <div className="h-80 animate-pulse rounded-xl border border-border/30 bg-card" />
       </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <section className="space-y-6">
+        <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <BarChart3 className="h-4 w-4 text-primary" />
+            <p className="text-[10px] font-black uppercase tracking-[0.12em]">Team Intelligence</p>
+          </div>
+          <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Analytics</h1>
+        </header>
+
+        <Card className="border-destructive/20 bg-card">
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Failed to load analytics</h3>
+            <p className="text-sm text-muted-foreground text-center max-w-md mb-4">{error}</p>
+            <Button
+              variant="outline"
+              onClick={() => setRetryKey((k) => k + 1)}
+              className="gap-2"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      </section>
     )
   }
 

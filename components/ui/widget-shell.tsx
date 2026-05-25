@@ -89,7 +89,7 @@ export function WidgetShell({
  return (
   <Card
   data-widget-shell="v2"
-  className={cn("relative h-full overflow-hidden rounded-lg border border-border bg-card",
+  className={cn("relative h-full overflow-hidden rounded-xl border border-border bg-card",
     variant ==="hoverable" && "transition-colors hover:border-border/80 hover:bg-muted/30",
    className
    )}
@@ -102,7 +102,7 @@ export function WidgetShell({
  <div className="flex items-center gap-[var(--space-2)]">
  {icon ? <span className="size-[15px] text-muted-foreground/50">{icon}</span> : null}
  {title ? (
- <CardTitle className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70">{title}</CardTitle>
+ <CardTitle className="text-[11px] font-black uppercase tracking-[0.12em] text-muted-foreground/70">{title}</CardTitle>
  ) : null}
  {info ? (
  <TooltipProvider>

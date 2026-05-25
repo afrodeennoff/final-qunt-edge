@@ -66,9 +66,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',
           size === 'lg' && 'type-body-lg',
-          hover && 'hover:border-border/50 hover:shadow-sm',
+          hover && 'hover:border-border/50 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-150',
           isInteractive &&
-            'cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+            'cursor-pointer transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.99]',
           isLoading && 'pointer-events-none opacity-80',
           className,
         )}

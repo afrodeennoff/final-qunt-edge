@@ -287,7 +287,7 @@ const ActionButtons = ({ t }: { t: typeof translations.fr }) => (
       <tbody>
         <tr>
           <td className="w-[50%] pr-[8px]">
-            <div className="bg-[#7c3aed] rounded-[6px] text-center py-[12px] px-[16px] box-border">
+            <div className="bg-primary rounded-[6px] text-center py-[12px] px-[16px] box-border">
               <Link
                 href="https://cal.com/hugo-demenez/qunt-edge-discussion"
                 className="text-white font-medium no-underline text-[14px]"
@@ -297,10 +297,10 @@ const ActionButtons = ({ t }: { t: typeof translations.fr }) => (
             </div>
           </td>
           <td className="w-[50%] pl-[8px]">
-            <div className="bg-white border border-[#7c3aed] rounded-[6px] text-center py-[12px] px-[16px] box-border">
+            <div className="bg-white border border-primary rounded-[6px] text-center py-[12px] px-[16px] box-border">
               <Link
                 href="https://qunt-edge.vercel.app/dashboard"
-                className="text-[#7c3aed] font-medium no-underline text-[14px]"
+                className="text-primary font-medium no-underline text-[14px]"
               >
                 {t.visitDashboard}
               </Link>
@@ -469,12 +469,12 @@ export default function TraderStatsEmail({
                       {t.activityTitle}
                     </Heading>
                     <div className="overflow-auto">
-                      <table className="mx-auto border-collapse border border-[#d0d7de] rounded-[6px] bg-white" cellPadding="16">
+                      <table className="mx-auto border-collapse border border-border rounded-[6px] bg-white" cellPadding="16">
                         <thead>
                           <tr>
-                            <th className="text-[12px] text-[#57606a] pr-[8px] text-left"></th>
+                            <th className="text-[12px] text-muted-foreground pr-[8px] text-left"></th>
                             {t.weekdays.map((day: string, index: number) => (
-                              <th key={`header-${index}`} className="text-[12px] text-[#57606a] font-normal p-[4px]">
+                              <th key={`header-${index}`} className="text-[12px] text-muted-foreground font-normal p-[4px]">
                                 {day}
                               </th>
                             ))}
@@ -483,7 +483,7 @@ export default function TraderStatsEmail({
                         <tbody>
                           {grid.map((row: number[], rowIndex: number) => (
                             <tr key={`row-${rowIndex}`}>
-                              <td className="text-[13px] font-medium text-[#24292f] pr-[12px]">
+                              <td className="text-[13px] font-medium text-foreground pr-[12px]">
                                 {t.weekNumber(weekNumbers[rowIndex])}
                               </td>
                               {row.map((level: number, colIndex: number) => (
@@ -499,18 +499,18 @@ export default function TraderStatsEmail({
 
                     {/* Activity stats */}
                     <div className="mt-[16px] mb-[24px] text-center">
-                      <Text className="text-[14px] text-[#57606a] m-0">
-                        <strong className="text-[#24292f]">{totalTradingDays}</strong> {t.contributions}
+                      <Text className="text-[14px] text-muted-foreground m-0">
+                        <strong className="text-foreground">{totalTradingDays}</strong> {t.contributions}
                       </Text>
 
                       <div className="flex flex-row mt-[8px] items-center justify-center">
-                        <Text className="text-[12px] text-[#57606a] mr-[4px] m-0">{t.less}</Text>
-                        <div className="bg-[#ebedf0] w-[14px] h-[14px] rounded-[2px] mx-px" />
-                        <div className="bg-[#e9d5ff] w-[14px] h-[14px] rounded-[2px] mx-px" />
-                        <div className="bg-[#c4b5fd] w-[14px] h-[14px] rounded-[2px] mx-px" />
-                        <div className="bg-[#a78bfa] w-[14px] h-[14px] rounded-[2px] mx-px" />
-                        <div className="bg-[#7c3aed] w-[14px] h-[14px] rounded-[2px] mx-px" />
-                        <Text className="text-[12px] text-[#57606a] ml-[4px] m-0">{t.more}</Text>
+                        <Text className="text-[12px] text-muted-foreground mr-[4px] m-0">{t.less}</Text>
+                        <div className="bg-muted w-[14px] h-[14px] rounded-[2px] mx-px" />
+                        <div className="bg-accent w-[14px] h-[14px] rounded-[2px] mx-px" />
+                        <div className="bg-primary/80 w-[14px] h-[14px] rounded-[2px] mx-px" />
+                        <div className="bg-primary/60 w-[14px] h-[14px] rounded-[2px] mx-px" />
+                        <div className="bg-primary w-[14px] h-[14px] rounded-[2px] mx-px" />
+                        <Text className="text-[12px] text-muted-foreground ml-[4px] m-0">{t.more}</Text>
                       </div>
                       <Text className="text-[12px] text-[#57606a] mt-[4px] m-0">
                         {t.activityIntensity}

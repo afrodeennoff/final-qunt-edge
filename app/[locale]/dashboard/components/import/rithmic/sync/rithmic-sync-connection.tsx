@@ -66,6 +66,11 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
  const isLocalhost = process.env.NEXT_PUBLIC_RITHMIC_API_URL?.includes('localhost')
  const http = isLocalhost ? window.location.protocol : 'https:'
  const response = await fetch(`${http}//${process.env.NEXT_PUBLIC_RITHMIC_API_URL}/servers`)
+
+ if (!response.ok) {
+   throw new Error(`HTTP ${response.status}`)
+ }
+
  const data = await response.json()
 
  if (data.success) {
@@ -75,6 +80,9 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
  }
  } catch (error) {
  console.warn('Failed to fetch server configurations:', error)
+ toast.error('Connection failed', {
+   description: 'Could not load Rithmic server configurations. Please try again later.',
+ })
  }
  }, [])
  

@@ -13,6 +13,7 @@ import {
   PauseCircle,
   Sparkles,
   TrendingUp,
+  AlertTriangle,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -267,6 +268,21 @@ export default function DashboardBehaviorPage() {
           </CardContent>
         </Card>
 
+        {insightsError && !isLoadingInsights ? (
+          <div className="flex items-center gap-3 rounded-xl border border-destructive/20 bg-destructive/5 px-4 py-3">
+            <AlertTriangle className="h-4 w-4 shrink-0 text-destructive" />
+            <p className="text-sm text-muted-foreground">{insightsError}</p>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="ml-auto shrink-0 text-xs"
+              onClick={() => setRefreshKey((k) => k + 1)}
+            >
+              Retry
+            </Button>
+          </div>
+        ) : null}
+
         <Tabs defaultValue="insights" className="space-y-4">
         <TabsList className="h-auto rounded-xl border border-border/30 bg-muted/40 p-1">
           <TabsTrigger value="insights">Insights</TabsTrigger>
@@ -274,6 +290,19 @@ export default function DashboardBehaviorPage() {
         </TabsList>
 
         <TabsContent value="insights" className="space-y-4">
+          {isLoadingInsights && !insights ? (
+            <div className="space-y-4">
+              <div className="grid gap-4 lg:grid-cols-3">
+                <div className="h-48 animate-pulse rounded-xl border border-border/30 bg-muted/40 lg:col-span-2" />
+                <div className="h-48 animate-pulse rounded-xl border border-border/30 bg-muted/40" />
+              </div>
+              <div className="grid gap-4 lg:grid-cols-2">
+                <div className="h-64 animate-pulse rounded-xl border border-border/30 bg-muted/40" />
+                <div className="h-64 animate-pulse rounded-xl border border-border/30 bg-muted/40" />
+              </div>
+            </div>
+          ) : (
+          <>
           <section className="grid gap-4 lg:grid-cols-3">
             <Card className="border-border/30 bg-card lg:col-span-2">
               <CardHeader>
@@ -407,7 +436,7 @@ export default function DashboardBehaviorPage() {
                 ? insights.recommendationsDetailed.map((recommendation, index) => (
                     <div
                       key={`${recommendation.text}-${index}`}
-                      className="rounded-lg border border-border/30 p-3 bg-background/50"
+                      className="rounded-xl border border-border/30 p-3 bg-background/50"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <p className="text-sm text-muted-foreground">{recommendation.text}</p>
@@ -433,6 +462,8 @@ export default function DashboardBehaviorPage() {
             </div>
           </section>
         ) : null}
+          </>
+          )}
       </TabsContent>
 
           <TabsContent value="workspace" className="space-y-4">

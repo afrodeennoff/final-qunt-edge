@@ -12,7 +12,21 @@ export default async function TraderDashboard(props: { params: Promise<{ slug: s
 
   return (
     <DataProvider adminView={{ userId: slug }}>
-      <Suspense fallback={null}>
+      <Suspense
+        fallback={
+          <div className="space-y-4">
+            <div className="h-32 animate-pulse rounded-xl border border-border/30 bg-muted/40" />
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-24 animate-pulse rounded-xl border border-border/30 bg-muted/40"
+                />
+              ))}
+            </div>
+          </div>
+        }
+      >
       <TraderInfo slug={slug}/>
       </Suspense>
       <div className="min-h-screen flex flex-col bg-background">

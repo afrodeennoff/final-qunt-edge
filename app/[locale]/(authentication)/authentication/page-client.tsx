@@ -88,7 +88,7 @@ export default function AuthenticationPageClient() {
                     <Logo className="h-4.5 w-4.5 fill-current" />
                   </div>
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground">
                       Daily trading access
                     </p>
                     <p className="pt-1 text-sm text-muted-foreground">Secure entry for the full workspace.</p>
@@ -110,7 +110,7 @@ export default function AuthenticationPageClient() {
                           <point.icon className="h-4 w-4" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold tracking-tight text-foreground">
+                          <p className="text-sm font-black tracking-tight text-foreground">
                             {point.title}
                           </p>
                           <p className="mt-1.5 text-xs leading-[1.65] text-muted-foreground">

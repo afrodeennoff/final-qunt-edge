@@ -194,7 +194,13 @@ export function TeamManagement({
 
  // Load data on component mount
  useEffect(() => {
+ let isMounted = true
+
  loadTeamData()
+
+ return () => {
+   isMounted = false
+ }
  }, [])
 
  async function loadTeamData() {

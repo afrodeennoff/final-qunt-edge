@@ -59,7 +59,7 @@ export default async function Hero({ locale }: { locale: string }) {
         </div>
 
         <div className="relative hidden lg:block">
-          <div className="overflow-hidden rounded-lg border border-border bg-card">
+          <div className="overflow-hidden rounded-xl border border-border bg-card">
             <div className="flex items-center gap-2 border-b border-border bg-muted/60 px-3 py-2 text-[10px] text-muted-foreground">
               <div className="flex gap-1">
                 <div className="h-1.5 w-1.5 rounded-full bg-destructive" />

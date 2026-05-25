@@ -96,7 +96,7 @@ function ChartPanel() {
  <select
  value={symbol}
  onChange={(event) => setSymbol(event.target.value as SymbolValue)}
- className="h-8 rounded-md border border-input bg-background px-2 text-[10px] font-bold uppercase tracking-widest text-foreground outline-none hover:bg-background/25 transition-colors"
+ className="h-8 rounded-md border border-input bg-background px-2 text-[10px] font-black uppercase tracking-[0.12em] text-foreground outline-none hover:bg-background/25 transition-colors focus-visible:ring-2 focus-visible:ring-ring/40"
  >
  {SYMBOLS.map((item) => (
  <option key={item.value} value={item.value}>
@@ -148,7 +148,7 @@ function AssistantPanel() {
  return (
  <aside className="flex min-h-[500px] flex-col rounded-xl border border-border/30 bg-primary/[0.03] overflow-hidden">
  <div className="flex items-center justify-between border-b border-border/30 p-4">
- <h3 className="text-[10px] font-bold uppercase tracking-[0.12em] text-foreground">AI Assistant</h3>
+ <h3 className="text-[10px] font-black uppercase tracking-[0.12em] text-foreground">AI Assistant</h3>
  <Bot className="size-4 text-primary" />
  </div>
 
@@ -156,7 +156,7 @@ function AssistantPanel() {
  {messages.map((message) => (
  <div
  key={message.id}
- className={cn("rounded-lg border-border/30 px-3 py-2 text-xs leading-relaxed",
+ className={cn("rounded-xl border-border/30 px-3 py-2 text-xs leading-relaxed",
  message.role ==="user"
  ?"border-primary/20 bg-primary/10 text-foreground"
  :"border-border/30 bg-muted/40 text-muted-foreground",
@@ -168,7 +168,7 @@ function AssistantPanel() {
  </div>
 
  <div className="border-t border-border/30 p-3">
- <div className="flex items-center gap-2 rounded-lg border border-border/30 bg-muted/40 px-2 py-1.5 focus-within:border-primary/50 transition-colors">
+ <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-muted/40 px-2 py-1.5 focus-within:border-primary/50 transition-colors">
  <input
  value={draft}
  onChange={(event) => setDraft(event.target.value)}

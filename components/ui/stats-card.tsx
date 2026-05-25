@@ -167,7 +167,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
   {renderIcon()}
   </div>
   )}
- <h3 className={cn("font-semibold text-muted-foreground/80 truncate micro-sans",
+ <h3 className={cn("font-black text-muted-foreground/80 truncate micro-sans",
  config.title
  )}>
  {title}

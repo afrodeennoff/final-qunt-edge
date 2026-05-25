@@ -32,6 +32,8 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
     const supabase = createClient()
 
     useEffect(() => {
+        let isMounted = true
+
         const fetchUser = async () => {
             if (supabase) {
                 const { data, error } = await supabase.auth.getUser()
@@ -39,11 +41,17 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                     console.warn('Error getting user:', error)
                     return
                 }
-                setName(data.user.user_metadata.full_name || '')
-                setEmail(data.user.email || '')
+                if (isMounted) {
+                    setName(data.user.user_metadata.full_name || '')
+                    setEmail(data.user.email || '')
+                }
             }
         }
         fetchUser()
+
+        return () => {
+            isMounted = false
+        }
     }, [supabase])
 
     const handleSendEmail = useCallback(async () => {

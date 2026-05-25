@@ -5,7 +5,16 @@ import { getCanonicalUrl } from "@/lib/seo";
 import { CheckoutSuccessHandler } from "./components/checkout-success-handler";
 
 const WidgetCanvas = dynamic(() => import("./components/widget-canvas"), {
-  loading: () => null,
+  loading: () => (
+    <div className="grid grid-cols-2 gap-4 p-4 lg:grid-cols-4 lg:p-6">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div
+          key={i}
+          className="h-32 animate-pulse rounded-xl border border-border/30 bg-muted/40"
+        />
+      ))}
+    </div>
+  ),
 });
 
 export async function generateMetadata({
@@ -39,7 +48,18 @@ export default async function DashboardPage(props: {
   return (
     <>
       {checkoutSuccess && <CheckoutSuccessHandler />}
-      <Suspense fallback={null}>
+      <Suspense
+        fallback={
+          <div className="grid grid-cols-2 gap-4 p-4 lg:grid-cols-4 lg:p-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-32 animate-pulse rounded-xl border border-border/30 bg-muted/40"
+              />
+            ))}
+          </div>
+        }
+      >
         <WidgetCanvas />
       </Suspense>
     </>

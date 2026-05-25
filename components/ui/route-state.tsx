@@ -44,7 +44,7 @@ function RouteStateShell({
       )}
     >
       <BackgroundGlow variant="accent" />
-      <div className="pointer-events-none absolute inset-x-6 top-0 h-32 rounded-b-[2rem] border border-border/20 bg-primary/[0.02]" />
+      <div className="pointer-events-none absolute inset-x-6 top-0 h-32 rounded-b-[2rem] border border-border/30 bg-primary/[0.02]" />
 
       <div
         className={cn(

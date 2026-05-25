@@ -95,10 +95,10 @@ export default function Hero({ }: HeroProps) {
 					className="mt-20 border-t border-border px-4 pt-10 opacity-50 transition-[opacity] duration-700 hover:opacity-100 sm:mt-24 sm:pt-12"
 				>
 					<div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 lg:gap-8">
-						<span className="text-[11px] font-black tracking-[0.20em] uppercase text-muted-foreground transition-[color,letter-spacing] duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">TRADOVATE</span>
-						<span className="text-[11px] font-black tracking-[0.20em] uppercase text-muted-foreground transition-[color,letter-spacing] duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">RITHMIC</span>
-						<span className="text-[11px] font-black tracking-[0.20em] uppercase text-muted-foreground transition-[color,letter-spacing] duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">IBKR</span>
-						<span className="text-[11px] font-black tracking-[0.20em] uppercase text-muted-foreground transition-[color,letter-spacing] duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">CQG</span>
+						<span className="text-[11px] font-black tracking-[0.12em] uppercase text-muted-foreground transition-[color,letter-spacing] duration-300 hover:text-foreground hover:tracking-[0.12em] cursor-default">TRADOVATE</span>
+						<span className="text-[11px] font-black tracking-[0.12em] uppercase text-muted-foreground transition-[color,letter-spacing] duration-300 hover:text-foreground hover:tracking-[0.12em] cursor-default">RITHMIC</span>
+						<span className="text-[11px] font-black tracking-[0.12em] uppercase text-muted-foreground transition-[color,letter-spacing] duration-300 hover:text-foreground hover:tracking-[0.12em] cursor-default">IBKR</span>
+						<span className="text-[11px] font-black tracking-[0.12em] uppercase text-muted-foreground transition-[color,letter-spacing] duration-300 hover:text-foreground hover:tracking-[0.12em] cursor-default">CQG</span>
 					</div>
 				</motion.div>
 			</motion.div>

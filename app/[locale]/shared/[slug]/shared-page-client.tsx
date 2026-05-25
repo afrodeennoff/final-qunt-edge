@@ -149,7 +149,7 @@ export function SharedPageClient() {
               <div className="grid gap-4 xl:grid-cols-[minmax(0,1.12fr)_340px] xl:gap-6">
                 <div className="rounded-2xl border border-border/30 bg-background/30 p-5 sm:p-6">
                   <CardHeader className="space-y-4 p-0">
-                    <div className="inline-flex w-fit rounded-full border border-border/0.08 bg-background/30 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+                    <div className="inline-flex w-fit rounded-full border border-border/0.08 bg-background/30 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
                       Shared Report
                     </div>
                     <div className="flex flex-col gap-2">

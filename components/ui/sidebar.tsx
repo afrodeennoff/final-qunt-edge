@@ -401,12 +401,9 @@ function SidebarGroupAction({
         className={cn(
           'flex h-full w-[var(--sidebar-width)] flex-col',
           'bg-sidebar text-sidebar-foreground',
-          groupDataCollapsible === 'offcanvas' && 'fixed inset-y-0 z-50 shadow-2xl',
+          'fixed inset-y-0 z-50 shadow-2xl',
           className,
         )}
-        data-sidebar="sidebar"
-        data-variant={variant}
-        ref={ref}
         {...props}
     />
   )

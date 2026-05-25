@@ -11,7 +11,7 @@ export default function FAQ() {
  <div className="container mx-auto px-4">
  <div className="grid gap-6 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]">
  <div className="rounded-xl border border-border/30 bg-muted/40 p-6">
- <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+ <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
  FAQ
  </p>
  <h2 className="mt-5 text-3xl font-[350] tracking-tight text-foreground sm:text-4xl">

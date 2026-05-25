@@ -31,7 +31,7 @@ export default function HeroMinimal({ }: HeroProps) {
                       YOUR TRADING COMMAND CENTER
                     </div>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-4xl font-bold">3.8M</span>
+                      <span className="text-4xl font-black">3.8M</span>
                       <span className="text-lg font-semibold text-success">+</span>
                     </div>
                   </div>
@@ -51,7 +51,7 @@ export default function HeroMinimal({ }: HeroProps) {
 
           {/* Main Content */}
           <div className="space-y-8">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight">
               Qunt <span className="text-primary">Edge.</span>
             </h1>
 

@@ -29,7 +29,7 @@ export default function ExpectancyWidget({ size }: { size?: string }) {
  >
  <div className="flex-1 flex flex-col items-center justify-center p-4">
  <div className="flex flex-col items-center justify-center">
- <span className="mb-3 text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">Value per trade</span>
+ <span className="mb-3 text-[11px] font-black uppercase tracking-[0.12em] text-muted-foreground">Value per trade</span>
  <div className={cn("text-[28px] font-[250] tracking-tight text-foreground tabular-nums",
  expectancy > 0 ?"text-semantic-success" : expectancy < 0 ?"text-semantic-error" :"text-foreground"
  )}>

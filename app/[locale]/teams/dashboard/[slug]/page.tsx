@@ -22,7 +22,18 @@ export default async function TeamDashboardPage({ params }: TeamDashboardPagePro
         </p>
       </header>
 
-      <Suspense fallback={null}>
+      <Suspense
+        fallback={
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-48 animate-pulse rounded-xl border border-border/30 bg-muted/40"
+              />
+            ))}
+          </div>
+        }
+      >
         <TeamEquityGridClient teamId={slug} />
       </Suspense>
     </section>

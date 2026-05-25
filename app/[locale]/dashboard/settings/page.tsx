@@ -121,7 +121,7 @@ function TeamSettingsCard({
               {userTeams.ownedTeams.map((team) => (
                 <div
                   key={team.id}
-                  className="flex items-center justify-between rounded-lg border border-border/30 p-3"
+                  className="flex items-center justify-between rounded-xl border border-border/30 p-3"
                 >
                   <div>
                     <p className="font-medium">{team.name}</p>
@@ -134,7 +134,7 @@ function TeamSettingsCard({
               {userTeams.joinedTeams.map((team) => (
                 <div
                   key={team.id}
-                  className="flex items-center justify-between rounded-lg border border-border/30 p-3"
+                  className="flex items-center justify-between rounded-xl border border-border/30 p-3"
                 >
                   <div>
                     <p className="font-medium">{team.name}</p>
@@ -349,6 +349,10 @@ export default function SettingsPage() {
         ownedTeams: result.ownedTeams,
         joinedTeams: result.joinedTeams,
       })
+    }).catch((error) => {
+      if (!isCancelled) {
+        console.warn('Failed to load user teams:', error)
+      }
     })
 
     return () => {

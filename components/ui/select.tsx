@@ -20,8 +20,8 @@ const SelectTrigger = React.forwardRef<
     ref={ref}
     data-slot="select-trigger"
     className={cn(
-      'type-body-sm flex h-10 w-full items-center justify-between rounded-[0.95rem] border border-border/7 bg-card/70 px-3.5 py-2 text-left text-foreground shadow-[inset_0_1px_0_hsl(var(--foreground)/0.025)] transition-[background-color,border-color,box-shadow] duration-200 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
-      'focus-visible:border-border/14 focus-visible:ring-2 focus-visible:ring-ring/30',
+      'type-body-sm flex h-10 w-full items-center justify-between rounded-[0.95rem] border border-border/7 bg-card/70 px-3.5 py-2 text-left text-foreground shadow-[inset_0_1px_0_hsl(var(--foreground)/0.025)] transition-[background-color,border-color,box-shadow] duration-150 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+      'focus-visible:border-border/14 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2',
       error &&
         'border-destructive/60 focus-visible:border-destructive/70 focus-visible:ring-destructive/20',
       className,

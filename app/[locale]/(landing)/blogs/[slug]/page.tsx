@@ -95,7 +95,7 @@ export default async function BlogDetailPage(props: Props) {
             {categoryLabel}
           </Badge>
 
-          <h1 className="text-4xl font-bold text-foreground sm:text-5xl">
+          <h1 className="text-4xl font-black text-foreground sm:text-5xl">
             {post.title}
           </h1>
 

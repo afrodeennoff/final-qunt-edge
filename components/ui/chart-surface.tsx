@@ -119,7 +119,7 @@ export function ChartSurface({
   return (
   <div
   data-chart-surface="modern"
-  className={cn("relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card",
+  className={cn("relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card",
   className
   )}
   style={height ? { height } : undefined}
@@ -136,7 +136,7 @@ export function ChartSurface({
  {title ? (
   <span
   className={cn("line-clamp-1 text-foreground",
-  isSmall ?"text-[13px] font-semibold tracking-[-0.01em]" :"text-sm font-semibold tracking-[-0.01em]"
+  isSmall ?"text-[13px] font-black tracking-[-0.01em]" :"text-sm font-black tracking-[-0.01em]"
   )}
   >
  {title}

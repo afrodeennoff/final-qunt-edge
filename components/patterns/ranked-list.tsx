@@ -26,7 +26,7 @@ export function RankedList({
       data-slot="ranked-list"
     >
       {title && (
-        <h3 className="text-[18px] font-semibold text-foreground mb-6">
+        <h3 className="text-[18px] font-black text-foreground mb-6">
           {title}
         </h3>
       )}
@@ -51,7 +51,7 @@ export function RankedList({
             </div>
             <span
               className={cn(
-                'flex-1 font-semibold',
+                'flex-1 font-black',
                 item.isHighlighted ? 'text-primary' : 'text-foreground'
               )}
             >

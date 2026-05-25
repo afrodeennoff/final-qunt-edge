@@ -30,7 +30,7 @@ export function ChartCard({
       data-slot="chart-card"
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-[18px] font-semibold text-foreground">
+        <h3 className="text-[18px] font-black text-foreground">
           {title}
         </h3>
         <div className="flex gap-1 bg-muted p-1 rounded-full">

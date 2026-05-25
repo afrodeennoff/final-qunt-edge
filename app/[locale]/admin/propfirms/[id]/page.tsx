@@ -327,7 +327,7 @@ function FormFieldGroup({
   return (
     <div className="space-y-4 rounded-xl border border-border/30 bg-background/40 p-4">
       <div className="space-y-1">
-        <p className="text-sm font-semibold text-foreground">{title}</p>
+        <p className="text-sm font-black text-foreground">{title}</p>
         {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
       </div>
       {children}
@@ -723,7 +723,7 @@ function ReviewsSection({
             {firm.reviews.map((review) => (
               <div
                 key={review.id}
-                className="rounded-lg border border-border/30 p-4"
+                className="rounded-xl border border-border/30 p-4"
               >
                 <div className="space-y-3">
                   <form action={handleUpdateReview} className="space-y-2">
@@ -1023,7 +1023,7 @@ function CouponEditorCard({
       <div className="flex flex-col gap-4 border-b border-border/30 pb-4 md:flex-row md:items-start md:justify-between">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-base font-semibold tracking-tight">{coupon.code}</p>
+            <p className="text-base font-black tracking-tight">{coupon.code}</p>
             <Badge variant={coupon.isActive ? 'default' : 'secondary'}>
               {coupon.isActive ? 'Active' : 'Inactive'}
             </Badge>

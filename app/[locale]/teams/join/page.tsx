@@ -70,11 +70,17 @@ export default function TeamJoinPage() {
   }
 
   useEffect(() => {
+    let isMounted = true
+
     if (invitationToken) {
       loadInvitationDetails()
     } else {
       setError('No invitation token provided')
       setIsLoading(false)
+    }
+
+    return () => {
+      isMounted = false
     }
   }, [invitationToken])
 

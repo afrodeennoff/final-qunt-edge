@@ -120,10 +120,15 @@ async function loadSubscribersData(): Promise<Subscriber[]> {
 
 async function loadNeedsInferenceCount(): Promise<number> {
  const response = await fetch("/api/email/format-name")
+
+ if (!response.ok) {
+   throw new Error(`HTTP ${response.status}: Failed to check inference needed`)
+ }
+
  const data = await response.json()
 
  if (!data.success) {
- throw new Error(data.error ||"Failed to check inference needed")
+   throw new Error(data.error ||"Failed to check inference needed")
  }
 
  return Number(data.needsInference || 0)
@@ -574,8 +579,20 @@ export function SubscriberTable() {
 
  // Fetch subscribers on mount and after revalidation
  useEffect(() => {
- fetchSubscribers()
- checkInferenceNeeded()
+ let isMounted = true
+
+ const loadData = async () => {
+   if (!isMounted) return
+   await fetchSubscribers()
+   if (!isMounted) return
+   await checkInferenceNeeded()
+ }
+
+ loadData()
+
+ return () => {
+   isMounted = false
+ }
  }, [])
 
  const handleCSVUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {

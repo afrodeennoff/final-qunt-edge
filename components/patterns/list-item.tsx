@@ -38,7 +38,7 @@ export function ListItem({
       </div>
       <div className="flex-1 min-w-0">
         <p className={cn(
-          'text-sm font-semibold truncate',
+          'text-sm font-black truncate',
           isActive ? 'text-primary' : 'text-foreground'
         )}>
           {label}

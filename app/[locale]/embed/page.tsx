@@ -282,10 +282,10 @@ export default function EmbedPage() {
         <Toaster />
         <div className="relative z-10 mx-auto flex max-w-[1600px] flex-col gap-4 px-4 pt-4 lg:gap-6 lg:px-6 lg:pt-6">
           <MotionSection delay={0.03}>
-            <section className="overflow-hidden rounded-[2rem] border border-border/30 bg-black/70 px-4 py-4 shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_24px_70px_-34px_rgba(0,0,0,0.9)] lg:px-6">
+            <section className="overflow-hidden rounded-[2rem] border border-border/30 hsl(var(--background)/0.7) px-4 py-4 shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_24px_70px_-34px_rgba(0,0,0,0.9)] lg:px-6">
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_320px]">
                 <div className="rounded-2xl border border-border/30 bg-background/30 p-4">
-                  <div className="inline-flex w-fit rounded-full border border-border/0.08 bg-background/30 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+                  <div className="inline-flex w-fit rounded-full border border-border/0.08 bg-background/30 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
                     Embed Library
                   </div>
                   <div className="pt-4">

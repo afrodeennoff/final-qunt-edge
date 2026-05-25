@@ -124,7 +124,7 @@ function getPlanCardClassName(popular: boolean): string {
 
 function getPlanCtaClassName(): string {
   return cn(
-    'h-12 w-full rounded-xl text-[10px] font-semibold uppercase tracking-[0.18em]',
+    'h-12 w-full rounded-xl text-[10px] font-black uppercase tracking-[0.12em]',
     '[font-family:var(--home-copy)]'
   )
 }
@@ -133,7 +133,7 @@ function PlanPopularBadge({ popular }: { popular: boolean }) {
   if (!popular) return null
 
   return (
-    <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary shadow-sm">
+    <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-primary shadow-sm">
       <Sparkles className="h-3 w-3" />
       <span>Popular</span>
     </div>
@@ -210,7 +210,7 @@ function FreePlanCard({
     <div className="relative">
       <Card className={getPlanCardClassName(plan.isPopular ?? false)}>
         <CardHeader>
-          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">
+          <CardTitle className="text-[15px] font-black tracking-[-0.02em] text-foreground">
             {plan.name}
           </CardTitle>
           <CardDescription className="text-sm text-muted-foreground">
@@ -377,7 +377,7 @@ function PlusPlanCard({
       <Card className={getPlanCardClassName(true)}>
         <PlanPopularBadge popular={plan.isPopular ?? true} />
         <CardHeader>
-          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">
+          <CardTitle className="text-[15px] font-black tracking-[-0.02em] text-foreground">
             {plan.name}
           </CardTitle>
           <CardDescription className="text-sm text-muted-foreground">
@@ -386,7 +386,7 @@ function PlusPlanCard({
         </CardHeader>
         <CardContent>
           <div className="mb-4 space-y-3 rounded-xl border border-border/0.06 bg-background/0.04 p-4">
-            <span className="block text-center text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/35">
+            <span className="block text-center text-[10px] font-black uppercase tracking-[0.12em] text-foreground/35">
               {t('pricing.billingPeriod')}
             </span>
 

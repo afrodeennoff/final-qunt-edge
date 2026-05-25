@@ -691,7 +691,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                   setSortBy(e.target.value as ReviewSortOption)
                   setCurrentPage(1)
                 }}
-                className="rounded-lg border border-border bg-muted/40 px-3 py-1.5 text-sm text-foreground focus:border-primary focus:outline-none"
+                className="rounded-xl border border-border bg-muted/40 px-3 py-1.5 text-sm text-foreground focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>

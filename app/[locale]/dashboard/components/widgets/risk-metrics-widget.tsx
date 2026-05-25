@@ -55,7 +55,7 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  <div className={cn("flex flex-col border-r border-b border-border/30",
  size === 'tiny' ?"p-1.5" :"p-4"
  )}>
- <h3 className="text-[11px] font-bold uppercase tracking-[0.12em] mb-3 text-muted-foreground">Ratios</h3>
+ <h3 className="text-[11px] font-black uppercase tracking-[0.12em] mb-3 text-muted-foreground">Ratios</h3>
  <div className="flex-1 flex flex-col justify-center gap-2.5">
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Sharpe</span>
@@ -82,7 +82,7 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  <div className={cn("flex flex-col border-b border-border/30",
  size === 'tiny' ?"p-1.5" :"p-4"
  )}>
- <h3 className="text-[11px] font-bold uppercase tracking-[0.12em] mb-3 text-muted-foreground">Position sizing</h3>
+ <h3 className="text-[11px] font-black uppercase tracking-[0.12em] mb-3 text-muted-foreground">Position sizing</h3>
  <div className="flex-1 flex flex-col justify-center gap-2.5">
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs text-balance">Kelly Half</span>

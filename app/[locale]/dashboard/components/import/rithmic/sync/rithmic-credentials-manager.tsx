@@ -99,6 +99,8 @@ export function RithmicCredentialsManager({
 
  // Fetch synchronizations from API
  useEffect(() => {
+ let isMounted = true;
+
  const fetchSynchronizations = async () => {
  try {
  setIsLoadingSynchronizations(true);
@@ -112,18 +114,32 @@ export function RithmicCredentialsManager({
  }
 
  const result = await response.json();
+ if (isMounted) {
  setSynchronizations(result.data || []);
+ }
  } catch (error) {
  console.error("Error fetching synchronizations:", error);
+ if (isMounted) {
  toast.error(t("rithmic.error.syncError"));
+ }
  } finally {
+ if (isMounted) {
  setIsLoadingSynchronizations(false);
+ }
  }
  };
 
  fetchSynchronizations();
 
- getAllRithmicData().then(setCredentials);
+ getAllRithmicData().then((data) => {
+ if (isMounted) setCredentials(data);
+ }).catch(() => {
+ // Credentials load failure is non-critical; the table just stays empty.
+ });
+
+ return () => {
+ isMounted = false;
+ };
  }, [t]);
 
  // Build a merged view of synchronizations and local credentials
