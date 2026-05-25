@@ -49,7 +49,7 @@ import { TraderProfileShareButton } from './components/trader-profile-share-butt
 
 const RadarChartCard = dynamic(() => import('./components/RadarChartCard'), {
   loading: () => (
-    <div className="rounded-xl border border-border bg-muted/20 p-3">
+    <div className="rounded-xl border border-border/30 bg-muted p-4">
       <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
     </div>
   ),
@@ -181,7 +181,7 @@ export function StatTile({
 }) {
   return (
     <div className={cn(insetPanelClassName, 'px-4 py-3.5', className)}>
-      <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
+      <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
       <p
         className={cn(
           'mt-1.5 text-xl font-semibold tabular-nums tracking-tight text-foreground',
@@ -210,7 +210,7 @@ function MeterRow({
   return (
     <div className={cn(insetPanelClassName, 'px-4 py-3')}>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
         <p className="text-sm font-semibold tabular-nums text-foreground">{value}</p>
       </div>
       <div className="mt-2.5 h-1.5 rounded-full bg-border/25">
@@ -239,7 +239,7 @@ function SignalTile({
 }) {
   return (
     <div className={cn(insetPanelClassName, 'px-4 py-3')}>
-      <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
+      <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
       <p
         className={cn(
           'mt-1.5 text-lg font-semibold tabular-nums tracking-tight text-foreground',
@@ -839,11 +839,11 @@ export default function TraderProfilePageClient() {
                       </div>
 
                       <div className="space-y-2">
-                        <h2 className="truncate text-3xl font-semibold tracking-tight text-foreground sm:text-4xl 2xl:text-5xl">
+                        <h2 className="truncate text-3xl font-black tracking-tight text-foreground sm:text-4xl 2xl:text-5xl">
                           {profileName}
                         </h2>
 
-                        <p className="max-w-2xl text-sm text-muted-foreground sm:text-[0.95rem]">
+                        <p className="max-w-2xl text-sm text-muted-foreground">
                           Performance board for reviewing consistency, session rhythm, and active
                           account health in one place.
                         </p>
@@ -861,7 +861,7 @@ export default function TraderProfilePageClient() {
               </div>
 
               {/* Section 2: Metrics Strip + Review Controls */}
-              <div className="p-4 sm:p-5">
+              <div className="p-5 sm:p-6">
                 <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.9fr)]">
                   <div className="space-y-3">
                     <div className="grid gap-3 md:grid-cols-3">
@@ -890,19 +890,19 @@ export default function TraderProfilePageClient() {
                     </div>
                   </div>
 
-                  <div className={cn(insetPanelClassName, 'p-4 sm:p-4')}>
+                  <div className={cn(insetPanelClassName, 'p-5 sm:p-6')}>
                     <div className="flex flex-col gap-4">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div className="space-y-1">
-                          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                          <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
                             Review controls
                           </p>
                           <p className="text-sm font-semibold text-foreground">
                             {reviewWindowSummary}
                           </p>
                         </div>
-                        <div className="rounded-2xl border border-border bg-muted/20 p-3.5">
-                          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                        <div className="rounded-2xl border border-border bg-muted p-4 sm:p-5">
+                          <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
                             Active session
                           </p>
                           <p className="mt-2 text-sm font-semibold text-foreground">
@@ -916,7 +916,7 @@ export default function TraderProfilePageClient() {
                           value={dateFilterPreset}
                           onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
                         >
-                          <SelectTrigger className="h-10 w-full border-border bg-muted/20 text-sm text-foreground">
+                          <SelectTrigger className="h-10 w-full border-border bg-muted text-sm text-foreground">
                             <SelectValue placeholder="Select range" />
                           </SelectTrigger>
                           <SelectContent>
@@ -934,7 +934,7 @@ export default function TraderProfilePageClient() {
                             <Button
                               type="button"
                               variant="outline"
-                              className="h-10 justify-start border-border bg-muted/20 text-sm text-foreground hover:bg-background/85"
+                              className="h-10 justify-start border-border bg-muted text-sm text-foreground hover:bg-muted"
                             >
                               <CalendarIcon className="h-4 w-4" />
                               {dateFilterLabel ?? 'Custom Range'}
@@ -971,13 +971,13 @@ export default function TraderProfilePageClient() {
                 </div>
 
                 <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.92fr)] 2xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,1fr)]">
-                  <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
+                  <div className={cn(insetPanelClassName, 'p-5 sm:p-6')}>
                     {activeAccountLabels.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {activeAccountLabels.map((accountLabel) => (
                           <span
                             key={accountLabel}
-                            className="rounded-full border border-border bg-muted/20 px-3 py-1.5 text-xs font-medium text-foreground"
+                            className="rounded-full border border-border bg-muted px-3 py-1.5 text-xs font-medium text-foreground"
                           >
                             {accountLabel}
                           </span>
@@ -1035,7 +1035,7 @@ export default function TraderProfilePageClient() {
                 <div
                   className={cn(
                     insetPanelClassName,
-                    'mt-4 min-h-[30rem] overflow-x-auto p-2 sm:p-3 lg:min-h-[36rem] 2xl:min-h-[42rem]',
+                    'mt-4 min-h-[30rem] overflow-x-auto p-5 sm:p-6 lg:min-h-[36rem] 2xl:min-h-[42rem]',
                   )}
                 >
                   <CalendarWidget
@@ -1119,7 +1119,7 @@ export default function TraderProfilePageClient() {
                   label="Trade volume"
                   value={`${metrics.totalTrades} trades`}
                   progress={Math.min(100, Math.max(8, metrics.totalTrades))}
-                  fillClassName="bg-primary/45"
+                  fillClassName="bg-primary/50"
                 />
               </div>
             </div>
@@ -1131,7 +1131,7 @@ export default function TraderProfilePageClient() {
         <Suspense fallback={<TableSkeleton />}>
           <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d5 p-5 sm:p-6">
             <div className="flex items-center justify-between gap-2">
-              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+              <p className="text-[11px] font-black uppercase tracking-[0.12em] text-muted-foreground">
                 Trade history
               </p>
               <Badge variant="secondary">{tradeFeedSummary}</Badge>
