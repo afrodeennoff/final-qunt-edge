@@ -20,9 +20,9 @@ const parseOrders = (text: string): TradeOrder[] => {
   const tradesMatch = text.match(/Trades[\s\S]*?(?=Financial Instrument Information|$)/);
   if (!tradesMatch) return [];
 
-
+  
   const tradesText = tradesMatch[0];
-
+  
   // Pattern to match order lines - now more flexible with whitespace
   const orderPattern = /U\*\*\*(\d+)\s+([A-Z0-9]+)\s+(\d{4}-\d{2}-\d{2}),\s*(\d{2}:\d{2}:\d{2})\s+(\d{4}-\d{2}-\d{2})\s+-\s+(BUY|SELL)\s+(-?\d+)\s+([\d,]+\.\d+)\s+(-?[\d,]+\.\d+)\s+(-?[\d,]+\.\d+)\s+([\d,]+\.\d+)\s+([A-Z]+)\s+([OC])/g;
 
@@ -50,7 +50,7 @@ const parseOrders = (text: string): TradeOrder[] => {
 
     // Convert datetime to ISO format
     const isoTimestamp = new Date(`${date}T${time}`).toISOString();
-
+    
     // Generate a short unique ID: side + index + last 2 digits of seconds
     const timeSeconds = time.split(':')[2];
     const orderId = `${side.charAt(0)}${orderIndex}${timeSeconds}`;
@@ -66,7 +66,7 @@ const parseOrders = (text: string): TradeOrder[] => {
       orderId: orderId,
       orderType: orderType
     });
-
+    
     orderIndex++;
   }
 
@@ -77,31 +77,31 @@ const parseOrders = (text: string): TradeOrder[] => {
 const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
   const instrumentInformationMatch = text.match(/Financial Instrument Information[\s\S]*?(?=Order Types|Generated:|$)/);
   if (!instrumentInformationMatch) return [];
-
+  
   const instrumentInformationText = instrumentInformationMatch[0];
   console.log('instrumentInformationText', instrumentInformationText);
-
+  
   // The text appears to be concatenated, so let's work with it as a single string
   // Pattern: "Financial Instrument Information Symbol Description Conid ... Code Futures SYMBOL DESC CONID ..."
-
+  
   // First, find where the actual data starts after "Futures" (or other instrument types)
   const instrumentTypeMatch = instrumentInformationText.match(/(Futures|Options|Stocks|Bonds|ETFs?)/);
   if (!instrumentTypeMatch) return [];
-
+  
   const instrumentType = instrumentTypeMatch[1];
   const instrumentTypeIndex = instrumentInformationText.indexOf(instrumentType);
-
+  
   // Get the data part after the instrument type
   const dataText = instrumentInformationText.substring(instrumentTypeIndex + instrumentType.length).trim();
-
+  
   // Now parse the instruments - each instrument should have these fields:
   // Symbol, Description (like "MES 20JUN25"), Conid, Underlying, Exchange, Multiplier, Expiry, DeliveryMonth
   // Pattern matches: SYMBOL DESC1 DESC2 CONID UNDERLYING EXCHANGE MULTIPLIER EXPIRY DELIVERYMONTH
   const instrumentPattern = /([A-Z0-9]+)\s+([A-Z0-9]+\s+[A-Z0-9]+)\s+(\d+)\s+([A-Z0-9]+)\s+([A-Z]+)\s+(\d+)\s+(\d{4}-\d{2}-\d{2})\s+(\d{4}-\d{2})/g;
-
+  
   const instruments: FinancialInstrument[] = [];
   let match;
-
+  
   while ((match = instrumentPattern.exec(dataText)) !== null) {
     const [
       _,
@@ -114,7 +114,7 @@ const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
       expiry,
       deliveryMonth
     ] = match;
-
+    
     instruments.push({
       symbol: symbol.trim(),
       description: description.trim(),
@@ -127,7 +127,7 @@ const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
       instrumentType: instrumentType
     });
   }
-
+  
   console.log('instruments', instruments)
   return instruments;
 };
@@ -146,7 +146,7 @@ export async function POST(request: Request) {
 
     const parsedOrders = parseOrders(text)
     const instrumentInformation = parseInstrumentInformation(text)
-
+    
     // Validate orders against schema
     const validOrders = parsedOrders.filter(order => {
       try {
@@ -158,9 +158,9 @@ export async function POST(request: Request) {
       }
     });
 
-    return new Response(JSON.stringify({
-      orders: validOrders,
-      instruments: instrumentInformation
+    return new Response(JSON.stringify({ 
+      orders: validOrders, 
+      instruments: instrumentInformation 
     }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
@@ -172,4 +172,4 @@ export async function POST(request: Request) {
       headers: { "Content-Type": "application/json" },
     });
   }
-}
+} 

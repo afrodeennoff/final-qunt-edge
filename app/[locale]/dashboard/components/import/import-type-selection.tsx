@@ -1,384 +1,149 @@
 'use client'
 
-import React, { useCallback, useDeferredValue, useEffect, useMemo, useState } from 'react'
-import { Link2, FileSpreadsheet, Database, Pencil, Search, LayoutGrid, ListFilter, GitCompare, X } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import Image from "next/image"
+import React, { useEffect, useState } from 'react'
+import { Link2, FileSpreadsheet, Database, Pencil } from "lucide-react"
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandList,
+} from "@/components/ui/command"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { useTypedI18n } from "@/locales/client"
-import { platforms, PlatformConfig } from './config/platforms'
-import { PlatformCard } from './components/platform-card'
+import { useI18n } from "@/locales/client"
+import { platforms, PlatformConfig, PlatformType } from './config/platforms'
+import { PlatformItem } from './components/platform-item'
 import { PlatformTutorial } from './components/platform-tutorial'
 import { cn } from '@/lib/utils'
 import { useImportTypePreferenceStore } from '@/store/import-type-preference-store'
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useIsMobile } from '@/hooks/use-mobile'
 
-export type ImportType = string
+export type ImportType = PlatformType
 
 interface ImportTypeSelectionProps {
- selectedType: ImportType
- setSelectedType: React.Dispatch<React.SetStateAction<ImportType>>
- setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  selectedType: ImportType
+  setSelectedType: React.Dispatch<React.SetStateAction<ImportType>>
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
+
+
 const categoryIcons: Record<PlatformConfig['category'], React.ReactNode> = {
- 'Direct Account Sync': <Link2 className="h-4 w-4" />,
- 'Intelligent Import': <FileSpreadsheet className="h-4 w-4" />,
- 'Platform CSV Import': <Database className="h-4 w-4" />,
- 'Manual Entry': <Pencil className="h-4 w-4" />
+  'Direct Account Sync': <Link2 className="h-4 w-4" />,
+  'Intelligent Import': <FileSpreadsheet className="h-4 w-4" />,
+  'Platform CSV Import': <Database className="h-4 w-4" />,
+  'Manual Entry': <Pencil className="h-4 w-4" />
 }
 
 // Function to check if it's weekend
 function isWeekend() {
- const day = new Date().getDay()
- return day === 0 || day === 6 // 0 is Sunday, 6 is Saturday
+  const day = new Date().getDay()
+  return day === 0 || day === 6 // 0 is Sunday, 6 is Saturday
 }
 
 export default function ImportTypeSelection({ selectedType, setSelectedType, setIsOpen }: ImportTypeSelectionProps) {
- const [searchQuery, setSearchQuery] = useState('')
- const [activeCategory, setActiveCategory] = useState<string>("all")
- const [isCompareMode, setIsCompareMode] = useState(false)
- const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([])
- const t = useTypedI18n()
- const isMobile = useIsMobile()
- const { lastSelectedType, setLastSelectedType } = useImportTypePreferenceStore()
- const deferredSearchQuery = useDeferredValue(searchQuery)
- const normalizedSearchQuery = deferredSearchQuery.trim().toLowerCase()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [hoveredCategory, setHoveredCategory] = useState<PlatformConfig['category'] | null>(null)
+  const t = useI18n()
+  const { lastSelectedType, setLastSelectedType } = useImportTypePreferenceStore()
+  
+  // Set default selection from store preference
+  useEffect(() => {
+    setSelectedType(lastSelectedType)
+  }, [setSelectedType, lastSelectedType])
 
- // Stable reference — platforms array is constant, no need to rebuild
- const platformsByType = useMemo(
- () => new Map(platforms.map((platform) => [platform.type, platform])),
- []
- )
+  const getTranslatedCategory = (category: PlatformConfig['category']) => {
+    switch (category) {
+      case 'Direct Account Sync':
+        return t('import.type.category.directSync')
+      case 'Intelligent Import':
+        return t('import.type.category.intelligentImport')
+      case 'Platform CSV Import':
+        return t('import.type.category.platformCsv')
+      case 'Manual Entry':
+        return t('import.type.category.manualEntry')
+      default:
+        return category
+    }
+  }
 
- const handlePlatformCheck = (platformType: string, checked: boolean) => {
- setSelectedPlatforms(prev => {
- if (checked) {
- if (prev.length >= 4) return prev
- return [...prev, platformType]
- } else {
- return prev.filter(p => p !== platformType)
- }
- })
- }
+  const filteredPlatforms = platforms.filter(platform => 
+    t(platform.name as keyof typeof t).toLowerCase().includes(searchQuery.toLowerCase()) ||
+    t(platform.description as keyof typeof t).toLowerCase().includes(searchQuery.toLowerCase()) ||
+    getTranslatedCategory(platform.category).toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
- const clearSelection = () => {
- setSelectedPlatforms([])
- }
+  const categories = Array.from(new Set(filteredPlatforms.map(platform => platform.category)))
+  const selectedPlatform = platforms.find(p => p.type === selectedType)
 
- // Set default selection from store preference
- useEffect(() => {
- if (lastSelectedType && !selectedType) {
- const preferredPlatform = platformsByType.get(lastSelectedType)
- if (preferredPlatform && !preferredPlatform.isDisabled && !preferredPlatform.isComingSoon) {
- setSelectedType(lastSelectedType)
- }
- }
- }, [lastSelectedType, platformsByType, selectedType, setSelectedType])
+  return (
+    <div className="flex flex-col h-full">
+      <div className="grid md:grid-cols-2 gap-6 h-full min-h-0 p-2">
+        <div className="h-full min-h-0">
+          <Command className="border rounded-lg h-full">
+            <div className="flex flex-col h-full">
+              <CommandInput 
+                className="h-auto rounded-none shrink-0"
+                placeholder={t('import.type.search')}
+                value={searchQuery}
+                onValueChange={setSearchQuery}
+              />
+              <ScrollArea className="h-[calc(100%-45px)]">
+                <CommandList className="h-full" defaultChecked={false} defaultValue={lastSelectedType}>
+                  <CommandEmpty>{t('import.type.noResults')}</CommandEmpty>
+                  {categories.map(category => {
+                    const categoryPlatforms = filteredPlatforms.filter(platform => platform.category === category)
+                    if (categoryPlatforms.length === 0) return null
 
- useEffect(() => {
- if (!selectedType) return
- const selectedPlatform = platformsByType.get(selectedType)
- if (selectedPlatform?.isDisabled || selectedPlatform?.isComingSoon) {
- setSelectedType('')
- }
- }, [platformsByType, selectedType, setSelectedType])
+                    return (
+                      <CommandGroup key={category} heading={
+                        <div className={cn(
+                          "flex items-center gap-2 text-muted-foreground transition-all duration-200 px-2",
+                          hoveredCategory === category ? "text-foreground scale-[1.02] translate-x-1" : "hover:text-foreground"
+                        )}>
+                          {categoryIcons[category]}
+                          <span>{getTranslatedCategory(category)}</span>
+                        </div>
+                      }>
+                        {categoryPlatforms.map((platform) => (
+                          <PlatformItem
+                            key={platform.type}
+                            platform={platform}
+                            isSelected={selectedType === platform.type}
+                            onSelect={(type) => {
+                              setSelectedType(type as ImportType)
+                              setLastSelectedType(type as ImportType)
+                            }}
+                            onHover={(category) => setHoveredCategory(category as PlatformConfig['category'])}
+                            onLeave={() => setHoveredCategory(null)}
+                            isWeekend={isWeekend()}
+                          />
+                        ))}
+                      </CommandGroup>
+                    )
+                  })}
+                </CommandList>
+              </ScrollArea>
+            </div>
+          </Command>
+        </div>
 
- const getTranslatedCategory = useCallback((category: PlatformConfig['category']) => {
- switch (category) {
- case 'Direct Account Sync':
- return t('import.type.category.directSync')
- case 'Intelligent Import':
- return t('import.type.category.intelligentImport')
- case 'Platform CSV Import':
- return t('import.type.category.platformCsv')
- case 'Manual Entry':
- return t('import.type.category.manualEntry')
- default:
- return category
- }
- }, [t])
-
- const filteredPlatforms = useMemo(() => {
- return platforms.filter((platform) => {
- const matchesSearch =
- normalizedSearchQuery.length === 0 ||
- String(t(platform.name, { count: 1 })).toLowerCase().includes(normalizedSearchQuery) ||
- String(t(platform.description, { count: 1 })).toLowerCase().includes(normalizedSearchQuery) ||
- String(getTranslatedCategory(platform.category)).toLowerCase().includes(normalizedSearchQuery)
-
- const matchesCategory = activeCategory ==="all" || platform.category === activeCategory
-
- return matchesSearch && matchesCategory
- })
- }, [activeCategory, getTranslatedCategory, normalizedSearchQuery, t])
-
- const allCategories = useMemo(
- () => Array.from(new Set(platforms.map((platform) => platform.category))),
- []
- )
-
- const selectedPlatform = selectedType ? platformsByType.get(selectedType) : undefined
- const showDesktopDetailPanel =
- (isCompareMode && selectedPlatforms.length >= 2) || (!!selectedType && !!selectedPlatform)
-
- return (
- <div className="flex flex-col h-full bg-background/50">
- <div
- className={cn("grid h-full overflow-hidden",
- "grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_340px]",
- showDesktopDetailPanel && "lg:divide-x lg:divide-border",
- )}
- >
- {/* Left Side: Grid of options */}
- <div className="flex flex-col gap-4 h-full min-h-0 relative">
- {/* Header & Filter */}
- <div className="p-4 border-b border-border bg-card/95 sticky top-0 z-10">
- <div className="flex items-center gap-3">
- <div className="relative flex-1">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
- <Input
- placeholder={String(t('import.type.search'))}
- value={searchQuery}
- onChange={(e) => setSearchQuery(e.target.value)}
- className="pl-9 bg-background/80/50 border-transparent hover:bg-background/80/80 focus:bg-card transition-[opacity,background-color,border-color]"
- />
- </div>
- <Button
- variant={isCompareMode ?"default" :"outline"}
- size="sm"
- onClick={() => setIsCompareMode(!isCompareMode)}
- className={cn("shrink-0 gap-2",
- isCompareMode &&"bg-primary text-primary-foreground hover:bg-primary/90"
- )}
- >
- <GitCompare className="h-4 w-4" />
- Compare
- </Button>
- </div>
-
- <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory} className="w-full">
- <ScrollArea className="w-full pb-2">
- <TabsList className="bg-transparent p-0 h-auto gap-2">
- <TabsTrigger
- value="all"
- className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-full px-4 h-8"
- >
- <LayoutGrid className="h-3 w-3 mr-2" />
- All
- </TabsTrigger>
- {allCategories.map(cat => (
- <TabsTrigger
- key={cat}
- value={cat}
- className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-full px-4 h-8"
- >
- {categoryIcons[cat]}
- <span className="ml-2">{getTranslatedCategory(cat)}</span>
- </TabsTrigger>
- ))}
- </TabsList>
- </ScrollArea>
- </Tabs>
- </div>
-
- {/* Grid Content */}
- <ScrollArea className="flex-1 p-4 md:p-6">
- <div className="grid auto-rows-fr gap-3 pb-20 [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]">
- {filteredPlatforms.length > 0 ? (
- filteredPlatforms.map((platform) => (
- <div key={platform.type} className="h-full">
- <PlatformCard
- platform={platform}
- isSelected={selectedType === platform.type}
- onSelect={(type) => {
- if (!isCompareMode) {
- setSelectedType(type as ImportType)
- setLastSelectedType(type as ImportType)
- }
- }}
- isWeekend={isWeekend()}
- isMultiSelectMode={isCompareMode}
- isChecked={selectedPlatforms.includes(platform.type)}
- onCheckChange={(checked) => handlePlatformCheck(platform.type, checked)}
- />
- </div>
- ))
- ) : (
- <div className="col-span-full py-16 text-center">
- <div className="inline-flex h-16 w-16 items-center justify-center rounded-xl bg-background/80 mb-5">
- <ListFilter className="h-8 w-8 text-muted-foreground" />
- </div>
- <p className="text-base font-medium text-foreground mb-1.5">
- {t('import.type.noResults')}
- </p>
- <p className="text-sm text-muted-foreground">
- Try adjusting your search or filter criteria
- </p>
- </div>
- )}
- </div>
- </ScrollArea>
-
- {isCompareMode && selectedPlatforms.length >= 2 && (
- <div className="absolute bottom-4 left-4 right-4 z-20"
- >
- <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-card/95 border border-border shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] shadow-black/10">
- <div className="flex items-center gap-2 text-sm text-muted-foreground">
- <span>{selectedPlatforms.length} platforms selected</span>
- </div>
- <div className="flex items-center gap-2">
- <Button
- variant="ghost"
- size="sm"
- onClick={clearSelection}
- className="text-muted-foreground hover:text-foreground"
- >
- <X className="h-4 w-4 mr-1" />
- Clear
- </Button>
- <Button
- variant="default"
- size="sm"
- onClick={() => {
-   setIsCompareMode(false)
-   if (selectedPlatforms[0]) {
-     setSelectedType(selectedPlatforms[0] as ImportType)
-     setLastSelectedType(selectedPlatforms[0] as ImportType)
-   }
-   setSelectedPlatforms([])
- }}
- className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2"
- >
- Import
- </Button>
- </div>
- </div>
- </div>
- )}
- </div>
-
- {/* Always reserve right panel space on desktop */}
- <div className={cn("relative hidden h-full overflow-hidden lg:flex", showDesktopDetailPanel ? "bg-background/80/20" : "bg-transparent")}>
- {isCompareMode && selectedPlatforms.length >= 2 ? (
- <div className="h-full flex flex-col w-full">
- <div className="p-4 border-b border-border flex items-center justify-between">
- <h3 className="text-sm font-semibold text-foreground">Compare Platforms</h3>
- <Button variant="ghost" size="sm" onClick={() => setIsCompareMode(false)}>
- <X className="h-4 w-4" />
- </Button>
- </div>
- <div className="h-full overflow-y-auto p-4">
- <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${Math.min(selectedPlatforms.length, 4)}, 1fr)` }}>
- {selectedPlatforms.slice(0, 4).map(platformType => {
- const platform = platformsByType.get(platformType)
- if (!platform) return null
- return (
- <div key={platform.type} className="flex flex-col">
- <Card variant="default" size="sm" className="h-full">
- <CardContent className="p-4 flex flex-col gap-3">
- <div className="flex items-center gap-3">
- {platform.logo.path && (
- <div className="relative h-10 w-10 shrink-0">
- <Image
- src={platform.logo.path}
- alt={platform.logo.alt ||""}
- fill
- sizes="40px"
- className="object-contain"
- />
- </div>
- )}
- <div className="flex-1 min-w-0">
- <h4 className="text-sm font-semibold text-foreground truncate">
- {t(platform.name, { count: 1 })}
- </h4>
- <p className="text-xs text-muted-foreground truncate">
- {platform.category}
- </p>
- </div>
- <Button
- variant="ghost"
- size="sm"
- className="h-7 w-7 p-0"
- onClick={() => handlePlatformCheck(platform.type, false)}
- >
- <X className="h-3 w-3" />
- </Button>
- </div>
- <p className="text-xs text-muted-foreground line-clamp-3">
- {t(platform.description, { count: 1 })}
- </p>
- <div className="flex flex-wrap gap-1.5 mt-auto">
- {!platform.isDisabled && !platform.isComingSoon && (
- <Badge variant="success" className="text-[10px]">Available</Badge>
- )}
- {platform.isDisabled && (
- <Badge variant="warning" className="text-[10px]">Maintenance</Badge>
- )}
- {platform.isComingSoon && (
- <Badge variant="secondary" className="text-[10px] bg-semantic-info-bg/10 text-semantic-info">Coming Soon</Badge>
- )}
- {platform.isRithmic && (
- <Badge variant="outline" className="text-[10px]">Rithmic</Badge>
- )}
- </div>
- </CardContent>
- </Card>
- </div>
- )
- })}
- </div>
- </div>
- </div>
- ) : selectedType && selectedPlatform ? (
- <div className="h-full flex flex-col">
- <div className="h-full overflow-y-auto p-6">
- {selectedPlatform.customComponent ? (
- <selectedPlatform.customComponent setIsOpen={setIsOpen} />
- ) : (
- <PlatformTutorial selectedPlatform={selectedPlatform} setIsOpen={setIsOpen} />
- )}
- </div>
- </div>
- ) : (
- <div className="flex items-center justify-center h-full text-muted-foreground">
- <p className="text-sm">Select a platform to view details</p>
- </div>
- )}
- </div>
-
- {isMobile && selectedType && selectedPlatform && (
- <Sheet open={!!selectedType} onOpenChange={() => {
- setSelectedType('')
- setLastSelectedType('')
- }}>
- <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl bg-card border-border p-0">
- {/* Drag Handle */}
- <div className="flex justify-center py-3">
- <div className="h-1.5 w-12 rounded-full bg-border" />
- </div>
- <SheetHeader className="px-4 pb-2">
- <SheetTitle className="text-foreground">
- {t(selectedPlatform.name, { count: 1 })}
- </SheetTitle>
- </SheetHeader>
- <div className="h-[calc(85vh-100px)] overflow-y-auto px-4 pb-4">
- {selectedPlatform.customComponent ? (
- <selectedPlatform.customComponent setIsOpen={setIsOpen} />
- ) : (
- <PlatformTutorial selectedPlatform={selectedPlatform} setIsOpen={setIsOpen} />
- )}
- </div>
- </SheetContent>
- </Sheet>
- )}
- </div>
- </div>
- )
+        <div className="h-full min-h-0 overflow-y-auto">
+          {/* <ScrollArea className="h-full"> */}
+            {selectedType !== '' && selectedPlatform && (
+              selectedPlatform.customComponent ? (
+                <div className="h-full pr-4">
+                  {selectedPlatform.customComponent && <selectedPlatform.customComponent setIsOpen={setIsOpen} />}
+                </div>
+              ) : (
+                <div className="pr-4">
+                  <PlatformTutorial selectedPlatform={selectedPlatform} setIsOpen={setIsOpen} />
+                </div>
+              )
+            )}
+          {/* </ScrollArea> */}
+        </div>
+      </div>
+    </div>
+  )
 }

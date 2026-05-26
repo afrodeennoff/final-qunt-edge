@@ -1,19 +1,53 @@
 'use server'
-
-import {
-  getRithmicSynchronizations as getRithmicSynchronizationsInternal,
-  removeRithmicSynchronization as removeRithmicSynchronizationInternal,
-  setRithmicSynchronization as setRithmicSynchronizationInternal,
-} from '@/server/imports/rithmic-sync-actions'
+import { prisma } from "@/lib/prisma"
+import { getUserId } from "@/server/auth"
+import { Synchronization } from "@/prisma/generated/prisma/client"
 
 export async function getRithmicSynchronizations() {
-  return getRithmicSynchronizationsInternal()
+  console.log('CHECKING RITHMIC SYNCHRONIZATIONS')
+  const userId = await getUserId()
+  const synchronizations = await prisma.synchronization.findMany({
+    where: { userId: userId, service: "rithmic" },
+  })
+  return synchronizations
 }
 
-export async function setRithmicSynchronization(...args: Parameters<typeof setRithmicSynchronizationInternal>) {
-  return setRithmicSynchronizationInternal(...args)
+export async function setRithmicSynchronization(synchronization: Partial<Synchronization>) {
+  console.log('SETTING RITHMIC SYNCHRONIZATION')
+  const userId = await getUserId()
+  await prisma.synchronization.upsert({
+    where: { 
+      userId_service_accountId: {
+        userId: userId,
+        service: synchronization.service || 'rithmic',
+        accountId: synchronization.accountId || ''
+      }
+    },
+    update: {
+      ...synchronization,
+      userId: userId,
+      includedFeeTypes: undefined, // Rithmic has no fee differentiator
+    },
+    create: {
+      ...synchronization,
+      service: synchronization.service || 'rithmic',
+      accountId: synchronization.accountId || '',
+      lastSyncedAt: synchronization.lastSyncedAt || new Date(),
+      userId: userId,
+      includedFeeTypes: undefined, // Rithmic has no fee differentiator
+    },
+  })
 }
 
 export async function removeRithmicSynchronization(accountId: string) {
-  return removeRithmicSynchronizationInternal(accountId)
+  console.log('REMOVING RITHMIC SYNCHRONIZATION')
+  const userId = await getUserId()
+
+  await prisma.synchronization.deleteMany({
+    where: {
+      userId,
+      service: "rithmic",
+      accountId,
+    },
+  })
 }

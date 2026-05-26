@@ -11,55 +11,55 @@ type Trade = z.infer<typeof tradeSchema>
 
 function matchOrdersWithFIFO(orders: Order[], instruments: FinancialInstrument[]): Trade[] {
   // Sort orders by timestamp to ensure FIFO
-  const sortedOrders = [...orders].sort((a, b) =>
+  const sortedOrders = [...orders].sort((a, b) => 
     new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
   );
-
+  
   const trades: Trade[] = [];
   const openPositions: Map<string, Order[]> = new Map(); // symbol -> orders
-
+  
   for (const order of sortedOrders) {
     const symbol = order.rawSymbol;
-
+    
     if (!openPositions.has(symbol)) {
       openPositions.set(symbol, []);
     }
-
+    
     const symbolOrders = openPositions.get(symbol)!;
-
+    
     // Try to match with existing opposite position
     let matched = false;
-
+    
     for (let i = 0; i < symbolOrders.length; i++) {
       const existingOrder = symbolOrders[i];
-
+      
       // Check if we can match (opposite sides)
-      if ((existingOrder.side === 'BUY' && order.side === 'SELL') ||
+      if ((existingOrder.side === 'BUY' && order.side === 'SELL') || 
           (existingOrder.side === 'SELL' && order.side === 'BUY')) {
-
+        
         // Find the instrument to get multiplier
         const instrument = instruments.find(inst => inst.symbol === symbol);
         const multiplier = instrument?.multiplier || 1;
-
+        
         // Calculate quantities to match
         const matchQuantity = Math.min(existingOrder.quantity, order.quantity);
-
+        
         // Determine trade direction and correct entry/exit assignment
         const isLongTrade = existingOrder.side === 'BUY';
-
+        
         let entryOrder: Order;
         let exitOrder: Order;
-
+        
         if (isLongTrade) {
           // Long trade: BUY first (entry), then SELL (exit)
           entryOrder = existingOrder; // BUY order
           exitOrder = order; // SELL order
         } else {
           // Short trade: SELL first (entry), then BUY (exit)
-          entryOrder = existingOrder; // SELL order
+          entryOrder = existingOrder; // SELL order 
           exitOrder = order; // BUY order
         }
-
+        
         // Calculate P&L
         let grossPnl: number;
         if (isLongTrade) {
@@ -69,12 +69,12 @@ function matchOrdersWithFIFO(orders: Order[], instruments: FinancialInstrument[]
           // Short: (Entry Price - Exit Price) × Quantity × Multiplier
           grossPnl = (entryOrder.price - exitOrder.price) * matchQuantity * multiplier;
         }
-
+        
         // Calculate time in position (in seconds)
         const entryTime = new Date(entryOrder.timestamp).getTime();
         const exitTime = new Date(exitOrder.timestamp).getTime();
         const timeInPosition = Math.floor((exitTime - entryTime) / 1000);
-
+        
         // Calculate total commission
         const totalCommission = (entryOrder.commission || 0) + (exitOrder.commission || 0);
         // Create trade
@@ -94,23 +94,23 @@ function matchOrdersWithFIFO(orders: Order[], instruments: FinancialInstrument[]
           orderIds: [entryOrder.orderId!, exitOrder.orderId!].filter(Boolean),
           accountNumber: entryOrder.accountNumber || exitOrder.accountNumber || 'Unknown'
         };
-
+        
         trades.push(trade);
-
+        
         // Update remaining quantities
         existingOrder.quantity -= matchQuantity;
         order.quantity -= matchQuantity;
-
+        
         // Remove fully matched orders
         if (existingOrder.quantity === 0) {
           symbolOrders.splice(i, 1);
         }
-
+        
         matched = true;
         break;
       }
     }
-
+    
     // If not fully matched, add remaining quantity to open positions
     if (order.quantity > 0) {
       symbolOrders.push({
@@ -119,7 +119,7 @@ function matchOrdersWithFIFO(orders: Order[], instruments: FinancialInstrument[]
       });
     }
   }
-
+  
   return trades;
 }
 
@@ -183,4 +183,4 @@ export async function POST(request: Request) {
             headers: { "Content-Type": "application/json" },
         });
     }
-}
+} 
