@@ -206,8 +206,8 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
 
  setEditingTag(null)
  setFormData({ name: '', description: null, color: DEFAULT_TAG_COLOR })
- } catch (error) {
- console.error('Failed to save tag:', error)
+ } catch {
+
  toast.error(t('widgets.tags.error'), {
  description: editingTag ? t('widgets.tags.updateError') : t('widgets.tags.createError'),
  })
@@ -251,8 +251,8 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
  toast.success(t('widgets.tags.success'), {
  description: t('widgets.tags.deleteSuccess'),
  })
- } catch (error) {
- console.error('Failed to delete tag:', error)
+ } catch {
+
  toast.error(t('widgets.tags.error'), {
  description: t('widgets.tags.deleteError'),
  })

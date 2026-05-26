@@ -55,8 +55,8 @@ export function DxFeedCredentialsManager() {
         await deleteAccount(accountId)
         setIsDeleteDialogOpen(false)
         toast.success(t('dxfeedSync.multiAccount.accountDeleted', { accountId }))
-      } catch (error) {
-        console.warn('DxFeed delete error:', error)
+      } catch {
+
         toast.error(t('dxfeedSync.multiAccount.deleteError', { accountId }))
       }
     },
@@ -82,8 +82,8 @@ export function DxFeedCredentialsManager() {
       setLoginEmail('')
       setLoginPassword('')
       await loadAccounts()
-    } catch (error) {
-      console.warn('DxFeed auth error:', error)
+    } catch {
+
       toast.error(t('dxfeedSync.error.authFailed'))
     } finally {
       setIsLoading(false)
@@ -107,8 +107,8 @@ export function DxFeedCredentialsManager() {
       setIsReloading(true)
       await loadAccounts()
       toast.success(t('dxfeedSync.multiAccount.accountsReloaded'))
-    } catch (error) {
-      console.warn('DxFeed reload error:', error)
+    } catch {
+
       toast.error(t('dxfeedSync.multiAccount.reloadError'))
     } finally {
       setIsReloading(false)
@@ -151,8 +151,8 @@ export function DxFeedCredentialsManager() {
       } else {
         toast.error(result.error || t('dxfeedSync.multiAccount.dailySyncTimeUpdateError'))
       }
-    } catch (error) {
-      console.warn('DxFeed update sync time error:', error)
+    } catch {
+
       toast.error(t('dxfeedSync.multiAccount.dailySyncTimeUpdateError'))
     } finally {
       setIsSavingTime(false)

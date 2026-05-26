@@ -15,7 +15,6 @@ import { sendSupportEmail } from "../../actions/send-support-email";
 import { UIMessage } from "@ai-sdk/react";
 import { createClient } from "@/lib/supabase";
 
-
 export default function SupportForm({ summary, locale, messages, setMessages, sendMessage }: {
     summary: string,
     locale: 'en' | 'fr',
@@ -38,7 +37,7 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
             if (supabase) {
                 const { data, error } = await supabase.auth.getUser()
         if (error) {
-                    console.warn('Error getting user:', error)
+
                     return
                 }
                 if (isMounted) {
@@ -89,8 +88,8 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
             } else {
                 throw new Error(result.error)
             }
-        } catch (error) {
-            console.warn('Error sending email:', error)
+        } catch {
+
             toast.error(t('support.emailError'), {
                 description: t('error'),
                 duration: 5000,

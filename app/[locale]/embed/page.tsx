@@ -276,7 +276,7 @@ export default function EmbedPage() {
                 security_storage: true
               }))
             }
-          } catch (e) {}`}
+          } catch (error) {}`}
         </Script>
 
         <Toaster />

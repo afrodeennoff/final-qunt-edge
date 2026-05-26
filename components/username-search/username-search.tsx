@@ -33,8 +33,8 @@ export function UsernameSearch({ onSelectUser }: UsernameSearchProps) {
         const data = await response.json()
         setResults(data.users)
         setSelectedIndex(-1)
-      } catch (error) {
-        console.error('Error searching users:', error)
+      } catch {
+
       } finally {
         setIsLoading(false)
       }

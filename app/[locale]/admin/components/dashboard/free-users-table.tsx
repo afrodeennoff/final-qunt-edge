@@ -81,8 +81,8 @@ export function FreeUsersTable() {
  try {
  const data = await getFreeUsers()
  setUsers(data)
- } catch (error) {
- console.error('Failed to load free users:', error)
+ } catch {
+
  } finally {
  setIsLoading(false)
  }

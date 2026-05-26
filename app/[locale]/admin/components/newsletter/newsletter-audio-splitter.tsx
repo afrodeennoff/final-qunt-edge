@@ -110,7 +110,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  }
 
  } catch (error) {
- console.error('Error splitting audio:', error)
+
  const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
  setError(`Failed to split audio: ${errorMessage}`)
  } finally {
@@ -164,7 +164,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  
  source.start()
  } catch (error) {
- console.error('Error playing segment:', error)
+
  }
  }
 

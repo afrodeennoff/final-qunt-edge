@@ -18,11 +18,3 @@ export function EmailPreview({ html, height }: EmailPreviewProps) {
  )
 }
 
-
-
-
-
-
-
-
-

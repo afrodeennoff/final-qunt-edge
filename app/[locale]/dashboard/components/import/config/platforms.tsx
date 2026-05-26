@@ -165,7 +165,6 @@ type StepComponent =
  | typeof FtmoProcessor
  | typeof ManualProcessor
 
-
 export interface PlatformProcessorProps {
  csvData: string[][]
  headers: string[]

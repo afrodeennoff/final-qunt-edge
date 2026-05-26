@@ -118,8 +118,8 @@ export function AdminDashboard() {
 						}))
 						: [],
 				})
-			} catch (error) {
-				console.error('Error fetching admin dashboard data:', error)
+			} catch {
+
 			} finally {
 				setIsLoading(false)
 			}
@@ -143,7 +143,6 @@ export function AdminDashboard() {
 			</div>
 		)
 	}
-
 
 	return (
 		<div className="space-y-6 p-4 sm:p-6">

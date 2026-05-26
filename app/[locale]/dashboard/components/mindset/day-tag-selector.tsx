@@ -110,8 +110,8 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
  
  setInputValue('')
  setIsOpen(false)
- } catch (error) {
- console.error('Failed to create and apply tag:', error)
+ } catch {
+
  } finally {
  setIsApplying(null)
  }

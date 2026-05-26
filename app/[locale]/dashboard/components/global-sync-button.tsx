@@ -60,8 +60,8 @@ export function GlobalSyncButton() {
  await refreshAllData({ force: true })
 
  toast.success(t('refreshSuccess'), { id: toastId })
- } catch (error) {
- console.error("Global sync error:", error)
+ } catch {
+
  toast.error(t('refreshError'), { id: toastId })
  } finally {
  setIsRefreshing(false)

@@ -149,7 +149,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  toast.error(t('error'), { description: queryErrorMessage })
  }
  } catch (error) {
- console.warn('Failed to parse URL params:', error)
+
  }
  }, [t])
 

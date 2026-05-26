@@ -34,8 +34,8 @@ export function WeeklyRecapProvider({ children }: { children: React.ReactNode })
  setIsLoading(true)
  const content = await loadInitialContent(email,userId)
  setContent(content)
- } catch (error) {
- console.error("Failed to load weekly recap content:", error)
+ } catch {
+
  } finally {
  setIsLoading(false)
  }

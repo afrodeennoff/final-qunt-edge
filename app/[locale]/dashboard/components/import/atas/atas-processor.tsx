@@ -21,7 +21,7 @@ const formatPnl = (
  pnl: string | undefined
 ): { pnl: number; error?: string } => {
  if (!pnl || String(pnl).trim() ==="") {
- console.warn("Invalid PNL value:", pnl);
+
  return { pnl: 0, error:"Invalid PNL value" };
  }
 
@@ -33,7 +33,7 @@ const formatPnl = (
  const numericValue = parseFloat(formattedPnl);
 
  if (isNaN(numericValue)) {
- console.warn("Unable to parse PNL value:", pnl);
+
  return { pnl: 0, error:"Unable to parse PNL value" };
  }
 
@@ -140,7 +140,7 @@ const parseAtasDate = (dateValue: string | number | Date | null | undefined, tim
  const correctUTC = new Date(tempUTC.getTime() + (totalSecondsDiff * 1000));
 
  if (isNaN(correctUTC.getTime())) {
- console.error(`Invalid date created:`, correctUTC);
+
  return undefined;
  }
 
@@ -156,10 +156,10 @@ const parseAtasDate = (dateValue: string | number | Date | null | undefined, tim
  }
 
  // If we reach here, the date format is not recognized
- console.error(`Unsupported date format: ${dateStr}`);
+
  return undefined;
- } catch (error) {
- console.error(`Error parsing ATAS date: ${dateValue}`, error);
+ } catch {
+
  return undefined;
  }
 };
@@ -376,7 +376,7 @@ export default function AtasProcessor({
  });
 
  if (!item.entryDate || !item.closeDate) {
- console.warn("Missing required dates");
+
  return;
  }
 
@@ -394,9 +394,6 @@ export default function AtasProcessor({
  : 0;
 
  if (quantity !== closeQuantity) {
- console.warn(
- `Quantity mismatch for ${item.instrument}: open=${quantity}, close=${closeQuantity}`
- );
  // Still process the trade but use the open quantity
  }
 

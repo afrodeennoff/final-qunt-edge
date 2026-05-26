@@ -1,6 +1,5 @@
 'use client'
 
-import React from "react"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import MobileCalendarPnl from "./mobile-calendar";
 import DesktopCalendarPnl from "./desktop-calendar";

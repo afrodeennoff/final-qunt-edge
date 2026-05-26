@@ -117,8 +117,8 @@ export function RithmicCredentialsManager({
  if (isMounted) {
  setSynchronizations(result.data || []);
  }
- } catch (error) {
- console.error("Error fetching synchronizations:", error);
+ } catch {
+
  if (isMounted) {
  toast.error(t("rithmic.error.syncError"));
  }
@@ -160,9 +160,9 @@ export function RithmicCredentialsManager({
  if (result?.success) {
  updateLastSyncTime(credential.id);
  }
- } catch (error) {
+ } catch {
  toast.error(t("rithmic.error.syncError"));
- console.error("Sync error:", error);
+
  } finally {
  setSyncingId(null);
  }
@@ -213,9 +213,9 @@ export function RithmicCredentialsManager({
 
  // Update last sync time
  updateLastSyncTime(credential.id);
- } catch (error) {
+ } catch {
  toast.error(t("rithmic.error.syncError"));
- console.error("Load more data error:", error);
+
  } finally {
  setSyncingId(null);
  }
@@ -251,8 +251,8 @@ export function RithmicCredentialsManager({
  prev.filter((sync) => sync.accountId !== accountId)
  );
  toast.success(t("rithmic.synchronizationRemoved"));
- } catch (error) {
- console.error("Error deleting synchronization:", error);
+ } catch {
+
  toast.error(t("rithmic.error.syncDeleteFailed"));
  } finally {
  setDeletingSyncId(null);

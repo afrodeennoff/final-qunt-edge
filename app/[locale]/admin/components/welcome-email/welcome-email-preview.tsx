@@ -33,8 +33,8 @@ export function WelcomeEmailPreview() {
  if (result.success && result.html) {
  setEmailHtml(result.html)
  }
- } catch (error) {
- console.error('Error rendering email preview:', error)
+ } catch {
+
  } finally {
  setIsLoading(false)
  }

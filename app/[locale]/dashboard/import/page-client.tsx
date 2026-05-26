@@ -117,8 +117,8 @@ export default function ImportCallbackPageClient() {
         try {
           await tradovate.loadAccounts()
           await refreshAllData({ force: true })
-        } catch (loadError) {
-          console.warn('Failed to refresh Tradovate synchronizations', loadError)
+        } catch (error) {
+
         }
 
         setStatus('success')

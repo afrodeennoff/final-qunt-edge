@@ -90,8 +90,8 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
  setShowSuccess(false)
  setIsOpen(false)
  }, 1000)
- } catch (error) {
- console.error('Failed to update video URL:', error)
+ } catch {
+
  } finally {
  setIsUpdating(false)
  }
@@ -109,8 +109,8 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
  setShowSuccess(false)
  setIsOpen(false)
  }, 1000)
- } catch (error) {
- console.error('Failed to clear video URL:', error)
+ } catch {
+
  } finally {
  setIsUpdating(false)
  }

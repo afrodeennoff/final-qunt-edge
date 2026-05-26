@@ -7,6 +7,9 @@ import { getUserData, computeTradingStats } from "./actions/user-data"
 import { buildUnsubscribeUrl } from "@/lib/unsubscribe-url"
 import { requireServiceAuth, toErrorResponse } from "@/server/authz"
 import { z } from "zod"
+import { rateLimit, createRateLimitResponse } from "@/lib/rate-limit"
+
+const weeklySummaryRateLimit = rateLimit({ limit: 60, window: 60_000, identifier: "weekly-summary" })
 
 const sanitizeErrorMessage = (error: unknown): string => {
   if (error instanceof Error && error.message) {
@@ -27,6 +30,16 @@ export async function POST(req: Request, props: { params: Promise<{ userid: stri
 
   const params = await props.params;
   try {
+    // SECURITY: Rate limit to prevent abuse
+    const limitResult = await weeklySummaryRateLimit(req as unknown as Parameters<typeof weeklySummaryRateLimit>[0])
+    if (!limitResult.success) {
+      return createRateLimitResponse({
+        limit: limitResult.limit,
+        remaining: limitResult.remaining,
+        resetTime: limitResult.resetTime,
+      })
+    }
+
     // Verify that this is a legitimate request with the correct secret
     requireServiceAuth(req.headers.get('authorization'), { serviceName: 'email-weekly-summary' })
 

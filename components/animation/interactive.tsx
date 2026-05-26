@@ -36,7 +36,6 @@ export function InteractiveWrapper({
  const dragX = useMotionValue(0)
  const dragY = useMotionValue(0)
 
-
  const handleDragEnd = useCallback((_: unknown, info: PanInfo) => {
  if (prefersReducedMotion) return
 
@@ -117,7 +116,6 @@ export function MagneticButton({
 }: MagneticButtonProps) {
  const prefersReducedMotion = useReducedMotion()
  const ref = useRef<HTMLButtonElement>(null)
-
 
  if (prefersReducedMotion) {
  return (

@@ -43,7 +43,7 @@ export default function Modals() {
   useEffect(() => {
     if (!isLoading && !isPaywallOpen) {
       if (!trades) {
-        console.warn('No trades available. Please add some trades to see the dashboard content.');
+
         // Use requestAnimationFrame to defer state update
         requestAnimationFrame(() => {
           setIsTradesDialogOpen(true)
@@ -110,7 +110,6 @@ export default function Modals() {
           </div>
         </SheetContent>
       </Sheet>
-
 
       <Dialog open={isAlreadySubscribedOpen} onOpenChange={setIsAlreadySubscribedOpen}>
         <DialogContent>

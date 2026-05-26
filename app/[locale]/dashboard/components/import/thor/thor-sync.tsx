@@ -42,7 +42,7 @@ export function ThorSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void }
  // Play video when component mounts
  const playVideo = () => {
  video.play().catch(() => {
- console.warn('Video playback failed — user interaction may be required')
+
  })
  }
 
@@ -74,7 +74,7 @@ export function ThorSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void }
  if (!user) return
  setUser({ ...user, thorToken: result.token })
  toast.success(t('thor.generated'))
- } catch (error) {
+ } catch {
  toast.error(t('thor.error.generation'))
  } finally {
  setIsGenerating(false)

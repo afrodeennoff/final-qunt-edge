@@ -31,8 +31,6 @@ import { clearAllCache } from '@/lib/indexeddb/trades-cache'
 
 type GroupedTrades = Record<string, Record<string, Trade[]>>
 
-
-
 export function DataManagementCard() {
   const t = useI18n()
   const user = useUserStore((state) => state.user)
@@ -57,8 +55,6 @@ export function DataManagementCard() {
   const [deleteMode, setDeleteMode] = useState<'selected' | 'all'>('selected')
   const [groupedTrades, setGroupedTrades] = useState<GroupedTrades>({})
 
-
-
   const getGroupedTrades = useMemo(() => {
     return trades.reduce<GroupedTrades>((acc, trade) => {
       if (!acc[trade.accountNumber]) {
@@ -77,8 +73,8 @@ export function DataManagementCard() {
     const fetchTradesData = async () => {
       try {
         setGroupedTrades(getGroupedTrades)
-      } catch (error) {
-        console.error("Failed to fetch trades:", error)
+      } catch {
+
         setError(error instanceof Error ? error : new Error('Failed to fetch trades'))
       }
     }
@@ -102,8 +98,8 @@ export function DataManagementCard() {
       await refreshTradesOnly({ force: true })
       setSelectedAccounts([])
       toast.success(accountsToDelete.length > 1 ? t('dataManagement.toast.accountsDeleted') : t('dataManagement.toast.accountDeleted'))
-    } catch (error) {
-      console.error("Failed to delete accounts:", error)
+    } catch {
+
       setError(error instanceof Error ? error : new Error('Failed to delete accounts'))
       toast.error(t('dataManagement.toast.deleteError'), {
         description: t('dataManagement.toast.deleteErrorDesc'),
@@ -131,8 +127,8 @@ export function DataManagementCard() {
       await clearAllCache(user.id)
       await refreshTradesOnly({ force: true })
       toast.success(t('dataManagement.toast.instrumentDeleted'))
-    } catch (error) {
-      console.error("Failed to delete instrument group:", error)
+    } catch {
+
       setError(error instanceof Error ? error : new Error('Failed to delete instrument group'))
       toast.error(t('dataManagement.toast.instrumentDeleteError'), {
         description: t('dataManagement.toast.deleteErrorDesc'),
@@ -200,8 +196,8 @@ export function DataManagementCard() {
       })
 
       toast.success(t('dataManagement.toast.commissionUpdated'))
-    } catch (error) {
-      console.error("Failed to update commission:", error)
+    } catch {
+
       setError(error instanceof Error ? error : new Error('Failed to update commission'))
       toast.error(t('dataManagement.toast.commissionError'), {
         description: t('dataManagement.toast.deleteErrorDesc'),
@@ -238,8 +234,8 @@ export function DataManagementCard() {
       setRenameInstrumentDialogOpen(false)
       setInstrumentToRename({ accountNumber: "", currentName: "" })
       setNewInstrumentName("")
-    } catch (error) {
-      console.error("Failed to rename instrument:", error)
+    } catch {
+
       setError(error instanceof Error ? error : new Error('Failed to rename instrument'))
       toast.error(t('dataManagement.toast.instrumentRenameError'), {
         description: error instanceof Error ? error.message : t('dataManagement.toast.deleteErrorDesc'),
@@ -284,8 +280,8 @@ export function DataManagementCard() {
       setRenameAccountDialogOpen(false)
       setAccountToRename("")
       setNewAccountNumber("")
-    } catch (error) {
-      console.error("Failed to rename account:", error)
+    } catch {
+
       setError(error instanceof Error ? error : new Error('Failed to rename account'))
       toast.error(t('dataManagement.toast.accountRenameError'), {
         description: error instanceof Error ? error.message : t('dataManagement.toast.deleteErrorDesc'),

@@ -511,7 +511,6 @@ export function FormatPreview({
  });
  }, []);
 
-
  const appendUniqueTrades = useCallback((incomingTrades: Partial<ImportTradeDraft>[]) => {
  const uniqueTrades: Partial<ImportTradeDraft>[] = [];
 

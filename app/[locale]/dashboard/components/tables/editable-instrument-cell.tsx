@@ -63,8 +63,8 @@ export function EditableInstrumentCell({
  try {
  await onUpdate(tradeIds, { instrument: trimmedValue })
  setIsEditing(false)
- } catch (error) {
- console.error('Error updating instrument:', error)
+ } catch {
+
  } finally {
  setIsSaving(false)
  }

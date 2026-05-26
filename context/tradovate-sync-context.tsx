@@ -81,7 +81,7 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
       const data = Array.isArray(result.data) ? result.data : []
       setAccounts(data.map(normalizeSynchronization))
     } catch (error) {
-      console.warn('Failed to load Tradovate accounts:', error)
+
     }
   }, [normalizeSynchronization])
 
@@ -98,7 +98,7 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
     let payload: { success?: boolean; message?: string } | null = null
     try {
       payload = await response.json()
-    } catch {
+    } catch (error) {
       payload = null
     }
 
@@ -198,7 +198,6 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
     } catch (error) {
       const errorMsg = `Sync error for account ${accountId}: ${error instanceof Error ? error.message : t('tradovateSync.sync.unknownError')}`
 
-      console.error('Sync error:', error)
       return { success: false, message: errorMsg }
     }
   }, [accounts, t, refreshAllData, loadAccounts])
@@ -244,7 +243,7 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
       }
 
     } catch (error) {
-      console.warn('Error during bulk sync:', error)
+
       toast.error(t('tradovateSync.bulk.error'), { id: toastId })
     } finally {
       isAutoSyncingRef.current = false
@@ -273,7 +272,7 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
         }
       }
     } catch (error) {
-      console.warn('Error during tradovate auto-sync check:', error)
+
     }
   }, [isSyncRouteActive, enableAutoSync, accounts, syncInterval, performSyncForAccount]);
 

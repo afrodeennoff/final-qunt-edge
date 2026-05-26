@@ -68,7 +68,6 @@ function CommissionsTooltip({
  return null;
 }
 
-
 const chartConfig = {
  pnl: {
  label:"Net P/L",
@@ -98,7 +97,6 @@ export default React.memo(function CommissionsPnLChart({
  const { formattedTrades: trades } = useDashboardStats();
  const t = useI18n();
 
-
  const chartData = React.useMemo(() => {
  const totalPnL = trades.reduce((sum, trade) => sum + Number(trade.pnl), 0);
  const totalCommissions = trades.reduce(
@@ -124,7 +122,6 @@ export default React.memo(function CommissionsPnLChart({
  ];
  }, [trades]);
  const hasData = chartData.some((item) => item.value > 0);
-
 
  // Keep donut visually centered and larger to avoid dead space.
  const pieLayout = React.useMemo(() => {

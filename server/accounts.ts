@@ -39,7 +39,8 @@ export async function fetchGroupedTradesAction(_userId?: string): Promise<FetchT
       id: true,
       accountNumber: true,
       instrument: true,
-    }
+    },
+    take: 10_000,
   })
 
   const groupedTrades = trades.reduce<GroupedTrades>((acc, trade) => {
@@ -625,12 +626,14 @@ export async function checkAndResetAccountsAction() {
         lte: today,
       },
     },
+    select: { id: true },
   })
 
-  for (const account of accountsToReset) {
-    await prisma.account.update({
+  if (accountsToReset.length > 0) {
+    await prisma.account.updateMany({
       where: {
-        id: account.id
+        id: { in: accountsToReset.map(a => a.id) },
+        userId,
       },
       data: {
         resetDate: null,

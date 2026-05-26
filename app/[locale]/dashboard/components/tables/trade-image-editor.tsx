@@ -168,7 +168,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  .createSignedUrl(path, SIGNED_URL_TTL_SECONDS);
 
  if (error || !data?.signedUrl) {
- console.error("Failed to create signed URL for trade image:", error?.message);
+
  return imageReference;
  }
 
@@ -206,8 +206,8 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  if (images) {
  setLocalImages(images);
  }
- } catch (error) {
- console.error("Failed to load images:", error);
+ } catch {
+
  } finally {
  setIsLoadingImages(false);
  }
@@ -286,8 +286,8 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  }
 
  toast.success("Image deleted successfully");
- } catch (error) {
- console.error("Error removing image:", error);
+ } catch {
+
  toast.error("Failed to delete image");
  }
  };
@@ -331,9 +331,6 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  });
 
  if (unauthorized.length > 0) {
- console.error("Blocked deletion of image paths outside actor prefix", {
- unauthorized,
- });
  toast.error("Failed to delete image");
  return;
  }
@@ -342,8 +339,8 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  await supabase.storage.from("trade-images").remove(ownedPaths);
  }
  }
- } catch (error) {
- console.error("Error removing all images:", error);
+ } catch {
+
  }
  };
 

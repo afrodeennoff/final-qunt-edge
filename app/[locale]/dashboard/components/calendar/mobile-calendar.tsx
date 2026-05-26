@@ -113,8 +113,8 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  if (date.getFullYear() === currentYear && date.getMonth() === currentMonth) {
  return total + dayData.pnl
  }
- } catch (e) {
- console.error("Error parsing date string in calculateMonthlyTotal:", dateString, e)
+ } catch {
+
  }
  return total
  }, 0)
@@ -130,8 +130,8 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  // Use UTC for parsing the key to avoid local shifts, then compare components
  const date = toDate(dateString + 'T00:00:00Z')
  return date.getFullYear() === currentYear && date.getMonth() === currentMonth
- } catch (e) {
- console.error("Error parsing date string in getMaxPnl:", dateString, e)
+ } catch {
+
  return false
  }
  })
@@ -198,8 +198,8 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  let dateInTZ: Date;
  try {
  dateInTZ = toDate(dateString, { timeZone: timezone });
- } catch (e) {
- console.error("Error parsing date string for display:", dateString, e);
+ } catch {
+
  // Render a placeholder or skip if parsing fails
  return <div key={dateString} className="text-muted-foreground text-[10px] uppercase font-bold">Error</div>;
  }

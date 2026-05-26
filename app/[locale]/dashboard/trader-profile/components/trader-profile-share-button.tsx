@@ -36,7 +36,7 @@ export function TraderProfileShareButton() {
       toast.success(t('share.urlCopied'))
       setTimeout(() => setCopied(false), 2000)
     } catch (error) {
-      console.error('Error copying URL:', error)
+
       toast.error(t('share.error.description'))
     }
   }
@@ -53,7 +53,7 @@ export function TraderProfileShareButton() {
         setOpen(false)
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
-          console.error('Error sharing:', error)
+
         }
       }
     } else {

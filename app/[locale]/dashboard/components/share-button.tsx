@@ -339,7 +339,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  triggerConfetti()
  }, 1000)
  } catch (error) {
- console.error('Error sharing trades:', error)
+
  toast.error(t('share.error'), {
  description: error instanceof Error ? error.message : t('share.error.description'),
  })
@@ -351,7 +351,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  await navigator.clipboard.writeText(shareUrl)
  toast.success(t('share.urlCopied'))
  } catch (error) {
- console.error('Error copying URL:', error)
+
  }
  }
 

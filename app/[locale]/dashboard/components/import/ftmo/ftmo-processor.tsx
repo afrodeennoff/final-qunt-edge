@@ -45,7 +45,7 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
 
  // Validate required fields
  if (row.length < 15) {
- console.warn(`Row ${i + 1} has insufficient columns:`, row)
+
  continue
  }
 
@@ -65,7 +65,7 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
 
  // Validate essential fields
  if (!ticket || !symbol || !openTime || !closeTime) {
- console.warn(`Row ${i + 1} missing essential data:`, { ticket, symbol, openTime, closeTime })
+
  continue
  }
 
@@ -75,7 +75,7 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
 
  // Validate dates
  if (isNaN(openDate.getTime()) || isNaN(closeDate.getTime())) {
- console.warn(`Row ${i + 1} has invalid dates:`, { openTime, closeTime })
+
  continue
  }
 
@@ -114,7 +114,6 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
  useEffect(() => {
  processTrades();
  }, [processTrades]);
-
 
  const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0), [processedTrades]);
  const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + ((trade as { commissionOnly?: number }).commissionOnly || 0), 0), [processedTrades]);

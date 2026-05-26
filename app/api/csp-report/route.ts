@@ -1,8 +1,16 @@
 import { createLogger } from '@/lib/logger'
+import { createRateLimitResponse, rateLimit } from '@/lib/rate-limit'
 
 const log = createLogger('csp-report')
 
+const cspReportRateLimit = rateLimit({ limit: 60, window: 60_000, identifier: 'csp-report' })
+
 export async function POST(request: Request) {
+  const rl = await cspReportRateLimit(request)
+  if (!rl.success) {
+    return createRateLimitResponse({ limit: rl.limit, remaining: rl.remaining, resetTime: rl.resetTime })
+  }
+
   try {
     const report = await request.json()
 

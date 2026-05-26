@@ -1,6 +1,5 @@
 'use client'
 
-import React from 'react'
 import Link from 'next/link'
 import { useCurrentLocale } from '@/locales/client'
 import { ButtonMinimal } from '@/components/ui/button-minimal'

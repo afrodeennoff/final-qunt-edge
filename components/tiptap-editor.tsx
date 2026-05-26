@@ -157,7 +157,7 @@ export function TiptapEditor({
       }
     },
     onError: (error) => {
-      console.error("Completion error:", error);
+
       const errorMessage = error?.message || String(error);
 
       if (errorMessage.includes("API key") || errorMessage.includes("OPENROUTER_API_KEY") || errorMessage.includes("AI_BASE_URL")) {
@@ -260,7 +260,7 @@ export function TiptapEditor({
         imageHashCacheRef.current.set(hashHex, url);
         return url;
       } catch (error) {
-        console.error("Image upload error:", error);
+
         toast.error(
           t("trade-table.imageUploadError", { error: "Upload failed" }),
         );
@@ -440,7 +440,7 @@ export function TiptapEditor({
                   editor.chain().focus().insertContent({ type: 'imageResize', attrs: { src: imageUrl } }).run();
                 })
                 .catch((error) => {
-                  console.error("Failed to upload pasted image:", error);
+
                 });
             }
             return true;
@@ -459,7 +459,7 @@ export function TiptapEditor({
                 editor.chain().focus().insertContent({ type: 'imageResize', attrs: { src: imageUrl } }).run();
               })
               .catch((error) => {
-                console.error("Failed to upload dropped image:", error);
+
               });
             return true;
           }
@@ -559,7 +559,7 @@ export function TiptapEditor({
             editor.chain().focus().insertContent({ type: 'imageResize', attrs: { src: imageUrl } }).run();
           })
           .catch((error) => {
-            console.error("Failed to upload image:", error);
+
           });
       }
     },

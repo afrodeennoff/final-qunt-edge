@@ -720,10 +720,7 @@ export default React.memo(function EquityChart({ size ="medium" }: EquityChartPr
  computeClientSideData();
  setChartData(computedData);
  setAvailableAccountNumbers(accNumbers);
- } catch (error) {
- console.error("Failed to compute client-side equity chart data:",
- error
- );
+ } catch {
  setChartData([]);
  setAvailableAccountNumbers([]);
  } finally {
@@ -790,8 +787,8 @@ export default React.memo(function EquityChart({ size ="medium" }: EquityChartPr
 
  setChartData(result.chartData);
  setAvailableAccountNumbers(result.accountNumbers);
- } catch (error) {
- console.error("Failed to fetch equity chart data:", error);
+ } catch {
+
  if (formattedTrades.length > 0) {
  applyClientFallback();
  } else if (!cancelled) {

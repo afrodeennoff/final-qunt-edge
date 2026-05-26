@@ -47,7 +47,6 @@ function getLocaleFromGeolocation(): 'en' | 'fr' {
   }
 }
 
-
 function detectLocaleFromBrowser(): 'en' | 'fr' {
   if (typeof window === 'undefined') return 'fr'
 

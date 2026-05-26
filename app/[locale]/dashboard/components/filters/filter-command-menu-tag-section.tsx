@@ -122,8 +122,8 @@ export function TagSection({ searchValue }: TagSectionProps) {
  toast.success(t('widgets.tags.success'), {
  description: t('widgets.tags.createSuccess'),
  })
- } catch (error) {
- console.error('Failed to create tag:', error)
+ } catch {
+
  toast.error(t('widgets.tags.error'), {
  description: t('widgets.tags.createError'),
  })
@@ -163,8 +163,8 @@ export function TagSection({ searchValue }: TagSectionProps) {
  toast.success(t('widgets.tags.success'), {
  description: t('widgets.tags.deleteSuccess'),
  })
- } catch (error) {
- console.error('Failed to delete tag:', error)
+ } catch {
+
  toast.error(t('widgets.tags.error'), {
  description: t('widgets.tags.deleteError'),
  })

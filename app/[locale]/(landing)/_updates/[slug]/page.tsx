@@ -92,15 +92,15 @@ export async function generateMetadata({
           description: meta.description,
         },
       };
-    } catch (postError) {
-      console.warn("Error fetching post:", postError);
+    } catch {
+
       return {
         title: "Not Found",
         description: "The page you are looking for does not exist.",
       };
     }
-  } catch (paramError) {
-    console.warn("Error resolving params:", paramError);
+  } catch {
+
     return {
       title: "Not Found",
       description: "The page you are looking for does not exist.",
@@ -121,8 +121,8 @@ async function getPageData(slug: string, locale: string) {
       previous: adjacent.previous,
       next: adjacent.next,
     };
-  } catch (postError) {
-    console.warn("Error fetching post data:", postError);
+  } catch {
+
     return null;
   }
 }

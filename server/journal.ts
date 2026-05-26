@@ -227,26 +227,34 @@ async function _getMoodHistoryCached(userId: string, fromDate?: Date, toDate?: D
 
 export async function cleanupExpiredChatConversations(now: Date = new Date()) {
   const moods = await prisma.mood.findMany({
+    where: {
+      conversation: { not: Prisma.DbNull },
+    },
     select: {
       id: true,
       userId: true,
       conversation: true,
     },
+    take: 500,
   })
 
   let cleaned = 0
+  const batchUpdateIds: string[] = []
 
   for (const mood of moods) {
     if (!mood.conversation || !isStoredChatConversationExpired(mood.conversation, now)) {
       continue
     }
-
-    await prisma.mood.update({
-      where: { id: mood.id },
-      data: { conversation: Prisma.JsonNull },
-    })
+    batchUpdateIds.push(mood.id)
     invalidateJournalRelatedCaches(mood.userId)
     cleaned += 1
+  }
+
+  if (batchUpdateIds.length > 0) {
+    await prisma.mood.updateMany({
+      where: { id: { in: batchUpdateIds } },
+      data: { conversation: Prisma.JsonNull },
+    })
   }
 
   return { scanned: moods.length, cleaned }

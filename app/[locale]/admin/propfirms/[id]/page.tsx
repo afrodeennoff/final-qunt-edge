@@ -367,7 +367,7 @@ export default async function PropFirmEditPage({
           },
         })
       } catch (error) {
-        console.warn('[Admin PropFirm] DB error loading firm:', error)
+
         firm = buildFallbackFirm(id)
       }
     } else {

@@ -33,7 +33,7 @@ async function convertFilesToDataURLs(files: Iterable<File>): Promise<ChatAttach
  });
  };
  reader.onerror = (error) => {
- console.error('File reader error for:', file.name, error)
+
  reject(error);
  };
  reader.readAsDataURL(file);
@@ -68,7 +68,7 @@ export function ChatInput({
  fileInputRef.current.accept ="image/*"
  fileInputRef.current.click()
  } else {
- console.error('File input ref is null')
+
  }
  }
 
@@ -91,8 +91,8 @@ export function ChatInput({
  try {
  const fileParts = await convertFilesToDataURLs(supportedFiles)
  onFilesChange?.(fileParts)
- } catch (error) {
- console.error('Error converting files:', error)
+ } catch {
+
  }
  }
  }
@@ -140,8 +140,8 @@ export function ChatInput({
  if (decodedUrl.includes('.webp')) return 'image/webp'
  if (decodedUrl.includes('.svg')) return 'image/svg+xml'
  }
- } catch (e) {
- console.warn('Failed to parse Google redirect URL:', e)
+ } catch {
+
  }
  return 'image/*'
  }
@@ -226,8 +226,8 @@ export function ChatInput({
  try {
  const fileParts = await convertFilesToDataURLs(supportedFiles)
  onFilesChange?.([...files, ...fileParts])
- } catch (error) {
- console.error('Error converting dropped files:', error)
+ } catch {
+
  }
  }
  }, [files, onFilesChange])
@@ -245,8 +245,8 @@ export function ChatInput({
  onFilesChange?.([...files, newFile])
  setUrlInput("")
  setShowUrlInput(false)
- } catch (error) {
- console.error('Invalid URL:', error)
+ } catch {
+
  // You could add a toast notification here
  }
  }

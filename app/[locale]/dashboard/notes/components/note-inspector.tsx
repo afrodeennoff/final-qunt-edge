@@ -55,7 +55,7 @@ export function NoteInspector({
       }
     },
     onError: (error) => {
-      console.warn("AI Summary error:", error)
+
       const errorMessage = error?.message || String(error)
 
       if (errorMessage.includes("API key") || errorMessage.includes("OPENROUTER_API_KEY")) {

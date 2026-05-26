@@ -980,8 +980,8 @@ function AccountsOverviewComponent({
             : t('propFirm.payout.successDescription'),
         },
       )
-    } catch (error) {
-      console.error('Failed to handle payout:', error)
+    } catch {
+
       toast.error(t('propFirm.payout.error'), {
         description: t('propFirm.payout.errorDescription'),
       })
@@ -1007,8 +1007,8 @@ function AccountsOverviewComponent({
       toast.success(t('propFirm.payout.deleteSuccess'), {
         description: t('propFirm.payout.deleteSuccessDescription'),
       })
-    } catch (error) {
-      console.error('Failed to delete payout:', error)
+    } catch {
+
       toast.error(t('propFirm.payout.deleteError'), {
         description: t('propFirm.payout.deleteErrorDescription'),
       })
@@ -1030,8 +1030,8 @@ function AccountsOverviewComponent({
       toast.success(t('propFirm.toast.deleteSuccess'), {
         description: t('propFirm.toast.deleteSuccessDescription'),
       })
-    } catch (error) {
-      console.error('Failed to delete account:', error)
+    } catch {
+
       toast.error(t('propFirm.toast.deleteError'), {
         description: t('propFirm.toast.deleteErrorDescription'),
       })
@@ -1102,8 +1102,8 @@ function AccountsOverviewComponent({
       toast.success(t('propFirm.toast.setupSuccess'), {
         description: t('propFirm.toast.setupSuccessDescription'),
       })
-    } catch (error) {
-      console.error('Failed to setup account:', error)
+    } catch {
+
       toast.error(t('propFirm.toast.setupError'), {
         description: t('propFirm.toast.setupErrorDescription'),
       })
@@ -1554,8 +1554,8 @@ function AccountsOverviewComponent({
                           toast.success(t('propFirm.payout.deleteSuccess'), {
                             description: t('propFirm.payout.deleteSuccessDescription'),
                           })
-                        } catch (error) {
-                          console.error('Failed to delete payout:', error)
+                        } catch {
+
                           toast.error(t('propFirm.payout.deleteError'), {
                             description: t('propFirm.payout.deleteErrorDescription'),
                           })

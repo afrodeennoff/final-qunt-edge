@@ -32,7 +32,7 @@ export function PlatformTutorial({
  // Define playVideo outside the conditional to ensure it's accessible for cleanup
  const playVideo = () => {
  video.play().catch((error) => {
- console.error("Video playback error:", error);
+
  });
  };
 

@@ -84,7 +84,7 @@ export default function PdfUpload({
  progress: 100
  })
  } catch (error) {
- console.error('Error processing PDF:', error)
+
  setProcessingStatus({
  status: 'error',
  step: 'ocr',
@@ -108,7 +108,6 @@ export default function PdfUpload({
  setLocalFiles(prev => prev.filter((_, i) => i !== index))
  setFiles(prev => prev.filter((_, i) => i !== index))
  }, [setLocalFiles, setFiles])
-
 
  return (
  <div className="flex flex-col h-full">

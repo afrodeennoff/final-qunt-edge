@@ -45,14 +45,13 @@ export function TradeComment({ tradeIds, comment: initialComment, onCommentChang
  // Update all trades in the list
  await updateTrades(tradeIds, { comment: newComment })
 
-
  setShowSuccess(true)
  setTimeout(() => {
  setShowSuccess(false)
  }, 1000)
  setOpen(false)
- } catch (error) {
- console.error('Failed to update comment:', error)
+ } catch {
+
  // Revert local state on error
  setLocalComment(initialComment || '')
  } finally {
@@ -73,8 +72,8 @@ export function TradeComment({ tradeIds, comment: initialComment, onCommentChang
  setTimeout(() => {
  setShowSuccess(false)
  }, 1000)
- } catch (error) {
- console.error('Failed to clear comment:', error)
+ } catch {
+
  // Revert local state on error
  setLocalComment(initialComment || '')
  } finally {

@@ -99,7 +99,7 @@ export function WeeklyRecapPreview() {
  setSelectedUserId,
  setSelectedEmail,
  }).catch((err) => {
- console.error("Error loading users:", err)
+
  toast.error("Error", {
  description:"Failed to load users",
  })
@@ -124,7 +124,7 @@ export function WeeklyRecapPreview() {
  setLoadingState,
  setEmailHtml,
  }).catch((err) => {
- console.error("Error generating preview:", err)
+
  setError(err instanceof Error ? err.message :"An error occurred while generating the preview")
  setLoadingState("idle")
  })

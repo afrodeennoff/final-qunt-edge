@@ -85,7 +85,7 @@ export default function DashboardBehaviorPage() {
         }
       } catch (error) {
         if ((error as Error).name === 'AbortError') return
-        console.error('[Behavior Page] Failed to load insights', error)
+
         if (isMounted) {
           setInsightsError('Unable to load behavior insights right now.')
         }

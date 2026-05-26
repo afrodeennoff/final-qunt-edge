@@ -64,7 +64,7 @@ export function Timeline({ onSelectDate, selectedDate, moodHistory, className, o
  toast.success(t('mindset.deleteSuccess'), {
  description: t('mindset.deleteSuccessDescription'),
  })
- } catch (error) {
+ } catch {
  toast.error(t('mindset.deleteError'), {
  description: t('mindset.deleteErrorDescription'),
  })

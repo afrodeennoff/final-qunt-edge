@@ -36,10 +36,10 @@ async function saveThemeToApi(theme: DashboardTheme): Promise<void> {
       body: JSON.stringify({ theme }),
     })
     if (!response.ok) {
-      console.error('[ThemeProvider] Failed to save theme:', response.status)
+
     }
-  } catch (error) {
-    console.error('[ThemeProvider] Error saving theme:', error)
+  } catch {
+
   }
 }
 

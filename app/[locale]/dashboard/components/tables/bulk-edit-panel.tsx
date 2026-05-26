@@ -74,8 +74,8 @@ export function BulkEditPanel({
  setEntryHourOffset(0)
  setExitHourOffset(0)
  onFinish()
- } catch (error) {
- console.error('Error applying time changes:', error)
+ } catch {
+
  } finally {
  setIsSaving(false)
  }
@@ -121,8 +121,8 @@ export function BulkEditPanel({
  setTrimFromStart(0)
  setTrimFromEnd(0)
  onFinish()
- } catch (error) {
- console.error('Error applying instrument changes:', error)
+ } catch {
+
  } finally {
  setIsSaving(false)
  }

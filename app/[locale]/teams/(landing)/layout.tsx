@@ -1,4 +1,3 @@
-
 import MarketingLayoutShell from "../../(landing)/components/marketing-layout-shell";
 import { Metadata } from 'next';
 

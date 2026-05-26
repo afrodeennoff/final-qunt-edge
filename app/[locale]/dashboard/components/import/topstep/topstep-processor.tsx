@@ -112,7 +112,7 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
  // The date is already in UTC when parsed from a string with timezone info
  item.closeDate = date.toISOString().replace('Z', '+00:00');
  }
- } catch (e) {
+ } catch {
  isValidTrade = false;
  return;
  }

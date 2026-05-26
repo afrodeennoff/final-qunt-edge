@@ -118,8 +118,8 @@ export default function TickDistributionChartEmbed({
           {} as Record<string, TickDetails>,
         );
         setTickDetails(tickDetailsMap);
-        } catch (error) {
-        console.warn("Failed to fetch tick details:", error);
+        } catch {
+
       } finally {
         setIsLoading(false);
       }

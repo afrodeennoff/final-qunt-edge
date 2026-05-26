@@ -351,7 +351,7 @@ export default function SettingsPage() {
       })
     }).catch((error) => {
       if (!isCancelled) {
-        console.warn('Failed to load user teams:', error)
+
       }
     })
 
@@ -380,7 +380,7 @@ export default function SettingsPage() {
       } else {
         toast.error(result.error || 'Failed to update username')
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to update username')
     } finally {
       setIsUpdatingUsername(false)

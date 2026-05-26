@@ -82,7 +82,7 @@ export default function PdfProcessing({
  instruments: z.array(financialInstrumentSchema)
  }),
  onError(error) {
- console.error('Error processing orders:', error);
+
  setError(`Failed to process orders: ${error.message}`);
  }
  });
@@ -92,7 +92,7 @@ export default function PdfProcessing({
  api: '/api/imports/ibkr/fifo-computation',
  schema: z.array(tradeSchema),
  onError(error) {
- console.error('Error processing trades:', error);
+
  setError(`Failed to process trades: ${error.message}`);
  }
  });
@@ -180,7 +180,7 @@ export default function PdfProcessing({
  // Start streaming orders
  submitOrders({ text: extractedText });
  } catch (error) {
- console.error('Error processing orders:', error);
+
  setError(error instanceof Error ? error.message : 'Failed to process orders');
  } finally {
  setIsProcessing(false);

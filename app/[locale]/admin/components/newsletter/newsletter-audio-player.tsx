@@ -82,8 +82,8 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  setIsLoading(true)
  await audioRef.current.play()
  }
- } catch (error) {
- console.error('Error playing audio:', error)
+ } catch {
+
  setIsLoading(false)
  }
  }

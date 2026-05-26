@@ -12,7 +12,6 @@ import { useDashboardFilters } from "@/context/data-provider"
 import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { useUserStore } from "../../../../../store/user-store"
 
-
 interface AccountFilterProps {
  showAccountNumbers: boolean
  className?: string

@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server'
 
+export type HeaderCarrier = {
+  headers: Pick<Headers, 'get'>
+}
+
 interface RateLimitStore {
   count: number
   resetTime: number
@@ -252,6 +256,7 @@ export async function createRateLimitResponse({
       headers: {
         'X-RateLimit-Limit': limit.toString(),
         'X-RateLimit-Remaining': remaining.toString(),
+        'X-RateLimit-Reset': new Date(resetTime).toISOString(),
         'Retry-After': retryAfter.toString(),
       },
     }
@@ -263,7 +268,3 @@ const rateLimitCleanupTimer = setInterval(() => {
 }, CLEANUP_INTERVAL_MS)
 
 rateLimitCleanupTimer.unref?.()
-
-type HeaderCarrier = {
-  headers: Pick<Headers, 'get'>
-}

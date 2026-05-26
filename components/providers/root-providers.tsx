@@ -121,7 +121,7 @@ export function RootProviders({
                     .map((key) => caches.delete(key))
             );
             if (cacheDebugEnabled) {
-                console.warn(`${logPrefix} service worker disabled; existing registrations cleared.`);
+
             }
         };
 
@@ -136,7 +136,7 @@ export function RootProviders({
 
             unregisterAllServiceWorkers().catch((error) => {
                 if (cacheDebugEnabled) {
-                    console.error(`${logPrefix} failed to clear service workers`, error);
+
                 }
             });
 
@@ -155,10 +155,7 @@ export function RootProviders({
 
         const handleControllerChange = () => {
             if (cacheDebugEnabled) {
-                console.warn(`${logPrefix} service worker controller changed`, {
-                    pathname: window.location.pathname,
-                    hasController: Boolean(navigator.serviceWorker.controller),
-                });
+                /* debug: service worker controller changed */
             }
         };
         navigator.serviceWorker.addEventListener("controllerchange", handleControllerChange);

@@ -27,7 +27,7 @@ export async function generateMetadata({
       ? post.content.slice(0, 160).replace(/[#*_\n]/g, ' ').trim()
       : 'Join the discussion on Qunt Edge community.'
     return buildPublicMetadata({ locale, path: `/community/post/${id}`, title, description })
-  } catch {
+  } catch (error) {
     return { title: 'Community Post | Qunt Edge' }
   }
 }

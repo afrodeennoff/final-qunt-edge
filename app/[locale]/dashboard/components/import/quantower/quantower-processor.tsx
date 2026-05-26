@@ -351,7 +351,7 @@ function parseDateTime(dateTimeStr: string): string {
  }
  
  // If neither format matches, log warning and return current time as fallback
- console.warn(`[Quantower] Unable to parse date "${dateTimeStr}", using current time as fallback`);
+
  return new Date().toISOString();
 }
 
@@ -420,8 +420,8 @@ export default function QuantowerOrderProcessor({ csvData, headers, processedTra
  const dateA = new Date(parseDateTime(a[1]));
  const dateB = new Date(parseDateTime(b[1]));
  return dateA.getTime() - dateB.getTime();
- } catch (error) {
- console.error('Error parsing date during sort:', error);
+ } catch {
+
  return 0; // Keep original order if date parsing fails
  }
  });
@@ -430,7 +430,7 @@ export default function QuantowerOrderProcessor({ csvData, headers, processedTra
  const [account, dateTime, symbol, description, symbolType, expirationDate, strikePrice, side, orderType, quantity, price, grossPnL, fee, netPnL, tradeValue, tradeId, orderId, positionId] = row;
 
  if (!symbol) {
- console.error('Invalid row: symbol is undefined', row);
+
  return; // Skip this row
  }
 

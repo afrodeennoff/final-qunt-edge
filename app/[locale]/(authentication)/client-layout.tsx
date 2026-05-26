@@ -31,8 +31,8 @@ export default function AuthenticationLayout({
  // Clear the hash after showing the toast
  router.replace(`/${locale}/authentication`);
  }
- } catch (error) {
- console.warn('Failed to parse error from URL hash:', error)
+ } catch {
+
  }
  }, [locale, router]);
 

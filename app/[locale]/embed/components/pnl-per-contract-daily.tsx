@@ -10,7 +10,6 @@ import { useI18n } from '@/locales/client'
 import { formatInTimeZone } from 'date-fns-tz'
 import { enUS } from 'date-fns/locale'
 
-
 type TradeLike = {
   instrument?: string
   pnl: number

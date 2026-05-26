@@ -39,8 +39,8 @@ export default function PropfirmCatalogueWidget() {
  try {
  const { stats: fetchedStats } = await getPropfirmCatalogueData('allTime')
  setStats(fetchedStats)
- } catch (error) {
- console.warn("Failed to fetch propfirm catalogue:", error)
+ } catch {
+
  } finally {
  setIsLoading(false)
  }

@@ -70,8 +70,8 @@ export function DailyComment({ selectedDate }: DailyCommentProps) {
  const comment = mood.journalContent ||"";
  setComment(comment);
  }
- } catch (error) {
- console.error("Error loading comment:", error);
+ } catch {
+
  } finally {
  setIsLoading(false);
  }
@@ -110,8 +110,8 @@ export function DailyComment({ selectedDate }: DailyCommentProps) {
  setMoodHistory([...updatedMoodHistory, savedMood]);
 
  toast.success(t("calendar.charts.commentSaved"));
- } catch (error) {
- console.error("Error saving comment:", error);
+ } catch {
+
  setSaveError(t("calendar.charts.commentError"));
  toast.error(t("calendar.charts.commentError"));
  } finally {

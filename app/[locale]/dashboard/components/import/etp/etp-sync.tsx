@@ -42,7 +42,7 @@ export function EtpSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void })
  // Play video when component mounts
  const playVideo = () => {
  video.play().catch((error) => {
- console.error('Video playback error:', error)
+
  })
  }
 
@@ -74,7 +74,7 @@ export function EtpSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void })
  if (!user) return
  setUser({ ...user, etpToken: result.token })
  toast.success(t('etp.generated'))
- } catch (error) {
+ } catch {
  toast.error(t('etp.error.generation'))
  } finally {
  setIsGenerating(false)

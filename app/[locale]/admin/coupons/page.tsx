@@ -161,7 +161,7 @@ async function loadCoupons() {
       orderBy: [{ isActive: 'desc' }, { expiresAt: 'asc' }, { updatedAt: 'desc' }],
     })
   } catch (error) {
-    console.warn('[Admin Coupons] Failed to load coupons:', error)
+
     return []
   }
 }

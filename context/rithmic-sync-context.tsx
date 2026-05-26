@@ -206,13 +206,6 @@ export function RithmicSyncContextProvider({
                     total: parseInt(totalDays),
                   });
                 } else {
-                  console.warn(
-                    "No matching account found for setting total days:",
-                    {
-                      totalDays,
-                      message: message.message,
-                    }
-                  );
                 }
               }
             }
@@ -498,7 +491,7 @@ export function RithmicSyncContextProvider({
           const message = JSON.parse(event.data);
           handleMessage(message);
         } catch (error) {
-          console.error("Error parsing WebSocket message:", error);
+
           const errorMessage =
             error instanceof Error ? error.message : "Unknown error";
           setConnectionStatus(`Failed to parse message: ${errorMessage}`);
@@ -511,7 +504,7 @@ export function RithmicSyncContextProvider({
       };
 
       newWs.onerror = (error) => {
-        console.error("WebSocket error:", error);
+
         setConnectionStatus("WebSocket error occurred");
         handleMessage({
           type: "connection_status",
@@ -752,7 +745,7 @@ export function RithmicSyncContextProvider({
           message: "Sync started successfully",
         };
       } catch (error) {
-        console.error("Auto-sync error:", error);
+
         handleMessage({
           type: "log",
           level: "error",
@@ -917,7 +910,7 @@ export function RithmicSyncContextProvider({
         }
       }
     } catch (error) {
-      console.warn("Error during rithmic auto-sync check:", error);
+
     } finally {
       isAutoSyncingRef.current = false;
     }

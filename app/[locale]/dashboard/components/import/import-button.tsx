@@ -460,7 +460,6 @@ export default function ImportButton() {
  );
  }
 
-
  if (Component === ColumnMapping) {
  return (
  <Component

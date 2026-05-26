@@ -33,7 +33,6 @@ interface ConsentSettings {
   security_storage: boolean;
 }
 
-
 export function ConsentBanner() {
   const t = useTypedI18n()
   const [isVisible, setIsVisible] = useState(false)

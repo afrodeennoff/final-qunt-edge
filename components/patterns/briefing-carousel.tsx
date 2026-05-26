@@ -1,6 +1,5 @@
 import { cn } from './utils'
 import { LucideIcon } from 'lucide-react'
-import React from 'react'
 
 interface BriefingCarouselProps {
   title?: string

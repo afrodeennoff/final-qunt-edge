@@ -8,7 +8,6 @@ import { generateTradeHash } from '@/lib/utils'
 import { PlatformProcessorProps } from '../config/platforms'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
-
 /**
  * Formats currency values from NinjaTrader CSV exports
  * Supports multiple formats:

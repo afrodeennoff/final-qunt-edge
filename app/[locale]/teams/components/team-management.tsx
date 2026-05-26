@@ -220,8 +220,8 @@ export function TeamManagement({
  if (managedResult.success) {
  setManagedTeams(managedResult.managedTeams || [])
  }
- } catch (error) {
- console.warn('Error loading team data:', error)
+ } catch {
+
  toast.error(t('dashboard.teams.error'))
  } finally {
  setIsLoading(false)
@@ -246,8 +246,8 @@ export function TeamManagement({
  } else {
  toast.error(result.error || t('dashboard.teams.error'))
  }
- } catch (error) {
- console.warn('Error creating team:', error)
+ } catch {
+
  toast.error(t('dashboard.teams.error'))
  } finally {
  setIsSubmitting(false)
@@ -271,8 +271,8 @@ export function TeamManagement({
  } else {
  toast.error(result.error || t('dashboard.teams.error'))
  }
- } catch (error) {
- console.warn('Error joining team:', error)
+ } catch {
+
  toast.error(t('dashboard.teams.error'))
  } finally {
  setIsSubmitting(false)
@@ -288,8 +288,8 @@ export function TeamManagement({
  } else {
  toast.error(result.error || t('dashboard.teams.error'))
  }
- } catch (error) {
- console.warn('Error leaving team:', error)
+ } catch {
+
  toast.error(t('dashboard.teams.error'))
  }
  }
@@ -353,8 +353,8 @@ export function TeamManagement({
  } else {
  toast.error(result.error || t('dashboard.teams.error'))
  }
- } catch (error) {
- console.warn('Error adding manager:', error)
+ } catch {
+
  toast.error(t('dashboard.teams.error'))
  } finally {
  setIsSubmitting(false)
@@ -403,8 +403,8 @@ export function TeamManagement({
  } else {
  toast.error(result.error || t('dashboard.teams.error'))
  }
- } catch (error) {
- console.warn('Error removing manager:', error)
+ } catch {
+
  toast.error(t('dashboard.teams.error'))
  }
  }
@@ -455,8 +455,8 @@ export function TeamManagement({
  } else {
  toast.error(result.error || t('dashboard.teams.error'))
  }
- } catch (error) {
- console.warn('Error updating manager access:', error)
+ } catch {
+
  toast.error(t('dashboard.teams.error'))
  }
  }
@@ -470,8 +470,8 @@ export function TeamManagement({
  } else {
  toast.error(result.error || 'Failed to delete team')
  }
- } catch (error) {
- console.warn('Error deleting team:', error)
+ } catch {
+
  toast.error('Failed to delete team')
  }
  }
@@ -522,8 +522,8 @@ export function TeamManagement({
  } else {
  toast.error(result.error || t('teams.rename.error'))
  }
- } catch (error) {
- console.warn('Error renaming team:', error)
+ } catch {
+
  toast.error(t('teams.rename.error'))
  } finally {
  setIsSubmitting(false)
@@ -547,8 +547,8 @@ export function TeamManagement({
  } else {
  toast.error(result.error || t('teams.traders.add.error'))
  }
- } catch (error) {
- console.warn('Error adding trader:', error)
+ } catch {
+
  toast.error(t('teams.traders.add.error'))
  } finally {
  setIsSubmitting(false)
@@ -563,8 +563,8 @@ export function TeamManagement({
  if (result.success) {
  setPendingInvitations(result.invitations || [])
  }
- } catch (error) {
- console.warn('Error loading pending invitations:', error)
+ } catch {
+
  }
  }
 
@@ -608,8 +608,8 @@ export function TeamManagement({
  } else {
  toast.error(removeResult.error || t('dashboard.teams.error'))
  }
- } catch (error) {
- console.warn('Error removing trader:', error)
+ } catch {
+
  toast.error(t('dashboard.teams.error'))
  }
  }
@@ -625,8 +625,8 @@ export function TeamManagement({
  } else {
  toast.error(cancelResult.error || t('dashboard.teams.error'))
  }
- } catch (error) {
- console.warn('Error canceling invitation:', error)
+ } catch {
+
  toast.error(t('dashboard.teams.error'))
  }
  }
@@ -705,7 +705,6 @@ export function TeamManagement({
  <h1 className="text-2xl font-black tracking-tight text-foreground">{t('teams.management.component.title')}</h1>
  <p className="text-muted-foreground mt-2 text-sm">{t('teams.management.component.description')}</p>
  </div>
-
 
  {/* Teams Grid */}
  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

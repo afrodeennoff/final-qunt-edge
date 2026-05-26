@@ -389,8 +389,8 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
       // Reset table selection
       table.resetRowSelection()
       setSelectedTrades([])
-    } catch (error) {
-      console.error('Error grouping trades:', error)
+    } catch {
+
       toast.error(t('trade-table.deleteError'), {
         description: t('trade-table.deleteErrorDescription'),
       })
@@ -407,8 +407,8 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
       // Reset table selection
       table.resetRowSelection()
       setSelectedTrades([])
-    } catch (error) {
-      console.error('Error ungrouping trades:', error)
+    } catch {
+
       toast.error(t('trade-table.deleteError'), {
         description: t('trade-table.deleteErrorDescription'),
       })
@@ -435,8 +435,8 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           count: validTradeIds.length,
         }),
       })
-    } catch (error) {
-      console.error('Error deleting trades:', error)
+    } catch {
+
       toast.error(t('trade-table.deleteError'), {
         description: t('trade-table.deleteErrorDescription'),
       })

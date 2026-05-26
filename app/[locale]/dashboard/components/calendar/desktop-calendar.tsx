@@ -27,7 +27,6 @@ import { useUserStore } from "@/store/user-store"
 import { Account } from "@/lib/data-types"
 import { HIDDEN_GROUP_NAME } from "../filters/account-group-board"
 
-
 const WEEKDAYS_SUNDAY_START = [
  'calendar.weekdays.sun',
  'calendar.weekdays.mon',
@@ -47,7 +46,6 @@ const WEEKDAYS_MONDAY_START = [
  'calendar.weekdays.sat',
  'calendar.weekdays.sun'
 ] as const
-
 
 function getCalendarDays(monthStart: Date, monthEnd: Date, weekStartsOnMonday: boolean = false) {
  const weekStartsOn = weekStartsOnMonday ? 1 : 0
@@ -99,7 +97,6 @@ interface CalendarPnlProps {
  financialEvents?: FinancialEvent[];
  hideFiltersOnMobile?: boolean;
 }
-
 
 type ImpactLevel ="low" |"medium" |"high"
 const IMPACT_LEVELS: ImpactLevel[] = ["low","medium","high"]
@@ -365,8 +362,8 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  map.set(dateKey, []);
  }
  map.get(dateKey)!.push(event);
- } catch (error) {
- console.error('Error parsing event date:', error);
+ } catch {
+
  }
  });
  return map;
@@ -388,8 +385,8 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  map.set(dateKey, []);
  }
  map.get(dateKey)!.push(account);
- } catch (error) {
- console.error('Error parsing renewal date:', error);
+ } catch {
+
  }
  });
  return map;

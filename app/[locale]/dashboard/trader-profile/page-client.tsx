@@ -426,8 +426,8 @@ export default function TraderProfilePageClient() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const payload = (await res.json()) as { benchmark?: BenchmarkMetrics }
         if (alive) setBenchmark(payload.benchmark ?? null)
-      } catch (error) {
-        console.error('[TraderProfile] failed to fetch benchmark', error)
+      } catch {
+
         if (alive) setBenchmark(null)
       } finally {
         if (alive) setIsBenchmarkLoading(false)
@@ -1125,7 +1125,6 @@ export default function TraderProfilePageClient() {
             </div>
           </UnifiedSurface>
         </div>
-
 
         {/* ---- Trade History ---- */}
         <Suspense fallback={<TableSkeleton />}>

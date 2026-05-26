@@ -48,7 +48,7 @@ export function NewsletterEditor() {
  toast.error("Unable to retrieve video transcription")
  }
  } catch (error) {
- console.error('Error fetching transcript:', error)
+
  toast.error("Error retrieving transcription")
  } finally {
  setIsLoadingTranscript(false)
@@ -87,11 +87,11 @@ export function NewsletterEditor() {
  }))
  toast.success("Newsletter generated successfully!")
  } else {
- console.error('Newsletter generation failed:', result)
+
  toast.error("Failed to generate content")
  }
  } catch (error) {
- console.error('Error generating newsletter:', error)
+
  toast.error("An error occurred during generation")
  } finally {
  setGenerating(false)
@@ -119,7 +119,7 @@ export function NewsletterEditor() {
  // Restore content in case of error
  setContent(currentContent)
  toast.error(error instanceof Error ? error.message : "Failed to send newsletter")
- console.error(error)
+
  } finally {
  setLoading(false)
  }

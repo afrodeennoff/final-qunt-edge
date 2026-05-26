@@ -42,7 +42,6 @@ export function SyncCountdown({ lastSyncTime, isAutoSyncing, credentialId }: Syn
 
  performSyncForCredential(credentialId).catch(error => {
 
- console.error('Error triggering immediate sync:', error)
  })
  }
  return
@@ -65,7 +64,6 @@ export function SyncCountdown({ lastSyncTime, isAutoSyncing, credentialId }: Syn
  return () => clearInterval(interval)
 
  }, [lastSyncTime, syncInterval, credentialId, isAutoSyncing, performSyncForCredential])
-
 
  if (isAutoSyncing) {
  return <span className="text-primary">Syncing...</span>

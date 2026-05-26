@@ -1,5 +1,4 @@
 import { cn } from './utils'
-import React from 'react'
 
 interface RankedListProps {
   title?: string

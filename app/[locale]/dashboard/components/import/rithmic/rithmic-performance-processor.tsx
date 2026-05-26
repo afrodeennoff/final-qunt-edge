@@ -55,8 +55,8 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
  if (isNaN(d.getTime())) return;
  item.closeDate = d.toISOString();
  }
- } catch (e) {
- console.warn('[RithmicPerformance] Error processing dates for row', e);
+ } catch {
+
  return;
  }
  // On rithmic performance, the side is stored as 'B' or 'S'

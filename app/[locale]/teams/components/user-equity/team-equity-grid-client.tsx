@@ -109,8 +109,8 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  setUsers(prev => [...prev, ...data.users])
  setHasMore(data.hasMore)
  setCurrentPage(currentPage + 1)
- } catch (error) {
- console.error('Error loading more users:', error)
+ } catch {
+
  } finally {
  setIsLoadingMore(false)
  }
@@ -125,8 +125,8 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  setUsers(data.users)
  setHasMore(data.hasMore)
  setCurrentPage(2)
- } catch (error) {
- console.error('Error loading initial data:', error)
+ } catch {
+
  } finally {
  setIsInitialLoading(false)
  }
@@ -186,8 +186,8 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  document.body.removeChild(link)
  
  toast.success(t('teams.equity.exportSuccess'))
- } catch (error) {
- console.error('Error exporting trades:', error)
+ } catch {
+
  toast.error(t('teams.equity.exportError'))
  } finally {
  setIsExporting(false)

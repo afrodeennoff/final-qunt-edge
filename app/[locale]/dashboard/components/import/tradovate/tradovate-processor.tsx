@@ -13,7 +13,7 @@ import { PlatformProcessorProps } from '../config/platforms'
 
 const formatPnl = (pnl: string | undefined): { pnl: number, error?: string } => {
  if (typeof pnl !== 'string' || pnl.trim() === '') {
- console.warn('Invalid PNL value:', pnl);
+
  return { pnl: 0, error: 'Invalid PNL value' };
  }
 
@@ -26,7 +26,7 @@ const formatPnl = (pnl: string | undefined): { pnl: number, error?: string } => 
  const numericValue = parseFloat(formattedPnl.replace(/[$,]/g, ''));
 
  if (isNaN(numericValue)) {
- console.warn('Unable to parse PNL value:', pnl);
+
  return { pnl: 0, error: 'Unable to parse PNL value' };
  }
 
@@ -35,7 +35,7 @@ const formatPnl = (pnl: string | undefined): { pnl: number, error?: string } => 
 
 const convertTimeInPosition = (time: string | undefined): number | undefined => {
  if (typeof time !== 'string' || time.trim() === '') {
- console.warn('Invalid time value:', time);
+
  return 0;
  }
  if (/^\d+\.\d+$/.test(time)) {
@@ -55,13 +55,11 @@ const convertTimeInPosition = (time: string | undefined): number | undefined => 
 const newMappings: { [key: string]: string } = {"symbol":"instrument","qty":"quantity","pnl":"pnl","duration":"timeInPosition","buyFillId":"entryId","buyPrice":"entryPrice","boughtTimestamp":"entryDate","sellFillId":"closeId","sellPrice":"closePrice","soldTimestamp":"closeDate",
 }
 
-
 export default function TradovateProcessor({ headers, csvData, processedTrades, setProcessedTrades, accountNumbers }: PlatformProcessorProps) {
  const existingTrades = useTradingDomainStore((state => state.trades))
  const [missingCommissions, setMissingCommissions] = useState<{ [key: string]: number }>({})
  const [showCommissionPrompt, setShowCommissionPrompt] = useState(false)
  const t = useI18n()
-
 
  const existingCommissions = useMemo(() => {
  const commissions: { [key: string]: number } = {}
@@ -112,7 +110,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
  const [datePart, timePart] = cellValue.split(' ');
  
  if (!datePart || !timePart) {
- console.error(`Invalid date format: ${cellValue}`);
+
  item[key] = undefined;
  break;
  }
@@ -123,9 +121,6 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
  
  // Validate all components
  if ([year, month, day, hours, minutes, seconds].some(n => isNaN(n))) {
- console.error(`Invalid date components:`, {
- year, month, day, hours, minutes, seconds
- });
  item[key] = undefined;
  break;
  }
@@ -135,7 +130,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
  
  // Validate the created date
  if (isNaN(localDate.getTime())) {
- console.error(`Invalid date created:`, localDate);
+
  item[key] = undefined;
  break;
  }
@@ -146,8 +141,8 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
  // Format with explicit +00:00 timezone
  item[key] = utcDate.toISOString().replace('Z', '+00:00');
 
- } catch (error) {
- console.error(`Error parsing date: ${cellValue}`, error);
+ } catch {
+
  item[key] = undefined;
  }
  } else {
@@ -161,7 +156,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
  });
 
  if (!item.entryDate) {
- console.warn('Missing required entryDate');
+
  return;
  }
 

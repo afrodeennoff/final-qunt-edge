@@ -9,8 +9,6 @@ import { PlatformProcessorProps } from '../config/platforms'
 const newMappings: { [key: string]: string } = {"Account Name":"accountNumber","Close Date":"closeDate","Close Time":"closeTime","Commission":"commission","Duration":"timeInPosition","Entry Price":"entryPrice","Open Date":"entryDate","Open Time":"entryTime","Exit Price":"closePrice","Fee":"commission","Gross P&L":"pnl","Instrument":"instrument","Quantity":"quantity","Side":"side","Symbol":"instrument","Adjusted Cost":"entryId","Adjusted Proceeds":"closeId",
 }
 
-
-
 export default function TradezellaProcessor({ headers, csvData, setProcessedTrades }: PlatformProcessorProps) {
  const [trades, setTrades] = useState<Trade[]>([])
 

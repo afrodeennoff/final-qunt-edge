@@ -73,9 +73,9 @@ export function TradovateCredentialsManager() {
  toast.success(
  t("tradovateSync.multiAccount.accountDeleted", { accountId }),
  );
- } catch (error) {
+ } catch {
  toast.error(t("tradovateSync.multiAccount.deleteError", { accountId }));
- console.error("Delete error:", error);
+
  }
  },
  [t],
@@ -98,7 +98,7 @@ export function TradovateCredentialsManager() {
 
  // Redirect to Tradovate OAuth
  window.location.href = result.authUrl;
- } catch (error) {
+ } catch {
  toast.error(t("tradovateSync.error.oauthInit"));
  } finally {
  setIsLoading(false);
@@ -114,9 +114,9 @@ export function TradovateCredentialsManager() {
  setIsReloading(true);
  await loadAccounts();
  toast.success(t("tradovateSync.multiAccount.accountsReloaded"));
- } catch (error) {
+ } catch {
  toast.error(t("tradovateSync.multiAccount.reloadError"));
- console.error("Reload error:", error);
+
  } finally {
  setIsReloading(false);
  }
@@ -165,9 +165,9 @@ export function TradovateCredentialsManager() {
  result.error || t("tradovateSync.multiAccount.dailySyncTimeUpdateError"),
  );
  }
- } catch (error) {
+ } catch {
  toast.error(t("tradovateSync.multiAccount.dailySyncTimeUpdateError"));
- console.error("Update sync time error:", error);
+
  } finally {
  setIsSavingTime(false);
  }

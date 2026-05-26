@@ -120,7 +120,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  api:"/api/ai/analysis/accounts",
  }),
  onError: (error) => {
- console.error("Chat error:", error);
+
  },
  });
 
@@ -192,7 +192,6 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  lastUpdated,
  onStatusChange,
  ]);
-
 
  return (
  <Card className="relative">

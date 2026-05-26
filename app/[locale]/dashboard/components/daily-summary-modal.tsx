@@ -161,8 +161,8 @@ const downloadSummaryImage = async (cardEl: HTMLDivElement | null, setIsExportin
  link.href = image
  link.download = `QuntEdge-Recap-${format(new Date(), 'yyyy-MM-dd')}.png`
  link.click()
- } catch (err) {
- console.error("Failed to export image:", err)
+ } catch {
+
  } finally {
  setIsExporting(false)
  }
@@ -196,16 +196,16 @@ const shareSummaryImage = async (
  title: 'QuntEdge Trading Recap',
  text: 'Check out my trading performance today!'
  })
- } catch (err) {
- console.error("Shared failed:", err)
+ } catch {
+
  fallbackDownload()
  }
  } else {
  fallbackDownload()
  }
  })
- } catch (err) {
- console.error("Failed to share image:", err)
+ } catch {
+
  } finally {
  setIsExporting(false)
  }
@@ -351,7 +351,6 @@ const EditableTarget = ({ customTarget, isEditing, onStartEditing, onFinishEditi
  </button>
  )
 }
-
 
 export function DailySummaryModal() {
  const { calendarData, statistics: overallStats } = useDashboardStats()

@@ -1344,7 +1344,7 @@ export const DataProvider: React.FC<{
       if (requiresDate) {
         try {
           entryDate = toZonedTime(rawDate, timezoneName)
-        } catch {
+        } catch (error) {
           entryDate = rawDate
         }
 

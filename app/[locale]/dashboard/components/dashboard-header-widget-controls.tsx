@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
 import { useDashboard } from "@/app/[locale]/dashboard/dashboard-context";

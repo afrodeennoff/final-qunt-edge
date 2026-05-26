@@ -24,7 +24,8 @@ async function handleGet(request: NextRequest) {
       return apiError('AUTH_UNAUTHORIZED', 'No active session', 401, { requestId })
     }
 
-    const salt = 'rithmic-credential-encryption-v1'
+    // SECURITY: Per-user salt derived from user ID to prevent cross-user key collisions
+    const salt = `rithmic-credential-v2:${user.id}`
     const encoder = new TextEncoder()
     const keyMaterial = await crypto.subtle.importKey(
       'raw',

@@ -84,8 +84,8 @@ async function transcribeAllSegments(
 
  try {
  results.push(await transcribeSegment(segment))
- } catch (error) {
- console.error(`Failed to transcribe segment ${segment.index}:`, error)
+ } catch {
+
  results.push(createErrorResult(segment))
  }
  }
@@ -139,8 +139,8 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  }
 
  toast.success(`Transcription completed: ${results.length} segments processed`)
- } catch (error) {
- console.error('Transcription failed:', error)
+ } catch {
+
  toast.error('Transcription failed')
  } finally {
  setIsTranscribing(false)
@@ -156,8 +156,8 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
 
  // Reset copied state after 2 seconds
  setTimeout(() => setCopiedIndex(null), 2000)
- } catch (error) {
- console.error('Failed to copy text:', error)
+ } catch {
+
  toast.error('Copy failed')
  }
  }

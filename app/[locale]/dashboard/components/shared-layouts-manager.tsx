@@ -83,8 +83,8 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
  dateRange: layout.dateRange as { from: string; to?: string }
  }))
  setSharedLayouts(transformedLayouts)
- } catch (error) {
- console.error('Error loading shared layouts:', error)
+ } catch {
+
  toast.error(t('share.error'), {
  description: t('share.error.loadFailed'),
  })
@@ -110,8 +110,8 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
  await deleteShared(layoutToDelete.slug)
  setSharedLayouts(prev => prev.filter(layout => layout.slug !== layoutToDelete.slug))
  toast.success(t('share.deleteSuccess'))
- } catch (error) {
- console.error('Error deleting shared layout:', error)
+ } catch {
+
  toast.error(t('share.error'), {
  description: t('share.error.deleteFailed'),
  })
@@ -126,8 +126,8 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
  try {
  await navigator.clipboard.writeText(url)
  toast.success(t('share.urlCopied'))
- } catch (error) {
- console.error('Error copying URL:', error)
+ } catch {
+
  }
  }
 

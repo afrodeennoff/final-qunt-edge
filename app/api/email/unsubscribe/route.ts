@@ -2,6 +2,9 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { logger } from "@/lib/logger"
 import { verifyUnsubscribeToken } from "@/lib/unsubscribe-token"
+import { createRateLimitResponse, rateLimit } from "@/lib/rate-limit"
+
+const unsubscribeRateLimit = rateLimit({ limit: 30, window: 60_000, identifier: 'email-unsubscribe' })
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const TOKEN_REGEX = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/
@@ -19,6 +22,11 @@ function getRequestUrl(request: Request): URL {
 }
 
 export async function GET(request: Request) {
+  const rl = await unsubscribeRateLimit(request)
+  if (!rl.success) {
+    return createRateLimitResponse({ limit: rl.limit, remaining: rl.remaining, resetTime: rl.resetTime })
+  }
+
   try {
     const requestUrl = getRequestUrl(request)
     const searchParams = requestUrl.searchParams

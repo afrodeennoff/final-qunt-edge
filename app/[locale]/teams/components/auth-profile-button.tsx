@@ -19,7 +19,6 @@ import type { Subscription } from '@/prisma/generated/prisma'
 import { LogoutButton } from './logout-button'
 import { maskEmail } from '@/lib/redact-pii'
 
-
 export function AuthProfileButton() {
  const t = useI18n()
  const locale = useCurrentLocale()

@@ -66,8 +66,8 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
 
  setInputValue('')
  setIsOpen(false)
- } catch (error) {
- console.error('Failed to add tag:', error)
+ } catch {
+
  } finally {
  setIsUpdating(false)
  }
@@ -88,8 +88,8 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  tags: prev.tags.filter(t => t !== tagToRemove)
  }))
  }
- } catch (error) {
- console.error('Failed to remove tag:', error)
+ } catch {
+
  } finally {
  setIsUpdating(false)
  }
@@ -98,11 +98,11 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  return (
  <div className="flex items-center gap-2">
  <div className="flex gap-1 flex-wrap">
- {trade.tags.map((tag, index) => {
+ {trade.tags.map((tag) => {
  const metadata = tags.find(t => t.name.toLowerCase() === tag.toLowerCase())
  return (
  <div
- key={index}
+ key={tag}
  className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 border border-border/55 h-auto max-w-[150px] transition-[opacity,background-color,border-color] hover:border-border/65"
  style={{
  backgroundColor: metadata?.color || 'hsl(var(--foreground) / 0.35)',

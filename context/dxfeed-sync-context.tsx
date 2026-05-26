@@ -107,7 +107,7 @@ export function DxFeedSyncContextProvider({ children }: { children: React.ReactN
 
       setAccounts((result.data || []).map(normalizeSynchronization))
     } catch (error) {
-      console.warn('Failed to load DxFeed accounts:', error)
+
     }
   }, [])
 
@@ -207,7 +207,7 @@ export function DxFeedSyncContextProvider({ children }: { children: React.ReactN
         const message = `Sync error for account ${accountId}: ${
           error instanceof Error ? error.message : t('dxfeedSync.sync.unknownError')
         }`
-        console.warn('DxFeed sync error:', error)
+
         return { success: false, message }
       }
     },
@@ -254,7 +254,7 @@ export function DxFeedSyncContextProvider({ children }: { children: React.ReactN
           { id: toastId },
         )
       } catch (error) {
-        console.warn('Error during DxFeed bulk sync:', error)
+
         toast.error(t('dxfeedSync.sync.unknownError'), { id: toastId })
       } finally {
         isAutoSyncingRef.current = false
@@ -277,7 +277,7 @@ export function DxFeedSyncContextProvider({ children }: { children: React.ReactN
         }
       }
     } catch (error) {
-      console.warn('Error during DxFeed auto-sync check:', error)
+
     }
   }, [accounts, enableAutoSync, isSyncRouteActive, performSyncForAccount, syncInterval])
 

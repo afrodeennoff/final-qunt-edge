@@ -560,9 +560,9 @@ export function SubscriberTable() {
  setLoading(true)
  try {
  setSubscribers(await loadSubscribersData())
- } catch (error) {
+ } catch {
  toast.error("Failed to load subscribers")
- console.error(error)
+
  } finally {
  setLoading(false)
  }
@@ -572,8 +572,8 @@ export function SubscriberTable() {
  const checkInferenceNeeded = async () => {
  try {
  setNeedsInference(await loadNeedsInferenceCount())
- } catch (error) {
- console.error('Failed to check inference needed:', error)
+ } catch {
+
  }
  }
 
@@ -605,9 +605,9 @@ export function SubscriberTable() {
  const count = await importSubscriberCsv(file)
  toast.success(`Successfully imported ${count} subscribers`)
  await fetchSubscribers() // Refresh the list
- } catch (error) {
+ } catch {
  toast.error("Failed to import subscribers")
- console.error(error)
+
  } finally {
  setUploading(false)
  // Reset the file input
@@ -620,9 +620,9 @@ export function SubscriberTable() {
  await deleteSubscriberByEmail(email)
  toast.success("Subscriber deleted successfully")
  await fetchSubscribers() // Refresh the list
- } catch (error) {
+ } catch {
  toast.error("Failed to delete subscriber")
- console.error(error)
+
  }
  }
 
@@ -636,9 +636,9 @@ export function SubscriberTable() {
  try {
  await sendTestEmailToSubscriber(email, firstName, content)
  toast.success("Test email sent successfully")
- } catch (error) {
+ } catch {
  toast.error("Failed to send test email")
- console.error(error)
+
  } finally {
  setSendingTest(null)
  }
@@ -655,9 +655,9 @@ export function SubscriberTable() {
  }))
  await fetchSubscribers()
  await checkInferenceNeeded()
- } catch (error) {
+ } catch {
  toast.error(t('newsletter.admin.nameInference.error'))
- console.error(error)
+
  } finally {
  setInferringNames(false)
  }

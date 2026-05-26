@@ -195,7 +195,7 @@ model DashboardLayout {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user           User            @relation("UserDashboardLayout", fields: [userId], references: [auth_user_id], onDelete: Cascade)
+  user           User            @relation("UserDashboardLayout", fields: [userId], references: [id], onDelete: Cascade)
   versionHistory LayoutVersion[]
 
   @@index([userId])
@@ -355,6 +355,7 @@ model Trade {
   @@index([userId, accountNumber, entryDate]) // Composite for dashboard trade queries
   @@index([userId, pnl]) // Composite for PnL filtering
   @@index([userId, tags]) // GIN index for array column filtering
+  @@index([userId]) // Single-field index for userId-only lookups
   @@schema("public")
 }
 
@@ -926,6 +927,7 @@ model Notification {
   user User @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([createdAt])
   @@schema("public")
 }
 

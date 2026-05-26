@@ -61,7 +61,7 @@ export function AudioExtractor({ onAudioExtracted }: AudioExtractorProps) {
  }
 
  } catch (error) {
- console.error('Error extracting audio:', error)
+
  const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
  setError(`Failed to extract audio: ${errorMessage}`)
  } finally {
@@ -75,7 +75,6 @@ export function AudioExtractor({ onAudioExtracted }: AudioExtractorProps) {
  extractAudio(file)
  }
  }
-
 
  return (
  <div className="p-4 bg-muted/40">

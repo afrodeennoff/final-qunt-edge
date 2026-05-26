@@ -99,7 +99,7 @@ export default async function PropFirmsListPage({
         orderBy: { name: 'asc' },
       })
     } catch (error) {
-      console.warn('[Admin PropFirms] Falling back to reference rows:', error)
+
     }
   }
 

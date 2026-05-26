@@ -200,8 +200,8 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  setSearchValue("")
  toast.success(t('filters.commandMenu.dateRangeApplied'))
  }
- } catch (error) {
- console.error('Error parsing date:', error)
+ } catch {
+
  toast.error(t('filters.commandMenu.dateParseError'))
  } finally {
  setIsParsingDate(false)

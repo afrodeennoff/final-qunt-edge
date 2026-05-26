@@ -76,12 +76,12 @@ export default async function DealsPage({
       if (result.status === 'rejected') {
         hadFetchError = true
         const sources = ['deals', 'firms', 'overview', 'faqs']
-        console.warn(`DealsPage: Failed to fetch ${sources[index]}:`, result.reason)
+
       }
     })
-  } catch (error) {
+  } catch {
     hadFetchError = true
-    console.warn('DealsPage: Unexpected error:', error)
+
   }
 
   const faqSchema = faqs.length > 0

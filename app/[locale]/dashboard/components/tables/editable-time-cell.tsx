@@ -89,8 +89,8 @@ export function EditableTimeCell({
  await onUpdate(tradeIds, { [fieldType]: newDateTime.toISOString() })
  setIsEditing(false)
  setIsPopoverOpen(false)
- } catch (error) {
- console.error('Error updating time:', error)
+ } catch {
+
  } finally {
  setIsSaving(false)
  setHourOffset(0)

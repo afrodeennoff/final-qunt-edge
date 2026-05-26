@@ -61,8 +61,8 @@ export default function TeamJoinPage() {
       } else {
         setError(result.error || 'Failed to load invitation details')
       }
-    } catch (error) {
-      console.error('Error loading invitation details:', error)
+    } catch {
+
       setError('Failed to load invitation details')
     } finally {
       setIsLoading(false)
@@ -101,8 +101,8 @@ export default function TeamJoinPage() {
       } else {
         toast.error(result.error || t('teams.join.error'))
       }
-    } catch (error) {
-      console.error('Error joining team:', error)
+    } catch {
+
       toast.error(t('teams.join.error'))
     } finally {
       setIsJoining(false)

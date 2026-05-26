@@ -76,7 +76,7 @@ export default async function DashboardLayout({
     ? import('@/server/dashboard-bootstrap')
         .then(({ getDashboardBootstrap }) => getDashboardBootstrap())
         .catch((err) => {
-          console.warn('[Dashboard] Bootstrap failed, falling back to client loadData:', err)
+
           return null
         })
     : Promise.resolve(null)
@@ -97,7 +97,7 @@ export default async function DashboardLayout({
         id="init-dashboard-theme"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
-          __html: `(function(){try{var root=document.documentElement;${themeScript};root.setAttribute('data-theme','${userTheme ?? DEFAULT_DASHBOARD_THEME}')}catch(e){console.error('[Theme] Bootstrap failed',e)}})()`,
+          __html: `(function(){try{var root=document.documentElement;${themeScript};root.setAttribute("data-theme","${userTheme ?? DEFAULT_DASHBOARD_THEME}")}catch(e){}})()`,
         }}
       />
       <SidebarRootProviders

@@ -1,4 +1,3 @@
-import React from 'react'
 import { getI18n } from '@/locales/server'
 import CompletedTimeline from '../components/completed-timeline'
 import { getAllPosts } from '@/lib/posts'

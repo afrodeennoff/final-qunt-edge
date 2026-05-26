@@ -53,8 +53,8 @@ export default function OnboardingModal({ onDismiss }: OnboardingModalProps) {
       setTimeout(() => {
         onDismiss?.()
       }, 100)
-    } catch (error) {
-      console.error('Failed to update onboarding status:', error)
+    } catch {
+
     }
   }, [current, changeIsFirstConnection, onDismiss])
 
@@ -69,8 +69,8 @@ export default function OnboardingModal({ onDismiss }: OnboardingModalProps) {
       setTimeout(() => {
         onDismiss?.()
       }, 100)
-    } catch (error) {
-      console.error('Failed to update onboarding status:', error)
+    } catch {
+
     }
   }, [changeIsFirstConnection, onDismiss])
 

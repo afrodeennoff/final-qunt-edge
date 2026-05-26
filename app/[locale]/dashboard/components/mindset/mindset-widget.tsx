@@ -228,7 +228,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
 
  if (moodForDate) {
  // If we have data, update all the state values
- console.warn("We have data for the selected date")
+
  setEmotionValue(moodForDate.emotionValue ?? 50)
  setSelectedNews(moodForDate.selectedNews ?? [])
  setJournalContent(moodForDate.journalContent ??"")
@@ -257,7 +257,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
 
  return eventDate.getTime() === compareDate.getTime() && event.lang === locale
  } catch (error) {
- console.error('Error parsing event date:', error)
+
  return false
  }
  })
