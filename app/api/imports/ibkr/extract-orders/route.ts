@@ -1,11 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { withRateLimited } from '@/lib/api/with-api-route'
 import { orderSchema } from '../fifo-computation/schema'
 import { type FinancialInstrument } from './schema'
-import { addMoney, toMoneyNumber } from '@/lib/financial-math'
-import { normalizeToUtcTimestamp } from '@/lib/date-utils'
-import { apiError } from '@/lib/api-response'
-import { createRouteClient } from '@/lib/supabase/route-client'
 
 export const maxDuration = 60 // Allow up to 60 seconds for AI processing
 
@@ -21,23 +15,14 @@ interface TradeOrder {
   orderType?: string;
 }
 
-function parseNumericValue(rawValue: string): number {
-  const normalized = rawValue.replace(/,/g, '')
-  const parsed = Number(normalized)
-  if (!Number.isFinite(parsed)) {
-    throw new Error(`Invalid numeric value: ${rawValue}`)
-  }
-  return parsed
-}
-
 const parseOrders = (text: string): TradeOrder[] => {
   // First, let's extract just the trades section
   const tradesMatch = text.match(/Trades[\s\S]*?(?=Financial Instrument Information|$)/);
   if (!tradesMatch) return [];
 
-  
+
   const tradesText = tradesMatch[0];
-  
+
   // Pattern to match order lines - now more flexible with whitespace
   const orderPattern = /U\*\*\*(\d+)\s+([A-Z0-9]+)\s+(\d{4}-\d{2}-\d{2}),\s*(\d{2}:\d{2}:\d{2})\s+(\d{4}-\d{2}-\d{2})\s+-\s+(BUY|SELL)\s+(-?\d+)\s+([\d,]+\.\d+)\s+(-?[\d,]+\.\d+)\s+(-?[\d,]+\.\d+)\s+([\d,]+\.\d+)\s+([A-Z]+)\s+([OC])/g;
 
@@ -64,8 +49,8 @@ const parseOrders = (text: string): TradeOrder[] => {
     ] = match;
 
     // Convert datetime to ISO format
-    const isoTimestamp = normalizeToUtcTimestamp(`${date}T${time}Z`)
-    
+    const isoTimestamp = new Date(`${date}T${time}`).toISOString();
+
     // Generate a short unique ID: side + index + last 2 digits of seconds
     const timeSeconds = time.split(':')[2];
     const orderId = `${side.charAt(0)}${orderIndex}${timeSeconds}`;
@@ -74,17 +59,14 @@ const parseOrders = (text: string): TradeOrder[] => {
       rawSymbol: symbol,
       side: side as 'BUY' | 'SELL',
       quantity: Math.abs(parseInt(quantity)), // Use absolute value for quantity
-      price: parseNumericValue(price),
+      price: parseFloat(price.replace(/,/g, '')),
       timestamp: isoTimestamp,
-      commission: toMoneyNumber(
-        addMoney(parseNumericValue(fee), parseNumericValue(commission)),
-        8
-      ),
+      commission: parseFloat(fee.replace(/,/g, ''))+parseFloat(commission.replace(/,/g, '')),
       accountNumber: `U***${accountId}`,
       orderId: orderId,
       orderType: orderType
     });
-    
+
     orderIndex++;
   }
 
@@ -95,30 +77,31 @@ const parseOrders = (text: string): TradeOrder[] => {
 const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
   const instrumentInformationMatch = text.match(/Financial Instrument Information[\s\S]*?(?=Order Types|Generated:|$)/);
   if (!instrumentInformationMatch) return [];
-  
+
   const instrumentInformationText = instrumentInformationMatch[0];
-  
+  console.log('instrumentInformationText', instrumentInformationText);
+
   // The text appears to be concatenated, so let's work with it as a single string
   // Pattern: "Financial Instrument Information Symbol Description Conid ... Code Futures SYMBOL DESC CONID ..."
-  
+
   // First, find where the actual data starts after "Futures" (or other instrument types)
   const instrumentTypeMatch = instrumentInformationText.match(/(Futures|Options|Stocks|Bonds|ETFs?)/);
   if (!instrumentTypeMatch) return [];
-  
+
   const instrumentType = instrumentTypeMatch[1];
   const instrumentTypeIndex = instrumentInformationText.indexOf(instrumentType);
-  
+
   // Get the data part after the instrument type
   const dataText = instrumentInformationText.substring(instrumentTypeIndex + instrumentType.length).trim();
-  
+
   // Now parse the instruments - each instrument should have these fields:
   // Symbol, Description (like "MES 20JUN25"), Conid, Underlying, Exchange, Multiplier, Expiry, DeliveryMonth
   // Pattern matches: SYMBOL DESC1 DESC2 CONID UNDERLYING EXCHANGE MULTIPLIER EXPIRY DELIVERYMONTH
   const instrumentPattern = /([A-Z0-9]+)\s+([A-Z0-9]+\s+[A-Z0-9]+)\s+(\d+)\s+([A-Z0-9]+)\s+([A-Z]+)\s+(\d+)\s+(\d{4}-\d{2}-\d{2})\s+(\d{4}-\d{2})/g;
-  
+
   const instruments: FinancialInstrument[] = [];
   let match;
-  
+
   while ((match = instrumentPattern.exec(dataText)) !== null) {
     const [
       _,
@@ -131,7 +114,7 @@ const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
       expiry,
       deliveryMonth
     ] = match;
-    
+
     instruments.push({
       symbol: symbol.trim(),
       description: description.trim(),
@@ -144,28 +127,26 @@ const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
       instrumentType: instrumentType
     });
   }
-  
+
+  console.log('instruments', instruments)
   return instruments;
 };
 
-async function handlePost(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const supabase = createRouteClient(request)
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user?.id) {
-      return apiError('UNAUTHORIZED', 'Authentication required', 401)
-    }
-
     const json = await request.json()
     const { text } = json
 
     if (!text) {
-      return apiError('VALIDATION_FAILED', 'No text provided', 400)
+      return new Response(JSON.stringify({ error: 'No text provided' }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const parsedOrders = parseOrders(text)
     const instrumentInformation = parseInstrumentInformation(text)
-    
+
     // Validate orders against schema
     const validOrders = parsedOrders.filter(order => {
       try {
@@ -177,19 +158,18 @@ async function handlePost(request: NextRequest) {
       }
     });
 
-    return NextResponse.json({ 
-      orders: validOrders, 
-      instruments: instrumentInformation 
+    return new Response(JSON.stringify({
+      orders: validOrders,
+      instruments: instrumentInformation
+    }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error('Error processing request:', error);
-    return apiError('INTERNAL_ERROR', error instanceof Error ? error.message : 'Failed to process request', 500)
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Failed to process request' }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
-
-export const POST = withRateLimited(handlePost, {
-  rateLimitId: 'ibkr-extract',
-  rateLimitMax: 15,
-  rateLimitWindow: 60_000,
-  routeName: 'ibkr-extract',
-})
