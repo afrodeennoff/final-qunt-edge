@@ -1,5 +1,4 @@
 export const MCP_SERVER_NAME = 'qunt-edge-mcp'
 export const MCP_SERVER_VERSION = '1.0.0'
-export const MCP_AUTH_HEADER = 'authorization'
 export const MCP_KEY_PREFIX_USER = 'qunt_usr_'
 export const MCP_KEY_PREFIX_ADMIN = 'qunt_adm_'

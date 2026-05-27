@@ -1,6 +1,22 @@
 import type { McpAuthContext } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
 
+function parseOptionalDate(value: unknown): Date | undefined {
+  if (typeof value !== 'string') return undefined
+  const d = new Date(value)
+  return Number.isNaN(d.getTime()) ? undefined : d
+}
+
+function buildDateFilter(args: Record<string, unknown>): Record<string, unknown> | undefined {
+  const startDate = parseOptionalDate(args.startDate)
+  const endDate = parseOptionalDate(args.endDate)
+  if (!startDate && !endDate) return undefined
+  const filter: Record<string, unknown> = {}
+  if (startDate) filter.gte = startDate
+  if (endDate) filter.lte = endDate
+  return filter
+}
+
 export const standardTools = [
   {
     name: 'list_accounts',
@@ -103,11 +119,8 @@ async function listTrades(ctx: McpAuthContext, args: Record<string, unknown>) {
   const limit = Math.min(Number(args.limit) || 50, 200)
   const offset = Number(args.offset) || 0
   const where: Record<string, unknown> = { authUserId: ctx.userId }
-  if (args.startDate || args.endDate) {
-    where.entryDate = {}
-    if (args.startDate) (where.entryDate as Record<string, unknown>).gte = new Date(args.startDate as string)
-    if (args.endDate) (where.entryDate as Record<string, unknown>).lte = new Date(args.endDate as string)
-  }
+  const dateFilter = buildDateFilter(args)
+  if (dateFilter) where.entryDate = dateFilter
   const trades = await prisma.trade.findMany({
     where: where as any,
     orderBy: { entryDate: 'desc' },
@@ -119,11 +132,8 @@ async function listTrades(ctx: McpAuthContext, args: Record<string, unknown>) {
 
 async function getPerformanceSummary(ctx: McpAuthContext, args: Record<string, unknown>) {
   const where: Record<string, unknown> = { authUserId: ctx.userId }
-  if (args.startDate || args.endDate) {
-    where.entryDate = {}
-    if (args.startDate) (where.entryDate as Record<string, unknown>).gte = new Date(args.startDate as string)
-    if (args.endDate) (where.entryDate as Record<string, unknown>).lte = new Date(args.endDate as string)
-  }
+  const dateFilter = buildDateFilter(args)
+  if (dateFilter) where.entryDate = dateFilter
   const trades = await prisma.trade.findMany({ where: where as any, select: { pnl: true, commission: true } })
   const pnlValues = trades.map((t) => Number(t.pnl || 0))
   const netValues = trades.map((t) => Number(t.pnl || 0) - Number(t.commission || 0))

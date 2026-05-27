@@ -7,20 +7,20 @@ import { MCP_SERVER_NAME, MCP_SERVER_VERSION } from '@/lib/mcp-constants'
 const ALL_TOOLS = [...standardTools, ...adminTools]
 
 export async function POST(request: NextRequest) {
+  let reqId: unknown = null
   try {
     const authCtx = await authenticateMcpRequest(request.headers.get('authorization'))
 
     const body = await request.json()
     const { method, params } = body as { method?: string; params?: Record<string, unknown> }
+    reqId = params?.id ?? null
 
     if (!method) {
       return Response.json(
-        { jsonrpc: '2.0', error: { code: -32600, message: 'Invalid request' }, id: null },
+        { jsonrpc: '2.0', error: { code: -32600, message: 'Invalid request' }, id: reqId },
         { status: 400 },
       )
     }
-
-    const reqId = (params as Record<string, unknown>)?.id ?? null
 
     if (method === 'initialize') {
       return Response.json({
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (method === 'tools/call') {
-      const toolName = params?.name as string | undefined
+      const toolName = params?.name
       const toolArgs = (params?.arguments ?? {}) as Record<string, unknown>
 
       if (!toolName) {
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
         : message.includes('not found') ? 404
           : 500
     return Response.json(
-      { jsonrpc: '2.0', error: { code: -32000, message }, id: null },
+      { jsonrpc: '2.0', error: { code: -32000, message }, id: reqId },
       { status },
     )
   }

@@ -26,25 +26,25 @@ function generateApiKey(role: 'user' | 'admin'): { key: string; keyPrefix: strin
   return { key, keyPrefix: prefix, keyHash }
 }
 
-export async function generateUserApiKey(name: string): Promise<{ success: true; result: ApiKeyResult } | { success: false; error: string }> {
+async function generateApiKeyForUser(
+  name: string,
+  role: 'user' | 'admin',
+  user: { id: string },
+): Promise<{ success: true; result: ApiKeyResult } | { success: false; error: string }> {
+  if (!name || name.trim().length < 2 || name.trim().length > 64) {
+    return { success: false, error: 'Key name must be 2-64 characters' }
+  }
+
+  const { key, keyPrefix, keyHash } = generateApiKey(role)
+
   try {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user?.id) return { success: false, error: 'Unauthorized' }
-
-    if (!name || name.trim().length < 2 || name.trim().length > 64) {
-      return { success: false, error: 'Key name must be 2-64 characters' }
-    }
-
-    const { key, keyPrefix, keyHash } = generateApiKey('user')
-
     const apiKey = await prisma.apiKey.create({
       data: {
         key: keyHash,
         keyPrefix,
         name: name.trim(),
         userId: user.id,
-        role: 'user',
+        role,
       },
     })
 
@@ -55,11 +55,23 @@ export async function generateUserApiKey(name: string): Promise<{ success: true;
         key,
         keyPrefix,
         name: apiKey.name,
-        role: 'user',
+        role,
         createdAt: apiKey.createdAt,
         lastUsedAt: apiKey.lastUsedAt,
       },
     }
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : `Failed to generate ${role} API key` }
+  }
+}
+
+export async function generateUserApiKey(name: string): Promise<{ success: true; result: ApiKeyResult } | { success: false; error: string }> {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user?.id) return { success: false, error: 'Unauthorized' }
+
+    return generateApiKeyForUser(name, 'user', user)
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : 'Failed to generate API key' }
   }
@@ -73,30 +85,7 @@ export async function generateAdminApiKey(name: string): Promise<{ success: true
       return { success: false, error: 'Forbidden: Admin access required' }
     }
 
-    const { key, keyPrefix, keyHash } = generateApiKey('admin')
-
-    const apiKey = await prisma.apiKey.create({
-      data: {
-        key: keyHash,
-        keyPrefix,
-        name: name.trim(),
-        userId: user.id,
-        role: 'admin',
-      },
-    })
-
-    return {
-      success: true,
-      result: {
-        id: apiKey.id,
-        key,
-        keyPrefix,
-        name: apiKey.name,
-        role: 'admin',
-        createdAt: apiKey.createdAt,
-        lastUsedAt: apiKey.lastUsedAt,
-      },
-    }
+    return generateApiKeyForUser(name, 'admin', user)
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : 'Failed to generate admin API key' }
   }
