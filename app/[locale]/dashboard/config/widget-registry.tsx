@@ -17,30 +17,30 @@ const SmartInsightsWidget = dynamic(
   () => import('../components/widgets/smart-insights-widget').then((m) => m.SmartInsightsWidget),
   { loading: () => widgetFallback }
 )
-const EquityChart = dynamic(() => import('./charts/client/equity-chart'), { loading: () => widgetFallback })
-const TickDistributionChart = dynamic(() => import('./charts/client/tick-distribution'), { loading: () => widgetFallback })
-const PNLChart = dynamic(() => import('./charts/client/pnl-bar-chart'), { loading: () => widgetFallback })
+const EquityChart = dynamic(() => import('../components/charts/client/equity-chart'), { loading: () => widgetFallback })
+const TickDistributionChart = dynamic(() => import('../components/charts/client/tick-distribution'), { loading: () => widgetFallback })
+const PNLChart = dynamic(() => import('../components/charts/client/pnl-bar-chart'), { loading: () => widgetFallback })
 const TimeOfDayTradeChart = dynamic(
-  () => import('./charts/client/pnl-time-bar-chart'),
+  () => import('../components/charts/client/pnl-time-bar-chart'),
   { loading: () => widgetFallback }
 )
-const TimeInPositionChart = dynamic(() => import('./charts/client/time-in-position'), { loading: () => widgetFallback })
+const TimeInPositionChart = dynamic(() => import('../components/charts/client/time-in-position'), { loading: () => widgetFallback })
 const TimeRangePerformanceChart = dynamic(
-  () => import('./charts/client/time-range-performance'),
+  () => import('../components/charts/client/time-range-performance'),
   { loading: () => widgetFallback }
 )
-const WeekdayPNLChart = dynamic(() => import('./charts/client/weekday-pnl'), { loading: () => widgetFallback })
-const PnLBySideChart = dynamic(() => import('./charts/client/pnl-by-side'), { loading: () => widgetFallback })
+const WeekdayPNLChart = dynamic(() => import('../components/charts/client/weekday-pnl'), { loading: () => widgetFallback })
+const PnLBySideChart = dynamic(() => import('../components/charts/client/pnl-by-side'), { loading: () => widgetFallback })
 const PnLPerContractChart = dynamic(
-  () => import('./charts/client/pnl-per-contract'),
+  () => import('../components/charts/client/pnl-per-contract'),
   { loading: () => widgetFallback }
 )
 const PnLPerContractDailyChart = dynamic(
-  () => import('./charts/client/pnl-per-contract-daily'),
+  () => import('../components/charts/client/pnl-per-contract-daily'),
   { loading: () => widgetFallback }
 )
 const ContractQuantityChart = dynamic(
-  () => import('./charts/client/contract-quantity'),
+  () => import('../components/charts/client/contract-quantity'),
   { loading: () => widgetFallback }
 )
 const AveragePositionTimeCard = dynamic(
@@ -69,7 +69,7 @@ const RiskRewardRatioCard = dynamic(
 )
 const CalendarPnl = dynamic(() => import('../components/calendar/calendar-widget'), { loading: () => widgetFallback })
 const CommissionsPnLChart = dynamic(
-  () => import('./charts/client/commissions-pnl'),
+  () => import('../components/charts/client/commissions-pnl'),
   { loading: () => widgetFallback }
 )
 const StatisticsWidget = dynamic(
@@ -85,7 +85,7 @@ const MoodSelector = dynamic(
   { loading: () => widgetFallback }
 )
 const TradeDistributionChart = dynamic(
-  () => import('./charts/client/trade-distribution'),
+  () => import('../components/charts/client/trade-distribution'),
   { loading: () => widgetFallback }
 )
 const AccountsOverview = dynamic(
@@ -101,7 +101,7 @@ const ProfitFactorCard = dynamic(
   { loading: () => widgetFallback }
 )
 const DailyTickTargetChart = dynamic(
-  () => import('./charts/client/daily-tick-target'),
+  () => import('../components/charts/client/daily-tick-target'),
   { loading: () => widgetFallback }
 )
 const MindsetWidget = dynamic(
