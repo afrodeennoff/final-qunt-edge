@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTradovateSyncStore } from '@/store/tradovate-sync-store'
-import { handleTradovateCallback } from '../components/import/tradovate/actions'
+import { handleTradovateCallback } from '../components/import/tradovate/sync/actions'
 import { useI18n } from '@/locales/client'
 import { useCurrentLocale } from '@/locales/client'
 import { useSyncContext } from '@/context/sync-context'

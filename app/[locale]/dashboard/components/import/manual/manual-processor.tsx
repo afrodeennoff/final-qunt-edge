@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from 'sonner'
 import { Trade } from '@/prisma/generated/prisma/browser'
 import { useI18n } from '@/locales/client'
-import { useTradesStore } from '@/store/trades-store'
+import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { generateTradeHash } from '@/lib/utils'
 import { PlatformProcessorProps } from '../config/platforms'
 import { Plus, Trash2, Edit2 } from 'lucide-react'
@@ -42,7 +42,7 @@ const initialFormData: TradeFormData = {
 }
 
 export default function ManualProcessor({ processedTrades, setProcessedTrades, accountNumbers }: PlatformProcessorProps) {
-  const existingTrades = useTradesStore((state => state.trades))
+  const existingTrades = useTradingDomainStore((state => state.trades))
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [formData, setFormData] = useState<TradeFormData>(initialFormData)

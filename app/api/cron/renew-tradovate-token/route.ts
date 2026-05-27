@@ -245,7 +245,7 @@ async function performDailySync(synchronization: SynchronizationRecord): Promise
     }
 
     // Dynamically importing the getTradovateTrades action to avoid circular dependencies
-    const { getTradovateTrades } = await import('@/app/[locale]/dashboard/components/import/tradovate/actions');
+    const { getTradovateTrades } = await import('@/server/imports/tradovate-actions');
 
     // Fetch and save trades
     const result = await getTradovateTrades(accessToken, { userId: synchronization.userId, accountId: synchronization.accountId });

@@ -23,7 +23,7 @@ import { platforms } from "./config/platforms";
 import { FormatPreview } from "./components/format-preview";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store/user-store";
-import { useTradesStore } from "@/store/trades-store";
+import { useTradingDomainStore } from "@/store/trading-domain-store";
 import { usePdfProcessingStore } from "@/store/pdf-processing-store";
 import PdfUpload from "./ibkr-pdf/pdf-upload";
 import PdfProcessing from "./ibkr-pdf/pdf-processing";
@@ -68,8 +68,8 @@ export default function ImportButton() {
   const [selectedAccountNumbers, setSelectedAccountNumbers] = useState<string[]>([]);
   const user = useUserStore((state) => state.user);
   const supabaseUser = useUserStore((state) => state.supabaseUser);
-  const trades = useTradesStore((state) => state.trades);
-  const setTradesStore = useTradesStore((state) => state.setTrades);
+  const trades = useTradingDomainStore((state) => state.trades);
+  const setTradesStore = useTradingDomainStore((state) => state.setTrades);
   const { refreshTradesOnly } = useData();
   const t = useI18n();
 
