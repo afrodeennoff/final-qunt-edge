@@ -20,7 +20,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { themeVarsToStyle, type EmbedThemeVars } from "../theme";
+import { themeVarsToStyle, type EmbedThemeVars } from "../../theme";
 import { useI18n } from "@/locales/client";
 
 function getTimeRangeKey(timeInPosition: number): string {

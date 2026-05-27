@@ -30,7 +30,7 @@ import { WidgetSize } from "@/app/[locale]/dashboard/types/dashboard";
 import { useI18n } from "@/locales/client";
 import { formatInTimeZone } from "date-fns-tz";
 import { Button } from "@/components/ui/button";
-import { useUserStore } from "../../../../../store/user-store";
+import { useUserStore } from "@/store/user-store";
 
 interface TimeOfDayTradeChartProps {
  size?: WidgetSize;
