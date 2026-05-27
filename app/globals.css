@@ -569,7 +569,7 @@
   --subtle-foreground: #666666;
 
   /* ── BRAND (Deep Purple — default palette locked for public pages) ── */
-  --primary: hsl(263, 85%, 65%);
+  --primary: hsl(263, 88%, 68%);
   --primary-foreground: #000000;
   --accent: hsl(263, 60%, 15%);
   --accent-foreground: hsl(263, 85%, 65%);
@@ -601,8 +601,8 @@
   --semantic-info-border: 263 85% 65% / 0.25;
 
   /* ── BORDER & RING — Deep Purple only for focus/ring ── */
-  --border: hsl(260, 20%, 15%);
-  --border-subtle: hsl(260, 20%, 12%);
+  --border: hsl(263, 24%, 16%);
+  --border-subtle: hsl(263, 22%, 13%);
   --input: hsl(260, 20%, 12%);
   --ring: hsl(263, 85%, 65%);
 
@@ -725,7 +725,7 @@
   --subtle-foreground: #666666;
 
   /* Brand: Deep Purple (default) */
-  --primary: hsl(263, 85%, 65%);
+  --primary: hsl(263, 88%, 68%);
   --primary-foreground: #000000;
   --accent: hsl(263, 60%, 15%);
   --accent-foreground: hsl(263, 85%, 65%);
@@ -739,8 +739,8 @@
   --destructive-foreground: #FFFFFF;
 
   /* Clean minimal borders */
-  --border: hsl(260, 20%, 15%);
-  --border-subtle: hsl(260, 20%, 12%);
+  --border: hsl(263, 24%, 16%);
+  --border-subtle: hsl(263, 22%, 13%);
   --input: hsl(260, 20%, 12%);
   --ring: hsl(263, 85%, 65%);
 
@@ -3989,23 +3989,23 @@ img[loading='lazy'] {
   --popover: #000000 !important;
   --sidebar: #000000 !important;
   --sidebar-background: #000000 !important;
-  --muted: hsl(260, 20%, 8%) !important;
-  --border: hsl(260, 20%, 15%) !important;
+  --muted: hsl(263, 22%, 9%) !important;
+  --border: hsl(263, 24%, 16%) !important;
   --input: hsl(260, 20%, 12%) !important;
   /* Pure black surface fallback */
   background: #000000 !important;
 
   /* Locked Deep Purple accents from default palette (cmlh0x713000104jrgmds6vcd) */
-  --primary: hsl(263, 85%, 65%) !important;
+  --primary: hsl(263, 88%, 68%) !important;
   --primary-foreground: hsl(260, 25%, 2%) !important;
   --ring: hsl(263, 85%, 65%) !important;
   --accent: hsl(263, 60%, 15%) !important;
   --accent-foreground: hsl(263, 85%, 65%) !important;
   --warning: hsl(263, 85%, 65%) !important;
   --warning-foreground: #000000 !important;
-  --chart-1: hsl(263, 85%, 65%) !important;
-  --chart-2: hsl(190, 80%, 55%) !important;
-  --chart-3: hsl(150, 70%, 50%) !important;
-  --chart-4: hsl(280, 80%, 70%) !important;
-  --chart-5: hsl(330, 90%, 65%) !important;
+  --chart-1: hsl(263, 88%, 68%) !important;
+  --chart-2: hsl(190, 85%, 58%) !important;
+  --chart-3: hsl(150, 75%, 53%) !important;
+  --chart-4: hsl(280, 85%, 73%) !important;
+  --chart-5: hsl(330, 95%, 68%) !important;
 }

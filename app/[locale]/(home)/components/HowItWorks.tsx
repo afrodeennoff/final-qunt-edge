@@ -39,21 +39,24 @@ export function HowItWorks() {
             return (
               <div
                 key={index}
-                className="group relative rounded-2xl border border-primary/10 bg-primary/5 p-8 transition hover:border-primary/30"
+                className="group relative rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/[0.04] to-transparent p-8 transition-all duration-300 hover:border-primary/30 hover:shadow-[0_0_25px_-12px] hover:shadow-primary/10"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary/20 bg-primary/5 text-sm font-mono tracking-[1px] text-primary">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/60 text-sm font-mono tracking-[1px] text-white shadow-sm">
                     {step.number}
                   </div>
-                  <Icon className="h-5 w-5 text-primary/70 transition group-hover:text-primary" />
+                  <Icon className="h-5 w-5 text-primary/60 transition group-hover:text-primary" />
                 </div>
 
                 <h3 className="mt-6 text-xl font-medium tracking-tight">{step.title}</h3>
                 <p className="mt-3 text-[14.5px] leading-relaxed text-muted-foreground/90">{step.desc}</p>
 
                 {index < 2 && (
-                  <div className="absolute -right-3 top-10 hidden text-primary/30 md:block">
-                    <ArrowRight className="h-4 w-4" />
+                  <div className="absolute -right-3 top-10 hidden md:block">
+                    <div className="flex items-center gap-0.5 text-primary/30">
+                      <span className="h-px w-4 bg-gradient-to-r from-primary/20 to-transparent" />
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </div>
                   </div>
                 )}
               </div>

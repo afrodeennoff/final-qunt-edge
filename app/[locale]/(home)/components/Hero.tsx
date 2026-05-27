@@ -9,9 +9,11 @@ export default async function Hero({ locale }: { locale: string }) {
 
   return (
     <MarketingSection
-      className="pt-16 pb-12 sm:pt-20 sm:pb-16 lg:pt-24 lg:pb-20"
+      className="relative pt-16 pb-12 sm:pt-20 sm:pb-16 lg:pt-24 lg:pb-20"
       innerClassName="max-w-[1280px]"
     >
+      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-[500px] w-[800px] max-w-full bg-[radial-gradient(ellipse_at_center,oklch(0.68_0.24_280_/_0.08),transparent_70%)]" />
+
       <div className="relative grid items-center gap-8 lg:grid-cols-2">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">
@@ -19,7 +21,10 @@ export default async function Hero({ locale }: { locale: string }) {
           </div>
 
           <h1 className="mt-6 text-balance text-[56px] font-[250] leading-[0.96] tracking-tight text-foreground sm:text-[72px] lg:text-[88px]">
-            The <span className="text-primary">command center</span>
+            The{' '}
+            <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+              command center
+            </span>
             <br />for serious traders.
           </h1>
 
@@ -59,7 +64,7 @@ export default async function Hero({ locale }: { locale: string }) {
         </div>
 
         <div className="relative hidden lg:block">
-          <div className="overflow-hidden rounded-xl border border-border bg-card">
+          <div className="overflow-hidden rounded-xl border border-border bg-card shadow-[0_0_35px_-12px] shadow-primary/20">
             <div className="flex items-center gap-2 border-b border-border bg-muted/60 px-3 py-2 text-[10px] text-muted-foreground">
               <div className="flex gap-1">
                 <div className="h-1.5 w-1.5 rounded-full bg-destructive" />
@@ -85,6 +90,16 @@ export default async function Hero({ locale }: { locale: string }) {
 
             <div className="relative h-24 border-t border-border bg-card px-4 py-4">
               <svg viewBox="0 0 600 80" className="h-full w-full" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.25" />
+                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M0,62 Q60,48 110,52 T210,34 T310,41 T410,22 T500,28 T600,12 L600,80 L0,80 Z"
+                  fill="url(#chartGrad)"
+                />
                 <path
                   d="M0,62 Q60,48 110,52 T210,34 T310,41 T410,22 T500,28 T600,12"
                   fill="none"
@@ -93,7 +108,10 @@ export default async function Hero({ locale }: { locale: string }) {
                   strokeLinecap="round"
                 />
               </svg>
-              <div className="absolute right-3 top-2 rounded bg-muted px-1.5 py-px text-[9px] font-mono text-muted-foreground/70">LIVE</div>
+              <div className="absolute right-3 top-2 flex items-center gap-1.5 rounded bg-muted px-1.5 py-px text-[9px] font-mono text-muted-foreground/70">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
+                LIVE
+              </div>
             </div>
           </div>
         </div>

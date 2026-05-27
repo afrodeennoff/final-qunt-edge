@@ -22,19 +22,20 @@ export function LiveInAction() {
       </div>
 
       {/* Cinematic video surface */}
-      <div className="group relative mx-auto mt-10 max-w-5xl overflow-hidden rounded-2xl border border-primary/15 bg-card shadow-sm">
+      <div className="group relative mx-auto mt-10 max-w-5xl overflow-hidden rounded-2xl border border-primary/20 bg-card shadow-[inset_0_0_40px_-20px] shadow-primary/10">
         <div className="aspect-video w-full bg-[linear-gradient(180deg,var(--background)_0%,var(--background)_100%)] flex items-center justify-center relative">
+          <div className="absolute inset-0 bg-gradient-to-t from-primary/[0.04] to-transparent" />
           <div className="absolute inset-0 bg-[radial-gradient(#1a1a1a_0.8px,transparent_1px)] bg-[length:4px_4px] opacity-40" />
 
           <button
             onClick={() => setOpen(true)}
-            className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full border border-primary/25 bg-primary/10 transition-all duration-200 group-hover:border-primary/60 group-hover:bg-primary/15 active:scale-[0.985]"
+            className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full border border-primary/30 bg-primary/10 transition-all duration-200 group-hover:border-primary/60 group-hover:bg-primary/15 active:scale-[0.985] animate-[pulse-ring_2s_ease-in-out_infinite]"
             aria-label="Play demo video"
           >
             <Play className="h-7 w-7 text-white/90 ml-0.5" />
           </button>
 
-          <div className="absolute bottom-5 right-5 rounded hsl(var(--background)/0.6) px-2.5 py-0.5 text-[10px] font-mono tracking-[2px] text-white/50">
+          <div className="absolute bottom-5 right-5 rounded bg-background/60 px-2.5 py-0.5 text-[10px] font-mono tracking-[2px] text-white/50 backdrop-blur-sm">
             2:14 • REAL SESSION
           </div>
         </div>
@@ -59,7 +60,7 @@ export function LiveInAction() {
             </video>
             <button
               onClick={() => setOpen(false)}
-              className="absolute right-4 top-4 z-50 rounded-full hsl(var(--background)/0.6) p-2 text-white/80 hover:hsl(var(--background)/0.8) hover:text-white"
+              className="absolute right-4 top-4 z-50 rounded-full bg-background/60 p-2 text-white/80 hover:bg-background/80 hover:text-white"
             >
               <X className="h-5 w-5" />
             </button>

@@ -69,6 +69,12 @@
   100% { transform: translateX(100%); }
 }
 
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 oklch(0.68 0.24 280 / 0.35); }
+  70% { box-shadow: 0 0 0 16px oklch(0.68 0.24 280 / 0); }
+  100% { box-shadow: 0 0 0 0 oklch(0.68 0.24 280 / 0); }
+}
+
 @keyframes skeletonPulse {
   0%, 100% { opacity: 0.4; }
   50% { opacity: 0.7; }
@@ -176,7 +182,8 @@
   .animate-scale-in,
   .animate-stagger > *,
   .shimmer-sweep::after,
-  .skeleton-pulse {
+  .skeleton-pulse,
+  [style*="pulse-ring"] {
     animation: none !important;
     transition: none !important;
     transform: none !important;
