@@ -1,115 +1,84 @@
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from "next/server";
 import {
   getRithmicSynchronizations,
   setRithmicSynchronization,
   removeRithmicSynchronization,
-} from '@/server/imports/rithmic-sync-actions'
-import { createRouteClient } from '@/lib/supabase/route-client'
-import { z } from 'zod'
-import { parseJson, toValidationErrorResponse } from '@/app/api/_utils/validate'
-import { apiError } from '@/lib/api-response'
-import { apiSuccess, withRateLimited } from '@/lib/api/with-api-route'
+} from "@/app/[locale]/dashboard/components/import/rithmic/sync/actions";
+import { Synchronization } from "@/prisma/generated/prisma/client";
 
-const rithmicSyncWriteBodySchema = z
-  .object({
-    accountId: z.string().min(1),
-  })
-  .strict()
-const rithmicSyncDeleteBodySchema = z.object({
-  accountId: z.string().min(1),
-})
-
-async function requireSessionUser(request: Request) {
-  const supabase = createRouteClient(request)
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser()
-  return { user, error }
-}
-
-async function handleGet(request: NextRequest) {
-  const requestId = crypto.randomUUID()
+export async function GET(request: NextRequest) {
   try {
-    const { user, error } = await requireSessionUser(request)
-    if (error || !user?.id) {
-      return apiError('UNAUTHORIZED', 'Unauthorized', 401, { requestId })
-    }
-
-    const synchronizations = await getRithmicSynchronizations()
-    return apiSuccess({ success: true, data: synchronizations })
+    const synchronizations = await getRithmicSynchronizations();
+    return NextResponse.json({ success: true, data: synchronizations });
   } catch (error) {
-    console.error('Error fetching Rithmic synchronizations:', error)
-    return apiError('INTERNAL_ERROR', 'Failed to fetch synchronizations', 500, { requestId })
+    console.error("Error fetching Rithmic synchronizations:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch synchronizations",
+      },
+      { status: 500 }
+    );
   }
 }
 
-async function handlePost(request: NextRequest) {
-  const requestId = crypto.randomUUID()
+export async function POST(request: NextRequest) {
   try {
-    const { user, error } = await requireSessionUser(request)
-    if (error || !user?.id) {
-      return apiError('UNAUTHORIZED', 'Unauthorized', 401, { requestId })
-    }
+    const body = await request.json();
+    const synchronization: Partial<Synchronization> = body;
 
-    const { accountId } = await parseJson(request, rithmicSyncWriteBodySchema)
-    await setRithmicSynchronization({ accountId, service: 'rithmic' })
-    return apiSuccess({
+    await setRithmicSynchronization(synchronization);
+    return NextResponse.json({
       success: true,
-      message: 'Synchronization updated successfully',
-    })
+      message: "Synchronization updated successfully",
+    });
   } catch (error) {
-    const validationResponse = toValidationErrorResponse(error)
-    if (validationResponse.status !== 500) return validationResponse
-    console.error('Error setting Rithmic synchronization:', error)
-    return apiError('INTERNAL_ERROR', 'Failed to update synchronization', 500, { requestId })
+    console.error("Error setting Rithmic synchronization:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to update synchronization",
+      },
+      { status: 500 }
+    );
   }
 }
 
-async function handleDelete(request: NextRequest) {
-  const requestId = crypto.randomUUID()
+export async function DELETE(request: NextRequest) {
   try {
-    const { user, error } = await requireSessionUser(request)
-    if (error || !user?.id) {
-      return apiError('UNAUTHORIZED', 'Unauthorized', 401, { requestId })
+    const body = await request.json();
+    const accountId = body?.accountId as string | undefined;
+
+    if (!accountId) {
+      return NextResponse.json(
+        { success: false, message: "accountId is required" },
+        { status: 400 }
+      );
     }
 
-    const { accountId } = await parseJson(request, rithmicSyncDeleteBodySchema)
+    await removeRithmicSynchronization(accountId);
 
-    const result = await removeRithmicSynchronization(accountId)
-    if (result.deletedCount === 0) {
-      return apiError('NOT_FOUND', 'Synchronization not found', 404, { requestId })
-    }
-
-    return apiSuccess({
+    return NextResponse.json({
       success: true,
-      message: 'Synchronization removed successfully',
-    })
+      message: "Synchronization removed successfully",
+    });
   } catch (error) {
-    const validationResponse = toValidationErrorResponse(error)
-    if (validationResponse.status !== 500) return validationResponse
-    console.error('Error deleting Rithmic synchronization:', error)
-    return apiError('INTERNAL_ERROR', 'Failed to delete synchronization', 500, { requestId })
+    console.error("Error deleting Rithmic synchronization:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to delete synchronization",
+      },
+      { status: 500 }
+    );
   }
 }
-
-export const GET = withRateLimited(handleGet, {
-  rateLimitId: 'rithmic-sync-read',
-  rateLimitMax: 120,
-  rateLimitWindow: 60_000,
-  routeName: 'rithmic/synchronizations:get',
-})
-
-export const POST = withRateLimited(handlePost, {
-  rateLimitId: 'rithmic-sync-write',
-  rateLimitMax: 20,
-  rateLimitWindow: 60_000,
-  routeName: 'rithmic/synchronizations:post',
-})
-
-export const DELETE = withRateLimited(handleDelete, {
-  rateLimitId: 'rithmic-sync-write',
-  rateLimitMax: 20,
-  rateLimitWindow: 60_000,
-  routeName: 'rithmic/synchronizations:delete',
-})
