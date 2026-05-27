@@ -5,9 +5,6 @@ import { handleAdminMcpToolCall, adminTools } from '@/server/mcp-admin-tools'
 
 const ALL_TOOLS = [...standardTools, ...adminTools]
 
-export const runtime = 'nodejs'
-export const dynamic = 'force-dynamic'
-
 export async function POST(request: NextRequest) {
   try {
     const authCtx = await authenticateMcpRequest(request.headers.get('authorization'))
