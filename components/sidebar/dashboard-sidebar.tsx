@@ -5,7 +5,6 @@ import { SUPPORTED_TIMEZONES } from "@/lib/constants/timezones"
 import { NAV_ICON_SIZE } from "@/lib/constants/sidebar"
 import {
     Activity,
-    BarChart3,
     BookOpen,
     Building2,
     CreditCard,
@@ -19,7 +18,6 @@ import {
     TrendingUp,
     Shield,
     Users,
-    Compass,
     DollarSign,
 } from "lucide-react"
 
@@ -74,14 +72,8 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
         // ── Review ──
         {
             href: `/${locale}/dashboard/analytics`,
-            icon: <Compass className={NAV_ICON_SIZE} />,
-            label: "Analytics",
-            group: "Review"
-        },
-        {
-            href: `/${locale}/dashboard/analytics`,
-            icon: <BarChart3 className={NAV_ICON_SIZE} />,
-            label: "Reports",
+            icon: <Sparkles className={NAV_ICON_SIZE} />,
+            label: "Copilot",
             group: "Review"
         },
         {
@@ -96,12 +88,6 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             href: `/${locale}/dashboard/import`,
             icon: <FileUp className={NAV_ICON_SIZE} />,
             label: "Import",
-            group: "Tools"
-        },
-        {
-            href: `/${locale}/dashboard/analytics`,
-            icon: <Sparkles className={NAV_ICON_SIZE} />,
-            label: "AI Assistant",
             group: "Tools"
         },
         {
