@@ -1,5 +1,5 @@
 {
-  "installCommand": "npm ci",
+  "installCommand": "bun install",
   "buildCommand": "npm run build",
   "env": {
     "NEXT_PUBLIC_SKIP_DATABASE_MIGRATIONS": "true"
