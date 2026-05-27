@@ -25,7 +25,7 @@ export function LiveInAction() {
       <div className="group relative mx-auto mt-10 max-w-5xl overflow-hidden rounded-2xl border border-primary/20 bg-card shadow-[inset_0_0_40px_-20px] shadow-primary/10">
         <div className="aspect-video w-full bg-[linear-gradient(180deg,var(--background)_0%,var(--background)_100%)] flex items-center justify-center relative">
           <div className="absolute inset-0 bg-gradient-to-t from-primary/[0.04] to-transparent" />
-          <div className="absolute inset-0 bg-[radial-gradient(#1a1a1a_0.8px,transparent_1px)] bg-[length:4px_4px] opacity-40" />
+          <div className="absolute inset-0 bg-[radial-gradient(oklch(0.15_0.01_260)_0.8px,transparent_1px)] bg-[length:4px_4px] opacity-40" />
 
           <button
             onClick={() => setOpen(true)}
@@ -35,7 +35,7 @@ export function LiveInAction() {
             <Play className="h-7 w-7 text-white/90 ml-0.5" />
           </button>
 
-          <div className="absolute bottom-5 right-5 rounded bg-background/60 px-2.5 py-0.5 text-[10px] font-mono tracking-[2px] text-white/50 backdrop-blur-sm">
+          <div className="absolute bottom-5 right-5 rounded bg-background/60 px-2.5 py-0.5 text-[10px] font-mono tracking-[2px] text-white/50">
             2:14 • REAL SESSION
           </div>
         </div>

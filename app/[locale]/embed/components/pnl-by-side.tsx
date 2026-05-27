@@ -1,1 +1,1 @@
-export { default } from './client/pnl-by-side.tsx'
+export { PnLBySideChartEmbed } from './client/pnl-by-side.tsx'

@@ -33,10 +33,10 @@ const DXFEED_HISTORY_LOOKBACK_DAYS = Math.max(
 
 const logger = {
   debug: (message: string, data?: any) => {
-    if (IS_DEV) console.log(`[DXFEED-DEBUG] ${message}`, data ?? '')
+    if (IS_DEV) console.warn(`[DXFEED-DEBUG] ${message}`, data ?? '')
   },
   info: (message: string) => {
-    console.log(`[DXFEED] ${message}`)
+    console.warn(`[DXFEED] ${message}`)
   },
   warn: (message: string) => {
     console.warn(`[DXFEED] ${message}`)

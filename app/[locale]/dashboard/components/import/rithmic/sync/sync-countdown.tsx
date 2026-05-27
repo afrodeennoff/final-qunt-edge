@@ -35,7 +35,7 @@ export function SyncCountdown({ lastSyncTime, isAutoSyncing, credentialId }: Syn
         // Trigger immediate sync check when ready (only once per ready state)
         if (!hasTriggeredSyncRef.current && credentialId && !isAutoSyncing) {
           hasTriggeredSyncRef.current = true
-          console.log('Countdown reached Ready state, triggering immediate sync check for credential:', credentialId)
+          console.warn('Countdown reached Ready state, triggering immediate sync check for credential:', credentialId)
 
           performSyncForCredential(credentialId).catch(error => {
 

@@ -79,7 +79,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             group: "Review"
         },
         {
-            href: `/${locale}/dashboard/reports`,
+            href: `/${locale}/dashboard/analytics`,
             icon: <BarChart3 className={NAV_ICON_SIZE} />,
             label: "Reports",
             group: "Review"
@@ -99,7 +99,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             group: "Tools"
         },
         {
-            href: `/${locale}/dashboard/behavior`,
+            href: `/${locale}/dashboard/analytics`,
             icon: <Sparkles className={NAV_ICON_SIZE} />,
             label: "AI Assistant",
             group: "Tools"

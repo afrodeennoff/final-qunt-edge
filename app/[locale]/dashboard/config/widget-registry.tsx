@@ -797,15 +797,7 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     getComponent: ({ size }) => <ContractQuantityChart size={size} />,
     getPreview: () => <ChartPreviewSkeleton title="Contract Quantity" />
   },
-  // marketChart: {
-  //   type: 'marketChart',
-  //   defaultSize: 'large',
-  //   allowedSizes: ['small', 'medium', 'large'],
-  //   category: 'charts',
-  //   previewHeight: 300,
-  //   getComponent: ({ size }) => <MarketChart />,
-  //   getPreview: () => <MarketChart />
-  // },
+
 }
 
 export function getWidgetsByCategory(category: WidgetConfig['category']) {

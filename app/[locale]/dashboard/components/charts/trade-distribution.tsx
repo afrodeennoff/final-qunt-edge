@@ -1,1 +1,1 @@
-export { default } from './client/trade-distribution.tsx'
+export { TradeDistributionChart } from './client/trade-distribution.tsx'

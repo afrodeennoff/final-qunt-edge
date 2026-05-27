@@ -65,9 +65,9 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
       console.error('Error generating AI mappings:', error);
     },
     onFinish({ object }) {
-      console.log('=== AI MAPPING DEBUG ===');
-      console.log('AI Response Object:', object);
-      console.log('Headers:', headers);
+      console.warn('=== AI MAPPING DEBUG ===');
+      console.warn('AI Response Object:', object);
+      console.warn('Headers:', headers);
       
       setMappings(prev => {
         const newMappings = { ...prev };
@@ -77,7 +77,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
             if (typeof headerValue !== "string" || headerValue.length === 0) {
               return;
             }
-            console.log(`Processing: ${destinationColumn} -> ${headerValue}`);
+            console.warn(`Processing: ${destinationColumn} -> ${headerValue}`);
 
             // Check if the header value includes position information (e.g., "Prix_1", "Prix_2")
             const positionMatch = headerValue.match(/^(.+)_(\d+)$/);
@@ -87,39 +87,39 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
               const [, headerName, positionStr] = positionMatch;
               const position = parseInt(positionStr, 10) - 1; // Convert to 0-based index
               
-              console.log(`Position-based mapping: ${headerName} at position ${position + 1}`);
+              console.warn(`Position-based mapping: ${headerName} at position ${position + 1}`);
               
               // Find the header at the specific position
               if (position >= 0 && position < headers.length && headers[position] === headerName) {
                 const uniqueId = createUniqueColumnId(headerName, position);
-                console.log(`Mapped to unique ID: ${uniqueId}`);
+                console.warn(`Mapped to unique ID: ${uniqueId}`);
                 // Remove any existing mapping for this unique column first
                 if (newMappings[uniqueId]) {
                   delete newMappings[uniqueId];
                 }
                 newMappings[uniqueId] = destinationColumn;
               } else {
-                console.log(`Position ${position + 1} not found or header mismatch`);
+                console.warn(`Position ${position + 1} not found or header mismatch`);
               }
             } else {
               // Handle regular mapping (fallback for backward compatibility)
-              console.log(`Regular mapping for: ${headerValue}`);
+              console.warn(`Regular mapping for: ${headerValue}`);
               const headerIndex = headers.findIndex(h => h === headerValue);
               if (headerIndex !== -1 && !Object.values(newMappings).includes(destinationColumn)) {
                 const uniqueId = createUniqueColumnId(headerValue, headerIndex);
-                console.log(`Mapped to unique ID: ${uniqueId}`);
+                console.warn(`Mapped to unique ID: ${uniqueId}`);
                 // Remove any existing mapping for this unique column first
                 if (newMappings[uniqueId]) {
                   delete newMappings[uniqueId];
                 }
                 newMappings[uniqueId] = destinationColumn;
               } else {
-                console.log(`Header ${headerValue} not found or already mapped`);
+                console.warn(`Header ${headerValue} not found or already mapped`);
               }
             }
           });
         }
-        console.log('Final mappings:', newMappings);
+        console.warn('Final mappings:', newMappings);
         return newMappings;
       });
 

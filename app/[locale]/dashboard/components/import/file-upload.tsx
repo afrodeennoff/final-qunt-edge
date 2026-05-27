@@ -125,7 +125,7 @@ export default function FileUpload({
         }
       })
 
-      console.log(headers, concatenatedData)
+      console.warn(headers, concatenatedData)
       setRawCsvData([headers, ...concatenatedData])
       setCsvData(concatenatedData)
       setHeaders(headers)

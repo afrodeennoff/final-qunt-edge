@@ -74,7 +74,7 @@ export default function ImportButton() {
   const t = useI18n();
 
   const handleSave = useCallback(async () => {
-    console.log("[ImportButton] First:", processedTrades);
+    console.warn("[ImportButton] First:", processedTrades);
     if (!user || !supabaseUser) {
       toast.error(t("import.error.auth"), {
         description: t("import.error.authDescription"),
@@ -105,7 +105,7 @@ export default function ImportButton() {
         });
       } else {
         for (const accountNumber of accountNumbers) {
-          console.log("[ImportButton] Account number:", accountNumber);
+          console.warn("[ImportButton] Account number:", accountNumber);
           newTrades = [
             ...newTrades,
             ...tradesToSave.map((trade) => {
@@ -118,7 +118,7 @@ export default function ImportButton() {
         }
       }
 
-      console.log("[ImportButton] Saving trades:", newTrades);
+      console.warn("[ImportButton] Saving trades:", newTrades);
       const result = await saveTradesAction(newTrades);
 
       // Optimistically merge new trades into local store to avoid full refetch

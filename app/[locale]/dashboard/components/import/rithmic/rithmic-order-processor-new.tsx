@@ -191,7 +191,7 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
         const orderCommission = commissionRate * quantity
         const orderId = order["Order Number"]
 
-        console.log({
+        console.warn({
           orderId,
           symbol,
           quantity,
@@ -312,7 +312,7 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
       });
     });
 
-    console.log('processedTrades', processedTrades);
+    console.warn('processedTrades', processedTrades);
     setProcessedTrades(processedTrades);
     setIncompleteTrades(incompleteTradesArray);
 

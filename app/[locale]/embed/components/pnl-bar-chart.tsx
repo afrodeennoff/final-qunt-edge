@@ -1,1 +1,1 @@
-export { default } from './client/pnl-bar-chart.tsx'
+export { DailyPnLChartEmbed } from './client/pnl-bar-chart.tsx'

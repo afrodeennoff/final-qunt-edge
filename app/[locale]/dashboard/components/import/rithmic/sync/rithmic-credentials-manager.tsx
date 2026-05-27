@@ -111,7 +111,7 @@ export function RithmicCredentialsManager({
         }
 
         const result = await response.json();
-        console.log("synchronizations", result.data);
+        console.warn("synchronizations", result.data);
         setSynchronizations(result.data || []);
       } catch (error) {
         console.error("Error fetching synchronizations:", error);
@@ -136,11 +136,11 @@ export function RithmicCredentialsManager({
       }
 
       try {
-        console.log("Starting sync for credential:", credential.id);
+        console.warn("Starting sync for credential:", credential.id);
         setSyncingId(credential.id);
         const result = await performSyncForCredential(credential.id);
 
-        console.log("Sync result:", result);
+        console.warn("Sync result:", result);
 
         if (result?.success) {
           updateLastSyncTime(credential.id);

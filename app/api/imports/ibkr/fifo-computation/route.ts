@@ -153,12 +153,12 @@ export async function POST(request: Request) {
             }
         });
 
-        console.log(`Processing ${validOrders.length} valid orders with ${instruments.length} instruments`);
+        console.warn(`Processing ${validOrders.length} valid orders with ${instruments.length} instruments`);
 
         // Match orders using custom FIFO algorithm
         const trades = matchOrdersWithFIFO(validOrders, instruments);
 
-        console.log(`Generated ${trades.length} trades`);
+        console.warn(`Generated ${trades.length} trades`);
 
         // Validate trades
         const validTrades = trades.filter((trade: Trade) => {

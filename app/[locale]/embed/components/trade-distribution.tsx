@@ -1,1 +1,1 @@
-export { default } from './client/trade-distribution.tsx'
+export { TradeDistributionChartEmbed } from './client/trade-distribution.tsx'

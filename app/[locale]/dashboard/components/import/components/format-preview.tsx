@@ -189,7 +189,7 @@ export function FormatPreview({
     setCurrentBatchIndex1(0);
     setCurrentBatchIndex2(0);
     
-    console.log(`Split batches - Set 1: ${set1.join(', ')}, Set 2: ${set2.join(', ')}`);
+    console.warn(`Split batches - Set 1: ${set1.join(', ')}, Set 2: ${set2.join(', ')}`);
   };
 
   // First useObject instance - processes batchSet1
@@ -205,26 +205,26 @@ export function FormatPreview({
       setError(`Failed to process batch set 1: ${error.message}`);
     },
     onFinish() {
-      console.log('useObject 1 streaming completed');
+      console.warn('useObject 1 streaming completed');
       const currentBatch = batchSet1Ref.current[currentBatchIndex1Ref.current];
       if (currentBatch !== undefined) {
-        console.log(`Batch ${currentBatch} completed by instance 1`);
+        console.warn(`Batch ${currentBatch} completed by instance 1`);
         setCompletedBatches(prev => {
           const newSet = new Set([...prev, currentBatch]);
-          console.log(`Completed batches now: ${Array.from(newSet).join(', ')}`);
+          console.warn(`Completed batches now: ${Array.from(newSet).join(', ')}`);
           return newSet;
         });
         
         // Move to next batch in set 1
         setCurrentBatchIndex1(prev => {
           const newIndex = prev + 1;
-          console.log(`Set 1 index moved from ${prev} to ${newIndex}`);
+          console.warn(`Set 1 index moved from ${prev} to ${newIndex}`);
           return newIndex;
         });
         
         // Check if all batches are completed
         if (completedBatchesRef.current.size + 1 === totalBatches) {
-          console.log('All batches completed, stopping auto-processing');
+          console.warn('All batches completed, stopping auto-processing');
           setIsAutoProcessing(false);
         } else if (isAutoProcessingRef.current && !isStoppedRef.current) {
           // Process next batch in set 1 if available and not stopped
@@ -249,26 +249,26 @@ export function FormatPreview({
       setError(`Failed to process batch set 2: ${error.message}`);
     },
     onFinish() {
-      console.log('useObject 2 streaming completed');
+      console.warn('useObject 2 streaming completed');
       const currentBatch = batchSet2Ref.current[currentBatchIndex2Ref.current];
       if (currentBatch !== undefined) {
-        console.log(`Batch ${currentBatch} completed by instance 2`);
+        console.warn(`Batch ${currentBatch} completed by instance 2`);
         setCompletedBatches(prev => {
           const newSet = new Set([...prev, currentBatch]);
-          console.log(`Completed batches now: ${Array.from(newSet).join(', ')}`);
+          console.warn(`Completed batches now: ${Array.from(newSet).join(', ')}`);
           return newSet;
         });
         
         // Move to next batch in set 2
         setCurrentBatchIndex2(prev => {
           const newIndex = prev + 1;
-          console.log(`Set 2 index moved from ${prev} to ${newIndex}`);
+          console.warn(`Set 2 index moved from ${prev} to ${newIndex}`);
           return newIndex;
         });
         
         // Check if all batches are completed
         if (completedBatchesRef.current.size + 1 === totalBatches) {
-          console.log('All batches completed, stopping auto-processing');
+          console.warn('All batches completed, stopping auto-processing');
           setIsAutoProcessing(false);
         } else if (isAutoProcessingRef.current && !isStoppedRef.current) {
           // Process next batch in set 2 if available and not stopped
@@ -287,23 +287,23 @@ export function FormatPreview({
     const currentIndex = currentBatchIndex1Ref.current;
     const batchSet = batchSet1Ref.current;
     
-    console.log(`processNextBatchInSet1 - currentIndex: ${currentIndex}, batchSet: ${batchSet.join(', ')}, length: ${batchSet.length}`);
+    console.warn(`processNextBatchInSet1 - currentIndex: ${currentIndex}, batchSet: ${batchSet.join(', ')}, length: ${batchSet.length}`);
     
     if (currentIndex < batchSet.length) {
       const nextBatch = batchSet[currentIndex];
-      console.log(`Processing batch ${nextBatch} in set 1 (index ${currentIndex})`);
+      console.warn(`Processing batch ${nextBatch} in set 1 (index ${currentIndex})`);
       const batchData = getBatchData(nextBatch);
-      console.log('=== BATCH DATA DEBUG ===');
-      console.log('Original headers:', headers);
-      console.log('Mappings:', mappings);
-      console.log('Transformed headers:', transformedHeaders);
-      console.log('Transformed rows:', batchData);
+      console.warn('=== BATCH DATA DEBUG ===');
+      console.warn('Original headers:', headers);
+      console.warn('Mappings:', mappings);
+      console.warn('Transformed headers:', transformedHeaders);
+      console.warn('Transformed rows:', batchData);
       submit1({
         headers: transformedHeaders,
         rows: batchData
       });
     } else {
-      console.log('No more batches in set 1 - reached end of set');
+      console.warn('No more batches in set 1 - reached end of set');
     }
   };
 
@@ -312,23 +312,23 @@ export function FormatPreview({
     const currentIndex = currentBatchIndex2Ref.current;
     const batchSet = batchSet2Ref.current;
     
-    console.log(`processNextBatchInSet2 - currentIndex: ${currentIndex}, batchSet: ${batchSet.join(', ')}, length: ${batchSet.length}`);
+    console.warn(`processNextBatchInSet2 - currentIndex: ${currentIndex}, batchSet: ${batchSet.join(', ')}, length: ${batchSet.length}`);
     
     if (currentIndex < batchSet.length) {
       const nextBatch = batchSet[currentIndex];
-      console.log(`Processing batch ${nextBatch} in set 2 (index ${currentIndex})`);
+      console.warn(`Processing batch ${nextBatch} in set 2 (index ${currentIndex})`);
       const batchData = getBatchData(nextBatch);
-      console.log('=== BATCH DATA DEBUG (Set 2) ===');
-      console.log('Original headers:', headers);
-      console.log('Mappings:', mappings);
-      console.log('Transformed headers:', transformedHeaders);
-      console.log('Transformed rows:', batchData);
+      console.warn('=== BATCH DATA DEBUG (Set 2) ===');
+      console.warn('Original headers:', headers);
+      console.warn('Mappings:', mappings);
+      console.warn('Transformed headers:', transformedHeaders);
+      console.warn('Transformed rows:', batchData);
       submit2({
         headers: transformedHeaders,
         rows: batchData
       });
     } else {
-      console.log('No more batches in set 2 - reached end of set');
+      console.warn('No more batches in set 2 - reached end of set');
     }
   };
 
@@ -344,13 +344,13 @@ export function FormatPreview({
   };
 
   const stopProcessing = () => {
-    console.log('Stop processing clicked - stopping auto-processing');
+    console.warn('Stop processing clicked - stopping auto-processing');
     setIsAutoProcessing(false);
     setIsStopped(true);
     
     // Don't mark currently processing batches as completed - let them finish naturally
     // The onFinish callbacks will handle completion when they finish streaming
-    console.log('Stopped - current batches will finish streaming but no new ones will start');
+    console.warn('Stopped - current batches will finish streaming but no new ones will start');
   };
 
   const resetProcessing = () => {

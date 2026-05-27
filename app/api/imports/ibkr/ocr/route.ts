@@ -92,7 +92,7 @@ export async function POST(request: Request) {
 
     // Extract text from PDF
     const extractedText = await extractTextFromPdf(pdfBuffer)
-    console.log(extractedText.slice(0, 100))
+    console.warn(extractedText.slice(0, 100))
 
     return new Response(JSON.stringify({ text: extractedText }), {
       status: 200,

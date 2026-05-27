@@ -79,7 +79,7 @@ const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
   if (!instrumentInformationMatch) return [];
   
   const instrumentInformationText = instrumentInformationMatch[0];
-  console.log('instrumentInformationText', instrumentInformationText);
+  console.warn('instrumentInformationText', instrumentInformationText);
   
   // The text appears to be concatenated, so let's work with it as a single string
   // Pattern: "Financial Instrument Information Symbol Description Conid ... Code Futures SYMBOL DESC CONID ..."
@@ -128,7 +128,7 @@ const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
     });
   }
   
-  console.log('instruments', instruments)
+  console.warn('instruments', instruments)
   return instruments;
 };
 
