@@ -1,17 +1,10 @@
 'use client'
 
-import { Suspense, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { endOfDay, format, startOfDay, subDays, subMonths, subYears } from 'date-fns'
 import type { DateRange } from 'react-day-picker'
-import {
-  Calendar as CalendarIcon,
-  CircleDot,
-  Globe,
-  Lock,
-  Sparkles,
-  TrendingUp,
-} from 'lucide-react'
+import { Calendar as CalendarIcon, CircleDot, Globe, Lock, Sparkles } from 'lucide-react'
 
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -44,19 +37,14 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
 import { getLeaderboardVisibility, toggleLeaderboardVisibility } from '@/server/user-profile'
 import { useUserStore } from '@/store/user-store'
-import { TableSkeleton, CalendarSkeleton } from './components/Skeletons'
 import { TraderProfileShareButton } from './components/trader-profile-share-button'
 
 const RadarChartCard = dynamic(() => import('./components/RadarChartCard'), {
-  loading: () => (
-    <div className="rounded-xl border border-border/30 bg-muted p-4">
-      <div className="h-64 w-full animate-pulse rounded-lg bg-muted/30" />
-    </div>
-  ),
+  loading: () => <div className="h-64 animate-pulse rounded-xl border border-border/30 bg-muted" />,
 })
 
 const CalendarWidget = dynamic(() => import('./components/CalendarWidget'), {
-  loading: () => <CalendarSkeleton />,
+  loading: () => <div className="h-64 animate-pulse rounded-xl border border-border/30 bg-muted" />,
 })
 
 interface BenchmarkMetrics {
@@ -90,108 +78,71 @@ type DateFilterPreset =
 
 type StatTone = 'default' | 'positive' | 'negative'
 
-const insetPanelClassName =
-  'rounded-xl border border-border/30 bg-card/50 shadow-sm'
+const insetPanelClassName = 'rounded-xl border border-border/25 bg-card/95 shadow-sm'
 
-function clamp(value: number, min = 0, max = 100) {
-  return Math.min(max, Math.max(min, value))
+function clamp(v: number, min = 0, max = 100) {
+  return Math.min(max, Math.max(min, v))
 }
-
-function scoreHigherBetter(value: number, baseline: number) {
-  const maxRef = Math.max(value, baseline, 1)
-  return clamp((Math.max(0, value) / maxRef) * 100)
+function scoreHigherBetter(v: number, b: number) {
+  const m = Math.max(v, b, 1)
+  return clamp((Math.max(0, v) / m) * 100)
 }
-
-function scoreLowerBetter(value: number, baseline: number) {
-  const maxRef = Math.max(value, baseline, 1)
-  return clamp((1 - Math.max(0, value) / maxRef) * 100)
+function scoreLowerBetter(v: number, b: number) {
+  const m = Math.max(v, b, 1)
+  return clamp((1 - Math.max(0, v) / m) * 100)
 }
-
-function scoreSigned(value: number, baseline: number) {
-  const minRef = Math.min(value, baseline, 0)
-  const maxRef = Math.max(value, baseline, 1)
-  if (maxRef === minRef) return 50
-  return clamp(((value - minRef) / (maxRef - minRef)) * 100)
+function scoreSigned(v: number, b: number) {
+  const mn = Math.min(v, b, 0)
+  const mx = Math.max(v, b, 1)
+  return mx === mn ? 50 : clamp(((v - mn) / (mx - mn)) * 100)
 }
-
-function formatValue(value: number, digits = 2) {
-  return Number.isFinite(value) ? value.toFixed(digits) : '0.00'
+function fv(v: number, d = 2) {
+  return Number.isFinite(v) ? v.toFixed(d) : '0.00'
 }
-
-function formatSigned(value: number, digits = 2) {
-  if (!Number.isFinite(value)) return '0.00'
-  return `${value >= 0 ? '+' : ''}${value.toFixed(digits)}`
+function fs(v: number, d = 2) {
+  return Number.isFinite(v) ? `${v >= 0 ? '+' : ''}${v.toFixed(d)}` : '0.00'
 }
-
-function formatCapitalCompact(value: number) {
-  if (!Number.isFinite(value)) return '0'
-  const sign = value < 0 ? '-' : ''
-  const abs = Math.abs(value)
-  if (abs >= 1_000_000) return `${sign}${(abs / 1_000_000).toFixed(abs >= 10_000_000 ? 0 : 1)}m`
-  if (abs >= 1_000) return `${sign}${(abs / 1_000).toFixed(abs >= 100_000 ? 0 : 1)}k`
-  return `${sign}${abs.toFixed(0)}`
-}
-
-function getTradeDay(dateValue: string | Date) {
-  const date = new Date(dateValue)
-  if (Number.isNaN(date.getTime())) return 'Invalid date'
-  return date.toISOString().slice(0, 10)
-}
-
 function getWinningStreak(values: number[]) {
-  let count = 0
-  for (let index = values.length - 1; index >= 0; index -= 1) {
-    const value = values[index]
-    if (value > 0) {
-      count += 1
-      continue
-    }
-    break
+  let c = 0
+  for (let i = values.length - 1; i >= 0; i--) {
+    if (values[i] > 0) c++
+    else break
   }
-  return count
+  return c
 }
-
-function isDateWithinRange(value: Date, range?: DateRange) {
-  const from = range?.from ? startOfDay(range.from) : undefined
-  const to = range?.to ? endOfDay(range.to) : undefined
-  if (from && value < from) return false
-  if (to && value > to) return false
+function isDateWithinRange(v: Date, r?: DateRange) {
+  const f = r?.from ? startOfDay(r.from) : undefined
+  const t = r?.to ? endOfDay(r.to) : undefined
+  if (f && v < f) return false
+  if (t && v > t) return false
   return true
 }
 
-function formatTradeTimestamp(value: string | Date | null | undefined) {
-  if (!value) return 'Unknown close time'
-  const parsed = new Date(value)
-  if (Number.isNaN(parsed.getTime())) return 'Unknown close time'
-  return format(parsed, 'MMM d, yyyy • p')
-}
-
-export function StatTile({
+function StatTile({
   label,
   value,
-  helper,
   tone = 'default',
   className,
 }: {
   label: string
   value: string
-  helper?: string
   tone?: StatTone
   className?: string
 }) {
   return (
-    <div className={cn(insetPanelClassName, 'px-4 py-3.5', className)}>
-      <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
+    <div className={cn(insetPanelClassName, 'px-4 py-3', className)}>
+      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+        {label}
+      </p>
       <p
         className={cn(
-          'mt-1.5 text-xl font-semibold tabular-nums tracking-tight text-foreground',
+          'mt-1.5 text-xl font-semibold tabular-nums tracking-tight',
           tone === 'positive' && 'text-semantic-success',
           tone === 'negative' && 'text-semantic-error',
         )}
       >
         {value}
       </p>
-      {helper ? <p className="mt-1 text-xs text-muted-foreground">{helper}</p> : null}
     </div>
   )
 }
@@ -200,148 +151,24 @@ function MeterRow({
   label,
   value,
   progress,
-  fillClassName,
 }: {
   label: string
   value: string
   progress: number
-  fillClassName?: string
 }) {
   return (
     <div className={cn(insetPanelClassName, 'px-4 py-3')}>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
-        <p className="text-sm font-semibold tabular-nums text-foreground">{value}</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+          {label}
+        </p>
+        <p className="text-sm font-semibold tabular-nums">{value}</p>
       </div>
-      <div className="mt-2.5 h-1.5 rounded-full bg-border/25">
+      <div className="mt-2 h-1.5 rounded-full bg-border/20">
         <div
-          className={cn(
-            'h-full rounded-full bg-primary/50 transition-[width] duration-300',
-            fillClassName,
-          )}
-          style={{ width: `${progress}%` }}
+          className="h-full rounded-full bg-primary/50 transition-[width] duration-300"
+          style={{ width: `${Math.min(100, Math.max(8, progress))}%` }}
         />
-      </div>
-    </div>
-  )
-}
-
-function SignalTile({
-  label,
-  value,
-  helper,
-  tone = 'default',
-}: {
-  label: string
-  value: string
-  helper?: string
-  tone?: StatTone
-}) {
-  return (
-    <div className={cn(insetPanelClassName, 'px-4 py-3')}>
-      <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
-      <p
-        className={cn(
-          'mt-1.5 text-lg font-semibold tabular-nums tracking-tight text-foreground',
-          tone === 'positive' && 'text-semantic-success',
-          tone === 'negative' && 'text-semantic-error',
-        )}
-      >
-        {value}
-      </p>
-      {helper ? <p className="mt-1 text-xs text-muted-foreground">{helper}</p> : null}
-    </div>
-  )
-}
-
-export function StripMetric({
-  label,
-  value,
-  helper,
-  tone = 'default',
-  emphasis = false,
-  className,
-}: {
-  label: string
-  value: string
-  helper?: string
-  tone?: StatTone
-  emphasis?: boolean
-  className?: string
-}) {
-  return (
-    <div className={cn(insetPanelClassName, 'p-3.5', className)}>
-      <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
-      <p
-        className={cn(
-          'mt-1.5 font-semibold tracking-tight text-foreground',
-          emphasis ? 'text-base sm:text-lg' : 'text-sm',
-          tone === 'positive' && 'text-semantic-success',
-          tone === 'negative' && 'text-semantic-error',
-        )}
-      >
-        {value}
-      </p>
-      {helper ? <p className="mt-1 text-xs text-muted-foreground">{helper}</p> : null}
-    </div>
-  )
-}
-
-function ProfileVisibilityPanel({
-  isOwnProfile,
-  showOnLeaderboard,
-  isTogglingVisibility,
-  onToggle,
-}: {
-  isOwnProfile: boolean
-  showOnLeaderboard: boolean
-  isTogglingVisibility: boolean
-  onToggle: () => Promise<void>
-}) {
-  return (
-    <div
-      className={cn(
-        insetPanelClassName,
-        'w-full rounded-xl p-3.5 sm:w-auto sm:min-w-[18rem] lg:min-w-[19rem]',
-      )}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="space-y-1">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-            Public visibility
-          </p>
-          <Badge
-            variant={showOnLeaderboard ? 'success' : 'outline'}
-            className="mt-1 inline-flex gap-1.5"
-          >
-            {showOnLeaderboard ? (
-              <Globe className="h-3.5 w-3.5" />
-            ) : (
-              <Lock className="h-3.5 w-3.5" />
-            )}
-            {showOnLeaderboard ? 'Public profile' : 'Private profile'}
-          </Badge>
-          <p className="text-xs text-muted-foreground">
-            {showOnLeaderboard
-              ? 'Visible on the public leaderboard.'
-              : 'Only visible inside your workspace.'}
-          </p>
-        </div>
-
-        {isOwnProfile ? (
-          <Switch
-            checked={showOnLeaderboard}
-            onCheckedChange={() => {
-              void onToggle()
-            }}
-            disabled={isTogglingVisibility}
-            aria-label="Toggle leaderboard visibility"
-          />
-        ) : (
-          <Badge variant="secondary" className="shrink-0">
-            View only
-          </Badge>
-        )}
       </div>
     </div>
   )
@@ -351,12 +178,11 @@ export default function TraderProfilePageClient() {
   const { formattedTrades } = useDashboardStats()
   const isLoading = useDashboardIsLoading()
   const accounts = useDashboardAccountsList()
-  const user = useUserStore((state) => state.user)
-  const supabaseUser = useUserStore((state) => state.supabaseUser)
+  const user = useUserStore((s) => s.user)
+  const supabaseUser = useUserStore((s) => s.supabaseUser)
   const isMobile = useIsMobile()
 
   const [benchmark, setBenchmark] = useState<BenchmarkMetrics | null>(null)
-  const [isBenchmarkLoading, setIsBenchmarkLoading] = useState(true)
   const [dateFilterPreset, setDateFilterPreset] = useState<DateFilterPreset>('last_month')
   const [customDateRange, setCustomDateRange] = useState<DateRange | undefined>(undefined)
   const [selectedCalendarDay, setSelectedCalendarDay] = useState<Date | undefined>(undefined)
@@ -369,15 +195,11 @@ export default function TraderProfilePageClient() {
   useEffect(() => {
     if (!isOwnProfile) return
     let alive = true
-
-    void getLeaderboardVisibility()
-      .then((result) => {
-        if (alive) setShowOnLeaderboard(result.showOnLeaderboard)
+    getLeaderboardVisibility()
+      .then((r) => {
+        if (alive) setShowOnLeaderboard(r.showOnLeaderboard)
       })
-      .catch(() => {
-        // The switch can safely stay off if the read fails.
-      })
-
+      .catch(() => {})
     return () => {
       alive = false
     }
@@ -387,12 +209,9 @@ export default function TraderProfilePageClient() {
     if (isTogglingVisibility) return
     setIsTogglingVisibility(true)
     try {
-      const result = await toggleLeaderboardVisibility()
-      if (result.success) {
-        setShowOnLeaderboard(result.showOnLeaderboard)
-      }
+      const r = await toggleLeaderboardVisibility()
+      if (r.success) setShowOnLeaderboard(r.showOnLeaderboard)
     } catch {
-      // The user can retry without losing page state.
     } finally {
       setIsTogglingVisibility(false)
     }
@@ -400,55 +219,21 @@ export default function TraderProfilePageClient() {
 
   useEffect(() => {
     let alive = true
-    let timer: number | null = null
-
-    const scheduleNext = (delayMs: number) => {
-      if (!alive) return
-      if (timer) window.clearTimeout(timer)
-      timer = window.setTimeout(() => {
-        void load()
-      }, delayMs)
-    }
-
     const load = async () => {
-      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
-        scheduleNext(60_000)
-        return
-      }
-
-      setIsBenchmarkLoading(true)
       try {
-        const res = await fetch('/api/trader-profile/benchmark', {
-          method: 'GET',
+        const r = await fetch('/api/trader-profile/benchmark', {
           credentials: 'include',
           cache: 'no-store',
         })
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const payload = (await res.json()) as { benchmark?: BenchmarkMetrics }
-        if (alive) setBenchmark(payload.benchmark ?? null)
-      } catch {
-
-        if (alive) setBenchmark(null)
-      } finally {
-        if (alive) setIsBenchmarkLoading(false)
-        scheduleNext(60_000)
-      }
+        if (r.ok && alive) {
+          const p = (await r.json()) as { benchmark?: BenchmarkMetrics }
+          setBenchmark(p.benchmark ?? null)
+        }
+      } catch {}
     }
-
-    const onVisibilityChange = () => {
-      if (!alive) return
-      if (document.visibilityState === 'visible') {
-        void load()
-      }
-    }
-
-    void load()
-    document.addEventListener('visibilitychange', onVisibilityChange)
-
+    load()
     return () => {
       alive = false
-      if (timer) window.clearTimeout(timer)
-      document.removeEventListener('visibilitychange', onVisibilityChange)
     }
   }, [])
 
@@ -461,28 +246,24 @@ export default function TraderProfilePageClient() {
       supabaseUser?.email?.split('@')[0] ||
       'Trader'
     )
-  }, [
-    user?.username,
-    supabaseUser?.email,
-    supabaseUser?.user_metadata?.full_name,
-    supabaseUser?.user_metadata?.name,
-    user?.email,
-  ])
+  }, [user, supabaseUser])
 
   const profileAvatar = useMemo(() => {
-    const avatar = supabaseUser?.user_metadata?.avatar_url
-    return typeof avatar === 'string' && avatar.length > 0 ? avatar : null
-  }, [supabaseUser?.user_metadata?.avatar_url])
+    const a = supabaseUser?.user_metadata?.avatar_url
+    return typeof a === 'string' && a.length > 0 ? a : null
+  }, [supabaseUser])
 
   const profileInitials = useMemo(() => {
-    const parts = profileName
+    const p = profileName
       .split(' ')
-      .map((value: string) => value.trim())
+      .map((v: string) => v.trim())
       .filter(Boolean)
       .slice(0, 2)
-
-    if (parts.length === 0) return 'TR'
-    return parts.map((part: string) => part[0]?.toUpperCase() ?? '').join('') || 'TR'
+    return p.length === 0
+      ? 'TR'
+      : p
+          .map((part: string) => part[0]?.toUpperCase() ?? '')
+          .join('') || 'TR'
   }, [profileName])
 
   const activeDateRange = useMemo<DateRange | undefined>(() => {
@@ -509,72 +290,64 @@ export default function TraderProfilePageClient() {
     const trades = formattedTrades || []
     const from = activeDateRange?.from ? startOfDay(activeDateRange.from) : undefined
     const to = activeDateRange?.to ? endOfDay(activeDateRange.to) : undefined
-
     if (!from && !to) return trades
-
-    return trades.filter((trade) => {
-      const entry = new Date(trade.entryDate)
-      if (Number.isNaN(entry.getTime())) return false
-      if (from && entry < from) return false
-      if (to && entry > to) return false
+    return trades.filter((trade: { entryDate: string | Date }) => {
+      const e = new Date(trade.entryDate)
+      if (isNaN(e.getTime())) return false
+      if (from && e < from) return false
+      if (to && e > to) return false
       return true
     })
   }, [activeDateRange, formattedTrades])
 
-  const dateFilterLabel = useMemo(() => {
-    if (dateFilterPreset !== 'custom') return null
-    if (customDateRange?.from && customDateRange?.to) {
-      return `${format(customDateRange.from, 'MMM d, yyyy')} - ${format(customDateRange.to, 'MMM d, yyyy')}`
-    }
-    if (customDateRange?.from) {
-      return format(customDateRange.from, 'MMM d, yyyy')
-    }
-    return 'Pick date range'
-  }, [customDateRange, dateFilterPreset])
-
   const metrics = useMemo<TraderMetrics>(() => {
     const trades = filteredTrades || []
     const sorted = [...trades].sort(
-      (a, b) => new Date(a.entryDate).getTime() - new Date(b.entryDate).getTime(),
+      (a: { entryDate: string | Date }, b: { entryDate: string | Date }) =>
+        new Date(a.entryDate).getTime() - new Date(b.entryDate).getTime(),
     )
-    const pnlValues = sorted.map((trade) => Number(trade.pnl || 0))
-    const netValues = sorted.map((trade) => Number(trade.pnl || 0) - Number(trade.commission || 0))
-    const wins = pnlValues.filter((value) => value > 0)
-    const losses = pnlValues.filter((value) => value < 0)
-    const sumGain = wins.reduce((acc, value) => acc + value, 0)
-    const avgWin = wins.length > 0 ? wins.reduce((a, b) => a + b, 0) / wins.length : 0
+    const pnlValues = sorted.map((trade: { pnl?: number }) => Number(trade.pnl || 0))
+    const netValues = sorted.map(
+      (trade: { pnl?: number; commission?: number }) =>
+        Number(trade.pnl || 0) - Number(trade.commission || 0),
+    )
+    const wins = pnlValues.filter((v: number) => v > 0)
+    const losses = pnlValues.filter((v: number) => v < 0)
+    const sumGain = wins.reduce((a: number, v: number) => a + v, 0)
+    const avgWin = wins.length > 0 ? wins.reduce((a: number, b: number) => a + b, 0) / wins.length : 0
     const avgLossAbs =
-      losses.length > 0 ? Math.abs(losses.reduce((a, b) => a + b, 0) / losses.length) : 0
-    const decisiveTrades = wins.length + losses.length
-    const winRate = decisiveTrades > 0 ? (wins.length / decisiveTrades) * 100 : 0
+      losses.length > 0
+        ? Math.abs(losses.reduce((a: number, b: number) => a + b, 0) / losses.length)
+        : 0
+    const decisive = wins.length + losses.length
+    const winRate = decisive > 0 ? (wins.length / decisive) * 100 : 0
     const totalTrades = trades.length
-    const cumulativePnl = netValues.reduce((a, b) => a + b, 0)
+    const cumulativePnl = netValues.reduce((a: number, v: number) => a + v, 0)
     const avgReturn = totalTrades > 0 ? cumulativePnl / totalTrades : 0
-
-    let runningNet = 0
-    let peakNet = 0
-    let maxDrawdown = 0
-    for (const net of netValues) {
-      runningNet += net
-      peakNet = Math.max(peakNet, runningNet)
-      maxDrawdown = Math.max(maxDrawdown, peakNet - runningNet)
+    let running = 0
+    let peak = 0
+    let maxDD = 0
+    for (const n of netValues) {
+      running += n
+      peak = Math.max(peak, running)
+      maxDD = Math.max(maxDD, peak - running)
     }
-
     const dayPnl = new Map<string, number>()
-    sorted.forEach((trade) => {
-      const key = getTradeDay(trade.entryDate)
-      const prev = dayPnl.get(key) ?? 0
-      dayPnl.set(key, prev + Number(trade.pnl || 0))
+    sorted.forEach((trade: { entryDate: string | Date; pnl?: number }) => {
+      const k = new Date(trade.entryDate).toISOString().slice(0, 10)
+      dayPnl.set(k, (dayPnl.get(k) ?? 0) + Number(trade.pnl || 0))
     })
-    const activeDays = [...dayPnl.values()]
-    const positiveDays = activeDays.filter((value) => value > 0).length
-    const consistencyRate = activeDays.length > 0 ? (positiveDays / activeDays.length) * 100 : 0
+    const activeDaysArr = [...dayPnl.values()]
+    const consistencyRate =
+      activeDaysArr.length > 0
+        ? (activeDaysArr.filter((v: number) => v > 0).length / activeDaysArr.length) * 100
+        : 0
     const winningStreak = getWinningStreak(pnlValues)
-    const breakEvenRate = avgWin + avgLossAbs > 0 ? (avgLossAbs / (avgWin + avgLossAbs)) * 100 : 0
-
+    const breakEvenRate =
+      avgWin + avgLossAbs > 0 ? (avgLossAbs / (avgWin + avgLossAbs)) * 100 : 0
     return {
       riskReward: avgLossAbs > 0 ? avgWin / avgLossAbs : 0,
-      drawdown: maxDrawdown,
+      drawdown: maxDD,
       winRate,
       avgReturn,
       totalTrades,
@@ -587,224 +360,151 @@ export default function TraderProfilePageClient() {
   }, [filteredTrades])
 
   const radarData = useMemo(() => {
-    const baseline = benchmark ?? {
+    const b = benchmark ?? {
       riskReward: 0,
       drawdown: 0,
       winRate: 0,
       avgReturn: 0,
       sampleSize: 0,
     }
-    const totalTradeBaseline = Math.max(20, baseline.sampleSize)
-
+    const totalTradeBaseline = Math.max(20, b.sampleSize)
     return [
+      { metric: 'TOTAL TRADES', trader: scoreHigherBetter(metrics.totalTrades, totalTradeBaseline) },
       {
-        metric: 'TOTAL TRADES',
-        trader: scoreHigherBetter(metrics.totalTrades, totalTradeBaseline),
+        metric: 'RISK REWARD',
+        trader: scoreHigherBetter(metrics.riskReward, b.riskReward),
       },
-      { metric: 'RISK REWARD', trader: scoreHigherBetter(metrics.riskReward, baseline.riskReward) },
-      { metric: 'AVG. DRAWDOWN', trader: scoreLowerBetter(metrics.drawdown, baseline.drawdown) },
-      { metric: 'WIN RATE', trader: scoreHigherBetter(metrics.winRate, baseline.winRate) },
-      { metric: 'AVG RETURN', trader: scoreSigned(metrics.avgReturn, baseline.avgReturn) },
+      { metric: 'AVG. DRAWDOWN', trader: scoreLowerBetter(metrics.drawdown, b.drawdown) },
+      { metric: 'WIN RATE', trader: scoreHigherBetter(metrics.winRate, b.winRate) },
+      { metric: 'AVG RETURN', trader: scoreSigned(metrics.avgReturn, b.avgReturn) },
     ]
-  }, [
-    benchmark,
-    metrics.avgReturn,
-    metrics.drawdown,
-    metrics.riskReward,
-    metrics.totalTrades,
-    metrics.winRate,
-  ])
+  }, [benchmark, metrics])
 
-  const closedTrades = useMemo(() => {
-    return [...(filteredTrades || [])]
-      .filter((trade) => {
-        const closeDate = (trade as { closeDate?: string | Date | null }).closeDate
-        if (!closeDate) return false
-        const parsed = new Date(closeDate)
-        return !Number.isNaN(parsed.getTime())
-      })
-      .sort((a, b) => {
-        const closeA = new Date(
-          (a as { closeDate?: string | Date | null }).closeDate as string | Date,
-        ).getTime()
-        const closeB = new Date(
-          (b as { closeDate?: string | Date | null }).closeDate as string | Date,
-        ).getTime()
-        return closeB - closeA
-      })
-  }, [filteredTrades])
+  const closedTrades = useMemo(
+    () =>
+      [...(filteredTrades || [])]
+        .filter((trade: { closeDate?: string | Date | null }) => {
+          if (!trade.closeDate) return false
+          const p = new Date(trade.closeDate)
+          return !isNaN(p.getTime())
+        })
+        .sort(
+          (
+            a: { closeDate?: string | Date | null },
+            b: { closeDate?: string | Date | null },
+          ) =>
+            new Date(b.closeDate as string | Date).getTime() -
+            new Date(a.closeDate as string | Date).getTime(),
+        ),
+    [filteredTrades],
+  )
 
   const tradesPerPage = 5
-  const tradeFeedTotalPages = Math.max(1, Math.ceil(closedTrades.length / tradesPerPage))
-
+  const totalPages = Math.max(1, Math.ceil(closedTrades.length / tradesPerPage))
   const paginatedClosedTrades = useMemo(() => {
-    const start = (tradeFeedPage - 1) * tradesPerPage
-    return closedTrades.slice(start, start + tradesPerPage)
+    const s = (tradeFeedPage - 1) * tradesPerPage
+    return closedTrades.slice(s, s + tradesPerPage)
   }, [closedTrades, tradeFeedPage])
 
-  const totalWithdrawAllAccounts = useMemo(() => {
-    return (accounts || []).reduce((accountSum, account) => {
-      const accountWithdraw = (account.payouts || [])
-        .filter((payout) => {
-          if (payout.status !== 'PAID') return false
-          const payoutDate = new Date(payout.date)
-          if (Number.isNaN(payoutDate.getTime())) return false
-          return isDateWithinRange(payoutDate, activeDateRange)
-        })
-        .reduce((withdrawSum, payout) => withdrawSum + Number(payout.amount || 0), 0)
-      return accountSum + accountWithdraw
-    }, 0)
-  }, [accounts, activeDateRange])
+  const totalWithdraw = useMemo(
+    () =>
+      (accounts || []).reduce(
+        (acc: number, acct: { payouts?: { status: string; date: string; amount: number }[] }) =>
+          acc +
+          (acct.payouts || [])
+            .filter(
+              (p) => p.status === 'PAID' && isDateWithinRange(new Date(p.date), activeDateRange),
+            )
+            .reduce((s: number, p: { amount: number }) => s + Number(p.amount || 0), 0),
+        0,
+      ),
+    [accounts, activeDateRange],
+  )
 
-  const totalCapitalAllAccounts = useMemo(() => {
-    const openingCapital = (accounts || []).reduce(
-      (sum, account) => sum + Number(account.startingBalance || 0),
-      0,
-    )
-    const filteredTradingPnl = (filteredTrades || []).reduce(
-      (sum, trade) => sum + Number(trade.pnl || 0) - Number(trade.commission || 0),
-      0,
-    )
-    return openingCapital + filteredTradingPnl - totalWithdrawAllAccounts
-  }, [accounts, filteredTrades, totalWithdrawAllAccounts])
+  const totalCapital = useMemo(
+    () =>
+      (accounts || []).reduce(
+        (s: number, acct: { startingBalance?: number }) => s + Number(acct.startingBalance || 0),
+        0,
+      ) +
+      (filteredTrades || []).reduce(
+        (s: number, t: { pnl?: number; commission?: number }) =>
+          s + Number(t.pnl || 0) - Number(t.commission || 0),
+        0,
+      ) -
+      totalWithdraw,
+    [accounts, filteredTrades, totalWithdraw],
+  )
 
-  const activeAccountsCount = useMemo(() => {
-    return (accounts || []).filter((account) => Boolean(account.number)).length
-  }, [accounts])
-
-  const activeAccountLabels = useMemo(() => {
-    return (accounts || [])
-      .map((account) =>
-        typeof account.number === 'string' ? account.number.trim() : String(account.number || ''),
-      )
-      .filter((value) => value.length > 0)
-      .slice(0, 8)
-  }, [accounts])
+  const activeAccountsCount = useMemo(
+    () => (accounts || []).filter((a: { number?: string | number }) => Boolean(a.number)).length,
+    [accounts],
+  )
 
   const tradeCalendarDays = useMemo(() => {
     const byDay = new Map<string, Date>()
-    ;(filteredTrades || []).forEach((trade) => {
-      const date = new Date(trade.entryDate)
-      if (Number.isNaN(date.getTime())) return
-      const key = date.toISOString().slice(0, 10)
-      if (!byDay.has(key))
-        byDay.set(key, new Date(date.getFullYear(), date.getMonth(), date.getDate()))
+    ;(filteredTrades || []).forEach((trade: { entryDate: string | Date }) => {
+      const d = new Date(trade.entryDate)
+      if (!isNaN(d.getTime())) {
+        const k = d.toISOString().slice(0, 10)
+        if (!byDay.has(k))
+          byDay.set(k, new Date(d.getFullYear(), d.getMonth(), d.getDate()))
+      }
     })
-
     return Array.from(byDay.values()).sort((a, b) => a.getTime() - b.getTime())
   }, [filteredTrades])
 
   const tradePnlByDay = useMemo(() => {
-    const map = new Map<string, number>()
-    ;(filteredTrades || []).forEach((trade) => {
-      const date = new Date(trade.entryDate)
-      if (Number.isNaN(date.getTime())) return
-      const key = date.toISOString().slice(0, 10)
-      const prev = map.get(key) ?? 0
-      const net = Number(trade.pnl || 0) - Number(trade.commission || 0)
-      map.set(key, prev + net)
-    })
-    return map
+    const m = new Map<string, number>()
+    ;(filteredTrades || []).forEach(
+      (trade: { entryDate: string | Date; pnl?: number; commission?: number }) => {
+        const k = new Date(trade.entryDate).toISOString().slice(0, 10)
+        m.set(k, (m.get(k) ?? 0) + Number(trade.pnl || 0) - Number(trade.commission || 0))
+      },
+    )
+    return m
   }, [filteredTrades])
 
-  const positivePnlDays = useMemo(() => {
-    return tradeCalendarDays.filter((day) => {
-      const key = day.toISOString().slice(0, 10)
-      return (tradePnlByDay.get(key) ?? 0) > 0
-    })
-  }, [tradeCalendarDays, tradePnlByDay])
+  const positivePnlDays = useMemo(
+    () => tradeCalendarDays.filter((d) => (tradePnlByDay.get(d.toISOString().slice(0, 10)) ?? 0) > 0),
+    [tradeCalendarDays, tradePnlByDay],
+  )
 
-  const negativePnlDays = useMemo(() => {
-    return tradeCalendarDays.filter((day) => {
-      const key = day.toISOString().slice(0, 10)
-      return (tradePnlByDay.get(key) ?? 0) < 0
-    })
-  }, [tradeCalendarDays, tradePnlByDay])
+  const negativePnlDays = useMemo(
+    () => tradeCalendarDays.filter((d) => (tradePnlByDay.get(d.toISOString().slice(0, 10)) ?? 0) < 0),
+    [tradeCalendarDays, tradePnlByDay],
+  )
 
   const latestTradeDay =
-    tradeCalendarDays.length > 0 ? tradeCalendarDays[tradeCalendarDays.length - 1] : undefined
+    tradeCalendarDays.length > 0
+      ? tradeCalendarDays[tradeCalendarDays.length - 1]
+      : undefined
+
   const selectedPnl = useMemo(() => {
-    const target = selectedCalendarDay ?? latestTradeDay
-    if (!target) return 0
-    const key = target.toISOString().slice(0, 10)
-    return tradePnlByDay.get(key) ?? 0
-  }, [latestTradeDay, selectedCalendarDay, tradePnlByDay])
+    const t = selectedCalendarDay ?? latestTradeDay
+    if (!t) return 0
+    return tradePnlByDay.get(t.toISOString().slice(0, 10)) ?? 0
+  }, [selectedCalendarDay, latestTradeDay, tradePnlByDay])
 
   const selectedDayLabel = useMemo(() => {
     if (selectedCalendarDay) return format(selectedCalendarDay, 'EEE, MMM d')
     if (latestTradeDay) return format(latestTradeDay, 'EEE, MMM d')
     return 'No active session'
-  }, [latestTradeDay, selectedCalendarDay])
+  }, [selectedCalendarDay, latestTradeDay])
 
   const reviewWindowSummary = useMemo(() => {
-    if (activeDateRange?.from && activeDateRange?.to) {
+    if (activeDateRange?.from && activeDateRange?.to)
       return `${format(activeDateRange.from, 'MMM d, yyyy')} - ${format(activeDateRange.to, 'MMM d, yyyy')}`
-    }
     if (activeDateRange?.from) return format(activeDateRange.from, 'MMM d, yyyy')
     return 'All available trades'
   }, [activeDateRange])
 
   const tradeFeedSummary = useMemo(() => {
     if (closedTrades.length === 0) return '0 of 0'
-    const start = (tradeFeedPage - 1) * tradesPerPage + 1
-    const end = Math.min(tradeFeedPage * tradesPerPage, closedTrades.length)
-    return `${start}-${end} of ${closedTrades.length}`
+    const s = (tradeFeedPage - 1) * tradesPerPage + 1
+    const e = Math.min(tradeFeedPage * tradesPerPage, closedTrades.length)
+    return `${s}-${e} of ${closedTrades.length}`
   }, [closedTrades.length, tradeFeedPage])
-
-  const primaryStripMetrics: Array<{ label: string; value: string; tone?: StatTone }> = [
-    {
-      label: 'Net PnL',
-      value: formatSigned(metrics.netPnl),
-      tone:
-        metrics.netPnl > 0 ? 'positive' : metrics.netPnl < 0 ? 'negative' : ('default' as const),
-    },
-    {
-      label: 'Avg net / trade',
-      value: formatSigned(metrics.avgReturn),
-      tone:
-        metrics.avgReturn > 0
-          ? 'positive'
-          : metrics.avgReturn < 0
-            ? 'negative'
-            : ('default' as const),
-    },
-    {
-      label: 'Consistency',
-      value: `${formatValue(metrics.consistencyRate)}%`,
-      tone: metrics.consistencyRate >= 50 ? ('positive' as const) : ('default' as const),
-    },
-  ]
-
-  const secondaryStripMetrics: Array<{ label: string; value: string; tone?: StatTone }> = [
-    {
-      label: 'Break-even rate',
-      value: `${formatValue(metrics.breakEvenRate)}%`,
-    },
-    {
-      label: 'Active accounts',
-      value: String(activeAccountsCount),
-    },
-    {
-      label: 'Total trades',
-      value: String(metrics.totalTrades),
-    },
-    {
-      label: 'Current streak',
-      value: metrics.winningStreak > 0 ? `${metrics.winningStreak} wins` : 'Reset',
-      tone: metrics.winningStreak > 0 ? ('positive' as const) : ('default' as const),
-    },
-  ]
-
-  useEffect(() => {
-    const hasSelection = Boolean(selectedCalendarDay)
-    const selectionInRange = selectedCalendarDay
-      ? isDateWithinRange(selectedCalendarDay, activeDateRange)
-      : false
-
-    if ((!hasSelection || !selectionInRange) && latestTradeDay) {
-      setSelectedCalendarDay(latestTradeDay)
-    }
-  }, [activeDateRange, latestTradeDay, selectedCalendarDay])
 
   useEffect(() => {
     setTradeFeedPage(1)
@@ -812,372 +512,238 @@ export default function TraderProfilePageClient() {
 
   return (
     <UnifiedPageShell density="compact" widthClassName="max-w-[2400px]">
-      <div className="animate-page-enter space-y-4 sm:space-y-5">
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.6fr)_minmax(380px,0.95fr)] 2xl:grid-cols-[minmax(0,1.8fr)_minmax(420px,1fr)] 2xl:gap-8">
-          {/* LEFT COLUMN - Single unified card */}
-          <UnifiedSurface
-            variant="elevated"
-            className="animate-fade-up-smooth overflow-hidden p-0"
-          >
-            <section className="min-w-0 divide-y divide-border/15">
-              {/* Section 1: Profile Header */}
-              <div className="relative p-5 sm:p-6 lg:p-[1.75rem]">
-                <div className="absolute left-0 top-0 h-full w-px bg-gradient-to-b from-primary/30 via-primary/10 to-transparent" />
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                  <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start">
-                    <Avatar className="h-20 w-20 shrink-0 rounded-2xl border border-border bg-muted sm:h-24 sm:w-24">
-                      <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
-                      <AvatarFallback className="bg-background text-lg font-semibold text-foreground">
-                        {profileInitials}
-                      </AvatarFallback>
-                    </Avatar>
-
-                    <div className="min-w-0 flex-1 space-y-3">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant="secondary" className="gap-1.5">
-                          <Sparkles className="h-3.5 w-3.5" />
-                          Trader Profile
-                        </Badge>
-                        <TraderProfileShareButton />
-                      </div>
-
-                      <div className="space-y-2">
-                        <h2 className="truncate text-3xl font-black tracking-tight text-foreground sm:text-4xl 2xl:text-5xl">
-                          {profileName}
-                        </h2>
-
-                        <p className="max-w-2xl text-sm text-muted-foreground">
-                          Performance board for reviewing consistency, session rhythm, and active
-                          account health in one place.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <ProfileVisibilityPanel
-                    isOwnProfile={isOwnProfile}
-                    showOnLeaderboard={showOnLeaderboard}
-                    isTogglingVisibility={isTogglingVisibility}
-                    onToggle={handleToggleLeaderboard}
-                  />
+      <div className="space-y-5">
+        {/* Profile Header */}
+        <UnifiedSurface className="p-5 sm:p-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex min-w-0 items-start gap-4">
+              <Avatar className="h-20 w-20 shrink-0 rounded-2xl border border-border sm:h-24 sm:w-24">
+                <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
+                <AvatarFallback className="bg-background text-lg font-semibold">
+                  {profileInitials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className="gap-1">
+                    <Sparkles className="h-3.5 w-3.5" /> Trader Profile
+                  </Badge>
+                  <TraderProfileShareButton />
                 </div>
-              </div>
-
-              {/* Section 2: Metrics Strip + Review Controls */}
-              <div className="p-5 sm:p-6">
-                <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.9fr)]">
-                  <div className="space-y-3">
-                    <div className="grid gap-3 md:grid-cols-3">
-                      {primaryStripMetrics.map((metric) => (
-                        <StripMetric
-                          key={metric.label}
-                          label={metric.label}
-                          value={metric.value}
-                          tone={metric.tone}
-                          emphasis
-                          className="h-full"
-                        />
-                      ))}
-                    </div>
-
-                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                      {secondaryStripMetrics.map((metric) => (
-                        <StripMetric
-                          key={metric.label}
-                          label={metric.label}
-                          value={metric.value}
-                          tone={metric.tone}
-                          className="h-full"
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className={cn(insetPanelClassName, 'p-5 sm:p-6')}>
-                    <div className="flex flex-col gap-4">
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div className="space-y-1">
-                          <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
-                            Review controls
-                          </p>
-                          <p className="text-sm font-semibold text-foreground">
-                            {reviewWindowSummary}
-                          </p>
-                        </div>
-                        <div className={cn(insetPanelClassName, "p-4 sm:p-5")}>
-                          <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
-                            Active session
-                          </p>
-                          <p className="mt-2 text-sm font-semibold text-foreground">
-                            {selectedDayLabel}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-                        <Select
-                          value={dateFilterPreset}
-                          onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
-                        >
-                          <SelectTrigger className="h-10 w-full border-border bg-muted text-sm text-foreground">
-                            <SelectValue placeholder="Select range" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="last_week">Last Week</SelectItem>
-                            <SelectItem value="last_month">Last Month</SelectItem>
-                            <SelectItem value="last_3_months">Last 3 Months</SelectItem>
-                            <SelectItem value="last_6_months">Last 6 Months</SelectItem>
-                            <SelectItem value="last_year">Last Year</SelectItem>
-                            <SelectItem value="custom">Custom</SelectItem>
-                          </SelectContent>
-                        </Select>
-
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              className="h-10 justify-start border-border bg-muted text-sm text-foreground hover:bg-muted"
-                            >
-                              <CalendarIcon className="h-4 w-4" />
-                              {dateFilterLabel ?? 'Custom Range'}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-2" align="start">
-                            <Calendar
-                              mode="range"
-                              selected={customDateRange}
-                              onSelect={setCustomDateRange}
-                              numberOfMonths={isMobile ? 1 : 2}
-                              className="p-0"
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Section 3: Active Accounts */}
-              <div className="p-5 sm:p-6">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="space-y-1">
-                    <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-                      Active accounts
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Linked accounts contributing to the selected review window.
-                    </p>
-                  </div>
-                  <Badge variant="secondary">{activeAccountsCount} active</Badge>
-                </div>
-
-                <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.92fr)] 2xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,1fr)]">
-                  <div className={cn(insetPanelClassName, 'p-5 sm:p-6')}>
-                    {activeAccountLabels.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {activeAccountLabels.map((accountLabel) => (
-                          <span
-                            key={accountLabel}
-                            className="rounded-full border border-border bg-muted px-3 py-1.5 text-xs font-medium text-foreground"
-                          >
-                            {accountLabel}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className={cn(insetPanelClassName, 'p-4 text-sm text-muted-foreground')}>
-                        No linked accounts yet.
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 2xl:grid-cols-3">
-                    <SignalTile
-                      label="Total capital"
-                      value={formatCapitalCompact(totalCapitalAllAccounts)}
-                      tone={totalCapitalAllAccounts >= 0 ? 'positive' : 'negative'}
-                    />
-                    <SignalTile
-                      label="Total withdraw"
-                      value={formatCapitalCompact(totalWithdrawAllAccounts)}
-                    />
-                    <SignalTile
-                      label="Active days"
-                      value={String(tradeCalendarDays.length)}
-                      tone={tradeCalendarDays.length > 0 ? 'positive' : 'default'}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Section 4: Daily Session Pattern */}
-              <div className="p-5 sm:p-6">
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                  <div className="space-y-1">
-                    <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-                      Daily session pattern
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Review day-by-day trading rhythm and the currently selected session result.
-                    </p>
-                  </div>
-
-                  <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px]">
-                    <StatTile label="Selected day" value={selectedDayLabel} className="p-3" />
-                    <StatTile
-                      label="Selected PnL"
-                      value={formatSigned(selectedPnl)}
-                      tone={selectedPnl >= 0 ? 'positive' : 'negative'}
-                      className="p-3"
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className={cn(
-                    insetPanelClassName,
-                    'mt-4 min-h-[30rem] overflow-x-auto p-5 sm:p-6 lg:min-h-[36rem] 2xl:min-h-[42rem]',
-                  )}
-                >
-                  <CalendarWidget
-                    selectedDay={selectedCalendarDay}
-                    latestTradeDay={latestTradeDay}
-                    onSelectDay={setSelectedCalendarDay}
-                    positivePnlDays={positivePnlDays}
-                    negativePnlDays={negativePnlDays}
-                    tradePnlByDay={tradePnlByDay}
-                  />
-
-                  <div className="mt-4 flex flex-wrap items-center gap-3 px-1 text-[11px] text-muted-foreground">
-                    <span className="inline-flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-semantic-success-bg/50" />
-                      Profit day
-                    </span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-semantic-error-border" />
-                      Loss day
-                    </span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-primary/30" />
-                      No trades
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </UnifiedSurface>
-
-          <UnifiedSurface
-            variant="elevated"
-            className="animate-fade-up-smooth-d1 space-y-6 p-5 sm:p-6 xl:sticky xl:top-24 xl:self-start"
-          >
-            <RadarChartCard
-              radarData={radarData}
-              isBenchmarkLoading={isBenchmarkLoading}
-              benchmarkSampleSize={benchmark?.sampleSize}
-            />
-
-            <div className="border-t border-border/30" />
-
-            <div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-                  Execution quality
+                <h1 className="truncate text-3xl font-bold tracking-tight sm:text-4xl">
+                  {profileName}
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Performance board for reviewing consistency, session rhythm, and active account
+                  health.
                 </p>
               </div>
+            </div>
+            <div className={cn(insetPanelClassName, 'w-full p-3.5 sm:w-auto sm:min-w-[18rem]')}>
+              <div className="flex items-start justify-between gap-3">
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                    Public visibility
+                  </p>
+                  <Badge
+                    variant={showOnLeaderboard ? 'default' : 'outline'}
+                    className="inline-flex gap-1.5"
+                  >
+                    {showOnLeaderboard ? (
+                      <Globe className="h-3.5 w-3.5" />
+                    ) : (
+                      <Lock className="h-3.5 w-3.5" />
+                    )}
+                    {showOnLeaderboard ? 'Public' : 'Private'}
+                  </Badge>
+                </div>
+                {isOwnProfile && (
+                  <Switch
+                    checked={showOnLeaderboard}
+                    onCheckedChange={() => handleToggleLeaderboard()}
+                    disabled={isTogglingVisibility}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+        </UnifiedSurface>
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        {/* Metrics + Controls */}
+        <div className="grid gap-4 xl:grid-cols-[1fr_380px]">
+          <div className="space-y-3">
+            <div className="grid gap-3 md:grid-cols-3">
+              <StatTile
+                label="Net PnL"
+                value={fs(metrics.netPnl)}
+                tone={metrics.netPnl > 0 ? 'positive' : metrics.netPnl < 0 ? 'negative' : 'default'}
+              />
+              <StatTile
+                label="Avg net / trade"
+                value={fs(metrics.avgReturn)}
+                tone={
+                  metrics.avgReturn > 0
+                    ? 'positive'
+                    : metrics.avgReturn < 0
+                      ? 'negative'
+                      : 'default'
+                }
+              />
+              <StatTile
+                label="Consistency"
+                value={`${fv(metrics.consistencyRate)}%`}
+                tone={metrics.consistencyRate >= 50 ? 'positive' : 'default'}
+              />
+            </div>
+            <div className="grid gap-3 grid-cols-2 xl:grid-cols-4">
+              <StatTile label="Win Rate" value={`${fv(metrics.winRate)}%`} />
+              <StatTile label="Total Trades" value={String(metrics.totalTrades)} />
+              <StatTile
+                label="Current Streak"
+                value={metrics.winningStreak > 0 ? `${metrics.winningStreak} wins` : 'Reset'}
+              />
+              <StatTile label="Active Accounts" value={String(activeAccountsCount)} />
+            </div>
+          </div>
+
+          <div className={cn(insetPanelClassName, 'p-5')}>
+            <div className="space-y-4">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                  Review Window
+                </p>
+                <p className="mt-1 text-sm font-semibold">{reviewWindowSummary}</p>
+              </div>
+              <div className="flex gap-2">
+                <Select
+                  value={dateFilterPreset}
+                  onValueChange={(v: DateFilterPreset) => setDateFilterPreset(v)}
+                >
+                  <SelectTrigger className="h-10 flex-1 border-border bg-muted">
+                    <SelectValue placeholder="Range" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="last_week">Last Week</SelectItem>
+                    <SelectItem value="last_month">Last Month</SelectItem>
+                    <SelectItem value="last_3_months">Last 3 Months</SelectItem>
+                    <SelectItem value="last_6_months">Last 6 Months</SelectItem>
+                    <SelectItem value="last_year">Last Year</SelectItem>
+                    <SelectItem value="custom">Custom</SelectItem>
+                  </SelectContent>
+                </Select>
+                {dateFilterPreset === 'custom' && (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="h-10 border-border bg-muted">
+                        <CalendarIcon className="h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-2" align="end">
+                      <Calendar
+                        mode="range"
+                        selected={customDateRange}
+                        onSelect={setCustomDateRange}
+                        numberOfMonths={isMobile ? 1 : 2}
+                        className="p-0"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Calendar + Radar */}
+        <div className="grid gap-4 xl:grid-cols-[1fr_380px]">
+          <UnifiedSurface className="p-5 sm:p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                Daily Session Pattern
+              </p>
+              <Badge variant="outline">
+                {selectedDayLabel} · {fs(selectedPnl)}
+              </Badge>
+            </div>
+            <CalendarWidget
+              selectedDay={selectedCalendarDay}
+              latestTradeDay={latestTradeDay}
+              onSelectDay={setSelectedCalendarDay}
+              positivePnlDays={positivePnlDays}
+              negativePnlDays={negativePnlDays}
+              tradePnlByDay={tradePnlByDay}
+            />
+          </UnifiedSurface>
+          <UnifiedSurface className="space-y-5 p-5 sm:p-6">
+            <RadarChartCard
+              radarData={radarData}
+              isBenchmarkLoading={false}
+              benchmarkSampleSize={benchmark?.sampleSize}
+            />
+            <div className="space-y-3">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                Execution Quality
+              </p>
+              <div className="grid grid-cols-2 gap-3">
                 <StatTile
-                  label="Max drawdown"
-                  value={formatValue(metrics.drawdown)}
+                  label="Max DD"
+                  value={fv(metrics.drawdown)}
                   tone={metrics.drawdown > 0 ? 'negative' : 'default'}
                 />
                 <StatTile
-                  label="Win rate"
-                  value={`${formatValue(metrics.winRate)}%`}
-                  tone={metrics.winRate >= 50 ? 'positive' : 'default'}
-                />
-                <StatTile
-                  label="Risk reward"
-                  value={formatValue(metrics.riskReward)}
+                  label="Risk/Reward"
+                  value={fv(metrics.riskReward)}
                   tone={metrics.riskReward >= 1 ? 'positive' : 'default'}
                 />
-                <StatTile
-                  label="Gross wins"
-                  value={formatCapitalCompact(metrics.sumGain)}
-                  tone={metrics.sumGain > 0 ? 'positive' : 'default'}
-                />
               </div>
-
-              <div className="mt-4 space-y-3">
-                <MeterRow
-                  label="Win rate balance"
-                  value={`${formatValue(metrics.winRate)}%`}
-                  progress={Math.min(100, Math.max(8, metrics.winRate))}
-                />
-                <MeterRow
-                  label="Trade volume"
-                  value={`${metrics.totalTrades} trades`}
-                  progress={Math.min(100, Math.max(8, metrics.totalTrades))}
-                  fillClassName="bg-primary/50"
-                />
-              </div>
+              <MeterRow
+                label="Win Rate"
+                value={`${fv(metrics.winRate)}%`}
+                progress={Math.min(100, Math.max(8, metrics.winRate))}
+              />
+              <MeterRow
+                label="Trade Volume"
+                value={`${metrics.totalTrades} trades`}
+                progress={metrics.totalTrades}
+              />
             </div>
           </UnifiedSurface>
         </div>
 
-        {/* ---- Trade History ---- */}
-        <Suspense fallback={<TableSkeleton />}>
-          <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d5 p-5 sm:p-6">
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-[11px] font-black uppercase tracking-[0.12em] text-muted-foreground">
-                Trade history
-              </p>
-              <Badge variant="secondary">{tradeFeedSummary}</Badge>
-            </div>
-
-            {isLoading ? (
-            <div className="mt-4 space-y-2">
-                {[1, 2, 3].map((index) => (
-                  <div
-                    key={index}
-                    className={cn(
-                      insetPanelClassName,
-                      'flex items-center justify-between gap-3 px-4 py-3 animate-pulse',
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="h-3 w-3 rounded-full bg-muted/30" />
-                      <div className="space-y-1.5">
-                        <div className="h-3 w-24 rounded bg-muted/30" />
-                        <div className="h-2.5 w-36 rounded bg-muted/30" />
-                      </div>
-                    </div>
-                    <div className="h-3 w-14 rounded bg-muted/30" />
-                  </div>
-                ))}
+        {/* Trade History */}
+        <UnifiedSurface className="p-5 sm:p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+              Trade History
+            </p>
+            <Badge variant="secondary">{tradeFeedSummary}</Badge>
+          </div>
+          <div className="space-y-2">
+            {paginatedClosedTrades.length === 0 ? (
+              <div
+                className={cn(
+                  insetPanelClassName,
+                  'px-4 py-4 text-sm text-muted-foreground',
+                )}
+              >
+                No closed trades in range.
               </div>
-            ) : null}
-
-            <div className="mt-5 space-y-2">
-              {paginatedClosedTrades.length === 0 ? (
-                 <div className={cn(insetPanelClassName, 'px-4 py-4 text-sm text-muted-foreground')}>
-                  No closed trades in the current range yet.
-                </div>
-              ) : (
-                paginatedClosedTrades.map((trade) => {
+            ) : (
+              paginatedClosedTrades.map(
+                (trade: {
+                  id: string
+                  pnl?: number
+                  instrument?: string
+                  entryDate: string | Date
+                  closeDate?: string | Date | null
+                }) => {
                   const pnl = Number(trade.pnl || 0)
-                  const closeDate = (trade as { closeDate?: string | Date | null }).closeDate
-
                   return (
                     <div
                       key={trade.id}
                       className={cn(
                         insetPanelClassName,
-                        'flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3',
+                        'flex items-center justify-between gap-3 px-4 py-3',
                       )}
                     >
                       <div className="flex min-w-0 items-center gap-3">
@@ -1188,66 +754,71 @@ export default function TraderProfilePageClient() {
                           )}
                         />
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-medium text-foreground">
-                            {trade.instrument || 'Unknown instrument'}
+                          <p className="truncate text-sm font-medium">
+                            {trade.instrument || 'Unknown'}
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            Closed {formatTradeTimestamp(closeDate ?? trade.entryDate)}
+                            Closed{' '}
+                            {trade.closeDate
+                              ? format(new Date(trade.closeDate), 'MMM d, yyyy • p')
+                              : 'N/A'}
                           </p>
                         </div>
                       </div>
-
                       <p
                         className={cn(
                           'shrink-0 text-sm font-semibold tabular-nums',
                           pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error',
                         )}
                       >
-                        {formatSigned(pnl)}
+                        {fs(pnl)}
                       </p>
                     </div>
                   )
-                })
-              )}
+                },
+              )
+            )}
+          </div>
+          {closedTrades.length > tradesPerPage && (
+            <div className={cn(insetPanelClassName, 'mt-4 px-3 py-2')}>
+              <Pagination className="justify-end">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setTradeFeedPage((c) => Math.max(1, c - 1))
+                      }}
+                      className={
+                        tradeFeedPage === 1 ? 'pointer-events-none opacity-50' : ''
+                      }
+                    />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#" isActive size="default" className="min-w-20">
+                      {tradeFeedPage} / {totalPages}
+                    </PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setTradeFeedPage((c) => Math.min(totalPages, c + 1))
+                      }}
+                      className={
+                        tradeFeedPage >= totalPages
+                          ? 'pointer-events-none opacity-50'
+                          : ''
+                      }
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             </div>
-
-            {closedTrades.length > tradesPerPage ? (
-              <div className={cn(insetPanelClassName, 'mt-4 px-3 py-2')}>
-                <Pagination className="justify-end">
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious
-                        href="#"
-                        onClick={(event) => {
-                          event.preventDefault()
-                          setTradeFeedPage((current) => Math.max(1, current - 1))
-                        }}
-                        className={tradeFeedPage === 1 ? 'pointer-events-none opacity-50' : ''}
-                      />
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink href="#" isActive size="default" className="min-w-24">
-                        {tradeFeedPage} / {tradeFeedTotalPages}
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationNext
-                        href="#"
-                        onClick={(event) => {
-                          event.preventDefault()
-                          setTradeFeedPage((current) => Math.min(tradeFeedTotalPages, current + 1))
-                        }}
-                        className={
-                          tradeFeedPage >= tradeFeedTotalPages ? 'pointer-events-none opacity-50' : ''
-                        }
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </div>
-            ) : null}
-          </UnifiedSurface>
-        </Suspense>
+          )}
+        </UnifiedSurface>
       </div>
     </UnifiedPageShell>
   )
