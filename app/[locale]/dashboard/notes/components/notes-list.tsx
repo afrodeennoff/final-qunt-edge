@@ -199,9 +199,11 @@ export function NotesList({
           </div>
         ) : notes.length === 0 ? (
           <div className="p-8 text-center">
-            <FileText className="h-10 w-10 mx-auto mb-3 text-muted-foreground/30" />
-            <p className="text-xs font-medium text-muted-foreground">No notes found</p>
-            <p className="text-[11px] mt-1 text-muted-foreground/60">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-border/30 bg-gradient-to-br from-primary/[0.08] to-transparent">
+              <FileText className="h-5 w-5 text-primary/60" />
+            </div>
+            <p className="text-sm font-medium text-foreground/70">No notes found</p>
+            <p className="text-xs mt-1.5 text-muted-foreground/60">
               {searchQuery
                 ? 'Try a different search term'
                 : 'Create your first note to get started'}
@@ -216,11 +218,11 @@ export function NotesList({
                   key={note.id}
                   onClick={() => onNoteSelect(note.id)}
                   className={cn(
-                    "w-full text-left p-3 rounded-md transition-colors duration-150",
+                    "w-full text-left p-3 rounded-md transition-all duration-150",
                     "focus:outline-none",
                     isActive
-                      ? "bg-card/60 border-l-2 border-l-primary/50"
-                      : "border-l-2 border-l-transparent hover:bg-card/30"
+                      ? "bg-gradient-to-r from-primary/[0.06] to-transparent border-l-2 border-l-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]"
+                      : "border-l-2 border-l-transparent hover:bg-card/30 hover:border-l-primary/20"
                   )}
                 >
                   <div className="flex items-start gap-2">

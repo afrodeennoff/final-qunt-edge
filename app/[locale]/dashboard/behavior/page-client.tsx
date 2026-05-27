@@ -286,7 +286,6 @@ export default function DashboardBehaviorPage() {
         <Tabs defaultValue="insights" className="space-y-4">
         <TabsList className="h-auto rounded-xl border border-border/30 bg-muted/40 p-1">
           <TabsTrigger value="insights">Insights</TabsTrigger>
-          <TabsTrigger value="workspace">Workspace</TabsTrigger>
         </TabsList>
 
         <TabsContent value="insights" className="space-y-4">
@@ -304,47 +303,45 @@ export default function DashboardBehaviorPage() {
           ) : (
           <>
           <section className="grid gap-4 lg:grid-cols-3">
-            <Card className="border-border/30 bg-card lg:col-span-2">
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold tracking-tight">Behavior Health</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Risk Alignment</span>
-                  <span className="font-semibold">{insights?.modules.riskAlignmentScore ?? 0}%</span>
+            <div className="rounded-xl border border-border/30 bg-card lg:col-span-2">
+              <div className="p-5 sm:p-6">
+                <h3 className="text-lg font-semibold tracking-tight mb-4">Behavior Health</h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Risk Alignment</span>
+                    <span className="font-semibold">{insights?.modules.riskAlignmentScore ?? 0}%</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Emotional Risk</span>
+                    <span className="font-semibold">
+                      {insights?.summary.emotionalRiskPercent ?? 0}%
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Check-In Rate</span>
+                    <span className="font-semibold">{insights?.modules.checkInRate ?? 0}%</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Loss Chasing Events</span>
+                    <span className="font-semibold">{insights?.summary.lossChasingEvents ?? 0}</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Emotional Risk</span>
-                  <span className="font-semibold">
-                    {insights?.summary.emotionalRiskPercent ?? 0}%
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Check-In Rate</span>
-                  <span className="font-semibold">{insights?.modules.checkInRate ?? 0}%</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Loss Chasing Events</span>
-                  <span className="font-semibold">{insights?.summary.lossChasingEvents ?? 0}</span>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card className="border-border/30 bg-card">
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold tracking-tight">Live Prompt</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+            <div className="rounded-xl border border-border/30 bg-card">
+              <div className="p-5 sm:p-6">
+                <h3 className="text-lg font-semibold tracking-tight mb-4">Live Prompt</h3>
                 <p className="text-sm text-muted-foreground">
                   {insights?.prompts.mindful ??
                     'Before executing: is this trade analysis-driven or emotion-driven?'}
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </section>
 
           {(insights?.drivers?.length ?? 0) > 0 ? (
-          <section className="rounded-xl border border-border/30 bg-card p-4 sm:p-6">
+          <section className="rounded-xl border border-border/30 bg-card p-5 sm:p-6">
             <div className="mb-3 flex items-center gap-2">
               <Gauge className="h-4 w-4 text-foreground" />
               <h3 className="text-lg font-semibold tracking-tight">Top Risk Drivers</h3>
@@ -367,66 +364,66 @@ export default function DashboardBehaviorPage() {
         ) : null}
 
         <section className="grid gap-4 lg:grid-cols-2">
-          <Card className="border-border/30 bg-card">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold tracking-tight">Training & Reflection</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {trainingModules.map((module) => (
-                <div
-                  key={module.title}
-                  className="rounded-xl border border-border/30 bg-muted/40 p-3"
-                >
-                  <p className="text-sm font-semibold">{module.title}</p>
-                  <p className="text-xs text-muted-foreground">{module.description}</p>
-                  <Badge variant="secondary" className="mt-2">
-                    {module.metric}
-                  </Badge>
-                </div>
-              ))}
-              {reflectionModules.map((module) => (
-                <div
-                  key={module.title}
-                  className="flex items-center justify-between rounded-xl border border-border/30 bg-muted/40 p-3 text-sm"
-                >
-                  <span className="text-muted-foreground">{module.metric}</span>
-                  <span className="font-semibold">{module.value}</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/30 bg-card">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold tracking-tight">Achievements & Guidance</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {gamificationModules.map((module) => (
-                <div
-                  key={module.badge}
-                  className="rounded-xl border border-border/30 bg-muted/40 p-3"
-                >
-                  <p className="text-sm font-semibold flex items-center gap-2">
-                    {module.achieved ? (
-                      <CircleCheck className="h-4 w-4 text-foreground" />
-                    ) : (
-                      <CircleX className="h-4 w-4 text-muted-foreground" />
-                    )}
-                    {module.badge}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{module.detail}</p>
-                </div>
-              ))}
-              <div className="rounded-xl border border-border/30 bg-muted/40 p-3">
-                <p className="text-sm font-semibold mb-1">Risk Guard</p>
-                <p className="text-xs text-muted-foreground">{insights?.prompts.riskGuard}</p>
+          <div className="rounded-xl border border-border/30 bg-card">
+            <div className="p-5 sm:p-6">
+              <h3 className="text-lg font-semibold tracking-tight mb-4">Training & Reflection</h3>
+              <div className="space-y-3">
+                {trainingModules.map((module) => (
+                  <div
+                    key={module.title}
+                    className="rounded-xl border border-border/30 bg-muted/40 p-3"
+                  >
+                    <p className="text-sm font-semibold">{module.title}</p>
+                    <p className="text-xs text-muted-foreground">{module.description}</p>
+                    <Badge variant="secondary" className="mt-2">
+                      {module.metric}
+                    </Badge>
+                  </div>
+                ))}
+                {reflectionModules.map((module) => (
+                  <div
+                    key={module.title}
+                    className="flex items-center justify-between rounded-xl border border-border/30 bg-muted/40 p-3 text-sm"
+                  >
+                    <span className="text-muted-foreground">{module.metric}</span>
+                    <span className="font-semibold">{module.value}</span>
+                  </div>
+                ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-border/30 bg-card">
+            <div className="p-5 sm:p-6">
+              <h3 className="text-lg font-semibold tracking-tight mb-4">Achievements & Guidance</h3>
+              <div className="space-y-3">
+                {gamificationModules.map((module) => (
+                  <div
+                    key={module.badge}
+                    className="rounded-xl border border-border/30 bg-muted/40 p-3"
+                  >
+                    <p className="text-sm font-semibold flex items-center gap-2">
+                      {module.achieved ? (
+                        <CircleCheck className="h-4 w-4 text-foreground" />
+                      ) : (
+                        <CircleX className="h-4 w-4 text-muted-foreground" />
+                      )}
+                      {module.badge}
+                    </p>
+                    <p className="text-xs text-muted-foreground">{module.detail}</p>
+                  </div>
+                ))}
+                <div className="rounded-xl border border-border/30 bg-muted/40 p-3">
+                  <p className="text-sm font-semibold mb-1">Risk Guard</p>
+                  <p className="text-xs text-muted-foreground">{insights?.prompts.riskGuard}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
         {recommendationList.length > 0 ? (
-          <section className="rounded-xl border border-border/30 bg-card p-4 sm:p-6">
+          <section className="rounded-xl border border-border/30 bg-card p-5 sm:p-6">
             <div className="mb-3 flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-foreground" />
               <h3 className="text-lg font-semibold tracking-tight">AI Recommendations</h3>
@@ -462,44 +459,43 @@ export default function DashboardBehaviorPage() {
             </div>
           </section>
         ) : null}
+
+          {/* Analysis, AI Coach, Mindset & Journal — moved from workspace tab */}
+          <section
+            id="analysis-section"
+            className="rounded-xl border border-border/30 bg-card p-5 sm:p-6"
+          >
+            <AnalysisOverview />
+          </section>
+
+          <section
+            id="coach-section"
+            className="rounded-xl border border-border/30 bg-card p-5 sm:p-6"
+          >
+            <div className="mb-4 flex items-center gap-2">
+              <Bot className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-semibold tracking-tight">AI Trading Coach</h2>
+            </div>
+            <div className="h-[min(620px,68dvh)] min-h-[420px] sm:min-h-[500px]">
+              <ChatWidget size="large" />
+            </div>
+          </section>
+
+          <section
+            id="mindset-section"
+            className="rounded-xl border border-border/30 bg-card p-5 sm:p-6"
+          >
+            <div className="mb-4 flex items-center gap-2">
+              <MessageSquareText className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-semibold tracking-tight">Mindset & Journal</h2>
+            </div>
+            <div className="h-[min(780px,calc(100dvh-220px))] min-h-[420px] sm:min-h-[640px]">
+              <MindsetWidget size="large" />
+            </div>
+          </section>
           </>
           )}
       </TabsContent>
-
-          <TabsContent value="workspace" className="space-y-4">
-            <section
-              id="analysis-section"
-              className="rounded-xl border border-border/30 bg-card p-4 sm:p-6"
-            >
-              <AnalysisOverview />
-            </section>
-
-            <section
-              id="coach-section"
-              className="rounded-xl border border-border/30 bg-card p-4 sm:p-6"
-            >
-              <div className="mb-4 flex items-center gap-2">
-                <Bot className="h-5 w-5 text-primary" />
-                <h2 className="text-xl font-semibold tracking-tight">AI Trading Coach</h2>
-              </div>
-              <div className="h-[min(620px,68dvh)] min-h-[420px] sm:min-h-[500px]">
-                <ChatWidget size="large" />
-              </div>
-            </section>
-
-            <section
-              id="mindset-section"
-              className="rounded-xl border border-border/30 bg-card p-4 sm:p-6"
-            >
-              <div className="mb-4 flex items-center gap-2">
-                <MessageSquareText className="h-5 w-5 text-primary" />
-                <h2 className="text-xl font-semibold tracking-tight">Mindset & Journal</h2>
-              </div>
-              <div className="h-[min(780px,calc(100dvh-220px))] min-h-[420px] sm:min-h-[640px]">
-                <MindsetWidget size="large" />
-              </div>
-            </section>
-          </TabsContent>
       </Tabs>
       </div>
     </UnifiedPageShell>

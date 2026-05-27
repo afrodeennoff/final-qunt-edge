@@ -170,7 +170,7 @@ export function NoteInspector({
   return (
     <div className={cn("h-full flex flex-col bg-background/40", className)}>
       {/* Header */}
-      <div className="p-3 space-y-3 border-b border-border/15">
+      <div className="p-4 space-y-3 border-b border-border/15 bg-background/20">
         <h3 className="font-semibold text-[11px] uppercase tracking-wider text-muted-foreground/60">
           Inspector
         </h3>
@@ -246,7 +246,7 @@ export function NoteInspector({
                   <button
                     key={template.id}
                     onClick={() => handleApplyTemplate(template)}
-                    className="w-full text-left p-2 rounded-md transition-colors duration-150 text-xs text-foreground/70 hover:bg-card/30"
+                    className="w-full text-left p-2 rounded-md transition-all duration-150 text-xs text-foreground/70 hover:bg-gradient-to-r hover:from-primary/[0.04] hover:to-transparent hover:border-l-primary/30"
                   >
                     <div className="font-medium">{template.name}</div>
                     <div className="mt-0.5 line-clamp-1 text-muted-foreground/60">

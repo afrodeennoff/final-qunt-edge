@@ -74,10 +74,10 @@ export function NoteEditor({
   if (!note) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-8 bg-background/40">
-        <div className="text-center space-y-3 max-w-sm">
-          <div className="h-14 w-14 rounded-2xl mx-auto flex items-center justify-center bg-card border border-border/30">
+        <div className="text-center space-y-4 max-w-sm">
+          <div className="h-16 w-16 rounded-2xl mx-auto flex items-center justify-center bg-gradient-to-br from-primary/[0.08] to-transparent border border-primary/10">
             <svg
-              className="h-6 w-6 text-muted-foreground/50"
+              className="h-7 w-7 text-primary/50"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -90,12 +90,14 @@ export function NoteEditor({
               />
             </svg>
           </div>
-          <h3 className="text-sm font-medium text-foreground/70">
-            Select a note to edit
-          </h3>
-          <p className="text-xs leading-relaxed text-muted-foreground/60">
-            Choose a note from the sidebar or create a new one to get started.
-          </p>
+          <div>
+            <h3 className="text-base font-medium text-foreground/70">
+              Select a note to edit
+            </h3>
+            <p className="text-sm mt-1 leading-relaxed text-muted-foreground/60">
+              Choose a note from the sidebar or create a new one to get started.
+            </p>
+          </div>
         </div>
       </div>
     )
@@ -156,12 +158,12 @@ export function NoteEditor({
   return (
     <div className="flex flex-col h-full bg-background/30">
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-border/15">
+      <div className="flex items-center justify-between px-5 py-2.5 border-b border-border/15 bg-background/20">
         <div className="flex items-center gap-0.5">
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 w-7 p-0 rounded-md text-muted-foreground hover:text-foreground"
+            className="h-7 w-7 p-0 rounded-md text-muted-foreground hover:text-foreground hover:bg-primary/10"
             onClick={() => onTogglePin(note.id)}
             title={note.pinned ? 'Unpin note' : 'Pin note'}
           >
@@ -175,7 +177,7 @@ export function NoteEditor({
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 w-7 p-0 rounded-md text-muted-foreground hover:text-foreground"
+            className="h-7 w-7 p-0 rounded-md text-muted-foreground hover:text-foreground hover:bg-primary/10"
             onClick={() => onToggleArchive(note.id)}
             title={note.archived ? 'Unarchive note' : 'Archive note'}
           >
@@ -189,7 +191,7 @@ export function NoteEditor({
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 w-7 p-0 rounded-md text-muted-foreground hover:text-destructive"
+            className="h-7 w-7 p-0 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10"
             onClick={handleDelete}
             title="Delete note"
           >

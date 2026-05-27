@@ -91,7 +91,7 @@ type DateFilterPreset =
 type StatTone = 'default' | 'positive' | 'negative'
 
 const insetPanelClassName =
-  'rounded-md border border-border/30 bg-muted/40 shadow-none'
+  'rounded-xl border border-border/30 bg-card/50 shadow-sm'
 
 function clamp(value: number, min = 0, max = 100) {
   return Math.min(max, Math.max(min, value))
@@ -817,9 +817,10 @@ export default function TraderProfilePageClient() {
             variant="elevated"
             className="animate-fade-up-smooth overflow-hidden p-0"
           >
-            <section className="min-w-0 divide-y divide-border/20">
+            <section className="min-w-0 divide-y divide-border/15">
               {/* Section 1: Profile Header */}
-              <div className="p-5 sm:p-6 lg:p-[1.75rem]">
+              <div className="relative p-5 sm:p-6 lg:p-[1.75rem]">
+                <div className="absolute left-0 top-0 h-full w-px bg-gradient-to-b from-primary/30 via-primary/10 to-transparent" />
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start">
                     <Avatar className="h-20 w-20 shrink-0 rounded-2xl border border-border bg-muted sm:h-24 sm:w-24">
@@ -901,7 +902,7 @@ export default function TraderProfilePageClient() {
                             {reviewWindowSummary}
                           </p>
                         </div>
-                        <div className="rounded-2xl border border-border bg-muted p-4 sm:p-5">
+                        <div className={cn(insetPanelClassName, "p-4 sm:p-5")}>
                           <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
                             Active session
                           </p>
