@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { authenticateMcpRequest, requireAdminAccess } from '@/server/mcp-auth'
 import { handleMcpToolCall, standardTools } from '@/server/mcp-tools'
 import { handleAdminMcpToolCall, adminTools } from '@/server/mcp-admin-tools'
+import { MCP_SERVER_NAME, MCP_SERVER_VERSION } from '@/lib/mcp-constants'
 
 const ALL_TOOLS = [...standardTools, ...adminTools]
 
@@ -10,14 +11,16 @@ export async function POST(request: NextRequest) {
     const authCtx = await authenticateMcpRequest(request.headers.get('authorization'))
 
     const body = await request.json()
-    const { method, params } = body as { method: string; params: { name: string; arguments?: Record<string, unknown>; id?: unknown } }
+    const { method, params } = body as { method?: string; params?: Record<string, unknown> }
 
-    if (!method || !params) {
+    if (!method) {
       return Response.json(
         { jsonrpc: '2.0', error: { code: -32600, message: 'Invalid request' }, id: null },
         { status: 400 },
       )
     }
+
+    const reqId = (params as Record<string, unknown>)?.id ?? null
 
     if (method === 'initialize') {
       return Response.json({
@@ -25,9 +28,9 @@ export async function POST(request: NextRequest) {
         result: {
           protocolVersion: '2024-11-05',
           capabilities: { tools: {} },
-          serverInfo: { name: 'qunt-edge-mcp', version: '1.0.0' },
+          serverInfo: { name: MCP_SERVER_NAME, version: MCP_SERVER_VERSION },
         },
-        id: (params as any).id ?? null,
+        id: reqId,
       })
     }
 
@@ -35,27 +38,34 @@ export async function POST(request: NextRequest) {
       return Response.json({
         jsonrpc: '2.0',
         result: { tools: authCtx.role === 'admin' ? ALL_TOOLS : standardTools },
-        id: (params as any).id ?? null,
+        id: reqId,
       })
     }
 
     if (method === 'tools/call') {
-      const toolName = params.name
-      const toolArgs = params.arguments ?? {}
+      const toolName = params?.name as string | undefined
+      const toolArgs = (params?.arguments ?? {}) as Record<string, unknown>
+
+      if (!toolName) {
+        return Response.json(
+          { jsonrpc: '2.0', error: { code: -32602, message: 'Invalid params: tool name required' }, id: reqId },
+          { status: 400 },
+        )
+      }
 
       const isAdminTool = adminTools.some((t) => t.name === toolName)
       if (isAdminTool) {
         requireAdminAccess(authCtx)
         const result = await handleAdminMcpToolCall(toolName, toolArgs, authCtx)
-        return Response.json({ jsonrpc: '2.0', result, id: (params as any).id ?? null })
+        return Response.json({ jsonrpc: '2.0', result, id: reqId })
       }
 
       const result = await handleMcpToolCall(toolName, toolArgs, authCtx)
-      return Response.json({ jsonrpc: '2.0', result, id: (params as any).id ?? null })
+      return Response.json({ jsonrpc: '2.0', result, id: reqId })
     }
 
     return Response.json(
-      { jsonrpc: '2.0', error: { code: -32601, message: `Method not found: ${method}` }, id: (params as any).id ?? null },
+      { jsonrpc: '2.0', error: { code: -32601, message: `Method not found: ${method}` }, id: reqId },
       { status: 404 },
     )
   } catch (error) {

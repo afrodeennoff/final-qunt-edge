@@ -4,9 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { createClient } from '@/server/auth'
 import { randomBytes, createHash } from 'node:crypto'
 import { isAdminUser } from '@/server/authz'
+import { MCP_KEY_PREFIX_USER, MCP_KEY_PREFIX_ADMIN } from '@/lib/mcp-constants'
 
-const KEY_PREFIX_USER = 'qunt_usr_'
-const KEY_PREFIX_ADMIN = 'qunt_adm_'
 const KEY_BYTES = 32
 
 export interface ApiKeyResult {
@@ -20,7 +19,7 @@ export interface ApiKeyResult {
 }
 
 function generateApiKey(role: 'user' | 'admin'): { key: string; keyPrefix: string; keyHash: string } {
-  const prefix = role === 'admin' ? KEY_PREFIX_ADMIN : KEY_PREFIX_USER
+  const prefix = role === 'admin' ? MCP_KEY_PREFIX_ADMIN : MCP_KEY_PREFIX_USER
   const raw = randomBytes(KEY_BYTES).toString('base64url')
   const key = `${prefix}${raw}`
   const keyHash = createHash('sha256').update(key).digest('hex')
