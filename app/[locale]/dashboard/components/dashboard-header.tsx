@@ -58,10 +58,8 @@ export function DashboardHeader() {
     if (isDashboardRoot) return 'Home'
     if (pathname.includes('/dashboard/trades')) return 'Journal'
     if (pathname.includes('/dashboard/accounts')) return 'Accounts'
-    if (pathname.includes('/dashboard/analytics')) return 'Scenario Lab'
+    if (pathname.includes('/dashboard/analytics')) return 'Trading Copilot'
     if (pathname.includes('strategies')) return 'Playbook'
-    if (pathname.includes('reports')) return 'Analytics'
-    if (pathname.includes('behavior')) return 'Coaching'
     if (pathname.includes('trader-profile')) return 'Profile'
     if (pathname.includes('calendar')) return 'Calendar'
     if (pathname.includes('data')) return 'Data'
@@ -78,14 +76,10 @@ export function DashboardHeader() {
       : pathname.includes('/dashboard/accounts')
         ? 'Track account growth, balances, and consistency'
         : pathname.includes('/dashboard/analytics')
-          ? 'Run what-if scenarios on your trade data'
+          ? 'Behavioral analytics, performance reports, and AI-driven trade insights'
           : pathname.includes('strategies')
             ? 'Build and test trading strategies'
-            : pathname.includes('reports')
-              ? 'Deep-dive analytics and performance reports'
-              : pathname.includes('behavior')
-                ? 'AI-powered behavioral coaching'
-                : pathname.includes('trader-profile')
+            : pathname.includes('trader-profile')
                   ? 'Your public trader profile'
                   : pathname.includes('calendar')
                     ? 'Calendar view of your trading activity'
