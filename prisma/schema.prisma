@@ -129,6 +129,24 @@ model RecoveryCode {
   @@schema("public")
 }
 
+model ApiKey {
+  id          String    @id @default(cuid())
+  key         String    @unique
+  keyPrefix   String
+  name        String
+  userId      String
+  role        String    @default("user")
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([key])
+  @@index([userId])
+  @@index([keyPrefix])
+  @@schema("public")
+}
+
 model Referral {
   id     String @id @default(uuid())
   userId String @unique

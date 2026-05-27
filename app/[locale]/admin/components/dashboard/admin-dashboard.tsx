@@ -13,6 +13,7 @@ import {
 } from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
 import { FreeUsersTable } from './free-users-table'
+import { AdminApiKeyGenerator } from '@/app/[locale]/admin/components/admin-api-key-generator'
 import {
 	Building2,
 	Mail,
@@ -303,6 +304,8 @@ export function AdminDashboard() {
 					</Card>
 				</TabsContent>
 			</Tabs>
+
+			<AdminApiKeyGenerator />
 		</div>
 	)
 }

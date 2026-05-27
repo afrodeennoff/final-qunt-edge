@@ -33,6 +33,10 @@ import {
   Eye,
   EyeOff,
   Palette,
+  Key,
+  Copy,
+  Plus,
+  Trash2,
 } from 'lucide-react'
 import { signOut, setPasswordAction } from '@/server/auth'
 import Link from 'next/link'
@@ -58,6 +62,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Skeleton } from '@/components/ui/skeleton'
 import { LinkedAccounts } from '@/components/linked-accounts'
 import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
 
@@ -288,6 +302,137 @@ function PasswordSettingsCard({
           </div>
           <Button onClick={onUpdatePassword}>{t('auth.setPassword')}</Button>
         </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+function ApiKeySection() {
+  const [keys, setKeys] = useState<Array<{ id: string; name: string; keyPrefix: string; role: string; createdAt: string; lastUsedAt: string | null }>>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [newKeyName, setNewKeyName] = useState('')
+  const [createdKey, setCreatedKey] = useState<string | null>(null)
+  const [isCreating, setIsCreating] = useState(false)
+
+  const loadKeys = async () => {
+    setIsLoading(true)
+    const { listUserApiKeys } = await import('@/server/mcp-key-service')
+    const result = await listUserApiKeys()
+    if (result.success) setKeys(result.keys as any)
+    setIsLoading(false)
+  }
+
+  useEffect(() => { loadKeys() }, [])
+
+  const handleCreate = async () => {
+    if (!newKeyName.trim()) return
+    setIsCreating(true)
+    const { generateUserApiKey } = await import('@/server/mcp-key-service')
+    const result = await generateUserApiKey(newKeyName.trim())
+    if (result.success) {
+      setCreatedKey(result.result.key)
+      setNewKeyName('')
+      await loadKeys()
+    } else {
+      toast.error(result.error || 'Failed to create key')
+    }
+    setIsCreating(false)
+  }
+
+  const handleRevoke = async (keyId: string) => {
+    const { revokeApiKey } = await import('@/server/mcp-key-service')
+    const result = await revokeApiKey(keyId)
+    if (result.success) {
+      toast.success('API key revoked')
+      await loadKeys()
+    } else {
+      toast.error(result.error || 'Failed to revoke key')
+    }
+  }
+
+  return (
+    <Card className="rounded-xl border border-border/30 bg-card shadow-sm lg:col-span-2">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Key className="h-5 w-5" />
+          API Keys
+        </CardTitle>
+        <CardDescription>Manage API keys for programmatic access to your trading data via the MCP server.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          {isLoading ? (
+            <div className="space-y-2">
+              {[1, 2].map((i) => <Skeleton key={i} className="h-14 w-full rounded-lg" />)}
+            </div>
+          ) : keys.length === 0 ? (
+            <div className="text-center py-6 text-muted-foreground">
+              <Key className="mx-auto h-8 w-8 mb-2 opacity-50" />
+              <p className="text-sm">No API keys yet. Create one to connect external tools.</p>
+            </div>
+          ) : (
+            keys.map((apiKey) => (
+              <div key={apiKey.id} className="flex items-center justify-between rounded-xl border border-border/25 bg-muted/40 p-3">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium">{apiKey.name}</p>
+                    <Badge variant="outline" className="text-[10px]">{apiKey.keyPrefix}...</Badge>
+                    <Badge variant="secondary" className="text-[10px]">{apiKey.role}</Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Created {new Date(apiKey.createdAt).toLocaleDateString()}
+                    {apiKey.lastUsedAt ? ` · Last used ${new Date(apiKey.lastUsedAt).toLocaleDateString()}` : ' · Never used'}
+                  </p>
+                </div>
+                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-destructive" onClick={() => handleRevoke(apiKey.id)}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ))
+          )}
+        </div>
+
+        <Dialog open={showCreateDialog} onOpenChange={(open) => { setShowCreateDialog(open); if (!open) setCreatedKey(null) }}>
+          <DialogTrigger asChild>
+            <Button variant="outline" className="w-full gap-2">
+              <Plus className="h-4 w-4" /> Create API Key
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create API Key</DialogTitle>
+              <DialogDescription>Give this key a name so you can identify it later. The key will only be shown once.</DialogDescription>
+            </DialogHeader>
+            {createdKey ? (
+              <div className="space-y-3">
+                <p className="text-sm font-medium">Your API key:</p>
+                <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-muted/40 p-3">
+                  <code className="flex-1 text-xs break-all select-all">{createdKey}</code>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => { navigator.clipboard.writeText(createdKey); toast.success('Copied!') }}>
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+                <p className="text-xs text-destructive">Copy this key now. You won&apos;t be able to see it again.</p>
+              </div>
+            ) : (
+              <>
+                <Input
+                  placeholder="e.g., My Trading Bot"
+                  value={newKeyName}
+                  onChange={(e) => setNewKeyName(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleCreate() }}
+                />
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setShowCreateDialog(false)}>Cancel</Button>
+                  <Button onClick={handleCreate} disabled={isCreating || !newKeyName.trim()}>
+                    {isCreating ? 'Creating...' : 'Create Key'}
+                  </Button>
+                </DialogFooter>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   )
@@ -695,6 +840,8 @@ export default function SettingsPage() {
           onToggleConfirmPassword={() => setShowConfirmPassword((value) => !value)}
           onUpdatePassword={handlePasswordUpdate}
         />
+
+        <ApiKeySection />
 
         {/* Account Management Section */}
         <Card className="rounded-xl border border-border/30 bg-card shadow-sm">
