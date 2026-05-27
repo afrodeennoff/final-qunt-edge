@@ -564,7 +564,7 @@
   --popover-foreground: #EAEAEA;
   --sidebar: #000000;
   --sidebar-background: #000000;
-  --muted: #0D0D0D;
+  --muted: hsl(0, 0%, 5%);
   --muted-foreground: #888888;
   --subtle-foreground: #666666;
 
@@ -601,9 +601,9 @@
   --semantic-info-border: 263 85% 65% / 0.25;
 
   /* ── BORDER & RING — Deep Purple only for focus/ring ── */
-  --border: hsl(263, 24%, 16%);
-  --border-subtle: hsl(263, 22%, 13%);
-  --input: hsl(260, 20%, 12%);
+  --border: hsl(260, 12%, 16%);
+  --border-subtle: hsl(260, 8%, 13%);
+  --input: hsl(260, 10%, 12%);
   --ring: hsl(263, 85%, 65%);
 
   /* ── SIDEBAR */
@@ -614,7 +614,7 @@
   --sidebar-primary-foreground: #000000;
   --sidebar-accent: hsl(263, 60%, 12%);
   --sidebar-accent-foreground: hsl(263, 85%, 65%);
-  --sidebar-border: hsl(260, 20%, 12%);
+  --sidebar-border: hsl(260, 10%, 12%);
   --sidebar-ring: hsl(263, 85%, 65%);
 
   /* ── COMPATIBILITY BRIDGE — neutral dark grays for legacy code */
@@ -739,9 +739,9 @@
   --destructive-foreground: #FFFFFF;
 
   /* Clean minimal borders */
-  --border: hsl(263, 24%, 16%);
-  --border-subtle: hsl(263, 22%, 13%);
-  --input: hsl(260, 20%, 12%);
+  --border: hsl(260, 12%, 16%);
+  --border-subtle: hsl(260, 8%, 13%);
+  --input: hsl(260, 10%, 12%);
   --ring: hsl(263, 85%, 65%);
 
   --sidebar-foreground: #EAEAEA;
@@ -749,7 +749,7 @@
   --sidebar-primary-foreground: #000000;
   --sidebar-accent: hsl(263, 60%, 12%);
   --sidebar-accent-foreground: hsl(263, 85%, 65%);
-  --sidebar-border: hsl(260, 20%, 12%);
+  --sidebar-border: hsl(260, 10%, 12%);
   --sidebar-ring: hsl(263, 85%, 65%);
 
   /* Trading P&L semantics (strong, no tint bg unless needed) */

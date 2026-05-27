@@ -200,7 +200,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                       type="submit"
                       name="action"
                       value="dismissed"
-                      variant="solid"
+                      variant="default"
                       size="sm"
                       className="w-32 bg-success hover:bg-success/80"
                     >

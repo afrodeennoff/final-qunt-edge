@@ -218,7 +218,7 @@ export function MarketingPricingCard({
           </li>
         ))}
       </ul>
-      <Button asChild variant={highlighted ? 'solid' : 'outline'} size="lg" className={cn('mt-8 w-full', highlighted && 'rounded-lg border border-primary/30')} style={highlighted ? { background: 'var(--primary)' } : undefined}>
+      <Button asChild variant={highlighted ? 'default' : 'outline'} size="lg" className={cn('mt-8 w-full', highlighted && 'rounded-lg border border-primary/30')} style={highlighted ? { background: 'var(--primary)' } : undefined}>
         <Link href={href}>{cta}</Link>
       </Button>
     </Card>

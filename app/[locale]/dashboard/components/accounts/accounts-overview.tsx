@@ -1471,7 +1471,7 @@ function AccountsOverviewComponent({
                   <DialogDescription>{t('propFirm.configurator.description')}</DialogDescription>
                 </div>
                 <div className="flex items-center gap-2 pr-4">
-                  <Button variant="solid" onClick={handleSave} disabled={pendingChanges === null}>
+                  <Button variant="default" onClick={handleSave} disabled={pendingChanges === null}>
                     {isSaving ? t('common.saving') : t('common.save')}
                   </Button>
                   <Button

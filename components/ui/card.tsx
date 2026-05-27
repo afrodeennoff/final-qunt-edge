@@ -57,16 +57,16 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onClick={isInteractive ? onClick : undefined}
         className={cn(
           'group relative overflow-hidden text-foreground',
-          'rounded-xl bg-card border border-border/30',
-          variant === 'outlined' && 'bg-transparent border-border shadow-none',
-          variant === 'flat' && 'border-transparent bg-transparent shadow-none',
-          variant === 'default' && 'bg-card border border-border/30 shadow-none',
-          variant === 'elevated' && 'bg-card border border-border/40 shadow-sm',
+          'rounded-xl bg-card border border-border/25',
+          variant === 'outlined' && 'bg-transparent border-border/25',
+          variant === 'flat' && 'border-transparent bg-transparent',
+          variant === 'default' && 'bg-card border border-border/25',
+          variant === 'elevated' && 'bg-card/95 border border-border/25',
           accent && accentClassMap[accent],
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',
           size === 'lg' && 'type-body-lg',
-          hover && 'hover:border-border/50 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-150',
+          hover && 'hover:border-border/40 hover:-translate-y-px transition-all duration-150',
           isInteractive &&
             'cursor-pointer transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.99]',
           isLoading && 'pointer-events-none opacity-80',
@@ -115,7 +115,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
         'relative flex flex-col gap-3',
         {
           'p-3 pb-0': size === 'sm',
-          'p-4 pb-0': size === 'md',
+          'p-3.5 pb-0': size === 'md',
           'p-6 pb-0': size === 'lg',
         },
         className,
@@ -208,7 +208,7 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
         'type-body text-foreground',
         {
           'p-3': size === 'sm',
-          'p-4': size === 'md',
+          'p-3.5': size === 'md',
           'p-6': size === 'lg',
         },
         className,
@@ -228,10 +228,10 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-3 border-t border-border',
+        'flex items-center gap-3 border-t border-border/50',
         {
           'p-3': size === 'sm',
-          'p-4': size === 'md',
+          'p-3.5': size === 'md',
           'p-6': size === 'lg',
         },
         className,

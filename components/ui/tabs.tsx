@@ -28,7 +28,7 @@ const TabsList = React.forwardRef<
     ref={ref}
     data-slot="tabs-list"
     className={cn(
-      'inline-flex min-h-10 items-center justify-center rounded-xl border border-border/40 bg-background/60 p-1 text-muted-foreground',
+      'inline-flex min-h-10 items-center justify-center rounded-xl border border-border/25 bg-background/60 p-0.5 text-muted-foreground',
       className,
     )}
     {...props}

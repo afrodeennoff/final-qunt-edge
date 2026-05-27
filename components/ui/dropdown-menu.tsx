@@ -46,12 +46,13 @@ const DropdownMenuSubContent = React.forwardRef<
   <DropdownMenuPrimitive.SubContent
     ref={ref}
     className={cn(
-      'z-50 min-w-[10rem] overflow-hidden rounded-xl border border-border/70 bg-popover p-1.5 text-popover-foreground shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
-      className,
-    )}
-    {...props}
-  />
-))
+      'z-50 min-w-[10rem] overflow-hidden rounded-xl border border-border/50 bg-popover p-1 text-popover-foreground shadow-[0_8px_20px_-12px_rgba(0,0,0,0.5)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+        className,
+      )}
+      {...props}
+    />
+  ))
+})
 DropdownMenuSubContent.displayName = DropdownMenuPrimitive.SubContent.displayName
 
 const DropdownMenuContent = React.forwardRef<
@@ -63,7 +64,7 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        'z-50 min-w-[10rem] overflow-hidden rounded-xl border border-border/70 bg-popover p-1.5 text-popover-foreground shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+        'z-50 min-w-[10rem] overflow-hidden rounded-xl border border-border/50 bg-popover p-1 text-popover-foreground shadow-[0_8px_20px_-12px_rgba(0,0,0,0.5)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
         className,
       )}
       {...props}
@@ -81,8 +82,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      'type-body-sm relative flex cursor-default select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-foreground/80 outline-none transition-[background-color,border-color,color] duration-120 focus:bg-accent/60 focus:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-accent/60 hover:text-foreground',
-      'rounded-lg focus:bg-primary/4 hover:bg-primary/4',
+      'type-body-sm relative flex cursor-default select-none items-center gap-2.5 rounded-lg px-2 py-1.5 text-foreground/80 outline-none transition-[background-color,border-color,color] duration-120 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       inset && 'pl-8',
       className,
     )}

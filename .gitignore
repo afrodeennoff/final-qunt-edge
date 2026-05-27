@@ -104,3 +104,6 @@ blob-report/
 playwright-report/
 playwright/.cache/
 .env*.local
+
+# Brainstorming / visual companion artifacts
+.superpowers/

@@ -6,25 +6,16 @@ import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'type-body-sm inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border select-none font-medium tracking-normal transition-[background-color,border-color,color,transform,box-shadow] duration-150 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 min-h-[40px] rounded-lg press-scale',
+  'type-body-sm inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border select-none font-medium tracking-normal transition-[background-color,border-color,color,transform] duration-150 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 min-h-[40px] rounded-[10px]',
   {
     variants: {
       variant: {
-        solid: 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
+        default: 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
+        destructive: 'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
         outline: 'border-primary/12 bg-transparent text-foreground hover:bg-primary/4 hover:border-primary/20',
         ghost: 'border-transparent text-muted-foreground hover:bg-primary/4 hover:text-foreground',
-        error: 'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
-        destructive: 'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
         link: 'border-transparent text-primary underline-offset-2 hover:underline p-0 h-auto min-h-0',
-        default: 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
         secondary: 'border-primary/12 bg-primary/3 text-foreground hover:bg-primary/6',
-        mono: 'border-primary/12 bg-primary/2 text-foreground font-mono hover:bg-primary/4',
-        pill: 'rounded-full border-primary/12 bg-primary/2 text-foreground hover:bg-primary/4',
-        'pill-solid': 'rounded-full border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
-        'pill-ghost': 'rounded-full border-transparent text-muted-foreground hover:bg-primary/4 hover:text-foreground',
-        'gradient-primary': 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
-        'gradient-secondary': 'border-primary/12 bg-primary/3 text-foreground hover:bg-primary/6',
-        shimmer: 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
       },
       size: {
         sm: 'h-8 min-h-[36px] min-w-[28px] px-2.5 text-xs',
@@ -35,7 +26,7 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: 'solid',
+      variant: 'default',
       size: 'default',
     },
   },
