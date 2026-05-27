@@ -5,8 +5,10 @@ import logger, { withLogContext } from '@/lib/logger'
 import { prisma, hasConfiguredDatabaseConnection } from '@/lib/prisma'
 import { isAdminUser } from '@/server/authz'
 import { maskEmail, maskString } from '@/lib/redact-pii'
+import { withRateLimited } from '@/lib/api/with-api-route'
 
-export async function GET(request: Request) {
+export const GET = withRateLimited(
+  async (request: Request) => {
   const requestId = crypto.randomUUID()
 
   // Disable in production unless explicitly enabled
@@ -115,5 +117,6 @@ export async function GET(request: Request) {
       500,
       error instanceof Error ? error.message : undefined
     )
-  })
-}
+  },
+  { rateLimitId: 'debug-data', rateLimitMax: 30, rateLimitWindow: 60_000 }
+)

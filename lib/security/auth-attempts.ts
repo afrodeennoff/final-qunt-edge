@@ -40,7 +40,7 @@ export async function checkAuthGuard(params: {
   ip: string
   actionType: AuthActionType
 }): Promise<AuthGuardResult> {
-  if (!authSecurityConfig.rateLimitEnabled || !authSecurityConfig.lockoutEnabled) {
+  if (!authSecurityConfig.rateLimitEnabled && !authSecurityConfig.lockoutEnabled) {
     return { allowed: true }
   }
 

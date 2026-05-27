@@ -1,5 +1,6 @@
 import { orderSchema } from '../fifo-computation/schema'
 import { type FinancialInstrument } from './schema'
+import { withRateLimited } from '@/lib/api/with-api-route'
 
 export const maxDuration = 60 // Allow up to 60 seconds for AI processing
 
@@ -132,7 +133,8 @@ const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
   return instruments;
 };
 
-export async function POST(request: Request) {
+export const POST = withRateLimited(
+  async (request: Request) => {
   try {
     const json = await request.json()
     const { text } = json
@@ -172,4 +174,6 @@ export async function POST(request: Request) {
       headers: { "Content-Type": "application/json" },
     });
   }
-} 
+  },
+  { rateLimitId: 'ibkr-extract-orders', rateLimitMax: 10, rateLimitWindow: 60_000 }
+) 

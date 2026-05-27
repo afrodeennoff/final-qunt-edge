@@ -126,6 +126,11 @@ export function withApiRoute(
     routeName = 'unknown',
   } = config
 
+  // Create limiter once when the route module loads, not per request
+  const limiter = rateLimitId
+    ? rateLimit({ limit: rateLimitMax, window: rateLimitWindow, identifier: rateLimitId })
+    : null
+
   return async (request: NextRequest): Promise<NextResponse> => {
     const requestId = generateRequestId()
     const startTime = Date.now()
@@ -142,12 +147,7 @@ export function withApiRoute(
     return withLogContext(logCtx, async () => {
       try {
         // Rate limiting
-        if (rateLimitId) {
-          const limiter = rateLimit({
-            limit: rateLimitMax,
-            window: rateLimitWindow,
-            identifier: rateLimitId,
-          })
+        if (limiter) {
 
           const result = await limiter(request)
           if (!result.success) {

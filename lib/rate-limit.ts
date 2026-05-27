@@ -18,8 +18,9 @@ const memoryStore = new Map<string, RateLimitStore>()
 const MAX_TRACKED_KEYS = 10_000
 const CLEANUP_INTERVAL_MS = 60_000
 const RATE_LIMIT_STRICT_MODE = process.env.RATE_LIMIT_STRICT_MODE === 'true'
-let hasWarnedMissingUpstashConfig = false
-let hasWarnedUpstashFailure = false
+let lastMissingConfigWarnAt = 0
+let lastUpstashFailureWarnAt = 0
+const WARN_INTERVAL_MS = 5 * 60_000 // Re-warn every 5 minutes
 
 function normalizeHeaderIp(value: string | null): string | null {
   if (!value) return null
@@ -132,6 +133,19 @@ async function incrementUpstash(key: string, window: number): Promise<IncrementR
         throw new Error('Upstash returned invalid increment result')
       }
 
+      // If PEXPIRE NX didn't set the TTL (e.g. race condition), set it unconditionally
+      if (ttlMs < 0) {
+        await fetch(`${restUrl}/pipeline`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${restToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify([['PEXPIRE', key, `${window}`]]),
+          signal: AbortSignal.timeout(2500),
+        }).catch(() => undefined)
+      }
+
       const resetTime = Date.now() + (ttlMs > 0 ? ttlMs : window)
       return { count: increment, resetTime }
     } catch (error) {
@@ -159,8 +173,9 @@ async function incrementCounter(key: string, window: number): Promise<IncrementR
         )
       }
 
-      if (!hasWarnedMissingUpstashConfig) {
-        hasWarnedMissingUpstashConfig = true
+      const now = Date.now()
+      if (now - lastMissingConfigWarnAt > WARN_INTERVAL_MS) {
+        lastMissingConfigWarnAt = now
         console.warn(
           '[rate-limit] Missing Upstash config in production; using in-memory fallback. Set RATE_LIMIT_STRICT_MODE=true to fail closed.',
         )
@@ -178,8 +193,9 @@ async function incrementCounter(key: string, window: number): Promise<IncrementR
         throw new Error('Rate limiting temporarily unavailable')
       }
 
-      if (!hasWarnedUpstashFailure) {
-        hasWarnedUpstashFailure = true
+      const failNow = Date.now()
+      if (failNow - lastUpstashFailureWarnAt > WARN_INTERVAL_MS) {
+        lastUpstashFailureWarnAt = failNow
         console.warn(
           '[rate-limit] Upstash request failed in production; using in-memory fallback. Set RATE_LIMIT_STRICT_MODE=true to fail closed.',
           error,
