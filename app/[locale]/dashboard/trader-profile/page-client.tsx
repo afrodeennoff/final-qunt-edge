@@ -454,6 +454,7 @@ export default function TraderProfilePageClient() {
 
   const profileName = useMemo(() => {
     return (
+      user?.username ||
       supabaseUser?.user_metadata?.full_name ||
       supabaseUser?.user_metadata?.name ||
       user?.email?.split('@')[0] ||
@@ -461,6 +462,7 @@ export default function TraderProfilePageClient() {
       'Trader'
     )
   }, [
+    user?.username,
     supabaseUser?.email,
     supabaseUser?.user_metadata?.full_name,
     supabaseUser?.user_metadata?.name,
