@@ -1,5 +1,4 @@
 import PDFParser from 'pdf2json'
-import { withRateLimited } from '@/lib/api/with-api-route'
 
 export const maxDuration = 60 // Allow up to 60 seconds for AI processing
 
@@ -50,8 +49,7 @@ async function extractTextFromPdf(pdfBuffer: Buffer): Promise<string> {
   })
 }
 
-export const POST = withRateLimited(
-  async (request: Request) => {
+export async function POST(request: Request) {
   try {
     const json = await request.json()
     const attachment = json.attachments?.[0]
@@ -107,6 +105,4 @@ export const POST = withRateLimited(
       headers: { "Content-Type": "application/json" },
     });
   }
-  },
-  { rateLimitId: 'ibkr-ocr', rateLimitMax: 10, rateLimitWindow: 60_000 }
-) 
+} 

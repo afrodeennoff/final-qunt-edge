@@ -1,26 +1,22 @@
 import type { Metadata } from 'next'
 import { createClient } from '@/server/auth'
 import { redirect } from 'next/navigation'
-import { TeamsSidebar } from '../components/teams-sidebar'
 import { cookies } from 'next/headers'
 import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from '@/lib/sidebar-state'
 import { SidebarRootProviders } from '@/components/providers/root-providers'
-import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
-import {
-    unifiedMetricPanelClassName,
-    unifiedSectionPanelClassName,
-} from "@/components/layout/unified-page-recipes"
-import { cn } from "@/lib/utils"
-import { BackgroundGlow } from '@/components/ui/background-glow'
-import {
-  HEADER_Z_INDEX,
-  CONTENT_PADDING,
-  CONTENT_PADDING_Y,
-  APP_SHELL_SOFT_BORDER_STYLE,
-  WORKSPACE_SHELL_WIDTH,
-} from '@/lib/constants/layout'
 import { DashboardProviders } from '@/components/providers/dashboard-providers'
+import { TeamsSidebar } from '../components/teams-sidebar'
 import { TeamsMobileBottomNav } from '../components/teams-mobile-bottom-nav'
+import { SidebarLayoutShell } from '@/components/ui/sidebar-layout-shell'
+import { SidebarTrigger } from '@/components/ui/sidebar'
+import { GestureProvider } from '@/components/providers/gesture-provider'
+import { PullToRefreshIndicator } from '@/components/pull-to-refresh'
+import { ErrorBoundary } from '@/components/error-boundary'
+import { cn } from '@/lib/utils'
+import {
+  WORKSPACE_SHELL_WIDTH,
+  APP_SHELL_SOFT_BORDER_STYLE,
+} from '@/lib/constants/layout'
 
 export const metadata: Metadata = {
   robots: {
@@ -81,70 +77,54 @@ export default async function DashboardLayout({
       style={APP_SHELL_SOFT_BORDER_STYLE}
     >
       <DashboardProviders>
-        <TeamsSidebar />
-
-                <SidebarInset className="qe-v2-app-shell relative h-dvh overflow-hidden selection:bg-primary/20 selection:text-foreground">
-                    <div className="pointer-events-none absolute inset-x-6 top-0 z-0 h-32 rounded-b-2xl border border-primary/10 bg-primary/5" />
-
-                    <div className="relative z-0 flex h-full flex-col">
-                        <header
-                            className={`sticky top-0 ${HEADER_Z_INDEX} p-3 sm:p-4`}
-                        >
-                            <div className="mx-auto w-full max-w-[1800px]">
-                                <div className={cn(unifiedSectionPanelClassName, 'relative flex min-h-[4.5rem] flex-col gap-4 overflow-hidden rounded-2xl p-3 sm:p-4 lg:flex-row lg:items-center lg:justify-between')}>
-                                    <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/20 to-transparent" />
-                                    <div className="flex min-w-0 items-center gap-3">
-                                        <SidebarTrigger className="-ml-0.5 h-10 w-10 rounded-xl border border-border/40 bg-muted/70 text-muted-foreground/70 hover:border-primary/25 hover:bg-primary/10 hover:text-foreground md:h-9 md:w-9" />
-                                        <div className="flex min-w-0 flex-1 flex-col">
-                                            <div className="flex items-center gap-2.5">
-                                                <span className="hidden rounded-full border border-primary/20 bg-primary/8 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-primary sm:inline-flex">
-                                                    Team
-                                                </span>
-                                                <h1 className="truncate text-sm font-black uppercase tracking-tight text-foreground">
-                                                    Team Command
-                                                </h1>
-                                            </div>
-                                            <span className="truncate pt-1 text-xs text-muted-foreground">
-                                                Unified oversight for members, performance, and operational team health.
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div className="grid gap-2 sm:grid-cols-2 lg:w-auto">
-                                        <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2')}>
-                                            <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                                                Focus
-                                            </span>
-                                            <span className="block pt-1 text-sm text-foreground">
-                                                Members and process visibility
-                                            </span>
-                                        </div>
-                                        <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2')}>
-                                            <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                                                Surface
-                                            </span>
-                                            <span className="block pt-1 text-sm text-foreground">
-                                                Shared team operating layer
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </header>
-
-                        <main className="flex-1 overflow-y-auto">
-                            <div className={`mx-auto w-full max-w-[1800px] ${CONTENT_PADDING} ${CONTENT_PADDING_Y}`}>
-                                {children}
-                            </div>
-                        </main>
+        <SidebarLayoutShell
+          sidebar={<TeamsSidebar />}
+          header={
+            <header className="sticky top-0 z-50 w-full shrink-0 px-3 pb-2 pt-3 transition-[opacity,background-color,border-color] duration-200 sm:px-4 sm:pb-2 sm:pt-4">
+              <div className={cn('relative mx-auto', WORKSPACE_SHELL_WIDTH)}>
+                <div className="bg-background/80 border border-border/30 relative flex min-h-[5rem] items-center justify-between gap-3 overflow-hidden rounded-2xl px-3 py-3 transition-all duration-300 sm:gap-4 sm:px-4">
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/8 to-transparent" />
+                  <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2 pr-3 sm:gap-3 sm:pr-4">
+                    <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-border/30 bg-background/40 text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:border-border/50 hover:bg-background/60 hover:text-foreground md:h-9 md:w-9" />
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="hidden h-8 w-px bg-border/40 sm:block" />
+                      <div className="min-w-0 max-w-[min(32rem,44vw)]">
+                        <div className="flex items-center gap-2">
+                          <span className="hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] border-border/40 bg-background/60 text-muted-foreground">
+                            Teams
+                          </span>
+                          <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground sm:text-sm sm:uppercase sm:tracking-[0.12em]">
+                            Team Workspace
+                          </h1>
+                        </div>
+                        <p className="hidden truncate pt-1 text-xs text-muted-foreground xl:block">
+                          Manage your teams, members, and collaborative analytics
+                        </p>
+                      </div>
                     </div>
-                    <TeamsMobileBottomNav
-                        dashboardRoot={dashboardRoot}
-                        slug={slug}
-                        backHref={`/${locale}/dashboard`}
-                    />
-                </SidebarInset>
-            </DashboardProviders>
-        </SidebarRootProviders>
-    )
+                  </div>
+                </div>
+              </div>
+            </header>
+          }
+          mobileNav={
+            <TeamsMobileBottomNav
+              dashboardRoot={dashboardRoot}
+              slug={slug}
+              backHref={`/${locale}/dashboard`}
+            />
+          }
+          backgroundVariant="accent"
+          className="selection:bg-primary/20 selection:text-primary"
+        >
+          <GestureProvider>
+            <PullToRefreshIndicator />
+            <div className={cn('mx-auto flex w-full flex-col', WORKSPACE_SHELL_WIDTH)}>
+              <ErrorBoundary>{children}</ErrorBoundary>
+            </div>
+          </GestureProvider>
+        </SidebarLayoutShell>
+      </DashboardProviders>
+    </SidebarRootProviders>
+  )
 }

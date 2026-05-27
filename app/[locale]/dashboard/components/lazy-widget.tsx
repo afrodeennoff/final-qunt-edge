@@ -26,17 +26,17 @@ const loadingShell = (
 )
 
 const widgetLoaders: Record<WidgetType, () => Promise<{ default: React.ComponentType<WidgetComponentProps> }>> = {
- weekdayPnlChart: () => import("../components/charts/weekday-pnl"),
- pnlChart: () => import("../components/charts/pnl-bar-chart"),
- timeOfDayChart: () => import("../components/charts/pnl-time-bar-chart"),
- timeInPositionChart: () => import("../components/charts/time-in-position"),
- equityChart: () => import("../components/charts/equity-chart"),
- pnlBySideChart: () => import("../components/charts/pnl-by-side"),
- pnlPerContractChart: () => import("../components/charts/pnl-per-contract"),
- pnlPerContractDailyChart: () => import("../components/charts/pnl-per-contract-daily"),
- tickDistribution: () => import("../components/charts/tick-distribution"),
- dailyTickTarget: () => import("../components/charts/daily-tick-target"),
- commissionsPnl: () => import("../components/charts/commissions-pnl"),
+ weekdayPnlChart: () => import("./charts/client/weekday-pnl"),
+ pnlChart: () => import("./charts/client/pnl-bar-chart"),
+ timeOfDayChart: () => import("./charts/client/pnl-time-bar-chart"),
+ timeInPositionChart: () => import("./charts/client/time-in-position"),
+ equityChart: () => import("./charts/client/equity-chart"),
+ pnlBySideChart: () => import("./charts/client/pnl-by-side"),
+ pnlPerContractChart: () => import("./charts/client/pnl-per-contract"),
+ pnlPerContractDailyChart: () => import("./charts/client/pnl-per-contract-daily"),
+ tickDistribution: () => import("./charts/client/tick-distribution"),
+ dailyTickTarget: () => import("./charts/client/daily-tick-target"),
+ commissionsPnl: () => import("./charts/client/commissions-pnl"),
  calendarWidget: () => import("../components/calendar/calendar-widget"),
  averagePositionTime: () => import("../components/statistics/average-position-time-card"),
  cumulativePnl: () => import("../components/statistics/cumulative-pnl-card"),
@@ -50,12 +50,12 @@ const widgetLoaders: Record<WidgetType, () => Promise<{ default: React.Component
  default: module.TradeTableReview as React.ComponentType<WidgetComponentProps>,
  })),
  chatWidget: () => import("../components/chat/chat"),
- tradeDistribution: () => import("../components/charts/trade-distribution"),
+ tradeDistribution: () => import("./charts/client/trade-distribution"),
  propFirm: () =>
  import("../components/accounts/accounts-overview").then((module) => ({
  default: module.AccountsOverview as React.ComponentType<WidgetComponentProps>,
  })),
- timeRangePerformance: () => import("../components/charts/time-range-performance"),
+ timeRangePerformance: () => import("./charts/client/time-range-performance"),
  tagWidget: () =>
  import("../components/filters/tag-widget").then((module) => ({
  default: module.TagWidget as React.ComponentType<WidgetComponentProps>,
@@ -72,7 +72,7 @@ const widgetLoaders: Record<WidgetType, () => Promise<{ default: React.Component
  smartInsights: () => import("../components/widgets/smart-insights-widget").then((module) => ({
  default: module.SmartInsightsWidget as React.ComponentType<WidgetComponentProps>,
  })),
- contractQuantity: () => import("../components/charts/contract-quantity"),
+ contractQuantity: () => import("./charts/client/contract-quantity"),
 }
 
 const dynamicWidgets = Object.entries(widgetLoaders).reduce((acc, [type, loader]) => {

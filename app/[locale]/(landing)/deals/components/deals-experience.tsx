@@ -467,7 +467,7 @@ function DealsBoard({
   const faqItems = faqs.length > 0 ? faqs : faqFallbackItems
 
   return (
-    <div className="min-h-screen overflow-hidden bg-background">
+    <div className="min-h-dvh overflow-hidden bg-background">
       <UnifiedPageShell
         widthClassName="max-w-[1360px]"
         density="compact"

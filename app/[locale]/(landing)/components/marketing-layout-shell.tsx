@@ -35,12 +35,12 @@ export default function MarketingLayoutShell({
   return (
     <div
       className={cn(
-        'marketing-shell qe-v2-app-shell min-h-screen w-full overflow-x-hidden bg-background',
+        'marketing-shell qe-v2-app-shell min-h-dvh w-full overflow-x-hidden bg-background',
         className,
       )}
     >
       <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-px bg-border/30" />
-      <div className="flex min-h-screen w-full">
+      <div className="flex min-h-dvh w-full">
         {/* Full-width content: no sidebar column */}
         <div className="flex-1 min-h-0 min-w-0 bg-transparent">
           <MiniMaxNavbarWrapper>

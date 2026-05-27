@@ -25,7 +25,7 @@ export async function generateMetadata({
 
 export default function TradesPage() {
   return (
-    <div className="flex h-[calc(100dvh-10rem)] min-h-[40rem] w-full flex-col pb-[max(env(safe-area-inset-bottom),0.75rem)]">
+    <div className="flex min-h-[calc(100dvh-10rem)] min-h-[40rem] w-full flex-col pb-[max(env(safe-area-inset-bottom),0.75rem)]">
       <div className="rounded-xl border border-border/30 bg-card p-4 shadow-sm sm:p-6">
         <TradeTableReview />
       </div>

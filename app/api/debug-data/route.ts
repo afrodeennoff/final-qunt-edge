@@ -117,6 +117,7 @@ export const GET = withRateLimited(
       500,
       error instanceof Error ? error.message : undefined
     )
+    })
   },
   { rateLimitId: 'debug-data', rateLimitMax: 30, rateLimitWindow: 60_000 }
 )

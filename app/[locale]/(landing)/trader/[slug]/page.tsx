@@ -175,7 +175,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
   return (
-    <div className="min-h-[calc(100vh-72px)] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+    <div className="min-h-[calc(100dvh-72px)] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <div className="mx-auto max-w-[1120px]">
         <div className="rounded-2xl border border-border bg-muted/40 p-8">
           <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Trader profile</p>
@@ -232,7 +232,7 @@ export default async function TraderProfilePage({
   const publicStats = buildPublicStats(snapshot)
 
   return (
-    <div className="min-h-[calc(100vh-72px)] px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+    <div className="min-h-[calc(100dvh-72px)] px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }}

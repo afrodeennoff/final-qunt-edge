@@ -140,7 +140,7 @@ export function WeeklyRecapPreview() {
  }, [isOpen])
 
  return (
- <div className="h-screen flex flex-col">
+  <div className="min-h-dvh flex flex-col">
  <Card className="flex-1 flex flex-col">
  <CardHeader>
  <div className="flex items-center justify-between">

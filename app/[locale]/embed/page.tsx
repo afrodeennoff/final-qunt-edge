@@ -260,7 +260,7 @@ export default function EmbedPage() {
 
   return (
     <I18nProviderClient locale={lang}>
-      <div className="qe-v2-app-shell relative min-h-screen w-full pb-20">
+      <div className="qe-v2-app-shell relative min-h-dvh w-full pb-20">
         <BackgroundGlow variant="default" />
         {/*Dismiss cookie consent banner*/}
         <Script id="embed-autoconsent" strategy="beforeInteractive">

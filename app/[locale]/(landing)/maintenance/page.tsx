@@ -23,7 +23,7 @@ export default async function MaintenancePage() {
   const t = await getI18n()
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+    <div className="flex min-h-dvh items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md border-border/30 shadow-sm">
         <CardHeader className="space-y-3">
           <div className="flex items-center gap-3">

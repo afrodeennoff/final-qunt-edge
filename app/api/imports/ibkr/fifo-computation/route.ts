@@ -3,7 +3,6 @@ import { streamObject } from "ai"
 import { tradeSchema, orderSchema } from './schema'
 import { type FinancialInstrument } from '../extract-orders/schema'
 import { z } from 'zod/v3';
-import { withRateLimited } from '@/lib/api/with-api-route'
 
 export const maxDuration = 60 // Allow up to 60 seconds for AI processing
 
@@ -124,8 +123,7 @@ function matchOrdersWithFIFO(orders: Order[], instruments: FinancialInstrument[]
   return trades;
 }
 
-export const POST = withRateLimited(
-  async (request: Request) => {
+export async function POST(request: Request) {
     try {
         const json = await request.json()
         const { orders, instruments } = json
@@ -185,6 +183,4 @@ export const POST = withRateLimited(
             headers: { "Content-Type": "application/json" },
         });
     }
-  },
-  { rateLimitId: 'ibkr-fifo', rateLimitMax: 10, rateLimitWindow: 60_000 }
-) 
+} 

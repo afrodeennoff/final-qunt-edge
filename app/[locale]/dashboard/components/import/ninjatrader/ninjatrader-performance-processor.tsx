@@ -268,7 +268,7 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
       <CardContent className="flex-1 min-h-0 overflow-auto p-0">
         <div className="flex h-full flex-col min-w-fit">
           <Table className="w-full h-full border-separate border-spacing-0">
-            <TableHeader className="sticky top-0 z-10 bg-muted/90 backdrop-blur-xs shadow-xs border-b">
+            <TableHeader className="sticky top-0 z-10 bg-muted/95 shadow-xs border-b">
               <TableRow>
                 <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l">
                   Account

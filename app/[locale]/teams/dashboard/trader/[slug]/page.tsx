@@ -29,7 +29,7 @@ export default async function TraderDashboard(props: { params: Promise<{ slug: s
       >
       <TraderInfo slug={slug}/>
       </Suspense>
-      <div className="min-h-screen flex flex-col bg-background">
+      <div className="min-h-dvh flex flex-col bg-background">
         <div className="flex-1">
           <SharedWidgetCanvas />
         </div>

@@ -1346,7 +1346,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
   const visibleCouponCount = getVisibleCouponCount(firm)
 
   return (
-    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.05),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--background)/0.96)_24%,hsl(var(--background))_100%)]">
+    <div className="flex min-h-dvh flex-col bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.05),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--background)/0.96)_24%,hsl(var(--background))_100%)]">
       <div className="mx-auto w-full max-w-[1240px] flex-1 overflow-y-auto px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         <FirmHeader firm={firm} />
 

@@ -144,7 +144,7 @@ const ChatBotDemo = () => {
 
   return (
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-20 lg:py-24">
-      <UnifiedSurface className="flex h-[calc(100vh-220px)] min-h-[680px] flex-col">
+      <UnifiedSurface className="flex min-h-[calc(100dvh-220px)] min-h-[680px] flex-col">
         <header className="mb-4">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             Qunt Edge Support

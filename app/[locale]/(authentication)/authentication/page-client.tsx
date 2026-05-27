@@ -53,7 +53,7 @@ export default function AuthenticationPageClient() {
   const locale = useCurrentLocale()
 
   return (
-    <main className="qe-v2-app-shell relative min-h-screen overflow-hidden bg-background text-foreground">
+    <main className="qe-v2-app-shell relative min-h-dvh overflow-hidden bg-background text-foreground">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-x-6 top-0 h-36 rounded-b-2xl border border-border/30 bg-primary/[0.02]" />
         <div className="absolute left-[-10rem] top-[-8rem] h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.08),transparent_72%)] opacity-70" />
@@ -61,7 +61,7 @@ export default function AuthenticationPageClient() {
         <div className="absolute inset-0 marketing-grid opacity-[0.07]" />
       </div>
 
-      <div className="relative mx-auto flex min-h-screen w-full items-center justify-center px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <div className="relative mx-auto flex min-h-dvh w-full items-center justify-center px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <div className={cn(unifiedHeroPanelClassName, 'w-full max-w-[1380px]')}>
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.06fr)_minmax(460px,0.94fr)]">
             <section className="relative overflow-hidden p-6 sm:p-8 lg:border-r lg:border-border/30 lg:p-10 xl:p-12">

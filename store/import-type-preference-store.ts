@@ -10,7 +10,7 @@ interface ImportTypePreferenceState {
   resetPreference: () => void
 }
 
-const defaultImportType: ImportType = 'csv-ai'
+const defaultImportType: ImportType = 'rithmic-sync'
 
 export const useImportTypePreferenceStore = create<ImportTypePreferenceState>()(
   persist(
