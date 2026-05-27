@@ -1,1 +1,1 @@
-export { default } from './client/admin-surface.tsx'
+export { AdminPageHeader, AdminSection, AdminStatCard } from './client/admin-surface.tsx'

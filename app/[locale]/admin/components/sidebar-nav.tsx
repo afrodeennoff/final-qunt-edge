@@ -1,1 +1,1 @@
-export { default } from './client/sidebar-nav.tsx'
+export { SidebarNav } from './client/sidebar-nav.tsx'

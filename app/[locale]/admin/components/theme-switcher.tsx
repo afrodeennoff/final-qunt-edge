@@ -1,1 +1,1 @@
-export { default } from './client/theme-switcher.tsx'
+export { ThemeSwitcher } from './client/theme-switcher.tsx'

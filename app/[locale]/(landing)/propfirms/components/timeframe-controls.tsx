@@ -1,1 +1,1 @@
-export { default } from './client/timeframe-controls.tsx'
+export { TimeframeControls } from './client/timeframe-controls.tsx'

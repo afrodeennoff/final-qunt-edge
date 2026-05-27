@@ -1,1 +1,1 @@
-export { default } from './client/firm-grid.tsx'
+export { FirmGrid } from './client/firm-grid.tsx'

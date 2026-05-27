@@ -1,1 +1,1 @@
-export { default } from './client/firm-filters.tsx'
+export { FirmFilters } from './client/firm-filters.tsx'

@@ -1,1 +1,1 @@
-export { default } from './client/catalogue-experience.tsx'
+export { PropFirmCatalogueExperience } from './client/catalogue-experience.tsx'

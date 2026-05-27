@@ -1,1 +1,1 @@
-export { default } from './client/registered-accounts-chart.tsx'
+export { RegisteredAccountsChart } from './client/registered-accounts-chart.tsx'
