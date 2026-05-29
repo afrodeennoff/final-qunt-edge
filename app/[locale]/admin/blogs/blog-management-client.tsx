@@ -95,19 +95,19 @@ export function BlogManagementClient({
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-border/30 text-left text-sm">
-                  <th className="p-4 font-medium text-muted-foreground">Title</th>
-                  <th className="p-4 font-medium text-muted-foreground">Slug</th>
-                  <th className="p-4 font-medium text-muted-foreground">Category</th>
-                  <th className="p-4 font-medium text-muted-foreground">Author</th>
-                  <th className="p-4 font-medium text-muted-foreground">Status</th>
-                  <th className="p-4 font-medium text-muted-foreground">Date</th>
+                 <tr className="border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm text-left text-sm">
+                  <th   className="type-label p-4 font-medium text-muted-foreground">Title</th>
+                  <th   className="type-label p-4 font-medium text-muted-foreground">Slug</th>
+                  <th   className="type-label p-4 font-medium text-muted-foreground">Category</th>
+                  <th   className="type-label p-4 font-medium text-muted-foreground">Author</th>
+                  <th   className="type-label p-4 font-medium text-muted-foreground">Status</th>
+                  <th   className="type-label p-4 font-medium text-muted-foreground">Date</th>
                   <th className="p-4 font-medium text-muted-foreground text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredPosts.map((post) => (
-                  <tr key={post.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
+                  <tr key={post.id} className="border-b border-border/20 last:border-0 hover:bg-primary/[0.02] transition-colors">
                     <td className="p-4">
                       <div className="font-medium text-foreground">{post.title}</div>
                       {post.excerpt && (

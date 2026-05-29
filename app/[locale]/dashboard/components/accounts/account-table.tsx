@@ -268,7 +268,7 @@ export function AccountTable({
  const hasInconsistentDays = metrics.some(metric => metric.pnl > maxAllowedDailyProfit)
 
  return (
- <TableRow className="bg-muted/30 font-medium">
+  <TableRow className="bg-card/30 font-medium border-t border-border/20">
  <TableCell>{t('calendar.modal.total')}</TableCell>
  <TableCell className={cn("text-right",
  totalPnL > 0 ?"metric-positive" : totalPnL < 0 ?"metric-negative" :""

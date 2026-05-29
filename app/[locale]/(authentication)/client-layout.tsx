@@ -36,14 +36,16 @@ export default function AuthenticationLayout({
  }
  }, [locale, router]);
 
-  return (
-    <div className="min-h-dvh w-full bg-background bg-[radial-gradient(oklch(0.15_0.01_260)_0.8px,transparent_1px)] bg-[length:4px_4px]">
-      <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
-        <div className="h-[500px] w-[500px] rounded-full bg-primary/[0.02] blur-3xl" />
-      </div>
-      <div className="relative z-10">
-        <RootProviders>{children}</RootProviders>
-      </div>
-    </div>
-  );
+   return (
+     <div className="min-h-dvh w-full bg-background">
+       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(oklch(0.15_0.01_260)_0.8px,transparent_1px)] bg-[length:4px_4px] opacity-15" />
+       <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
+         <div className="h-[500px] w-[500px] rounded-full bg-primary/[0.03] blur-2xl" />
+       </div>
+       <div className="relative z-10">
+         <RootProviders>{children}</RootProviders>
+       </div>
+     </div>
+   );
+
 }

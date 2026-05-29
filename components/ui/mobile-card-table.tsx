@@ -37,7 +37,7 @@ export function MobileCardTable({
       {data.map((row, i) => (
         <div
           key={i}
-          className="rounded-xl border border-border/50 bg-card p-3 touch-target cursor-pointer"
+          className="rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02] p-3 touch-target cursor-pointer"
           onClick={() => {
             if (expandable) setExpandedIndex(expandedIndex === i ? null : i)
             onRowTap?.(row)
@@ -69,7 +69,7 @@ export function MobileCardTable({
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="mt-2 pt-2 border-t border-border/30 space-y-1.5">
+                <div className="mt-2 pt-2 border-t border-border/20 space-y-1.5">
                   {secondaryFields.map((field) => (
                     <div key={field.key} className="flex justify-between text-xs">
                       <span className="text-muted-foreground">{field.label}</span>

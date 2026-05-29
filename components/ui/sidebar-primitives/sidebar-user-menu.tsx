@@ -92,7 +92,7 @@ export function SidebarUserMenu({
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-sidebar-border/12" />
+            <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-sidebar-border/30 to-transparent h-px my-0.5" />
             {timezone && (
               <div className="px-2.5 py-2.5">
                 <p className="text-[9px] font-black uppercase tracking-[0.12em] text-sidebar-foreground/40 px-1 mb-2">
@@ -112,7 +112,7 @@ export function SidebarUserMenu({
                 </Select>
               </div>
             )}
-            <DropdownMenuSeparator className="bg-sidebar-border/12" />
+            <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-sidebar-border/30 to-transparent h-px my-0.5" />
             {onLogout && (
               <DropdownMenuItem
                 onClick={onLogout}

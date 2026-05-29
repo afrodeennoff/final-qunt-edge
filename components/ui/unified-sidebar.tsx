@@ -257,7 +257,7 @@ function SidebarContentRender({
       variant="inset"
       collapsible="icon"
       className={cn(
-        'pointer-events-auto overflow-hidden text-sidebar-foreground',
+        'pointer-events-auto overflow-hidden text-sidebar-foreground border border-sidebar-border/10',
         styleVariant === 'minimal' ? 'bg-sidebar/98' : 'bg-sidebar/96',
       )}
     >
@@ -284,7 +284,7 @@ function SidebarContentRender({
         )}
       </SidebarContent>
 
-      <SidebarFooter className="p-3">
+      <SidebarFooter className="p-3 border-t border-sidebar-border/12">
         <SidebarUserMenu
           user={user}
           timezone={timezone}

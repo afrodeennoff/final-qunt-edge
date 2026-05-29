@@ -50,15 +50,15 @@ export function WidgetShell({
  children,
 }: WidgetShellProps) {
  const renderContent = () => {
- if (state ==="loading") {
- return (
-  <div className="space-y-3 p-4">
- <Skeleton className="h-3 w-2/5 animate-pulse rounded-full bg-muted/60" style={{ animationDelay: '0ms' }} />
- <Skeleton className="h-24 animate-pulse rounded-lg bg-muted/40" style={{ animationDelay: '100ms' }} />
- <Skeleton className="h-3 w-3/5 animate-pulse rounded-full bg-muted/60" style={{ animationDelay: '200ms' }} />
- </div>
- )
- }
+  if (state ==="loading") {
+  return (
+   <div className="space-y-3 p-4">
+  <Skeleton className="h-3 w-2/5 rounded-full" style={{ animationDelay: '0ms' }} />
+  <Skeleton className="h-24 rounded-lg" style={{ animationDelay: '100ms' }} />
+  <Skeleton className="h-3 w-3/5 rounded-full" style={{ animationDelay: '200ms' }} />
+  </div>
+  )
+  }
 
   if (state ==="error") {
   return (
@@ -75,9 +75,9 @@ export function WidgetShell({
  if (state ==="empty") {
  return (
   <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-3 p-4">
- <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border/40 bg-muted/30">
- <Inbox className="size-4 text-muted-foreground/50" />
- </div>
+  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border/20 bg-gradient-to-br from-muted/40 to-muted/10 ring-1 ring-inset ring-white/[0.02]">
+  <Inbox className="size-4 text-muted-foreground/50" />
+  </div>
  <p className="text-center text-[13px] text-muted-foreground/70">{emptyMessage}</p>
  </div>
  )
@@ -88,51 +88,50 @@ export function WidgetShell({
 
   return (
     <Card
+      variant="default"
       className={cn(
-        "group relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-all",
-        variant === "hoverable" && "hover:border-primary/30 hover:shadow-sm",
+        "group relative flex h-full flex-col overflow-hidden rounded-xl transition-all",
+        variant === "hoverable" && "hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15",
         className
       )}
-      style={{
-        background: 'linear-gradient(180deg, hsl(var(--primary) / 0.025) 0%, hsl(var(--card)) 100%)',
-      }}
     >
   {(title || actions || icon || description) && (
-    <CardHeader className="border-b border-border bg-card px-4 py-2">
- <div className="flex items-start justify-between gap-[var(--space-3)]">
- <div className="min-w-0 gap-[var(--space-2)]">
- {(title || icon) && (
- <div className="flex items-center gap-[var(--space-2)]">
- {icon ? <span className="size-[15px] text-muted-foreground/50">{icon}</span> : null}
- {title ? (
- <CardTitle className="text-[11px] font-black uppercase tracking-[0.12em] text-muted-foreground/70">{title}</CardTitle>
- ) : null}
- {info ? (
- <TooltipProvider>
- <Tooltip>
- <TooltipTrigger asChild>
- <button
- type="button"
- className="text-muted-foreground/50 transition-colors hover:text-foreground"
- aria-label="Widget info"
- >
- <Info className="h-3.5 w-3.5" />
- </button>
- </TooltipTrigger>
- <TooltipContent>{info}</TooltipContent>
- </Tooltip>
- </TooltipProvider>
- ) : null}
- </div>
- )}
- {description ? (
- <p className="line-clamp-1 text-[12px] text-muted-foreground/60">{description}</p>
- ) : null}
- </div>
- {actions ? <div className="shrink-0">{actions}</div> : null}
- </div>
- </CardHeader>
- )}
+    <CardHeader className="border-b border-border/20 bg-card/50 px-4 py-2">
+  <div className="flex items-start justify-between gap-[var(--space-3)]">
+  <div className="min-w-0 gap-[var(--space-2)]">
+  {(title || icon) && (
+  <div className="flex items-center gap-[var(--space-2)]">
+  {icon ? <span className="size-[15px] text-muted-foreground/50">{icon}</span> : null}
+  {title ? (
+  <CardTitle className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground/70">{title}</CardTitle>
+  ) : null}
+  {info ? (
+  <TooltipProvider>
+  <Tooltip>
+  <TooltipTrigger asChild>
+  <button
+  type="button"
+  className="text-muted-foreground/50 transition-colors hover:text-foreground"
+  aria-label="Widget info"
+  >
+  <Info className="h-3.5 w-3.5" />
+  </button>
+  </TooltipTrigger>
+  <TooltipContent>{info}</TooltipContent>
+  </Tooltip>
+  </TooltipProvider>
+  ) : null}
+  </div>
+  )}
+  {description ? (
+  <p className="line-clamp-1 text-[12px] text-muted-foreground/60">{description}</p>
+  ) : null}
+  </div>
+  {actions ? <div className="shrink-0">{actions}</div> : null}
+  </div>
+  </CardHeader>
+  )}
+
 
  <CardContent className={cn("flex-1 min-h-0 p-0", contentClassName)}>
  {renderContent()}

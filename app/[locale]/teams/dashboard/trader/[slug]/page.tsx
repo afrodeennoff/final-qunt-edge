@@ -2,6 +2,7 @@ import { DataProvider } from "@/context/data-provider";
 import { TraderInfo } from "../../../components/trader-info";
 import { Suspense } from "react";
 import { SharedWidgetCanvas } from "@/app/[locale]/shared/[slug]/shared-widget-canvas";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default async function TraderDashboard(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
@@ -15,13 +16,10 @@ export default async function TraderDashboard(props: { params: Promise<{ slug: s
       <Suspense
         fallback={
           <div className="space-y-4">
-            <div className="h-32 animate-pulse rounded-xl border border-border/30 bg-muted/40" />
+            <Skeleton className="h-32 w-full rounded-xl" />
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 3 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-24 animate-pulse rounded-xl border border-border/30 bg-muted/40"
-                />
+                <Skeleton key={i} className="h-24 w-full rounded-xl" />
               ))}
             </div>
           </div>

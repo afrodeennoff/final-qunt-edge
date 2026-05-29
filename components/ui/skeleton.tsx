@@ -5,19 +5,19 @@ export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 function Skeleton({
- className,
- as: Component = 'div',
- ...props
+  className,
+  as: Component = 'div',
+  ...props
 }: SkeletonProps) {
- return (
- <Component
- className={cn(
- "animate-pulse rounded-xl border border-border/20 bg-gradient-to-br from-muted/40 to-muted/10 ring-1 ring-inset ring-white/[0.02]",
- className
- )}
- {...props}
- />
- )
+  return (
+  <Component
+  className={cn(
+  "skeleton-pulse rounded-xl border border-border/10 bg-gradient-to-br from-muted/50 to-muted/20 ring-1 ring-inset ring-white/[0.02]",
+  className
+  )}
+  {...props}
+  />
+  )
 }
 
 export function DashboardHeaderSkeleton() {

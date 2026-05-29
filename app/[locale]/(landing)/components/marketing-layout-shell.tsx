@@ -18,7 +18,12 @@ type MarketingLayoutShellProps = Readonly<{
 }>
 
 const MiniMaxNavbarWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  return <div className="w-full border-b border-border/30 bg-background/80">{children}</div>
+  return (
+    <div className="relative w-full bg-background/80">
+      {children}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+    </div>
+  )
 }
 
 export default function MarketingLayoutShell({
@@ -35,13 +40,14 @@ export default function MarketingLayoutShell({
   return (
     <div
       className={cn(
-        'marketing-shell qe-v2-app-shell min-h-dvh w-full overflow-x-hidden bg-background bg-[radial-gradient(oklch(0.15_0.01_260)_0.8px,transparent_1px)] bg-[length:4px_4px]',
+        'marketing-shell qe-v2-app-shell min-h-dvh w-full overflow-x-hidden bg-background',
         className,
       )}
     >
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(oklch(0.15_0.01_260)_0.8px,transparent_1px)] bg-[length:4px_4px] opacity-15" />
       <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
       <div className="pointer-events-none fixed inset-0 flex items-start justify-center">
-        <div className="h-[600px] w-[600px] rounded-full bg-primary/[0.02] blur-3xl" />
+        <div className="h-[500px] w-[500px] rounded-full bg-primary/[0.03] blur-2xl" />
       </div>
       <div className="relative z-10 flex min-h-dvh w-full">
         {/* Full-width content: no sidebar column */}

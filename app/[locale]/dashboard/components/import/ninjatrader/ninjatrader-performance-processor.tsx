@@ -268,39 +268,39 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
       <CardContent className="flex-1 min-h-0 overflow-auto p-0">
         <div className="flex h-full flex-col min-w-fit">
           <Table className="w-full h-full border-separate border-spacing-0">
-            <TableHeader className="sticky top-0 z-10 bg-muted/95 shadow-xs border-b">
+            <TableHeader className="sticky top-0 z-10 border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-md">
               <TableRow>
-                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l">
+                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l">
                   Account
                 </TableHead>
-                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l">
+                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l">
                   Instrument
                 </TableHead>
-                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l">
+                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l">
                   Side
                 </TableHead>
-                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l">
+                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l">
                   Quantity
                 </TableHead>
-                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l">
+                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l">
                   Entry Price
                 </TableHead>
-                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l">
+                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l">
                   Close Price
                 </TableHead>
-                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l">
+                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l">
                   Entry Date
                 </TableHead>
-                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l">
+                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l">
                   Close Date
                 </TableHead>
-                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l">
+                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l">
                   PnL
                 </TableHead>
-                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l">
+                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l">
                   Time in Position
                 </TableHead>
-                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l">
+                <TableHead className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l">
                   Commission
                 </TableHead>
               </TableRow>
@@ -310,7 +310,7 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
                 trades.map((trade) => (
                   <TableRow
                     key={trade.id}
-                    className="border-b border-border transition-all duration-75 hover:bg-muted/40"
+                    className="border-b border-border/20 transition-all duration-200 hover:bg-primary/[0.02]"
                   >
                     <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l">
                       {trade.accountNumber}
@@ -336,7 +336,7 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
                     <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l">
                       {trade.closeDate ? new Date(trade.closeDate).toLocaleString() : '-'}
                     </TableCell>
-                    <TableCell className={`whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l ${trade.pnl && trade.pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    <TableCell className={`whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l ${trade.pnl && trade.pnl >= 0 ? 'text-success' : 'text-destructive'}`}>
                       {trade.pnl?.toFixed(2)}
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l">
@@ -365,7 +365,7 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
         <div className="flex items-center gap-6">
           <div>
             <h3 className="text-sm font-semibold mb-1">Total PnL</h3>
-            <p className={`text-lg font-bold ${totalPnL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            <p className={`text-lg font-bold ${totalPnL >= 0 ? 'text-success' : 'text-destructive'}`}>
               ${totalPnL.toFixed(2)}
             </p>
           </div>

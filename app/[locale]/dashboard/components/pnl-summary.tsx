@@ -3,8 +3,30 @@
 import { useDashboardStats } from '@/context/data-provider'
 import { useMemo } from 'react'
 import { cn } from '@/lib/utils'
-import { LucideIcon, TrendingDown, TrendingUp, Target, Zap } from 'lucide-react'
-import { startOfDay, isWithinInterval, endOfDay, parseISO } from 'date-fns'
+import { LucideIcon, TrendingDown, TrendingUp, Target, Zap, Download } from 'lucide-react'
+import { startOfDay, isWithinInterval, endOfDay, parseISO, format } from 'date-fns'
+
+function downloadPnLSummaryCSV(data: { daily: { pnl: number; wins: number; total: number }; winRate: number }, longTermWinRate: number | null) {
+  const today = format(new Date(), 'yyyy-MM-dd')
+  const rows = [
+    ['Metric', 'Value'],
+    ["Today's PnL", data.daily.pnl.toFixed(2)],
+    ['Trades Today', data.daily.total.toString()],
+    ['Wins Today', data.daily.wins.toString()],
+    ['Win Rate Today', `${data.winRate}%`],
+    ['Long-term Win Rate', longTermWinRate !== null ? `${longTermWinRate}%` : '—'],
+    ['Generated', new Date().toISOString()],
+  ]
+
+  const csvContent = rows.map(r => r.join(',')).join('\n')
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  const url = URL.createObjectURL(blob)
+  link.href = url
+  link.download = `pnl-summary-${today}.csv`
+  link.click()
+  URL.revokeObjectURL(url)
+}
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -123,6 +145,14 @@ export function PnLSummary({ className }: PnLSummaryProps) {
           </div>
         </div>
       ))}
+      <button
+        onClick={() => downloadPnLSummaryCSV({ daily: stats.daily, winRate: stats.winRate }, longTermWinRate)}
+        className="ml-2 flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground/60 transition hover:bg-muted/30 hover:text-foreground"
+        aria-label="Download PnL Summary as CSV"
+        title="Download CSV"
+      >
+        <Download className="h-3.5 w-3.5" />
+      </button>
     </div>
   )
 }

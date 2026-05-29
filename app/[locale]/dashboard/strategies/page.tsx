@@ -1,9 +1,10 @@
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
 import dynamic from 'next/dynamic'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const TradeTableReview = dynamic(
   () => import('../components/tables/trade-table-review').then(m => ({ default: m.TradeTableReview })),
-  { loading: () => <div className="flex h-[80vh] items-center justify-center"><div className="h-32 w-full animate-pulse rounded-xl bg-muted/30" /></div> }
+  { loading: () => <div className="flex h-[80vh] items-center justify-center"><Skeleton className="h-32 w-full max-w-4xl rounded-xl" /></div> }
 )
 
 export default function DashboardStrategiesPage() {

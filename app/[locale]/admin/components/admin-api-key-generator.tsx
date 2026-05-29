@@ -5,6 +5,8 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { unifiedInsetPanelClassName } from '@/components/layout/unified-page-recipes'
+import { cn } from '@/lib/utils'
 import { Key, Copy } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -28,13 +30,13 @@ export function AdminApiKeyGenerator() {
     setIsCreating(false)
   }
   return (
-    <Card className="border-border/30 bg-card">
+    <Card className="border-border/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02]">
       <CardHeader><CardTitle className="flex items-center gap-2"><Key className="h-5 w-5" /> Admin API Keys</CardTitle></CardHeader>
       <CardContent className="space-y-3">
         {createdKey ? (
           <div className="space-y-3">
             <p className="text-sm font-medium">Admin API Key (show once):</p>
-            <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-muted/40 p-3">
+            <div className={cn(unifiedInsetPanelClassName, 'p-3')}>
               <code className="flex-1 text-xs break-all select-all">{createdKey}</code>
               <Button variant="ghost" size="icon" onClick={() => { navigator.clipboard.writeText(createdKey); toast.success('Copied!') }}>
                 <Copy className="h-4 w-4" />
@@ -42,9 +44,9 @@ export function AdminApiKeyGenerator() {
             </div>
             <p className="text-xs text-destructive">This key grants full admin access. Store it securely.</p>
             {origin && (
-              <div className="rounded-lg border border-border/20 bg-muted/30 p-3 text-xs text-muted-foreground space-y-2">
+              <div className={cn(unifiedInsetPanelClassName, 'p-3 text-xs text-muted-foreground space-y-2')}>
                 <p className="font-semibold text-foreground">Admin MCP Endpoint</p>
-                <div className="rounded border border-border/10 bg-background/40 p-2">
+                <div className={cn(unifiedInsetPanelClassName, 'rounded p-2 bg-background/50')}>
                   <div className="flex items-center gap-2 mb-0.5">
                     <code className="flex-1 break-all font-mono text-[10px] text-foreground/80">{origin}/api/mcp/admin</code>
                     <Button variant="ghost" size="icon" className="h-5 w-5 shrink-0" onClick={() => { navigator.clipboard.writeText(`${origin}/api/mcp/admin`); toast.success('URL copied!') }}>

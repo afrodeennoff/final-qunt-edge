@@ -8,6 +8,7 @@ import { ExternalLink, Download } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { Switch } from '@/components/ui/switch'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -17,7 +18,7 @@ import { useTypedI18n } from '@/locales/client'
 import { toast } from 'sonner'
 
 const UserEquityChart = dynamic(() => import('./user-equity-chart').then(m => ({ default: m.UserEquityChart })), {
-  loading: () => <div className="h-32 animate-pulse rounded-lg bg-muted/40" />,
+  loading: () => <Skeleton className="h-32 w-full rounded-lg" />,
 })
 
 interface UserEquityData {

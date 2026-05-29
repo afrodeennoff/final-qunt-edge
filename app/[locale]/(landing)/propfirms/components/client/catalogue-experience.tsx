@@ -26,6 +26,7 @@ import {
 } from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
 import dynamic from 'next/dynamic'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface PropFirmCatalogueExperienceProps {
   locale: string
@@ -53,7 +54,9 @@ const RegisteredAccountsChart = dynamic(
   {
     ssr: false,
     loading: () => (
-      <section className={cn(unifiedSectionPanelClassName, 'min-h-[420px] animate-pulse bg-muted/10')} />
+      <section className={cn(unifiedSectionPanelClassName, 'min-h-[420px]')}>
+        <Skeleton className="h-full min-h-[420px] w-full rounded-xl" />
+      </section>
     ),
   },
 )

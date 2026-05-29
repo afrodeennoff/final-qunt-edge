@@ -1,22 +1,26 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
+import { cn } from '@/lib/utils'
 import dynamic from 'next/dynamic'
 import { Bot, Brain, Sparkles, TrendingUp, BarChart3, MessageSquareText, Loader2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { DashboardStatCard } from '@/components/ui/dashboard-stat-card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
+import { unifiedInsetPanelClassName } from '@/components/layout/unified-page-recipes'
 import { MarketChart } from './market-chart'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const AnalysisOverview = dynamic(
   () => import('../../components/analysis/analysis-overview').then((m) => ({ default: m.AnalysisOverview })),
-  { loading: () => <div className="h-80 w-full animate-pulse rounded-xl border border-border/30 bg-card" /> },
+  { loading: () => <Skeleton className="h-80 w-full rounded-xl" /> },
 )
 
 const ChatWidget = dynamic(() => import('../../components/chat/chat'), {
-  loading: () => <div className="h-full w-full animate-pulse rounded-xl border border-border/30 bg-card" />,
+  loading: () => <Skeleton className="h-full w-full rounded-xl" />,
 })
 
 const sampleMarketData = Array.from({ length: 100 }, (_, i) => ({
@@ -120,21 +124,38 @@ export default function AnalyticsClient() {
             <div className="grid gap-4 lg:grid-cols-3">
               <div className="lg:col-span-2"><AnalysisOverview /></div>
               <div className="space-y-4">
-                <Card className="border-border/30 bg-card">
-                  <CardHeader className="pb-3"><CardTitle className="text-sm">Quick Stats</CardTitle></CardHeader>
-                  <CardContent>
-                    {isLoadingInsights ? (
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                    ) : (
-                      <div className="space-y-3 text-sm">
-                        <div className="flex justify-between"><span className="text-muted-foreground">Risk Alignment</span><span className="font-semibold">{insights?.modules.riskAlignmentScore ?? '-'}%</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Emotional Risk</span><span className="font-semibold">{insights?.summary.emotionalRiskPercent ?? '-'}%</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Check-In Rate</span><span className="font-semibold">{insights?.modules.checkInRate ?? '-'}%</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Confidence</span><span className="font-semibold">{insights?.summary.confidenceScore ?? '-'}%</span></div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                   <Card>
+                     <CardHeader className="pb-3"><CardTitle className="text-sm">Quick Stats</CardTitle></CardHeader>
+                     <CardContent>
+                       {isLoadingInsights ? (
+                         <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                       ) : (
+                         <div className="grid grid-cols-2 gap-3">
+                           <DashboardStatCard
+                             label="Risk Alignment"
+                             value={`${insights?.modules.riskAlignmentScore ?? '-'}%`}
+                             size="sm"
+                           />
+                           <DashboardStatCard
+                             label="Emotional Risk"
+                             value={`${insights?.summary.emotionalRiskPercent ?? '-'}%`}
+                             size="sm"
+                           />
+                           <DashboardStatCard
+                             label="Check-In Rate"
+                             value={`${insights?.modules.checkInRate ?? '-'}%`}
+                             size="sm"
+                           />
+                           <DashboardStatCard
+                             label="Confidence"
+                             value={`${insights?.summary.confidenceScore ?? '-'}%`}
+                             size="sm"
+                           />
+                         </div>
+                       )}
+                     </CardContent>
+                   </Card>
+
               </div>
             </div>
           </TabsContent>
@@ -142,13 +163,13 @@ export default function AnalyticsClient() {
           <TabsContent value="insights" className="space-y-4">
             {isLoadingInsights ? (
               <div className="grid gap-4 lg:grid-cols-2">
-                <div className="h-48 animate-pulse rounded-xl border border-border/30 bg-card" />
-                <div className="h-48 animate-pulse rounded-xl border border-border/30 bg-card" />
+                <Skeleton className="h-48 w-full rounded-xl" />
+                <Skeleton className="h-48 w-full rounded-xl" />
               </div>
             ) : (
               <>
                 <div className="grid gap-4 lg:grid-cols-2">
-                  <Card className="border-border/30 bg-card">
+                  <Card>
                     <CardHeader><CardTitle className="flex items-center gap-2 text-lg"><Brain className="h-4 w-4" /> Behavior Health</CardTitle></CardHeader>
                     <CardContent className="space-y-3 text-sm">
                       <div className="flex justify-between"><span className="text-muted-foreground">Overtrading Days</span><span className="font-semibold">{insights?.summary.overtradingDays ?? 0}</span></div>
@@ -157,14 +178,14 @@ export default function AnalyticsClient() {
                       <div className="flex justify-between"><span className="text-muted-foreground">Risk Alignment</span><span className="font-semibold">{insights?.modules.riskAlignmentScore ?? 0}%</span></div>
                     </CardContent>
                   </Card>
-                  <Card className="border-border/30 bg-card">
+                  <Card>
                     <CardHeader><CardTitle className="flex items-center gap-2 text-lg"><Sparkles className="h-4 w-4" /> Guidance</CardTitle></CardHeader>
                     <CardContent className="space-y-3 text-sm">
-                      <div className="rounded-xl border border-border/20 bg-muted/40 p-3">
+                      <div className={cn(unifiedInsetPanelClassName, 'p-3')}>
                         <p className="font-semibold mb-1">Live Prompt</p>
                         <p className="text-muted-foreground">{insights?.prompts.mindful ?? 'Before executing: is this trade analysis-driven or emotion-driven?'}</p>
                       </div>
-                      <div className="rounded-xl border border-border/20 bg-muted/40 p-3">
+                      <div className={cn(unifiedInsetPanelClassName, 'p-3')}>
                         <p className="font-semibold mb-1">Risk Guard</p>
                         <p className="text-muted-foreground">{insights?.prompts.riskGuard ?? 'Stay disciplined.'}</p>
                       </div>
@@ -173,7 +194,7 @@ export default function AnalyticsClient() {
                 </div>
 
                 {insights?.recommendations && insights.recommendations.length > 0 && (
-                  <Card className="border-border/30 bg-card">
+                  <Card>
                     <CardHeader><CardTitle className="flex items-center gap-2 text-lg"><Sparkles className="h-4 w-4" /> AI Recommendations</CardTitle></CardHeader>
                     <CardContent className="space-y-2">
                       {insights.recommendations.map((rec, i) => (
@@ -187,7 +208,7 @@ export default function AnalyticsClient() {
           </TabsContent>
 
           <TabsContent value="market">
-            <Card className="border-border/30 bg-card">
+            <Card className="border-border/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02]">
               <CardHeader><CardTitle className="text-lg">Market Overview</CardTitle></CardHeader>
               <CardContent>
                 <MarketChart data={sampleMarketData} height={300} className="min-h-[200px] h-[40vh] max-h-[400px]" />
@@ -196,7 +217,7 @@ export default function AnalyticsClient() {
           </TabsContent>
 
           <TabsContent value="coach">
-            <Card className="border-border/30 bg-card">
+            <Card className="border-border/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02]">
               <CardHeader>
                 <div className="flex items-center gap-2"><Bot className="h-5 w-5 text-primary" /><CardTitle className="text-lg">AI Trading Coach</CardTitle></div>
               </CardHeader>

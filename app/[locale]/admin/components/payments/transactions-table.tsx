@@ -50,7 +50,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
  }
 
  return (
- <div className="overflow-x-auto rounded-md border">
+  <div className="overflow-x-auto">
  <Table>
  <TableHeader>
  <TableRow>

@@ -1,10 +1,11 @@
 import dynamic from 'next/dynamic'
 import type { Metadata } from "next";
 import { getCanonicalUrl } from "@/lib/seo";
+import { Skeleton } from '@/components/ui/skeleton'
 
 const AccountsOverview = dynamic(
   () => import("../components/accounts/accounts-overview").then(m => ({ default: m.AccountsOverview })),
-  { loading: () => <div className="flex h-[80vh] items-center justify-center"><div className="h-32 w-full max-w-4xl animate-pulse rounded-xl bg-muted/30" /></div> }
+  { loading: () => <div className="flex h-[80vh] items-center justify-center"><Skeleton className="h-32 w-full max-w-4xl rounded-xl" /></div> }
 )
 
 export async function generateMetadata({

@@ -830,12 +830,12 @@ export function FormatPreview({
                         key={row.id}
                         data-state={row.getIsSelected() && "selected"}
                         className={cn(
-                          "border-b transition-colors hover:bg-muted",
-                          row.getIsExpanded()
-                            ? "bg-muted"
-                            : row.getCanExpand()
-                              ? ""
-                              : "bg-muted/50"
+                           "border-b border-border/20 transition-all duration-200 hover:bg-primary/[0.02]",
+                           row.getIsExpanded()
+                             ? "bg-muted/40"
+                             : row.getCanExpand()
+                               ? ""
+                               : "bg-muted/20"
                         )}
                       >
                         {row.getVisibleCells().map((cell) => (

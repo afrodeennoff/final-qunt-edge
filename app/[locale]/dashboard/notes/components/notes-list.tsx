@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import { useI18n } from "@/locales/client"
 import { TradingNote } from "../lib/use-notes"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface NotesListProps {
   traders: string[]
@@ -191,10 +192,7 @@ export function NotesList({
         {isLoading ? (
           <div className="p-3 space-y-2">
             {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="h-20 rounded-md bg-card/30 animate-pulse"
-              />
+              <Skeleton key={i} className="h-20 w-full rounded-md" />
             ))}
           </div>
         ) : notes.length === 0 ? (

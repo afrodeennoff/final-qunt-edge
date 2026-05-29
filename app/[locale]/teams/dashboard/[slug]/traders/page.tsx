@@ -6,6 +6,7 @@ import { Zap } from "lucide-react"
 import { TeamEquityGridClient } from "../../../components/user-equity/team-equity-grid-client"
 import { unifiedSectionPanelClassName } from "@/components/layout/unified-page-recipes"
 import { cn } from "@/lib/utils"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function TeamTradersPage() {
   const params = useParams<{ slug: string }>()
@@ -28,10 +29,7 @@ export default function TeamTradersPage() {
         fallback={
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-48 animate-pulse rounded-xl border border-border/30 bg-muted/40"
-              />
+              <Skeleton key={i} className="h-48 w-full rounded-xl" />
             ))}
           </div>
         }

@@ -38,13 +38,14 @@ import { cn } from '@/lib/utils'
 import { getLeaderboardVisibility, toggleLeaderboardVisibility } from '@/server/user-profile'
 import { useUserStore } from '@/store/user-store'
 import { TraderProfileShareButton } from './components/trader-profile-share-button'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const RadarChartCard = dynamic(() => import('./components/RadarChartCard'), {
-  loading: () => <div className="h-64 animate-pulse rounded-xl border border-border/30 bg-muted" />,
+  loading: () => <Skeleton className="h-64 w-full rounded-xl" />,
 })
 
 const CalendarWidget = dynamic(() => import('./components/CalendarWidget'), {
-  loading: () => <div className="h-64 animate-pulse rounded-xl border border-border/30 bg-muted" />,
+  loading: () => <Skeleton className="h-64 w-full rounded-xl" />,
 })
 
 interface BenchmarkMetrics {

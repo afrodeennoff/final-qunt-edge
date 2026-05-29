@@ -121,11 +121,11 @@ export interface ErrorFallbackProps {
 }
 
 export function ErrorFallback({ error, errorInfo, onReset }: ErrorFallbackProps) {
-  return (
-    <div className="flex min-h-[400px] flex-col items-center justify-center gap-6 rounded-xl border border-border/30 bg-background/50 p-8 text-center">
-      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
-        <AlertCircle className="h-8 w-8 text-destructive" />
-      </div>
+      return (
+        <div className="flex min-h-[400px] flex-col items-center justify-center gap-6 rounded-xl border border-border/20 bg-gradient-to-br from-muted/50 to-muted/20 ring-1 ring-inset ring-white/[0.02] p-8 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-destructive/20 bg-gradient-to-br from-destructive/15 to-destructive/5 ring-1 ring-inset ring-white/[0.02]">
+          <AlertCircle className="h-8 w-8 text-destructive" />
+        </div>
 
       <div className="space-y-2 max-w-md">
         <h2 className="type-heading-lg font-black text-foreground">Something went wrong</h2>
@@ -136,7 +136,7 @@ export function ErrorFallback({ error, errorInfo, onReset }: ErrorFallbackProps)
 
       {/* Error details (hidden by default, can be shown for debugging) */}
       {process.env.NODE_ENV === 'development' && (
-        <details className="max-h-48 max-w-md overflow-auto rounded-lg border border-border/30 bg-background/80 p-4 text-left">
+        <details className="max-h-48 max-w-md overflow-auto rounded-lg border border-border/20 bg-gradient-to-br from-muted/40 to-muted/10 ring-1 ring-inset ring-white/[0.02] p-4 text-left">
           <summary className="cursor-pointer type-body-sm font-medium text-muted-foreground">
             Error Details (Development Only)
           </summary>

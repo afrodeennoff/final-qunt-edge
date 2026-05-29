@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
 import { useTypedI18n } from '@/locales/client'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const mockData = [
   { time: '09:30', price: 4312, ema: 4308, volume: 32 },
@@ -21,7 +22,7 @@ const mockData = [
 ]
 
 const AnalysisDemoChart = dynamic(() => import('./analysis-demo-chart'), { loading: () => (
-    <div className="h-full w-full animate-pulse rounded-md border border-border/40 bg-card/60" />
+    <Skeleton className="h-full w-full rounded-md" />
   ) })
 
 export default function AnalysisDemo() {

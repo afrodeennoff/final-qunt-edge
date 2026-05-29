@@ -361,7 +361,7 @@ export default function PdfProcessing({
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <TableRow className="border-b transition-colors hover:bg-muted cursor-default">
+            <TableRow className="border-b border-border/20 transition-all duration-200 hover:bg-primary/[0.02] cursor-default">
               {row.getVisibleCells().map((cell: any) => (
                 <TableCell
                   key={cell.id}
@@ -426,7 +426,7 @@ export default function PdfProcessing({
     if (!totals) return null;
 
     return (
-      <TableRow className="border-t-2 bg-muted/30 font-medium">
+      <TableRow className="border-t-2 border-border/20 bg-card/30 font-medium">
         <TableCell className="whitespace-nowrap px-4 py-2.5 text-sm font-semibold">
           {t('trade-table.total')} ({totals.totalTrades})
         </TableCell>

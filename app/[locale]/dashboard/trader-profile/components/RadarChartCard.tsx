@@ -3,9 +3,10 @@
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from 'recharts'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const insetPanelClassName =
-  'rounded-xl border border-border bg-muted/40 shadow-none'
+  'rounded-xl border border-border/20 bg-gradient-to-br from-muted/50 to-muted/20 ring-1 ring-inset ring-white/[0.02] shadow-none'
 
 interface RadarChartDataPoint {
   metric: string
@@ -21,7 +22,7 @@ interface RadarChartCardProps {
 function RadarChartSkeleton() {
   return (
     <div className={cn(insetPanelClassName, 'p-3')}>
-      <div className="h-64 w-full 2xl:h-80 animate-pulse rounded-lg bg-muted/30" />
+      <Skeleton className="h-64 w-full rounded-lg 2xl:h-80" />
     </div>
   )
 }

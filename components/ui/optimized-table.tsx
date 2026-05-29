@@ -118,7 +118,7 @@ export function OptimizedVirtualTable<TData, TValue>({
  return (
  <div
  className={cn(
- 'flex items-center border-b border-border/30 transition-colors hover:bg-background/80',
+  'flex items-center border-b border-border/20 transition-colors hover:bg-primary/[0.02]',
  onRowClick && 'cursor-pointer'
  )}
  style={{
@@ -131,7 +131,7 @@ export function OptimizedVirtualTable<TData, TValue>({
  {row.getVisibleCells().map((cell) => (
  <div
  key={cell.id}
- className='px-4 py-2 border-r border-border/30 last:border-r-0'
+  className='px-4 py-2 border-r border-border/20 last:border-r-0'
  style={{ width: cell.column.getSize() }}
  >
  {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -154,13 +154,13 @@ export function OptimizedVirtualTable<TData, TValue>({
  className='relative'
  style={{ height: `${totalHeight}px` }}
  >
- <div className='sticky top-0 z-10 bg-background border-b'>
+  <div className='sticky top-0 z-10 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-md border-b border-border/20'>
  {table.getHeaderGroups().map((headerGroup) => (
  <div key={headerGroup.id} className='flex'>
  {headerGroup.headers.map((header) => (
  <div
  key={header.id}
- className='px-4 py-3 font-medium text-sm text-muted-foreground border-r border-border/30 last:border-r-0'
+  className='px-4 py-3 font-medium text-sm text-muted-foreground border-r border-border/20 last:border-r-0'
  style={{ width: header.getSize() }}
  >
  {header.isPlaceholder

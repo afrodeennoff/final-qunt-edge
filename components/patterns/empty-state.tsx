@@ -22,7 +22,7 @@ export function EmptyState({
       className={cn('flex flex-col items-center text-center', className)}
       data-slot="empty-state"
     >
-      <div className="size-12 rounded-xl bg-muted flex items-center justify-center mb-4">
+      <div className="size-12 rounded-xl border border-border/20 bg-gradient-to-br from-muted/40 to-muted/10 ring-1 ring-inset ring-white/[0.02] flex items-center justify-center mb-4">
         <Icon className="size-4 text-muted-foreground" />
       </div>
       <p className="text-[14px] text-muted-foreground font-black mb-2">

@@ -137,7 +137,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
   <div className="absolute inset-0 rounded-xl border border-border border-dashed" />
  <div className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.12),hsl(var(--background)/0.8)_62%)] opacity-100" />
  <div className="absolute inset-0 flex items-center justify-center opacity-100 drag-handle cursor-grab active:cursor-grabbing">
-  <div className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-foreground shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]">
+  <div className="flex flex-col items-center gap-2 rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 px-4 py-3 text-foreground ring-1 ring-inset ring-white/[0.02]">
  <GripVertical className="h-6 w-4" />
  <p className="text-sm font-medium">{t('widgets.dragToMove')}</p>
  </div>
@@ -547,7 +547,8 @@ export default function WidgetCanvas() {
  if (!layouts) {
  return (
  <div className="relative mt-0 w-full min-h-0" role="status" aria-label="Loading dashboard">
-   <div className="rounded-xl border border-border bg-card p-4 space-y-3" aria-hidden="true">
+    <div className="rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 p-4 ring-1 ring-inset ring-white/[0.02] space-y-3" aria-hidden="true">
+
  <Skeleton className="h-4 w-48" />
  <Skeleton className="h-3 w-80 max-w-full" />
  <div className="flex gap-2 pt-2">
@@ -563,8 +564,10 @@ export default function WidgetCanvas() {
  if (currentLayout.length === 0) {
  return (
  <div className="relative mt-0 w-full min-h-0" role="status">
-  <div className="mx-auto mt-8 max-w-lg rounded-xl border border-border bg-card p-6 text-center shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]" role="alert">
-  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground">
+   <div className="mx-auto mt-8 max-w-lg rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 p-6 text-center ring-1 ring-inset ring-white/[0.02]" role="alert">
+
+   <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 text-muted-foreground ring-1 ring-inset ring-white/[0.02]">
+
  <Maximize2 className="h-5 w-5" />
  </div>
  <div className="text-sm font-semibold tracking-tight text-foreground">

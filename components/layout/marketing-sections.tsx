@@ -105,11 +105,11 @@ export function MarketingFeatureCard({
         {icon}
       </div>
       <div className="mt-4">
-        <h3 className="text-base font-black tracking-tight text-foreground">{title}</h3>
+        <h3 className="text-base font-semibold tracking-tight text-foreground">{title}</h3>
         <p className={cn(marketingBodyClassName, 'mt-2 line-clamp-2 text-sm')}>{description}</p>
       </div>
       {footer ? (
-        <div className="mt-4 text-xs font-black uppercase tracking-[0.12em] text-muted-foreground">
+        <div className="mt-4 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
           {footer}
         </div>
       ) : null}
@@ -161,7 +161,7 @@ export function MarketingStepCard({
           {icon}
         </span>
       </div>
-      <h3 className="mt-6 text-base font-black tracking-[-0.01em] text-foreground">{title}</h3>
+      <h3 className="mt-6 text-base font-semibold tracking-tight text-foreground">{title}</h3>
       <p className={cn(marketingBodyClassName, 'mt-2 text-sm')}>{description}</p>
     </Card>
   )
@@ -207,7 +207,7 @@ export function MarketingPricingCard({
         </Badge>
       ) : null}
       <div className={cn(badge && 'sm:pr-24')}>
-        <h3 className="text-base font-black tracking-[-0.01em] text-foreground">{name}</h3>
+        <h3 className="text-base font-semibold tracking-tight text-foreground">{name}</h3>
         <p className={cn(marketingBodyClassName, 'mt-2 text-sm')}>{description}</p>
       </div>
       <div className="mt-8 flex items-end gap-3">
@@ -252,13 +252,13 @@ export function MarketingHyperframe({
 }) {
   return (
     <Card id={id} className={cn('overflow-hidden p-0', className)}>
-      <div className="flex items-center justify-between border-b border-foreground/5 bg-muted/50 px-4 py-2.5">
+      <div className="flex items-center justify-between border-b border-border/20 bg-gradient-to-br from-card/30 to-card/5 px-4 py-2.5">
         <div className="flex items-center gap-1.5 px-2 py-1" aria-hidden>
           <span className="h-3 w-3 rounded-full bg-destructive/80" />
           <span className="h-3 w-3 rounded-full bg-warning/80" />
           <span className="h-3 w-3 rounded-full bg-success/80" />
         </div>
-        <div className="rounded-full bg-muted/50 border border-border/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+        <div className="rounded-full border border-border/20 bg-gradient-to-br from-muted/40 to-muted/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground ring-1 ring-inset ring-white/[0.02]">
           {label}
         </div>
         <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/80 sm:flex">

@@ -278,7 +278,7 @@ function LeaderboardEntryRow({ entry, locale }: { entry: LeaderboardEntry; local
   const profileLink = profileHref(locale, entry.userId)
 
   return (
-    <tr className="group transition-[background-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-primary/6">
+    <tr className="group transition-[background-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-primary/[0.02]">
       <td className={cn('border-b px-6 py-4 align-middle', rowDividerClassName)}>
         <span
           className={cn(

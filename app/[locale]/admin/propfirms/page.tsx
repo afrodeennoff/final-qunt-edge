@@ -237,10 +237,10 @@ export default async function PropFirmsListPage({
         <div className="hidden overflow-x-auto lg:block">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border/30">
-                <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Name</th>
-                <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Category</th>
-                <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Platform</th>
+               <tr className="border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm">
+                <th   className="type-label pb-3 pr-4 text-left font-medium text-muted-foreground">Name</th>
+                <th   className="type-label pb-3 pr-4 text-left font-medium text-muted-foreground">Category</th>
+                <th   className="type-label pb-3 pr-4 text-left font-medium text-muted-foreground">Platform</th>
                 <th className="pb-3 pr-4 text-center font-medium text-muted-foreground">Reviews</th>
                 <th className="pb-3 pr-4 text-center font-medium text-muted-foreground">Coupons</th>
                 <th className="pb-3 pr-4 text-center font-medium text-muted-foreground">State</th>
@@ -264,7 +264,7 @@ export default async function PropFirmsListPage({
                   return (
                     <tr
                       key={firm.id}
-                      className="border-b border-border/30 last:border-0"
+                      className="border-b border-border/20 last:border-0 hover:bg-primary/[0.02] transition-colors"
                     >
                       <td className="py-3 pr-4">
                         <div className="space-y-1">

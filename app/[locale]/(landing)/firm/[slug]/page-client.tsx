@@ -1079,16 +1079,16 @@ function RulesSection({ firm }: { firm: FirmData }) {
             <div className="mt-6 hidden overflow-x-auto lg:block">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border">
-                    <th className="px-4 py-3 text-left text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Account</th>
-                    <th className="px-4 py-3 text-right text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Daily Loss</th>
-                    <th className="px-4 py-3 text-right text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Max Drawdown</th>
-                    <th className="px-4 py-3 text-right text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Profit Target</th>
+                  <tr className="border-b border-border/20 bg-gradient-to-br from-card/30 to-card/5">
+                                         <th className="type-label px-4 py-3 text-left type-label text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Account</th>
+                    <th className="px-4 py-3 text-right type-label text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Daily Loss</th>
+                    <th className="px-4 py-3 text-right type-label text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Max Drawdown</th>
+                    <th className="px-4 py-3 text-right type-label text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Profit Target</th>
                   </tr>
                 </thead>
                 <tbody>
                   {accountSizes.map(([key, size]) => (
-                    <tr key={key} className="border-b border-border/60">
+                    <tr key={key} className="border-b border-border/20 hover:bg-primary/[0.02] transition-colors">
                       <td className="px-4 py-3 font-medium text-foreground">{size.name}</td>
                       <td className="px-4 py-3 text-right text-muted-foreground">
                         {size.dailyLoss !== null ? formatCompactCurrency(size.dailyLoss) : 'No limit'}

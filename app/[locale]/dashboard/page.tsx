@@ -3,15 +3,13 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getCanonicalUrl } from "@/lib/seo";
 import { CheckoutSuccessHandler } from "./components/checkout-success-handler";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const WidgetCanvas = dynamic(() => import("./components/widget-canvas"), {
   loading: () => (
     <div className="grid grid-cols-2 gap-4 p-4 lg:grid-cols-4 lg:p-6">
       {Array.from({ length: 8 }).map((_, i) => (
-        <div
-          key={i}
-          className="h-32 animate-pulse rounded-xl border border-border/20 bg-gradient-to-br from-muted/40 to-muted/10 ring-1 ring-inset ring-white/[0.02]"
-        />
+        <Skeleton key={i} className="h-32 w-full rounded-xl" />
       ))}
     </div>
   ),
@@ -52,10 +50,7 @@ export default async function DashboardPage(props: {
         fallback={
           <div className="grid grid-cols-2 gap-4 p-4 lg:grid-cols-4 lg:p-6">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-32 animate-pulse rounded-xl border border-border/20 bg-gradient-to-br from-muted/40 to-muted/10 ring-1 ring-inset ring-white/[0.02]"
-              />
+              <Skeleton key={i} className="h-32 w-full rounded-xl" />
             ))}
           </div>
         }

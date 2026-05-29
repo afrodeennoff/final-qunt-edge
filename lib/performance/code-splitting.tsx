@@ -2,6 +2,7 @@
 
 import React, { lazy, ComponentType, Suspense, ReactNode, useEffect } from 'react'
 import dynamic from 'next/dynamic'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface LazyComponentOptions {
   fallback?: ReactNode
@@ -15,7 +16,7 @@ export function createLazyComponent<T extends object>(
   options: LazyComponentOptions = {}
 ): ComponentType<T> {
   const {
-    fallback = <div className="animate-pulse bg-muted h-32 w-full" />,
+    fallback = <Skeleton className="h-32 w-full" />,
     ssr: _ssr = false,
     loadingComponent,
     errorComponent
@@ -51,7 +52,7 @@ export function createDynamicComponent<T extends object>(
     ssr,
     loading: LoadingComponent
       ? () => <LoadingComponent />
-      : () => <div className="animate-pulse bg-muted h-32 w-full" />
+      : () => <Skeleton className="h-32 w-full" />
   }) as ComponentType<T>
 }
 

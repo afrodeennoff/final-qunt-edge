@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Search, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface SearchUserResult {
   id: string
@@ -93,7 +94,7 @@ export function UsernameSearch({ onSelectUser }: UsernameSearchProps) {
 
       {isLoading && query.length >= 2 && (
         <div className="absolute mt-1 w-full rounded-lg border border-input bg-background p-2 shadow-md">
-          <div className="h-4 w-24 rounded bg-muted animate-pulse" />
+          <Skeleton className="h-4 w-24 rounded" />
         </div>
       )}
 

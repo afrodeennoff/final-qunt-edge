@@ -13,6 +13,7 @@ import {
 } from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
 import { FreeUsersTable } from './free-users-table'
+import { Skeleton } from '@/components/ui/skeleton'
 import { AdminApiKeyGenerator } from '@/app/[locale]/admin/components/admin-api-key-generator'
 import {
 	Building2,
@@ -29,7 +30,7 @@ import { SubscriptionsTable } from "@/app/[locale]/admin/components/payments/sub
 import { getTransactionsAction, getSubscriptionsAction } from "@/app/[locale]/admin/actions/payment-actions"
 
 const UserGrowthChart = dynamic(() => import('./user-growth-chart').then(m => ({ default: m.UserGrowthChart })), {
-	loading: () => <div className="h-[400px] animate-pulse rounded-lg bg-muted/30" />,
+	loading: () => <Skeleton className="h-[400px] w-full rounded-lg" />,
 })
 
 interface User {

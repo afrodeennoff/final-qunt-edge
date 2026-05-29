@@ -76,7 +76,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </Link>
             <Link
               href={`/${locale}/support`}
-              className="inline-flex items-center justify-center rounded-full border border-border/30 bg-card px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-foreground transition-all hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
+              className="inline-flex items-center justify-center rounded-full border border-border/20 bg-gradient-to-br from-card/50 to-card/10 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-foreground transition-all hover:border-primary/25 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
             >
               Contact Support
             </Link>
@@ -86,7 +86,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {storyCards.map((card) => (
             <UnifiedSurface key={card.title} variant="subtle">
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-foreground">
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-border/20 bg-gradient-to-br from-muted/50 to-muted/20 text-foreground">
                 {card.icon}
               </div>
               <h3 className="text-lg font-semibold tracking-tight text-foreground">{card.title}</h3>
@@ -98,7 +98,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <h3 className="text-lg font-semibold tracking-tight text-foreground">Founder&apos;s Expertise</h3>
             <div className="mt-4 flex flex-wrap gap-2">
               {founderSkills.map((skill) => (
-                <Badge key={skill.name} variant="secondary" className="flex items-center gap-1 border-border/30 bg-muted/40 px-2.5 py-1 text-sm">
+                <Badge key={skill.name} variant="secondary" className="flex items-center gap-1 border-border/20 bg-muted/30 px-2.5 py-1 text-sm">
                   {skill.icon}
                   {skill.name}
                 </Badge>

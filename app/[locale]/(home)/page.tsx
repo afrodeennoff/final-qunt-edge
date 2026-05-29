@@ -8,6 +8,7 @@ import {
   buildPublicMetadata,
   buildSoftwareApplicationSchema,
 } from '@/lib/seo'
+import { Skeleton } from '@/components/ui/skeleton'
 
 type Locale = 'en' | 'fr'
 
@@ -66,18 +67,18 @@ const HomeContent = dynamic(() => import('./components/HomeContent'), {
       <main className="relative z-10 mx-auto w-full max-w-[1280px] min-w-0 px-4 sm:px-6 lg:px-8">
         <div className="pt-24 sm:pt-32 lg:pt-40">
           <div className="mx-auto max-w-3xl space-y-8 text-center">
-            <div className="h-5 w-32 animate-pulse bg-primary/20 rounded mx-auto" />
-            <div className="h-14 sm:h-16 w-[min(100%,42rem)] animate-pulse bg-muted/60 rounded-2xl mx-auto" />
-            <div className="h-4 w-80 animate-pulse bg-muted/40 rounded mx-auto mt-4" />
+            <Skeleton className="h-5 w-32 rounded mx-auto" />
+            <Skeleton className="h-14 sm:h-16 w-[min(100%,42rem)] rounded-2xl mx-auto" />
+            <Skeleton className="h-4 w-80 rounded mx-auto mt-4" />
             <div className="flex justify-center gap-3 mt-8">
-              <div className="h-11 w-36 animate-pulse bg-primary/30 rounded-xl" />
+              <Skeleton className="h-11 w-36 rounded-xl" />
             </div>
           </div>
         </div>
         {/* Live stats skeleton */}
         <div className="mt-16 grid grid-cols-2 gap-6 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-24 rounded-xl border border-border bg-muted/30 animate-pulse" />
+            <Skeleton key={i} className="h-24 w-full rounded-xl" />
           ))}
         </div>
       </main>

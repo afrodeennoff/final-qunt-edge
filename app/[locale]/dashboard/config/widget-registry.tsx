@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/locales/client'
 import { translateWeekday } from '@/lib/translation-utils'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const widgetFallback = <div className="h-full w-full rounded-xl bg-background/0.08" />
 
@@ -147,11 +148,11 @@ function ChartPreviewSkeleton({ title }: { title: string }) {
 
 function StatPreviewSkeleton({ height = 100 }: { height?: number }) {
   return (
-    <div className="h-[300px] rounded-xl border border-border/30 bg-card p-4 animate-pulse">
+    <div className="h-[300px] rounded-xl border border-border/20 bg-gradient-to-br from-muted/50 to-muted/20 ring-1 ring-inset ring-white/[0.02] p-4">
       <div className="space-y-3">
-        <div className="h-3 w-20 rounded bg-muted" />
-        <div className="h-8 w-28 rounded bg-muted" />
-        <div className="h-2 w-full rounded bg-muted" />
+        <Skeleton className="h-3 w-20 rounded" />
+        <Skeleton className="h-8 w-28 rounded" />
+        <Skeleton className="h-2 w-full rounded" />
       </div>
     </div>
   )

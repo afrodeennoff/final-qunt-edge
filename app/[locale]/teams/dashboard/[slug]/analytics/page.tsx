@@ -18,8 +18,10 @@ import {
 } from '@/components/layout/unified-page-recipes'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { DashboardStatCard } from '@/components/ui/dashboard-stat-card'
 import { cn } from '@/lib/utils'
 import { getTeamAnalyticsDataAction } from '../../../actions/analytics'
+import { Skeleton } from '@/components/ui/skeleton'
 
 type TeamMemberPerformance = {
   userId: string
@@ -196,8 +198,8 @@ export default function TeamAnalyticsPage() {
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="h-28 animate-pulse rounded-xl border border-border/30 bg-card" />
-        <div className="h-80 animate-pulse rounded-xl border border-border/30 bg-card" />
+        <Skeleton className="h-28 w-full rounded-xl" />
+        <Skeleton className="h-80 w-full rounded-xl" />
       </div>
     )
   }
@@ -213,7 +215,7 @@ export default function TeamAnalyticsPage() {
           <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Analytics</h1>
         </header>
 
-        <Card className="border-destructive/20 bg-card">
+        <Card className="border-destructive/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02]">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
             <h3 className="text-lg font-semibold mb-2">Failed to load analytics</h3>
@@ -246,7 +248,7 @@ export default function TeamAnalyticsPage() {
           </p>
         </header>
 
-        <Card className="border-border/30 bg-card">
+        <Card className="border-border/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02]">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <BarChart3 className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">No analytics data yet</h3>
@@ -273,39 +275,34 @@ export default function TeamAnalyticsPage() {
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="border-border/30 bg-card">
-          <CardHeader className="pb-2">
-            <CardDescription className="text-[11px] font-semibold uppercase tracking-[0.12em]">Total PnL</CardDescription>
-            <CardTitle className={cn('text-xl font-black', summary.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}>
-              {formatCurrency(summary.totalPnL)}
-            </CardTitle>
-          </CardHeader>
-        </Card>
+        <DashboardStatCard
+          label="Total PnL"
+          value={formatCurrency(summary.totalPnL)}
+          valueClassName={cn(summary.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}
+          size="md"
+        />
 
-        <Card className="border-border/30 bg-card">
-          <CardHeader className="pb-2">
-            <CardDescription className="text-[11px] font-semibold uppercase tracking-[0.12em]">Win Rate</CardDescription>
-            <CardTitle className="text-xl font-black">{summary.winRate.toFixed(1)}%</CardTitle>
-          </CardHeader>
-        </Card>
+        <DashboardStatCard
+          label="Win Rate"
+          value={`${summary.winRate.toFixed(1)}%`}
+          size="md"
+        />
 
-        <Card className="border-border/30 bg-card">
-          <CardHeader className="pb-2">
-            <CardDescription className="text-[11px] font-semibold uppercase tracking-[0.12em]">Total Trades</CardDescription>
-            <CardTitle className="text-xl font-black">{summary.trades}</CardTitle>
-          </CardHeader>
-        </Card>
+        <DashboardStatCard
+          label="Total Trades"
+          value={summary.trades}
+          size="md"
+        />
 
-        <Card className="border-border/30 bg-card">
-          <CardHeader className="pb-2">
-            <CardDescription className="text-[11px] font-semibold uppercase tracking-[0.12em]">Profit Factor</CardDescription>
-            <CardTitle className="text-xl font-black">{summary.profitFactor.toFixed(2)}</CardTitle>
-          </CardHeader>
-        </Card>
+        <DashboardStatCard
+          label="Profit Factor"
+          value={summary.profitFactor.toFixed(2)}
+          size="md"
+        />
       </div>
 
       <div className="grid gap-4 xl:grid-cols-12">
-        <Card data-chart-surface="modern" className="border-border/30 bg-card xl:col-span-8">
+        <Card data-chart-surface="modern" className="border-border/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02] xl:col-span-8">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Cumulative Equity</CardTitle>
             <CardDescription className="text-[13px] leading-[1.55]">Rolling team performance over time</CardDescription>
@@ -346,7 +343,7 @@ export default function TeamAnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-border/30 bg-card xl:col-span-4">
+        <Card className="border-border/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02] xl:col-span-4">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Member Breakdown</CardTitle>
             <CardDescription className="text-[13px] leading-[1.55]">Per-trader contribution</CardDescription>
@@ -380,7 +377,7 @@ export default function TeamAnalyticsPage() {
         </Card>
       </div>
 
-      <Card className="border-border/30 bg-card">
+      <Card className="border-border/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02]">
         <CardHeader>
           <CardTitle className="inline-flex items-center gap-2 text-lg font-semibold">
             <TrendingUp className="h-5 w-5 text-primary" />

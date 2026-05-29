@@ -75,7 +75,7 @@ export function SharedWidgetCanvas() {
 
   if (!hasSelectedAccounts) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] bg-card rounded-xl border border-dashed border-border/30 p-8">
+      <div className="flex flex-col items-center justify-center min-h-[400px] rounded-xl border border-dashed border-border/20 bg-gradient-to-br from-muted/50 to-muted/20 ring-1 ring-inset ring-white/[0.02] p-8">
         <EmptyState
           icon={<div className="h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center">
             <BarChart3 className="h-6 w-6 text-muted-foreground/50" />
@@ -94,7 +94,7 @@ export function SharedWidgetCanvas() {
 
   if (transformedLayout.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] bg-card rounded-xl border border-dashed border-border/30">
+      <div className="flex flex-col items-center justify-center min-h-[400px] rounded-xl border border-dashed border-border/20 bg-gradient-to-br from-muted/50 to-muted/20 ring-1 ring-inset ring-white/[0.02]">
         <EmptyState
           icon={<BarChart3 className="h-12 w-12 text-muted-foreground/50" />}
           title="No Widgets Available"
@@ -123,7 +123,8 @@ export function SharedWidgetCanvas() {
             key={widget.i}
             className={cn(
               "widget-enter-smooth",
-              "bg-card border border-border rounded-xl transition-colors hover:bg-muted",
+              "rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02] transition-all duration-300",
+              "hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15",
               widget.type.includes('pnl') && "hover:border-success/30",
               widget.type.includes('chart') && "hover:border-primary/30"
             )}

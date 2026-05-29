@@ -310,23 +310,23 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  <div className="overflow-x-auto">
  <table className="w-full text-sm">
  <thead>
- <tr className="border-b">
- <th className="text-left p-2 font-medium">
+  <tr className="border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm">
+ <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.account")}
  </th>
- <th className="text-left p-2 font-medium">
+ <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.netPnL")}
  </th>
- <th className="text-left p-2 font-medium">
+ <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.winRate")}
  </th>
- <th className="text-left p-2 font-medium">
+ <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.totalTrades")}
  </th>
- <th className="text-left p-2 font-medium">
+ <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.profitFactor")}
  </th>
- <th className="text-left p-2 font-medium">
+ <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.riskLevel")}
  </th>
  </tr>
@@ -334,8 +334,8 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  <tbody>
  {accountPerformanceData.accounts.map(
  (account: any, index: number) => (
- <tr key={index} className="border-b">
- <td className="p-2 font-medium">
+  <tr key={index} className="border-b border-border/20 hover:bg-primary/[0.02] transition-colors">
+ <td   className="p-2.5 font-medium">
  {account.accountNumber}
  </td>
  <td
@@ -343,16 +343,16 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  >
  ${account.netPnL?.toLocaleString() || 0}
  </td>
- <td className="p-2">
+ <td   className="p-2.5">
  {account.winRate?.toFixed(1) || 0}%
  </td>
- <td className="p-2">
+ <td   className="p-2.5">
  {account.totalTrades || 0}
  </td>
- <td className="p-2">
+ <td   className="p-2.5">
  {account.profitFactor?.toFixed(2) || 0}
  </td>
- <td className="p-2">
+ <td   className="p-2.5">
  <Badge
  variant="outline"
  className={

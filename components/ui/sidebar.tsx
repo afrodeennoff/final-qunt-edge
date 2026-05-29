@@ -222,7 +222,7 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
           className={cn(
-            'flex h-full w-full flex-col bg-sidebar/85 backdrop-blur-md',
+            'flex h-full w-full flex-col bg-gradient-to-br from-sidebar/92 to-sidebar/78 backdrop-blur-md border border-sidebar-border/8 ring-1 ring-inset ring-white/[0.015]',
             'group-data-[variant=floating]:rounded-2xl',
             'group-data-[variant=inset]:rounded-2xl',
           )}
@@ -379,7 +379,7 @@ function SidebarGroupLabel({
       data-slot="sidebar-group-label"
       data-sidebar="group-label"
       className={cn(
-        'flex h-7 shrink-0 items-center rounded-lg px-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70 outline-hidden transition-[margin,opacity] duration-150 ease-[0.22,1,0.36,1] focus-visible:ring-2 focus-visible:ring-sidebar-primary/50 [&>svg]:size-4 [&>svg]:shrink-0',
+        'flex h-7 shrink-0 items-center rounded-lg px-2 text-[11px] font-medium uppercase tracking-[-0.01em] text-muted-foreground/60 outline-hidden transition-[margin,opacity] duration-150 ease-[0.22,1,0.36,1] focus-visible:ring-2 focus-visible:ring-sidebar-primary/50 [&>svg]:size-4 [&>svg]:shrink-0',
         'group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0',
         className,
       )}

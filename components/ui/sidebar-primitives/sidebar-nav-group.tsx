@@ -18,7 +18,7 @@ const ITEM_BUTTON_CLASS =
   'pointer-events-auto rounded-xl font-medium hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground transition-[opacity,background-color,border-color,box-shadow] duration-150'
 const INACTIVE_ITEM_CLASS = 'text-sidebar-foreground/68'
 const ACTIVE_ITEM_CLASS =
-  'border-sidebar-primary/28 bg-sidebar-primary/12 text-sidebar-foreground shadow-sm'
+  'border-sidebar-primary/25 bg-sidebar-primary/8 ring-1 ring-inset ring-sidebar-primary/22 shadow-[0_0_10px_-2px] shadow-sidebar-primary/15 text-sidebar-foreground'
 
 function isItemPending(
   item: UnifiedSidebarItem,
@@ -168,11 +168,11 @@ const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
 
             return (
               <React.Fragment key={`${item.label}-${index}`}>
-                {showSeparator && <div className="mx-3 my-2 h-px bg-sidebar-border/22" />}
+                {showSeparator && <div className="mx-3 my-1.5 h-px bg-gradient-to-r from-transparent via-sidebar-border/28 to-transparent" />}
                 <SidebarMenuItem className="relative">
-                  {itemIsActive && (
-                    <div className="absolute left-0 top-1/2 h-9 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary/85" />
-                  )}
+                   {itemIsActive && (
+                     <div className="absolute left-0 top-1/2 h-9 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary/75 shadow-[0_0_6px_hsl(var(--sidebar-primary)/0.4)]" />
+                   )}
                   {href ? (
                     <SidebarMenuButton
                       asChild

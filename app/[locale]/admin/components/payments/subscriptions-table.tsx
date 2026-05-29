@@ -45,7 +45,7 @@ export function SubscriptionsTable({ subscriptions }: SubscriptionsTableProps) {
  }
 
  return (
- <div className="overflow-x-auto rounded-md border">
+  <div className="overflow-x-auto">
  <Table>
  <TableHeader>
  <TableRow>
