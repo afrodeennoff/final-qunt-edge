@@ -12,7 +12,7 @@ export function AdminApiKeyGenerator() {
   const [name, setName] = useState('')
   const [createdKey, setCreatedKey] = useState<string | null>(null)
   const [isCreating, setIsCreating] = useState(false)
-  const mcpUrl = typeof window !== 'undefined' ? `${window.location.origin}/api/mcp` : ''
+  const origin = typeof window !== 'undefined' ? window.location.origin : ''
 
   const handleCreate = async () => {
     if (!name.trim()) return
@@ -41,15 +41,25 @@ export function AdminApiKeyGenerator() {
               </Button>
             </div>
             <p className="text-xs text-destructive">This key grants full admin access. Store it securely.</p>
-            {mcpUrl && (
-              <div className="rounded-lg border border-border/20 bg-muted/30 p-3 text-xs text-muted-foreground space-y-1">
-                <p className="font-semibold text-foreground">MCP Server URL:</p>
-                <div className="flex items-center gap-2">
-                  <code className="flex-1 break-all rounded bg-background/80 px-2 py-1 font-mono text-[10px]">{mcpUrl}</code>
-                  <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => { navigator.clipboard.writeText(mcpUrl); toast.success('URL copied!') }}>
-                    <Copy className="h-3 w-3" />
-                  </Button>
-                </div>
+            {origin && (
+              <div className="rounded-lg border border-border/20 bg-muted/30 p-3 text-xs text-muted-foreground space-y-2">
+                <p className="font-semibold text-foreground">MCP Endpoints</p>
+                {[
+                  { url: `${origin}/api/mcp/admin`, label: 'Admin (use this with admin keys)', desc: 'Full admin access — users, subscriptions, analytics' },
+                  { url: `${origin}/api/mcp`, label: 'Personal (user API key required)', desc: 'Accounts, trades, tags + public data' },
+                  { url: `${origin}/api/mcp/public`, label: 'Public (no auth)', desc: 'Prop firms, deals, blog, leaderboard, benchmarks' },
+                ].map((ep) => (
+                  <div key={ep.url} className="rounded border border-border/10 bg-background/40 p-2">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <code className="flex-1 break-all font-mono text-[10px] text-foreground/80">{ep.url}</code>
+                      <Button variant="ghost" size="icon" className="h-5 w-5 shrink-0" onClick={() => { navigator.clipboard.writeText(ep.url); toast.success('URL copied!') }}>
+                        <Copy className="h-2.5 w-2.5" />
+                      </Button>
+                    </div>
+                    <p className="text-[10px] font-medium text-foreground/70">{ep.label}</p>
+                    <p className="text-[9px] text-muted-foreground/70">{ep.desc}</p>
+                  </div>
+                ))}
               </div>
             )}
             <Button variant="outline" onClick={() => setCreatedKey(null)}>Create Another</Button>

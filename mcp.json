@@ -2,11 +2,17 @@
   "mcpServers": {
     "qunt-edge": {
       "url": "https://qunt-edge.vercel.app/api/mcp",
-      "description": "Qunt Edge MCP server — access trading data, prop firms, leaderboard, and more",
-      "auth": {
-        "type": "bearer",
-        "description": "Generate an API key from your Qunt Edge dashboard settings page"
-      }
+      "description": "Qunt Edge MCP — personal trading data (requires API key). Generate one from your dashboard settings.",
+      "auth": { "type": "bearer" }
+    },
+    "qunt-edge-public": {
+      "url": "https://qunt-edge.vercel.app/api/mcp/public",
+      "description": "Qunt Edge public MCP — no auth required. Browse prop firms, deals, blog, leaderboard."
+    },
+    "qunt-edge-admin": {
+      "url": "https://qunt-edge.vercel.app/api/mcp/admin",
+      "description": "Qunt Edge admin MCP — full access including admin operations (requires admin API key).",
+      "auth": { "type": "bearer" }
     }
   }
 }

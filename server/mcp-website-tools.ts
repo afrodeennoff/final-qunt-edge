@@ -121,7 +121,7 @@ export const websiteTools = [
   },
 ]
 
-export async function handleWebsiteMcpToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext): Promise<McpToolResult> {
+export async function handleWebsiteMcpToolCall(toolName: string, args: Record<string, unknown>, _ctx?: McpAuthContext | null): Promise<McpToolResult> {
   switch (toolName) {
     case 'list_blog_posts':
       return await listBlogPosts(args)

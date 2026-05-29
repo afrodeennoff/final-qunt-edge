@@ -315,10 +315,10 @@ function ApiKeySection() {
   const [newKeyName, setNewKeyName] = useState('')
   const [createdKey, setCreatedKey] = useState<string | null>(null)
   const [isCreating, setIsCreating] = useState(false)
-  const [mcpUrl, setMcpUrl] = useState('')
+  const [origin, setOrigin] = useState('')
 
   useEffect(() => {
-    setMcpUrl(`${window.location.origin}/api/mcp`)
+    setOrigin(window.location.origin)
   }, [])
 
   const loadKeys = async () => {
@@ -367,28 +367,34 @@ function ApiKeySection() {
         <CardDescription>Manage API keys for programmatic access to your trading data via the MCP server.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {mcpUrl && (
-          <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary mb-2">
-              MCP Server URL
+        {origin && (
+          <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
+              MCP Endpoints
             </p>
-            <div className="flex items-center gap-2">
-              <code className="flex-1 text-xs break-all select-all rounded-lg bg-background/80 px-3 py-2 font-mono text-foreground/90">
-                {mcpUrl}
-              </code>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 shrink-0"
-                onClick={() => { navigator.clipboard.writeText(mcpUrl); toast.success('MCP URL copied!') }}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
-            </div>
-            <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-              Use this URL to connect AI tools (Claude, Cursor, Cline, etc.) to your trading data.
-              Add it as an MCP server with your API key as the Bearer token.
-            </p>
+            {[
+              { url: `${origin}/api/mcp`, label: 'Personal (API key required)', desc: 'Your accounts, trades, tags + public data' },
+              { url: `${origin}/api/mcp/public`, label: 'Public (no auth)', desc: 'Prop firms, deals, blog, leaderboard, benchmarks' },
+              { url: `${origin}/api/mcp/admin`, label: 'Admin (admin API key required)', desc: 'Full access — users, subscriptions, analytics' },
+            ].map((ep) => (
+              <div key={ep.url} className="rounded-lg border border-border/20 bg-background/40 p-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <code className="flex-1 text-[11px] break-all select-all font-mono text-foreground/80">
+                    {ep.url}
+                  </code>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 shrink-0"
+                    onClick={() => { navigator.clipboard.writeText(ep.url); toast.success('URL copied!') }}
+                  >
+                    <Copy className="h-3 w-3" />
+                  </Button>
+                </div>
+                <p className="text-[11px] font-medium text-foreground/70">{ep.label}</p>
+                <p className="text-[10px] text-muted-foreground/70">{ep.desc}</p>
+              </div>
+            ))}
           </div>
         )}
 
@@ -445,19 +451,12 @@ function ApiKeySection() {
                   </Button>
                 </div>
                 <p className="text-xs text-destructive">Copy this key now. You won&apos;t be able to see it again.</p>
-                <div className="rounded-lg border border-border/20 bg-muted/30 p-3 text-xs text-muted-foreground space-y-1.5">
-                  <p className="font-semibold text-foreground">Connect to MCP:</p>
-                  <p>1. Copy the MCP Server URL shown above</p>
-                  <p>2. Add to your AI tool as an MCP server with:</p>
-                  <pre className="mt-1 rounded bg-background/80 p-2 font-mono text-[10px] leading-relaxed text-foreground/80">
-{`{
-  "type": "mcp",
-  "url": "${mcpUrl}",
-  "headers": {
-    "Authorization": "Bearer ${createdKey.slice(0, 16)}..."
-  }
-}`}</pre>
-                </div>
+             <div className="rounded-lg border border-border/20 bg-muted/30 p-3 text-xs text-muted-foreground space-y-1.5">
+                   <p className="font-semibold text-foreground">Connect to MCP:</p>
+                   <p>1. Copy your API key above</p>
+                   <p>2. Use endpoint: <code className="font-mono text-[10px] bg-background/60 px-1 rounded">{origin}/api/mcp</code></p>
+                   <p>3. Add as Bearer token in your AI tool</p>
+                 </div>
               </div>
             ) : (
               <>
