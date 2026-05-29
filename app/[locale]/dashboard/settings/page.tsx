@@ -385,9 +385,98 @@ function ApiKeySection() {
                 <Copy className="h-3 w-3" />
               </Button>
             </div>
-            <p className="text-[10px] text-muted-foreground/70">Official MCP SDK (Streamable HTTP). Use with your API key as Bearer token.</p>
+            <p className="text-[10px] text-muted-foreground/70">Use with your API key as Bearer token in any MCP-compatible AI tool.</p>
           </div>
         )}
+
+        {/* Polished Connection Guide - MCP */}
+        <div className="rounded-xl border border-border/30 bg-muted/30 p-4 space-y-4">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground/80">Connect your AI tools (MCP)</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Use any API key above as Bearer token. Your trading data becomes available to AI agents.
+            </p>
+          </div>
+
+          {/* Claude Desktop */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium">Claude Desktop</p>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs"
+                onClick={() => {
+                  const config = `{
+  "mcpServers": {
+    "qunt-edge": {
+      "url": "${origin}/api/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_KEY_HERE"
+      }
+    }
+  }
+}`;
+                  navigator.clipboard.writeText(config);
+                  toast.success("Claude config copied!");
+                }}
+              >
+                Copy config
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Paste into Claude Desktop → Settings → Developer → Edit Config
+            </p>
+          </div>
+
+          {/* Cursor */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium">Cursor</p>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs"
+                onClick={() => {
+                  const text = `URL: ${origin}/api/mcp\nAuthorization: Bearer YOUR_KEY_HERE`;
+                  navigator.clipboard.writeText(text);
+                  toast.success("Cursor details copied!");
+                }}
+              >
+                Copy
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Settings → Features → MCP Servers → Add Custom Server
+            </p>
+          </div>
+
+          {/* Windsurf & Cline */}
+          <div className="space-y-1.5">
+            <p className="text-sm font-medium">Windsurf / Cline / Other Tools</p>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs"
+                onClick={() => {
+                  const text = `MCP Server URL: ${origin}/api/mcp\nAuthorization Header: Bearer YOUR_KEY_HERE`;
+                  navigator.clipboard.writeText(text);
+                  toast.success("Copied!");
+                }}
+              >
+                Copy details
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Add as a remote/custom MCP server using the URL above + Bearer token.
+            </p>
+          </div>
+
+          <p className="text-[11px] text-muted-foreground pt-1 border-t border-border/40">
+            Once connected, your AI can use account health, trades, risk metrics, journal entries, and more.
+          </p>
+        </div>
 
         {error && (
           <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-4 space-y-3">
@@ -397,9 +486,12 @@ function ApiKeySection() {
             <p className="text-sm text-destructive/90">{error}</p>
             <div className="rounded-lg bg-background/60 p-3 text-xs font-mono overflow-auto">
               <div className="mb-1 text-[10px] uppercase tracking-widest text-muted-foreground">Run this in your database (Supabase SQL Editor):</div>
-              <pre className="whitespace-pre-wrap select-all">{`-- MCP Tables (ApiKey + Audit Log)
+              <pre className="whitespace-pre-wrap select-all">{`-- MCP Tables (ApiKey + McpAuditLog)
+-- Run this once in Supabase SQL Editor
+
+-- ApiKey (uses cuid() in Prisma — no DB default)
 CREATE TABLE IF NOT EXISTS "ApiKey" (
-    "id" TEXT NOT NULL DEFAULT gen_random_uuid()::text,
+    "id" TEXT NOT NULL,
     "key" TEXT NOT NULL,
     "keyPrefix" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -416,6 +508,7 @@ CREATE INDEX IF NOT EXISTS "ApiKey_key_idx" ON "ApiKey"("key");
 CREATE INDEX IF NOT EXISTS "ApiKey_userId_idx" ON "ApiKey"("userId");
 CREATE INDEX IF NOT EXISTS "ApiKey_keyPrefix_idx" ON "ApiKey"("keyPrefix");
 
+-- McpAuditLog (uses uuid())
 CREATE TABLE IF NOT EXISTS "McpAuditLog" (
     "id" TEXT NOT NULL DEFAULT gen_random_uuid()::text,
     "apiKeyId" TEXT,

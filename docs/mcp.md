@@ -1,6 +1,6 @@
 # Qunt Edge MCP — Model Context Protocol Integration
 
-> **Implementation note (2026-05-29):** Powered by the official `@modelcontextprotocol/server` SDK (Streamable HTTP transport). All connection URLs, API key format (`qunt_usr_*` / `qunt_adm_*`), tool behavior, and 3-endpoint split remain unchanged. The previous custom JSON-RPC router is still available via `MCP_SDK_ENABLED=false` (default) during the migration period.
+> **Current Status (2026-05-29):** Using the stable custom MCP implementation (legacy JSON-RPC over HTTP). The official SDK migration is paused. All endpoints, key format (`qunt_usr_*` / `qunt_adm_*`), and tools are fully functional.
 
 ## Overview
 

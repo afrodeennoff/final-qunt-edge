@@ -1,6 +1,7 @@
 -- Create McpAuditLog table for MCP tool call auditing
+-- id uses @default(uuid()) in Prisma
 CREATE TABLE IF NOT EXISTS "McpAuditLog" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid()::text,
     "apiKeyId" TEXT,
     "userId" TEXT,
     "tool" TEXT NOT NULL,

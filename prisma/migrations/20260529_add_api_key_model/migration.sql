@@ -1,4 +1,5 @@
 -- Create ApiKey table for MCP server authentication
+-- Note: id uses @default(cuid()) in Prisma → we do NOT set a DB default here.
 CREATE TABLE IF NOT EXISTS "ApiKey" (
     "id" TEXT NOT NULL,
     "key" TEXT NOT NULL,
@@ -9,7 +10,7 @@ CREATE TABLE IF NOT EXISTS "ApiKey" (
     "lastUsedAt" TIMESTAMP(3),
     "expiresAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "ApiKey_pkey" PRIMARY KEY ("id")
 );
