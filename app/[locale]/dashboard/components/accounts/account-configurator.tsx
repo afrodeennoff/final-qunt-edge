@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog"
 import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon, X, Check, Info, SearchCheck } from "lucide-react"
+import { CalendarIcon, X, Check, Info, SearchCheck, Settings2, Shield, BarChart3, DollarSign, RotateCcw } from "lucide-react"
 // Tooltips replaced by Popovers
 import { format, Locale } from "date-fns"
 import { cn } from "@/lib/utils"
@@ -198,7 +198,7 @@ export function AccountConfigurator({
   }
 
  return (
- <div className="space-y-6">
+ <div className="space-y-5">
  {/* Template Loading Section */}
  <div className="flex flex-col gap-4 p-4 border rounded-lg bg-muted/50">
  <div className="flex items-center justify-between">
@@ -341,13 +341,20 @@ export function AccountConfigurator({
  </div>
  </div>
 
- <Accordion type="multiple" defaultValue={["basic-info"]} className="w-full">
+ <Accordion type="multiple" defaultValue={["basic-info"]} className="w-full pt-2">
  {/* Basic Account Info */}
- <AccordionItem value="basic-info">
- <AccordionTrigger>{t('propFirm.configurator.sections.basicInfo')}</AccordionTrigger>
+ <AccordionItem value="basic-info" className="border-border/40">
+ <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
+ <div className="flex items-center gap-2.5">
+ <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
+ <Settings2 className="h-3.5 w-3.5" />
+ </div>
+ <span>{t('propFirm.configurator.sections.basicInfo')}</span>
+ </div>
+ </AccordionTrigger>
  <AccordionContent>
- <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
- <div className="flex flex-col gap-2">
+ <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-5">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label>{t('propFirm.configurator.fields.propfirmName')}</Label>
  <Input
  value={pendingChanges?.propfirm ?? account.propfirm ?? ''}
@@ -355,7 +362,7 @@ export function AccountConfigurator({
  placeholder={t('propFirm.configurator.fields.propfirmName')}
  />
  </div>
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label>{t('propFirm.accountSize')}</Label>
  <div className="relative">
  <Input
@@ -419,7 +426,7 @@ export function AccountConfigurator({
  )}
  </div>
  </div>
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label>{t('propFirm.target')}</Label>
  <Input
  type="number"
@@ -433,9 +440,9 @@ export function AccountConfigurator({
  />
  </div>
  {/* Consistency moved to dedicated subsection below */}
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label>{t('propFirm.configurator.fields.accountType')}</Label>
- <div className="flex items-center gap-x-2">
+ <div className="flex items-center gap-x-2.5 rounded-md bg-muted/15 px-2.5 py-1.5 border border-border/10">
  <Switch
  id="isPerformance"
  checked={pendingChanges?.isPerformance ?? account.isPerformance ?? false}
@@ -446,7 +453,7 @@ export function AccountConfigurator({
  </Label>
  </div>
  </div>
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label>{t('filters.groupName')}</Label>
  {showNewGroupInput ? (
  <div className="flex items-center gap-2">
@@ -540,13 +547,21 @@ export function AccountConfigurator({
  </AccordionItem>
 
  {/* Drawdown & Trading Rules */}
- <AccordionItem value="drawdown-rules">
- <AccordionTrigger>{t('propFirm.configurator.sections.drawdownRules')}</AccordionTrigger>
+ <AccordionItem value="drawdown-rules" className="border-border/40">
+ <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
+ <div className="flex items-center gap-2.5">
+ <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
+ <Shield className="h-3.5 w-3.5" />
+ </div>
+ <span>{t('propFirm.configurator.sections.drawdownRules')}</span>
+ </div>
+ </AccordionTrigger>
  <AccordionContent>
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-5 p-5">
  {/* Drawdown Configuration */}
  <div className="flex flex-col gap-4">
- <div className="flex flex-col gap-2">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Drawdown Config</span>
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.drawdown')}</Label>
  <Input
  type="number"
@@ -555,9 +570,9 @@ export function AccountConfigurator({
  />
  </div>
 
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.drawdownType')}</Label>
- <div className="flex items-center gap-x-2">
+ <div className="flex items-center gap-x-2.5 rounded-md bg-muted/15 px-2.5 py-1.5 border border-border/10">
  <Switch
  id="trailingDrawdown"
  checked={pendingChanges?.trailingDrawdown ?? account.trailingDrawdown ?? false}
@@ -582,7 +597,7 @@ export function AccountConfigurator({
  </div>
 
  {(pendingChanges?.trailingDrawdown ?? account.trailingDrawdown) && (
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.trailingStopProfit')}</Label>
  <p className="text-xs text-muted-foreground">{t('propFirm.configurator.tooltips.trailingStopProfit')}</p>
  <Input
@@ -594,7 +609,7 @@ export function AccountConfigurator({
  </div>
  )}
 
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.trailingType')}</Label>
  <Select
  value={pendingChanges?.trailing ?? account.trailing ?? 'EOD'}
@@ -611,7 +626,7 @@ export function AccountConfigurator({
  </div>
 
  {/* Buffer Configuration */}
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <div className="flex items-center gap-2">
  <Label className="text-sm text-muted-foreground">Buffer</Label>
  <Popover>
@@ -638,7 +653,7 @@ export function AccountConfigurator({
  />
 
  {/* Consider buffer in metrics switch */}
- <div className="flex items-center justify-between pt-1">
+ <div className="flex items-center justify-between rounded-md bg-muted/15 px-2.5 py-1.5 border border-border/10 pt-1">
  <div className="flex items-center gap-2">
  <Label className="text-sm text-muted-foreground">
  {t('propFirm.configurator.fields.considerBuffer')}
@@ -668,8 +683,9 @@ export function AccountConfigurator({
  </div>
 
  {/* Daily Loss Rules */}
- <div className="flex flex-col gap-4">
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-4 md:pl-5 md:border-l md:border-border/20">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Daily Loss Rules</span>
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.dailyLoss')}</Label>
  <Input
  type="number"
@@ -678,7 +694,7 @@ export function AccountConfigurator({
  />
  </div>
 
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <div className="flex items-center gap-2">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.minPnlToCountAsDay')}</Label>
  <Popover>
@@ -705,9 +721,9 @@ export function AccountConfigurator({
  />
  </div>
 
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.tradingNewsAllowed')}</Label>
- <div className="flex items-center gap-x-2">
+ <div className="flex items-center gap-x-2.5 rounded-md bg-muted/15 px-2.5 py-1.5 border border-border/10">
  <Switch
  id="tradingNewsAllowed"
  checked={pendingChanges?.tradingNewsAllowed ?? account.tradingNewsAllowed ?? false}
@@ -722,10 +738,17 @@ export function AccountConfigurator({
  </AccordionItem>
 
  {/* Consistency Settings */}
- <AccordionItem value="consistency">
- <AccordionTrigger>{t('propFirm.consistency.title')}</AccordionTrigger>
+ <AccordionItem value="consistency" className="border-border/40">
+ <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
+ <div className="flex items-center gap-2.5">
+ <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
+ <BarChart3 className="h-3.5 w-3.5" />
+ </div>
+ <span>{t('propFirm.consistency.title')}</span>
+ </div>
+ </AccordionTrigger>
  <AccordionContent>
- <div className="p-4 border rounded-lg space-y-3 bg-muted/40">
+ <div className="p-5 border rounded-lg space-y-3 bg-muted/40">
  <div className="flex items-center justify-between">
  <div className="flex flex-col">
  <h4 className="text-sm font-medium">{t('propFirm.consistency.title')}</h4>
@@ -733,7 +756,7 @@ export function AccountConfigurator({
  {t('propFirm.consistency.description')}
  </p>
  </div>
- <div className="flex items-center gap-x-2">
+ <div className="flex items-center gap-x-2.5">
  <Switch
  id="consistencyEnabled"
  checked={isConsistencyEnabled}
@@ -754,7 +777,7 @@ export function AccountConfigurator({
  </div>
 
  {isConsistencyEnabled && (
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.coherence')}</Label>
  <Input
  type="number"
@@ -773,13 +796,21 @@ export function AccountConfigurator({
  </AccordionItem>
 
  {/* Pricing & Payout Section */}
- <AccordionItem value="pricing-payout">
- <AccordionTrigger>{t('propFirm.configurator.sections.pricingPayout')}</AccordionTrigger>
+ <AccordionItem value="pricing-payout" className="border-border/40">
+ <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
+ <div className="flex items-center gap-2.5">
+ <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
+ <DollarSign className="h-3.5 w-3.5" />
+ </div>
+ <span>{t('propFirm.configurator.sections.pricingPayout')}</span>
+ </div>
+ </AccordionTrigger>
  <AccordionContent>
- <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-5 p-5">
  {/* Price Section */}
  <div className="flex flex-col gap-4">
- <div className="flex flex-col gap-2">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Price</span>
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.price')}</Label>
  <Input
  type="number"
@@ -792,7 +823,8 @@ export function AccountConfigurator({
 
  {/* Payment & Renewal Section */}
  <div className="flex flex-col gap-4">
- <div className="flex flex-col gap-2">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Payment</span>
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.nextPaymentDate')}</Label>
  <Dialog open={paymentCalendarOpen} onOpenChange={setPaymentCalendarOpen}>
  <DialogTrigger asChild>
@@ -877,7 +909,7 @@ export function AccountConfigurator({
  )}
  </div>
 
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.paymentFrequency')}</Label>
  <Select
  value={pendingChanges?.paymentFrequency ?? account.paymentFrequency ?? 'MONTHLY'}
@@ -896,9 +928,9 @@ export function AccountConfigurator({
  </Select>
  </div>
 
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.renewalNotification')}</Label>
- <div className="flex items-center gap-x-2">
+ <div className="flex items-center gap-x-2.5 rounded-md bg-muted/15 px-2.5 py-1.5 border border-border/10">
  <Switch
  id="renewalNotification"
  checked={pendingChanges?.autoRenewal ?? account.autoRenewal ?? false}
@@ -924,7 +956,8 @@ export function AccountConfigurator({
 
  {/* Payout Section */}
  <div className="flex flex-col gap-4">
- <div className="flex flex-col gap-2">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Payout</span>
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.minTradingDays')}</Label>
  <Input
  type="number"
@@ -938,10 +971,17 @@ export function AccountConfigurator({
  </AccordionItem>
 
  {/* Reset Date Section */}
- <AccordionItem value="reset-date">
- <AccordionTrigger>{t('propFirm.configurator.sections.resetDate')}</AccordionTrigger>
+ <AccordionItem value="reset-date" className="border-border/40">
+ <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
+ <div className="flex items-center gap-2.5">
+ <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
+ <RotateCcw className="h-3.5 w-3.5" />
+ </div>
+ <span>{t('propFirm.configurator.sections.resetDate')}</span>
+ </div>
+ </AccordionTrigger>
  <AccordionContent>
- <div className="p-4">
+ <div className="p-5">
  <Dialog open={calendarOpen} onOpenChange={setCalendarOpen}>
  <DialogTrigger asChild>
  <div className="relative w-full">
@@ -1011,8 +1051,8 @@ export function AccountConfigurator({
  </Dialog>
  
  {/* Should Consider Trades Before Reset */}
- <div className="flex flex-col gap-2 mt-4">
- <div className="flex items-center justify-between">
+ <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3 mt-4">
+ <div className="flex items-center justify-between rounded-md bg-muted/15 px-2.5 py-1.5 border border-border/10">
  <div className="flex items-center gap-2">
  <Label className="text-sm text-muted-foreground">
  {t('propFirm.resetDate.shouldConsiderTradesBeforeReset')}
