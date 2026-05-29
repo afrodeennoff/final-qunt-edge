@@ -391,6 +391,7 @@ model Trade {
   @@index([userId, pnl]) // Composite for PnL filtering
   @@index([userId, tags]) // GIN index for array column filtering
   @@index([userId]) // Single-field index for userId-only lookups
+  @@index([accountNumber, userId]) // Composite FK index for Account relation (critical for joins and enforcement)
   @@schema("public")
 }
 

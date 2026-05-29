@@ -480,53 +480,57 @@ function ApiKeySection() {
 
         {error && (
           <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-4 space-y-3">
-            <div className="flex items-start gap-2">
-              <div className="text-destructive font-semibold text-sm">Database migration required</div>
+            <div>
+              <p className="font-semibold text-destructive">Database tables are missing</p>
+              <p className="text-sm text-destructive/90 mt-1">{error}</p>
             </div>
-            <p className="text-sm text-destructive/90">{error}</p>
-            <div className="rounded-lg bg-background/60 p-3 text-xs font-mono overflow-auto">
-              <div className="mb-1 text-[10px] uppercase tracking-widest text-muted-foreground">Run this in your database (Supabase SQL Editor):</div>
-              <pre className="whitespace-pre-wrap select-all">{`-- MCP Tables (ApiKey + McpAuditLog)
--- Run this once in Supabase SQL Editor
 
--- ApiKey (uses cuid() in Prisma — no DB default)
-CREATE TABLE IF NOT EXISTS "ApiKey" (
-    "id" TEXT NOT NULL,
-    "key" TEXT NOT NULL,
-    "keyPrefix" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "role" TEXT NOT NULL DEFAULT 'user',
-    "lastUsedAt" TIMESTAMP(3),
-    "expiresAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "ApiKey_pkey" PRIMARY KEY ("id")
-);
-CREATE UNIQUE INDEX IF NOT EXISTS "ApiKey_key_key" ON "ApiKey"("key");
-CREATE INDEX IF NOT EXISTS "ApiKey_key_idx" ON "ApiKey"("key");
-CREATE INDEX IF NOT EXISTS "ApiKey_userId_idx" ON "ApiKey"("userId");
-CREATE INDEX IF NOT EXISTS "ApiKey_keyPrefix_idx" ON "ApiKey"("keyPrefix");
+            <div className="space-y-2">
+              <p className="text-sm font-medium">How to fix:</p>
+              <ol className="list-decimal list-inside text-sm space-y-1 text-muted-foreground">
+                <li>
+                  Go to the migrations folder in the repo:<br />
+                  <a 
+                    href="https://github.com/afrodeennoff/qunt-edge/tree/v3/prisma/migrations" 
+                    target="_blank" 
+                    className="text-primary underline"
+                  >
+                    prisma/migrations
+                  </a>
+                </li>
+                <li>Run the two migration files in order in Supabase SQL Editor:</li>
+              </ol>
 
--- McpAuditLog (uses uuid())
-CREATE TABLE IF NOT EXISTS "McpAuditLog" (
-    "id" TEXT NOT NULL DEFAULT gen_random_uuid()::text,
-    "apiKeyId" TEXT,
-    "userId" TEXT,
-    "tool" TEXT NOT NULL,
-    "argsKeys" TEXT,
-    "success" BOOLEAN NOT NULL,
-    "durationMs" INTEGER NOT NULL,
-    "errorCode" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "McpAuditLog_pkey" PRIMARY KEY ("id")
-);
-CREATE INDEX IF NOT EXISTS "McpAuditLog_apiKeyId_createdAt_idx" ON "McpAuditLog"("apiKeyId", "createdAt");
-CREATE INDEX IF NOT EXISTS "McpAuditLog_userId_createdAt_idx" ON "McpAuditLog"("userId", "createdAt");
-CREATE INDEX IF NOT EXISTS "McpAuditLog_tool_createdAt_idx" ON "McpAuditLog"("tool", "createdAt");
-CREATE INDEX IF NOT EXISTS "McpAuditLog_createdAt_idx" ON "McpAuditLog"("createdAt");`}</pre>
+              <div className="flex flex-wrap gap-2 mt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const sql = `-- Run this first
+-- File: 20260529_add_api_key_model/migration.sql`;
+                    navigator.clipboard.writeText(sql);
+                    toast.success("Instruction copied. Now open the file on GitHub.");
+                    window.open("https://github.com/afrodeennoff/qunt-edge/blob/v3/prisma/migrations/20260529_add_api_key_model/migration.sql", "_blank");
+                  }}
+                >
+                  Open ApiKey migration
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    window.open("https://github.com/afrodeennoff/qunt-edge/blob/v3/prisma/migrations/20260529_add_mcp_audit_log/migration.sql", "_blank");
+                  }}
+                >
+                  Open McpAuditLog migration
+                </Button>
+              </div>
             </div>
-            <p className="text-[11px] text-muted-foreground">After running the SQL, refresh this page. Key creation will work immediately.</p>
+
+            <p className="text-[11px] text-muted-foreground">
+              After running both files, hard refresh this page. Key creation will work.
+            </p>
           </div>
         )}
 
