@@ -1,0 +1,20 @@
+-- Create McpAuditLog table for MCP tool call auditing
+CREATE TABLE IF NOT EXISTS "McpAuditLog" (
+    "id" TEXT NOT NULL,
+    "apiKeyId" TEXT,
+    "userId" TEXT,
+    "tool" TEXT NOT NULL,
+    "argsKeys" TEXT,
+    "success" BOOLEAN NOT NULL,
+    "durationMs" INTEGER NOT NULL,
+    "errorCode" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "McpAuditLog_pkey" PRIMARY KEY ("id")
+);
+
+-- Indexes for common queries
+CREATE INDEX IF NOT EXISTS "McpAuditLog_apiKeyId_createdAt_idx" ON "McpAuditLog"("apiKeyId", "createdAt");
+CREATE INDEX IF NOT EXISTS "McpAuditLog_userId_createdAt_idx" ON "McpAuditLog"("userId", "createdAt");
+CREATE INDEX IF NOT EXISTS "McpAuditLog_tool_createdAt_idx" ON "McpAuditLog"("tool", "createdAt");
+CREATE INDEX IF NOT EXISTS "McpAuditLog_createdAt_idx" ON "McpAuditLog"("createdAt");
