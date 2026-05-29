@@ -46,8 +46,7 @@ export function AdminApiKeyGenerator() {
                 <p className="font-semibold text-foreground">MCP Endpoints</p>
                 {[
                   { url: `${origin}/api/mcp/admin`, label: 'Admin (use this with admin keys)', desc: 'Full admin access — users, subscriptions, analytics' },
-                  { url: `${origin}/api/mcp`, label: 'Personal (user API key required)', desc: 'Accounts, trades, tags + public data' },
-                  { url: `${origin}/api/mcp/public`, label: 'Public (no auth)', desc: 'Prop firms, deals, blog, leaderboard, benchmarks' },
+                  { url: `${origin}/api/mcp/public`, label: 'Public (use for public data access)', desc: 'Prop firms, deals, blog, leaderboard, benchmarks' },
                 ].map((ep) => (
                   <div key={ep.url} className="rounded border border-border/10 bg-background/40 p-2">
                     <div className="flex items-center gap-2 mb-0.5">
