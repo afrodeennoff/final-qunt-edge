@@ -1,14 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createTradeHandler, updateTradeHandler } from '../trade'
+import { createTradeHandler, updateTradeHandler, uploadTradeImageHandler, deleteTradeImageHandler } from '../trade'
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
     account: { findFirst: vi.fn() },
-    trade: { create: vi.fn(), findFirst: vi.fn(), update: vi.fn() },
+    trade: { create: vi.fn(), findFirst: vi.fn(), update: vi.fn(), findMany: vi.fn(), updateMany: vi.fn() },
   },
 }))
 
 import { prisma } from '@/lib/prisma'
+
+vi.mock('@/server/database', () => ({
+  invalidateTradeRelatedCaches: vi.fn(),
+}))
 
 const mockAccount = { id: 'acc1', number: 'TEST-001', userId: 'user-123' }
 
@@ -272,5 +276,97 @@ describe('updateTradeHandler', () => {
     vi.mocked(prisma.trade.findFirst).mockResolvedValue({ id: 't1', userId: 'user-123' } as any)
     await expect(updateTradeHandler({ userId: 'user-123' }, { tradeId: 't1' }))
       .rejects.toThrow(/No fields to update/i)
+  })
+})
+
+describe('uploadTradeImageHandler', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('sets image strictly scoped to ctx userId, ignores any userId in args, reuses update pattern', async () => {
+    vi.mocked(prisma.trade.findMany).mockResolvedValue([{ id: 't1' }] as any)
+    vi.mocked(prisma.trade.updateMany).mockResolvedValue({ count: 1 } as any)
+
+    const args = {
+      tradeIds: ['t1'],
+      imageBase64: 'data:image/png;base64,ABC123',
+      field: 'imageBase64Second',
+      userId: 'attacker-999', // must be ignored
+    }
+
+    const result = await uploadTradeImageHandler({ userId: 'user-123' }, args)
+
+    expect(prisma.trade.findMany).toHaveBeenCalledWith({
+      where: { id: { in: ['t1'] }, userId: 'user-123' },
+      select: { id: true },
+    })
+    expect(prisma.trade.updateMany).toHaveBeenCalledWith({
+      where: { id: { in: ['t1'] }, userId: 'user-123' },
+      data: { imageBase64Second: 'data:image/png;base64,ABC123' },
+    })
+    expect(result.success).toBe(true)
+    expect(result.updated).toBe(1)
+  })
+
+  it('throws authentication error when ctx has no userId (uses requireUserId guard)', async () => {
+    await expect(
+      uploadTradeImageHandler({} as any, { tradeIds: ['t1'], imageBase64: 'x' })
+    ).rejects.toThrow('Authentication required — provide a valid API key')
+  })
+
+  it('throws when no tradeIds provided', async () => {
+    await expect(
+      uploadTradeImageHandler({ userId: 'u1' }, { imageBase64: 'x' })
+    ).rejects.toThrow(/tradeId or tradeIds.*required/i)
+  })
+
+  it('throws when some trades not owned (cross-user or missing)', async () => {
+    vi.mocked(prisma.trade.findMany).mockResolvedValue([] as any)
+    await expect(
+      uploadTradeImageHandler({ userId: 'user-123' }, { tradeIds: ['t1'], imageBase64: 'x' })
+    ).rejects.toThrow(/not found or not owned/i)
+  })
+})
+
+describe('deleteTradeImageHandler', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('deletes (nulls) image strictly scoped to ctx userId, uses assertNoCrossUserAccess', async () => {
+    vi.mocked(prisma.trade.findMany).mockResolvedValue([{ id: 't1' }] as any)
+    vi.mocked(prisma.trade.updateMany).mockResolvedValue({ count: 1 } as any)
+
+    const args = {
+      tradeId: 't1',
+      field: 'imageBase64',
+      userId: 'evil', // ignored
+    }
+
+    const result = await deleteTradeImageHandler({ userId: 'user-123' }, args)
+
+    expect(prisma.trade.updateMany).toHaveBeenCalledWith({
+      where: { id: { in: ['t1'] }, userId: 'user-123' },
+      data: { imageBase64: null },
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('throws auth error via requireUserId', async () => {
+    await expect(deleteTradeImageHandler({} as any, { tradeId: 't1' }))
+      .rejects.toThrow('Authentication required — provide a valid API key')
+  })
+
+  it('supports imagePath delete with storage cleanup attempt (no crash)', async () => {
+    vi.mocked(prisma.trade.findMany).mockResolvedValue([{ id: 't1', images: ['user-123/trades/abc.png'] }] as any)
+    vi.mocked(prisma.trade.updateMany).mockResolvedValue({ count: 1 } as any)
+    // note: prisma update for images array not asserted in minimal; storage is try/catch
+
+    const result = await deleteTradeImageHandler({ userId: 'user-123' }, {
+      tradeId: 't1',
+      imagePath: 'user-123/trades/abc.png',
+    })
+    expect(result.success).toBe(true)
   })
 })

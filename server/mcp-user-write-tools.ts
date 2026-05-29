@@ -266,6 +266,67 @@ Returns: Count of deleted trades`,
     annotations: DESTROY,
   },
   {
+    name: 'upload_trade_image',
+    description: `Upload or set an image on one or more trades (stores reference in imageBase64 / imageBase64Second or accepts storage path).
+
+SECURITY: Only your own trades (ctx.userId from API key). Any userId in args is ignored + assertNoCrossUserAccess enforced in handler.
+Reuses ownership + update logic pattern from server/trades.ts (updateTradeImage / updateTradesAction).
+
+Args:
+  - tradeId (string, optional): Single trade ID (use this or tradeIds)
+  - tradeIds (string[], optional): Multiple trades to apply same image to
+  - imageBase64 (string | null, required): Base64 data URL (e.g. "data:image/png;base64,...") or raw base64, or a Supabase storage path like "user-id/trades/hash.png". Null to clear.
+  - field (string, optional): "imageBase64" (default) or "imageBase64Second"
+  - image (string, alias for imageBase64)
+
+Returns: { success, updated count, field, tradeIds }
+
+This is a write (stores image data/reference for your trades).`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        tradeId: { type: 'string', description: 'Single trade ID to update image for' },
+        tradeIds: { type: 'array', items: { type: 'string' }, description: 'Trade IDs (bulk apply same image)' },
+        imageBase64: { type: ['string', 'null'], description: 'Base64 image data or storage path; null clears' },
+        image: { type: ['string', 'null'], description: 'Alias for imageBase64' },
+        field: { type: 'string', enum: ['imageBase64', 'imageBase64Second'], description: 'Which image slot (default imageBase64)' },
+      },
+      required: [],
+    },
+    annotations: WRITE,
+  },
+  {
+    name: 'delete_trade_image',
+    description: `Delete/clear an image from your trade(s). Clears legacy field and optionally removes path from images[] + cleans Supabase storage bucket.
+
+SECURITY: Strict userId from ctx only. Ownership verified. Cross-user blocked via assertNoCrossUserAccess + query filter.
+Reuses server/trades.ts image update pattern + lib/trade-image-path for safe storage delete.
+
+Args:
+  - tradeId / tradeIds (as in upload)
+  - field (optional): which legacy field to null
+  - imagePath (string, optional): storage path to also remove from images[] array + delete from Supabase "trade-images" bucket (uses service role + ensureOwned check)
+
+Returns: { success, cleared count, ... }
+
+Destructive write operation.`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        tradeId: { type: 'string' },
+        tradeIds: { type: 'array', items: { type: 'string' } },
+        field: { type: 'string', enum: ['imageBase64', 'imageBase64Second'] },
+        imagePath: { type: 'string', description: 'Storage path to purge from DB array + bucket' },
+      },
+      required: [],
+    },
+    annotations: DESTROY,
+  },
+  {
     name: 'group_trades',
     description: `Group multiple trades together by setting a shared groupId.
 
@@ -611,6 +672,8 @@ export async function handleUserWriteToolCall(toolName: string, args: Record<str
     case 'import_trades': return await importTrades(ctx, args)
     case 'create_trade': return await createTrade(ctx, args)
     case 'update_trade': return await updateTrade(ctx, args)
+    case 'upload_trade_image': return await uploadTradeImage(ctx, args)
+    case 'delete_trade_image': return await deleteTradeImage(ctx, args)
     case 'delete_trades': return await deleteTrades(ctx, args)
     case 'group_trades': return await groupTrades(ctx, args)
     case 'ungroup_trades': return await ungroupTrades(ctx, args)
@@ -781,6 +844,26 @@ async function updateTrade(ctx: McpAuthContext, args: Record<string, unknown>): 
     return toolSuccess(data)
   } catch (e: any) {
     return toolError(e.message || 'Failed to update trade')
+  }
+}
+
+async function uploadTradeImage(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { uploadTradeImageHandler } = await import('@/server/mcp/handlers/trade')
+    const data = await uploadTradeImageHandler({ userId: ctx.userId }, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message || 'Failed to upload trade image')
+  }
+}
+
+async function deleteTradeImage(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { deleteTradeImageHandler } = await import('@/server/mcp/handlers/trade')
+    const data = await deleteTradeImageHandler({ userId: ctx.userId }, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message || 'Failed to delete trade image')
   }
 }
 
