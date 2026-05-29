@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export default function NotesLoading() {
   return (
-    <div className="flex h-[calc(100dvh-8rem)] min-h-[32rem]">
+    <div className="flex min-h-full w-full">
       {/* Notes sidebar */}
       <div className="hidden w-72 shrink-0 flex-col border-r border-border/30 bg-card p-4 sm:flex">
         <div className="mb-4 flex items-center justify-between">

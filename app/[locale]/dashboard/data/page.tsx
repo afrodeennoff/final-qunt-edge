@@ -6,9 +6,9 @@ import { UnifiedPageShell, UnifiedSurface } from "@/components/layout/unified-pa
 export default function DashboardPage() {
   return (
     <UnifiedPageShell density="compact">
-      <div className="flex w-full flex-1 flex-col">
-        <Tabs defaultValue="accounts" className="w-full space-y-4">
-          <TabsList className="h-auto rounded-xl border border-border/30 bg-muted/40 p-1">
+      <div className="flex w-full flex-1 flex-col min-h-0">
+        <Tabs defaultValue="accounts" className="flex w-full flex-1 flex-col space-y-4 min-h-0">
+          <TabsList className="h-auto shrink-0 rounded-xl border border-border/30 bg-muted/40 p-1">
             <TabsTrigger value="accounts">Accounts</TabsTrigger>
             <TabsTrigger value="trades">Trades</TabsTrigger>
           </TabsList>
@@ -17,8 +17,8 @@ export default function DashboardPage() {
               <DataManagementCard />
             </UnifiedSurface>
           </TabsContent>
-          <TabsContent value="trades" className="mt-0 h-[calc(100dvh-var(--navbar-height)-var(--tabs-height)-16px)] pb-[max(env(safe-area-inset-bottom),0.5rem)]">
-            <UnifiedSurface className="h-full rounded-xl border border-border/30 shadow-sm">
+          <TabsContent value="trades" className="mt-0 flex min-h-0 flex-1 pb-[max(env(safe-area-inset-bottom),0.5rem)]">
+            <UnifiedSurface className="h-full w-full rounded-xl border border-border/30 shadow-sm">
               <TradeTableReview />
             </UnifiedSurface>
           </TabsContent>

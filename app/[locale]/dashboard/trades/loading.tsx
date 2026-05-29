@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export default function TradesLoading() {
   return (
-    <div className="flex h-[calc(100dvh-10rem)] min-h-[40rem] w-full flex-col pb-[max(env(safe-area-inset-bottom),0.75rem)]">
+    <div className="flex min-h-full w-full flex-col pb-[max(env(safe-area-inset-bottom),0.75rem)]">
       <div className="rounded-xl border border-border/30 bg-card p-4 shadow-sm sm:p-6">
         {/* Search and filter bar */}
         <div className="mb-4 flex items-center justify-between gap-3">
