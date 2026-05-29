@@ -110,8 +110,10 @@ function isLeaderboardUnavailableError(error: unknown): boolean {
   return (
     maybeError.code === 'ECONNREFUSED' ||
     maybeError.code === 'P1001' ||
+    maybeError.code === 'P1002' ||
     message.includes('econnrefused') ||
-    message.includes('can\'t reach database server')
+    message.includes('can\'t reach database server') ||
+    message.includes('timeout exceeded')
   )
 }
 

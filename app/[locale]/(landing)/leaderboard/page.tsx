@@ -35,7 +35,7 @@ export default async function LeaderboardPage({
   const sortKey: LeaderboardSort = VALID_SORTS.includes(sort as LeaderboardSort)
     ? (sort as LeaderboardSort)
     : 'monthly_pnl'
-  const entries = await getLeaderboardData(sortKey)
+  const entries = await getLeaderboardData(sortKey).catch(() => [])
 
   return (
     <UnifiedPageShell widthClassName="max-w-[1360px]" className="py-12 sm:py-16">
