@@ -42,7 +42,7 @@ export function SidebarLayoutShell({
               contain: 'content',
             }}
           >
-            <div className="w-full">
+            <div className="min-h-full w-full">
               {children}
             </div>
           </div>

@@ -121,7 +121,7 @@ export default async function DashboardLayout({
                 <PullToRefreshIndicator />
                 <div
                   className={cn(
-                    'mx-auto flex w-full flex-col',
+                    'mx-auto flex w-full flex-col min-h-full',
                     WORKSPACE_SHELL_WIDTH,
                   )}
                 >

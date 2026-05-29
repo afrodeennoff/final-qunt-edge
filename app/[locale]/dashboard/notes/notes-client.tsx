@@ -184,7 +184,7 @@ export default function NotesPageClient() {
   // Desktop layout (3-pane)
   if (!isMobile && !isTablet) {
     return (
-      <div className="h-full flex">
+      <div className="min-h-full flex">
         <ResizablePanelGroup direction="horizontal" className="flex-1">
           {/* Left Pane - Notes List (22% default) */}
           <ResizablePanel
@@ -254,7 +254,7 @@ export default function NotesPageClient() {
   // Tablet layout (2-pane with inspector overlay)
   if (isTablet) {
     return (
-      <div className="h-full flex">
+      <div className="min-h-full flex">
         <ResizablePanelGroup direction="horizontal" className="flex-1">
           {/* Left Pane - Notes List (280px) */}
           <ResizablePanel
@@ -318,7 +318,7 @@ export default function NotesPageClient() {
 
   // Mobile layout (single pane with navigation)
   return (
-    <div className="h-full flex flex-col rounded-xl border border-border/30 bg-card shadow-sm">
+    <div className="min-h-full flex flex-col rounded-xl border border-border/30 bg-card shadow-sm">
       {viewMode === 'list' ? (
           <NotesList
             traders={traders}
