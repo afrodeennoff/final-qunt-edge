@@ -12,6 +12,7 @@ export function AdminApiKeyGenerator() {
   const [name, setName] = useState('')
   const [createdKey, setCreatedKey] = useState<string | null>(null)
   const [isCreating, setIsCreating] = useState(false)
+  const mcpUrl = typeof window !== 'undefined' ? `${window.location.origin}/api/mcp` : ''
 
   const handleCreate = async () => {
     if (!name.trim()) return
@@ -26,7 +27,6 @@ export function AdminApiKeyGenerator() {
     }
     setIsCreating(false)
   }
-
   return (
     <Card className="border-border/30 bg-card">
       <CardHeader><CardTitle className="flex items-center gap-2"><Key className="h-5 w-5" /> Admin API Keys</CardTitle></CardHeader>
@@ -41,6 +41,17 @@ export function AdminApiKeyGenerator() {
               </Button>
             </div>
             <p className="text-xs text-destructive">This key grants full admin access. Store it securely.</p>
+            {mcpUrl && (
+              <div className="rounded-lg border border-border/20 bg-muted/30 p-3 text-xs text-muted-foreground space-y-1">
+                <p className="font-semibold text-foreground">MCP Server URL:</p>
+                <div className="flex items-center gap-2">
+                  <code className="flex-1 break-all rounded bg-background/80 px-2 py-1 font-mono text-[10px]">{mcpUrl}</code>
+                  <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => { navigator.clipboard.writeText(mcpUrl); toast.success('URL copied!') }}>
+                    <Copy className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+            )}
             <Button variant="outline" onClick={() => setCreatedKey(null)}>Create Another</Button>
           </div>
         ) : (
