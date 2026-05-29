@@ -285,7 +285,7 @@ export default function EmbedPage() {
             <section className="overflow-hidden rounded-[2rem] border border-border/20 bg-gradient-to-br from-card/40 to-card/5 px-4 py-4 ring-1 ring-inset ring-white/[0.02] shadow-[0_0_35px_-18px] shadow-primary/10 lg:px-6">
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_320px]">
                 <div className="rounded-2xl border border-border/20 bg-gradient-to-br from-card/40 to-card/5 p-4 ring-1 ring-inset ring-white/[0.02]">
-                  <div className="inline-flex w-fit rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
+                  <div className="inline-flex w-fit rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
                     Embed Library
                   </div>
                   <div className="pt-4">

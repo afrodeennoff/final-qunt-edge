@@ -11,7 +11,7 @@ export const unifiedMetricPanelClassName =
   'rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 p-4 ring-1 ring-inset ring-white/[0.02]'
 
 export const unifiedChipClassName =
-  'inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary'
+  'inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary'
 
 export const unifiedGhostActionClassName =
   'inline-flex items-center justify-center gap-2 rounded-md border border-border/20 bg-gradient-to-br from-card/50 to-card/10 px-3 py-1.5 text-sm font-medium text-foreground transition-all duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15'
