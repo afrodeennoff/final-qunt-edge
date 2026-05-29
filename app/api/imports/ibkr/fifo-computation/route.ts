@@ -9,7 +9,7 @@ export const maxDuration = 60 // Allow up to 60 seconds for AI processing
 type Order = z.infer<typeof orderSchema>
 type Trade = z.infer<typeof tradeSchema>
 
-function matchOrdersWithFIFO(orders: Order[], instruments: FinancialInstrument[]): Trade[] {
+export function matchOrdersWithFIFO(orders: Order[], instruments: FinancialInstrument[]): Trade[] {
   // Sort orders by timestamp to ensure FIFO
   const sortedOrders = [...orders].sort((a, b) => 
     new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()

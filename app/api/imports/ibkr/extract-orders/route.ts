@@ -15,7 +15,7 @@ interface TradeOrder {
   orderType?: string;
 }
 
-const parseOrders = (text: string): TradeOrder[] => {
+export const parseOrders = (text: string): TradeOrder[] => {
   // First, let's extract just the trades section
   const tradesMatch = text.match(/Trades[\s\S]*?(?=Financial Instrument Information|$)/);
   if (!tradesMatch) return [];
@@ -74,7 +74,7 @@ const parseOrders = (text: string): TradeOrder[] => {
 };
 
 
-const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
+export const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
   const instrumentInformationMatch = text.match(/Financial Instrument Information[\s\S]*?(?=Order Types|Generated:|$)/);
   if (!instrumentInformationMatch) return [];
   

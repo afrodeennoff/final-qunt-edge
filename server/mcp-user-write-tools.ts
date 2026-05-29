@@ -1,6 +1,12 @@
 import type { McpAuthContext } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
 import { toolError, toolSuccess, clampInt, requireParam, buildDateFilter, parseOptionalDate, type McpToolResult, type ToolDefinition } from './mcp-helpers'
+import {
+  extractIbkrOrdersHandler,
+  computeIbkrFifoHandler,
+  importIbkrPdfHandler,
+  syncTradovateHandler,
+} from './mcp/handlers/imports'
 
 const WRITE = { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
 const READ = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
@@ -662,6 +668,83 @@ Returns: Updated profile fields`,
     },
     annotations: WRITE,
   },
+
+  // ── IBKR Import Tools (Phase 2, Top 15 #7) - wrap /api/imports/ibkr/* with strict scoping + progress
+  {
+    name: 'extract_ibkr_orders',
+    description: `Extract orders from IBKR PDF statement text (post-OCR). Pure compute, user auth required for tool access.
+Args:
+  - text (string, required): Extracted text from IBKR PDF (Trades section)
+Returns: { orders: TradeOrder[], instruments: FinancialInstrument[] }`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        text: { type: 'string', description: 'Raw extracted text from IBKR PDF containing Trades and Financial Instrument sections' },
+      },
+      required: ['text'],
+    },
+    annotations: READ,
+  },
+  {
+    name: 'compute_ibkr_fifo',
+    description: `Compute FIFO matched trades from IBKR orders + instruments (no DB write).
+Args:
+  - orders (array, required): Array of order objects from extract_ibkr_orders
+  - instruments (array, required): Array of instrument metadata
+Returns: { trades: Trade[], count: number }`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        orders: { type: 'array', items: { type: 'object' }, description: 'Orders from extract step' },
+        instruments: { type: 'array', items: { type: 'object' }, description: 'Instruments from extract step' },
+      },
+      required: ['orders'],
+    },
+    annotations: READ,
+  },
+  {
+    name: 'import_ibkr_pdf',
+    description: `Full IBKR PDF import: OCR extract -> parse orders -> FIFO match -> save trades to account.
+Strict userId from context only. Credential-free (no secrets in args).
+Args:
+  - accountNumber (string, required)
+  - pdfBase64 (string, required): base64 of the IBKR PDF statement
+Returns: { imported, accountNumber, ordersProcessed, tradesMatched, progress: '100%' }`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        accountNumber: { type: 'string', description: 'Target account number (must belong to authenticated user)' },
+        pdfBase64: { type: 'string', description: 'Base64-encoded IBKR PDF file content' },
+      },
+      required: ['accountNumber', 'pdfBase64'],
+    },
+    annotations: WRITE,
+  },
+
+  // ── Tradovate Sync (Phase 2, Top 15 #6) - wrap server/imports/tradovate-actions with userId ctx + credential safety
+  {
+    name: 'sync_tradovate',
+    description: `Trigger Tradovate sync for connected account using stored encrypted credentials (never accepts tokens in args, never returns them).
+Progress reporting included. Strict user isolation.
+Args:
+  - accountId (string, optional): 'default' or specific accountId from sync records
+Returns: { success, savedCount, ordersCount, accountId, progress: '100%', message }`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        accountId: { type: 'string', description: 'Tradovate account identifier (defaults to "default")' },
+      },
+    },
+    annotations: WRITE,
+  },
 ]
 
 export async function handleUserWriteToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext): Promise<McpToolResult> {
@@ -691,6 +774,10 @@ export async function handleUserWriteToolCall(toolName: string, args: Record<str
     case 'get_mood_history': return await getMoodHistory(ctx, args)
     case 'get_subscription': return await getSubscription(ctx)
     case 'update_profile': return await updateProfile(ctx, args)
+    case 'extract_ibkr_orders': return await extractIbkrOrders(ctx, args)
+    case 'compute_ibkr_fifo': return await computeIbkrFifo(ctx, args)
+    case 'import_ibkr_pdf': return await importIbkrPdf(ctx, args)
+    case 'sync_tradovate': return await syncTradovate(ctx, args)
     default: return toolError(`Unknown user write tool: ${toolName}`)
   }
 }
@@ -1211,4 +1298,42 @@ async function updateProfile(ctx: McpAuthContext, args: Record<string, unknown>)
   })
 
   return toolSuccess(updated)
+}
+
+// ── IBKR & Tradovate wrappers (TDD implemented, use handlers with security guards) ──
+
+async function extractIbkrOrders(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const data = await extractIbkrOrdersHandler(ctx, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message || 'Failed to extract IBKR orders')
+  }
+}
+
+async function computeIbkrFifo(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const data = await computeIbkrFifoHandler(ctx, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message || 'Failed to compute IBKR FIFO')
+  }
+}
+
+async function importIbkrPdf(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const data = await importIbkrPdfHandler(ctx, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message || 'Failed to import IBKR PDF')
+  }
+}
+
+async function syncTradovate(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const data = await syncTradovateHandler(ctx, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message || 'Failed to sync Tradovate')
+  }
 }

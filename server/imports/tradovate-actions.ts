@@ -1197,13 +1197,18 @@ export async function storeTradovateToken(
   }
 }
 
-export async function getTradovateToken(accountId: string = 'default') {
+export async function getTradovateToken(accountId: string = 'default', userId?: string) {
   try {
-    const identity = await resolveSyncUserIdentity()
-    if ('error' in identity) {
-      return { error: identity.error }
+    let databaseUserId: string
+    if (userId) {
+      databaseUserId = await resolveWritableUserId(userId)
+    } else {
+      const identity = await resolveSyncUserIdentity()
+      if ('error' in identity) {
+        return { error: identity.error }
+      }
+      databaseUserId = identity.databaseUserId
     }
-    const { databaseUserId } = identity
 
     const syncData = await prisma.synchronization.findFirst({
       where: {

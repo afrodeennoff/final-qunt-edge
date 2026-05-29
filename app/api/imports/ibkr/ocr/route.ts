@@ -3,7 +3,7 @@ import PDFParser from 'pdf2json'
 export const maxDuration = 60 // Allow up to 60 seconds for AI processing
 
 // Simple PDF to text extraction function using pdf2json
-async function extractTextFromPdf(pdfBuffer: Buffer): Promise<string> {
+export async function extractTextFromPdf(pdfBuffer: Buffer): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
       // Use pdf2json for more reliable PDF processing
