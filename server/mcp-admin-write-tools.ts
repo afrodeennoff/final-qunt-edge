@@ -1,7 +1,10 @@
 import type { McpAuthContext } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
 import { requireAdminAccess } from './mcp-auth'
+import { requireAdmin } from './security'
 import { toolError, toolSuccess, requireParam, type McpToolResult, type ToolDefinition } from './mcp-helpers'
+import type { EmailTemplate } from '@/app/[locale]/admin/actions/send-email'
+import { sendEmailsToUsersInternal } from '@/app/[locale]/admin/actions/send-email'
 
 const WRITE = { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
 const DESTROY = { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
@@ -320,6 +323,68 @@ Returns: Updated user fields`,
     },
     annotations: WRITE,
   },
+
+  // ── Admin Email / Newsletter (Top 15 #15) - wrap admin email actions + welcome/weekly with strict requireAdmin
+  {
+    name: 'admin_send_email',
+    description: `Send templated email to list of users (admin only). Uses Resend batch. Templates include welcome, weekly-recap, etc.
+Requires admin ctx. Full audit via McpAuditLog.
+
+Args:
+  - template (string, required): welcome | weekly-recap | black-friday | new-feature | ...
+  - userIds (string[], required): Target internal user IDs
+  - customProps (object, optional): Props for template
+  - subject (string, optional): Override subject
+
+Returns: { success, successCount, errorCount, totalUsers }`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        template: { type: 'string', description: 'Email template key (welcome, weekly-recap, ...)' },
+        userIds: { type: 'array', items: { type: 'string' }, description: 'List of user IDs to email' },
+        customProps: { type: 'object', description: 'Template-specific props' },
+        subject: { type: 'string', description: 'Optional subject override' },
+      },
+      required: ['template', 'userIds'],
+    },
+    annotations: WRITE,
+  },
+  {
+    name: 'admin_send_welcome_email',
+    description: `Convenience: Send welcome email to users (admin only). Template="welcome".
+Args: userIds (required), customProps (optional)
+Returns: send result`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        userIds: { type: 'array', items: { type: 'string' } },
+        customProps: { type: 'object' },
+      },
+      required: ['userIds'],
+    },
+    annotations: WRITE,
+  },
+  {
+    name: 'admin_send_weekly_recap',
+    description: `Convenience: Send weekly trading recap emails (admin only). Template="weekly-recap".
+Args: userIds (required), customProps (optional, e.g. stats)
+Returns: send result`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        userIds: { type: 'array', items: { type: 'string' } },
+        customProps: { type: 'object' },
+      },
+      required: ['userIds'],
+    },
+    annotations: WRITE,
+  },
 ]
 
 export async function handleAdminWriteToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext): Promise<McpToolResult> {
@@ -337,6 +402,10 @@ export async function handleAdminWriteToolCall(toolName: string, args: Record<st
     case 'admin_moderate_review': return await adminModerateReview(args)
     case 'admin_get_review_moderation_queue': return await adminGetReviewModerationQueue(args)
     case 'admin_update_user': return await adminUpdateUser(args)
+    // Admin email (Top 15 #15) - requireAdmin + wrap internal send action
+    case 'admin_send_email': return await adminSendEmail(ctx, args)
+    case 'admin_send_welcome_email': return await adminSendWelcomeEmail(ctx, args)
+    case 'admin_send_weekly_recap': return await adminSendWeeklyRecap(ctx, args)
     default: return toolError(`Unknown admin write tool: ${toolName}`)
   }
 }
@@ -575,4 +644,38 @@ async function adminUpdateUser(args: Record<string, unknown>): Promise<McpToolRe
   })
 
   return toolSuccess(updated)
+}
+
+// ── Admin Email wrappers (Top 15 #15) - TDD, use requireAdmin from security.ts, wrap action internals
+async function adminSendEmail(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  requireAdmin(ctx) // strict per task
+  const template = requireParam(args, 'template') as EmailTemplate
+  const userIds = Array.isArray(args.userIds) ? (args.userIds as string[]) : []
+  if (userIds.length === 0) return toolError('userIds array is required and must not be empty')
+  const customProps = (typeof args.customProps === 'object' && args.customProps) ? args.customProps as any : {}
+  const subject = typeof args.subject === 'string' ? args.subject : undefined
+
+  const result = await sendEmailsToUsersInternal(template, userIds, customProps, subject)
+  if (result.error) return toolError(result.error)
+  return toolSuccess(result)
+}
+
+async function adminSendWelcomeEmail(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  requireAdmin(ctx)
+  const userIds = Array.isArray(args.userIds) ? (args.userIds as string[]) : []
+  if (userIds.length === 0) return toolError('userIds required for welcome email')
+  const customProps = (typeof args.customProps === 'object' && args.customProps) ? args.customProps as any : {}
+  const result = await sendEmailsToUsersInternal('welcome', userIds, customProps)
+  if (result.error) return toolError(result.error)
+  return toolSuccess(result)
+}
+
+async function adminSendWeeklyRecap(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  requireAdmin(ctx)
+  const userIds = Array.isArray(args.userIds) ? (args.userIds as string[]) : []
+  if (userIds.length === 0) return toolError('userIds required for weekly recap')
+  const customProps = (typeof args.customProps === 'object' && args.customProps) ? args.customProps as any : {}
+  const result = await sendEmailsToUsersInternal('weekly-recap', userIds, customProps)
+  if (result.error) return toolError(result.error)
+  return toolSuccess(result)
 }

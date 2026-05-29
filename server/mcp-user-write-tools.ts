@@ -840,6 +840,96 @@ Returns: { success, savedCount, ordersCount, accountId, progress: '100%', messag
     },
     annotations: WRITE,
   },
+
+  // ── Teams & Collaboration (Top 15 #13) - wrap server/teams.ts + /api/team/* with strict requireUserId + membership checks
+  {
+    name: 'create_team',
+    description: `Create a new team for collaboration (traders, shared analytics, views). Owner is auto-added as ADMIN.
+Strictly scoped to authenticated user (ctx.userId only). No cross-user teams.
+
+Args:
+  - name (string, required): Team name (unique per owner)
+  - organizationId (string, optional): Link to organization if any
+
+Returns: Created team object`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        name: { type: 'string', description: 'Team display name' },
+        organizationId: { type: 'string', description: 'Optional organization ID' },
+      },
+      required: ['name'],
+    },
+    annotations: WRITE,
+  },
+  {
+    name: 'invite_team_member',
+    description: `Invite a user (by email) to join a team. Sender must be team owner or ADMIN member (enforced via membership check on ctx.userId).
+Invitation record created; email sent via /api/team/invite surface. Full isolation.
+
+Args:
+  - teamId (string, required)
+  - email (string, required): Invitee's email (must match their account when accepting)
+  - role (string, optional): TRADER | ANALYST | VIEWER (default TRADER)
+
+Returns: { invitation }`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        teamId: { type: 'string', description: 'Target team ID' },
+        email: { type: 'string', description: 'Email of user to invite' },
+        role: { type: 'string', enum: ['TRADER', 'ANALYST', 'VIEWER'], description: 'Role for invitee' },
+      },
+      required: ['teamId', 'email'],
+    },
+    annotations: WRITE,
+  },
+  {
+    name: 'accept_team_invite',
+    description: `Accept a pending team invitation. The authenticated user's email (from ctx) MUST match the invitation email (enforced in wrapped logic).
+Adds user to team members. Isolation: only the invitee can accept their invite.
+
+Args:
+  - invitationId (string, required)
+
+Returns: { success: true }`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        invitationId: { type: 'string', description: 'ID from the invitation email/link' },
+      },
+      required: ['invitationId'],
+    },
+    annotations: WRITE,
+  },
+  {
+    name: 'remove_team_member',
+    description: `Remove a member from team (leave for others). Caller (ctx.userId) must be team ADMIN/owner. Cannot remove self (use delete team).
+Strict membership check enforced. No cross-team.
+
+Args:
+  - teamId (string, required)
+  - userId (string, required): The member to remove (must be current member)
+
+Returns: { success: true }`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        teamId: { type: 'string', description: 'Team to modify' },
+        userId: { type: 'string', description: 'Member user ID to remove' },
+      },
+      required: ['teamId', 'userId'],
+    },
+    annotations: WRITE,
+  },
 ]
 
 export async function handleUserWriteToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext): Promise<McpToolResult> {
@@ -879,6 +969,11 @@ export async function handleUserWriteToolCall(toolName: string, args: Record<str
     case 'compute_ibkr_fifo': return await computeIbkrFifo(ctx, args)
     case 'import_ibkr_pdf': return await importIbkrPdf(ctx, args)
     case 'sync_tradovate': return await syncTradovate(ctx, args)
+    // Teams (Top 15 #13) - strict userId + membership checks via handler
+    case 'create_team': return await createTeam(ctx, args)
+    case 'invite_team_member': return await inviteTeamMember(ctx, args)
+    case 'accept_team_invite': return await acceptTeamInvite(ctx, args)
+    case 'remove_team_member': return await removeTeamMember(ctx, args)
     default: return toolError(`Unknown user write tool: ${toolName}`)
   }
 }
@@ -1436,5 +1531,46 @@ async function syncTradovate(ctx: McpAuthContext, args: Record<string, unknown>)
     return toolSuccess(data)
   } catch (e: any) {
     return toolError(e.message || 'Failed to sync Tradovate')
+  }
+}
+
+// ── Teams (Top 15 #13) wrappers - TDD, strict security.ts requireUserId + membership checks, wrap server/teams.ts
+async function createTeam(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { createTeamHandler } = await import('@/server/mcp/handlers/teams')
+    const data = await createTeamHandler({ userId: ctx.userId, authUserId: ctx.authUserId, role: ctx.role, authMethod: ctx.authMethod }, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message || 'Failed to create team')
+  }
+}
+
+async function inviteTeamMember(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { inviteTeamMemberHandler } = await import('@/server/mcp/handlers/teams')
+    const data = await inviteTeamMemberHandler({ userId: ctx.userId, authUserId: ctx.authUserId, role: ctx.role, authMethod: ctx.authMethod }, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message || 'Failed to invite team member')
+  }
+}
+
+async function acceptTeamInvite(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { acceptTeamInviteHandler } = await import('@/server/mcp/handlers/teams')
+    const data = await acceptTeamInviteHandler({ userId: ctx.userId, authUserId: ctx.authUserId, role: ctx.role, authMethod: ctx.authMethod }, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message || 'Failed to accept team invite')
+  }
+}
+
+async function removeTeamMember(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { removeTeamMemberHandler } = await import('@/server/mcp/handlers/teams')
+    const data = await removeTeamMemberHandler({ userId: ctx.userId, authUserId: ctx.authUserId, role: ctx.role, authMethod: ctx.authMethod }, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message || 'Failed to remove team member')
   }
 }

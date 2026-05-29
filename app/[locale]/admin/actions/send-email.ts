@@ -270,13 +270,12 @@ export async function getUsersList(): Promise<UserListItem[]> {
   }
 }
 
-export async function sendEmailsToUsers(
+export async function sendEmailsToUsersInternal(
   template: EmailTemplate,
   userIds: string[],
   customProps: TemplateProps,
   subject?: string
 ) {
-  await assertAdminAccess()
   try {
     const supabase = getSupabaseAdminClient()
 
@@ -375,6 +374,16 @@ export async function sendEmailsToUsers(
     console.error("Failed to send emails:", error)
     return { error: "Failed to send emails" }
   }
+}
+
+export async function sendEmailsToUsers(
+  template: EmailTemplate,
+  userIds: string[],
+  customProps: TemplateProps,
+  subject?: string
+) {
+  await assertAdminAccess()
+  return sendEmailsToUsersInternal(template, userIds, customProps, subject)
 }
 
 function getDefaultSubject(template: EmailTemplate, language: string): string {
