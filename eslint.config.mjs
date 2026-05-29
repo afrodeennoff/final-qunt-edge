@@ -60,7 +60,6 @@ const eslintConfig = defineConfig([
     "prisma/generated/**",
     ".worktrees/**",
     ".claude/worktrees/**",
-    "hyperframes/**",
     "components/sidebar/__tests__/**",
   ]),
 ]);

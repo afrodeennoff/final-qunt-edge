@@ -66,7 +66,7 @@ const formatCurrency = (value: number) => {
  return `${value < 0 ?"-" :""}$${absValue.toFixed(0)}`;
 };
 
-const positiveColor ="hsl(var(--chart-1))";
+const positiveColor ="hsl(var(--primary))";
 const negativeColor ="hsl(var(--chart-4))";
 
 const CustomTooltip = ({ active, payload, label }: TooltipProps) => {

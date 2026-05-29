@@ -291,7 +291,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  {chartData.map((entry) => (
  <Cell
  key={`cell-${entry.range}`}
- fill={entry.avgPnl >= 0 ?"hsl(var(--chart-1))" :"hsl(var(--chart-4))"}
+  fill={entry.avgPnl >= 0 ?"hsl(var(--primary))" :"hsl(var(--chart-4))"}
  fillOpacity={timeRange.range === entry.range ? 1 : (timeRange.range ? 0.45 : (entry.avgPnl >= 0 ? 0.94 : 0.84))}
  stroke="hsl(var(--chart-axis))"
  strokeOpacity={timeRange.range === entry.range ? 0.95 : 0.35}
