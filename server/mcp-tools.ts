@@ -390,6 +390,121 @@ Returns: Created mood entry object`,
     },
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
   },
+  {
+    name: 'analyze_trade',
+    description: `Deep single-trade analysis using TradeAnalytics (MAE/MFE, efficiency, RR).
+Args:
+  - tradeId (string, required): The trade ID to analyze
+Returns: Trade basics plus MAE, MFE, riskRewardRatio, efficiency from TradeAnalytics, and computed risk %`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      properties: {
+        tradeId: { type: 'string', description: 'The trade ID to analyze' },
+      },
+      required: ['tradeId'],
+    },
+    outputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        instrument: { type: 'string' },
+        side: { type: 'string' },
+        quantity: { type: 'number' },
+        entryPrice: { type: 'number' },
+        closePrice: { type: 'number' },
+        pnl: { type: 'number' },
+        commission: { type: 'number' },
+        entryDate: { type: 'string', format: 'date-time' },
+        closeDate: { type: 'string', format: 'date-time' },
+        tags: { type: 'array', items: { type: 'string' } },
+        mae: { type: 'number' },
+        mfe: { type: 'number' },
+        riskRewardRatio: { type: 'number' },
+        efficiency: { type: 'number' },
+        riskPct: { type: 'number' },
+      },
+    },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+  },
+  {
+    name: 'run_monte_carlo',
+    description: `Run Monte Carlo simulations based on user's trade history to estimate ruin probability.
+Args:
+  - accountId (string, optional): Filter to a specific account
+  - simulations (number, optional): Number of simulations to run (default 1000, max 10000)
+Returns: Simulation results with ruin probability, median outcome, worst 5% and best 5% outcomes`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      properties: {
+        accountId: { type: 'string', description: 'Optional account ID to filter trades' },
+        simulations: { type: 'number', description: 'Number of simulations (default 1000, max 10000)' },
+      },
+    },
+    outputSchema: {
+      type: 'object',
+      properties: {
+        simulations: { type: 'number' },
+        tradeCount: { type: 'number' },
+        initialBalance: { type: 'number' },
+        parameters: {
+          type: 'object',
+          properties: {
+            winRate: { type: 'number' },
+            avgWin: { type: 'number' },
+            avgLoss: { type: 'number' },
+          },
+        },
+        results: {
+          type: 'object',
+          properties: {
+            ruinProbability: { type: 'number' },
+            medianOutcome: { type: 'number' },
+            worst5PercentOutcome: { type: 'number' },
+            best5PercentOutcome: { type: 'number' },
+            expectedOutcome: { type: 'number' },
+          },
+        },
+      },
+    },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+  },
+  {
+    name: 'suggest_position_size',
+    description: `Dynamic position sizing based on account health and risk parameters.
+Args:
+  - accountId (string, optional): Specific account ID
+  - targetRiskPct (number, required): % of account to risk (e.g. 0.5 for 0.5%)
+  - stopLossPct (number, required): Stop loss distance in % (e.g. 2 for 2%)
+  - accountSize (number, optional): Override account size
+Returns: Suggested position size with risk amount, account balance, and warnings`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      properties: {
+        accountId: { type: 'string', description: 'Optional account ID' },
+        targetRiskPct: { type: 'number', description: '% of account to risk (e.g. 0.5 for 0.5%)' },
+        stopLossPct: { type: 'number', description: 'Stop loss distance in % (e.g. 2 for 2%)' },
+        accountSize: { type: 'number', description: 'Override account size' },
+      },
+      required: ['targetRiskPct', 'stopLossPct'],
+    },
+    outputSchema: {
+      type: 'object',
+      properties: {
+        suggestedSize: { type: 'number' },
+        riskAmount: { type: 'number' },
+        accountBalance: { type: 'number' },
+        drawdownAdjustment: { type: 'number' },
+        drawdownPct: { type: 'number' },
+        targetRiskPct: { type: 'number' },
+        stopLossPct: { type: 'number' },
+        warnings: { type: 'array', items: { type: 'string' } },
+      },
+    },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+  },
 ]
 
 export async function handleMcpToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext): Promise<McpToolResult> {
@@ -400,6 +515,12 @@ export async function handleMcpToolCall(toolName: string, args: Record<string, u
       return await getRiskMetrics(ctx, args)
     case 'create_journal_entry':
       return await createJournalEntry(ctx, args)
+    case 'analyze_trade':
+      return await analyzeTrade(ctx, args)
+    case 'run_monte_carlo':
+      return await runMonteCarlo(ctx, args)
+    case 'suggest_position_size':
+      return await suggestPositionSize(ctx, args)
     case 'list_accounts':
       return await listAccounts(ctx)
     case 'get_account_details':
@@ -653,4 +774,219 @@ async function getUserProfile(ctx: McpAuthContext) {
 async function listTags(ctx: McpAuthContext) {
   const tags = await prisma.tag.findMany({ where: { userId: ctx.userId } })
   return toolSuccess(tags)
+}
+
+async function analyzeTrade(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  const tradeId = requireParam(args, 'tradeId')
+
+  const trade = await prisma.trade.findFirst({
+    where: { id: tradeId, userId: ctx.userId },
+  })
+
+  if (!trade) {
+    return toolError('Trade not found')
+  }
+
+  const analytics = await prisma.tradeAnalytics.findUnique({
+    where: { tradeId: trade.id },
+  })
+
+  const entryPrice = Number(trade.entryPrice)
+  const riskPct = entryPrice !== 0
+    ? (Math.abs(Number(trade.closePrice) - entryPrice) / entryPrice * 100)
+    : 0
+
+  return toolSuccess({
+    id: trade.id,
+    instrument: trade.instrument,
+    side: trade.side,
+    quantity: Number(trade.quantity),
+    entryPrice: Number(trade.entryPrice),
+    closePrice: Number(trade.closePrice),
+    pnl: Number(trade.pnl),
+    commission: Number(trade.commission),
+    entryDate: trade.entryDate,
+    closeDate: trade.closeDate,
+    tags: trade.tags,
+    ...(analytics
+      ? {
+          mae: Number(analytics.mae),
+          mfe: Number(analytics.mfe),
+          riskRewardRatio: analytics.riskRewardRatio ? Number(analytics.riskRewardRatio) : null,
+          efficiency: analytics.efficiency ? Number(analytics.efficiency) : null,
+        }
+      : { mae: null, mfe: null, riskRewardRatio: null, efficiency: null }),
+    riskPct: Number(riskPct.toFixed(2)),
+  })
+}
+
+async function runMonteCarlo(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  const accountId = typeof args.accountId === 'string' && args.accountId ? args.accountId : undefined
+  const simulations = clampInt(args.simulations, 1, 10000, 1000)
+
+  let initialBalance = 10000
+  let accountNumber: string | undefined
+
+  if (accountId) {
+    const account = await prisma.account.findFirst({
+      where: { id: accountId, userId: ctx.userId },
+    })
+    if (account) {
+      initialBalance = Number(account.startingBalance)
+      accountNumber = account.number
+    }
+  } else {
+    const firstAccount = await prisma.account.findFirst({
+      where: { userId: ctx.userId },
+      orderBy: { createdAt: 'asc' },
+    })
+    if (firstAccount) {
+      initialBalance = Number(firstAccount.startingBalance)
+    }
+  }
+
+  const where: Record<string, unknown> = { userId: ctx.userId }
+  if (accountNumber) {
+    where.accountNumber = accountNumber
+  }
+
+  const trades = await prisma.trade.findMany({
+    where: where as Parameters<typeof prisma.trade.findMany>[0]['where'],
+    select: { pnl: true },
+  })
+
+  if (trades.length < 5) {
+    return toolError('Need at least 5 trades to run Monte Carlo simulation')
+  }
+
+  const pnls = trades.map((t) => Number(t.pnl))
+  const wins = pnls.filter((p) => p > 0)
+  const losses = pnls.filter((p) => p < 0)
+  const winRate = wins.length / pnls.length
+  const avgWin = wins.length > 0 ? wins.reduce((s, v) => s + v, 0) / wins.length : 0
+  const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((s, v) => s + v, 0) / losses.length) : 0
+
+  const outcomes: number[] = []
+  let ruinCount = 0
+
+  for (let sim = 0; sim < simulations; sim++) {
+    let balance = initialBalance
+    let ruined = false
+
+    for (let i = 0; i < trades.length; i++) {
+      const randomPnl = pnls[Math.floor(Math.random() * pnls.length)]
+      balance += randomPnl
+      if (balance <= 0) {
+        ruined = true
+        break
+      }
+    }
+
+    if (ruined) ruinCount++
+    outcomes.push(balance)
+  }
+
+  outcomes.sort((a, b) => a - b)
+
+  const medianIndex = Math.floor(outcomes.length / 2)
+  const worst5Index = Math.floor(outcomes.length * 0.05)
+  const best5Index = Math.floor(outcomes.length * 0.95)
+
+  return toolSuccess({
+    simulations,
+    tradeCount: trades.length,
+    initialBalance,
+    parameters: {
+      winRate: Number((winRate * 100).toFixed(1)),
+      avgWin: Number(avgWin.toFixed(2)),
+      avgLoss: Number(avgLoss.toFixed(2)),
+    },
+    results: {
+      ruinProbability: Number(((ruinCount / simulations) * 100).toFixed(1)),
+      medianOutcome: Number(outcomes[medianIndex].toFixed(2)),
+      worst5PercentOutcome: Number(outcomes[worst5Index].toFixed(2)),
+      best5PercentOutcome: Number(outcomes[best5Index].toFixed(2)),
+      expectedOutcome: Number((outcomes.reduce((s, v) => s + v, 0) / outcomes.length).toFixed(2)),
+    },
+  })
+}
+
+async function suggestPositionSize(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  const targetRiskPct = Number(args.targetRiskPct)
+  const stopLossPct = Number(args.stopLossPct)
+
+  if (!Number.isFinite(targetRiskPct) || targetRiskPct <= 0) {
+    return toolError('targetRiskPct must be a positive number')
+  }
+  if (!Number.isFinite(stopLossPct) || stopLossPct <= 0) {
+    return toolError('stopLossPct must be a positive number')
+  }
+
+  const accountId = typeof args.accountId === 'string' && args.accountId ? args.accountId : undefined
+  const accountSizeOverride = typeof args.accountSize === 'number' ? args.accountSize : undefined
+  const warnings: string[] = []
+
+  let balance: number
+  let drawdownPct = 0
+
+  if (accountSizeOverride) {
+    balance = accountSizeOverride
+  } else {
+    let account
+    if (accountId) {
+      account = await prisma.account.findFirst({
+        where: { id: accountId, userId: ctx.userId },
+      })
+      if (!account) return toolError('Account not found')
+    } else {
+      account = await prisma.account.findFirst({
+        where: { userId: ctx.userId },
+        orderBy: { createdAt: 'asc' },
+      })
+      if (!account) return toolError('No accounts found and no accountSize provided')
+    }
+
+    const trades = await prisma.trade.findMany({
+      where: { accountNumber: account.number, userId: ctx.userId },
+      select: { pnl: true, entryDate: true },
+      orderBy: { entryDate: 'asc' },
+    })
+
+    const totalPnL = trades.reduce((sum, t) => sum + Number(t.pnl), 0)
+    balance = Number(account.startingBalance) + totalPnL
+    const drawdownThreshold = Number(account.drawdownThreshold)
+
+    let runningSum = 0
+    let peak = Number(account.startingBalance)
+    let maxDD = 0
+    for (const t of trades) {
+      runningSum += Number(t.pnl)
+      const currentVal = Number(account.startingBalance) + runningSum
+      if (currentVal > peak) peak = currentVal
+      const dd = peak - currentVal
+      if (dd > maxDD) maxDD = dd
+    }
+    drawdownPct = drawdownThreshold > 0 ? (maxDD / drawdownThreshold) * 100 : 0
+  }
+
+  let drawdownAdjustment = 1.0
+  if (drawdownPct > 50) {
+    drawdownAdjustment = 0.5
+    warnings.push(`Drawdown at ${drawdownPct.toFixed(1)}% of max allowed — risk reduced by 50%`)
+  }
+
+  const adjustedRiskPct = targetRiskPct * drawdownAdjustment
+  const riskAmount = balance * (adjustedRiskPct / 100)
+  const suggestedSize = stopLossPct > 0 ? riskAmount / (stopLossPct / 100) : 0
+
+  return toolSuccess({
+    suggestedSize: Number(suggestedSize.toFixed(2)),
+    riskAmount: Number(riskAmount.toFixed(2)),
+    accountBalance: Number(balance.toFixed(2)),
+    drawdownAdjustment,
+    drawdownPct: Number(drawdownPct.toFixed(1)),
+    targetRiskPct,
+    stopLossPct,
+    warnings,
+  })
 }
