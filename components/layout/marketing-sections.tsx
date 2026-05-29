@@ -206,7 +206,7 @@ export function MarketingPricingCard({
           {badge}
         </Badge>
       ) : null}
-      <div className={cn(badge cn(badge && 'pr-24')cn(badge && 'pr-24') 'sm:pr-24')}>
+      <div className={cn(badge && 'sm:pr-24')}>
         <h3 className="text-base font-black tracking-[-0.01em] text-foreground">{name}</h3>
         <p className={cn(marketingBodyClassName, 'mt-2 text-sm')}>{description}</p>
       </div>
