@@ -129,6 +129,47 @@ export const websiteTools: ToolDefinition[] = [
       properties: {},
     },
   },
+  {
+    name: 'get_community_post',
+    description: 'Get a single community post with its comments and vote counts',
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        postId: { type: 'string', description: 'The post ID' },
+      },
+      required: ['postId'],
+    },
+  },
+  {
+    name: 'get_community_post_comments',
+    description: 'Get comments for a specific community post',
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        postId: { type: 'string', description: 'The post ID' },
+        limit: { type: 'number', description: 'Max comments (default 50, max 100)' },
+        offset: { type: 'number', description: 'Pagination offset' },
+      },
+      required: ['postId'],
+    },
+  },
+  {
+    name: 'compare_prop_firms',
+    description: 'Compare multiple prop firms side by side. Returns key metrics for each requested firm.',
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        slugs: { type: 'array', items: { type: 'string' }, description: 'Array of prop firm slugs to compare (max 5)' },
+      },
+      required: ['slugs'],
+    },
+  },
 ]
 
 export async function handleWebsiteMcpToolCall(toolName: string, args: Record<string, unknown>, _ctx?: McpAuthContext | null): Promise<McpToolResult> {
@@ -153,6 +194,12 @@ export async function handleWebsiteMcpToolCall(toolName: string, args: Record<st
       return await getLeaderboard(args)
     case 'get_trader_benchmarks':
       return await getTraderBenchmarks()
+    case 'get_community_post':
+      return await getCommunityPost(requireParam(args, 'postId'))
+    case 'get_community_post_comments':
+      return await getCommunityPostComments(requireParam(args, 'postId'), args)
+    case 'compare_prop_firms':
+      return await comparePropFirms(args)
     default:
       return toolError(`Unknown website tool: ${toolName}`)
   }
@@ -323,4 +370,79 @@ async function getTraderBenchmarks(): Promise<McpToolResult> {
   const snapshot = await prisma.traderBenchmarkSnapshot.findFirst({ orderBy: { updatedAt: 'desc' } })
   if (!snapshot) return toolSuccess({ message: 'No benchmark data available yet' })
   return toolSuccess(snapshot)
+}
+
+async function getCommunityPost(postId: string): Promise<McpToolResult> {
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+    include: {
+      user: { select: { username: true } },
+      comments: {
+        take: 50,
+        orderBy: { createdAt: 'asc' },
+        include: { user: { select: { username: true } } },
+      },
+      votes: { select: { type: true } },
+    },
+  })
+  if (!post) return toolError('Post not found')
+
+  const upvotes = post.votes.filter(v => v.type === 'UPVOTE').length
+  const downvotes = post.votes.filter(v => v.type === 'DOWNVOTE').length
+  const { votes, ...rest } = post
+  return toolSuccess({ ...rest, upvotes, downvotes, score: upvotes - downvotes })
+}
+
+async function getCommunityPostComments(postId: string, args: Record<string, unknown>): Promise<McpToolResult> {
+  const post = await prisma.post.findUnique({ where: { id: postId }, select: { id: true } })
+  if (!post) return toolError('Post not found')
+
+  const limit = clampInt(args.limit, 1, 100, 50)
+  const offset = clampInt(args.offset, 0, 1_000_000, 0)
+
+  const comments = await prisma.comment.findMany({
+    where: { postId },
+    include: { user: { select: { username: true } } },
+    orderBy: { createdAt: 'asc' },
+    take: limit,
+    skip: offset,
+  })
+
+  return toolSuccess(comments)
+}
+
+async function comparePropFirms(args: Record<string, unknown>): Promise<McpToolResult> {
+  const slugs = args.slugs
+  if (!Array.isArray(slugs) || slugs.length === 0) return toolError('slugs must be a non-empty array')
+  if (slugs.length > 5) return toolError('Maximum 5 firms to compare at once')
+
+  const firms = await prisma.propFirm.findMany({
+    where: { slug: { in: slugs }, isActive: true },
+    select: {
+      id: true, slug: true, name: true, category: true, platform: true,
+      payoutModel: true, drawdownType: true, profitSplit: true, maxAllocation: true,
+      shortDesc: true, logoUrl: true,
+    },
+  })
+
+  if (!firms.length) return toolError('No matching firms found')
+
+  // Get review stats for each firm
+  const firmIds = firms.map(f => f.id)
+  const reviewStats = await prisma.propFirmReview.groupBy({
+    by: ['propFirmId'],
+    where: { propFirmId: { in: firmIds }, status: 'approved' },
+    _avg: { rating: true },
+    _count: { id: true },
+  })
+
+  const statsMap = new Map(reviewStats.map(s => [s.propFirmId, s]))
+
+  const comparison = firms.map(f => ({
+    ...f,
+    avgRating: statsMap.get(f.id)?._avg.rating ? Number(statsMap.get(f.id)!._avg.rating!.toFixed(1)) : null,
+    reviewCount: statsMap.get(f.id)?._count.id ?? 0,
+  }))
+
+  return toolSuccess(comparison)
 }

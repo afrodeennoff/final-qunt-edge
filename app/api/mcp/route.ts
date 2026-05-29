@@ -2,11 +2,14 @@ import { NextRequest } from 'next/server'
 import { handleMcpRequest, CORS_HEADERS, type McpRouteConfig } from '@/server/mcp-route-utils'
 import { authenticateMcpRequest } from '@/server/mcp-auth'
 import { handleMcpToolCall, standardTools } from '@/server/mcp-tools'
+import { handleUserWriteToolCall, userWriteTools } from '@/server/mcp-user-write-tools'
+import { handleAdminMcpToolCall, adminTools } from '@/server/mcp-admin-tools'
+import { handleAdminWriteToolCall, adminWriteTools } from '@/server/mcp-admin-write-tools'
 import { handleWebsiteMcpToolCall, websiteTools } from '@/server/mcp-website-tools'
 import { MCP_SERVER_NAME, MCP_SERVER_VERSION } from '@/lib/mcp-constants'
 import { getSiteOrigin } from '@/lib/site-url'
 
-const USER_TOOLS = [...standardTools, ...websiteTools]
+const USER_TOOLS = [...standardTools, ...userWriteTools, ...websiteTools]
 
 const mainConfig: McpRouteConfig = {
   tools: USER_TOOLS,
@@ -16,6 +19,9 @@ const mainConfig: McpRouteConfig = {
   handleToolCall: async (toolName, args, ctx) => {
     if (websiteTools.some((t) => t.name === toolName)) {
       return handleWebsiteMcpToolCall(toolName, args, ctx!)
+    }
+    if (userWriteTools.some((t) => t.name === toolName)) {
+      return handleUserWriteToolCall(toolName, args, ctx!)
     }
     return handleMcpToolCall(toolName, args, ctx!)
   },
@@ -44,14 +50,16 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   const origin = getSiteOrigin()
-  const toolCatalog = (t: (typeof standardTools | typeof websiteTools)[number]) => ({
+  const toolCatalog = (t: { name: string; description: string; inputSchema: Record<string, unknown>; annotations?: Record<string, unknown> }) => ({
     name: t.name,
     description: t.description.split('\n')[0],
     inputSchema: t.inputSchema,
     annotations: t.annotations,
   })
 
-  const totalTools = standardTools.length + websiteTools.length
+  const personalTools = [...standardTools, ...userWriteTools]
+  const totalTools = personalTools.length + websiteTools.length
+  const adminTotal = totalTools + adminTools.length + adminWriteTools.length
 
   return Response.json({
     name: MCP_SERVER_NAME,
@@ -87,7 +95,7 @@ export async function GET() {
         url: `${origin}/api/mcp`,
         auth: 'API key or OAuth token required',
         tools: totalTools,
-        description: 'Personal trading data + public website data.',
+        description: 'Personal trading data (accounts, trades, tags, groups, payouts, journal) + public website data.',
       },
       {
         path: '/api/mcp/public',
@@ -100,11 +108,12 @@ export async function GET() {
         path: '/api/mcp/admin',
         url: `${origin}/api/mcp/admin`,
         auth: 'Admin API key or admin OAuth token required',
-        description: 'Full access including admin operations.',
+        tools: adminTotal,
+        description: 'Full access including all user tools + admin operations (blog, prop firms, coupons, reviews, users).',
       },
     ],
     tools: {
-      personal: standardTools.map(toolCatalog),
+      personal: personalTools.map(toolCatalog),
       website: websiteTools.map(toolCatalog),
     },
   }, { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } })
