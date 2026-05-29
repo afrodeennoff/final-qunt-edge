@@ -10,7 +10,7 @@ const KEY_BYTES = 32
 
 export interface ApiKeyResult {
   id: string
-  key: string
+  key?: string
   keyPrefix: string
   name: string
   role: 'user' | 'admin'
@@ -104,7 +104,7 @@ export async function listUserApiKeys(): Promise<{ success: true; keys: ApiKeyRe
 
     return {
       success: true,
-      keys: keys.map((k) => ({ id: k.id, keyPrefix: k.keyPrefix, name: k.name, role: k.role, createdAt: k.createdAt, lastUsedAt: k.lastUsedAt, key: '' })),
+      keys: keys.map((k) => ({ id: k.id, keyPrefix: k.keyPrefix, name: k.name, role: k.role, createdAt: k.createdAt, lastUsedAt: k.lastUsedAt })),
     }
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : 'Failed to list API keys' }
@@ -143,7 +143,8 @@ export async function validateApiKey(rawKey: string): Promise<{ userId: string; 
     }
 
     return { userId: record.userId, role: record.role as 'user' | 'admin' }
-  } catch {
+  } catch (error) {
+    console.error('[validateApiKey] error:', error instanceof Error ? error.message : error)
     return null
   }
 }

@@ -86,7 +86,7 @@ export async function handleMcpToolCall(toolName: string, args: Record<string, u
     case 'list_tags':
       return await listTags(ctx)
     default:
-      throw new Error(`Unknown tool: ${toolName}`)
+      return toolError(`Unknown tool: ${toolName}`)
   }
 }
 

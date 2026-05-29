@@ -1,5 +1,4 @@
 import type { McpAuthContext } from './mcp-auth'
-import { requireAdminAccess } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
 import { maskEmail } from '@/lib/redact-pii'
 import { toolError, toolSuccess, requireParam, type McpToolResult } from './mcp-helpers'
@@ -45,8 +44,6 @@ export const adminTools = [
 ]
 
 export async function handleAdminMcpToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext): Promise<McpToolResult> {
-  requireAdminAccess(ctx)
-
   switch (toolName) {
     case 'admin_list_users':
       return await adminListUsers()
@@ -57,7 +54,7 @@ export async function handleAdminMcpToolCall(toolName: string, args: Record<stri
     case 'admin_get_analytics':
       return await adminGetAnalytics()
     default:
-      throw new Error(`Unknown admin tool: ${toolName}`)
+      return toolError(`Unknown admin tool: ${toolName}`)
   }
 }
 

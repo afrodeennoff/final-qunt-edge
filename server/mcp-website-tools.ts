@@ -144,7 +144,7 @@ export async function handleWebsiteMcpToolCall(toolName: string, args: Record<st
     case 'get_trader_benchmarks':
       return await getTraderBenchmarks()
     default:
-      throw new Error(`Unknown website tool: ${toolName}`)
+      return toolError(`Unknown website tool: ${toolName}`)
   }
 }
 
