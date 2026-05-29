@@ -37,8 +37,15 @@ export default function AuthenticationLayout({
  }, [locale, router]);
 
   return (
-    <div className="public-page">
-      <RootProviders>{children}</RootProviders>
+    <div className="min-h-dvh w-full bg-background bg-[radial-gradient(oklch(0.15_0.01_260)_0.8px,transparent_1px)] bg-[length:4px_4px]">
+      <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
+        <div className="h-[500px] w-[500px] rounded-full bg-primary/[0.02] blur-3xl" />
+      </div>
+      <div className="relative z-10 flex min-h-dvh items-center justify-center p-4">
+        <div className="w-full max-w-md rounded-2xl border border-border/20 bg-gradient-to-br from-card/60 to-card/10 p-8 ring-1 ring-inset ring-white/[0.02] shadow-[0_0_50px_-25px] shadow-primary/10">
+          <RootProviders>{children}</RootProviders>
+        </div>
+      </div>
     </div>
   );
 }

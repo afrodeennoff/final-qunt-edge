@@ -32,27 +32,30 @@ export default function RollingAdBanner() {
   const repeatedItems = [...items, ...items, ...items]
 
   return (
-    <div className="relative w-full max-w-full overflow-hidden rounded-xl bg-muted/40">
+    <div className="relative w-full max-w-full overflow-hidden rounded-[14px] bg-gradient-to-r from-muted/30 via-muted/20 to-muted/30 border border-border/10 shadow-sm">
+      <div className="absolute inset-0 rounded-[14px] ring-1 ring-inset ring-primary/[0.03]" />
       <div className="w-full max-w-full overflow-hidden" style={edgeFadeMask}>
-        <div className="flex min-w-max animate-scroll whitespace-nowrap py-2">
+        <div className="flex min-w-max animate-scroll whitespace-nowrap py-2.5">
           {repeatedItems.map((item, idx) => (
             <Link
               key={`${item.id}-${idx}`}
               href={`/${currentLocale === 'en' ? '' : currentLocale}/firm/${item.firmSlug}`}
               className={cn(
-                'inline-flex items-center gap-2.5 px-4 text-[0.8rem] font-medium tracking-wide transition-opacity duration-300 hover:opacity-80',
+                'inline-flex items-center gap-2.5 px-5 text-[0.8rem] font-medium tracking-wide transition-all duration-300 hover:opacity-80',
               )}
             >
               {item.type === 'deal' ? (
-                <Tag className="h-4 w-4 text-primary" />
+                <Tag className="h-3.5 w-3.5 text-primary" />
               ) : (
-                <Building2 className="h-4 w-4 text-muted-foreground" />
+                <Building2 className="h-3.5 w-3.5 text-muted-foreground/60" />
               )}
-              <span className="text-foreground">{item.firmName}</span>
+              <span className="text-foreground/80">{item.firmName}</span>
               <span
                 className={cn(
-                  'rounded-full px-3 py-1 text-[11px] font-medium uppercase tracking-wide',
-                  item.type === 'deal' ? 'bg-primary/10 text-primary' : 'bg-success/10 text-success',
+                  'rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em]',
+                  item.type === 'deal'
+                    ? 'bg-primary/10 text-primary ring-1 ring-inset ring-primary/20'
+                    : 'bg-success/10 text-success ring-1 ring-inset ring-success/20',
                 )}
               >
                 {item.badge}

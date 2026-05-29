@@ -10,7 +10,7 @@ const WidgetCanvas = dynamic(() => import("./components/widget-canvas"), {
       {Array.from({ length: 8 }).map((_, i) => (
         <div
           key={i}
-          className="h-32 animate-pulse rounded-xl border border-border/30 bg-muted/40"
+          className="h-32 animate-pulse rounded-xl border border-border/20 bg-gradient-to-br from-muted/40 to-muted/10 ring-1 ring-inset ring-white/[0.02]"
         />
       ))}
     </div>
@@ -54,7 +54,7 @@ export default async function DashboardPage(props: {
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
-                className="h-32 animate-pulse rounded-xl border border-border/30 bg-muted/40"
+                className="h-32 animate-pulse rounded-xl border border-border/20 bg-gradient-to-br from-muted/40 to-muted/10 ring-1 ring-inset ring-white/[0.02]"
               />
             ))}
           </div>

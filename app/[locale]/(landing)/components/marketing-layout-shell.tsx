@@ -35,12 +35,15 @@ export default function MarketingLayoutShell({
   return (
     <div
       className={cn(
-        'marketing-shell qe-v2-app-shell min-h-dvh w-full overflow-x-hidden bg-background',
+        'marketing-shell qe-v2-app-shell min-h-dvh w-full overflow-x-hidden bg-background bg-[radial-gradient(oklch(0.15_0.01_260)_0.8px,transparent_1px)] bg-[length:4px_4px]',
         className,
       )}
     >
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-px bg-border/30" />
-      <div className="flex min-h-dvh w-full">
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      <div className="pointer-events-none fixed inset-0 flex items-start justify-center">
+        <div className="h-[600px] w-[600px] rounded-full bg-primary/[0.02] blur-3xl" />
+      </div>
+      <div className="relative z-10 flex min-h-dvh w-full">
         {/* Full-width content: no sidebar column */}
         <div className="flex-1 min-h-0 min-w-0 bg-transparent">
           <MiniMaxNavbarWrapper>

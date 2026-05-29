@@ -35,11 +35,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   const { locale } = await params
   setStaticParamsLocale(locale)
 
-  const [t, softwareSchema, organizationSchema, breadcrumbSchema] = await Promise.all([
-    getI18n(),
-    Promise.resolve(buildSoftwareApplicationSchema(locale, '/')),
-    Promise.resolve(buildOrganizationSchema()),
-    Promise.resolve(buildBreadcrumbSchema(locale, [{ name: 'Home', path: '/' }])),
+  const [softwareSchema, organizationSchema, breadcrumbSchema] = await Promise.all([
+    buildSoftwareApplicationSchema(locale, '/'),
+    buildOrganizationSchema(),
+    buildBreadcrumbSchema(locale, [{ name: 'Home', path: '/' }]),
   ])
 
   return (
@@ -56,7 +55,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <HomeContent locale={locale} t={t} />
+      <HomeContent locale={locale} />
     </>
   )
 }

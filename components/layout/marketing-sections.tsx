@@ -6,30 +6,42 @@ import { MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
 
 export const marketingHeroTitleClassName =
-  'text-balance text-[48px] font-[275] leading-[var(--leading-none)] tracking-[var(--tracking-tighter)] text-foreground sm:text-[64px] lg:text-[80px] xl:text-[96px]'
+  'text-balance text-[48px] font-light tracking-tight text-foreground sm:text-[64px] lg:text-[80px] xl:text-[96px]'
 
 export const marketingSectionTitleClassName =
-  'text-balance text-[32px] font-[350] leading-[var(--leading-snug)] tracking-[var(--tracking-tight)] text-foreground sm:text-[40px] lg:text-[48px]'
+  'text-balance text-[32px] font-light tracking-tight text-foreground sm:text-[40px] lg:text-[48px]'
 
-export const marketingBodyClassName = 'text-[14px] leading-[var(--leading-relaxed)] text-muted-foreground/80 sm:text-[15px]'
+export const marketingBodyClassName = 'text-[14px] leading-relaxed text-muted-foreground/70'
 
 export function MarketingSection({
   children,
   id,
   className,
   innerClassName,
+  glow = false,
 }: {
   children: ReactNode
   id?: string
   className?: string
   innerClassName?: string
+  glow?: boolean
 }) {
   return (
     <section
       id={id}
-      className={cn('scroll-smooth-butter px-4 py-8 sm:px-6 lg:px-8 sm:py-10', className)}
+      className={cn(
+        'scroll-smooth-butter relative px-4 py-8 sm:px-6 lg:px-8 sm:py-10',
+        'border-t border-border/10',
+        className,
+      )}
     >
-      <div className={cn('mx-auto w-full', MARKETING_SHELL_WIDTH, innerClassName)}>{children}</div>
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      {glow && (
+        <div className="pointer-events-none absolute inset-0 flex items-start justify-center">
+          <div className="h-64 w-64 rounded-full bg-primary/[0.03] blur-3xl" />
+        </div>
+      )}
+      <div className={cn('relative z-10 mx-auto w-full', MARKETING_SHELL_WIDTH, innerClassName)}>{children}</div>
     </section>
   )
 }
@@ -60,9 +72,9 @@ export function MarketingSectionHeader({
       )}
     >
       {eyebrow ? (
-        <p className="text-[10.5px] font-black uppercase tracking-[0.12em] text-primary">
+        <span className="inline-block rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
           {eyebrow}
-        </p>
+        </span>
       ) : null}
       <Title className={marketingSectionTitleClassName}>{title}</Title>
       {description ? (
@@ -89,7 +101,7 @@ export function MarketingFeatureCard({
 }) {
   return (
     <Card className={cn('p-5', className)}>
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-muted-foreground">
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 ring-1 ring-inset ring-primary/10 text-primary">
         {icon}
       </div>
       <div className="mt-4">
@@ -115,14 +127,14 @@ export function MarketingStatBlock({
   className?: string
 }) {
   return (
-     <Card className={cn('p-6 text-center', className)}>
-      <p className="text-[32px] font-[250] tracking-[-0.05em] tabular-nums text-foreground leading-none">
+    <div className={cn('rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 p-6 ring-1 ring-inset ring-white/[0.02] text-center', className)}>
+      <p className="text-[32px] font-light tracking-[-0.05em] tabular-nums text-foreground leading-none font-mono">
         {value}
       </p>
-      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+      <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/60">
         {label}
       </p>
-    </Card>
+    </div>
   )
 }
 
@@ -145,7 +157,7 @@ export function MarketingStepCard({
         <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {step}
         </span>
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-muted-foreground">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 ring-1 ring-inset ring-primary/10 text-primary">
           {icon}
         </span>
       </div>
@@ -218,7 +230,7 @@ export function MarketingPricingCard({
           </li>
         ))}
       </ul>
-      <Button asChild variant={highlighted ? 'default' : 'outline'} size="lg" className={cn('mt-8 w-full', highlighted && 'rounded-lg border border-primary/30')} style={highlighted ? { background: 'var(--primary)' } : undefined}>
+      <Button asChild variant={highlighted ? 'default' : 'outline'} size="lg" className={cn('mt-8 w-full', highlighted && 'rounded-lg border border-primary/30 shadow-[0_0_25px_-12px] shadow-primary/30')} style={highlighted ? { background: 'var(--primary)' } : undefined}>
         <Link href={href}>{cta}</Link>
       </Button>
     </Card>
