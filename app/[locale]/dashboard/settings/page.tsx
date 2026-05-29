@@ -369,264 +369,295 @@ function ApiKeySection() {
   return (
     <Card className="rounded-xl border border-border/30 bg-card shadow-sm lg:col-span-2">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Key className="h-5 w-5" />
-          API Keys
-        </CardTitle>
-        <CardDescription>Manage API keys for programmatic access to your trading data via the MCP server.</CardDescription>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <Key className="h-5 w-5" />
+              API Keys
+            </CardTitle>
+            <CardDescription className="mt-1">
+              Secure access to your trading data for AI agents and external tools via MCP.
+            </CardDescription>
+          </div>
+        </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+
+      <CardContent className="space-y-6">
+        {/* Quick Connect - MCP Endpoint */}
         {origin && (
-          <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-2">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">MCP Server</p>
-            <div className="flex items-center gap-2">
-              <code className="flex-1 text-[11px] break-all select-all font-mono text-foreground/80">{origin}/api/mcp</code>
-              <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => { navigator.clipboard.writeText(`${origin}/api/mcp`); toast.success('URL copied!') }}>
-                <Copy className="h-3 w-3" />
-              </Button>
+          <div>
+            <div className="mb-2 flex items-center gap-2">
+              <p className="text-sm font-semibold text-foreground">MCP Server Endpoint</p>
+              <Badge variant="outline" className="text-[10px]">Primary</Badge>
             </div>
-            <p className="text-[10px] text-muted-foreground/70">Use with your API key as Bearer token in any MCP-compatible AI tool.</p>
+            <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
+              <div className="flex items-center gap-3">
+                <code className="flex-1 text-sm font-mono text-foreground/90 break-all select-all">
+                  {origin}/api/mcp
+                </code>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="shrink-0"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${origin}/api/mcp`)
+                    toast.success('Endpoint copied')
+                  }}
+                >
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy
+                </Button>
+              </div>
+              <p className="mt-2 text-[12px] text-muted-foreground">
+                Use any of your API keys below as a Bearer token.
+              </p>
+            </div>
           </div>
         )}
 
-        {/* Polished Connection Guide - MCP */}
-        <div className="rounded-xl border border-border/30 bg-muted/30 p-4 space-y-4">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground/80">Connect your AI tools (MCP)</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Use any API key above as Bearer token. Your trading data becomes available to AI agents.
-            </p>
+        {/* Your API Keys */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-sm font-semibold">Your API Keys</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowCreateDialog(true)}
+              className="gap-2"
+            >
+              <Plus className="h-4 w-4" /> Create New Key
+            </Button>
           </div>
 
-          {/* Claude Desktop */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium">Claude Desktop</p>
+          {isLoading ? (
+            <div className="space-y-2">
+              {[1, 2].map((i) => <Skeleton key={i} className="h-16 w-full rounded-xl" />)}
+            </div>
+          ) : keys.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-border/60 bg-muted/20 p-6 text-center">
+              <Key className="mx-auto h-8 w-8 mb-3 text-muted-foreground/60" />
+              <p className="text-sm text-muted-foreground mb-1">No API keys yet</p>
+              <p className="text-xs text-muted-foreground">Create one to connect AI tools or external services.</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {keys.map((apiKey) => (
+                <div
+                  key={apiKey.id}
+                  className="flex items-center justify-between rounded-xl border border-border/30 bg-card/50 p-4 hover:bg-muted/20 transition-colors"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-3">
+                      <p className="font-medium text-sm">{apiKey.name}</p>
+                      <Badge variant="outline" className="text-[10px] font-mono">{apiKey.keyPrefix}...</Badge>
+                      <Badge variant="secondary" className="text-[10px]">{apiKey.role}</Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Created {new Date(apiKey.createdAt).toLocaleDateString()} 
+                      {apiKey.lastUsedAt ? ` · Last used ${new Date(apiKey.lastUsedAt).toLocaleDateString()}` : ' · Never used'}
+                    </p>
+                  </div>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive h-8 w-8">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Revoke API Key</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Revoking <strong>{apiKey.name}</strong> will immediately disable access for any tool using it. This cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleRevoke(apiKey.id)}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Revoke Key
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Setup Guides */}
+        <div>
+          <p className="text-sm font-semibold mb-3">Setup Guides</p>
+          <div className="grid gap-3 md:grid-cols-2">
+            {/* Claude Desktop */}
+            <div className="rounded-xl border border-border/30 bg-muted/20 p-4">
+              <div className="font-medium text-sm mb-2 flex items-center gap-2">Claude Desktop</div>
+              <ol className="text-xs text-muted-foreground space-y-1.5 list-decimal list-inside">
+                <li>Open Claude Desktop → Settings → Developer</li>
+                <li>Click “Edit Config”</li>
+                <li>Paste the config below (replace <code>YOUR_KEY_HERE</code>)</li>
+              </ol>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="h-7 px-2 text-xs"
+                className="mt-3 w-full"
                 onClick={() => {
                   const config = `{
   "mcpServers": {
     "qunt-edge": {
       "url": "${origin}/api/mcp",
-      "headers": {
-        "Authorization": "Bearer YOUR_KEY_HERE"
-      }
+      "headers": { "Authorization": "Bearer YOUR_KEY_HERE" }
     }
   }
 }`;
                   navigator.clipboard.writeText(config);
-                  toast.success("Claude config copied!");
+                  toast.success("Claude config copied");
                 }}
               >
-                Copy config
+                Copy Claude Config
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Paste into Claude Desktop → Settings → Developer → Edit Config
-            </p>
-          </div>
 
-          {/* Cursor */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium">Cursor</p>
+            {/* Cursor */}
+            <div className="rounded-xl border border-border/30 bg-muted/20 p-4">
+              <div className="font-medium text-sm mb-2 flex items-center gap-2">Cursor</div>
+              <ol className="text-xs text-muted-foreground space-y-1.5 list-decimal list-inside">
+                <li>Go to Settings → Features → MCP Servers</li>
+                <li>Add Custom Server</li>
+                <li>Use the endpoint + Bearer token</li>
+              </ol>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="h-7 px-2 text-xs"
+                className="mt-3 w-full"
                 onClick={() => {
-                  const text = `URL: ${origin}/api/mcp\nAuthorization: Bearer YOUR_KEY_HERE`;
+                  const text = `MCP Server URL: ${origin}/api/mcp\nAuthorization: Bearer YOUR_API_KEY`;
                   navigator.clipboard.writeText(text);
-                  toast.success("Cursor details copied!");
+                  toast.success("Cursor config copied");
                 }}
               >
-                Copy
+                Copy Cursor Details
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Settings → Features → MCP Servers → Add Custom Server
-            </p>
-          </div>
 
-          {/* Windsurf & Cline */}
-          <div className="space-y-1.5">
-            <p className="text-sm font-medium">Windsurf / Cline / Other Tools</p>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2 text-xs"
-                onClick={() => {
-                  const text = `MCP Server URL: ${origin}/api/mcp\nAuthorization Header: Bearer YOUR_KEY_HERE`;
-                  navigator.clipboard.writeText(text);
-                  toast.success("Copied!");
-                }}
-              >
-                Copy details
-              </Button>
+            {/* Other Tools */}
+            <div className="rounded-xl border border-border/30 bg-muted/20 p-4 md:col-span-2">
+              <div className="font-medium text-sm mb-2">Windsurf, Cline & Other MCP Clients</div>
+              <p className="text-xs text-muted-foreground mb-3">
+                Most modern MCP-compatible tools support remote servers. Use the endpoint above and authenticate with <code>Bearer YOUR_KEY</code>.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${origin}/api/mcp`);
+                    toast.success("Endpoint copied");
+                  }}
+                >
+                  Copy Endpoint
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const text = `Authorization: Bearer YOUR_API_KEY`;
+                    navigator.clipboard.writeText(text);
+                    toast.success("Header copied");
+                  }}
+                >
+                  Copy Auth Header
+                </Button>
+              </div>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Add as a remote/custom MCP server using the URL above + Bearer token.
-            </p>
           </div>
+        </div>
 
-          <p className="text-[11px] text-muted-foreground pt-1 border-t border-border/40">
-            Once connected, your AI can use account health, trades, risk metrics, journal entries, and more.
+        {/* Guidebook */}
+        <div className="rounded-xl border border-border/30 bg-muted/10 p-5">
+          <p className="font-semibold text-sm mb-3">Guidebook — What You Can Do</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-sm text-muted-foreground">
+            <div className="space-y-1">
+              <p className="font-medium text-foreground text-xs uppercase tracking-wider">Available Capabilities</p>
+              <ul className="text-xs space-y-0.5 list-disc list-inside">
+                <li>Account health & drawdown status</li>
+                <li>Trade history & performance metrics</li>
+                <li>Risk analysis (Sharpe, Kelly, etc.)</li>
+                <li>Journal entries & mood tracking</li>
+                <li>Prop firm challenge progress</li>
+              </ul>
+            </div>
+            <div className="space-y-1">
+              <p className="font-medium text-foreground text-xs uppercase tracking-wider">Security Best Practices</p>
+              <ul className="text-xs space-y-0.5 list-disc list-inside">
+                <li>Never share your API key</li>
+                <li>Revoke keys you no longer use</li>
+                <li>Use descriptive names for each key</li>
+                <li>Rotate keys periodically</li>
+              </ul>
+            </div>
+          </div>
+          <p className="text-[11px] text-muted-foreground mt-4 border-t border-border/30 pt-3">
+            Your data stays private. The MCP server only responds to authenticated requests from your own AI tools.
           </p>
         </div>
 
+        {/* Error State (Migration) */}
         {error && (
-          <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-4 space-y-3">
-            <div>
-              <p className="font-semibold text-destructive">Database tables are missing</p>
-              <p className="text-sm text-destructive/90 mt-1">{error}</p>
-            </div>
-
-            <div className="space-y-2">
-              <p className="text-sm font-medium">How to fix:</p>
-              <ol className="list-decimal list-inside text-sm space-y-1 text-muted-foreground">
-                <li>
-                  Go to the migrations folder in the repo:<br />
-                  <a 
-                    href="https://github.com/afrodeennoff/qunt-edge/tree/v3/prisma/migrations" 
-                    target="_blank" 
-                    className="text-primary underline"
-                  >
-                    prisma/migrations
-                  </a>
-                </li>
-                <li>Run the two migration files in order in Supabase SQL Editor:</li>
-              </ol>
-
-              <div className="flex flex-wrap gap-2 mt-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const sql = `-- Run this first
--- File: 20260529_add_api_key_model/migration.sql`;
-                    navigator.clipboard.writeText(sql);
-                    toast.success("Instruction copied. Now open the file on GitHub.");
-                    window.open("https://github.com/afrodeennoff/qunt-edge/blob/v3/prisma/migrations/20260529_add_api_key_model/migration.sql", "_blank");
-                  }}
-                >
-                  Open ApiKey migration
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    window.open("https://github.com/afrodeennoff/qunt-edge/blob/v3/prisma/migrations/20260529_add_mcp_audit_log/migration.sql", "_blank");
-                  }}
-                >
-                  Open McpAuditLog migration
-                </Button>
-              </div>
-            </div>
-
-            <p className="text-[11px] text-muted-foreground">
-              After running both files, hard refresh this page. Key creation will work.
-            </p>
+          <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-4">
+            <p className="font-semibold text-destructive text-sm">Database setup required</p>
+            <p className="text-sm text-destructive/90 mt-1">{error}</p>
           </div>
         )}
 
-        <div className="space-y-2">
-          {isLoading ? (
-            <div className="space-y-2">
-              {[1, 2].map((i) => <Skeleton key={i} className="h-14 w-full rounded-lg" />)}
-            </div>
-          ) : keys.length === 0 ? (
-            <div className="text-center py-6 text-muted-foreground">
-              <Key className="mx-auto h-8 w-8 mb-2 opacity-50" />
-              <p className="text-sm">No API keys yet. Create one to connect external tools.</p>
-            </div>
-          ) : (
-            keys.map((apiKey) => (
-              <div key={apiKey.id} className="flex items-center justify-between rounded-xl border border-border/25 bg-muted/40 p-3">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium">{apiKey.name}</p>
-                    <Badge variant="outline" className="text-[10px]">{apiKey.keyPrefix}...</Badge>
-                    <Badge variant="secondary" className="text-[10px]">{apiKey.role}</Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Created {new Date(apiKey.createdAt).toLocaleDateString()}
-                    {apiKey.lastUsedAt ? ` · Last used ${new Date(apiKey.lastUsedAt).toLocaleDateString()}` : ' · Never used'}
-                  </p>
-                </div>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-destructive hover:text-destructive">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Revoke API Key</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Are you sure you want to revoke <strong>{apiKey.name}</strong>? This action cannot be undone. Any services using this key will immediately lose access.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => handleRevoke(apiKey.id)}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                      >
-                        Revoke
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
-            ))
-          )}
-        </div>
-
+        {/* Create Dialog */}
         <Dialog open={showCreateDialog} onOpenChange={(open) => { setShowCreateDialog(open); if (!open) setCreatedKey(null) }}>
           <DialogTrigger asChild>
             <Button variant="outline" className="w-full gap-2">
-              <Plus className="h-4 w-4" /> Create API Key
+              <Plus className="h-4 w-4" /> Create New API Key
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Create API Key</DialogTitle>
-              <DialogDescription>Give this key a name so you can identify it later. The key will only be shown once.</DialogDescription>
+              <DialogDescription>
+                Give this key a clear name. You will only see the full key once.
+              </DialogDescription>
             </DialogHeader>
+
             {createdKey ? (
-              <div className="space-y-3">
-                <p className="text-sm font-medium">Your API key:</p>
-                <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-muted/40 p-3">
-                  <code className="flex-1 text-xs break-all select-all">{createdKey}</code>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => { navigator.clipboard.writeText(createdKey); toast.success('Copied!') }}>
-                    <Copy className="h-4 w-4" />
-                  </Button>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-medium mb-2">Your new API key:</p>
+                  <div className="rounded-xl border border-border/30 bg-muted/40 p-4">
+                    <code className="text-xs break-all select-all font-mono block">{createdKey}</code>
+                  </div>
+                  <p className="text-xs text-destructive mt-2 font-medium">Copy this key now — it will never be shown again.</p>
                 </div>
-                <p className="text-xs text-destructive">Copy this key now. You won&apos;t be able to see it again.</p>
-             <div className="rounded-lg border border-border/20 bg-muted/30 p-3 text-xs text-muted-foreground space-y-1.5">
-                   <p className="font-semibold text-foreground">Connect to MCP:</p>
-                   <p>1. Copy your API key above</p>
-                   <p>2. Use endpoint: <code className="font-mono text-[10px] bg-background/60 px-1 rounded">{origin}/api/mcp</code></p>
-                   <p>3. Add as Bearer token in your AI tool</p>
-                 </div>
+
+                <div className="rounded-lg border border-border/20 bg-muted/20 p-3 text-xs">
+                  <p className="font-semibold mb-1">Next steps:</p>
+                  <ol className="list-decimal list-inside space-y-0.5 text-muted-foreground">
+                    <li>Copy the key above</li>
+                    <li>Use endpoint: <span className="font-mono">{origin}/api/mcp</span></li>
+                    <li>Authenticate with: <code>Bearer YOUR_KEY</code></li>
+                  </ol>
+                </div>
               </div>
             ) : (
               <>
                 <Input
-                  placeholder="e.g., My Trading Bot"
+                  placeholder="e.g. Claude Desktop, Trading Bot, Cursor"
                   value={newKeyName}
                   onChange={(e) => setNewKeyName(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') handleCreate() }}
+                  onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
                 />
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setShowCreateDialog(false)}>Cancel</Button>
                   <Button onClick={handleCreate} disabled={isCreating || !newKeyName.trim()}>
-                    {isCreating ? 'Creating...' : 'Create Key'}
+                    {isCreating ? 'Creating...' : 'Create API Key'}
                   </Button>
                 </DialogFooter>
               </>

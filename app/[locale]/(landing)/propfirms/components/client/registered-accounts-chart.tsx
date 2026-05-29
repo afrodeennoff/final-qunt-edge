@@ -1,14 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from '@/components/ui/chart'
 import { formatCompactCurrency } from '@/lib/formatting/currency'
 import { cn } from '@/lib/utils'
 import { unifiedInsetPanelClassName, unifiedSectionPanelClassName } from '@/components/layout/unified-page-recipes'
@@ -64,42 +57,6 @@ export function RegisteredAccountsChart({
     [activeMetric, data],
   )
 
-  const renderBottomLabel = (props: {
-    x?: string | number
-    y?: string | number
-    width?: string | number
-    height?: string | number
-    value?: string | number
-  }) => {
-    const { x, y, width, height, value } = props
-    const numericX = typeof x === 'number' ? x : Number(x)
-    const numericY = typeof y === 'number' ? y : Number(y)
-    const numericWidth = typeof width === 'number' ? width : Number(width)
-    const numericHeight = typeof height === 'number' ? height : Number(height)
-
-    if (
-      !Number.isFinite(numericX) ||
-      !Number.isFinite(numericY) ||
-      !Number.isFinite(numericWidth) ||
-      !Number.isFinite(numericHeight)
-    ) {
-      return null
-    }
-
-    const label = String(value ?? '')
-    return (
-      <text
-        x={numericX + numericWidth / 2}
-        y={numericY + numericHeight + 14}
-        textAnchor="middle"
-        dominantBaseline="hanging"
-        className="fill-muted-foreground text-[10px]"
-      >
-        {label}
-      </text>
-    )
-  }
-
   return (
     <Card className={cn(unifiedSectionPanelClassName, 'overflow-hidden')}>
       <CardHeader className="border-b border-border bg-[linear-gradient(180deg,hsl(var(--card)/0.58)_0%,transparent_100%)] px-6 pb-3 pt-4">
@@ -134,49 +91,38 @@ export function RegisteredAccountsChart({
       </CardHeader>
       <CardContent className="pt-3">
         {chartData.length > 0 ? (
-          <div className={cn(unifiedInsetPanelClassName, 'overflow-hidden p-3')}>
-            <ChartContainer
-              config={registeredAccountsChartConfig}
-              className="h-[360px] w-full overflow-hidden"
-            >
-              <BarChart
-                accessibilityLayer
-                data={chartData}
-                margin={{ top: 28, right: 10, left: 10, bottom: 52 }}
-              >
-                <CartesianGrid vertical={false} />
-                <XAxis dataKey="shortFirm" tick={false} tickLine={false} axisLine={false} />
-                <ChartTooltip
-                  cursor={false}
-                  content={
-                    <ChartTooltipContent
-                      hideLabel
-                      formatter={(value, _name, item) => {
-                        const firmName =
-                          (item?.payload as { firm?: string } | undefined)?.firm ?? 'Firm'
-                        return [formatMetricValue(Number(value), activeMetric), String(firmName)]
-                      }}
-                    />
-                  }
-                />
-                <Bar
-                  dataKey="metricValue"
-                  fill={`var(--color-${activeMetric})`}
-                  radius={10}
-                  maxBarSize={60}
-                >
-                  <LabelList
-                    dataKey="metricValue"
-                    position="top"
-                    offset={10}
-                    className="fill-foreground"
-                    fontSize={12}
-                    formatter={(value: number) => formatMetricValue(value, activeMetric)}
-                  />
-                  <LabelList dataKey="shortFirm" position="bottom" content={renderBottomLabel} />
-                </Bar>
-              </BarChart>
-            </ChartContainer>
+          <div className={cn(unifiedInsetPanelClassName, 'overflow-hidden p-4')}>
+            <div className="space-y-3">
+              {chartData.slice(0, 12).map((item, index) => {
+                const maxValue = Math.max(...chartData.map(d => d.metricValue), 1)
+                const percentage = maxValue > 0 ? (item.metricValue / maxValue) * 100 : 0
+
+                return (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-24 shrink-0 text-xs text-muted-foreground truncate" title={item.firm}>
+                      {item.firm}
+                    </div>
+                    <div className="flex-1 bg-muted/30 rounded-full h-2.5 overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{
+                          width: `${Math.max(percentage, item.metricValue > 0 ? 4 : 0)}%`,
+                          backgroundColor: `hsl(var(--primary))`,
+                        }}
+                      />
+                    </div>
+                    <div className="w-12 text-right text-xs font-medium tabular-nums">
+                      {formatMetricValue(item.metricValue, activeMetric)}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+            {chartData.length > 12 && (
+              <div className="text-center text-[10px] text-muted-foreground mt-3">
+                +{chartData.length - 12} more firms
+              </div>
+            )}
           </div>
         ) : (
           <div className="rounded-xl border border-dashed border-border bg-muted/30 px-4 py-6 text-sm text-muted-foreground">

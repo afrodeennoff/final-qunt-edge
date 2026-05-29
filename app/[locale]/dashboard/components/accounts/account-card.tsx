@@ -102,7 +102,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
             <div className="space-y-1.5">
               <div className="flex items-center justify-between gap-2 text-[12px]">
                 <span className="text-muted-foreground/70">{t('propFirm.card.remainingToTarget')}</span>
-                <span className={cn('tabular-nums font-medium', remainingToTarget <= 0 ? 'text-emerald-400' : 'text-rose-400')}>
+                <span className={cn('tabular-nums font-medium', remainingToTarget <= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]')}>
                   ${remainingToTarget.toFixed(0)}
                 </span>
               </div>
@@ -116,7 +116,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
             <div className="space-y-1.5">
               <div className="flex items-center justify-between gap-2 text-[12px]">
                 <span className="text-muted-foreground/70">{t('propFirm.card.drawdown')}</span>
-                <span className={cn('tabular-nums font-medium', remainingLoss > drawdownThreshold * 0.5 ? 'text-emerald-400' : 'text-rose-400')}>
+                <span className={cn('tabular-nums font-medium', remainingLoss > drawdownThreshold * 0.5 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]')}>
                   {remainingLoss > 0 ? `$${remainingLoss.toFixed(0)} left` : 'Breached'}
                 </span>
               </div>
@@ -134,7 +134,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
                   <span className={cn(
                     'font-medium',
                     !metrics.hasProfitableData ? 'text-muted-foreground' :
-                    metrics.isConsistent || consistencyPercentage === 100 ? 'text-emerald-400' : 'text-rose-400'
+                    metrics.isConsistent || consistencyPercentage === 100 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'
                   )}>
                     {!metrics.hasProfitableData ? '—' : metrics.isConsistent || consistencyPercentage === 100 ? 'Consistent' : 'Inconsistent'}
                   </span>
@@ -151,7 +151,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
                   <span>Trading Days</span>
                   <span className={cn(
                     'font-medium tabular-nums',
-                    metrics.validTradingDays === metrics.totalTradingDays ? 'text-emerald-400' : 'text-rose-400'
+                    metrics.validTradingDays === metrics.totalTradingDays ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'
                   )}>
                     {metrics.validTradingDays}/{metrics.totalTradingDays}
                   </span>

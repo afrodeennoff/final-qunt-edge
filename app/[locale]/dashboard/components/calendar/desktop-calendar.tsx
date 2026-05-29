@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo } from "react"
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday, startOfWeek, getDay, endOfWeek, addDays, getYear } from "date-fns"
+import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday, startOfWeek, getDay, addDays, getYear } from "date-fns"
 import { formatInTimeZone } from 'date-fns-tz'
 import { fr, enUS } from 'date-fns/locale'
 import { ChevronLeft, ChevronRight, Newspaper, Calendar, CalendarDays } from "lucide-react"
@@ -47,21 +47,12 @@ const WEEKDAYS_MONDAY_START = [
  'calendar.weekdays.sun'
 ] as const
 
-function getCalendarDays(monthStart: Date, monthEnd: Date, weekStartsOnMonday: boolean = false) {
- const weekStartsOn = weekStartsOnMonday ? 1 : 0
- const startDate = startOfWeek(monthStart, { weekStartsOn })
- const endDate = endOfWeek(monthEnd, { weekStartsOn })
- const days = eachDayOfInterval({ start: startDate, end: endDate })
-
- if (days.length === 42) return days
-
- const lastDay = days[days.length - 1]
- const additionalDays = eachDayOfInterval({
- start: addDays(lastDay, 1),
- end: addDays(startDate, 41)
- })
-
- return [...days, ...additionalDays].slice(0, 42)
+function getCalendarDays(monthStart: Date, weekStartsOnMonday: boolean = false) {
+  const weekStartsOn = weekStartsOnMonday ? 1 : 0
+  // Always start from the first day of the week containing the 1st of the month
+  const start = startOfWeek(monthStart, { weekStartsOn })
+  // Always generate exactly 42 days = 6 full weeks for a complete month view
+  return Array.from({ length: 42 }, (_, i) => addDays(start, i))
 }
 
 const formatCurrency = (value: number, options?: { minimumFractionDigits?: number; maximumFractionDigits?: number }) => {
@@ -299,10 +290,10 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  monthEnd: endOfMonth(currentDate)
  }), [currentDate])
 
- const calendarDays = useMemo(
- () => getCalendarDays(monthStart, monthEnd, weekStartsOnMonday),
- [monthStart, monthEnd, weekStartsOnMonday]
- )
+  const calendarDays = useMemo(
+  () => getCalendarDays(monthStart, weekStartsOnMonday),
+  [monthStart, weekStartsOnMonday]
+  )
 
  // Use the calendar view store
  const {

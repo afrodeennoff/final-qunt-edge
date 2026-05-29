@@ -592,7 +592,7 @@ export function FormatPreview({
             <Tooltip>
               <TooltipTrigger>
                 <div className="flex items-center gap-1">
-                  <span className={pnl >= 0 ? "text-green-600" : "text-red-600"}>
+                  <span className={pnl >= 0 ? "text-[color:var(--success)]" : "text-[color:var(--destructive)]"}>
                     ${pnl.toFixed(2)}
                   </span>
                   {isMismatch && (
@@ -886,7 +886,7 @@ export function FormatPreview({
                       {t('trade-table.footer.totalPnl')}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-sm">
-                      <span className={totals.totalPnl >= 0 ? "text-green-600" : "text-red-600"}>
+                      <span className={totals.totalPnl >= 0 ? "text-[color:var(--success)]" : "text-[color:var(--destructive)]"}>
                         ${totals.totalPnl.toFixed(2)}
                       </span>
                     </TableCell>
@@ -900,7 +900,7 @@ export function FormatPreview({
                       {t('trade-table.footer.netPnl')}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-sm">
-                      <span className={totals.netPnl >= 0 ? "text-green-600" : "text-red-600"}>
+                      <span className={totals.netPnl >= 0 ? "text-[color:var(--success)]" : "text-[color:var(--destructive)]"}>
                         ${totals.netPnl.toFixed(2)}
                       </span>
                     </TableCell>

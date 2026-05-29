@@ -408,7 +408,7 @@ export default React.memo(function PnLPerContractDailyChart({
  {chartData.map((entry, index) => (
  <Cell
  key={`cell-${index}`}
- fill={entry.averagePnl >= 0 ?"hsl(var(--chart-1))" :"hsl(var(--chart-4))"}
+  fill={entry.averagePnl >= 0 ?"hsl(var(--primary))" :"hsl(var(--chart-4))"}
  stroke="hsl(var(--chart-axis))"
  strokeOpacity={0.55}
  fillOpacity={entry.averagePnl >= 0 ? 0.94 : 0.84}
