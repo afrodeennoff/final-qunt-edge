@@ -155,6 +155,51 @@ Returns: Count of imported trades`,
     annotations: WRITE,
   },
   {
+    name: 'create_trade',
+    description: `Create a single trade manually (equivalent to manual journal entry in dashboard).
+
+SECURITY: Trade is always created for the authenticated MCP user (from API key / OAuth). Any userId in args is ignored.
+
+Args:
+  - accountNumber (string, required): Must match an existing account owned by you
+  - instrument (string, required): e.g. "ES", "AAPL", "EURUSD"
+  - side (string, optional): "LONG" | "SHORT" | "BUY" | "SELL" (default "")
+  - quantity (number, optional): Default 0
+  - entryPrice (number, required)
+  - closePrice (number, required)
+  - entryDate (string, required): ISO 8601 datetime
+  - closeDate (string, required): ISO 8601 datetime
+  - pnl (number, optional): If omitted, computed from prices/side/quantity - commission
+  - commission (number, optional): Default 0
+  - comment (string, optional)
+  - tags (string[], optional)
+
+Returns: The created trade object (with generated id, userId from your auth context, createdAt, etc.)
+
+This is a write operation (creates data in your journal).`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        accountNumber: { type: 'string', description: 'Account number (must belong to you)' },
+        instrument: { type: 'string', description: 'Trading instrument symbol' },
+        side: { type: 'string', description: 'LONG, SHORT, BUY, SELL etc.' },
+        quantity: { type: 'number', description: 'Position size' },
+        entryPrice: { type: 'number', description: 'Entry/fill price' },
+        closePrice: { type: 'number', description: 'Exit/close price' },
+        entryDate: { type: 'string', description: 'Entry timestamp (ISO 8601)' },
+        closeDate: { type: 'string', description: 'Close timestamp (ISO 8601)' },
+        pnl: { type: 'number', description: 'Profit/loss (computed if omitted)' },
+        commission: { type: 'number', description: 'Commission/fees' },
+        comment: { type: 'string', description: 'Trade review comment' },
+        tags: { type: 'array', items: { type: 'string' }, description: 'Tags for filtering' },
+      },
+      required: ['accountNumber', 'instrument', 'entryPrice', 'closePrice', 'entryDate', 'closeDate'],
+    },
+    annotations: WRITE,
+  },
+  {
     name: 'delete_trades',
     description: `Delete trades by their IDs. Verifies all trades belong to the authenticated user.
 
@@ -517,6 +562,7 @@ export async function handleUserWriteToolCall(toolName: string, args: Record<str
     case 'update_account': return await updateAccount(ctx, args)
     case 'delete_account': return await deleteAccount(ctx, args)
     case 'import_trades': return await importTrades(ctx, args)
+    case 'create_trade': return await createTrade(ctx, args)
     case 'delete_trades': return await deleteTrades(ctx, args)
     case 'group_trades': return await groupTrades(ctx, args)
     case 'ungroup_trades': return await ungroupTrades(ctx, args)
@@ -668,6 +714,16 @@ async function importTrades(ctx: McpAuthContext, args: Record<string, unknown>):
   const result = await prisma.trade.createMany({ data: tradeRecords })
 
   return toolSuccess({ imported: result.count, accountNumber })
+}
+
+async function createTrade(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { createTradeHandler } = await import('@/server/mcp/handlers/trade')
+    const data = await createTradeHandler({ userId: ctx.userId }, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message || 'Failed to create trade')
+  }
 }
 
 async function deleteTrades(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
