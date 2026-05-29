@@ -200,6 +200,53 @@ This is a write operation (creates data in your journal).`,
     annotations: WRITE,
   },
   {
+    name: 'update_trade',
+    description: `Update fields on an existing trade (prices, quantity, dates, instrument, side, commission, pnl, comment, tags, account).
+
+SECURITY: Only updates trades owned by the authenticated MCP user (from API key / OAuth). Any userId in args is ignored. Trade and (if changing) account must belong to you.
+
+Args:
+  - tradeId (string, required): ID of your trade to edit
+  - accountNumber (string, optional): Move to different account you own
+  - instrument (string, optional)
+  - side (string, optional)
+  - quantity (number, optional)
+  - entryPrice (number, optional)
+  - closePrice (number, optional)
+  - entryDate (string, optional): ISO 8601
+  - closeDate (string, optional): ISO 8601
+  - pnl (number, optional): If omitted and price/qty/side/comm changed, auto-recomputed
+  - commission (number, optional)
+  - comment (string, optional)
+  - tags (string[], optional)
+
+Returns: The full updated trade object.
+
+This is a write operation (mutates your journal data).`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        tradeId: { type: 'string', description: 'Trade ID to update (must belong to you)' },
+        accountNumber: { type: 'string', description: 'New account number (must belong to you)' },
+        instrument: { type: 'string', description: 'Trading instrument symbol' },
+        side: { type: 'string', description: 'LONG, SHORT, BUY, SELL etc.' },
+        quantity: { type: 'number', description: 'Position size' },
+        entryPrice: { type: 'number', description: 'Entry/fill price' },
+        closePrice: { type: 'number', description: 'Exit/close price' },
+        entryDate: { type: 'string', description: 'Entry timestamp (ISO 8601)' },
+        closeDate: { type: 'string', description: 'Close timestamp (ISO 8601)' },
+        pnl: { type: 'number', description: 'Profit/loss (auto-recomputed if omitted on price changes)' },
+        commission: { type: 'number', description: 'Commission/fees' },
+        comment: { type: 'string', description: 'Trade review comment' },
+        tags: { type: 'array', items: { type: 'string' }, description: 'Tags for filtering' },
+      },
+      required: ['tradeId'],
+    },
+    annotations: WRITE,
+  },
+  {
     name: 'delete_trades',
     description: `Delete trades by their IDs. Verifies all trades belong to the authenticated user.
 
@@ -563,6 +610,7 @@ export async function handleUserWriteToolCall(toolName: string, args: Record<str
     case 'delete_account': return await deleteAccount(ctx, args)
     case 'import_trades': return await importTrades(ctx, args)
     case 'create_trade': return await createTrade(ctx, args)
+    case 'update_trade': return await updateTrade(ctx, args)
     case 'delete_trades': return await deleteTrades(ctx, args)
     case 'group_trades': return await groupTrades(ctx, args)
     case 'ungroup_trades': return await ungroupTrades(ctx, args)
@@ -723,6 +771,16 @@ async function createTrade(ctx: McpAuthContext, args: Record<string, unknown>): 
     return toolSuccess(data)
   } catch (e: any) {
     return toolError(e.message || 'Failed to create trade')
+  }
+}
+
+async function updateTrade(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { updateTradeHandler } = await import('@/server/mcp/handlers/trade')
+    const data = await updateTradeHandler({ userId: ctx.userId }, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message || 'Failed to update trade')
   }
 }
 

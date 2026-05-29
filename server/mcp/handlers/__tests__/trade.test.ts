@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createTradeHandler } from '../trade'
+import { createTradeHandler, updateTradeHandler } from '../trade'
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
     account: { findFirst: vi.fn() },
-    trade: { create: vi.fn() },
+    trade: { create: vi.fn(), findFirst: vi.fn(), update: vi.fn() },
   },
 }))
 
@@ -60,6 +60,7 @@ describe('createTradeHandler', () => {
     // SECURITY: account lookup MUST use ctx userId
     expect(prisma.account.findFirst).toHaveBeenCalledWith({
       where: { number: 'TEST-001', userId: 'user-123' },
+      select: { number: true },
     })
 
     // SECURITY: create data MUST have userId from ctx only
@@ -146,5 +147,130 @@ describe('createTradeHandler', () => {
       userId: 'evil',
     })
     expect(result.userId).toBe('user-123')
+  })
+})
+
+describe('updateTradeHandler', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('updates trade strictly scoped to authenticated userId from ctx, never trusting args.userId', async () => {
+    const existingTrade = { id: 'trade-uuid-123', userId: 'user-123', accountNumber: 'TEST-001', instrument: 'ES', entryPrice: 5000 }
+    vi.mocked(prisma.trade.findFirst).mockResolvedValue(existingTrade as any)
+    const updatedTrade = { ...existingTrade, instrument: 'NQ', entryPrice: 5100, closePrice: 5110 }
+    vi.mocked(prisma.trade.update).mockResolvedValue(updatedTrade as any)
+
+    const args = {
+      tradeId: 'trade-uuid-123',
+      instrument: 'NQ',
+      entryPrice: 5100,
+      closePrice: 5110,
+      // malicious
+      userId: 'attacker-999',
+    }
+
+    const result = await updateTradeHandler({ userId: 'user-123' }, args)
+
+    expect(prisma.trade.findFirst).toHaveBeenCalledWith({
+      where: { id: 'trade-uuid-123', userId: 'user-123' },
+      select: {
+        id: true,
+        accountNumber: true,
+        instrument: true,
+        side: true,
+        quantity: true,
+        entryPrice: true,
+        closePrice: true,
+        commission: true,
+        pnl: true,
+      },
+    })
+
+    expect(prisma.trade.update).toHaveBeenCalledWith({
+      where: { id: 'trade-uuid-123', userId: 'user-123' },
+      data: expect.objectContaining({
+        instrument: 'NQ',
+        entryPrice: 5100,
+        closePrice: 5110,
+      }),
+    })
+
+    expect(result.instrument).toBe('NQ')
+    expect(result.userId).toBe('user-123')
+  })
+
+  it('throws authentication error when ctx has no userId (uses requireUserId guard)', async () => {
+    await expect(updateTradeHandler({} as any, { tradeId: 't1' }))
+      .rejects.toThrow('Authentication required — provide a valid API key')
+  })
+
+  it('throws when tradeId missing', async () => {
+    await expect(updateTradeHandler({ userId: 'u1' }, { entryPrice: 100 }))
+      .rejects.toThrow(/tradeId.*required/i)
+  })
+
+  it('throws when trade not found for this user (strict scoping)', async () => {
+    vi.mocked(prisma.trade.findFirst).mockResolvedValue(null)
+    await expect(
+      updateTradeHandler({ userId: 'user-123' }, { tradeId: 'NONEXISTENT' })
+    ).rejects.toThrow('Trade not found')
+  })
+
+  it('performs partial update (only provided fields)', async () => {
+    vi.mocked(prisma.trade.findFirst).mockResolvedValue({ id: 't1', userId: 'user-123' } as any)
+    vi.mocked(prisma.trade.update).mockResolvedValue({ id: 't1', comment: 'updated via MCP' } as any)
+
+    await updateTradeHandler({ userId: 'user-123' }, {
+      tradeId: 't1',
+      comment: 'updated via MCP',
+    })
+
+    expect(prisma.trade.update).toHaveBeenCalledWith({
+      where: { id: 't1', userId: 'user-123' },
+      data: { comment: 'updated via MCP' },
+    })
+  })
+
+  it('updates dates from ISO strings and numbers', async () => {
+    vi.mocked(prisma.trade.findFirst).mockResolvedValue({ id: 't1', userId: 'user-123' } as any)
+    vi.mocked(prisma.trade.update).mockResolvedValue({ id: 't1' } as any)
+
+    await updateTradeHandler({ userId: 'user-123' }, {
+      tradeId: 't1',
+      entryDate: '2026-06-01T10:00:00Z',
+      quantity: 5,
+    })
+
+    expect(prisma.trade.update).toHaveBeenCalledWith({
+      where: { id: 't1', userId: 'user-123' },
+      data: expect.objectContaining({
+        entryDate: expect.any(Date),
+        quantity: 5,
+      }),
+    })
+  })
+
+  it('allows changing accountNumber after verifying new account ownership', async () => {
+    vi.mocked(prisma.trade.findFirst).mockResolvedValue({ id: 't1', accountNumber: 'OLD-001', userId: 'user-123' } as any)
+    vi.mocked(prisma.account.findFirst).mockResolvedValue({ number: 'NEW-002' } as any)
+    vi.mocked(prisma.trade.update).mockResolvedValue({ id: 't1', accountNumber: 'NEW-002' } as any)
+
+    const result = await updateTradeHandler({ userId: 'user-123' }, {
+      tradeId: 't1',
+      accountNumber: 'NEW-002',
+    })
+
+    expect(prisma.account.findFirst).toHaveBeenCalledWith({
+      where: { number: 'NEW-002', userId: 'user-123' },
+      select: { number: true },
+    })
+    expect(result.accountNumber).toBe('NEW-002')
+  })
+
+  it('throws when no fields provided to update', async () => {
+    vi.mocked(prisma.trade.findFirst).mockResolvedValue({ id: 't1', userId: 'user-123' } as any)
+    await expect(updateTradeHandler({ userId: 'user-123' }, { tradeId: 't1' }))
+      .rejects.toThrow(/No fields to update/i)
   })
 })

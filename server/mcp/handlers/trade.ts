@@ -129,3 +129,89 @@ export async function createTradeHandler(ctx: AccountHealthContext, args: Record
 
   return trade
 }
+
+export async function updateTradeHandler(ctx: AccountHealthContext, args: Record<string, unknown>) {
+  const userId = requireUserId(ctx)
+
+  const tradeId = typeof args.tradeId === 'string' && args.tradeId.trim() ? args.tradeId.trim() : null
+  if (!tradeId) throw new Error('tradeId is required')
+
+  // Verify ownership + fetch current values for potential pnl recompute (like createTrade)
+  const current = await prisma.trade.findFirst({
+    where: { id: tradeId, userId },
+    select: {
+      id: true,
+      accountNumber: true,
+      instrument: true,
+      side: true,
+      quantity: true,
+      entryPrice: true,
+      closePrice: true,
+      commission: true,
+      pnl: true,
+    },
+  })
+  if (!current) {
+    throw new Error('Trade not found')
+  }
+
+  const updates: Record<string, unknown> = {}
+
+  if (typeof args.instrument === 'string' && args.instrument.trim()) updates.instrument = args.instrument.trim()
+  if (typeof args.side === 'string') updates.side = args.side
+  if (typeof args.quantity === 'number') updates.quantity = args.quantity
+  if (typeof args.entryPrice === 'number') updates.entryPrice = args.entryPrice
+  if (typeof args.closePrice === 'number') updates.closePrice = args.closePrice
+  if (typeof args.commission === 'number') updates.commission = args.commission
+  if (typeof args.comment === 'string' || args.comment === null) updates.comment = args.comment
+  if (Array.isArray(args.tags)) updates.tags = args.tags.filter((t: unknown) => typeof t === 'string')
+
+  // Dates (ISO strings)
+  if (args.entryDate != null) {
+    const d = new Date(args.entryDate as string)
+    if (Number.isNaN(d.getTime())) throw new Error('Invalid entryDate (ISO string)')
+    updates.entryDate = d
+  }
+  if (args.closeDate != null) {
+    const d = new Date(args.closeDate as string)
+    if (Number.isNaN(d.getTime())) throw new Error('Invalid closeDate (ISO string)')
+    updates.closeDate = d
+  }
+
+  // Account change (verify new account owned by user)
+  if (typeof args.accountNumber === 'string' && args.accountNumber.trim()) {
+    const newAcc = args.accountNumber.trim()
+    if (newAcc !== current.accountNumber) {
+      const account = await prisma.account.findFirst({
+        where: { number: newAcc, userId },
+        select: { number: true },
+      })
+      if (!account) throw new Error('Account not found')
+      updates.accountNumber = newAcc
+    }
+  }
+
+  // Auto-recompute pnl on price/qty/side/comm changes if pnl not explicitly provided (mirrors createTrade logic)
+  const hasCalcFields = updates.entryPrice !== undefined || updates.closePrice !== undefined ||
+                        updates.quantity !== undefined || updates.side !== undefined || updates.commission !== undefined
+  if (typeof args.pnl !== 'number' && hasCalcFields) {
+    const finalEntry = updates.entryPrice !== undefined ? (updates.entryPrice as number) : Number(current.entryPrice)
+    const finalClose = updates.closePrice !== undefined ? (updates.closePrice as number) : Number(current.closePrice)
+    const finalQty = updates.quantity !== undefined ? (updates.quantity as number) : Number(current.quantity)
+    const finalSide = (updates.side as string) || current.side || ''
+    const finalComm = updates.commission !== undefined ? (updates.commission as number) : Number(current.commission)
+    const direction = finalSide.toUpperCase() === 'SHORT' || finalSide.toUpperCase() === 'SELL' ? -1 : 1
+    updates.pnl = (finalClose - finalEntry) * direction * finalQty - finalComm
+  } else if (typeof args.pnl === 'number') {
+    updates.pnl = args.pnl
+  }
+
+  if (Object.keys(updates).length === 0) throw new Error('No fields to update')
+
+  const updated = await prisma.trade.update({
+    where: { id: tradeId, userId },
+    data: updates as Parameters<typeof prisma.trade.update>[0]['data'],
+  })
+
+  return updated
+}
