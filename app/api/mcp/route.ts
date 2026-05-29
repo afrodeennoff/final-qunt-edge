@@ -5,7 +5,6 @@ import { handleMcpToolCall, standardTools } from '@/server/mcp-tools'
 import { handleWebsiteMcpToolCall, websiteTools } from '@/server/mcp-website-tools'
 import { MCP_SERVER_NAME, MCP_SERVER_VERSION } from '@/lib/mcp-constants'
 import { getSiteOrigin } from '@/lib/site-url'
-import { getMcpServer } from '@/server/mcp/servers/factory' // official SDK path (dual-mode)
 
 const USER_TOOLS = [...standardTools, ...websiteTools]
 
