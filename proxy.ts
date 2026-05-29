@@ -228,9 +228,11 @@ const PUBLIC_API_PATH_PREFIXES = [
   '/api/whop/webhook',
   '/api/tradovate/auth',
   '/api/rithmic/callback',
+  '/api/mcp/public',
+  '/.well-known/',
 ]
 const PRIVATE_API_PATH_PREFIXES = ['/api/']
-const CUSTOM_TOKEN_API_PATH_PREFIXES = ['/api/mt5/', '/api/thor/', '/api/etp/']
+const CUSTOM_TOKEN_API_PATH_PREFIXES = ['/api/mt5/', '/api/thor/', '/api/etp/', '/api/mcp']
 
 type RouteClass =
   | 'static-asset'
