@@ -236,7 +236,7 @@ export default React.memo(function TimeInPositionChart({
  {chartData.map((entry, index) => (
  <Cell
  key={`cell-${index}`}
- fill="hsl(var(--chart-1))"
+  fill="hsl(var(--primary))"
  fillOpacity={entry.tradeCount > 0 ? 0.92 : 0.5}
  className={cn("hover:fill-opacity-100 transition-[opacity,background-color,border-color] duration-300",
  entry.tradeCount > 0 ?"chart-positive-emphasis" :"chart-negative-muted"

@@ -259,11 +259,11 @@ export default React.memo(function TickDistributionChart({
  {chartData.map((entry) => (
  <Cell
  key={`cell-${entry.ticks}`}
- fill={
- parseInt(entry.ticks) >= 0
- ?"hsl(var(--chart-1))"
- :"hsl(var(--chart-4))"
- }
+  fill={
+  parseInt(entry.ticks) >= 0
+  ?"hsl(var(--primary))"
+  :"hsl(var(--chart-4))"
+  }
  fillOpacity={
  tickFilter.value === entry.ticks
  ? 1
