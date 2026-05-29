@@ -250,10 +250,13 @@ export function AccountConfigurator({
  const filteredAccountSizes = getFilteredAccountSizes(firm)
  
  return (
- <CarouselItem key={firmKey} className="basis-1/2 xl:basis-1/5">
- <Popover modal>
- <PopoverTrigger asChild>
- <Card className="cursor-pointer hover:bg-muted/50 transition-colors basis-1/2 xl:basis-1/5">
+  <CarouselItem key={firmKey} className="basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
+  <Popover modal>
+  <PopoverTrigger asChild>
+  <Card
+    className="group relative cursor-pointer overflow-hidden rounded-xl border border-border bg-card transition-all basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+    style={{ background: 'linear-gradient(180deg, hsl(var(--primary) / 0.025) 0%, hsl(var(--card)) 100%)' }}
+  >
  <CardHeader>
  <CardTitle className='whitespace-nowrap text-sm'>{firm.name}</CardTitle>
  </CardHeader>
@@ -353,7 +356,7 @@ export function AccountConfigurator({
  </div>
  </AccordionTrigger>
  <AccordionContent>
- <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-5">
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5">
  <div className="flex flex-col gap-2 rounded-lg border border-border/20 bg-muted/20 p-3">
  <Label>{t('propFirm.configurator.fields.propfirmName')}</Label>
  <Input
@@ -806,7 +809,7 @@ export function AccountConfigurator({
  </div>
  </AccordionTrigger>
  <AccordionContent>
- <div className="grid grid-cols-1 md:grid-cols-3 gap-5 p-5">
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-5 p-5">
  {/* Price Section */}
  <div className="flex flex-col gap-4">
  <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Price</span>

@@ -1115,13 +1115,16 @@ function AccountsOverviewComponent({
   return (
     <Card
       className={cn(
-        'flex h-full w-full flex-col overflow-hidden rounded-lg border border-border/70 bg-card/95 shadow-sm',
+        'group relative flex h-full w-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-all',
         surface === 'embedded' && 'bg-card/95',
       )}
+      style={{
+        background: 'linear-gradient(180deg, hsl(var(--primary) / 0.025) 0%, hsl(var(--card)) 100%)',
+      }}
     >
       <CardHeader
         className={cn(
-          'shrink-0 border-b border-border/70 bg-muted/40 px-4 py-4 sm:px-6',
+          'shrink-0 border-b border-border/60 bg-card/60 px-4 py-3 sm:px-5',
           size === 'small' && 'px-3 py-3',
         )}
       >
@@ -1296,7 +1299,7 @@ function AccountsOverviewComponent({
 
       {/* Unconfigured accounts banner */}
       {unconfiguredAccounts.length > 0 && !isLoading && (
-        <div className="border-b border-border/70 bg-muted/40 px-4 py-4 sm:px-6">
+         <div className="border-b border-border/60 bg-card/60 px-4 py-3 sm:px-5">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
@@ -1350,13 +1353,16 @@ function AccountsOverviewComponent({
               <p className="type-body">{t('modals.noTrades.description')}</p>
             </div>
           ) : view === 'cards' ? (
-            <div className="space-y-6 px-4 py-4 sm:px-6 sm:py-6">
+            <div className="space-y-6 px-3 py-4 sm:px-4 sm:py-5">
               {sortedGroupEntries.map(({ group, accounts: orderedAccounts }) => (
                 <section
                   key={group.id}
-                  className="overflow-hidden rounded-lg border border-border/70 bg-background/40 shadow-sm"
+                  className="group relative overflow-hidden rounded-xl border border-border bg-card transition-all"
+                  style={{
+                    background: 'linear-gradient(180deg, hsl(var(--primary) / 0.025) 0%, hsl(var(--card)) 100%)',
+                  }}
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 px-4 py-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-card/60 px-4 py-3">
                     <h3 className="type-overline text-muted-foreground">{group.name}</h3>
                     <div className="rounded-full border border-border/70 bg-background/80 px-2.5 py-1">
                       <span className="type-label tabular-nums text-muted-foreground">
@@ -1377,7 +1383,7 @@ function AccountsOverviewComponent({
                         items={orderedAccounts.map((account) => account.number)}
                         strategy={rectSortingStrategy}
                       >
-                        <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
+                        <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 2xl:grid-cols-1">
                           {orderedAccounts
                             .map((account) => {
                               if (!account.number) return null
@@ -1398,9 +1404,14 @@ function AccountsOverviewComponent({
                 </section>
               ))}
 
-              {sortedUngroupedAccounts.length > 0 ? (
-                <section className="overflow-hidden rounded-lg border border-border/70 bg-background/40 shadow-sm">
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 px-4 py-4">
+                {sortedUngroupedAccounts.length > 0 ? (
+                 <section
+                   className="group relative overflow-hidden rounded-xl border border-border bg-card transition-all"
+                   style={{
+                     background: 'linear-gradient(180deg, hsl(var(--primary) / 0.025) 0%, hsl(var(--card)) 100%)',
+                   }}
+                 >
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-card/60 px-4 py-3">
                     <h3 className="type-overline text-muted-foreground">
                       {t('propFirm.ungrouped')}
                     </h3>
@@ -1423,7 +1434,7 @@ function AccountsOverviewComponent({
                         items={sortedUngroupedAccounts.map((account) => account.number)}
                         strategy={rectSortingStrategy}
                       >
-                        <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
+                        <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 2xl:grid-cols-1">
                           {sortedUngroupedAccounts
                             .map((account) => {
                               if (!account.number) return null
@@ -1459,7 +1470,7 @@ function AccountsOverviewComponent({
           open={!!selectedAccountForTable}
           onOpenChange={(open) => !open && setSelectedAccountForTable(null)}
         >
-          <DialogContent className="flex max-h-[calc(100dvh-1rem)] h-[min(80dvh,56rem)] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] flex-col overflow-y-auto pb-[max(env(safe-area-inset-bottom),0.75rem)] sm:w-full sm:max-w-7xl">
+          <DialogContent className="flex max-h-[calc(100dvh-1rem)] h-[min(80dvh,60rem)] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] flex-col overflow-y-auto pb-[max(env(safe-area-inset-bottom),0.75rem)] sm:w-full sm:max-w-7xl 2xl:max-w-[min(96vw,1600px)] 3xl:max-w-[1800px]">
             <DialogHeader className="pb-4 border-b">
               <div className="flex items-center justify-between">
                 <div>

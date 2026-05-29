@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { cache } from 'react'
 import { startOfDay } from 'date-fns'
 import {
   ArrowLeft,
@@ -170,9 +171,13 @@ async function getTraderSnapshot(slug: string): Promise<TraderSnapshot | null> {
   return buildTraderSnapshot(publicUser, trades)
 }
 
+const getCachedTraderSnapshot = cache(async (slug: string) => {
+  return getTraderSnapshot(slug)
+})
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
   const { locale, slug } = await params
-  const snapshot = await getTraderSnapshot(slug)
+  const snapshot = await getCachedTraderSnapshot(slug)
   return buildPublicMetadata({
     locale,
     path: `/trader/${slug}`,
@@ -234,7 +239,7 @@ export default async function TraderProfilePage({
   params: Promise<{ locale: string; slug: string }>
 }) {
   const { locale, slug } = await params
-  const snapshot = await getTraderSnapshot(slug)
+  const snapshot = await getCachedTraderSnapshot(slug)
 
   const personSchema = {
     "@context": "https://schema.org",
@@ -459,102 +464,5 @@ export default async function TraderProfilePage({
         </div>
       </div>
     </div>
-  )
-
-            })}
-          </div>
-
-          <div className={cn(unifiedSectionPanelClassName, 'overflow-hidden p-0')}>
-            <div className="flex items-center justify-between border-b border-border/40 px-5 py-4">
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Recent execution</p>
-                <h2 className="text-lg font-semibold tracking-tight text-foreground">Latest closed trades</h2>
-              </div>
-              <p className="text-xs text-muted-foreground">{snapshot.recentTrades.length} shown</p>
-            </div>
-            {snapshot.recentTrades.length > 0 ? (
-              <div className="divide-y divide-border/30">
-                {snapshot.recentTrades.map((trade) => {
-                  const pos = trade.pnl > 0
-                  const neg = trade.pnl < 0
-                  const dateStr = trade.closeTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                  return (
-                    <div key={trade.id} className="flex items-center justify-between px-5 py-3.5 transition-colors hover:bg-muted/20">
-                      <div className="flex items-center gap-3.5">
-                        <div className={cn('flex h-8 w-8 items-center justify-center rounded-xl text-[10px] font-bold', pos ? 'bg-semantic-success/10 text-semantic-success' : neg ? 'bg-semantic-error/10 text-semantic-error' : 'bg-muted text-muted-foreground')}>
-                          {trade.symbol.slice(0, 3).toUpperCase()}
-                        </div>
-                        <div>
-                          <p className="font-medium text-[13px] tracking-tight text-foreground">{trade.symbol}</p>
-                          <p className="text-[10px] text-muted-foreground/80">{dateStr}</p>
-                        </div>
-                      </div>
-                      <p className={cn('font-semibold tabular-nums text-sm tracking-tight', pos && 'text-semantic-success', neg && 'text-semantic-error')}>
-                        {formatSigned(trade.pnl)}
-                      </p>
-                    </div>
-                  )
-                })}
-              </div>
-            ) : (
-              <div className="px-5 py-8 text-center text-sm text-muted-foreground">No closed trades in public sample.</div>
-            )}
-          </div>
-        </div>
-
-        <aside className="space-y-4 xl:sticky xl:top-20 xl:self-start">
-          <div className={unifiedInsetPanelClassName}>
-            <div className="p-5">
-              <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                <BarChart3 className="h-3.5 w-3.5" /> Performance snapshot
-              </div>
-              <div className="mt-5 space-y-4">
-                <div className="flex items-center justify-between rounded-xl bg-muted/20 px-4 py-3">
-                  <div>
-                    <p className="text-[10px] text-muted-foreground">Win rate</p>
-                    <p className="mt-0.5 text-2xl font-semibold tracking-tight">{formatValue(snapshot.winRate)}%</p>
-                  </div>
-                  <WinRateRing value={snapshot.winRate} />
-                </div>
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div className="rounded-xl border border-border/30 bg-muted/10 p-3">
-                    <p className="text-[10px] text-muted-foreground">Avg PnL</p>
-                    <p className={cn('mt-1 font-semibold tabular-nums', getSignedTone(snapshot.avgPnl))}>{formatSigned(snapshot.avgPnl)}</p>
-                  </div>
-                  <div className="rounded-xl border border-border/30 bg-muted/10 p-3">
-                    <p className="text-[10px] text-muted-foreground">Best day</p>
-                    <p className={cn('mt-1 font-semibold tabular-nums', getSignedTone(bestDay))}>{formatSigned(bestDay)}</p>
-                  </div>
-                </div>
-                <div className="space-y-2 pt-1">
-                  <div>
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>Positive days</span><span>{positiveDays}</span>
-                    </div>
-                    <div className="mt-1 h-1 rounded bg-border/20"><div className="h-1 rounded bg-semantic-success" style={{width: `${Math.min(100, (positiveDays / 84) * 100)}%`}} /></div>
-                  </div>
-                  <div className="text-[10px] text-muted-foreground/70">Over last 84 days • {snapshot.totalTrades} trades sampled</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className={unifiedSectionPanelClassName}>
-            <div className="p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Session calendar</p>
-                  <p className="mt-1 text-xs text-muted-foreground">Last 84 days of public PnL</p>
-                </div>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-              </div>
-              <div className="mt-4">
-                <CalendarGrid dayPnl={snapshot.dayPnl} />
-              </div>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </UnifiedPageShell>
   )
 }
