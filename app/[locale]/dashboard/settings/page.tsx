@@ -368,33 +368,15 @@ function ApiKeySection() {
       </CardHeader>
       <CardContent className="space-y-4">
         {origin && (
-          <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
-              MCP Endpoints
-            </p>
-            {[
-              { url: `${origin}/api/mcp`, label: 'Personal (API key required)', desc: 'Your accounts, trades, tags + public data' },
-              { url: `${origin}/api/mcp/public`, label: 'Public (no auth)', desc: 'Prop firms, deals, blog, leaderboard, benchmarks' },
-              { url: `${origin}/api/mcp/admin`, label: 'Admin (admin API key required)', desc: 'Full access — users, subscriptions, analytics' },
-            ].map((ep) => (
-              <div key={ep.url} className="rounded-lg border border-border/20 bg-background/40 p-3">
-                <div className="flex items-center gap-2 mb-1">
-                  <code className="flex-1 text-[11px] break-all select-all font-mono text-foreground/80">
-                    {ep.url}
-                  </code>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6 shrink-0"
-                    onClick={() => { navigator.clipboard.writeText(ep.url); toast.success('URL copied!') }}
-                  >
-                    <Copy className="h-3 w-3" />
-                  </Button>
-                </div>
-                <p className="text-[11px] font-medium text-foreground/70">{ep.label}</p>
-                <p className="text-[10px] text-muted-foreground/70">{ep.desc}</p>
-              </div>
-            ))}
+          <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-2">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">MCP Server</p>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 text-[11px] break-all select-all font-mono text-foreground/80">{origin}/api/mcp</code>
+              <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => { navigator.clipboard.writeText(`${origin}/api/mcp`); toast.success('URL copied!') }}>
+                <Copy className="h-3 w-3" />
+              </Button>
+            </div>
+            <p className="text-[10px] text-muted-foreground/70">Use with your API key as Bearer token to access your trading data + public info.</p>
           </div>
         )}
 
