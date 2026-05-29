@@ -3,31 +3,49 @@ import { authenticateMcpRequest, requireAdminAccess } from '@/server/mcp-auth'
 import { handleMcpToolCall, standardTools } from '@/server/mcp-tools'
 import { handleAdminMcpToolCall, adminTools } from '@/server/mcp-admin-tools'
 import { handleWebsiteMcpToolCall, websiteTools } from '@/server/mcp-website-tools'
-import { MCP_SERVER_NAME, MCP_SERVER_VERSION } from '@/lib/mcp-constants'
+import { MCP_SERVER_NAME, MCP_SERVER_VERSION, MCP_PROTOCOL_VERSION } from '@/lib/mcp-constants'
 
 const ALL_TOOLS = [...standardTools, ...adminTools, ...websiteTools]
+
+function jsonRpcError(id: unknown, code: number, message: string, status: number) {
+  return Response.json({ jsonrpc: '2.0', error: { code, message }, id }, { status })
+}
 
 export async function POST(request: NextRequest) {
   let reqId: unknown = null
   try {
+    const contentType = request.headers.get('content-type') ?? ''
+    if (!contentType.includes('application/json')) {
+      return jsonRpcError(null, -32700, 'Parse error: Content-Type must be application/json', 415)
+    }
+
     const authCtx = await authenticateMcpRequest(request.headers.get('authorization'))
 
     const body = await request.json()
-    const { method, params } = body as { method?: string; params?: Record<string, unknown> }
-    reqId = params?.id ?? null
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+      return jsonRpcError(null, -32600, 'Invalid Request: body must be a JSON object', 400)
+    }
+
+    const { method, params, id } = body as { method?: string; params?: Record<string, unknown>; id?: unknown }
+    reqId = id ?? null
+
+    if (body.jsonrpc !== '2.0') {
+      return jsonRpcError(reqId, -32600, 'Invalid Request: jsonrpc must be "2.0"', 400)
+    }
 
     if (!method) {
-      return Response.json(
-        { jsonrpc: '2.0', error: { code: -32600, message: 'Invalid request' }, id: reqId },
-        { status: 400 },
-      )
+      return jsonRpcError(reqId, -32600, 'Invalid Request: method is required', 400)
+    }
+
+    if (method === 'ping') {
+      return Response.json({ jsonrpc: '2.0', result: {}, id: reqId })
     }
 
     if (method === 'initialize') {
       return Response.json({
         jsonrpc: '2.0',
         result: {
-          protocolVersion: '2024-11-05',
+          protocolVersion: MCP_PROTOCOL_VERSION,
           capabilities: { tools: {} },
           serverInfo: { name: MCP_SERVER_NAME, version: MCP_SERVER_VERSION },
         },
@@ -35,23 +53,25 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    if (method === 'notifications/initialized' || method === 'notifications/cancelled') {
+      return new Response(null, { status: 202 })
+    }
+
     if (method === 'tools/list') {
-      return Response.json({
-        jsonrpc: '2.0',
-        result: { tools: authCtx.role === 'admin' ? ALL_TOOLS : [...standardTools, ...websiteTools] },
-        id: reqId,
-      })
+      const tools = authCtx.role === 'admin' ? ALL_TOOLS : [...standardTools, ...websiteTools]
+      return Response.json({ jsonrpc: '2.0', result: { tools }, id: reqId })
     }
 
     if (method === 'tools/call') {
       const toolName = params?.name
       const toolArgs = (params?.arguments ?? {}) as Record<string, unknown>
 
-      if (!toolName) {
-        return Response.json(
-          { jsonrpc: '2.0', error: { code: -32602, message: 'Invalid params: tool name required' }, id: reqId },
-          { status: 400 },
-        )
+      if (!toolName || typeof toolName !== 'string') {
+        return jsonRpcError(reqId, -32602, 'Invalid params: tool name required', 400)
+      }
+
+      if (typeof toolArgs !== 'object' || toolArgs === null) {
+        return jsonRpcError(reqId, -32602, 'Invalid params: arguments must be an object', 400)
       }
 
       const isAdminTool = adminTools.some((t) => t.name === toolName)
@@ -71,20 +91,14 @@ export async function POST(request: NextRequest) {
       return Response.json({ jsonrpc: '2.0', result, id: reqId })
     }
 
-    return Response.json(
-      { jsonrpc: '2.0', error: { code: -32601, message: `Method not found: ${method}` }, id: reqId },
-      { status: 404 },
-    )
+    return jsonRpcError(reqId, -32601, `Method not found: ${method}`, 404)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Internal server error'
     const status = message.includes('Unauthorized') || message.includes('Missing') ? 401
       : message.includes('Forbidden') ? 403
         : message.includes('not found') ? 404
           : 500
-    return Response.json(
-      { jsonrpc: '2.0', error: { code: -32000, message }, id: reqId },
-      { status },
-    )
+    return jsonRpcError(reqId, -32000, message, status)
   }
 }
 

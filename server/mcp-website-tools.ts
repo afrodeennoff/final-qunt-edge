@@ -1,6 +1,16 @@
 import type { McpAuthContext } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
 
+type WebsiteToolResult = { content: Array<{ type: 'text'; text: string }>; isError?: boolean }
+
+function toolError(message: string): WebsiteToolResult {
+  return { content: [{ type: 'text' as const, text: message }], isError: true }
+}
+
+function toolSuccess(data: unknown): WebsiteToolResult {
+  return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
+}
+
 export const websiteTools = [
   {
     name: 'list_blog_posts',
@@ -116,7 +126,7 @@ export const websiteTools = [
   },
 ]
 
-export async function handleWebsiteMcpToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext) {
+export async function handleWebsiteMcpToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext): Promise<WebsiteToolResult> {
   switch (toolName) {
     case 'list_blog_posts':
       return await listBlogPosts(args)
@@ -156,16 +166,16 @@ async function listBlogPosts(args: Record<string, unknown>) {
     take: limit,
     skip: offset,
   })
-  return { content: [{ type: 'text' as const, text: JSON.stringify(posts, null, 2) }] }
+  return toolSuccess(posts)
 }
 
-async function getBlogPost(slug: string) {
+async function getBlogPost(slug: string): Promise<WebsiteToolResult> {
   const post = await prisma.blogPost.findUnique({
     where: { slug, published: true },
     include: { author: { select: { username: true } } },
   })
-  if (!post) throw new Error('Blog post not found')
-  return { content: [{ type: 'text' as const, text: JSON.stringify(post, null, 2) }] }
+  if (!post) return toolError('Blog post not found')
+  return toolSuccess(post)
 }
 
 async function listPropFirms(args: Record<string, unknown>) {
@@ -182,10 +192,10 @@ async function listPropFirms(args: Record<string, unknown>) {
     take: limit,
     skip: offset,
   })
-  return { content: [{ type: 'text' as const, text: JSON.stringify(firms, null, 2) }] }
+  return toolSuccess(firms)
 }
 
-async function getPropFirm(slug: string) {
+async function getPropFirm(slug: string): Promise<WebsiteToolResult> {
   const firm = await prisma.propFirm.findUnique({
     where: { slug },
     include: {
@@ -194,18 +204,16 @@ async function getPropFirm(slug: string) {
       rules: { where: { isActive: true } },
     },
   })
-  if (!firm) throw new Error('Prop firm not found')
+  if (!firm) return toolError('Prop firm not found')
 
   const challenges = await prisma.challenge.findMany({ where: { propFirmId: firm.id, isActive: true } })
 
-  return {
-    content: [{ type: 'text' as const, text: JSON.stringify({ ...firm, challenges }, null, 2) }],
-  }
+  return toolSuccess({ ...firm, challenges })
 }
 
-async function listChallenges(propFirmSlug: string, args: Record<string, unknown>) {
+async function listChallenges(propFirmSlug: string, args: Record<string, unknown>): Promise<WebsiteToolResult> {
   const firm = await prisma.propFirm.findUnique({ where: { slug: propFirmSlug }, select: { id: true } })
-  if (!firm) throw new Error('Prop firm not found')
+  if (!firm) return toolError('Prop firm not found')
 
   const limit = Math.min(Number(args.limit) || 20, 50)
   const challenges = await prisma.challenge.findMany({
@@ -213,12 +221,12 @@ async function listChallenges(propFirmSlug: string, args: Record<string, unknown
     orderBy: { accountSize: 'asc' },
     take: limit,
   })
-  return { content: [{ type: 'text' as const, text: JSON.stringify(challenges, null, 2) }] }
+  return toolSuccess(challenges)
 }
 
-async function listPropFirmReviews(propFirmSlug: string, args: Record<string, unknown>) {
+async function listPropFirmReviews(propFirmSlug: string, args: Record<string, unknown>): Promise<WebsiteToolResult> {
   const firm = await prisma.propFirm.findUnique({ where: { slug: propFirmSlug }, select: { id: true } })
-  if (!firm) throw new Error('Prop firm not found')
+  if (!firm) return toolError('Prop firm not found')
 
   const limit = Math.min(Number(args.limit) || 20, 50)
   const offset = Number(args.offset) || 0
@@ -229,7 +237,7 @@ async function listPropFirmReviews(propFirmSlug: string, args: Record<string, un
     take: limit,
     skip: offset,
   })
-  return { content: [{ type: 'text' as const, text: JSON.stringify(reviews, null, 2) }] }
+  return toolSuccess(reviews)
 }
 
 async function listActiveDeals(args: Record<string, unknown>) {
@@ -240,10 +248,10 @@ async function listActiveDeals(args: Record<string, unknown>) {
     orderBy: { createdAt: 'desc' },
     take: limit,
   })
-  return { content: [{ type: 'text' as const, text: JSON.stringify(deals, null, 2) }] }
+  return toolSuccess(deals)
 }
 
-async function listCommunityPosts(args: Record<string, unknown>) {
+async function listCommunityPosts(args: Record<string, unknown>): Promise<WebsiteToolResult> {
   const limit = Math.min(Number(args.limit) || 20, 50)
   const offset = Number(args.offset) || 0
   const where: Record<string, unknown> = {}
@@ -257,10 +265,10 @@ async function listCommunityPosts(args: Record<string, unknown>) {
     take: limit,
     skip: offset,
   })
-  return { content: [{ type: 'text' as const, text: JSON.stringify(posts, null, 2) }] }
+  return toolSuccess(posts)
 }
 
-async function getLeaderboard(args: Record<string, unknown>) {
+async function getLeaderboard(args: Record<string, unknown>): Promise<WebsiteToolResult> {
   const limit = Math.min(Number(args.limit) || 10, 50)
   const offset = Number(args.offset) || 0
 
@@ -290,11 +298,11 @@ async function getLeaderboard(args: Record<string, unknown>) {
 
   leaderboard.sort((a, b) => b.totalPnL - a.totalPnL)
 
-  return { content: [{ type: 'text' as const, text: JSON.stringify(leaderboard, null, 2) }] }
+  return toolSuccess(leaderboard)
 }
 
-async function getTraderBenchmarks() {
+async function getTraderBenchmarks(): Promise<WebsiteToolResult> {
   const snapshot = await prisma.traderBenchmarkSnapshot.findFirst({ orderBy: { updatedAt: 'desc' } })
-  if (!snapshot) return { content: [{ type: 'text' as const, text: JSON.stringify({ message: 'No benchmark data available yet' }) }] }
-  return { content: [{ type: 'text' as const, text: JSON.stringify(snapshot, null, 2) }] }
+  if (!snapshot) return toolSuccess({ message: 'No benchmark data available yet' })
+  return toolSuccess(snapshot)
 }

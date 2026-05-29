@@ -1,6 +1,16 @@
 import type { McpAuthContext } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
 
+type ToolResult = { content: Array<{ type: 'text'; text: string }>; isError?: boolean }
+
+function toolError(message: string): ToolResult {
+  return { content: [{ type: 'text', text: message }], isError: true }
+}
+
+function toolSuccess(data: unknown): ToolResult {
+  return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] }
+}
+
 function parseOptionalDate(value: unknown): Date | undefined {
   if (typeof value !== 'string') return undefined
   const d = new Date(value)
@@ -79,7 +89,7 @@ export const standardTools = [
   },
 ]
 
-export async function handleMcpToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext) {
+export async function handleMcpToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext): Promise<ToolResult> {
   switch (toolName) {
     case 'list_accounts':
       return await listAccounts(ctx)
@@ -103,7 +113,7 @@ async function listAccounts(ctx: McpAuthContext) {
     where: { authUserId: ctx.userId },
     select: { id: true, number: true, name: true, broker: true, startingBalance: true, createdAt: true },
   })
-  return { content: [{ type: 'text' as const, text: JSON.stringify(accounts, null, 2) }] }
+  return toolSuccess(accounts)
 }
 
 async function getAccountDetails(ctx: McpAuthContext, accountId: string) {
@@ -111,8 +121,8 @@ async function getAccountDetails(ctx: McpAuthContext, accountId: string) {
     where: { id: accountId, authUserId: ctx.userId },
     include: { trades: { take: 10, orderBy: { entryDate: 'desc' } } },
   })
-  if (!account) throw new Error('Account not found')
-  return { content: [{ type: 'text' as const, text: JSON.stringify(account, null, 2) }] }
+  if (!account) return toolError('Account not found')
+  return toolSuccess(account)
 }
 
 async function listTrades(ctx: McpAuthContext, args: Record<string, unknown>) {
@@ -127,7 +137,7 @@ async function listTrades(ctx: McpAuthContext, args: Record<string, unknown>) {
     take: limit,
     skip: offset,
   })
-  return { content: [{ type: 'text' as const, text: JSON.stringify(trades, null, 2) }] }
+  return toolSuccess(trades)
 }
 
 async function getPerformanceSummary(ctx: McpAuthContext, args: Record<string, unknown>) {
@@ -152,7 +162,7 @@ async function getPerformanceSummary(ctx: McpAuthContext, args: Record<string, u
       ? (Math.abs(wins.reduce((a, v) => a + v, 0) / losses.reduce((a, v) => a + v, 0))).toFixed(2)
       : 'N/A',
   }
-  return { content: [{ type: 'text' as const, text: JSON.stringify(summary, null, 2) }] }
+  return toolSuccess(summary)
 }
 
 async function getUserProfile(ctx: McpAuthContext) {
@@ -160,10 +170,10 @@ async function getUserProfile(ctx: McpAuthContext) {
     where: { authUserId: ctx.userId },
     select: { id: true, username: true, email: true, language: true, createdAt: true },
   })
-  return { content: [{ type: 'text' as const, text: JSON.stringify(user, null, 2) }] }
+  return toolSuccess(user)
 }
 
 async function listTags(ctx: McpAuthContext) {
   const tags = await prisma.tag.findMany({ where: { userId: ctx.userId } })
-  return { content: [{ type: 'text' as const, text: JSON.stringify(tags, null, 2) }] }
+  return toolSuccess(tags)
 }

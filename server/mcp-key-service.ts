@@ -81,9 +81,8 @@ export async function generateAdminApiKey(name: string): Promise<{ success: true
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user?.id || !isAdminUser(user as any)) {
-      return { success: false, error: 'Forbidden: Admin access required' }
-    }
+    if (!user?.id) return { success: false, error: 'Unauthorized' }
+    if (!isAdminUser(user)) return { success: false, error: 'Forbidden: Admin access required' }
 
     return generateApiKeyForUser(name, 'admin', user)
   } catch (error) {
@@ -105,7 +104,7 @@ export async function listUserApiKeys(): Promise<{ success: true; keys: ApiKeyRe
 
     return {
       success: true,
-      keys: keys.map((k) => ({ ...k, key: '' })),
+      keys: keys.map((k) => ({ id: k.id, keyPrefix: k.keyPrefix, name: k.name, role: k.role, createdAt: k.createdAt, lastUsedAt: k.lastUsedAt, key: '' })),
     }
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : 'Failed to list API keys' }
