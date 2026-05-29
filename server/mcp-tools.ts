@@ -776,7 +776,8 @@ async function getRiskMetrics(ctx: McpAuthContext, args: Record<string, unknown>
   const where: Record<string, unknown> = { userId: ctx.userId }
   if (dateFilter) where.entryDate = dateFilter
   if (typeof args.accountId === 'string' && args.accountId) {
-    where.accountNumber = args.accountId
+    const account = await prisma.account.findFirst({ where: { id: args.accountId, userId: ctx.userId }, select: { number: true } })
+    if (account) where.accountNumber = account.number
   }
 
   const trades = await prisma.trade.findMany({

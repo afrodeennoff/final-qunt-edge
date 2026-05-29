@@ -61,7 +61,7 @@ export async function GET() {
         path: '/api/mcp',
         url: `${origin}/api/mcp`,
         auth: 'User API key required',
-        description: 'Personal trading data + public data. 16 tools: accounts, trades, performance, tags, profile, prop firms, deals, blog, leaderboard.',
+        description: 'Personal trading data + public website data. Standard + website tools.',
       },
       {
         path: '/api/mcp/public',
@@ -73,7 +73,7 @@ export async function GET() {
         path: '/api/mcp/admin',
         url: `${origin}/api/mcp/admin`,
         auth: 'Admin API key required',
-        description: 'Full access including admin operations. All 20 tools.',
+        description: 'Full access including admin operations. All standard + website + admin tools.',
       },
     ],
     tools: {
