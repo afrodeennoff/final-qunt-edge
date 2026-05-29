@@ -137,7 +137,10 @@ export async function validateApiKey(rawKey: string): Promise<{ userId: string; 
     if (!record) return null
     if (record.expiresAt && record.expiresAt < new Date()) return null
 
-    await prisma.apiKey.update({ where: { id: record.id }, data: { lastUsedAt: new Date() } })
+    const shouldUpdate = !record.lastUsedAt || (Date.now() - record.lastUsedAt.getTime() > 5 * 60 * 1000)
+    if (shouldUpdate) {
+      await prisma.apiKey.update({ where: { id: record.id }, data: { lastUsedAt: new Date() } })
+    }
 
     return { userId: record.userId, role: record.role as 'user' | 'admin' }
   } catch {

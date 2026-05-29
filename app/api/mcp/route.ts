@@ -4,8 +4,11 @@ import { handleMcpToolCall, standardTools } from '@/server/mcp-tools'
 import { handleAdminMcpToolCall, adminTools } from '@/server/mcp-admin-tools'
 import { handleWebsiteMcpToolCall, websiteTools } from '@/server/mcp-website-tools'
 import { MCP_SERVER_NAME, MCP_SERVER_VERSION, MCP_PROTOCOL_VERSION } from '@/lib/mcp-constants'
+import { rateLimit, createRateLimitResponse, getTrustedClientIp } from '@/lib/rate-limit'
 
 const ALL_TOOLS = [...standardTools, ...adminTools, ...websiteTools]
+
+const limiter = rateLimit({ limit: 60, window: 60_000, identifier: 'mcp' })
 
 function jsonRpcError(id: unknown, code: number, message: string, status: number) {
   return Response.json({ jsonrpc: '2.0', error: { code, message }, id }, { status })
@@ -14,6 +17,12 @@ function jsonRpcError(id: unknown, code: number, message: string, status: number
 export async function POST(request: NextRequest) {
   let reqId: unknown = null
   try {
+    // Rate limiting
+    const rlResult = await limiter(request)
+    if (!rlResult.success) {
+      return jsonRpcError(null, -32000, 'Rate limit exceeded', 429)
+    }
+
     const contentType = request.headers.get('content-type') ?? ''
     if (!contentType.includes('application/json')) {
       return jsonRpcError(null, -32700, 'Parse error: Content-Type must be application/json', 415)
@@ -46,7 +55,7 @@ export async function POST(request: NextRequest) {
         jsonrpc: '2.0',
         result: {
           protocolVersion: MCP_PROTOCOL_VERSION,
-          capabilities: { tools: {} },
+          capabilities: { tools: { listChanged: false } },
           serverInfo: { name: MCP_SERVER_NAME, version: MCP_SERVER_VERSION },
         },
         id: reqId,
@@ -93,12 +102,15 @@ export async function POST(request: NextRequest) {
 
     return jsonRpcError(reqId, -32601, `Method not found: ${method}`, 404)
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Internal server error'
-    const status = message.includes('Unauthorized') || message.includes('Missing') ? 401
-      : message.includes('Forbidden') ? 403
-        : message.includes('not found') ? 404
-          : 500
-    return jsonRpcError(reqId, -32000, message, status)
+    const isAuthError = error instanceof Error && (
+      error.message.includes('Unauthorized')
+      || error.message.includes('Missing Authorization')
+      || error.message.includes('Forbidden')
+      || error.message.includes('Invalid or expired')
+    )
+    const code = isAuthError ? -32001 : -32603
+    const message = isAuthError ? 'Authentication failed' : 'Internal server error'
+    return jsonRpcError(reqId, code, message, isAuthError ? 401 : 500)
   }
 }
 

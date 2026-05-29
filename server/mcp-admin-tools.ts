@@ -1,27 +1,24 @@
 import type { McpAuthContext } from './mcp-auth'
 import { requireAdminAccess } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
-
-type AdminToolResult = { content: Array<{ type: 'text'; text: string }>; isError?: boolean }
-
-function toolError(message: string): AdminToolResult {
-  return { content: [{ type: 'text' as const, text: message }], isError: true }
-}
-
-function toolSuccess(data: unknown): AdminToolResult {
-  return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
-}
+import { maskEmail } from '@/lib/redact-pii'
+import { toolError, toolSuccess, type McpToolResult } from './mcp-helpers'
 
 export const adminTools = [
   {
     name: 'admin_list_users',
     description: 'List all users (admin only)',
-    inputSchema: { type: 'object', properties: {} },
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      properties: {},
+    },
   },
   {
     name: 'admin_get_user',
     description: 'Get details for a specific user by ID (admin only)',
     inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
       properties: { userId: { type: 'string', description: 'The user ID' } },
       required: ['userId'],
@@ -30,16 +27,24 @@ export const adminTools = [
   {
     name: 'admin_list_subscriptions',
     description: 'List all subscriptions (admin only)',
-    inputSchema: { type: 'object', properties: {} },
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      properties: {},
+    },
   },
   {
     name: 'admin_get_analytics',
     description: 'Get platform-wide analytics (admin only)',
-    inputSchema: { type: 'object', properties: {} },
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      properties: {},
+    },
   },
 ]
 
-export async function handleAdminMcpToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext): Promise<AdminToolResult> {
+export async function handleAdminMcpToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext): Promise<McpToolResult> {
   requireAdminAccess(ctx)
 
   switch (toolName) {
@@ -62,16 +67,23 @@ async function adminListUsers() {
     orderBy: { createdAt: 'desc' },
     take: 100,
   })
-  return toolSuccess(users)
+  return toolSuccess(users.map((u) => ({ ...u, email: maskEmail(u.email) })))
 }
 
 async function adminGetUser(userId: string) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    include: { accounts: true, subscription: true },
+    include: {
+      accounts: {
+        select: { id: true, number: true, name: true, broker: true, createdAt: true },
+      },
+      subscription: {
+        select: { id: true, plan: true, status: true, currentPeriodEnd: true },
+      },
+    },
   })
   if (!user) return toolError('User not found')
-  return toolSuccess(user)
+  return toolSuccess({ ...user, email: maskEmail(user.email) })
 }
 
 async function adminListSubscriptions() {
@@ -80,13 +92,18 @@ async function adminListSubscriptions() {
     orderBy: { createdAt: 'desc' },
     take: 100,
   })
-  return toolSuccess(subs)
+  return toolSuccess(subs.map((s) => ({
+    ...s,
+    user: s.user ? { ...s.user, email: maskEmail(s.user.email) } : s.user,
+  })))
 }
 
 async function adminGetAnalytics() {
-  const totalUsers = await prisma.user.count()
-  const totalAccounts = await prisma.account.count()
-  const totalTrades = await prisma.trade.count()
-  const activeSubscriptions = await prisma.subscription.count({ where: { status: 'ACTIVE' } })
+  const [totalUsers, totalAccounts, totalTrades, activeSubscriptions] = await Promise.all([
+    prisma.user.count(),
+    prisma.account.count(),
+    prisma.trade.count(),
+    prisma.subscription.count({ where: { status: 'ACTIVE' } }),
+  ])
   return toolSuccess({ totalUsers, totalAccounts, totalTrades, activeSubscriptions })
 }

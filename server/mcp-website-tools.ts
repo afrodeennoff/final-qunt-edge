@@ -1,21 +1,13 @@
 import type { McpAuthContext } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
-
-type WebsiteToolResult = { content: Array<{ type: 'text'; text: string }>; isError?: boolean }
-
-function toolError(message: string): WebsiteToolResult {
-  return { content: [{ type: 'text' as const, text: message }], isError: true }
-}
-
-function toolSuccess(data: unknown): WebsiteToolResult {
-  return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
-}
+import { toolError, toolSuccess, clampInt, type McpToolResult } from './mcp-helpers'
 
 export const websiteTools = [
   {
     name: 'list_blog_posts',
     description: 'List published blog posts with optional category filter and pagination',
     inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
       properties: {
         category: { type: 'string', enum: ['TRADING_TIPS', 'MARKET_ANALYSIS', 'PSYCHOLOGY', 'RISK_MANAGEMENT', 'PLATFORM_UPDATES'], description: 'Filter by category' },
@@ -28,10 +20,9 @@ export const websiteTools = [
     name: 'get_blog_post',
     description: 'Get a single published blog post by slug',
     inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
-      properties: {
-        slug: { type: 'string', description: 'The blog post slug' },
-      },
+      properties: { slug: { type: 'string', description: 'The blog post slug' } },
       required: ['slug'],
     },
   },
@@ -39,6 +30,7 @@ export const websiteTools = [
     name: 'list_prop_firms',
     description: 'List active prop firms with optional category filter',
     inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
       properties: {
         category: { type: 'string', description: 'Filter by prop firm category' },
@@ -52,10 +44,9 @@ export const websiteTools = [
     name: 'get_prop_firm',
     description: 'Get detailed information about a specific prop firm including reviews, coupons, rules, and challenges',
     inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
-      properties: {
-        slug: { type: 'string', description: 'The prop firm slug' },
-      },
+      properties: { slug: { type: 'string', description: 'The prop firm slug' } },
       required: ['slug'],
     },
   },
@@ -63,6 +54,7 @@ export const websiteTools = [
     name: 'list_challenges',
     description: 'List challenges for a specific prop firm',
     inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
       properties: {
         propFirmSlug: { type: 'string', description: 'The prop firm slug' },
@@ -74,6 +66,7 @@ export const websiteTools = [
     name: 'list_prop_firm_reviews',
     description: 'List approved reviews for a specific prop firm',
     inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
       properties: {
         propFirmSlug: { type: 'string', description: 'The prop firm slug' },
@@ -86,16 +79,16 @@ export const websiteTools = [
     name: 'list_active_deals',
     description: 'List active coupons and deals across all prop firms',
     inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
-      properties: {
-        limit: { type: 'number', description: 'Max deals to return (default 20, max 50)' },
-      },
+      properties: { limit: { type: 'number', description: 'Max deals to return (default 20, max 50)' } },
     },
   },
   {
     name: 'list_community_posts',
     description: 'List public community posts (feature requests, bug reports, discussions)',
     inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
       properties: {
         type: { type: 'string', enum: ['FEATURE_REQUEST', 'BUG_REPORT', 'DISCUSSION'], description: 'Filter by post type' },
@@ -109,6 +102,7 @@ export const websiteTools = [
     name: 'get_leaderboard',
     description: 'Get top traders sorted by total PnL (users who opted into the leaderboard)',
     inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
       properties: {
         limit: { type: 'number', description: 'Max traders to return (default 10, max 50)' },
@@ -120,13 +114,14 @@ export const websiteTools = [
     name: 'get_trader_benchmarks',
     description: 'Get global trader benchmark statistics (risk-reward, drawdown, win rate, avg return)',
     inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
       properties: {},
     },
   },
 ]
 
-export async function handleWebsiteMcpToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext): Promise<WebsiteToolResult> {
+export async function handleWebsiteMcpToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext): Promise<McpToolResult> {
   switch (toolName) {
     case 'list_blog_posts':
       return await listBlogPosts(args)
@@ -154,13 +149,13 @@ export async function handleWebsiteMcpToolCall(toolName: string, args: Record<st
 }
 
 async function listBlogPosts(args: Record<string, unknown>) {
-  const limit = Math.min(Number(args.limit) || 20, 50)
-  const offset = Number(args.offset) || 0
+  const limit = clampInt(args.limit, 1, 50, 20)
+  const offset = clampInt(args.offset, 0, 1_000_000, 0)
   const where: Record<string, unknown> = { published: true }
   if (args.category) where.category = args.category
 
   const posts = await prisma.blogPost.findMany({
-    where: where as any,
+    where: where as Parameters<typeof prisma.blogPost.findMany>[0]['where'],
     select: { id: true, title: true, slug: true, excerpt: true, coverImage: true, category: true, createdAt: true, updatedAt: true },
     orderBy: { createdAt: 'desc' },
     take: limit,
@@ -169,7 +164,7 @@ async function listBlogPosts(args: Record<string, unknown>) {
   return toolSuccess(posts)
 }
 
-async function getBlogPost(slug: string): Promise<WebsiteToolResult> {
+async function getBlogPost(slug: string): Promise<McpToolResult> {
   const post = await prisma.blogPost.findUnique({
     where: { slug, published: true },
     include: { author: { select: { username: true } } },
@@ -179,14 +174,14 @@ async function getBlogPost(slug: string): Promise<WebsiteToolResult> {
 }
 
 async function listPropFirms(args: Record<string, unknown>) {
-  const limit = Math.min(Number(args.limit) || 50, 100)
-  const offset = Number(args.offset) || 0
+  const limit = clampInt(args.limit, 1, 100, 50)
+  const offset = clampInt(args.offset, 0, 1_000_000, 0)
   const where: Record<string, unknown> = { isActive: true }
   if (args.category) where.category = args.category
   if (args.platform) where.platform = args.platform
 
   const firms = await prisma.propFirm.findMany({
-    where: where as any,
+    where: where as Parameters<typeof prisma.propFirm.findMany>[0]['where'],
     select: { id: true, slug: true, name: true, category: true, shortDesc: true, logoUrl: true, platform: true, payoutModel: true, profitSplit: true, referralUrl: true },
     orderBy: { name: 'asc' },
     take: limit,
@@ -195,9 +190,9 @@ async function listPropFirms(args: Record<string, unknown>) {
   return toolSuccess(firms)
 }
 
-async function getPropFirm(slug: string): Promise<WebsiteToolResult> {
+async function getPropFirm(slug: string): Promise<McpToolResult> {
   const firm = await prisma.propFirm.findUnique({
-    where: { slug },
+    where: { slug, isActive: true },
     include: {
       reviews: { where: { status: 'approved' }, orderBy: { createdAt: 'desc' }, take: 10 },
       coupons: { where: { isActive: true, expiresAt: { gte: new Date() } } },
@@ -211,11 +206,11 @@ async function getPropFirm(slug: string): Promise<WebsiteToolResult> {
   return toolSuccess({ ...firm, challenges })
 }
 
-async function listChallenges(propFirmSlug: string, args: Record<string, unknown>): Promise<WebsiteToolResult> {
-  const firm = await prisma.propFirm.findUnique({ where: { slug: propFirmSlug }, select: { id: true } })
+async function listChallenges(propFirmSlug: string, args: Record<string, unknown>): Promise<McpToolResult> {
+  const firm = await prisma.propFirm.findUnique({ where: { slug: propFirmSlug, isActive: true }, select: { id: true } })
   if (!firm) return toolError('Prop firm not found')
 
-  const limit = Math.min(Number(args.limit) || 20, 50)
+  const limit = clampInt(args.limit, 1, 50, 20)
   const challenges = await prisma.challenge.findMany({
     where: { propFirmId: firm.id, isActive: true },
     orderBy: { accountSize: 'asc' },
@@ -224,12 +219,12 @@ async function listChallenges(propFirmSlug: string, args: Record<string, unknown
   return toolSuccess(challenges)
 }
 
-async function listPropFirmReviews(propFirmSlug: string, args: Record<string, unknown>): Promise<WebsiteToolResult> {
-  const firm = await prisma.propFirm.findUnique({ where: { slug: propFirmSlug }, select: { id: true } })
+async function listPropFirmReviews(propFirmSlug: string, args: Record<string, unknown>): Promise<McpToolResult> {
+  const firm = await prisma.propFirm.findUnique({ where: { slug: propFirmSlug, isActive: true }, select: { id: true } })
   if (!firm) return toolError('Prop firm not found')
 
-  const limit = Math.min(Number(args.limit) || 20, 50)
-  const offset = Number(args.offset) || 0
+  const limit = clampInt(args.limit, 1, 50, 20)
+  const offset = clampInt(args.offset, 0, 1_000_000, 0)
   const reviews = await prisma.propFirmReview.findMany({
     where: { propFirmId: firm.id, status: 'approved' },
     select: { id: true, rating: true, title: true, content: true, helpfulVotes: true, createdAt: true, user: { select: { username: true } } },
@@ -241,7 +236,7 @@ async function listPropFirmReviews(propFirmSlug: string, args: Record<string, un
 }
 
 async function listActiveDeals(args: Record<string, unknown>) {
-  const limit = Math.min(Number(args.limit) || 20, 50)
+  const limit = clampInt(args.limit, 1, 50, 20)
   const deals = await prisma.propFirmCoupon.findMany({
     where: { isActive: true, expiresAt: { gte: new Date() } },
     select: { id: true, code: true, description: true, discountPercent: true, challengeFee: true, expiresAt: true, propFirm: { select: { name: true, slug: true, logoUrl: true } } },
@@ -251,15 +246,15 @@ async function listActiveDeals(args: Record<string, unknown>) {
   return toolSuccess(deals)
 }
 
-async function listCommunityPosts(args: Record<string, unknown>): Promise<WebsiteToolResult> {
-  const limit = Math.min(Number(args.limit) || 20, 50)
-  const offset = Number(args.offset) || 0
+async function listCommunityPosts(args: Record<string, unknown>): Promise<McpToolResult> {
+  const limit = clampInt(args.limit, 1, 50, 20)
+  const offset = clampInt(args.offset, 0, 1_000_000, 0)
   const where: Record<string, unknown> = {}
   if (args.type) where.type = args.type
   if (args.status) where.status = args.status
 
   const posts = await prisma.post.findMany({
-    where: where as any,
+    where: where as Parameters<typeof prisma.post.findMany>[0]['where'],
     select: { id: true, title: true, type: true, status: true, createdAt: true, userId: true },
     orderBy: { createdAt: 'desc' },
     take: limit,
@@ -268,9 +263,9 @@ async function listCommunityPosts(args: Record<string, unknown>): Promise<Websit
   return toolSuccess(posts)
 }
 
-async function getLeaderboard(args: Record<string, unknown>): Promise<WebsiteToolResult> {
-  const limit = Math.min(Number(args.limit) || 10, 50)
-  const offset = Number(args.offset) || 0
+async function getLeaderboard(args: Record<string, unknown>): Promise<McpToolResult> {
+  const limit = clampInt(args.limit, 1, 50, 10)
+  const offset = clampInt(args.offset, 0, 1_000_000, 0)
 
   const users = await prisma.user.findMany({
     where: { showOnLeaderboard: true },
@@ -279,29 +274,34 @@ async function getLeaderboard(args: Record<string, unknown>): Promise<WebsiteToo
     skip: offset,
   })
 
-  const leaderboard = await Promise.all(
-    users.map(async (user) => {
-      const summary = await prisma.trade.aggregate({
-        where: { userId: user.id },
-        _sum: { pnl: true },
-        _count: { id: true },
-      })
+  const userIds = users.map((u) => u.id)
+
+  const aggregates = await prisma.trade.groupBy({
+    by: ['userId'],
+    where: { userId: { in: userIds } },
+    _sum: { pnl: true },
+    _count: { id: true },
+  })
+
+  const aggMap = new Map(aggregates.map((a) => [a.userId, a]))
+
+  const leaderboard = users
+    .map((user) => {
+      const agg = aggMap.get(user.id)
       return {
         userId: user.id,
         username: user.username || 'Anonymous',
         language: user.language,
-        totalPnL: summary._sum.pnl ? Number(summary._sum.pnl) : 0,
-        totalTrades: summary._count.id,
+        totalPnL: agg?._sum.pnl ? Number(agg._sum.pnl) : 0,
+        totalTrades: agg?._count.id ?? 0,
       }
-    }),
-  )
-
-  leaderboard.sort((a, b) => b.totalPnL - a.totalPnL)
+    })
+    .sort((a, b) => b.totalPnL - a.totalPnL)
 
   return toolSuccess(leaderboard)
 }
 
-async function getTraderBenchmarks(): Promise<WebsiteToolResult> {
+async function getTraderBenchmarks(): Promise<McpToolResult> {
   const snapshot = await prisma.traderBenchmarkSnapshot.findFirst({ orderBy: { updatedAt: 'desc' } })
   if (!snapshot) return toolSuccess({ message: 'No benchmark data available yet' })
   return toolSuccess(snapshot)
