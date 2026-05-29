@@ -2,9 +2,10 @@ import { NextRequest } from 'next/server'
 import { authenticateMcpRequest, requireAdminAccess } from '@/server/mcp-auth'
 import { handleMcpToolCall, standardTools } from '@/server/mcp-tools'
 import { handleAdminMcpToolCall, adminTools } from '@/server/mcp-admin-tools'
+import { handleWebsiteMcpToolCall, websiteTools } from '@/server/mcp-website-tools'
 import { MCP_SERVER_NAME, MCP_SERVER_VERSION } from '@/lib/mcp-constants'
 
-const ALL_TOOLS = [...standardTools, ...adminTools]
+const ALL_TOOLS = [...standardTools, ...adminTools, ...websiteTools]
 
 export async function POST(request: NextRequest) {
   let reqId: unknown = null
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
     if (method === 'tools/list') {
       return Response.json({
         jsonrpc: '2.0',
-        result: { tools: authCtx.role === 'admin' ? ALL_TOOLS : standardTools },
+        result: { tools: authCtx.role === 'admin' ? ALL_TOOLS : [...standardTools, ...websiteTools] },
         id: reqId,
       })
     }
@@ -57,6 +58,12 @@ export async function POST(request: NextRequest) {
       if (isAdminTool) {
         requireAdminAccess(authCtx)
         const result = await handleAdminMcpToolCall(toolName, toolArgs, authCtx)
+        return Response.json({ jsonrpc: '2.0', result, id: reqId })
+      }
+
+      const isWebsiteTool = websiteTools.some((t) => t.name === toolName)
+      if (isWebsiteTool) {
+        const result = await handleWebsiteMcpToolCall(toolName, toolArgs, authCtx)
         return Response.json({ jsonrpc: '2.0', result, id: reqId })
       }
 

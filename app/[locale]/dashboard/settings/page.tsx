@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useI18n } from '@/locales/client'
+import type { ApiKeyResult } from '@/server/mcp-key-service'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -308,7 +309,7 @@ function PasswordSettingsCard({
 }
 
 function ApiKeySection() {
-  const [keys, setKeys] = useState<Array<{ id: string; name: string; keyPrefix: string; role: string; createdAt: string; lastUsedAt: string | null }>>([])
+  const [keys, setKeys] = useState<ApiKeyResult[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [newKeyName, setNewKeyName] = useState('')
@@ -319,7 +320,7 @@ function ApiKeySection() {
     setIsLoading(true)
     const { listUserApiKeys } = await import('@/server/mcp-key-service')
     const result = await listUserApiKeys()
-    if (result.success) setKeys(result.keys as any)
+    if (result.success) setKeys(result.keys)
     setIsLoading(false)
   }
 
