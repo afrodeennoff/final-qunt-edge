@@ -53,11 +53,12 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
  const lossRate = toPercent(nbLoss, nbTrades)
  const beRate = Number((100 - winRate - lossRate).toFixed(2))
 
- return [
- { name: `WINNING TRADES (${nbWin}/${nbTrades})`, value: winRate, color: 'hsl(var(--chart-1))', count: nbWin, total: nbTrades },
- { name: `BREAKEVEN TRADES (${nbBe}/${nbTrades})`, value: beRate, color: 'hsl(var(--chart-3))', count: nbBe, total: nbTrades },
- { name: `LOSING TRADES (${nbLoss}/${nbTrades})`, value: lossRate, color: 'hsl(var(--chart-4))', count: nbLoss, total: nbTrades },
- ]
+  const primaryColor = 'hsl(var(--primary))'
+  return [
+    { name: `WINNING TRADES (${nbWin}/${nbTrades})`, value: winRate, color: primaryColor, count: nbWin, total: nbTrades },
+    { name: `BREAKEVEN TRADES (${nbBe}/${nbTrades})`, value: beRate, color: 'hsl(var(--chart-3))', count: nbBe, total: nbTrades },
+    { name: `LOSING TRADES (${nbLoss}/${nbTrades})`, value: lossRate, color: 'hsl(var(--chart-4))', count: nbLoss, total: nbTrades },
+  ]
  }, [nbWin, nbLoss, nbBe, nbTrades])
 
  const pieLayout = React.useMemo(() => {

@@ -1377,7 +1377,7 @@ function AccountsOverviewComponent({
                         items={orderedAccounts.map((account) => account.number)}
                         strategy={rectSortingStrategy}
                       >
-                        <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
                           {orderedAccounts
                             .map((account) => {
                               if (!account.number) return null
@@ -1423,7 +1423,7 @@ function AccountsOverviewComponent({
                         items={sortedUngroupedAccounts.map((account) => account.number)}
                         strategy={rectSortingStrategy}
                       >
-                        <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
                           {sortedUngroupedAccounts
                             .map((account) => {
                               if (!account.number) return null

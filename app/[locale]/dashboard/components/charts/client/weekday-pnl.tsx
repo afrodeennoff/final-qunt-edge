@@ -42,7 +42,7 @@ const formatCurrency = (value: number) =>
 const chartConfig = {
  pnl: {
  label:"PnL",
- color:"hsl(var(--chart-1))",
+ color:"hsl(var(--primary))",
  },
 } satisfies ChartConfig;
 
@@ -279,7 +279,7 @@ export default React.memo(function WeekdayPNLChart({
  {weekdayData.map((entry) => (
  <Cell
  key={`cell-${entry.day}`}
- fill={entry.pnl >= 0 ?"hsl(var(--chart-1))" :"hsl(var(--chart-4))"}
+ fill={entry.pnl >= 0 ?"hsl(var(--primary))" :"hsl(var(--chart-4))"}
  fillOpacity={
  weekdayFilter.days && weekdayFilter.days.length > 0 && !weekdayFilter.days.includes(entry.day)
  ? 0.45

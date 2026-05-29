@@ -117,13 +117,16 @@ export function ChartSurface({
  }
 
   return (
-  <div
-  data-chart-surface="modern"
-  className={cn("relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card",
-  className
-  )}
-  style={height ? { height } : undefined}
-  >
+    <div
+      data-chart-surface="modern"
+      className={cn("relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card",
+      className
+      )}
+      style={{
+        ...(height ? { height } : {}),
+        background: 'linear-gradient(180deg, hsl(var(--primary) / 0.03) 0%, hsl(var(--card)) 100%)',
+      }}
+    >
   {hasHeader && (
   <div
   className={cn("flex shrink-0 items-center border-b border-border bg-card",

@@ -250,7 +250,7 @@ export default React.memo(function TimeOfDayTradeChart({
  {chartData.map((entry) => (
  <Cell
  key={`cell-${entry.hour}`}
- fill={entry.avgPnl >= 0 ?"hsl(var(--chart-1))" :"hsl(var(--chart-4))"}
+ fill={entry.avgPnl >= 0 ?"hsl(var(--primary))" :"hsl(var(--chart-4))"}
  fillOpacity={
  hourFilter.hour === entry.hour
  ? 1

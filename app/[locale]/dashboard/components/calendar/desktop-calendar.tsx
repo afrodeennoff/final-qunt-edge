@@ -600,20 +600,21 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  </div>
  </div>
  </CardHeader>
- <CardContent className="flex-1 min-h-0 p-2 sm:p-3">
- {viewMode === 'daily' ? (
- <>
- <div className="mb-2 grid grid-cols-8 gap-1">
- {WEEKDAYS.map((day) => (
- <div key={day} className="rounded-md border border-border/0.03 bg-secondary/18 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
- {translateWeekday(t, day)}
- </div>
- ))}
- <div className="rounded-md border border-border/0.03 bg-secondary/18 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
- {t('calendar.weekdays.weekly')}
- </div>
- </div>
- <div className="grid h-[calc(100%-30px)] auto-rows-fr grid-cols-8 gap-1">
+  <CardContent className="flex min-h-0 flex-1 flex-col overflow-hidden p-2 sm:p-3">
+  {viewMode === 'daily' ? (
+  <>
+  <div className="mb-2 grid grid-cols-8 gap-1">
+  {WEEKDAYS.map((day) => (
+  <div key={day} className="rounded-md border border-border/0.03 bg-secondary/18 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
+  {translateWeekday(t, day)}
+  </div>
+  ))}
+  <div className="rounded-md border border-border/0.03 bg-secondary/18 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
+  {t('calendar.weekdays.weekly')}
+  </div>
+  </div>
+  {/* Always show full month: explicit 6 rows so all dates of the month are visible in any widget size */}
+  <div className="grid min-h-[260px] flex-1 grid-cols-8 grid-rows-6 gap-1 sm:min-h-[300px] lg:min-h-[340px]">
  {calendarDays.map((date, index) => {
  const dateString = format(date, 'yyyy-MM-dd')
  const dayData = calendarData[dateString]
@@ -630,22 +631,22 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
 
  return (
  <React.Fragment key={dateString}>
- <button
- type="button"
- className={cn("group relative h-full cursor-pointer overflow-hidden rounded-lg border p-2 transition-[opacity,background-color,border-color] duration-200","hover:-translate-y-[1px] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]",
- !dayData &&"bg-background/0.13 border-border/0.03",
- dayPnl > 0 &&"bg-semantic-success-bg/10 border-semantic-success-border/30",
- dayPnl < 0 &&"bg-semantic-error-bg/10 border-semantic-error-border/30",
- !isCurrentMonth &&"opacity-45",
- isToday(date) &&"border-primary/70 bg-primary/10 shadow-[0_0_0_1px_hsl(var(--primary)/0.3)_inset]",
- index === 0 &&"rounded-tl-xl",
- index === 35 &&"rounded-bl-xl",
- )}
- onClick={() => {
- setSelectedDate(date)
- }}
- aria-label={`Open day ${format(date, 'yyyy-MM-dd')}`}
- >
+  <button
+  type="button"
+  className={cn("group relative flex h-full min-h-0 cursor-pointer flex-col overflow-hidden rounded-lg border p-1.5 transition-[opacity,background-color,border-color] duration-200 sm:p-2","hover:-translate-y-[1px] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]",
+  !dayData &&"bg-background/0.13 border-border/0.03",
+  dayPnl > 0 &&"bg-semantic-success/20 border-semantic-success-border/30",
+  dayPnl < 0 &&"bg-semantic-error/20 border-semantic-error-border/30",
+  !isCurrentMonth &&"opacity-45",
+  isToday(date) &&"border-primary/70 bg-primary/10 shadow-[0_0_0_1px_hsl(var(--primary)/0.3)_inset]",
+  index === 0 &&"rounded-tl-xl",
+  index === 35 &&"rounded-bl-xl",
+  )}
+  onClick={() => {
+  setSelectedDate(date)
+  }}
+  aria-label={`Open day ${format(date, 'yyyy-MM-dd')}`}
+  >
  <div
  className={cn("pointer-events-none absolute inset-0 rounded-lg transition-opacity",
  dayPnl > 0 &&"bg-semantic-success/20",
@@ -653,19 +654,19 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  )}
  style={{ opacity: pnlIntensity * 0.8 }}
  />
- <div className="flex items-start justify-between gap-1">
- <span className={cn("min-w-[18px] rounded-md border border-border/0.03 bg-background/0.13 px-1 py-0.5 text-center text-[10px] font-semibold",
- isToday(date) &&"text-primary font-semibold",
- !isCurrentMonth &&"opacity-60"
- )}>
- {format(date, 'd')}
- </span>
- <div className="flex flex-col gap-1">
- {dateEvents.length > 0 && <EventBadge events={dateEvents} impactLevels={impactLevels} />}
- {dateRenewals.length > 0 && <RenewalBadge renewals={dateRenewals} />}
- </div>
- </div>
- <div className="mt-2 flex flex-1 flex-col justify-end gap-1">
+  <div className="flex items-start justify-between gap-0.5">
+  <span className={cn("min-w-[16px] rounded-md border border-border/0.03 bg-background/0.13 px-1 py-px text-center text-[9px] font-semibold leading-none sm:text-[10px]",
+  isToday(date) &&"text-primary font-semibold",
+  !isCurrentMonth &&"opacity-60"
+  )}>
+  {format(date, 'd')}
+  </span>
+  <div className="flex flex-col gap-0.5">
+  {dateEvents.length > 0 && <EventBadge events={dateEvents} impactLevels={impactLevels} />}
+  {dateRenewals.length > 0 && <RenewalBadge renewals={dateRenewals} />}
+  </div>
+  </div>
+  <div className="mt-1 flex flex-1 flex-col justify-end gap-0.5">
  {dayData ? (
  <div className={cn("truncate text-center text-[11px] font-bold",
  dayData.pnl >= 0 ?"text-semantic-success" :"text-semantic-error",
@@ -712,23 +713,23 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  {isLastDayOfWeek && (() => {
  const weeklyTotal = calculateWeeklyTotal(index, calendarDays, calendarData)
  return (
- <button
- type="button"
- className={cn("flex h-full cursor-pointer items-center justify-center rounded-lg border border-border/0.03 bg-background/0.13 px-1 transition-[opacity,background-color,border-color]","hover:bg-secondary/50 hover:border-primary/40",
- index === 6 &&"rounded-tr-xl",
- index === 41 &&"rounded-br-xl"
- )}
- onClick={() => setSelectedWeekDate(date)}
- aria-label={`Open weekly summary for ${format(date, 'yyyy-MM-dd')}`}
- >
- <div className={cn("truncate px-1 text-[10px] font-bold",
- weeklyTotal >= 0
- ?"text-semantic-success"
- :"text-semantic-error"
- )}>
- {formatCurrency(weeklyTotal)}
- </div>
- </button>
+  <button
+  type="button"
+  className={cn("flex h-full min-h-0 cursor-pointer items-center justify-center rounded-lg border border-border/0.03 bg-background/0.13 px-1 transition-[opacity,background-color,border-color]","hover:bg-secondary/50 hover:border-primary/40",
+  index === 6 &&"rounded-tr-xl",
+  index === 41 &&"rounded-br-xl"
+  )}
+  onClick={() => setSelectedWeekDate(date)}
+  aria-label={`Open weekly summary for ${format(date, 'yyyy-MM-dd')}`}
+  >
+  <div className={cn("truncate px-1 text-[9px] font-bold sm:text-[10px]",
+  weeklyTotal >= 0
+  ?"text-semantic-success"
+  :"text-semantic-error"
+  )}>
+  {formatCurrency(weeklyTotal)}
+  </div>
+  </button>
  )
  })()}
  </React.Fragment>
