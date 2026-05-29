@@ -6,6 +6,7 @@ import {
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import ScrollLockFixLazy from '@/components/lazy/scroll-lock-fix-lazy'
+import { shouldEnforceDarkOnlySurfaces } from '@/lib/feature-flags'
 import { getUiVariant } from '@/lib/ui-v2'
 import { getSiteOrigin } from '@/lib/site-url'
 
@@ -114,7 +115,7 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
   themeColor: [
     { media: '(prefers-color-scheme: dark)', color: 'var(--card)' },
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: light)', color: 'oklch(0.9838 0.0035 247.8583)' },
   ],
   // 12K-specific properties for high-DPI displays
   colorScheme: 'dark light',
@@ -131,7 +132,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const isVercelRuntime = process.env.VERCEL === '1'
   const enableVercelInsights = isProduction && isVercelRuntime
   const uiVariant = getUiVariant()
-  const darkRootClass = 'dark' // Enforced: Electric Obsidian is dark-only. Prevents sidebar + surface color conflicts on theme toggle.
+  const darkRootClass = shouldEnforceDarkOnlySurfaces() ? 'dark' : ''
 
   return (
     <html
@@ -140,7 +141,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning
-      style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}
+      style={{ backgroundColor: '#000000', color: '#F5F5F7' }}
     >
       <head>
         {/* Resource Hinting for Performance */}

@@ -340,6 +340,13 @@ const config = {
         'cyber-pink': 'hsl(210 100% 40%)',
         'matte-black': 'hsl(var(--legacy-black))',
         obsidian: 'hsl(var(--background))',
+        // macOS Native Brand Colors
+        minimax: {
+          brand: 'hsl(var(--primary))',
+          pink: 'hsl(340 75% 55%)',
+          sky: 'hsl(203 100% 42%)',
+          deep: 'hsl(210 100% 40%)',
+        },
         semantic: {
           success: 'hsl(var(--semantic-success))',
           'success-fg': 'hsl(var(--semantic-success-fg))',
