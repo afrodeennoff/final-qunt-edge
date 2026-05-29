@@ -5,16 +5,9 @@ import { createClient } from '@/server/auth'
 import { randomBytes, createHash } from 'node:crypto'
 import { isAdminUser } from '@/server/authz'
 import { MCP_KEY_PREFIX_USER, MCP_KEY_PREFIX_ADMIN } from '@/lib/mcp-constants'
+import { isMissingTableError, ensureMcpTables } from './mcp-auto-migrate'
 
 const KEY_BYTES = 32
-
-function isMissingTableError(error: unknown): boolean {
-  if (!(error instanceof Error)) return false
-  const msg = error.message.toLowerCase()
-  return msg.includes('does not exist') || 
-         (msg.includes('relation') && msg.includes('does not exist')) ||
-         (msg.includes('table') && msg.includes('does not exist'))
-}
 
 export interface ApiKeyResult {
   id: string
@@ -70,7 +63,32 @@ async function generateApiKeyForUser(
     }
   } catch (error) {
     if (isMissingTableError(error)) {
-      return { success: false, error: 'Database not ready. The ApiKey table is missing. Run the migration SQL from prisma/migrations/20260529_add_api_key_model/migration.sql' }
+      await ensureMcpTables()
+      try {
+        const apiKey = await prisma.apiKey.create({
+          data: {
+            key: keyHash,
+            keyPrefix,
+            name: name.trim(),
+            userId: user.id,
+            role,
+          },
+        })
+        return {
+          success: true,
+          result: {
+            id: apiKey.id,
+            key,
+            keyPrefix,
+            name: apiKey.name,
+            role,
+            createdAt: apiKey.createdAt,
+            lastUsedAt: apiKey.lastUsedAt,
+          },
+        }
+      } catch (retryError) {
+        return { success: false, error: retryError instanceof Error ? retryError.message : `Failed to generate ${role} API key` }
+      }
     }
     return { success: false, error: error instanceof Error ? error.message : `Failed to generate ${role} API key` }
   }
@@ -85,7 +103,7 @@ export async function generateUserApiKey(name: string): Promise<{ success: true;
     return generateApiKeyForUser(name, 'user', user)
   } catch (error) {
     if (isMissingTableError(error)) {
-      return { success: false, error: 'Database not ready. The ApiKey table is missing. Run the migration SQL from prisma/migrations/20260529_add_api_key_model/migration.sql' }
+      return { success: false, error: 'Database is being initialized. Please try again in a moment.' }
     }
     return { success: false, error: error instanceof Error ? error.message : 'Failed to generate API key' }
   }
@@ -101,7 +119,7 @@ export async function generateAdminApiKey(name: string): Promise<{ success: true
     return generateApiKeyForUser(name, 'admin', user)
   } catch (error) {
     if (isMissingTableError(error)) {
-      return { success: false, error: 'Database not ready. The ApiKey table is missing. Run the migration SQL from prisma/migrations/20260529_add_api_key_model/migration.sql' }
+      return { success: false, error: 'Database is being initialized. Please try again in a moment.' }
     }
     return { success: false, error: error instanceof Error ? error.message : 'Failed to generate admin API key' }
   }
@@ -125,7 +143,8 @@ export async function listUserApiKeys(): Promise<{ success: true; keys: ApiKeyRe
     }
   } catch (error) {
     if (isMissingTableError(error)) {
-      return { success: false, error: 'Database not ready. The ApiKey table is missing. Run the migration SQL from prisma/migrations/20260529_add_api_key_model/migration.sql' }
+      await ensureMcpTables()
+      return { success: true, keys: [] }
     }
     return { success: false, error: error instanceof Error ? error.message : 'Failed to list API keys' }
   }
@@ -146,7 +165,8 @@ export async function revokeApiKey(keyId: string): Promise<{ success: true } | {
     return { success: true }
   } catch (error) {
     if (isMissingTableError(error)) {
-      return { success: false, error: 'Database not ready. The ApiKey table is missing. Run the migration SQL from prisma/migrations/20260529_add_api_key_model/migration.sql' }
+      await ensureMcpTables()
+      return { success: false, error: 'API key not found' }
     }
     return { success: false, error: error instanceof Error ? error.message : 'Failed to revoke API key' }
   }
@@ -168,7 +188,7 @@ export async function validateApiKey(rawKey: string): Promise<{ userId: string; 
     return { userId: record.userId, role: record.role as 'user' | 'admin' }
   } catch (error) {
     if (isMissingTableError(error)) {
-      console.error('[validateApiKey] Database not ready: ApiKey table is missing')
+      await ensureMcpTables()
     } else {
       console.error('[validateApiKey] error:', error instanceof Error ? error.message : error)
     }

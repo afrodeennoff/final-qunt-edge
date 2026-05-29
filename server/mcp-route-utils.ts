@@ -4,6 +4,7 @@ import { MCP_PROTOCOL_VERSION } from '@/lib/mcp-constants'
 import type { McpAuthContext } from './mcp-auth'
 import type { ToolDefinition } from './mcp-helpers'
 import { prisma } from '@/lib/prisma'
+import { ensureMcpTables } from './mcp-auto-migrate'
 
 export const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -59,7 +60,21 @@ async function logMcpCall(ctx: McpAuthContext | null, tool: string, args: Record
       },
     })
   } catch {
-    // audit log failures are non-fatal
+    await ensureMcpTables()
+    try {
+      await prisma.mcpAuditLog.create({
+        data: {
+          userId: ctx?.userId,
+          tool,
+          argsKeys: Object.keys(args).length > 0 ? JSON.stringify(Object.keys(args)) : null,
+          success,
+          durationMs,
+          errorCode,
+        },
+      })
+    } catch {
+      // audit log failures are non-fatal
+    }
   }
 }
 
