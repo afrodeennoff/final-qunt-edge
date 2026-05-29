@@ -1,17 +1,28 @@
+/**
+ * SECURITY: All queries and mutations in this file MUST be scoped by ctx.userId.
+ * Never accept userId from args. Use requireUserId(ctx) and assertNoCrossUserAccess from '../security'.
+ * Admin tools must additionally call requireAdmin(ctx).
+ */
+
 import { prisma } from '@/lib/prisma'
 import { computeDrawdown } from '../../mcp-tools' // temporary reuse of existing helper during migration
+import { requireUserId, assertNoCrossUserAccess } from '../security'
 
 export interface AccountHealthContext {
   userId: string
 }
 
 export async function getAccountHealthHandler(ctx: AccountHealthContext, args: Record<string, unknown>) {
+  const userId = requireUserId(ctx)
+  const requestedUserId = typeof args.userId === 'string' ? args.userId : undefined
+  assertNoCrossUserAccess(requestedUserId, userId)
+
   const accountFilter = typeof args.accountId === 'string' && args.accountId
     ? { id: args.accountId }
     : undefined
 
   const accounts = await prisma.account.findMany({
-    where: { userId: ctx.userId, ...(accountFilter || {}) },
+    where: { userId, ...(accountFilter || {}) },
   })
 
   if (!accounts.length) {
@@ -21,7 +32,7 @@ export async function getAccountHealthHandler(ctx: AccountHealthContext, args: R
   const now = new Date()
   const results = await Promise.all(accounts.map(async (acc) => {
     const trades = await prisma.trade.findMany({
-      where: { accountNumber: acc.number, userId: ctx.userId },
+      where: { accountNumber: acc.number, userId },
       select: { pnl: true, entryDate: true, closeDate: true },
       orderBy: { entryDate: 'desc' },
     })
