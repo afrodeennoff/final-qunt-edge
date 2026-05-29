@@ -1,6 +1,7 @@
 import { getActiveDeals } from '@/server/deals'
 import { TrendingUp, Tag, Clock } from 'lucide-react'
 import Link from 'next/link'
+import { connection } from 'next/server'
 
 function daysLeft(expiry: string): number {
   const diff = new Date(expiry).getTime() - Date.now()
@@ -14,6 +15,7 @@ function formatDays(days: number): string {
 }
 
 export async function DealsPreview() {
+  await connection()
   const deals = await getActiveDeals().catch(() => [])
   const topDeals = deals
     .filter((d) => daysLeft(d.expiryDate) > 0)
