@@ -13,11 +13,11 @@ export function EmotionGauge({ value, onChange }: EmotionGaugeProps) {
  const rotation = percentage * 1.8 - 90
 
  const getEmotionColor = (val: number) => {
- if (val < 20) return"hsl(var(--destructive))"
- if (val < 40) return"hsl(var(--chart-5))"
- if (val < 60) return"hsl(var(--chart-2))"
- if (val < 80) return"hsl(var(--chart-3))"
- return"hsl(var(--primary))"
+ if (val < 20) return"var(--destructive)"
+ if (val < 40) return"var(--chart-5)"
+ if (val < 60) return"var(--chart-2)"
+ if (val < 80) return"var(--chart-3)"
+ return"var(--primary)"
  }
 
  const getEmotionLabel = (val: number) => {

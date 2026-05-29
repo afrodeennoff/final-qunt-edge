@@ -39,7 +39,7 @@ interface TimeOfDayTradeChartProps {
 const chartConfig = {
  avgPnl: {
  label:"Average P/L",
- color:"hsl(var(--foreground))",
+ color:"var(--foreground)",
  },
 } satisfies ChartConfig;
 
@@ -97,7 +97,7 @@ export default React.memo(function TimeOfDayTradeChart({
 
  const getColor = (count: number) => {
  const intensity = Math.max(0.2, count / maxTradeCount);
- return `hsl(var(--chart-4) / ${intensity})`;
+ return `color-mix(in srgb, var(--chart-4) ${Math.round(intensity * 100)}%, transparent)`;
  };
 
  const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
@@ -203,7 +203,7 @@ export default React.memo(function TimeOfDayTradeChart({
  >
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="hsl(var(--chart-grid))"
+ stroke="var(--chart-grid)"
  strokeOpacity={0.3}
  vertical={false}
  />
@@ -216,7 +216,7 @@ export default React.memo(function TimeOfDayTradeChart({
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  tickFormatter={(value) => `${value}h`}
  ticks={
@@ -233,13 +233,13 @@ export default React.memo(function TimeOfDayTradeChart({
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
  />
  <Tooltip
  content={<CustomTooltip />}
- cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
+ cursor={{ fill: 'var(--chart-grid-cursor)' }}
  />
  <Bar
  dataKey="avgPnl"
@@ -250,7 +250,7 @@ export default React.memo(function TimeOfDayTradeChart({
  {chartData.map((entry) => (
  <Cell
  key={`cell-${entry.hour}`}
- fill={entry.avgPnl >= 0 ?"hsl(var(--primary))" :"hsl(var(--chart-4))"}
+ fill={entry.avgPnl >= 0 ?"var(--primary)" :"var(--chart-4)"}
  fillOpacity={
  hourFilter.hour === entry.hour
  ? 1
@@ -258,7 +258,7 @@ export default React.memo(function TimeOfDayTradeChart({
  ? 0.22
  : (entry.avgPnl >= 0 ? 0.94 : 0.84)
  }
- stroke="hsl(var(--chart-axis))"
+ stroke="var(--chart-axis)"
  strokeOpacity={
  hourFilter.hour === entry.hour
  ? 0.9

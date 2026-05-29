@@ -37,11 +37,11 @@ type DistributionChartPoint = {
 const chartConfig = {
  pnl: {
  label:"P&L Distribution",
- color:"hsl(var(--foreground))",
+ color:"var(--foreground)",
  },
  equity: {
  label:"Equity Variation",
- color:"hsl(var(--foreground) / 0.35)",
+ color:"color-mix(in srgb, var(--foreground) 35%, transparent)",
  },
 } satisfies ChartConfig
 
@@ -136,12 +136,12 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
 
  // Generate colors based on theme
  const colors = [
- 'hsl(var(--foreground) / 0.35)',
- 'hsl(var(--foreground) / 0.35)',
- 'hsl(var(--foreground) / 0.35)',
- 'hsl(var(--foreground) / 0.35)',
- 'hsl(var(--foreground) / 0.35)',
- 'hsl(var(--foreground) / 0.35)'
+ 'color-mix(in srgb, var(--foreground) 35%, transparent)',
+ 'color-mix(in srgb, var(--foreground) 35%, transparent)',
+ 'color-mix(in srgb, var(--foreground) 35%, transparent)',
+ 'color-mix(in srgb, var(--foreground) 35%, transparent)',
+ 'color-mix(in srgb, var(--foreground) 35%, transparent)',
+ 'color-mix(in srgb, var(--foreground) 35%, transparent)'
  ]
 
  const renderEquityTooltip = React.useCallback(({ active, payload }: TooltipProps<number, string>) => {
@@ -255,7 +255,7 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
  {equityChartData.map((entry, index) => (
  <Cell
  key={`cell-${index}`}
- fill={entry.pnl >= 0 ? 'hsl(var(--foreground))' : 'hsl(var(--foreground) / 0.35)'}
+ fill={entry.pnl >= 0 ? 'var(--foreground)' : 'color-mix(in srgb, var(--foreground) 35%, transparent)'}
  className="transition-[opacity,background-color,border-color] duration-300 ease-in-out hover:opacity-70"
  />
  ))}
@@ -329,7 +329,7 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
  tick={{ fontSize: '10px' }}
  width={50}
  />
- <ReferenceLine y={0} stroke="hsl(var(--muted-foreground))" />
+ <ReferenceLine y={0} stroke="var(--muted-foreground)" />
  <Tooltip
  content={renderDistributionTooltip}
  wrapperStyle={{ zIndex: 1000 }}
@@ -343,7 +343,7 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
  {chartData.map((entry, index) => (
  <Cell
  key={`cell-${index}`}
- fill={entry.value >= 0 ? colors[index % colors.length] : `hsl(var(--foreground) / 0.35)`}
+ fill={entry.value >= 0 ? colors[index % colors.length] : "color-mix(in srgb, var(--foreground) 35%, transparent)"}
  className="transition-[opacity,background-color,border-color] duration-300 ease-in-out hover:opacity-80"
  />
  ))}

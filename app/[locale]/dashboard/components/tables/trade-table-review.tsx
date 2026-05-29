@@ -170,7 +170,7 @@ function TagsColumnHeader() {
                           />
                           <div
                             className="w-3 h-3 rounded-full shrink-0"
-                            style={{ backgroundColor: tag.color || 'hsl(var(--muted-foreground))' }}
+                            style={{ backgroundColor: tag.color || 'var(--muted-foreground)' }}
                           />
                           <label
                             htmlFor={`tag-filter-${tag.id}`}

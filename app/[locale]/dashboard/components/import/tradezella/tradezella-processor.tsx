@@ -136,7 +136,7 @@ export default function TradezellaProcessor({ headers, csvData, setProcessedTrad
       <div className="flex justify-between">
         <div>
           <h3 className="text-lg font-semibold mb-2">Total PnL</h3>
-          <p className={`text-xl font-bold ${totalPnL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+          <p className={`text-xl font-bold ${totalPnL >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}`}>
             {totalPnL.toFixed(2)}
           </p>
         </div>

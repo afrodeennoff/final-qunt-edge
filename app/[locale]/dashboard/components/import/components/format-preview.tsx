@@ -711,7 +711,7 @@ export function FormatPreview({
   if (error) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="text-red-500">{error}</div>
+        <div className="text-[color:var(--destructive)]">{error}</div>
       </div>
     );
   }
@@ -732,13 +732,13 @@ export function FormatPreview({
           {isAutoProcessing && (
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-green-600 font-medium">{t('import.processing.autoProcessing')}</span>
+              <span className="text-xs text-[color:var(--success)] font-medium">{t('import.processing.autoProcessing')}</span>
             </div>
           )}
           {!isAutoProcessing && completedBatches.size === totalBatches && totalBatches > 0 && (
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-xs text-green-600 font-medium">{t('import.processing.allBatchesCompleted')}</span>
+              <span className="text-xs text-[color:var(--success)] font-medium">{t('import.processing.allBatchesCompleted')}</span>
             </div>
           )}
         </div>
@@ -747,7 +747,7 @@ export function FormatPreview({
             <Button
               onClick={startProcessing}
               disabled={isProcessing}
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className="bg-[color:var(--success)] hover:bg-[color:var(--success)]/90 text-white"
             >
               {isProcessing ? t('import.processing.starting') : t('import.processing.startProcessing')}
             </Button>
@@ -776,7 +776,7 @@ export function FormatPreview({
             onClick={resetProcessing}
             disabled={isProcessing}
             variant="outline"
-            className="border-red-200 text-red-600 hover:bg-red-50"
+            className="border-[color:var(--destructive)]/30 text-[color:var(--destructive)] hover:bg-[color:var(--destructive)]/10"
         >
           {t('import.processing.reset')}
           </Button>

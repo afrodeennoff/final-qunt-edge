@@ -106,7 +106,7 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 border border-border/55 h-auto max-w-[150px] transition-[opacity,background-color,border-color] hover:border-border/65"
  style={{
  backgroundColor: metadata?.color || 'hsl(var(--foreground) / 0.35)',
- color: 'hsl(var(--foreground))'
+ color: 'var(--foreground)'
  }}
  >
  {tag}
@@ -226,5 +226,5 @@ function getContrastColor(hexColor: string): string {
  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
 
  // Return black or white based on luminance
- return luminance > 0.5 ? 'hsl(var(--background))' : 'hsl(var(--foreground))'
+ return luminance > 0.5 ? 'var(--background)' : 'var(--foreground)'
 }

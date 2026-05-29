@@ -1,7 +1,14 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { Line, LineChart, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart'
+import type { ChartConfig } from '@/components/ui/chart'
 import { formatCompactCurrency } from '@/lib/formatting/currency'
 import { cn } from '@/lib/utils'
 import { unifiedInsetPanelClassName, unifiedSectionPanelClassName } from '@/components/layout/unified-page-recipes'
@@ -10,20 +17,20 @@ type MetricKey = 'payouts' | 'value' | 'accounts' | 'sized'
 
 const registeredAccountsChartConfig = {
   accounts: {
-    label: 'Registered Accounts',
-    color: 'hsl(var(--chart-1))',
-  },
-  value: {
-    label: 'Account Value',
-    color: 'hsl(var(--chart-2))',
+    label: "Num Accounts",
+    color: "var(--chart-1)",
   },
   payouts: {
-    label: 'Payouts',
-    color: 'hsl(var(--chart-3))',
+    label: "Paid",
+    color: "var(--chart-2)",
   },
-  sized: {
-    label: 'Sized Accounts',
-    color: 'hsl(var(--chart-4))',
+  pending: {
+    label: "Pending",
+    color: "var(--chart-3)",
+  },
+  refused: {
+    label: "Refused",
+    color: "var(--chart-4)",
   },
 } satisfies ChartConfig
 
@@ -32,29 +39,17 @@ export function RegisteredAccountsChart({
 }: {
   data: Array<{ name: string; accounts: number; sized: number; value: number; payouts: number }>
 }) {
-  const [activeMetric, setActiveMetric] = useState<MetricKey>('accounts')
-  const metricTabs: Array<{ key: MetricKey; label: string }> = [
-    { key: 'payouts', label: 'Payouts' },
-    { key: 'value', label: 'Value' },
-    { key: 'accounts', label: 'Reg' },
-    { key: 'sized', label: 'Sized' },
-  ]
-
-  const formatMetricValue = (value: number, key: MetricKey) => {
-    if (key === 'value' || key === 'payouts') return formatCompactCurrency(value)
-    return value.toLocaleString()
-  }
-
   const chartData = useMemo(
     () =>
-      [...data]
-        .sort((a, b) => b[activeMetric] - a[activeMetric])
-        .map((entry) => ({
-          firm: entry.name,
-          shortFirm: entry.name.length > 9 ? `${entry.name.slice(0, 9)}...` : entry.name,
-          metricValue: entry[activeMetric],
-        })),
-    [activeMetric, data],
+      [...data].map((entry) => ({
+        firm: entry.name,
+        shortFirm: entry.name.length > 10 ? `${entry.name.slice(0, 10)}...` : entry.name,
+        accounts: entry.accounts,
+        payouts: entry.payouts,
+        pending: entry.value,     // mapping value → Pending for now
+        refused: entry.sized,     // mapping sized → Refused for now
+      })),
+    [data],
   )
 
   return (
@@ -91,39 +86,88 @@ export function RegisteredAccountsChart({
       </CardHeader>
       <CardContent className="pt-3">
         {chartData.length > 0 ? (
-          <div className={cn(unifiedInsetPanelClassName, 'overflow-hidden p-4')}>
-            <div className="space-y-3">
-              {chartData.slice(0, 12).map((item, index) => {
-                const maxValue = Math.max(...chartData.map(d => d.metricValue), 1)
-                const percentage = maxValue > 0 ? (item.metricValue / maxValue) * 100 : 0
+          <Card>
+            <CardHeader>
+              <CardTitle>Registered Accounts by Prop Firm</CardTitle>
+              <CardDescription>Num Accounts • Paid • Pending • Refused across all firms</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <ChartContainer
+                  config={registeredAccountsChartConfig}
+                  className="h-[340px] w-full"
+                  style={{
+                    minWidth: Math.max(1200, chartData.length * 80) + 'px',
+                  }}
+                >
+                  <LineChart
+                    accessibilityLayer
+                    data={chartData}
+                    margin={{
+                      left: 12,
+                      right: 12,
+                      top: 20,
+                      bottom: 70,
+                    }}
+                  >
+                    <CartesianGrid vertical={false} />
+                    <XAxis
+                      dataKey="shortFirm"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                      tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                      angle={-40}
+                      textAnchor="end"
+                      height={75}
+                    />
+                    <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
 
-                return (
-                  <div key={index} className="flex items-center gap-3">
-                    <div className="w-24 shrink-0 text-xs text-muted-foreground truncate" title={item.firm}>
-                      {item.firm}
-                    </div>
-                    <div className="flex-1 bg-muted/30 rounded-full h-2.5 overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all"
-                        style={{
-                          width: `${Math.max(percentage, item.metricValue > 0 ? 4 : 0)}%`,
-                          backgroundColor: `hsl(var(--primary))`,
-                        }}
-                      />
-                    </div>
-                    <div className="w-12 text-right text-xs font-medium tabular-nums">
-                      {formatMetricValue(item.metricValue, activeMetric)}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-            {chartData.length > 12 && (
-              <div className="text-center text-[10px] text-muted-foreground mt-3">
-                +{chartData.length - 12} more firms
+                    <Line
+                      dataKey="accounts"
+                      type="natural"
+                      stroke="var(--color-accounts)"
+                      strokeWidth={2.5}
+                      dot={false}
+                    />
+                    <Line
+                      dataKey="payouts"
+                      type="natural"
+                      stroke="var(--color-payouts)"
+                      strokeWidth={2.5}
+                      dot={false}
+                    />
+                    <Line
+                      dataKey="pending"
+                      type="natural"
+                      stroke="var(--color-pending)"
+                      strokeWidth={2.5}
+                      dot={false}
+                    />
+                    <Line
+                      dataKey="refused"
+                      type="natural"
+                      stroke="var(--color-refused)"
+                      strokeWidth={2.5}
+                      dot={false}
+                    />
+                  </LineChart>
+                </ChartContainer>
               </div>
-            )}
-          </div>
+            </CardContent>
+            <CardFooter>
+              <div className="flex w-full items-start gap-2 text-sm">
+                <div className="grid gap-2">
+                  <div className="flex items-center gap-2 leading-none font-medium">
+                    All firms visible — scroll horizontally if needed
+                  </div>
+                  <div className="flex items-center gap-2 leading-none text-muted-foreground">
+                    Showing Num Accounts, Paid, Pending, and Refused per prop firm
+                  </div>
+                </div>
+              </div>
+            </CardFooter>
+          </Card>
         ) : (
           <div className="rounded-xl border border-dashed border-border bg-muted/30 px-4 py-6 text-sm text-muted-foreground">
             No account registrations available yet.

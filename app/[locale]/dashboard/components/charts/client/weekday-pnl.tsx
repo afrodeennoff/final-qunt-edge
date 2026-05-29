@@ -42,7 +42,7 @@ const formatCurrency = (value: number) =>
 const chartConfig = {
  pnl: {
  label:"PnL",
- color:"hsl(var(--primary))",
+ color:"var(--primary)",
  },
 } satisfies ChartConfig;
 
@@ -234,7 +234,7 @@ export default React.memo(function WeekdayPNLChart({
  >
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="hsl(var(--chart-grid))"
+ stroke="var(--chart-grid)"
  strokeOpacity={0.3}
  vertical={false}
  />
@@ -247,7 +247,7 @@ export default React.memo(function WeekdayPNLChart({
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  tickFormatter={(value) => {
  const dayName = translateWeekdayPnL(t, value);
@@ -262,13 +262,13 @@ export default React.memo(function WeekdayPNLChart({
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
  />
  <Tooltip
  content={<CustomTooltip />}
- cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
+ cursor={{ fill: 'var(--chart-grid-cursor)' }}
  />
  <Bar
  dataKey="pnl"
@@ -279,13 +279,13 @@ export default React.memo(function WeekdayPNLChart({
  {weekdayData.map((entry) => (
  <Cell
  key={`cell-${entry.day}`}
- fill={entry.pnl >= 0 ?"hsl(var(--primary))" :"hsl(var(--chart-4))"}
+ fill={entry.pnl >= 0 ?"var(--primary)" :"var(--chart-4)"}
  fillOpacity={
  weekdayFilter.days && weekdayFilter.days.length > 0 && !weekdayFilter.days.includes(entry.day)
  ? 0.45
  : (entry.pnl >= 0 ? 0.94 : 0.84)
  }
- stroke="hsl(var(--chart-axis))"
+ stroke="var(--chart-axis)"
  strokeOpacity={
  weekdayFilter.days && weekdayFilter.days.length > 0 && !weekdayFilter.days.includes(entry.day)
  ? 0.45

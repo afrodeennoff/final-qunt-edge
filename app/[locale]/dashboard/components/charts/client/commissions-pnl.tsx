@@ -71,11 +71,11 @@ function CommissionsTooltip({
 const chartConfig = {
  pnl: {
  label:"Net P/L",
- color:"hsl(var(--chart-1))",
+ color:"var(--chart-1)",
  },
  commissions: {
  label:"Commissions",
- color:"hsl(var(--chart-4))",
+ color:"var(--chart-4)",
  },
 } satisfies ChartConfig;
 
@@ -191,7 +191,7 @@ export default React.memo(function CommissionsPnLChart({
  {chartData.map((entry, index) => (
  <Cell
  key={`cell-${index}`}
-  fill={entry.name ==="NET P/L" ?"hsl(var(--primary))" :"hsl(var(--chart-4))"}
+  fill={entry.name ==="NET P/L" ?"var(--primary)" :"var(--chart-4)"}
  fillOpacity={entry.name ==="NET P/L" ? 0.94 : 0.84}
  className={cn("transition-[opacity,background-color,border-color] duration-300 ease-in-out hover:fill-opacity-100",
  entry.name ==="NET P/L" ?"chart-positive-emphasis" :"chart-negative-muted"
@@ -209,7 +209,7 @@ export default React.memo(function CommissionsPnLChart({
  </Pie>
  <Tooltip
  content={<CommissionsTooltip />}
- cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
+ cursor={{ fill: 'var(--chart-grid-cursor)' }}
  />
  </PieChart>
  </ResponsiveContainer>

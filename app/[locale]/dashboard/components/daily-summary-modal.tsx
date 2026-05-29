@@ -148,7 +148,7 @@ const downloadSummaryImage = async (cardEl: HTMLDivElement | null, setIsExportin
  try {
  const html2canvas = (await import("html2canvas")).default
  const canvas = await html2canvas(cardEl, {
- backgroundColor:"hsl(var(--background))",
+ backgroundColor:"var(--background)",
  scale: 2,
  logging: false,
  useCORS: true,
@@ -179,7 +179,7 @@ const shareSummaryImage = async (
  try {
  const html2canvas = (await import("html2canvas")).default
  const canvas = await html2canvas(cardEl, {
- backgroundColor:"hsl(var(--background))",
+ backgroundColor:"var(--background)",
  scale: 2,
  logging: false,
  useCORS: true

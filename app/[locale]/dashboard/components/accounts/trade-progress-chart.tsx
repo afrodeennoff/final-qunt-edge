@@ -53,19 +53,19 @@ export function TradeProgressChart({
  const chartConfig = {
  balance: {
  label: t('propFirm.chart.balance'),
- color:"hsl(var(--foreground))",
+ color:"var(--foreground)",
  },
  drawdown: {
  label: t('propFirm.chart.drawdownLevel'),
- color:"hsl(var(--chart-axis))",
+ color:"var(--chart-axis)",
  },
  target: {
  label: t('propFirm.chart.profitTarget'),
- color:"hsl(var(--chart-axis))",
+ color:"var(--chart-axis)",
  },
  payout: {
  label: t('propFirm.chart.payout'),
- color:"hsl(var(--chart-axis))",
+ color:"var(--chart-axis)",
  }
  }
 
@@ -155,11 +155,11 @@ export function TradeProgressChart({
 
  const getPayoutColor = (status: string) => {
  switch (status) {
- case 'PENDING': return 'hsl(var(--chart-axis))'
- case 'VALIDATED': return 'hsl(var(--chart-4))'
- case 'REFUSED': return 'hsl(var(--destructive))'
- case 'PAID': return 'hsl(var(--chart-2))'
- default: return 'hsl(var(--chart-axis))'
+ case 'PENDING': return 'var(--chart-axis)'
+ case 'VALIDATED': return 'var(--chart-4)'
+ case 'REFUSED': return 'var(--destructive)'
+ case 'PAID': return 'var(--chart-2)'
+ default: return 'var(--chart-axis)'
  }
  }
 
@@ -176,8 +176,8 @@ export function TradeProgressChart({
  cx={cx}
  cy={cy}
  r={5}
- fill="hsl(var(--foreground))"
- stroke="hsl(var(--foreground))"
+ fill="var(--foreground)"
+ stroke="var(--foreground)"
  strokeWidth={2}
  />
  )
@@ -191,7 +191,7 @@ export function TradeProgressChart({
  cy={cy}
  r={4}
  fill={getPayoutColor(payload.payoutStatus || '')}
- stroke="hsl(var(--foreground))"
+ stroke="var(--foreground)"
  strokeWidth={1}
  />
  )
@@ -217,7 +217,7 @@ export function TradeProgressChart({
  bottom: 20,
  }}
  >
- <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--chart-grid) / 0.58)" />
+ <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--chart-grid-cursor)" />
  <XAxis
  dataKey="tradeIndex"
  tickLine={false}
@@ -233,10 +233,10 @@ export function TradeProgressChart({
  ]}
  axisLine={false}
  tickLine={false}
- tick={{ fill: 'hsl(var(--chart-axis))', fontSize: 10 }}
+ tick={{ fill: 'var(--chart-axis)', fontSize: 10 }}
  />
  <Tooltip
- cursor={{ stroke: 'hsl(var(--chart-axis))', strokeWidth: 1, strokeDasharray: '3 3' }}
+ cursor={{ stroke: 'var(--chart-axis)', strokeWidth: 1, strokeDasharray: '3 3' }}
  content={({ active, payload }) => {
  if (active && payload && payload.length) {
  const data = payload[0].payload as ChartDataPoint;
@@ -324,12 +324,12 @@ export function TradeProgressChart({
  />
  <ReferenceLine
  y={startingBalance}
- stroke="hsl(var(--chart-axis))"
+ stroke="var(--chart-axis)"
  strokeDasharray="2 2"
  label={{
  value: t('propFirm.chart.startingBalance'),
  position:"insideBottomRight",
- fill:"hsl(var(--chart-axis))",
+ fill:"var(--chart-axis)",
  fontSize: 9,
  fontWeight: 'bold',
  }}

@@ -56,7 +56,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
       clickable={Boolean(onClick)}
       className="group relative flex h-full min-h-[18rem] w-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-all"
       style={{
-        background: 'linear-gradient(180deg, hsl(var(--primary) / 0.025) 0%, hsl(var(--card)) 100%)',
+        background: 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 2.5%, transparent) 0%, var(--card) 100%)',
       }}
       onClick={onClick}
     >

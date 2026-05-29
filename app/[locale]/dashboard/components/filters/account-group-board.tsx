@@ -45,7 +45,7 @@ const paletteFromSeed = (seed: string) => {
  acc = ((acc << 5) - acc) + char.charCodeAt(0)
  return acc & acc
  }, 0)
- const levels = ["hsl(var(--chart-2))","hsl(var(--chart-3))","hsl(var(--chart-4))","hsl(var(--chart-5))","hsl(var(--chart-6))","hsl(var(--chart-7))",
+ const levels = ["var(--chart-2)","var(--chart-3)","var(--chart-4)","var(--chart-5)","var(--chart-6)","var(--chart-7)",
  ]
  return { base: levels[Math.abs(hash) % levels.length] }
 }

@@ -240,13 +240,13 @@ function createPropfirmPreview() {
                   <polyline
                     points="0,35 20,25 40,28 60,18 80,14 100,8"
                     fill="none"
-                    stroke="hsl(var(--primary))"
+                    stroke="var(--primary)"
                     strokeWidth="1.5"
                   />
                   <polyline
                     points="0,36 20,28 40,30 60,22 80,18 100,14"
                     fill="none"
-                    stroke="hsl(var(--foreground) / 0.45)"
+                    stroke="color-mix(in srgb, var(--foreground) 45%, transparent)"
                     strokeWidth="1.5"
                     strokeDasharray="3 2"
                   />

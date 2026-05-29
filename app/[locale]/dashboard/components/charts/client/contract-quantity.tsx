@@ -36,7 +36,7 @@ interface ContractQuantityChartProps {
 const chartConfig = {
  totalQuantity: {
  label:"Total Number of Contracts",
- color:"hsl(var(--foreground))",
+ color:"var(--foreground)",
  },
 } satisfies ChartConfig;
 
@@ -78,7 +78,7 @@ export default React.memo(function ContractQuantityChart({
 
  const getColor = (count: number) => {
  const intensity = Math.max(0.2, count / maxTradeCount);
- return `hsl(var(--chart-3) / ${intensity})`;
+ return `color-mix(in srgb, var(--chart-3) ${Math.round(intensity * 100)}%, transparent)`;
  };
 
  // Custom tooltip component - using flexible typing for Recharts payload
@@ -176,7 +176,7 @@ export default React.memo(function ContractQuantityChart({
  >
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="hsl(var(--chart-grid))"
+ stroke="var(--chart-grid)"
  strokeOpacity={0.3}
  vertical={false}
  />
@@ -189,7 +189,7 @@ export default React.memo(function ContractQuantityChart({
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  tickFormatter={(value: number) => `${value}h`}
  ticks={
@@ -206,7 +206,7 @@ export default React.memo(function ContractQuantityChart({
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  tickFormatter={(value: number) => value.toFixed(0)}
  />
@@ -218,7 +218,7 @@ export default React.memo(function ContractQuantityChart({
  label={label}
  />
  )}
- cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
+ cursor={{ fill: 'var(--chart-grid-cursor)' }}
  />
  <Bar
  dataKey="totalQuantity"
@@ -229,9 +229,9 @@ export default React.memo(function ContractQuantityChart({
  {chartData.map((entry, index) => (
  <Cell
  key={`cell-${index}`}
- fill="hsl(var(--chart-3))"
+ fill="var(--chart-3)"
  fillOpacity={entry.tradeCount > 0 ? 0.92 : 0.5}
- stroke="hsl(var(--chart-axis))"
+ stroke="var(--chart-axis)"
  strokeOpacity={0.55}
  strokeWidth={1}
  className="hover:fill-opacity-100 transition-[opacity,background-color,border-color] duration-300"

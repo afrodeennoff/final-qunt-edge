@@ -104,7 +104,7 @@ export function DailyStats({ dayData, isWeekly = false }: DailyStatsProps) {
  </CardTitle>
  </CardHeader>
  <CardContent className="pt-2 mt-auto">
- <p className={`text-xl md:text-2xl font-bold ${totalPnL >= 0 ? 'text-[hsl(var(--success))]' : 'text-[hsl(var(--destructive))]'}`}>
+ <p className={`text-xl md:text-2xl font-bold ${totalPnL >= 0 ? 'text-[var(--success)]' : 'text-[var(--destructive)]'}`}>
  {formatCurrency(totalPnL)}
  </p>
  <p className="text-xs md:text-sm text-muted-foreground mt-1">

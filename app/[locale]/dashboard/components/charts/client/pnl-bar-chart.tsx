@@ -51,7 +51,7 @@ interface TooltipProps {
 const chartConfig = {
  pnl: {
  label:"Daily P/L",
- color:"hsl(var(--foreground))",
+ color:"var(--foreground)",
  },
 } satisfies ChartConfig;
 
@@ -66,8 +66,8 @@ const formatCurrency = (value: number) => {
  return `${value < 0 ?"-" :""}$${absValue.toFixed(0)}`;
 };
 
-const positiveColor ="hsl(var(--primary))";
-const negativeColor ="hsl(var(--chart-4))";
+const positiveColor ="var(--primary)";
+const negativeColor ="var(--chart-4)";
 
 const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
  const t = useI18n();
@@ -187,7 +187,7 @@ export default React.memo(function PNLChart({ size ="medium" }: PNLChartProps) {
  <BarChart data={chartData} margin={getChartMargins()}>
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="hsl(var(--chart-grid))"
+ stroke="var(--chart-grid)"
  strokeOpacity={0.3}
  vertical={false}
  />
@@ -200,7 +200,7 @@ export default React.memo(function PNLChart({ size ="medium" }: PNLChartProps) {
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  minTickGap={size ==="small" ? 30 : 50}
  tickFormatter={(value) => {
@@ -218,13 +218,13 @@ export default React.memo(function PNLChart({ size ="medium" }: PNLChartProps) {
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  tickFormatter={(value) => `$${(value / 1000).toFixed(1)}k`}
  />
  <Tooltip
  content={<CustomTooltip />}
- cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
+ cursor={{ fill: 'var(--chart-grid-cursor)' }}
  />
  <Bar
  dataKey="pnl"
@@ -237,7 +237,7 @@ export default React.memo(function PNLChart({ size ="medium" }: PNLChartProps) {
  key={`cell-${index}`}
  fill={entry.pnl >= 0 ? positiveColor : negativeColor}
  fillOpacity={entry.pnl >= 0 ? 0.94 : 0.86}
- stroke="hsl(var(--chart-axis))"
+ stroke="var(--chart-axis)"
  strokeOpacity={0.55}
  strokeWidth={1}
  className={cn("hover:fill-opacity-100 transition-[opacity,background-color,border-color] duration-300",

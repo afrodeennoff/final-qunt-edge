@@ -36,7 +36,7 @@ interface TimeInPositionChartProps {
 const chartConfig = {
  avgTimeInPosition: {
  label:"Average Time in Position",
- color:"hsl(var(--foreground))",
+ color:"var(--foreground)",
  },
 } satisfies ChartConfig;
 
@@ -136,7 +136,7 @@ export default React.memo(function TimeInPositionChart({
 
  const getColor = (count: number) => {
  const intensity = Math.max(0.2, count / maxTradeCount);
- return `hsl(var(--chart-8) / ${intensity})`;
+ return `color-mix(in srgb, var(--chart-8) ${Math.round(intensity * 100)}%, transparent)`;
  };
 
  return (
@@ -202,7 +202,7 @@ export default React.memo(function TimeInPositionChart({
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  tickFormatter={(value) => `${value}h`}
  ticks={
@@ -219,13 +219,13 @@ export default React.memo(function TimeInPositionChart({
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  tickFormatter={formatTime}
  />
  <Tooltip
  content={<CustomTooltip t={t} />}
- cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
+ cursor={{ fill: 'var(--chart-grid-cursor)' }}
  />
  <Bar
  dataKey="avgTimeInPosition"
@@ -236,7 +236,7 @@ export default React.memo(function TimeInPositionChart({
  {chartData.map((entry, index) => (
  <Cell
  key={`cell-${index}`}
-  fill="hsl(var(--primary))"
+  fill="var(--primary)"
  fillOpacity={entry.tradeCount > 0 ? 0.92 : 0.5}
  className={cn("hover:fill-opacity-100 transition-[opacity,background-color,border-color] duration-300",
  entry.tradeCount > 0 ?"chart-positive-emphasis" :"chart-negative-muted"

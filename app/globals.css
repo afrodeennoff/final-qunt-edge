@@ -350,6 +350,16 @@
   --chart-6: #0E7490;
   --chart-7: #0E7490;
   --chart-8: #6E6E73;
+  --chart-axis: color-mix(in srgb, var(--foreground) 58%, transparent);
+  --chart-axis-muted: color-mix(in srgb, var(--foreground) 50%, transparent);
+  --chart-grid: color-mix(in srgb, var(--border) 72%, transparent);
+  --chart-grid-muted: color-mix(in srgb, var(--border) 42%, transparent);
+  --chart-grid-cursor: color-mix(in srgb, var(--border) 55%, transparent);
+  --chart-tooltip: color-mix(in srgb, var(--card) 96%, transparent);
+  --chart-tooltip-border: color-mix(in srgb, var(--border) 82%, transparent);
+  --chart-foreground-muted: color-mix(in srgb, var(--foreground) 55%, transparent);
+  --chart-foreground-faint: color-mix(in srgb, var(--foreground) 8%, transparent);
+  --chart-primary-faint: color-mix(in srgb, var(--primary) 3%, transparent);
 
   /* ── Sidebar tokens defined below (dark defaults) — light overrides in .light class ── */
   /* ── RADIUS — macOS native ── */
@@ -1416,19 +1426,19 @@
   /* Unified Recharts visual system for readability and theme alignment */
   .recharts-wrapper .recharts-cartesian-grid line,
   .recharts-wrapper .recharts-polar-grid line {
-    stroke: hsl(var(--chart-grid) / 0.42);
+    stroke: var(--chart-grid-muted);
     stroke-dasharray: 2 6;
   }
 
   .recharts-wrapper .recharts-cartesian-axis-tick-value,
   .recharts-wrapper .recharts-polar-angle-axis-tick-value {
-    fill: hsl(var(--chart-axis));
+    fill: var(--chart-axis);
     font-size: 10px;
     font-weight: 500;
   }
 
   .recharts-wrapper .recharts-reference-line line {
-    stroke: hsl(var(--chart-axis) / 0.5);
+    stroke: var(--chart-axis-muted);
     stroke-dasharray: 2 8;
   }
 
@@ -1438,9 +1448,9 @@
   }
 
   .recharts-default-tooltip {
-    border: 1px solid hsl(var(--chart-tooltip-border)) !important;
+    border: 1px solid var(--chart-tooltip-border) !important;
     border-radius: 10px !important;
-    background: hsl(var(--chart-tooltip) / 0.98) !important;
+    background: var(--chart-tooltip) !important;
     box-shadow:
       0 1px 2px rgba(0, 0, 0, 0.08),
       0 8px 20px rgba(0, 0, 0, 0.32),

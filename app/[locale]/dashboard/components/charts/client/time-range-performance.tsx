@@ -110,8 +110,8 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  }, [activeRange, timeRange.range, setTimeRange])
 
  function getColorByWinRate(winRate: number): string {
- if (winRate === 0) return"hsl(var(--chart-axis))"
- return"hsl(var(--foreground))"
+ if (winRate === 0) return"var(--chart-axis)"
+ return"var(--foreground)"
  }
 
  const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
@@ -235,7 +235,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  >
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="hsl(var(--chart-grid))"
+ stroke="var(--chart-grid)"
  strokeOpacity={0.3}
  vertical={false}
  />
@@ -256,7 +256,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  y={0}
  dy={size === 'small' ? 8 : 10}
  textAnchor="middle"
- fill="hsl(var(--text-secondary))"
+ fill="var(--text-secondary)"
  fontSize={size === 'small' ? 9 : 10}
  transform={size === 'small' ? 'rotate(0)' : 'rotate(0)'} // Removed rotation for cleaner look if space permits, or adjust
  >
@@ -275,12 +275,12 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  hide
  tick={{
  fontSize: size === 'small' ? 9 : 10,
- fill: 'hsl(var(--text-secondary))'
+ fill: 'var(--text-secondary)'
  }}
  />
  <Tooltip
  content={<CustomTooltip />}
- cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
+ cursor={{ fill: 'var(--chart-grid-cursor)' }}
  />
  <Bar
  dataKey="avgPnl"
@@ -291,9 +291,9 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  {chartData.map((entry) => (
  <Cell
  key={`cell-${entry.range}`}
-  fill={entry.avgPnl >= 0 ?"hsl(var(--primary))" :"hsl(var(--chart-4))"}
+  fill={entry.avgPnl >= 0 ?"var(--primary)" :"var(--chart-4)"}
  fillOpacity={timeRange.range === entry.range ? 1 : (timeRange.range ? 0.45 : (entry.avgPnl >= 0 ? 0.94 : 0.84))}
- stroke="hsl(var(--chart-axis))"
+ stroke="var(--chart-axis)"
  strokeOpacity={timeRange.range === entry.range ? 0.95 : 0.35}
  className={cn("hover:opacity-100",
  entry.avgPnl >= 0 ?"chart-positive-emphasis" :"chart-negative-muted"

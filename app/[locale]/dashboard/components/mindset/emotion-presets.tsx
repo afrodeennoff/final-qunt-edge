@@ -20,33 +20,33 @@ function toneStyles(tone: EmotionPreset["tone"]) {
  switch (tone) {
  case"negative":
  return {
- color:"hsl(var(--destructive))",
- bg:"hsl(var(--destructive) / 0.12)",
- border:"hsl(var(--destructive) / 0.38)",
+ color:"var(--destructive)",
+ bg:"color-mix(in srgb, var(--destructive) 12%, transparent)",
+ border:"color-mix(in srgb, var(--destructive) 38%, transparent)",
  }
  case"warning":
  return {
- color:"hsl(var(--chart-5))",
- bg:"hsl(var(--chart-5) / 0.12)",
- border:"hsl(var(--chart-5) / 0.38)",
+ color:"var(--chart-5)",
+ bg:"color-mix(in srgb, var(--chart-5) 12%, transparent)",
+ border:"color-mix(in srgb, var(--chart-5) 38%, transparent)",
  }
  case"neutral":
  return {
- color:"hsl(var(--chart-2))",
- bg:"hsl(var(--chart-2) / 0.12)",
- border:"hsl(var(--chart-2) / 0.38)",
+ color:"var(--chart-2)",
+ bg:"color-mix(in srgb, var(--chart-2) 12%, transparent)",
+ border:"color-mix(in srgb, var(--chart-2) 38%, transparent)",
  }
  case"positive":
  return {
- color:"hsl(var(--chart-3))",
- bg:"hsl(var(--chart-3) / 0.12)",
- border:"hsl(var(--chart-3) / 0.38)",
+ color:"var(--chart-3)",
+ bg:"color-mix(in srgb, var(--chart-3) 12%, transparent)",
+ border:"color-mix(in srgb, var(--chart-3) 38%, transparent)",
  }
  case"strong":
  return {
- color:"hsl(var(--primary))",
- bg:"hsl(var(--primary) / 0.12)",
- border:"hsl(var(--primary) / 0.38)",
+ color:"var(--primary)",
+ bg:"color-mix(in srgb, var(--primary) 12%, transparent)",
+ border:"color-mix(in srgb, var(--primary) 38%, transparent)",
  }
  }
 }
@@ -77,8 +77,8 @@ export function EmotionPresets({ value, onChange }: EmotionPresetsProps) {
  active ?"ring-2 ring-primary/50" :"hover:opacity-90"
  )}
  style={{
- backgroundColor: active ? tone.bg :"hsl(var(--card) / 0.55)",
- borderColor: active ? tone.border :"hsl(var(--border) / 0.7)",
+ backgroundColor: active ? tone.bg :"color-mix(in srgb, var(--card) 55%, transparent)",
+ borderColor: active ? tone.border :"color-mix(in srgb, var(--border) 70%, transparent)",
  }}
  >
  <span style={{ color: tone.color }}>{preset.icon}</span>

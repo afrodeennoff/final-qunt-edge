@@ -82,7 +82,7 @@ const formatCurrency = (value: number) =>
  `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 function getChartColorByIndex(index: number): string {
- const paletteVars = ["hsl(var(--chart-1))","hsl(var(--chart-2))","hsl(var(--chart-3))","hsl(var(--chart-4))","hsl(var(--chart-5))","hsl(var(--chart-6))","hsl(var(--chart-7))","hsl(var(--chart-8))",
+ const paletteVars = ["var(--chart-1)","var(--chart-2)","var(--chart-3)","var(--chart-4)","var(--chart-5)","var(--chart-6)","var(--chart-7)","var(--chart-8)",
  ];
  return paletteVars[index % paletteVars.length];
 }
@@ -111,22 +111,22 @@ const getPayoutColors = (status: string) => {
  switch (status) {
  case"PENDING":
  return {
- fg:"hsl(var(--foreground) / 0.75)",
- bg:"hsl(var(--foreground) / 0.08)",
+ fg:"color-mix(in srgb, var(--foreground) 75%, transparent)",
+ bg:"color-mix(in srgb, var(--foreground) 8%, transparent)",
  };
  case"VALIDATED":
- return { fg:"hsl(var(--foreground))", bg:"hsl(var(--foreground) / 0.1)" };
+ return { fg:"var(--foreground)", bg:"color-mix(in srgb, var(--foreground) 10%, transparent)" };
  case"REFUSED":
  return {
- fg:"hsl(var(--foreground) / 0.6)",
- bg:"hsl(var(--foreground) / 0.08)",
+ fg:"color-mix(in srgb, var(--foreground) 60%, transparent)",
+ bg:"color-mix(in srgb, var(--foreground) 8%, transparent)",
  };
  case"PAID":
- return { fg:"hsl(var(--foreground))", bg:"hsl(var(--foreground) / 0.12)" };
+ return { fg:"var(--foreground)", bg:"color-mix(in srgb, var(--foreground) 12%, transparent)" };
  default:
  return {
- fg:"hsl(var(--foreground) / 0.75)",
- bg:"hsl(var(--foreground) / 0.08)",
+ fg:"color-mix(in srgb, var(--foreground) 75%, transparent)",
+ bg:"color-mix(in srgb, var(--foreground) 8%, transparent)",
  };
  }
 };
@@ -152,9 +152,9 @@ const renderDot = (props: DotRendererProps) => {
  cx={cx}
  cy={cy}
  r={5}
- fill="hsl(var(--chart-axis))"
+ fill="var(--chart-axis)"
  fillOpacity={0.55}
- stroke="hsl(var(--foreground))"
+ stroke="var(--foreground)"
  strokeOpacity={0.75}
  strokeWidth={1}
  />
@@ -175,7 +175,7 @@ const renderDot = (props: DotRendererProps) => {
  cy={cy}
  r={4}
  fill={fg}
- stroke="hsl(var(--chart-axis))"
+ stroke="var(--chart-axis)"
  strokeWidth={1}
  />
  );
@@ -191,8 +191,8 @@ const renderDot = (props: DotRendererProps) => {
  cx={cx}
  cy={cy}
  r={5}
- fill="hsl(var(--destructive))"
- stroke="hsl(var(--chart-axis))"
+ fill="var(--destructive)"
+ stroke="var(--chart-axis)"
  strokeWidth={2.5}
  />
  );
@@ -208,7 +208,7 @@ const renderDot = (props: DotRendererProps) => {
  cy={cy}
  r={4}
  fill={fg}
- stroke="hsl(var(--chart-axis))"
+ stroke="var(--chart-axis)"
  strokeWidth={1}
  />
  );
@@ -835,7 +835,7 @@ export default React.memo(function EquityChart({ size ="medium" }: EquityChartPr
  return {
  equity: {
  label:"Total Equity",
- color:"hsl(var(--foreground))",
+ color:"var(--foreground)",
  },
  } as ChartConfig;
  }
@@ -868,8 +868,8 @@ export default React.memo(function EquityChart({ size ="medium" }: EquityChartPr
  strokeWidth={2.5}
  dot={renderDot}
  isAnimationActive={false}
- activeDot={{ r: 3, style: { fill:"hsl(var(--foreground))" } }}
- stroke="hsl(var(--foreground))"
+ activeDot={{ r: 3, style: { fill:"var(--foreground)" } }}
+ stroke="var(--foreground)"
  connectNulls={false}
  />
  );
@@ -971,7 +971,7 @@ export default React.memo(function EquityChart({ size ="medium" }: EquityChartPr
  >
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="hsl(var(--chart-grid))"
+ stroke="var(--chart-grid)"
  strokeOpacity={0.3}
  vertical={false}
  />
@@ -985,7 +985,7 @@ export default React.memo(function EquityChart({ size ="medium" }: EquityChartPr
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  tickFormatter={(value) =>
  format(new Date(value),"MMM d", { locale: dateLocale })
@@ -999,13 +999,13 @@ export default React.memo(function EquityChart({ size ="medium" }: EquityChartPr
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  tickFormatter={(value) => `$${(value / 1000).toFixed(1)}k`}
  />
  <ReferenceLine
  y={0}
- stroke="hsl(var(--chart-axis))"
+ stroke="var(--chart-axis)"
  strokeDasharray="3 3"
  strokeOpacity={0.55}
  />

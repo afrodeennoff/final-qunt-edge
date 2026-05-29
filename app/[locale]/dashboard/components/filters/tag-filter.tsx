@@ -92,7 +92,7 @@ export function TagFilter({ className }: TagFilterProps) {
  />
  <div
  className="w-3 h-3 rounded-full shrink-0"
- style={{ backgroundColor: tag.color || 'hsl(var(--muted-foreground))' }}
+ style={{ backgroundColor: tag.color || 'var(--muted-foreground)' }}
  />
  <span className="text-sm truncate">{tag.name}</span>
  </CommandItem>

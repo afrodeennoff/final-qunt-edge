@@ -40,7 +40,7 @@ interface ChartDataPoint {
 const chartConfig = {
  count: {
  label:"Count",
- color:"hsl(var(--foreground))",
+ color:"var(--foreground)",
  },
 } satisfies ChartConfig;
 
@@ -219,7 +219,7 @@ export default React.memo(function TickDistributionChart({
  y={0}
  dy={size ==="small" ? 8 : 4}
  textAnchor="middle"
- fill="hsl(var(--text-secondary))"
+ fill="var(--text-secondary)"
  fontSize={size ==="small" ? 9 : 10}
  transform={
  size ==="small" ?"rotate(-45)" :"rotate(0)"
@@ -242,12 +242,12 @@ export default React.memo(function TickDistributionChart({
  tickFormatter={formatCount}
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  />
  <Tooltip
  content={<CustomTooltip t={t} />}
- cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
+ cursor={{ fill: 'var(--chart-grid-cursor)' }}
  />
  <Bar
  dataKey="count"
@@ -261,8 +261,8 @@ export default React.memo(function TickDistributionChart({
  key={`cell-${entry.ticks}`}
   fill={
   parseInt(entry.ticks) >= 0
-  ?"hsl(var(--primary))"
-  :"hsl(var(--chart-4))"
+  ?"var(--primary)"
+  :"var(--chart-4)"
   }
  fillOpacity={
  tickFilter.value === entry.ticks
@@ -271,7 +271,7 @@ export default React.memo(function TickDistributionChart({
  ? 0.22
  : parseInt(entry.ticks) >= 0 ? 0.94 : 0.84
  }
- stroke="hsl(var(--chart-axis))"
+ stroke="var(--chart-axis)"
  strokeOpacity={0.55}
  strokeWidth={1}
  className={cn("hover:fill-opacity-100 transition-[opacity,background-color,border-color] duration-300",

@@ -202,7 +202,7 @@ export default React.memo(function PnLPerContractChart({
  >
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="hsl(var(--chart-grid))"
+ stroke="var(--chart-grid)"
  strokeOpacity={0.3}
  vertical={false}
  />
@@ -215,7 +215,7 @@ export default React.memo(function PnLPerContractChart({
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  angle={size ==="small" ? -45 : -45}
  textAnchor="end"
@@ -228,15 +228,15 @@ export default React.memo(function PnLPerContractChart({
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
  domain={[Math.min(minPnL * 1.1, 0), Math.max(maxPnL * 1.1, 0)]}
  />
- <ReferenceLine y={0} stroke="hsl(var(--chart-axis))" />
+ <ReferenceLine y={0} stroke="var(--chart-axis)" />
  <Tooltip
  content={renderTooltip}
- cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
+ cursor={{ fill: 'var(--chart-grid-cursor)' }}
  />
  <Bar
  dataKey="averagePnl"
@@ -247,9 +247,9 @@ export default React.memo(function PnLPerContractChart({
  {chartData.map((entry, index) => (
  <Cell
  key={`cell-${index}`}
-  fill={entry.averagePnl >= 0 ?"hsl(var(--primary))" :"hsl(var(--chart-4))"}
+  fill={entry.averagePnl >= 0 ?"var(--primary)" :"var(--chart-4)"}
  fillOpacity={entry.averagePnl >= 0 ? 0.94 : 0.84}
- stroke="hsl(var(--chart-axis))"
+ stroke="var(--chart-axis)"
  strokeOpacity={0.55}
  strokeWidth={1}
  className={cn("hover:fill-opacity-100 transition-[opacity,background-color,border-color] duration-300",

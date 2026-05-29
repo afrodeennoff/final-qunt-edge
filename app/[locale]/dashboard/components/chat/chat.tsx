@@ -234,7 +234,7 @@ const FirstMessageLoading = () => {
      const t = useI18n();
      return (
      <div className="flex flex-col items-center justify-center py-8 gap-4">
-     <DotStream size="60" speed="2.5" color="hsl(var(--primary))" />
+     <DotStream size="60" speed="2.5" color="var(--primary)" />
      <p className="text-muted-foreground text-sm">
      {t("chat.loading.firstMessage")}
      </p>

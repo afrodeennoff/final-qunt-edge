@@ -742,7 +742,7 @@ export function AccountsTableView({
  <Progress
  value={progress}
  className="h-1.5"
- indicatorClassName={cn("transition-colors duration-300","bg-[hsl(var(--chart-6))]"
+ indicatorClassName={cn("transition-colors duration-300","bg-[var(--chart-6)]"
  )}
  />
  </div>

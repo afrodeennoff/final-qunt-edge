@@ -301,7 +301,7 @@ export default React.memo(function PnLPerContractDailyChart({
  <BarChart data={loadingMockData} margin={margin}>
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="hsl(var(--chart-grid))"
+ stroke="var(--chart-grid)"
  strokeOpacity={0.3}
  vertical={false}
  />
@@ -323,18 +323,18 @@ export default React.memo(function PnLPerContractDailyChart({
  tick={false}
  domain={[domainMin, domainMax]}
  />
- <ReferenceLine y={0} stroke="hsl(var(--chart-axis))" />
+ <ReferenceLine y={0} stroke="var(--chart-axis)" />
  <Bar
  dataKey="averagePnl"
  radius={[2, 2, 2, 2]}
  maxBarSize={size ==="small" ? 25 : 40}
  className="transition-none"
- fill="hsl(var(--chart-axis))"
+ fill="var(--chart-axis)"
  >
  {loadingMockData.map((_, index) => (
  <Cell
  key={`skeleton-cell-${index}`}
- fill="hsl(var(--chart-axis))"
+ fill="var(--chart-axis)"
  />
  ))}
  </Bar>
@@ -355,7 +355,7 @@ export default React.memo(function PnLPerContractDailyChart({
  >
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="hsl(var(--chart-grid))"
+ stroke="var(--chart-grid)"
  strokeOpacity={0.3}
  vertical={false}
  />
@@ -368,7 +368,7 @@ export default React.memo(function PnLPerContractDailyChart({
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  minTickGap={size ==="small" ? 30 : 50}
  tickFormatter={(value) => {
@@ -386,7 +386,7 @@ export default React.memo(function PnLPerContractDailyChart({
  hide
  tick={{
  fontSize: size ==="small" ? 9 : 10,
- fill:"hsl(var(--text-secondary))",
+ fill:"var(--text-secondary)",
  }}
  tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
  domain={[
@@ -394,10 +394,10 @@ export default React.memo(function PnLPerContractDailyChart({
  Math.max(maxPnL * 1.1, 0),
  ]}
  />
- <ReferenceLine y={0} stroke="hsl(var(--chart-axis))" />
+ <ReferenceLine y={0} stroke="var(--chart-axis)" />
  <Tooltip
  content={renderTooltip}
- cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
+ cursor={{ fill: 'var(--chart-grid-cursor)' }}
  />
  <Bar
  dataKey="averagePnl"
@@ -408,8 +408,8 @@ export default React.memo(function PnLPerContractDailyChart({
  {chartData.map((entry, index) => (
  <Cell
  key={`cell-${index}`}
-  fill={entry.averagePnl >= 0 ?"hsl(var(--primary))" :"hsl(var(--chart-4))"}
- stroke="hsl(var(--chart-axis))"
+  fill={entry.averagePnl >= 0 ?"var(--primary)" :"var(--chart-4)"}
+ stroke="var(--chart-axis)"
  strokeOpacity={0.55}
  fillOpacity={entry.averagePnl >= 0 ? 0.94 : 0.84}
  className={cn("hover:fill-opacity-100 transition-[opacity,background-color,border-color] duration-300",
