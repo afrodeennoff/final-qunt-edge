@@ -1,5 +1,7 @@
 -- Create ApiKey table for MCP server authentication
--- Note: id uses @default(cuid()) in Prisma → we do NOT set a DB default here.
+-- This is the official migration. Run via prisma migrate or manually in Supabase.
+-- Note: id uses @default(cuid()) in Prisma schema, so no database default is set here.
+
 CREATE TABLE IF NOT EXISTS "ApiKey" (
     "id" TEXT NOT NULL,
     "key" TEXT NOT NULL,
@@ -15,10 +17,7 @@ CREATE TABLE IF NOT EXISTS "ApiKey" (
     CONSTRAINT "ApiKey_pkey" PRIMARY KEY ("id")
 );
 
--- Create unique index on hashed key
 CREATE UNIQUE INDEX IF NOT EXISTS "ApiKey_key_key" ON "ApiKey"("key");
-
--- Create indexes for lookups
 CREATE INDEX IF NOT EXISTS "ApiKey_key_idx" ON "ApiKey"("key");
 CREATE INDEX IF NOT EXISTS "ApiKey_userId_idx" ON "ApiKey"("userId");
 CREATE INDEX IF NOT EXISTS "ApiKey_keyPrefix_idx" ON "ApiKey"("keyPrefix");
