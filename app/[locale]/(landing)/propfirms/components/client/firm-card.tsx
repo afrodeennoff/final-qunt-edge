@@ -74,7 +74,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
         </div>
 
         {/* KPI Row */}
-        <div className="grid grid-cols-3 divide-x divide-border/40 border-b border-border">
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-x divide-border/40 border-b border-border">
           <div className="px-4 py-3 text-center">
             <div className="mb-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground/60">
               Account Value

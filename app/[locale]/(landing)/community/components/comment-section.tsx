@@ -223,7 +223,7 @@ function CommentComponent({
         </div>
       </div>
       {comment.replies.length > 0 && (
-        <div className={`ml-4 space-y-4 pl-4 border-l ${level >= 3 ? 'opacity-80' : ''}`}>
+        <div className={`ml-2 sm:ml-4 space-y-4 pl-2 sm:pl-4 border-l ${level >= 3 ? 'opacity-80' : ''}`}>
           {comment.replies.map((reply) => (
             <CommentComponent
               key={reply.id}

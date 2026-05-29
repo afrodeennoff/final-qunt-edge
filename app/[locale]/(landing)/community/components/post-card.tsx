@@ -234,7 +234,7 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
                 {(post.status as string).replace('_', ' ')}
               </Badge>
             </div>
-            <h3 className="font-semibold">{post.title}</h3>
+            <h3 className="font-semibold break-words">{post.title}</h3>
             <p className="text-sm text-muted-foreground">
               {t('community.post.postedBy', {
                 user: post.user.displayName,

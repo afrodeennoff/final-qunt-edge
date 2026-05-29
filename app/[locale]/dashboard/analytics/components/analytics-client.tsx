@@ -109,7 +109,7 @@ export default function AnalyticsClient() {
         </UnifiedSurface>
 
         <Tabs defaultValue="analytics" className="space-y-4">
-          <TabsList>
+          <TabsList className="overflow-x-auto">
             <TabsTrigger value="analytics"><BarChart3 className="mr-1.5 h-4 w-4" /> Analytics</TabsTrigger>
             <TabsTrigger value="insights"><Brain className="mr-1.5 h-4 w-4" /> Insights</TabsTrigger>
             <TabsTrigger value="market"><TrendingUp className="mr-1.5 h-4 w-4" /> Market</TabsTrigger>
@@ -190,7 +190,7 @@ export default function AnalyticsClient() {
             <Card className="border-border/30 bg-card">
               <CardHeader><CardTitle className="text-lg">Market Overview</CardTitle></CardHeader>
               <CardContent>
-                <MarketChart data={sampleMarketData} height={400} />
+                <MarketChart data={sampleMarketData} height={300} className="min-h-[200px] h-[40vh] max-h-[400px]" />
               </CardContent>
             </Card>
           </TabsContent>

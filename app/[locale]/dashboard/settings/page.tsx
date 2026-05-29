@@ -689,7 +689,7 @@ export default function SettingsPage() {
               <div className="mt-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="w-[200px] justify-start">
+                    <Button variant="outline" className="w-full sm:w-[200px] justify-start">
                       <Globe className="mr-2 h-4 w-4" />
                       {languages.find((lang) => lang.value === currentLocale)?.label}
                     </Button>
@@ -723,7 +723,7 @@ export default function SettingsPage() {
               <div className="mt-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="w-[200px] justify-start">
+                    <Button variant="outline" className="w-full sm:w-[200px] justify-start">
                       <Clock className="mr-2 h-4 w-4" />
                       {timezone}
                     </Button>

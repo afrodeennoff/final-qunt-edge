@@ -108,7 +108,7 @@ export function FreeUsersTable() {
  <Button onClick={fetchUsers} variant="outline">
  Refresh
  </Button>
- <div className="rounded-md border">
+ <div className="overflow-x-auto rounded-md border">
  <Table>
  <TableHeader>
  <TableRow>

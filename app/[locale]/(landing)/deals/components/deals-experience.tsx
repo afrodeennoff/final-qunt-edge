@@ -586,7 +586,7 @@ function DealsTabSections({
               over headline hype.
             </p>
           </div>
-          <div className="mx-auto mb-6 grid max-w-2xl grid-cols-3 gap-3">
+          <div className="mx-auto mb-6 grid max-w-2xl grid-cols-1 sm:grid-cols-3 gap-3">
             <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-xs uppercase tracking-widest text-muted-foreground">Firms</p>
               <p className="mt-1 text-lg font-bold text-foreground">{firms.length}+</p>
@@ -653,7 +653,7 @@ function DealsTabSections({
               Set realistic expectations for resets, platform costs, and payout targets.
             </p>
           </div>
-          <div className="mx-auto mb-6 grid max-w-xl gap-2 sm:grid-cols-3">
+          <div className="mx-auto mb-6 grid max-w-xl gap-2 grid-cols-1 sm:grid-cols-3">
             <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-[11px] uppercase tracking-widest text-muted-foreground">
                 Input Layer
@@ -712,7 +712,7 @@ function DealsTabSections({
               funded phases.
             </p>
           </div>
-          <div className="mx-auto mb-6 grid max-w-xl gap-2 sm:grid-cols-3">
+          <div className="mx-auto mb-6 grid max-w-xl gap-2 grid-cols-1 sm:grid-cols-3">
             <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Focus</p>
               <p className="mt-1 font-bold text-foreground">Execution Quality</p>
@@ -1023,7 +1023,7 @@ function BackgroundDealTeaser({ deal, align }: { deal: DealItem; align: 'left' |
           <p className="text-4xl font-bold text-foreground">{deal.discountPercent}% off</p>
           <p className="mt-2 text-lg text-foreground">{deal.firmName}</p>
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className={cn(dealsInsetPanelClassName, 'p-3')}>
             <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Coupon</p>
             <p className="mt-1 text-sm font-semibold text-foreground/70">{deal.couponCode}</p>
@@ -1209,7 +1209,7 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
       </div>
 
       <div className="flex flex-col gap-3">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <StatCard
             label="Live deals"
             value={overview.totalLiveDeals.toString()}
@@ -1488,7 +1488,7 @@ function DealCard({
         </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-2 gap-3">
+      <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
         <StatPill label="Challenge fee" value={formatPrice(deal.challengeFee)} />
         <StatPill label="Drawdown" value={deal.drawdownType} />
         <StatPill label="Coupon" value={deal.couponCode} />
