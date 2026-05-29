@@ -5,6 +5,7 @@ import { handleMcpToolCall, standardTools } from '@/server/mcp-tools'
 import { handleWebsiteMcpToolCall, websiteTools } from '@/server/mcp-website-tools'
 import { MCP_SERVER_NAME, MCP_SERVER_VERSION } from '@/lib/mcp-constants'
 import { getSiteOrigin } from '@/lib/site-url'
+import { getMcpServer } from '@/server/mcp/servers/factory' // official SDK path (dual-mode)
 
 const USER_TOOLS = [...standardTools, ...websiteTools]
 
@@ -28,6 +29,17 @@ export async function OPTIONS() {
 }
 
 export async function POST(request: NextRequest) {
+  const useSdk = process.env.MCP_SDK_ENABLED === 'true'
+
+  if (useSdk) {
+    // Official SDK path (Streamable HTTP) - under active migration
+    // Full transport + per-endpoint auth + tool registration happens in Tasks 13+
+    return Response.json(
+      { error: 'MCP SDK transport not fully wired yet in this build. Use MCP_SDK_ENABLED=false for the stable legacy path.' },
+      { status: 503, headers: CORS_HEADERS }
+    )
+  }
+
   return handleMcpRequest(request, mainConfig)
 }
 

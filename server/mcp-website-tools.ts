@@ -9,6 +9,7 @@ export const websiteTools: ToolDefinition[] = [
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         category: { type: 'string', enum: ['TRADING_TIPS', 'MARKET_ANALYSIS', 'PSYCHOLOGY', 'RISK_MANAGEMENT', 'PLATFORM_UPDATES'], description: 'Filter by category' },
         limit: { type: 'number', description: 'Max posts to return (default 20, max 50)' },
@@ -22,6 +23,7 @@ export const websiteTools: ToolDefinition[] = [
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: { slug: { type: 'string', description: 'The blog post slug' } },
       required: ['slug'],
     },
@@ -32,6 +34,7 @@ export const websiteTools: ToolDefinition[] = [
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         category: { type: 'string', description: 'Filter by prop firm category' },
         platform: { type: 'string', description: 'Filter by platform (e.g. MT4, MT5, cTrader)' },
@@ -46,6 +49,7 @@ export const websiteTools: ToolDefinition[] = [
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: { slug: { type: 'string', description: 'The prop firm slug' } },
       required: ['slug'],
     },
@@ -56,6 +60,7 @@ export const websiteTools: ToolDefinition[] = [
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         propFirmSlug: { type: 'string', description: 'The prop firm slug' },
         limit: { type: 'number', description: 'Max challenges to return (default 20, max 50)' },
@@ -68,6 +73,7 @@ export const websiteTools: ToolDefinition[] = [
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         propFirmSlug: { type: 'string', description: 'The prop firm slug' },
         limit: { type: 'number', description: 'Max reviews to return (default 20, max 50)' },
@@ -81,6 +87,7 @@ export const websiteTools: ToolDefinition[] = [
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: { limit: { type: 'number', description: 'Max deals to return (default 20, max 50)' } },
     },
   },
@@ -90,6 +97,7 @@ export const websiteTools: ToolDefinition[] = [
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         type: { type: 'string', enum: ['FEATURE_REQUEST', 'BUG_REPORT', 'DISCUSSION'], description: 'Filter by post type' },
         status: { type: 'string', enum: ['OPEN', 'IN_PROGRESS', 'COMPLETED', 'CLOSED'], description: 'Filter by status' },
@@ -104,6 +112,7 @@ export const websiteTools: ToolDefinition[] = [
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         limit: { type: 'number', description: 'Max traders to return (default 10, max 50)' },
         offset: { type: 'number', description: 'Pagination offset' },
@@ -116,6 +125,7 @@ export const websiteTools: ToolDefinition[] = [
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {},
     },
   },

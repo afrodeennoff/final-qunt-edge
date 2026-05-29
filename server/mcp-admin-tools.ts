@@ -14,6 +14,7 @@ Returns: Array of user objects with id, username, email (masked), language, isBe
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {},
     },
     outputSchema: {
@@ -43,6 +44,7 @@ Returns: User object with accounts and subscription data`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: { userId: { type: 'string', description: 'The user ID to look up' } },
       required: ['userId'],
     },
@@ -69,6 +71,7 @@ Returns: Array of subscription objects with user email/username`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {},
     },
     outputSchema: {
@@ -95,6 +98,7 @@ Returns: Object with totalUsers, totalAccounts, totalTrades, activeSubscriptions
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {},
     },
     outputSchema: {

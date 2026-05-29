@@ -1,5 +1,7 @@
 # Qunt Edge MCP — Model Context Protocol Integration
 
+> **Implementation note (2026-05-29):** Powered by the official `@modelcontextprotocol/server` SDK (Streamable HTTP transport). All connection URLs, API key format (`qunt_usr_*` / `qunt_adm_*`), tool behavior, and 3-endpoint split remain unchanged. The previous custom JSON-RPC router is still available via `MCP_SDK_ENABLED=false` (default) during the migration period.
+
 ## Overview
 
 The [Model Context Protocol (MCP)](https://spec.modelcontextprotocol.io) is an open standard that enables AI assistants (Claude, Cursor, Cline, etc.) to interact directly with your Qunt Edge trading data. Instead of asking you to copy-paste numbers, your AI can query live account health, trade history, risk metrics, and more — all through a standardized JSON-RPC interface.
@@ -954,4 +956,21 @@ curl -s -X POST https://qunt-edge.vercel.app/api/mcp/admin \
     },
     "id": 1
   }' | jq .
+
+## Local Development
+
+Set `MCP_SDK_ENABLED=true` in your environment to activate the official `@modelcontextprotocol/server` SDK path (Streamable HTTP transport). The default (`false`) preserves the legacy custom JSON-RPC router for stability during the migration.
+
+```bash
+# .env.local
+MCP_SDK_ENABLED=true
+```
+
+When `MCP_SDK_ENABLED=true` is set, all 3 endpoints use `NodeStreamableHTTPServerTransport` with Zod v4 tool schemas, rate limiting, and audit logging via middleware.
+
+### Dependencies for the SDK path
+
+```bash
+bun add @modelcontextprotocol/server @modelcontextprotocol/node zod
+```
 ```

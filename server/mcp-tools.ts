@@ -24,70 +24,13 @@ function computeDrawdown(account: { startingBalance: number; drawdownThreshold: 
 }
 
 async function getAccountHealth(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
-  const accountFilter = typeof args.accountId === 'string' && args.accountId
-    ? { id: args.accountId }
-    : undefined
-
-  const accounts = await prisma.account.findMany({
-    where: { userId: ctx.userId, ...(accountFilter || {}) },
-  })
-
-  if (!accounts.length) {
-    return toolError(accountFilter ? 'Account not found' : 'No accounts found')
+  try {
+    const { getAccountHealthHandler } = await import('@/server/mcp/handlers/account')
+    const data = await getAccountHealthHandler({ userId: ctx.userId }, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message)
   }
-
-  const now = new Date()
-  const results = await Promise.all(accounts.map(async (acc) => {
-    const trades = await prisma.trade.findMany({
-      where: { accountNumber: acc.number, userId: ctx.userId },
-      select: { pnl: true, entryDate: true, closeDate: true },
-    })
-
-    const totalPnL = trades.reduce((sum, t) => sum + Number(t.pnl), 0)
-    const currentBalance = Number(acc.startingBalance) + totalPnL
-
-    const ddInfo = computeDrawdown(
-      { startingBalance: Number(acc.startingBalance), drawdownThreshold: Number(acc.drawdownThreshold), buffer: Number(acc.buffer) },
-      currentBalance,
-    )
-
-    const uniqueTradeDays = new Set(
-      trades.map((t) => t.entryDate.toISOString().slice(0, 10)),
-    ).size
-
-    const profitTarget = Number(acc.profitTarget)
-    const pnlSinceStart = totalPnL
-    const profitTargetPct = profitTarget > 0 ? ((pnlSinceStart / profitTarget) * 100) : 0
-
-    const trailingActive = acc.trailingDrawdown &&
-      Number(acc.trailingStopProfit || 0) > 0 &&
-      pnlSinceStart >= Number(acc.trailingStopProfit)
-
-    const minDays = acc.minTradingDaysForPayout || 0
-    const payoutEligible = !acc.evaluation ||
-      (profitTargetPct >= 100 && uniqueTradeDays >= minDays)
-
-    return {
-      id: acc.id,
-      number: acc.number,
-      propfirm: acc.propfirm,
-      accountSize: acc.accountSize || '',
-      startingBalance: Number(acc.startingBalance),
-      currentBalance,
-      pnl: totalPnL,
-      drawdownUsed: ddInfo.drawdownUsed,
-      drawdownUsedPct: ddInfo.drawdownUsedPct,
-      bufferRemaining: ddInfo.bufferRemaining,
-      atRisk: ddInfo.atRisk,
-      profitTargetPct: profitTargetPct.toFixed(1),
-      trailingActive,
-      daysTraded: uniqueTradeDays,
-      isEvaluation: acc.evaluation,
-      payoutEligible,
-    }
-  }))
-
-  return toolSuccess(results)
 }
 
 export const standardTools: ToolDefinition[] = [
@@ -102,6 +45,7 @@ Returns: Array of account health objects with balance, drawdown, buffer, trailin
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         accountId: { type: 'string', description: 'Optional account ID to get health for a specific account' },
       },
@@ -122,11 +66,16 @@ Returns: Array of account health objects with balance, drawdown, buffer, trailin
           drawdownUsedPct: { type: 'string' },
           bufferRemaining: { type: 'number' },
           atRisk: { type: 'boolean' },
+          status: { type: 'string', enum: ['HEALTHY', 'WARNING', 'CRITICAL'] },
           profitTargetPct: { type: 'string' },
           trailingActive: { type: 'boolean' },
           daysTraded: { type: 'number' },
           isEvaluation: { type: 'boolean' },
           payoutEligible: { type: 'boolean' },
+          payoutsReceived: { type: 'number' },
+          recentPerformance: { type: 'object', properties: { last10TradesPnL: { type: 'number' }, tradeCount: { type: 'number' } } },
+          dailyLossLimit: { type: 'number' },
+          lastUpdated: { type: 'string' },
         },
       },
     },
@@ -144,6 +93,7 @@ Returns: Array of account objects with id, number, propfirm, accountSize, starti
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {},
     },
     outputSchema: {
@@ -173,6 +123,7 @@ Returns: Account object with trades array (last 10 trades)`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         accountId: { type: 'string', description: 'The account ID' },
       },
@@ -206,6 +157,7 @@ Returns: Array of trade objects sorted by entryDate descending`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         startDate: { type: 'string', description: 'Start date (ISO 8601, e.g. "2024-01-01")' },
         endDate: { type: 'string', description: 'End date (ISO 8601)' },
@@ -244,6 +196,7 @@ Returns: Object with totalTrades, grossPnL, netPnL, winRate, totalWins, totalLos
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         startDate: { type: 'string', description: 'Start date (ISO 8601)' },
         endDate: { type: 'string', description: 'End date (ISO 8601)' },
@@ -277,6 +230,7 @@ Returns: Object with id, username, email (masked), language, createdAt`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {},
     },
     outputSchema: {
@@ -301,6 +255,7 @@ Returns: Array of tag objects with id, name, color, and userId`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {},
     },
     outputSchema: {
@@ -330,6 +285,7 @@ Returns: Object with totalTrades, maxDrawdown, maxDrawdownPct, avgRiskPerTrade, 
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         startDate: { type: 'string', description: 'Start date (ISO 8601)' },
         endDate: { type: 'string', description: 'End date (ISO 8601)' },
@@ -369,6 +325,7 @@ Returns: Created mood entry object`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         day: { type: 'string', description: 'Date (ISO 8601, e.g. "2024-01-15")' },
         mood: { type: 'string', description: 'Mood label: focused, anxious, confident, tilted, neutral, etc.' },
@@ -399,6 +356,7 @@ Returns: Trade basics plus MAE, MFE, riskRewardRatio, efficiency from TradeAnaly
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         tradeId: { type: 'string', description: 'The trade ID to analyze' },
       },
@@ -437,6 +395,7 @@ Returns: Simulation results with ruin probability, median outcome, worst 5% and 
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         accountId: { type: 'string', description: 'Optional account ID to filter trades' },
         simulations: { type: 'number', description: 'Number of simulations (default 1000, max 10000)' },
@@ -482,6 +441,7 @@ Returns: Suggested position size with risk amount, account balance, and warnings
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         accountId: { type: 'string', description: 'Optional account ID' },
         targetRiskPct: { type: 'number', description: '% of account to risk (e.g. 0.5 for 0.5%)' },
@@ -517,6 +477,7 @@ Returns: Mood-performance breakdown, best/worst mood, total entries, period days
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         days: { type: 'number', description: 'Lookback period in days (default 90)' },
       },
@@ -563,6 +524,7 @@ Returns: Compliance report with rules, violations, and overall status`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         accountId: { type: 'string', description: 'Optional account ID (defaults to first evaluation account)' },
       },
@@ -602,6 +564,7 @@ Returns: Challenge progress snapshot with phase, profit target, drawdown, and on
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         accountId: { type: 'string', description: 'Optional account ID (defaults to first evaluation account)' },
       },
@@ -637,6 +600,7 @@ Returns: Updated trade id and tags`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         tradeId: { type: 'string', description: 'The trade ID' },
         tags: { type: 'array', items: { type: 'string' }, description: 'New tags array' },
@@ -665,6 +629,7 @@ Returns: Trade id and updated comment`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         tradeId: { type: 'string', description: 'The trade ID' },
         comment: { type: 'string', description: 'Review note' },
@@ -693,6 +658,7 @@ Returns: Structured daily briefing with all aggregated data`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         date: { type: 'string', description: 'Date to summarize (ISO 8601, e.g. "2024-01-15")' },
       },
@@ -731,6 +697,7 @@ Returns: Audit report with violations, emotional patterns, suggestions, and grad
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
+      additionalProperties: false,
       properties: {
         limit: { type: 'number', description: 'Number of trades to review (default 20, max 100)' },
       },

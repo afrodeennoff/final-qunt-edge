@@ -376,7 +376,7 @@ function ApiKeySection() {
                 <Copy className="h-3 w-3" />
               </Button>
             </div>
-            <p className="text-[10px] text-muted-foreground/70">Use with your API key as Bearer token to access your trading data + public info.</p>
+            <p className="text-[10px] text-muted-foreground/70">Official MCP SDK (Streamable HTTP). Use with your API key as Bearer token.</p>
           </div>
         )}
 
