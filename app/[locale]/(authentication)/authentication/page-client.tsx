@@ -53,7 +53,7 @@ export default function AuthenticationPageClient() {
   const locale = useCurrentLocale()
 
   return (
-    <main className="qe-v2-app-shell relative min-h-dvh overflow-hidden bg-background text-foreground">
+    <main className="qe-v2-app-shell relative min-h-dvh bg-background text-foreground">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-x-6 top-0 h-36 rounded-b-2xl border border-border/30 bg-primary/[0.02]" />
         <div className="absolute left-[-10rem] top-[-8rem] h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.08),transparent_72%)] opacity-70" />
