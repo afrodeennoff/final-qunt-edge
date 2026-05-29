@@ -513,3 +513,56 @@ export async function saveDashboardLayoutWithVersionAction(
     }
   }
 }
+
+/**
+ * SECURITY ENHANCEMENT for MCP (Top 15 #12):
+ * These *ForUser variants are called ONLY from MCP handlers with ctx.userId.
+ * Web actions unchanged (still use getDatabaseUserId + session).
+ * All internal Prisma calls remain user-scoped.
+ */
+export async function getDashboardLayoutForUser(userId: string): Promise<Layouts | null> {
+  if (!userId) return null
+  try {
+    return await _loadDashboardLayoutCached(userId)
+  } catch (error) {
+    logger.error('[getDashboardLayoutForUser] Error', { error, userId })
+    return null
+  }
+}
+
+export async function saveDashboardLayoutForUser(
+  userId: string,
+  layouts: { desktop: unknown; mobile: unknown }
+): Promise<SaveLayoutResult> {
+  if (!userId) return { success: false, error: 'User required' }
+  if (!layouts || !validateLayouts(layouts as any)) {
+    return { success: false, error: 'Invalid layout structure' }
+  }
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.dashboardLayout.upsert({
+        where: { userId },
+        update: {
+          desktop: layouts.desktop as unknown as Prisma.JsonArray,
+          mobile: layouts.mobile as unknown as Prisma.JsonArray,
+          updatedAt: new Date(),
+        },
+        create: {
+          userId,
+          desktop: layouts.desktop as unknown as Prisma.JsonArray,
+          mobile: layouts.mobile as unknown as Prisma.JsonArray,
+        },
+      })
+    })
+    invalidateDashboardLayout(userId)
+    // Note: equity invalidate skipped for MCP path (no databaseUserId lookup)
+    logger.info('[saveDashboardLayoutForUser] Success (MCP path)', { userId })
+    return { success: true }
+  } catch (error) {
+    logger.error('[saveDashboardLayoutForUser] Error', { error, userId })
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown database error',
+    }
+  }
+}

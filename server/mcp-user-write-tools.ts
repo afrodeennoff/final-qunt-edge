@@ -7,6 +7,15 @@ import {
   importIbkrPdfHandler,
   syncTradovateHandler,
 } from './mcp/handlers/imports'
+import {
+  listJournalEntriesHandler,
+  updateJournalEntryHandler,
+  deleteJournalEntryHandler,
+} from './mcp/handlers/journal'
+import {
+  getDashboardLayoutHandler,
+  saveDashboardLayoutHandler,
+} from './mcp/handlers/layout'
 
 const WRITE = { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
 const READ = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
@@ -631,6 +640,92 @@ Returns: Array of mood entries`,
     },
     annotations: READ,
   },
+  // Journal full CRUD (Top 15 #10#11) - wired to handlers for ctx.userId only
+  {
+    name: 'list_journal_entries',
+    description: `List journal/mood entries with optional date range + pagination. Strict user scoping via ctx only.
+Args: startDate, endDate, limit, offset
+Returns: array of {id, day, mood, emotionValue, journalContent, ...}`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        startDate: { type: 'string', description: 'Start date ISO' },
+        endDate: { type: 'string', description: 'End date ISO' },
+        limit: { type: 'number', description: 'Max 200' },
+        offset: { type: 'number', description: 'Pagination' },
+      },
+    },
+    annotations: READ,
+  },
+  {
+    name: 'update_journal_entry',
+    description: `Update journal entry for a specific day. Uses ctx.userId only.
+Args: day (required), mood, emotionValue, journalContent
+Returns: updated entry`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        day: { type: 'string', description: 'ISO day to update' },
+        mood: { type: 'string' },
+        emotionValue: { type: 'number' },
+        journalContent: { type: 'string' },
+      },
+      required: ['day'],
+    },
+    annotations: WRITE,
+  },
+  {
+    name: 'delete_journal_entry',
+    description: `Delete journal entry by day. ctx.userId only.
+Args: day (required)
+Returns: {success, deletedId?}`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        day: { type: 'string', description: 'ISO day' },
+      },
+      required: ['day'],
+    },
+    annotations: WRITE,
+  },
+  // Dashboard layout (Top 15 #12)
+  {
+    name: 'get_dashboard_layout',
+    description: `Get current dashboard widget layout (desktop/mobile). ctx.userId only.
+Returns: {desktop: Widget[], mobile: Widget[]}`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {},
+    },
+    annotations: READ,
+  },
+  {
+    name: 'save_dashboard_layout',
+    description: `Save dashboard layout. Strict ctx.userId scoping + validation.
+Args: layouts {desktop, mobile}
+Returns: {success, error?}`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        layouts: {
+          type: 'object',
+          properties: { desktop: { type: 'array' }, mobile: { type: 'array' } },
+        },
+      },
+      required: ['layouts'],
+    },
+    annotations: WRITE,
+  },
   {
     name: 'get_subscription',
     description: `Get the authenticated user's subscription details including plan, status, and end date.
@@ -772,6 +867,12 @@ export async function handleUserWriteToolCall(toolName: string, args: Record<str
     case 'delete_payout': return await deletePayout(ctx, args)
     case 'get_equity_chart': return await getEquityChart(ctx, args)
     case 'get_mood_history': return await getMoodHistory(ctx, args)
+    // New journal + layout (Top 15) wired via handlers (ctx.userId enforced inside)
+    case 'list_journal_entries': return await listJournalEntriesHandler(ctx, args).then(toolSuccess).catch(e => toolError(e.message))
+    case 'update_journal_entry': return await updateJournalEntryHandler(ctx, args).then(toolSuccess).catch(e => toolError(e.message))
+    case 'delete_journal_entry': return await deleteJournalEntryHandler(ctx, args).then(toolSuccess).catch(e => toolError(e.message))
+    case 'get_dashboard_layout': return await getDashboardLayoutHandler(ctx, args).then(toolSuccess).catch(e => toolError(e.message))
+    case 'save_dashboard_layout': return await saveDashboardLayoutHandler(ctx, args).then(toolSuccess).catch(e => toolError(e.message))
     case 'get_subscription': return await getSubscription(ctx)
     case 'update_profile': return await updateProfile(ctx, args)
     case 'extract_ibkr_orders': return await extractIbkrOrders(ctx, args)
