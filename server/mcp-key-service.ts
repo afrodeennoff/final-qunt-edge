@@ -8,6 +8,14 @@ import { MCP_KEY_PREFIX_USER, MCP_KEY_PREFIX_ADMIN } from '@/lib/mcp-constants'
 
 const KEY_BYTES = 32
 
+function isMissingTableError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false
+  const msg = error.message.toLowerCase()
+  return msg.includes('does not exist') || 
+         (msg.includes('relation') && msg.includes('does not exist')) ||
+         (msg.includes('table') && msg.includes('does not exist'))
+}
+
 export interface ApiKeyResult {
   id: string
   key?: string
@@ -61,6 +69,9 @@ async function generateApiKeyForUser(
       },
     }
   } catch (error) {
+    if (isMissingTableError(error)) {
+      return { success: false, error: 'Database not ready. The ApiKey table is missing. Run the migration SQL from prisma/migrations/20260529_add_api_key_model/migration.sql' }
+    }
     return { success: false, error: error instanceof Error ? error.message : `Failed to generate ${role} API key` }
   }
 }
@@ -73,6 +84,9 @@ export async function generateUserApiKey(name: string): Promise<{ success: true;
 
     return generateApiKeyForUser(name, 'user', user)
   } catch (error) {
+    if (isMissingTableError(error)) {
+      return { success: false, error: 'Database not ready. The ApiKey table is missing. Run the migration SQL from prisma/migrations/20260529_add_api_key_model/migration.sql' }
+    }
     return { success: false, error: error instanceof Error ? error.message : 'Failed to generate API key' }
   }
 }
@@ -86,6 +100,9 @@ export async function generateAdminApiKey(name: string): Promise<{ success: true
 
     return generateApiKeyForUser(name, 'admin', user)
   } catch (error) {
+    if (isMissingTableError(error)) {
+      return { success: false, error: 'Database not ready. The ApiKey table is missing. Run the migration SQL from prisma/migrations/20260529_add_api_key_model/migration.sql' }
+    }
     return { success: false, error: error instanceof Error ? error.message : 'Failed to generate admin API key' }
   }
 }
@@ -107,6 +124,9 @@ export async function listUserApiKeys(): Promise<{ success: true; keys: ApiKeyRe
       keys: keys.map((k) => ({ id: k.id, keyPrefix: k.keyPrefix, name: k.name, role: k.role, createdAt: k.createdAt, lastUsedAt: k.lastUsedAt })),
     }
   } catch (error) {
+    if (isMissingTableError(error)) {
+      return { success: false, error: 'Database not ready. The ApiKey table is missing. Run the migration SQL from prisma/migrations/20260529_add_api_key_model/migration.sql' }
+    }
     return { success: false, error: error instanceof Error ? error.message : 'Failed to list API keys' }
   }
 }
@@ -125,6 +145,9 @@ export async function revokeApiKey(keyId: string): Promise<{ success: true } | {
     await prisma.apiKey.delete({ where: { id: keyId } })
     return { success: true }
   } catch (error) {
+    if (isMissingTableError(error)) {
+      return { success: false, error: 'Database not ready. The ApiKey table is missing. Run the migration SQL from prisma/migrations/20260529_add_api_key_model/migration.sql' }
+    }
     return { success: false, error: error instanceof Error ? error.message : 'Failed to revoke API key' }
   }
 }
@@ -144,7 +167,11 @@ export async function validateApiKey(rawKey: string): Promise<{ userId: string; 
 
     return { userId: record.userId, role: record.role as 'user' | 'admin' }
   } catch (error) {
-    console.error('[validateApiKey] error:', error instanceof Error ? error.message : error)
+    if (isMissingTableError(error)) {
+      console.error('[validateApiKey] Database not ready: ApiKey table is missing')
+    } else {
+      console.error('[validateApiKey] error:', error instanceof Error ? error.message : error)
+    }
     return null
   }
 }

@@ -396,10 +396,10 @@ function ApiKeySection() {
             </div>
             <p className="text-sm text-destructive/90">{error}</p>
             <div className="rounded-lg bg-background/60 p-3 text-xs font-mono overflow-auto">
-              <div className="mb-1 text-[10px] uppercase tracking-widest text-muted-foreground">Run this in your database (Supabase SQL Editor or psql):</div>
-              <pre className="whitespace-pre-wrap select-all">{`-- Create ApiKey table for MCP server authentication
+              <div className="mb-1 text-[10px] uppercase tracking-widest text-muted-foreground">Run this in your database (Supabase SQL Editor):</div>
+              <pre className="whitespace-pre-wrap select-all">{`-- MCP Tables (ApiKey + Audit Log)
 CREATE TABLE IF NOT EXISTS "ApiKey" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid()::text,
     "key" TEXT NOT NULL,
     "keyPrefix" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -408,13 +408,30 @@ CREATE TABLE IF NOT EXISTS "ApiKey" (
     "lastUsedAt" TIMESTAMP(3),
     "expiresAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "ApiKey_pkey" PRIMARY KEY ("id")
 );
 CREATE UNIQUE INDEX IF NOT EXISTS "ApiKey_key_key" ON "ApiKey"("key");
 CREATE INDEX IF NOT EXISTS "ApiKey_key_idx" ON "ApiKey"("key");
 CREATE INDEX IF NOT EXISTS "ApiKey_userId_idx" ON "ApiKey"("userId");
-CREATE INDEX IF NOT EXISTS "ApiKey_keyPrefix_idx" ON "ApiKey"("keyPrefix");`}</pre>
+CREATE INDEX IF NOT EXISTS "ApiKey_keyPrefix_idx" ON "ApiKey"("keyPrefix");
+
+CREATE TABLE IF NOT EXISTS "McpAuditLog" (
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid()::text,
+    "apiKeyId" TEXT,
+    "userId" TEXT,
+    "tool" TEXT NOT NULL,
+    "argsKeys" TEXT,
+    "success" BOOLEAN NOT NULL,
+    "durationMs" INTEGER NOT NULL,
+    "errorCode" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "McpAuditLog_pkey" PRIMARY KEY ("id")
+);
+CREATE INDEX IF NOT EXISTS "McpAuditLog_apiKeyId_createdAt_idx" ON "McpAuditLog"("apiKeyId", "createdAt");
+CREATE INDEX IF NOT EXISTS "McpAuditLog_userId_createdAt_idx" ON "McpAuditLog"("userId", "createdAt");
+CREATE INDEX IF NOT EXISTS "McpAuditLog_tool_createdAt_idx" ON "McpAuditLog"("tool", "createdAt");
+CREATE INDEX IF NOT EXISTS "McpAuditLog_createdAt_idx" ON "McpAuditLog"("createdAt");`}</pre>
             </div>
             <p className="text-[11px] text-muted-foreground">After running the SQL, refresh this page. Key creation will work immediately.</p>
           </div>
