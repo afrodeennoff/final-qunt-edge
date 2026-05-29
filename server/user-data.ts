@@ -183,7 +183,7 @@ async function findCoreUserByIdCompat(userId: string, authUserId: string): Promi
 async function loadGlobalTickDetails() {
   return withPrismaSchemaMismatchFallback(
     'user-data-global-tick-details',
-    () => prisma.tickDetails.findMany(),
+    () => prisma.tickDetails.findMany({ take: 1000, orderBy: { ticker: 'asc' } }),
     []
   )
 }

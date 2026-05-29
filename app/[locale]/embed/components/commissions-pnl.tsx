@@ -1,1 +1,1 @@
-export { CommissionsPnLEmbed } from './client/commissions-pnl.tsx'
+export { default } from './client/commissions-pnl'

@@ -838,7 +838,17 @@ export async function addTagToTrade(tradeId: string, tag: string) {
       throw new Error('Trade not found')
     }
     if (trade.tags.includes(tag.trim())) {
-      return await prisma.trade.findUnique({ where: { id: tradeId } })
+      return await prisma.trade.findUnique({
+        where: { id: tradeId },
+        select: {
+          id: true, userId: true, accountNumber: true, instrument: true,
+          side: true, quantity: true, entryPrice: true, closePrice: true,
+          pnl: true, commission: true, entryId: true, closeId: true,
+          entryDate: true, closeDate: true, timeInPosition: true,
+          comment: true, tags: true, groupId: true, images: true,
+          videoUrl: true, createdAt: true,
+        }
+      })
     }
     const updatedTrade = await prisma.trade.update({
       where: { id: tradeId, userId },

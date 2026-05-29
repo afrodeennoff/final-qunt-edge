@@ -312,6 +312,7 @@ export const DataProvider: React.FC<{
   const [refreshError, setRefreshError] = useState<string | null>(null)
   const bootstrappedSharedSlugRef = useRef<string | null>(null)
   const appliedBootstrapRef = useRef(false)
+  const bootstrapAppliedAtRef = useRef<number | null>(null)
   const dashboardLayoutRef = useRef(dashboardLayout)
   const activeUserIdRef = useRef<string | null>(null)
   const loadInProgressRef = useRef(false)
@@ -427,6 +428,7 @@ export const DataProvider: React.FC<{
     if (!bootstrapSnapshot || appliedBootstrapRef.current) return
 
     appliedBootstrapRef.current = true
+    bootstrapAppliedAtRef.current = Date.now()
     activeUserIdRef.current = bootstrapSnapshot.user?.id ?? null
 
     setUser(bootstrapSnapshot.user)
@@ -964,6 +966,19 @@ export const DataProvider: React.FC<{
     const loadDataIfMounted = async () => {
       if (!mounted) return
       if (isSharedView && initialSharedData) {
+        return
+      }
+
+      // Skip server refresh when bootstrap data was applied within the last 30 seconds
+      // — the SSR data is already fresh and a re-fetch would be redundant
+      const BOOTSTRAP_FRESHNESS_MS = 30_000
+      if (
+        bootstrapSnapshot &&
+        bootstrapAppliedAtRef.current !== null &&
+        Date.now() - bootstrapAppliedAtRef.current < BOOTSTRAP_FRESHNESS_MS
+      ) {
+        // Bootstrap data is fresh; skip loadData but still load subscription data
+        await loadSubscriptionData()
         return
       }
 

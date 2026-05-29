@@ -243,28 +243,36 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         }
     }, [layouts, persistLayout])
 
+    const contextValue = useMemo(() => ({
+        isCustomizing,
+        setIsCustomizing,
+        toggleCustomizing,
+        layouts,
+        currentLayout,
+        activeLayout,
+        addWidget,
+        removeWidget,
+        changeWidgetType,
+        changeWidgetSize,
+        removeAllWidgets,
+        restoreDefaultLayout,
+        handleLayoutChange,
+        isMobile,
+        autoSaveStatus: {
+            hasPending: pendingSaves > 0,
+            isInitialized: Boolean(userId),
+        },
+        flushPendingSaves,
+    }), [
+        isCustomizing, setIsCustomizing, toggleCustomizing, layouts,
+        currentLayout, activeLayout, addWidget, removeWidget,
+        changeWidgetType, changeWidgetSize, removeAllWidgets,
+        restoreDefaultLayout, handleLayoutChange, isMobile,
+        pendingSaves, userId, flushPendingSaves,
+    ])
+
     return (
-        <DashboardContext.Provider value={{
-            isCustomizing,
-            setIsCustomizing,
-            toggleCustomizing,
-            layouts,
-            currentLayout,
-            activeLayout,
-            addWidget,
-            removeWidget,
-            changeWidgetType,
-            changeWidgetSize,
-            removeAllWidgets,
-            restoreDefaultLayout,
-            handleLayoutChange,
-            isMobile,
-            autoSaveStatus: {
-                hasPending: pendingSaves > 0,
-                isInitialized: Boolean(userId),
-            },
-            flushPendingSaves,
-        }}>
+        <DashboardContext.Provider value={contextValue}>
             {children}
         </DashboardContext.Provider>
     )

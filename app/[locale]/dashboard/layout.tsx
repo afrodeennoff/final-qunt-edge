@@ -6,7 +6,6 @@ import { DashboardProviders } from '@/components/providers/dashboard-providers'
 import { SidebarRootProviders } from '@/components/providers/root-providers'
 import { DashboardScrollReset } from './components/dashboard-scroll-reset'
 import { ErrorBoundary } from '@/components/error-boundary'
-import { DashboardSidebar } from '@/components/sidebar/dashboard-sidebar'
 import dynamic from 'next/dynamic'
 import { isAdminUser } from '@/server/authz'
 import { getUserDashboardTheme } from '@/server/user-data'
@@ -18,7 +17,6 @@ import {
 import { cookies } from 'next/headers'
 import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from '@/lib/sidebar-state'
 import { SidebarLayoutShell } from '@/components/ui/sidebar-layout-shell'
-import { MobileBottomNav } from '@/components/mobile-bottom-nav'
 import { GestureProvider } from '@/components/providers/gesture-provider'
 import { PullToRefreshIndicator } from '@/components/pull-to-refresh'
 import { shouldUseServerBootstrap } from '@/lib/feature-flags'
@@ -39,6 +37,20 @@ const DashboardHeader = dynamic(
 const DashboardClientOverlays = dynamic(
   () => import('./components/dashboard-client-overlays').then((m) => m.DashboardClientOverlays),
   { loading: () => <div /> },
+)
+
+const DashboardSidebar = dynamic(
+  () => import('@/components/sidebar/dashboard-sidebar').then(m => ({ default: m.DashboardSidebar })),
+  {
+    loading: () => <div className="hidden lg:flex w-64 shrink-0 bg-background/50 animate-pulse" />,
+  }
+)
+
+const MobileBottomNav = dynamic(
+  () => import('@/components/mobile-bottom-nav').then(m => ({ default: m.MobileBottomNav })),
+  {
+    loading: () => <div className="h-16 animate-pulse bg-background/50 lg:hidden" />,
+  }
 )
 
 export const metadata: Metadata = {

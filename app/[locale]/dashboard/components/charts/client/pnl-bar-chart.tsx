@@ -72,7 +72,7 @@ const negativeColor ="hsl(var(--chart-4))";
 const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
  const t = useI18n();
  const locale = useCurrentLocale();
- const { timezone } = useUserStore();
+ const timezone = useUserStore(state => state.timezone);
  const dateLocale = locale ==="fr" ? fr : enUS;
 
  if (active && payload && payload.length) {
@@ -111,7 +111,7 @@ export default React.memo(function PNLChart({ size ="medium" }: PNLChartProps) {
  const { calendarData } = useDashboardStats();
  const t = useI18n();
  const locale = useCurrentLocale();
- const { timezone } = useUserStore();
+ const timezone = useUserStore(state => state.timezone);
  const dateLocale = locale ==="fr" ? fr : enUS;
 
  const chartData = React.useMemo(

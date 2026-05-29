@@ -1,1 +1,1 @@
-export { ContractQuantityChartEmbed } from './client/contract-quantity.tsx'
+export { default } from './client/contract-quantity'

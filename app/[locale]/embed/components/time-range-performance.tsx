@@ -1,1 +1,1 @@
-export { TimeRangePerformanceChart } from './client/time-range-performance.tsx'
+export { default } from './client/time-range-performance'

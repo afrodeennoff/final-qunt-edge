@@ -38,7 +38,6 @@ import { Calendar } from "@/components/ui/calendar"
 import { Input } from "@/components/ui/input"
 import { SharedLayoutsManager } from "./shared-layouts-manager"
 import { cn } from "@/lib/utils"
-import confetti from 'canvas-confetti'
 import { fr } from 'date-fns/locale'
 import { Switch } from "@/components/ui/switch"
 import { useTradingDomainStore } from '@/store/trading-domain-store'
@@ -69,7 +68,8 @@ function useIsMobile() {
  return isMobile
 }
 
-function triggerConfetti() {
+async function triggerConfetti() {
+ const confetti = (await import('canvas-confetti')).default
  const count = 200
  const defaults = {
  origin: { y: 0.7 },

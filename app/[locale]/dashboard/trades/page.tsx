@@ -1,6 +1,11 @@
-import { TradeTableReview } from "../components/tables/trade-table-review";
+import dynamic from 'next/dynamic'
 import type { Metadata } from "next";
 import { getCanonicalUrl } from "@/lib/seo";
+
+const TradeTableReview = dynamic(
+  () => import("../components/tables/trade-table-review").then(m => ({ default: m.TradeTableReview })),
+  { loading: () => <div className="flex h-[80vh] items-center justify-center"><div className="h-32 w-full animate-pulse rounded-xl bg-muted/30" /></div> }
+)
 
 export async function generateMetadata({
   params,

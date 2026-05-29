@@ -51,7 +51,7 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
   const config: NextConfig = {
     poweredByHeader: false,
     reactStrictMode: true,
-    serverExternalPackages: ['pdf2json', 'canvas', 'sharp'],
+    serverExternalPackages: ['pdf2json', 'canvas', 'sharp', 'openai'],
     cacheComponents: !cacheComponentsDisabled,
     // Bundle optimization - tree shake heavy libraries
     experimental: {

@@ -295,16 +295,16 @@ function AccountsTableSection({
  <div className="relative">
  <div className="overflow-x-auto" ref={tableWrapperRef}>
  <table className="w-full border-separate border-spacing-0 text-sm">
- <thead className="sticky top-0 z-10 bg-background/0.14 shadow-xs border-b [&_tr]:border-b">
+  <thead className="sticky top-0 z-10 border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-md [&_tr]:border-b [&_tr]:border-border/20">
  {table.getHeaderGroups().map((headerGroup) => (
  <tr
  key={headerGroup.id}
- className="border-b transition-colors hover:bg-background/0.06"
+  className="border-b border-border/20 transition-colors"
  >
  {headerGroup.headers.map((header) => (
  <th
  key={header.id}
- className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-background/0.14 border-r border-border/30 last:border-r-0 first:border-l align-middle text-foreground/80"
+  className="type-label whitespace-nowrap px-3.5 py-2.5 text-left text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l align-middle text-muted-foreground"
  style={{ width: header.getSize() }}
  >
  {header.isPlaceholder

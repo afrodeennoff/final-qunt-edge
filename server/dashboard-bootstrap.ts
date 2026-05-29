@@ -35,10 +35,11 @@ export async function getDashboardBootstrap(): Promise<DashboardBootstrapPayload
     return createEmptyBootstrap()
   }
 
-  // Load user data and layout in parallel
-  const [userData, layout] = await Promise.all([
+  // Load user data, layout, and trades in parallel
+  const [userData, layout, tradesResult] = await Promise.all([
     getUserData(),
     getDashboardLayout(userId),
+    getTradesAction(userId, 1, PAGE_SIZE, false, false),
   ])
 
   const {
@@ -52,15 +53,6 @@ export async function getDashboardBootstrap(): Promise<DashboardBootstrapPayload
     moodHistory,
   } = userData
   const normalizedGroups = groups as GroupInput[]
-
-  // Load first page of trades
-  const tradesResult = await getTradesAction(
-    userId,
-    1,
-    PAGE_SIZE,
-    false,
-    false,
-  )
 
   const normalizedTrades = normalizeTradesForClient(tradesResult.trades)
   const normalizedAccounts = normalizeAccountsForClient(accounts)

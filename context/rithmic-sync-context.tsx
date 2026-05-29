@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
   useCallback,
+  useMemo,
   useRef,
   ReactNode,
 } from "react";
@@ -950,27 +951,27 @@ export function RithmicSyncContextProvider({
     };
   }, [isSyncRouteActive, autoSyncEnabled, checkAndPerformSyncs, disconnect]);
 
+  const contextValue = useMemo(
+    () => ({
+      connect,
+      disconnect,
+      isConnected,
+      connectionStatus,
+      handleMessage,
+      performSyncForCredential,
+      calculateStartDate,
+      authenticateAndGetAccounts,
+      getWebSocketUrl,
+    }),
+    [
+      connect, disconnect, isConnected, connectionStatus, handleMessage,
+      performSyncForCredential, calculateStartDate, authenticateAndGetAccounts,
+      getWebSocketUrl,
+    ]
+  );
+
   return (
-    <RithmicSyncContext.Provider
-      value={{
-        // Core connection management
-        connect,
-        disconnect,
-        isConnected,
-        connectionStatus,
-
-        // Message handling
-        handleMessage,
-
-        // Auto-sync functionality
-        performSyncForCredential,
-
-        // Utilities
-        calculateStartDate,
-        authenticateAndGetAccounts,
-        getWebSocketUrl,
-      }}
-    >
+    <RithmicSyncContext.Provider value={contextValue}>
       {children}
     </RithmicSyncContext.Provider>
   );

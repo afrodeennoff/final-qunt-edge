@@ -1,5 +1,10 @@
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
-import { TradeTableReview } from '../components/tables/trade-table-review'
+import dynamic from 'next/dynamic'
+
+const TradeTableReview = dynamic(
+  () => import('../components/tables/trade-table-review').then(m => ({ default: m.TradeTableReview })),
+  { loading: () => <div className="flex h-[80vh] items-center justify-center"><div className="h-32 w-full animate-pulse rounded-xl bg-muted/30" /></div> }
+)
 
 export default function DashboardStrategiesPage() {
   return (

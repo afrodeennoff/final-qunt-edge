@@ -102,8 +102,8 @@ interface AccountsAnalysisProps {
 export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  const t = useI18n();
  const currentLocale = useCurrentLocale();
- const { supabaseUser } = useUserStore();
- const { timezone } = useUserStore();
+ const supabaseUser = useUserStore(state => state.supabaseUser);
+ const timezone = useUserStore(state => state.timezone);
 
  // Analysis store
  const {

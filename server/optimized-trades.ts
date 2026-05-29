@@ -88,6 +88,7 @@ export async function getTradesByAccountOptimized(accountNumber: string, userId:
         tags: true,
       },
       orderBy: { entryDate: 'desc' },
+      take: 10_000,
     }),
     `trades-account-${accountNumber}`,
     600

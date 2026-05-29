@@ -210,6 +210,7 @@ export async function getLeaderboardData(
           { userId: 'asc' },
           { closeDate: 'asc' },
         ],
+        take: 50_000,
       }),
       prisma.account.groupBy({
         by: ['userId'],

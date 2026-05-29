@@ -77,7 +77,7 @@ export default React.memo(function PnLPerContractDailyChart({
 }: PnLPerContractDailyChartProps) {
  const { formattedTrades: trades } = useDashboardStats();
  const isLoading = useDashboardIsLoading();
- const { timezone } = useUserStore();
+ const timezone = useUserStore(state => state.timezone);
  const { config, setSelectedInstrument } = usePnLPerContractDailyStore();
  const t = useI18n();
  const locale = useCurrentLocale();

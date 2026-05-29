@@ -1,1 +1,1 @@
-export { PnLPerContractDailyChartEmbed } from './client/pnl-per-contract-daily.tsx'
+export { default } from './client/pnl-per-contract-daily'
