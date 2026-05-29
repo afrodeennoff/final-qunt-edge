@@ -1,4 +1,4 @@
-import * as z from 'zod/v4'
+import { z } from 'zod'
 
 // Tier 1 - Core
 export const GetAccountHealthInput = z.object({

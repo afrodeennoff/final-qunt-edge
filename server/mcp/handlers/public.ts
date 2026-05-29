@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { clampInt } from '../mcp-helpers'
+import { clampInt } from '../../mcp-helpers'
 
 // Public website tool handlers — extraction from mcp-website-tools.ts
 
