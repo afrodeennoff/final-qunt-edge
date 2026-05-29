@@ -316,6 +316,7 @@ function ApiKeySection() {
   const [createdKey, setCreatedKey] = useState<string | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [origin, setOrigin] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     setOrigin(window.location.origin)
@@ -323,9 +324,14 @@ function ApiKeySection() {
 
   const loadKeys = async () => {
     setIsLoading(true)
+    setError(null)
     const { listUserApiKeys } = await import('@/server/mcp-key-service')
     const result = await listUserApiKeys()
-    if (result.success) setKeys(result.keys)
+    if (result.success) {
+      setKeys(result.keys)
+    } else {
+      setError(result.error || 'Failed to load API keys')
+    }
     setIsLoading(false)
   }
 
@@ -334,6 +340,7 @@ function ApiKeySection() {
   const handleCreate = async () => {
     if (!newKeyName.trim()) return
     setIsCreating(true)
+    setError(null)
     const { generateUserApiKey } = await import('@/server/mcp-key-service')
     const result = await generateUserApiKey(newKeyName.trim())
     if (result.success) {
@@ -341,7 +348,9 @@ function ApiKeySection() {
       setNewKeyName('')
       await loadKeys()
     } else {
-      toast.error(result.error || 'Failed to create key')
+      const msg = result.error || 'Failed to create key'
+      setError(msg)
+      toast.error(msg)
     }
     setIsCreating(false)
   }
@@ -377,6 +386,37 @@ function ApiKeySection() {
               </Button>
             </div>
             <p className="text-[10px] text-muted-foreground/70">Official MCP SDK (Streamable HTTP). Use with your API key as Bearer token.</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-4 space-y-3">
+            <div className="flex items-start gap-2">
+              <div className="text-destructive font-semibold text-sm">Database migration required</div>
+            </div>
+            <p className="text-sm text-destructive/90">{error}</p>
+            <div className="rounded-lg bg-background/60 p-3 text-xs font-mono overflow-auto">
+              <div className="mb-1 text-[10px] uppercase tracking-widest text-muted-foreground">Run this in your database (Supabase SQL Editor or psql):</div>
+              <pre className="whitespace-pre-wrap select-all">{`-- Create ApiKey table for MCP server authentication
+CREATE TABLE IF NOT EXISTS "ApiKey" (
+    "id" TEXT NOT NULL,
+    "key" TEXT NOT NULL,
+    "keyPrefix" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "role" TEXT NOT NULL DEFAULT 'user',
+    "lastUsedAt" TIMESTAMP(3),
+    "expiresAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    CONSTRAINT "ApiKey_pkey" PRIMARY KEY ("id")
+);
+CREATE UNIQUE INDEX IF NOT EXISTS "ApiKey_key_key" ON "ApiKey"("key");
+CREATE INDEX IF NOT EXISTS "ApiKey_key_idx" ON "ApiKey"("key");
+CREATE INDEX IF NOT EXISTS "ApiKey_userId_idx" ON "ApiKey"("userId");
+CREATE INDEX IF NOT EXISTS "ApiKey_keyPrefix_idx" ON "ApiKey"("keyPrefix");`}</pre>
+            </div>
+            <p className="text-[11px] text-muted-foreground">After running the SQL, refresh this page. Key creation will work immediately.</p>
           </div>
         )}
 
