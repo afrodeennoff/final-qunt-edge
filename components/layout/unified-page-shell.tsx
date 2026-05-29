@@ -120,7 +120,7 @@ export function UnifiedSurface({ children, className, variant = 'default', hover
   return (
     <section
       className={cn(
-        'relative overflow-hidden rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 p-4 ring-1 ring-inset ring-white/[0.02] sm:p-6',
+        'group relative overflow-hidden rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 p-4 ring-1 ring-inset ring-white/[0.02] sm:p-6',
         'transition-all duration-300',
         hover && 'hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15',
         glowOnHover && 'hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15',

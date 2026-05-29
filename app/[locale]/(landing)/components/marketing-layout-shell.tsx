@@ -30,7 +30,7 @@ export default function MarketingLayoutShell({
   contentSpacingClassName = 'space-y-6 pb-16 pt-4 sm:pt-6 lg:pt-8',
   shellVariant = 'black',
   fullWidth = false,
-  showSidebar: _showSidebar = true,
+  showSidebar = true,
 }: MarketingLayoutShellProps) {
   return (
     <div

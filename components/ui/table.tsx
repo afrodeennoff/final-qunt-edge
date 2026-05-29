@@ -103,8 +103,7 @@ const TableCell = React.forwardRef<
     ref={ref}
     data-slot="table-cell"
       className={cn(
-        'border-b border-border/60 p-3.5 align-middle type-body-sm leading-[var(--leading-normal)] sm:p-4 [&:has([role=checkbox])]:pr-0',
-      'border-border/6',
+        'border-b border-border/20 p-3.5 align-middle type-body-sm leading-[var(--leading-normal)] sm:p-4 [&:has([role=checkbox])]:pr-0',
       className,
     )}
     {...props}

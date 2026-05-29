@@ -1,4 +1,5 @@
 import { Suspense } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 import { TeamEquityGridClient } from "../../components/user-equity/team-equity-grid-client"
 import { unifiedSectionPanelClassName } from "@/components/layout/unified-page-recipes"
 import { cn } from "@/lib/utils"
@@ -26,10 +27,7 @@ export default async function TeamDashboardPage({ params }: TeamDashboardPagePro
         fallback={
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-48 animate-pulse rounded-xl border border-border/20 bg-gradient-to-br from-muted/40 to-muted/10 ring-1 ring-inset ring-white/[0.02]"
-              />
+              <Skeleton key={i} className="h-48 w-full" />
             ))}
           </div>
         }
