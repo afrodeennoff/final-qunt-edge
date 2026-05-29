@@ -50,30 +50,57 @@ export async function GET() {
     inputSchema: t.inputSchema,
     annotations: t.annotations,
   })
+
+  const totalTools = standardTools.length + websiteTools.length
+
   return Response.json({
     name: MCP_SERVER_NAME,
     version: MCP_SERVER_VERSION,
     protocol: 'MCP JSON-RPC 2.0',
     description: 'Qunt Edge Model Context Protocol server — connect AI tools to your trading data',
     documentation: 'https://spec.modelcontextprotocol.io',
+    authentication: {
+      methods: ['api-key', 'oauth'],
+      apiKey: {
+        description: 'Generate an API key in Settings → API Keys',
+        header: 'Authorization: Bearer <api_key>',
+      },
+      oauth: {
+        description: 'Use your Supabase OAuth access token',
+        header: 'Authorization: Bearer <supabase_access_token>',
+        metadata: `${origin}/.well-known/oauth-protected-resource`,
+      },
+    },
+    connection: {
+      curl: `curl -X POST ${origin}/api/mcp -H "Authorization: Bearer YOUR_API_KEY" -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"initialize","id":1}'`,
+      claude_desktop: {
+        command: 'npx',
+        args: ['mcp-remote', `${origin}/api/mcp`],
+      },
+      cursor: {
+        url: `${origin}/api/mcp`,
+      },
+    },
     endpoints: [
       {
         path: '/api/mcp',
         url: `${origin}/api/mcp`,
-        auth: 'User API key required',
-        description: 'Personal trading data + public website data. Standard + website tools.',
+        auth: 'API key or OAuth token required',
+        tools: totalTools,
+        description: 'Personal trading data + public website data.',
       },
       {
         path: '/api/mcp/public',
         url: `${origin}/api/mcp/public`,
         auth: 'None',
-        description: 'Public data only. 10 tools: prop firms, deals, blog, leaderboard, benchmarks, community posts.',
+        tools: websiteTools.length,
+        description: 'Public data only. Prop firms, deals, blog, leaderboard, benchmarks, community posts.',
       },
       {
         path: '/api/mcp/admin',
         url: `${origin}/api/mcp/admin`,
-        auth: 'Admin API key required',
-        description: 'Full access including admin operations. All standard + website + admin tools.',
+        auth: 'Admin API key or admin OAuth token required',
+        description: 'Full access including admin operations.',
       },
     ],
     tools: {
