@@ -1,7 +1,9 @@
 import type { McpAuthContext } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
 import { requireAdminAccess } from './mcp-auth'
-import { requireAdmin } from './security'
+
+// Alias used by swarm-generated admin tools
+const requireAdmin = requireAdminAccess
 import { toolError, toolSuccess, requireParam, type McpToolResult, type ToolDefinition } from './mcp-helpers'
 import type { EmailTemplate } from '@/app/[locale]/admin/actions/send-email'
 import { sendEmailsToUsersInternal } from '@/app/[locale]/admin/actions/send-email'

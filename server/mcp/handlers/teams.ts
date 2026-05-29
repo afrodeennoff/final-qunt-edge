@@ -16,7 +16,7 @@ import {
   acceptInvitation as serverAcceptInvitation,
   removeMember as serverRemoveMember,
 } from '@/server/teams'
-import { requireParam } from '../mcp-helpers'
+import { requireParam } from '../../mcp-helpers'
 
 async function assertTeamAdminMembership(teamId: string, userId: string): Promise<boolean> {
   // Check owner
