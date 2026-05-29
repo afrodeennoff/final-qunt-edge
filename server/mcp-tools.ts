@@ -33,6 +33,76 @@ async function getAccountHealth(ctx: McpAuthContext, args: Record<string, unknow
   }
 }
 
+async function aiChat(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { aiChatHandler } = await import('@/server/mcp/handlers/ai')
+    const data = await aiChatHandler(ctx, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message)
+  }
+}
+
+async function aiAnalyzeTrade(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { aiAnalyzeTradeHandler } = await import('@/server/mcp/handlers/ai')
+    const data = await aiAnalyzeTradeHandler(ctx, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message)
+  }
+}
+
+async function aiAnalysisGlobal(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { aiAnalysisGlobalHandler } = await import('@/server/mcp/handlers/ai')
+    const data = await aiAnalysisGlobalHandler(ctx, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message)
+  }
+}
+
+async function aiAnalysisAccounts(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { aiAnalysisAccountsHandler } = await import('@/server/mcp/handlers/ai')
+    const data = await aiAnalysisAccountsHandler(ctx, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message)
+  }
+}
+
+async function aiAnalysisInstrument(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { aiAnalysisInstrumentHandler } = await import('@/server/mcp/handlers/ai')
+    const data = await aiAnalysisInstrumentHandler(ctx, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message)
+  }
+}
+
+async function aiAnalysisTimeOfDay(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { aiAnalysisTimeOfDayHandler } = await import('@/server/mcp/handlers/ai')
+    const data = await aiAnalysisTimeOfDayHandler(ctx, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message)
+  }
+}
+
+async function aiSearchDate(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  try {
+    const { aiSearchDateHandler } = await import('@/server/mcp/handlers/ai')
+    const data = await aiSearchDateHandler(ctx, args)
+    return toolSuccess(data)
+  } catch (e: any) {
+    return toolError(e.message)
+  }
+}
+
 export const standardTools: ToolDefinition[] = [
   {
     name: 'get_account_health',
@@ -724,6 +794,97 @@ Returns: Audit report with violations, emotional patterns, suggestions, and grad
     },
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
   },
+  {
+    name: 'ai_chat',
+    description: `AI-powered conversational assistant for trading insights, performance questions, mindset coaching, news context. Wraps /api/ai/chat logic (non-streaming for MCP). Enforces entitlements, budget, rate limits, and strict user data isolation.
+
+Args:
+  - messages (array, optional): Chat messages [{role, content}]
+  - prompt (string, optional): Simple prompt if no messages
+
+Returns: { text: AI response, usage, tradesAnalyzed }`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        messages: { type: 'array', description: 'Chat history messages' },
+        prompt: { type: 'string', description: 'Direct question/prompt' },
+      },
+    },
+    outputSchema: {
+      type: 'object',
+      properties: {
+        text: { type: 'string' },
+        usage: { type: 'object' },
+        tradesAnalyzed: { type: 'number' },
+      },
+    },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+  },
+  {
+    name: 'ai_analyze_trade',
+    description: `LLM-powered deep analysis of a single trade (insights, what went well, improvements, risk). Wraps /api/ai/analyze spirit for trades. Requires tradeId owned by user.
+
+Args:
+  - tradeId (string, required)
+
+Returns: { tradeId, analysis: string, trade: object, usage }`,
+    inputSchema: {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        tradeId: { type: 'string', description: 'Trade ID to analyze (must belong to authenticated user)' },
+      },
+      required: ['tradeId'],
+    },
+    outputSchema: {
+      type: 'object',
+      properties: {
+        tradeId: { type: 'string' },
+        analysis: { type: 'string' },
+        trade: { type: 'object' },
+        usage: { type: 'object' },
+      },
+    },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+  },
+  {
+    name: 'ai_analysis_global',
+    description: `Global portfolio AI analysis (performance, trends, risk). Key variant from /api/ai/analysis/global. User-isolated.`,
+    inputSchema: { $schema: 'https://json-schema.org/draft/2020-12/schema', type: 'object', additionalProperties: false, properties: { locale: { type: 'string' } } },
+    outputSchema: { type: 'object', properties: { type: { type: 'string' }, text: { type: 'string' }, stats: { type: 'object' } } },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+  },
+  {
+    name: 'ai_analysis_accounts',
+    description: `Per-account AI performance analysis. Key variant from /api/ai/analysis/accounts.`,
+    inputSchema: { $schema: 'https://json-schema.org/draft/2020-12/schema', type: 'object', additionalProperties: false, properties: {} },
+    outputSchema: { type: 'object', properties: { type: { type: 'string' }, text: { type: 'string' }, accounts: { type: 'array' } } },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+  },
+  {
+    name: 'ai_analysis_instrument',
+    description: `Instrument-specific AI analysis (e.g. ES, NQ). Key variant from /api/ai/analysis/instrument. Requires 'instrument' arg.`,
+    inputSchema: { $schema: 'https://json-schema.org/draft/2020-12/schema', type: 'object', additionalProperties: false, properties: { instrument: { type: 'string' } } },
+    outputSchema: { type: 'object', properties: { type: { type: 'string' }, text: { type: 'string' }, tradeCount: { type: 'number' } } },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+  },
+  {
+    name: 'ai_analysis_time_of_day',
+    description: `Time-of-day / session AI pattern analysis. Key variant from /api/ai/analysis/time-of-day.`,
+    inputSchema: { $schema: 'https://json-schema.org/draft/2020-12/schema', type: 'object', additionalProperties: false, properties: {} },
+    outputSchema: { type: 'object', properties: { type: { type: 'string' }, text: { type: 'string' }, tradeCount: { type: 'number' } } },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+  },
+  {
+    name: 'ai_search_date',
+    description: `Natural language date query parser to ISO ranges or weekdays (for filtering trades). Wraps /api/ai/search/date. Returns parsed structure.`,
+    inputSchema: { $schema: 'https://json-schema.org/draft/2020-12/schema', type: 'object', additionalProperties: false, properties: { query: { type: 'string' } } },
+    outputSchema: { type: 'object', properties: { query: { type: 'string' }, parsed: { type: 'string' } } },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+  },
 ]
 
 export async function handleMcpToolCall(toolName: string, args: Record<string, unknown>, ctx: McpAuthContext): Promise<McpToolResult> {
@@ -736,6 +897,20 @@ export async function handleMcpToolCall(toolName: string, args: Record<string, u
       return await createJournalEntry(ctx, args)
     case 'analyze_trade':
       return await analyzeTrade(ctx, args)
+    case 'ai_chat':
+      return await aiChat(ctx, args)
+    case 'ai_analyze_trade':
+      return await aiAnalyzeTrade(ctx, args)
+    case 'ai_analysis_global':
+      return await aiAnalysisGlobal(ctx, args)
+    case 'ai_analysis_accounts':
+      return await aiAnalysisAccounts(ctx, args)
+    case 'ai_analysis_instrument':
+      return await aiAnalysisInstrument(ctx, args)
+    case 'ai_analysis_time_of_day':
+      return await aiAnalysisTimeOfDay(ctx, args)
+    case 'ai_search_date':
+      return await aiSearchDate(ctx, args)
     case 'run_monte_carlo':
       return await runMonteCarlo(ctx, args)
     case 'suggest_position_size':

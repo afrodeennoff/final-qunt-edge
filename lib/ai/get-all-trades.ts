@@ -9,6 +9,7 @@ type GetAllTradesOptions = {
   pageSize?: number;
   maxPages?: number;
   forceRefresh?: boolean;
+  userId?: string;  // explicit for MCP context (bypasses getUserId for strict scoping)
 };
 
 export type AiTradesFetchResult = {
@@ -28,7 +29,10 @@ export async function getAllTradesForAi(
   const pageSize = Math.max(1, Math.floor(options.pageSize ?? DEFAULT_PAGE_SIZE));
   const maxPages = Math.max(1, Math.floor(options.maxPages ?? MAX_PAGES));
   const forceRefresh = options.forceRefresh ?? false;
-  const userId = await getUserId();
+  const userId = options.userId || (await getUserId());
+  if (!userId) {
+    throw new Error('MISSING_USER_ID_FOR_AI_TRADES');
+  }
   const cacheKey = `user:${userId}:ps:${pageSize}:mp:${maxPages}`;
 
   if (!forceRefresh) {

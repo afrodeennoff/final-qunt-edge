@@ -229,6 +229,7 @@ export async function getAiTrades(params: GetAiTradesParams): Promise<ProfiledAi
     forceRefresh,
     pageSize: 500,
     maxPages: 200,
+    userId: effectiveUserId,
   })
 
   // Compute aggregates (available for all profiles)
