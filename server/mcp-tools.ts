@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { maskEmail } from '@/lib/redact-pii'
 import { toolError, toolSuccess, clampInt, buildDateFilter, requireParam, type McpToolResult, type ToolDefinition } from './mcp-helpers'
 
-function computeDrawdown(account: { startingBalance: number; drawdownThreshold: number; buffer: number }, currentBalance: number): {
+export function computeDrawdown(account: { startingBalance: number; drawdownThreshold: number; buffer: number }, currentBalance: number): {
   drawdownUsed: number
   drawdownUsedPct: string
   bufferRemaining: number
