@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { computeDrawdown } from '../mcp-tools' // temporary reuse of existing helper during migration
+import { computeDrawdown } from '../../mcp-tools' // temporary reuse of existing helper during migration
 
 export interface AccountHealthContext {
   userId: string
