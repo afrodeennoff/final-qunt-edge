@@ -272,6 +272,7 @@ export async function setupAccountAction(account: Account): Promise<Account> {
     id,
     userId: _,
     createdAt: _createdAt,
+    updatedAt: _updatedAt,
     payouts,
     groupId,
     balanceToDate,
