@@ -141,11 +141,16 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-border pt-5">
+        <div className="mt-8 border-t border-border pt-5 space-y-3">
+          <div className="text-xs text-muted-foreground/70">
+            <span className="font-semibold text-foreground/60">Public API (MCP):</span>{' '}
+            <code className="font-mono text-[10px] bg-muted/40 px-1.5 py-0.5 rounded select-all">{typeof window !== 'undefined' ? window.location.origin : ''}/api/mcp/public</code>
+            {' '}— no auth required, browse prop firms, deals, blog, leaderboard, benchmarks
+          </div>
           <p className="text-xs tracking-[-0.005em] text-muted-foreground">
             {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
-          <p className="mt-2 text-xs leading-relaxed text-muted-foreground/50">
+          <p className="text-xs leading-relaxed text-muted-foreground/50">
             {t('disclaimer.risk.content')}
           </p>
         </div>

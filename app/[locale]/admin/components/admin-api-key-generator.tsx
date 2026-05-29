@@ -43,22 +43,17 @@ export function AdminApiKeyGenerator() {
             <p className="text-xs text-destructive">This key grants full admin access. Store it securely.</p>
             {origin && (
               <div className="rounded-lg border border-border/20 bg-muted/30 p-3 text-xs text-muted-foreground space-y-2">
-                <p className="font-semibold text-foreground">MCP Endpoints</p>
-                {[
-                  { url: `${origin}/api/mcp/admin`, label: 'Admin (use this with admin keys)', desc: 'Full admin access — users, subscriptions, analytics' },
-                  { url: `${origin}/api/mcp/public`, label: 'Public (use for public data access)', desc: 'Prop firms, deals, blog, leaderboard, benchmarks' },
-                ].map((ep) => (
-                  <div key={ep.url} className="rounded border border-border/10 bg-background/40 p-2">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <code className="flex-1 break-all font-mono text-[10px] text-foreground/80">{ep.url}</code>
-                      <Button variant="ghost" size="icon" className="h-5 w-5 shrink-0" onClick={() => { navigator.clipboard.writeText(ep.url); toast.success('URL copied!') }}>
-                        <Copy className="h-2.5 w-2.5" />
-                      </Button>
-                    </div>
-                    <p className="text-[10px] font-medium text-foreground/70">{ep.label}</p>
-                    <p className="text-[9px] text-muted-foreground/70">{ep.desc}</p>
+                <p className="font-semibold text-foreground">Admin MCP Endpoint</p>
+                <div className="rounded border border-border/10 bg-background/40 p-2">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <code className="flex-1 break-all font-mono text-[10px] text-foreground/80">{origin}/api/mcp/admin</code>
+                    <Button variant="ghost" size="icon" className="h-5 w-5 shrink-0" onClick={() => { navigator.clipboard.writeText(`${origin}/api/mcp/admin`); toast.success('URL copied!') }}>
+                      <Copy className="h-2.5 w-2.5" />
+                    </Button>
                   </div>
-                ))}
+                  <p className="text-[10px] font-medium text-foreground/70">Admin (use this with admin keys)</p>
+                  <p className="text-[9px] text-muted-foreground/70">Full admin access — users, subscriptions, analytics</p>
+                </div>
               </div>
             )}
             <Button variant="outline" onClick={() => setCreatedKey(null)}>Create Another</Button>

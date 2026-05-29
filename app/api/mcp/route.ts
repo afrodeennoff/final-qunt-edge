@@ -33,17 +33,41 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   const origin = getSiteOrigin()
-  const endpoints = [
-    { path: '/api/mcp', auth: 'User API key required', description: 'Personal trading data + public data' },
-    { path: '/api/mcp/public', auth: 'None', description: 'Public data only (prop firms, deals, blog, leaderboard)' },
-    { path: '/api/mcp/admin', auth: 'Admin API key required', description: 'Full access including admin operations' },
-  ]
+  const toolCatalog = (t: (typeof standardTools | typeof websiteTools)[number]) => ({
+    name: t.name,
+    description: t.description.split('\n')[0],
+    inputSchema: t.inputSchema,
+    annotations: t.annotations,
+  })
   return Response.json({
     name: MCP_SERVER_NAME,
     version: MCP_SERVER_VERSION,
     protocol: 'MCP JSON-RPC 2.0',
-    description: 'Qunt Edge Model Context Protocol server — connect AI tools to trading data',
+    description: 'Qunt Edge Model Context Protocol server — connect AI tools to your trading data',
     documentation: 'https://spec.modelcontextprotocol.io',
-    endpoints: endpoints.map((e) => ({ ...e, url: `${origin}${e.path}` })),
+    endpoints: [
+      {
+        path: '/api/mcp',
+        url: `${origin}/api/mcp`,
+        auth: 'User API key required',
+        description: 'Personal trading data + public data. 16 tools: accounts, trades, performance, tags, profile, prop firms, deals, blog, leaderboard.',
+      },
+      {
+        path: '/api/mcp/public',
+        url: `${origin}/api/mcp/public`,
+        auth: 'None',
+        description: 'Public data only. 10 tools: prop firms, deals, blog, leaderboard, benchmarks, community posts.',
+      },
+      {
+        path: '/api/mcp/admin',
+        url: `${origin}/api/mcp/admin`,
+        auth: 'Admin API key required',
+        description: 'Full access including admin operations. All 20 tools.',
+      },
+    ],
+    tools: {
+      personal: standardTools.map(toolCatalog),
+      website: websiteTools.map(toolCatalog),
+    },
   }, { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } })
 }

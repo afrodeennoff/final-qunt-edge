@@ -1,8 +1,8 @@
 import type { McpAuthContext } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
-import { toolError, toolSuccess, clampInt, requireParam, type McpToolResult } from './mcp-helpers'
+import { toolError, toolSuccess, clampInt, requireParam, type McpToolResult, type ToolDefinition } from './mcp-helpers'
 
-export const websiteTools = [
+export const websiteTools: ToolDefinition[] = [
   {
     name: 'list_blog_posts',
     description: 'List published blog posts with optional category filter and pagination',

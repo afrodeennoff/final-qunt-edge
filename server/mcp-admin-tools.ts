@@ -1,45 +1,112 @@
 import type { McpAuthContext } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
 import { maskEmail } from '@/lib/redact-pii'
-import { toolError, toolSuccess, requireParam, type McpToolResult } from './mcp-helpers'
+import { toolError, toolSuccess, requireParam, type McpToolResult, type ToolDefinition } from './mcp-helpers'
 
-export const adminTools = [
+export const adminTools: ToolDefinition[] = [
   {
     name: 'admin_list_users',
-    description: 'List all users (admin only)',
+    description: `List all platform users with basic info (admin only).
+
+Args: none
+
+Returns: Array of user objects with id, username, email (masked), language, isBeta, createdAt, showOnLeaderboard`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
       properties: {},
     },
+    outputSchema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          username: { type: 'string' },
+          email: { type: 'string' },
+          language: { type: 'string' },
+          isBeta: { type: 'boolean' },
+          createdAt: { type: 'string', format: 'date-time' },
+        },
+      },
+    },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
   },
   {
     name: 'admin_get_user',
-    description: 'Get details for a specific user by ID (admin only)',
+    description: `Get detailed information for a specific user by ID, including their accounts and subscription.
+
+Args:
+  - userId (string, required): The user ID to look up
+
+Returns: User object with accounts and subscription data`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
-      properties: { userId: { type: 'string', description: 'The user ID' } },
+      properties: { userId: { type: 'string', description: 'The user ID to look up' } },
       required: ['userId'],
     },
+    outputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        username: { type: 'string' },
+        email: { type: 'string' },
+        language: { type: 'string' },
+        accounts: { type: 'array', items: { type: 'object' } },
+        subscription: { type: 'object' },
+      },
+    },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
   },
   {
     name: 'admin_list_subscriptions',
-    description: 'List all subscriptions (admin only)',
+    description: `List all subscriptions with user info (admin only).
+
+Args: none
+
+Returns: Array of subscription objects with user email/username`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
       properties: {},
     },
+    outputSchema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          plan: { type: 'string' },
+          status: { type: 'string' },
+          user: { type: 'object', properties: { email: { type: 'string' }, username: { type: 'string' } } },
+        },
+      },
+    },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
   },
   {
     name: 'admin_get_analytics',
-    description: 'Get platform-wide analytics (admin only)',
+    description: `Get platform-wide analytics including user, account, trade, and subscription counts.
+
+Args: none
+
+Returns: Object with totalUsers, totalAccounts, totalTrades, activeSubscriptions`,
     inputSchema: {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       type: 'object',
       properties: {},
     },
+    outputSchema: {
+      type: 'object',
+      properties: {
+        totalUsers: { type: 'number' },
+        totalAccounts: { type: 'number' },
+        totalTrades: { type: 'number' },
+        activeSubscriptions: { type: 'number' },
+      },
+    },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
   },
 ]
 

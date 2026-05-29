@@ -1,3 +1,18 @@
+export interface ToolAnnotations {
+  readOnlyHint?: boolean
+  destructiveHint?: boolean
+  idempotentHint?: boolean
+  openWorldHint?: boolean
+}
+
+export interface ToolDefinition {
+  name: string
+  description: string
+  inputSchema: Record<string, unknown>
+  outputSchema?: Record<string, unknown>
+  annotations?: ToolAnnotations
+}
+
 export type McpToolResult = { content: Array<{ type: 'text'; text: string }>; isError?: boolean }
 
 export function toolError(message: string): McpToolResult {

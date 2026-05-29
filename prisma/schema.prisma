@@ -147,6 +147,24 @@ model ApiKey {
   @@schema("public")
 }
 
+model McpAuditLog {
+  id        String   @id @default(uuid())
+  apiKeyId  String?
+  userId    String?
+  tool      String
+  argsKeys  String?  // JSON array of argument keys (not values, for privacy)
+  success   Boolean
+  durationMs Int
+  errorCode String?
+  createdAt DateTime @default(now())
+
+  @@index([apiKeyId, createdAt])
+  @@index([userId, createdAt])
+  @@index([tool, createdAt])
+  @@index([createdAt])
+  @@schema("public")
+}
+
 model Referral {
   id     String @id @default(uuid())
   userId String @unique
