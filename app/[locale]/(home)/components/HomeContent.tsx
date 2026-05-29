@@ -2,6 +2,9 @@ import Hero from './Hero'
 import { TrustBar } from './TrustBar'
 import { Problem } from './Problem'
 import { Features } from './Features'
+import { PropFirmPreview } from './PropFirmPreview'
+import { DealsPreview } from './DealsPreview'
+import { LeaderboardPreview } from './LeaderboardPreview'
 import { LiveInAction } from './LiveInAction'
 import { HowItWorks } from './HowItWorks'
 import { FinalCTA } from './FinalCTA'
@@ -14,6 +17,9 @@ export default function HomeContent({ locale }: { locale: string }) {
         <TrustBar />
         <Problem />
         <Features />
+        <PropFirmPreview />
+        <DealsPreview />
+        <LeaderboardPreview />
         <LiveInAction />
         <HowItWorks />
         <FinalCTA />

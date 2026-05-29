@@ -2,7 +2,7 @@ import type { McpAuthContext } from './mcp-auth'
 import { requireAdminAccess } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
 import { maskEmail } from '@/lib/redact-pii'
-import { toolError, toolSuccess, type McpToolResult } from './mcp-helpers'
+import { toolError, toolSuccess, requireParam, type McpToolResult } from './mcp-helpers'
 
 export const adminTools = [
   {
@@ -51,7 +51,7 @@ export async function handleAdminMcpToolCall(toolName: string, args: Record<stri
     case 'admin_list_users':
       return await adminListUsers()
     case 'admin_get_user':
-      return await adminGetUser(args.userId as string)
+      return await adminGetUser(requireParam(args, 'userId'))
     case 'admin_list_subscriptions':
       return await adminListSubscriptions()
     case 'admin_get_analytics':
@@ -75,10 +75,10 @@ async function adminGetUser(userId: string) {
     where: { id: userId },
     include: {
       accounts: {
-        select: { id: true, number: true, name: true, broker: true, createdAt: true },
+        select: { id: true, number: true, propfirm: true, accountSize: true, createdAt: true },
       },
       subscription: {
-        select: { id: true, plan: true, status: true, currentPeriodEnd: true },
+        select: { id: true, plan: true, status: true, endDate: true },
       },
     },
   })

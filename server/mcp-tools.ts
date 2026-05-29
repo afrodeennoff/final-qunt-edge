@@ -92,15 +92,15 @@ export async function handleMcpToolCall(toolName: string, args: Record<string, u
 
 async function listAccounts(ctx: McpAuthContext) {
   const accounts = await prisma.account.findMany({
-    where: { authUserId: ctx.userId },
-    select: { id: true, number: true, name: true, broker: true, startingBalance: true, createdAt: true },
+    where: { userId: ctx.userId },
+    select: { id: true, number: true, propfirm: true, accountSize: true, startingBalance: true, createdAt: true },
   })
   return toolSuccess(accounts)
 }
 
 async function getAccountDetails(ctx: McpAuthContext, accountId: string) {
   const account = await prisma.account.findFirst({
-    where: { id: accountId, authUserId: ctx.userId },
+    where: { id: accountId, userId: ctx.userId },
     include: { trades: { take: 10, orderBy: { entryDate: 'desc' } } },
   })
   if (!account) return toolError('Account not found')
@@ -110,7 +110,7 @@ async function getAccountDetails(ctx: McpAuthContext, accountId: string) {
 async function listTrades(ctx: McpAuthContext, args: Record<string, unknown>) {
   const limit = clampInt(args.limit, 1, 200, 50)
   const offset = clampInt(args.offset, 0, 1_000_000, 0)
-  const where: Record<string, unknown> = { authUserId: ctx.userId }
+  const where: Record<string, unknown> = { userId: ctx.userId }
   const dateFilter = buildDateFilter(args)
   if (dateFilter) where.entryDate = dateFilter
   const trades = await prisma.trade.findMany({
@@ -123,7 +123,7 @@ async function listTrades(ctx: McpAuthContext, args: Record<string, unknown>) {
 }
 
 async function getPerformanceSummary(ctx: McpAuthContext, args: Record<string, unknown>) {
-  const where: Record<string, unknown> = { authUserId: ctx.userId }
+  const where: Record<string, unknown> = { userId: ctx.userId }
   const dateFilter = buildDateFilter(args)
   if (dateFilter) where.entryDate = dateFilter
 
@@ -174,7 +174,7 @@ async function getPerformanceSummary(ctx: McpAuthContext, args: Record<string, u
 
 async function getUserProfile(ctx: McpAuthContext) {
   const user = await prisma.user.findUnique({
-    where: { authUserId: ctx.userId },
+    where: { id: ctx.userId },
     select: { id: true, username: true, email: true, language: true, createdAt: true },
   })
   if (!user) return toolError('User not found')

@@ -1,6 +1,6 @@
 import type { McpAuthContext } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
-import { toolError, toolSuccess, clampInt, type McpToolResult } from './mcp-helpers'
+import { toolError, toolSuccess, clampInt, requireParam, type McpToolResult } from './mcp-helpers'
 
 export const websiteTools = [
   {
@@ -126,15 +126,15 @@ export async function handleWebsiteMcpToolCall(toolName: string, args: Record<st
     case 'list_blog_posts':
       return await listBlogPosts(args)
     case 'get_blog_post':
-      return await getBlogPost(args.slug as string)
+      return await getBlogPost(requireParam(args, 'slug'))
     case 'list_prop_firms':
       return await listPropFirms(args)
     case 'get_prop_firm':
-      return await getPropFirm(args.slug as string)
+      return await getPropFirm(requireParam(args, 'slug'))
     case 'list_challenges':
-      return await listChallenges(args.propFirmSlug as string, args)
+      return await listChallenges(requireParam(args, 'propFirmSlug'), args)
     case 'list_prop_firm_reviews':
-      return await listPropFirmReviews(args.propFirmSlug as string, args)
+      return await listPropFirmReviews(requireParam(args, 'propFirmSlug'), args)
     case 'list_active_deals':
       return await listActiveDeals(args)
     case 'list_community_posts':
@@ -152,10 +152,10 @@ async function listBlogPosts(args: Record<string, unknown>) {
   const limit = clampInt(args.limit, 1, 50, 20)
   const offset = clampInt(args.offset, 0, 1_000_000, 0)
   const where: Record<string, unknown> = { published: true }
-  if (args.category) where.category = args.category
+  if (typeof args.category === 'string' && args.category) where.category = args.category
 
   const posts = await prisma.blogPost.findMany({
-    where: where as Parameters<typeof prisma.blogPost.findMany>[0]['where'],
+    where,
     select: { id: true, title: true, slug: true, excerpt: true, coverImage: true, category: true, createdAt: true, updatedAt: true },
     orderBy: { createdAt: 'desc' },
     take: limit,
@@ -177,11 +177,11 @@ async function listPropFirms(args: Record<string, unknown>) {
   const limit = clampInt(args.limit, 1, 100, 50)
   const offset = clampInt(args.offset, 0, 1_000_000, 0)
   const where: Record<string, unknown> = { isActive: true }
-  if (args.category) where.category = args.category
-  if (args.platform) where.platform = args.platform
+  if (typeof args.category === 'string' && args.category) where.category = args.category
+  if (typeof args.platform === 'string' && args.platform) where.platform = args.platform
 
   const firms = await prisma.propFirm.findMany({
-    where: where as Parameters<typeof prisma.propFirm.findMany>[0]['where'],
+    where,
     select: { id: true, slug: true, name: true, category: true, shortDesc: true, logoUrl: true, platform: true, payoutModel: true, profitSplit: true, referralUrl: true },
     orderBy: { name: 'asc' },
     take: limit,
@@ -237,8 +237,16 @@ async function listPropFirmReviews(propFirmSlug: string, args: Record<string, un
 
 async function listActiveDeals(args: Record<string, unknown>) {
   const limit = clampInt(args.limit, 1, 50, 20)
+  const now = new Date()
   const deals = await prisma.propFirmCoupon.findMany({
-    where: { isActive: true, expiresAt: { gte: new Date() } },
+    where: {
+      isActive: true,
+      expiresAt: { gte: now },
+      OR: [
+        { startsAt: null },
+        { startsAt: { lte: now } },
+      ],
+    },
     select: { id: true, code: true, description: true, discountPercent: true, challengeFee: true, expiresAt: true, propFirm: { select: { name: true, slug: true, logoUrl: true } } },
     orderBy: { createdAt: 'desc' },
     take: limit,
@@ -250,12 +258,12 @@ async function listCommunityPosts(args: Record<string, unknown>): Promise<McpToo
   const limit = clampInt(args.limit, 1, 50, 20)
   const offset = clampInt(args.offset, 0, 1_000_000, 0)
   const where: Record<string, unknown> = {}
-  if (args.type) where.type = args.type
-  if (args.status) where.status = args.status
+  if (typeof args.type === 'string' && args.type) where.type = args.type
+  if (typeof args.status === 'string' && args.status) where.status = args.status
 
   const posts = await prisma.post.findMany({
-    where: where as Parameters<typeof prisma.post.findMany>[0]['where'],
-    select: { id: true, title: true, type: true, status: true, createdAt: true, userId: true },
+    where,
+    select: { id: true, title: true, type: true, status: true, createdAt: true, user: { select: { username: true } } },
     orderBy: { createdAt: 'desc' },
     take: limit,
     skip: offset,
@@ -267,11 +275,10 @@ async function getLeaderboard(args: Record<string, unknown>): Promise<McpToolRes
   const limit = clampInt(args.limit, 1, 50, 10)
   const offset = clampInt(args.offset, 0, 1_000_000, 0)
 
+  // Aggregate all leaderboard users in one query, then sort and paginate in-memory
   const users = await prisma.user.findMany({
     where: { showOnLeaderboard: true },
     select: { id: true, username: true, language: true },
-    take: limit,
-    skip: offset,
   })
 
   const userIds = users.map((u) => u.id)
@@ -297,6 +304,7 @@ async function getLeaderboard(args: Record<string, unknown>): Promise<McpToolRes
       }
     })
     .sort((a, b) => b.totalPnL - a.totalPnL)
+    .slice(offset, offset + limit)
 
   return toolSuccess(leaderboard)
 }
