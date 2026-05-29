@@ -18,6 +18,5 @@ CREATE TABLE IF NOT EXISTS "ApiKey" (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS "ApiKey_key_key" ON "ApiKey"("key");
-CREATE INDEX IF NOT EXISTS "ApiKey_key_idx" ON "ApiKey"("key");
 CREATE INDEX IF NOT EXISTS "ApiKey_userId_idx" ON "ApiKey"("userId");
 CREATE INDEX IF NOT EXISTS "ApiKey_keyPrefix_idx" ON "ApiKey"("keyPrefix");
