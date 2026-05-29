@@ -69,7 +69,7 @@ export default function AnalyticsClient() {
 
   return (
     <UnifiedPageShell density="compact">
-      <div className="w-full space-y-5">
+      <div className="w-full min-h-full space-y-5 flex flex-col">
         <UnifiedSurface className="p-5 sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="space-y-1">

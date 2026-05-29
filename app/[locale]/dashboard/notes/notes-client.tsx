@@ -186,14 +186,14 @@ export default function NotesPageClient() {
     return (
       <div className="min-h-full flex">
         <ResizablePanelGroup direction="horizontal" className="flex-1">
-          {/* Left Pane - Notes List (22% default) */}
+           {/* Left Pane - Notes List (22% default) */}
           <ResizablePanel
             defaultSize={22}
             minSize={15}
             maxSize={35}
             className="border-r border-border/15"
           >
-            <div className="h-full rounded-xl border border-border/30 bg-card shadow-sm">
+            <div className="h-full flex flex-col min-h-0 rounded-xl border border-border/30 bg-card shadow-sm">
               <NotesList
                 traders={traders}
                 selectedTrader={selectedTrader}
@@ -215,7 +215,7 @@ export default function NotesPageClient() {
 
           {/* Middle Pane - Editor (flexible) */}
           <ResizablePanel defaultSize={53} minSize={30}>
-            <div className="h-full rounded-xl border border-border/30 bg-card shadow-sm">
+            <div className="h-full flex flex-col min-h-0 rounded-xl border border-border/30 bg-card shadow-sm">
               <NoteEditor
                 note={activeNote}
                 onNoteUpdate={updateNote}
@@ -237,7 +237,7 @@ export default function NotesPageClient() {
             maxSize={35}
             className="border-l border-border/15"
           >
-            <div className="h-full rounded-xl border border-border/30 bg-card shadow-sm">
+            <div className="h-full flex flex-col min-h-0 rounded-xl border border-border/30 bg-card shadow-sm">
               <NoteInspector
                 note={activeNote}
                 onApplyTemplate={handleApplyTemplate}
@@ -263,7 +263,7 @@ export default function NotesPageClient() {
             maxSize={40}
             className="border-r border-border/15"
           >
-            <div className="h-full rounded-xl border border-border/30 bg-card shadow-sm">
+            <div className="h-full flex flex-col min-h-0 rounded-xl border border-border/30 bg-card shadow-sm">
               <NotesList
                 traders={traders}
                 selectedTrader={selectedTrader}
@@ -285,7 +285,7 @@ export default function NotesPageClient() {
 
           {/* Right Pane - Editor */}
           <ResizablePanel defaultSize={72}>
-            <div className="h-full flex flex-col rounded-xl border border-border/30 bg-card shadow-sm relative">
+            <div className="h-full flex flex-col min-h-0 rounded-xl border border-border/30 bg-card shadow-sm relative">
               {/* Inspector Toggle */}
               <div className="absolute top-3 right-4 z-10">
                 <Button
