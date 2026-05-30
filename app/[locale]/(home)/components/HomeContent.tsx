@@ -22,56 +22,51 @@ import {
 
 const HOME_WIDTH = 'mx-auto w-full max-w-[1100px] px-6'
 
-const headingDisplay = 'text-[48px] sm:text-[56px] md:text-[68px] font-light tracking-[-0.035em] leading-[1.05] text-foreground'
-const headingSection = 'text-[32px] sm:text-[40px] md:text-[48px] font-light tracking-[-0.03em] leading-[1.08] text-foreground'
-const headingCard = 'text-[22px] sm:text-[26px] font-medium tracking-[-0.02em] leading-tight text-foreground'
-const eyebrowStyle = 'text-[10px] font-semibold uppercase tracking-[0.16em] text-primary'
-const bodyLarge = 'text-[17px] leading-[1.6] text-muted-foreground/80 max-w-[560px]'
-const bodyDefault = 'text-[15px] leading-[1.65] text-muted-foreground/70'
-const bodySmall = 'text-[13px] leading-[1.6] text-muted-foreground/60'
+const headingDisplay = 'text-[44px] sm:text-[54px] md:text-[64px] font-normal tracking-[-0.03em] leading-[1.08] text-foreground'
+const headingSection = 'text-[30px] sm:text-[38px] md:text-[46px] font-light tracking-[-0.03em] leading-[1.08] text-foreground'
+const headingCard = 'text-[20px] sm:text-[24px] font-medium tracking-[-0.02em] leading-tight text-foreground'
+const eyebrowStyle = 'text-[11px] font-semibold uppercase tracking-[0.16em] text-primary'
+const bodyLarge = 'text-[16px] leading-[1.65] text-muted-foreground/80 max-w-[560px]'
+const bodyDefault = 'text-[14px] leading-[1.7] text-muted-foreground/75'
+const bodySmall = 'text-[13px] leading-[1.65] text-muted-foreground/60'
 
 const cardMain = 'rounded-2xl border-0 bg-card p-6 sm:p-8'
 const cardNested = 'rounded-xl border-0 bg-muted/30 p-5'
 
-const accent = (color: string) => `text-${color}-400`
+const ctaPrimary = 'inline-flex h-[48px] items-center justify-center gap-2 rounded-full bg-primary px-7 text-[14px] font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/25 active:scale-[0.97]'
+const ctaSecondary = 'inline-flex h-[48px] items-center justify-center rounded-full border-0 bg-muted/30 px-6 text-[14px] font-medium text-foreground transition-all hover:bg-muted/50 active:scale-[0.97]'
 
 export default function HomeContent() {
   return (
     <div className="flex flex-col">
       {/* ─── HERO ─── */}
-      <section className="pt-28 pb-20 sm:pt-36 sm:pb-28">
+      <section className="relative pt-28 pb-20 sm:pt-36 sm:pb-28">
         <div className={HOME_WIDTH}>
           <div className="flex flex-col items-center text-center">
             <span className={eyebrowStyle}>The Trading Journal for Traders Who Track Everything</span>
 
-            <h1 className={cn(headingDisplay, 'mt-6 max-w-[900px]')}>
+            <h1 className={cn(headingDisplay, 'mt-6 max-w-[880px]')}>
               Your journal knows<br />your edge better than you do.
             </h1>
 
-            <p className={cn(bodyLarge, 'mt-6 text-center')}>
+            <p className={cn(bodyLarge, 'mt-5 text-center')}>
               Pre-trade plans. Post-trade reviews. Emotion tracking. Confidence and discipline scores.
               17+ tags per trade. Screenshot attachments. AI-powered pattern recognition.
               This is what a real trading journal looks like.
             </p>
 
-            <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
-              <Link
-                href="/authentication"
-                className="inline-flex h-[52px] items-center justify-center gap-2 rounded-full bg-primary px-8 text-[15px] font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30"
-              >
+            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
+              <Link href="/authentication" className={ctaPrimary}>
                 Start Your Journal <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link
-                href="#journal-preview"
-                className="inline-flex h-[52px] items-center justify-center rounded-full border-0 bg-muted/30 px-6 text-[15px] font-medium text-foreground transition-all hover:bg-muted/50"
-              >
+              <Link href="#journal-preview" className={ctaSecondary}>
                 See the Journal
               </Link>
             </div>
 
-            <div className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-3">
+            <div className="mt-9 flex flex-wrap justify-center gap-x-6 gap-y-2.5">
               {['Pre & post trade notes', 'Emotion tracking', '17+ trade tags', 'Screenshot attachments', 'AI-powered insights'].map((item) => (
-                <div key={item} className="flex items-center gap-2 text-[13px] text-muted-foreground/60">
+                <div key={item} className="flex items-center gap-2 text-[12px] text-muted-foreground/60">
                   <Check className="h-3.5 w-3.5 text-emerald-500" />
                   {item}
                 </div>
@@ -82,9 +77,9 @@ export default function HomeContent() {
       </section>
 
       {/* ─── MOCK JOURNAL ENTRY ─── */}
-      <section id="journal-preview" className="pb-24">
+      <section id="journal-preview" className="pb-20 sm:pb-24">
         <div className={HOME_WIDTH}>
-          <div className="flex flex-col items-center text-center mb-12">
+          <div className="flex flex-col items-center text-center mb-10 sm:mb-12">
             <span className={eyebrowStyle}>The Journal Entry</span>
             <h2 className={cn(headingSection, 'mt-4')}>Every trade tells a story.</h2>
             <p className={cn(bodyDefault, 'mt-3 text-center max-w-lg')}>
@@ -93,7 +88,6 @@ export default function HomeContent() {
           </div>
 
           <div className={cardMain}>
-            {/* Journal entry header */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <div className="flex items-center gap-3">
@@ -120,7 +114,6 @@ export default function HomeContent() {
 
             <div className="my-6 h-px bg-transparent/20" />
 
-            {/* Pre-trade notes */}
             <div className="grid gap-6 md:grid-cols-2">
               <div>
                 <div className="flex items-center gap-2 mb-3">
@@ -149,9 +142,7 @@ export default function HomeContent() {
               </div>
             </div>
 
-            {/* Emotions, confidence, tags row */}
             <div className="mt-6 grid gap-4 sm:grid-cols-3">
-              {/* Emotions */}
               <div className={cardNested}>
                 <div className="flex items-center gap-2 mb-3">
                   <Activity className="h-3.5 w-3.5 text-amber-400" />
@@ -166,7 +157,6 @@ export default function HomeContent() {
                 </div>
               </div>
 
-              {/* Confidence & Discipline */}
               <div className={cardNested}>
                 <div className="flex items-center gap-2 mb-3">
                   <Star className="h-3.5 w-3.5 text-primary" />
@@ -184,7 +174,6 @@ export default function HomeContent() {
                 </div>
               </div>
 
-              {/* Tags */}
               <div className={cardNested}>
                 <div className="flex items-center gap-2 mb-3">
                   <Tag className="h-3.5 w-3.5 text-primary" />
@@ -200,7 +189,6 @@ export default function HomeContent() {
               </div>
             </div>
 
-            {/* Screenshots placeholder */}
             <div className="mt-4 flex items-center gap-2 text-[12px] text-muted-foreground/40">
               <Camera className="h-3.5 w-3.5" />
               <span>3 screenshots attached — entry, management, exit</span>
@@ -210,9 +198,9 @@ export default function HomeContent() {
       </section>
 
       {/* ─── AI INTELLIGENCE SUITE ─── */}
-      <section className="pb-24">
+      <section className="pb-20 sm:pb-24">
         <div className={HOME_WIDTH}>
-          <div className="flex flex-col items-center text-center mb-14">
+          <div className="flex flex-col items-center text-center mb-12 sm:mb-14">
             <span className={eyebrowStyle}>AI-Powered Intelligence</span>
             <h2 className={cn(headingSection, 'mt-4')}>Three engines. One edge.</h2>
             <p className={cn(bodyDefault, 'mt-3 text-center max-w-lg')}>
@@ -220,20 +208,18 @@ export default function HomeContent() {
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-3">
-            {/* Pulse */}
+          <div className="grid gap-6 md:grid-cols-3">
             <div className={cardMain}>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border-0 bg-primary/10 text-primary">
-                <Brain className="h-6 w-6" />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl border-0 bg-primary/10 text-primary">
+                <Brain className="h-5 w-5" />
               </div>
-              <h3 className={cn(headingCard, 'mt-5')}>Qunt Pulse</h3>
-              <p className={cn(bodySmall, 'mt-3')}>
+              <h3 className={cn(headingCard, 'mt-4')}>Qunt Pulse</h3>
+              <p className={cn(bodySmall, 'mt-2.5')}>
                 Scores your trading across 5 dimensions — Psychology, Plan Adherence, Risk Management, Execution, Consistency.
                 See yourself the way a professional risk desk sees you.
               </p>
 
-              {/* Mini pulse preview */}
-              <div className="mt-6 grid grid-cols-5 gap-2">
+              <div className="mt-5 grid grid-cols-5 gap-2">
                 {[
                   { label: 'PSY', score: '89', color: 'emerald' },
                   { label: 'PLAN', score: '76', color: 'blue' },
@@ -249,19 +235,17 @@ export default function HomeContent() {
               </div>
             </div>
 
-            {/* Debrief */}
             <div className={cardMain}>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border-0 bg-primary/10 text-primary">
-                <Eye className="h-6 w-6" />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl border-0 bg-primary/10 text-primary">
+                <BarChart3 className="h-5 w-5" />
               </div>
-              <h3 className={cn(headingCard, 'mt-5')}>Qunt Debrief</h3>
-              <p className={cn(bodySmall, 'mt-3')}>
+              <h3 className={cn(headingCard, 'mt-4')}>Qunt Debrief</h3>
+              <p className={cn(bodySmall, 'mt-2.5')}>
                 Every trading day ends with an AI debrief you can't ignore. Pattern detection, behavioral insights,
                 and actionable feedback that compounds your edge over time.
               </p>
 
-              {/* Mini debrief preview */}
-              <div className="mt-6 rounded-lg border-0 bg-muted/20 p-4">
+              <div className="mt-5 rounded-lg border-0 bg-muted/20 p-4">
                 <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/50 mb-2">Pattern Detected</div>
                 <p className="text-[13px] leading-[1.6] text-muted-foreground/80">
                   Your win rate improves <span className="font-semibold text-emerald-400">27%</span> when you wait
@@ -271,19 +255,17 @@ export default function HomeContent() {
               </div>
             </div>
 
-            {/* Sentinel */}
             <div className={cardMain}>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border-0 bg-primary/10 text-primary">
-                <Shield className="h-6 w-6" />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl border-0 bg-primary/10 text-primary">
+                <Shield className="h-5 w-5" />
               </div>
-              <h3 className={cn(headingCard, 'mt-5')}>Qunt Sentinel</h3>
-              <p className={cn(bodySmall, 'mt-3')}>
+              <h3 className={cn(headingCard, 'mt-4')}>Qunt Sentinel</h3>
+              <p className={cn(bodySmall, 'mt-2.5')}>
                 Real-time risk rules that learn your patterns. Know your prop firm compliance before you break limits.
                 Automated guardrails you actually want.
               </p>
 
-              {/* Mini sentinel preview */}
-              <div className="mt-6 space-y-2.5">
+              <div className="mt-5 space-y-2.5">
                 {[
                   { rule: 'Daily loss limit guard', status: 'active' },
                   { rule: 'Max contracts: 6/session', status: 'active' },
@@ -302,9 +284,9 @@ export default function HomeContent() {
       </section>
 
       {/* ─── ANALYTICS DEEP DIVE ─── */}
-      <section className="pb-24">
+      <section className="pb-20 sm:pb-24">
         <div className={HOME_WIDTH}>
-          <div className="mb-14">
+          <div className="mb-10 sm:mb-14">
             <span className={eyebrowStyle}>30+ Analytics Widgets</span>
             <h2 className={cn(headingSection, 'mt-4 max-w-[680px]')}>
               Every metric that matters.<br/>All in one dashboard.
@@ -316,25 +298,25 @@ export default function HomeContent() {
           </div>
 
           <div className={cardMain}>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 { icon: BarChart3, label: 'PnL Curve', desc: 'Equity over time with session markers' },
                 { icon: TrendingUp, label: 'Win Rate by Session', desc: 'Morning vs afternoon vs overnight' },
                 { icon: AlertTriangle, label: 'Drawdown Heatmap', desc: 'Where losses cluster by day and time' },
                 { icon: Activity, label: 'R-Multiple Distribution', desc: 'Are your winners bigger than losers?' },
                 { icon: Zap, label: 'Streak Tracker', desc: 'Win/loss streaks and recovery patterns' },
-                { icon: Eye, label: 'Tag Performance', desc: 'Which setups and patterns actually work' },
+                { icon: BarChart3, label: 'Tag Performance', desc: 'Which setups and patterns actually work' },
                 { icon: Brain, label: 'Emotion Correlation', desc: 'How feelings predict your outcomes' },
                 { icon: Star, label: 'Confidence vs PnL', desc: 'Does confidence actually help?' },
               ].map((widget) => (
-                <div key={widget.label} className="rounded-xl border-0 bg-muted/20 p-4">
+                <div key={widget.label} className="rounded-xl border-0 bg-muted/20 p-4 transition-colors hover:bg-muted/30">
                   <widget.icon className="h-4 w-4 text-primary" />
-                  <div className="mt-2 text-[13px] font-medium text-foreground">{widget.label}</div>
-                  <div className="mt-1 text-[11px] text-muted-foreground/50">{widget.desc}</div>
+                  <div className="mt-3 text-[13px] font-medium text-foreground">{widget.label}</div>
+                  <div className="mt-1 text-[11px] text-muted-foreground/50 leading-normal">{widget.desc}</div>
                 </div>
               ))}
             </div>
-            <div className="mt-4 text-center text-[12px] text-muted-foreground/40">
+            <div className="mt-5 text-center text-[12px] text-muted-foreground/40">
               + 22 more widgets — all generated from your journal entries
             </div>
           </div>
@@ -342,9 +324,9 @@ export default function HomeContent() {
       </section>
 
       {/* ─── PROP FIRM INTELLIGENCE ─── */}
-      <section className="pb-24">
+      <section className="pb-20 sm:pb-24">
         <div className={HOME_WIDTH}>
-          <div className="grid gap-12 md:grid-cols-2 md:items-center">
+          <div className="grid gap-10 sm:gap-12 md:grid-cols-2 md:items-center">
             <div>
               <span className={eyebrowStyle}>Prop Firm Intelligence</span>
               <h2 className={cn(headingSection, 'mt-4')}>
@@ -357,14 +339,14 @@ export default function HomeContent() {
               </p>
               <Link
                 href="/propfirms"
-                className="mt-6 inline-flex items-center gap-2 text-[14px] font-medium text-primary transition-colors hover:text-primary/80"
+                className="mt-5 inline-flex items-center gap-2 text-[14px] font-medium text-primary transition-colors hover:text-primary/80"
               >
                 Browse Prop Firms <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
 
             <div className={cardMain}>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {[
                   { firm: 'Topstep', rule: 'Daily Loss: $500', status: 'pass', payout: '94%' },
                   { firm: 'Apex', rule: 'Daily Loss: $1,500', status: 'pass', payout: '91%' },
@@ -391,7 +373,7 @@ export default function HomeContent() {
       </section>
 
       {/* ─── MULTI-BROKER SYNC ─── */}
-      <section className="pb-24">
+      <section className="pb-20 sm:pb-24">
         <div className={HOME_WIDTH}>
           <div className="flex flex-col items-center text-center">
             <span className={eyebrowStyle}>Multi-Broker Sync</span>
@@ -400,7 +382,7 @@ export default function HomeContent() {
               Connect in under 60 seconds. No CSV hell. No manual entry. Your journal populates itself.
             </p>
 
-            <div className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-3">
+            <div className="mt-9 flex flex-wrap justify-center gap-x-5 gap-y-2.5">
               {[
                 'TradingView', 'NinjaTrader', 'Tradovate', 'Rithmic', 'Quantower', 'DeepCharts',
               ].map((broker) => (
@@ -415,35 +397,39 @@ export default function HomeContent() {
       </section>
 
       {/* ─── WHY JOURNAL ─── */}
-      <section className="pb-24">
+      <section className="pb-20 sm:pb-24">
         <div className={HOME_WIDTH}>
-          <div className="flex flex-col items-center text-center mb-14">
+          <div className="flex flex-col items-center text-center mb-12 sm:mb-14">
             <span className={eyebrowStyle}>Why Journal</span>
             <h2 className={cn(headingSection, 'mt-4')}>The traders who journal are the traders who last.</h2>
           </div>
 
-          <div className="grid gap-10 md:grid-cols-2">
+          <div className="grid gap-8 sm:gap-10 md:grid-cols-2">
             {[
               {
+                number: '01',
                 title: 'Capture the context',
                 desc: 'Screenshots, emotions, pre-trade reasoning, post-trade reflection. Every detail that a PnL number alone can\'t tell you.',
               },
               {
+                number: '02',
                 title: 'Spot your patterns',
                 desc: 'AI finds what you can\'t — which setups work, what emotions destroy your edge, when you should stop trading and when to push.',
               },
               {
+                number: '03',
                 title: 'Hold yourself accountable',
                 desc: 'Discipline and confidence scores per trade. See exactly when you followed your plan and when you didn\'t.',
               },
               {
+                number: '04',
                 title: 'Compound your edge',
                 desc: 'Daily debriefs. Weekly insights. Monthly reviews. The edge doesn\'t come from one trade — it comes from the pattern across a thousand.',
               },
-            ].map((item, i) => (
-              <div key={i}>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary/60 mb-2">
-                  {String(i + 1).padStart(2, '0')}
+            ].map((item) => (
+              <div key={item.number}>
+                <div className="text-[13px] font-bold uppercase tracking-[0.16em] text-primary/50 mb-2">
+                  {item.number}
                 </div>
                 <h3 className="text-xl font-medium tracking-[-0.01em] text-foreground">{item.title}</h3>
                 <p className={cn(bodyDefault, 'mt-2')}>{item.desc}</p>
@@ -454,7 +440,7 @@ export default function HomeContent() {
       </section>
 
       {/* ─── FINAL CTA ─── */}
-      <section className="pb-28 sm:pb-36">
+      <section className="pb-24 sm:pb-32">
         <div className={HOME_WIDTH}>
           <div className="flex flex-col items-center text-center">
             <h2 className={cn(headingSection, 'max-w-[600px]')}>
@@ -464,10 +450,7 @@ export default function HomeContent() {
               Free to start. No credit card. Your journal is waiting.
             </p>
 
-            <Link
-              href="/authentication"
-              className="mt-8 inline-flex h-[52px] items-center justify-center gap-2 rounded-full bg-primary px-10 text-[15px] font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30"
-            >
+            <Link href="/authentication" className={cn(ctaPrimary, 'mt-8 h-[52px] px-10')}>
               Open Your Journal <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
