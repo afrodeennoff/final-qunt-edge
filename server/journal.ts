@@ -399,11 +399,15 @@ export interface JournalTradesResult {
 }
 
 export async function getJournalTradesAction(
+  inputUserId?: string,
   page: number = 1,
   pageSize: number = 30,
   filters?: JournalTradesFilters,
 ): Promise<JournalTradesResult> {
-  const userId = await getDatabaseUserId()
+  const userId = inputUserId ?? (await getDatabaseUserId().catch(() => null))
+  if (!userId) {
+    return { entries: [], total: 0, page, pageSize, totalPages: 0 }
+  }
 
   const status = filters?.status || undefined
   const search = filters?.search || undefined

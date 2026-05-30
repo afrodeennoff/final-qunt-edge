@@ -86,7 +86,7 @@ export function useJournal(userId: string | null): UseJournalReturn {
     if (!userId) return
     setIsLoading(true)
     try {
-      const result = await getJournalTradesAction(page, JOURNAL_PAGE_SIZE, {
+      const result = await getJournalTradesAction(userId, page, JOURNAL_PAGE_SIZE, {
         status: filters.status !== 'all' ? filters.status : undefined,
         search: filters.search || undefined,
         instrument: filters.instrument || undefined,
