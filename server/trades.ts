@@ -555,8 +555,8 @@ export async function getTradesAction(
       ? loadTradesPage(currentUserId, page, pageSize, includeStats)
       : getTradesPageCached(currentUserId, page, pageSize, includeStats))
   } catch (error) {
-    logger.error('getTradesAction failed', { error })
-    throw error
+    logger.error('getTradesAction failed; falling back to direct fetch', { error })
+    return loadTradesPage(currentUserId, page, pageSize, includeStats)
   }
 }
 

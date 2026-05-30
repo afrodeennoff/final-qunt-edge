@@ -43,7 +43,7 @@ async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<st
       )
     }
 
-    const result = await getTradesAction(null, page, pageSize, false, false)
+    const result = await getTradesAction(null, page, pageSize, true, false)
     return apiSuccess(result, 200, {
       headers: {
         'Cache-Control': 'no-store, max-age=0',

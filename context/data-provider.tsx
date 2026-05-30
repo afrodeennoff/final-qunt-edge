@@ -500,7 +500,7 @@ export const DataProvider: React.FC<{
 
       while (hasMore) {
         const response = await withTimeout(
-          getTradesAction(userId, page, pageSize, force && page === 1, false),
+          getTradesAction(userId, page, pageSize, true, false),
           15000,
           `getTradesAction(page=${page})`,
         )
