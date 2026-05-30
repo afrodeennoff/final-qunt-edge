@@ -326,8 +326,9 @@ model Account {
 
   createdAt DateTime @default(now())
 
-  trades  Trade[]
-  payouts Payout[]
+  trades   Trade[]
+  journals JournalEntry[]
+  payouts  Payout[]
 
   user User @relation("UserAccounts", fields: [userId], references: [id], onDelete: Cascade)
 
@@ -377,6 +378,7 @@ model Trade {
   createdAt DateTime @default(now())
 
   account Account @relation(fields: [accountNumber, userId], references: [number, userId], onDelete: Cascade)
+  journal  JournalEntry?
 
   @@index([accountNumber])
   @@index([groupId])
@@ -392,6 +394,36 @@ model Trade {
   @@index([userId, tags]) // GIN index for array column filtering
   @@index([userId]) // Single-field index for userId-only lookups
   @@index([accountNumber, userId]) // Composite FK index for Account relation (critical for joins and enforcement)
+  @@schema("public")
+}
+
+model JournalEntry {
+  id              String   @id @unique @default(uuid())
+  userId          String
+  tradeId         String   @unique
+  accountNumber   String
+
+  preTradeNotes   String?
+  postTradeReview String?
+  emotions        String?
+
+  confidenceRating Int?
+  disciplineScore  Int?
+
+  customTags      String[] @default([])
+  screenshots     String[] @default([])
+
+  pinned          Boolean  @default(false)
+  archived        Boolean  @default(false)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  trade           Trade    @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+  account         Account  @relation(fields: [accountNumber, userId], references: [number, userId], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tradeId])
   @@schema("public")
 }
 
