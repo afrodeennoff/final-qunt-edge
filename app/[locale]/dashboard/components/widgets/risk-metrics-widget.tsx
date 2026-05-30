@@ -59,19 +59,19 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  <div className="flex-1 flex flex-col justify-center gap-2.5">
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Sharpe</span>
- <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeSharpeRatio > 1 ?"bg-semantic-success-bg text-semantic-success border-semantic-success/30" :"bg-background/30 text-foreground/70 border-border/30")}>
+ <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeSharpeRatio > 1 ?"bg-semantic-success-bg text-semantic-success border-semantic-success/30" :"bg-background/30 text-foreground/70 border-transparent")}>
  {safeSharpeRatio.toFixed(2)}
  </span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Sortino</span>
- <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeSortinoRatio > 1.5 ?"bg-semantic-success-bg text-semantic-success border-semantic-success/30" :"bg-background/30 text-foreground/70 border-border/30")}>
+ <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeSortinoRatio > 1.5 ?"bg-semantic-success-bg text-semantic-success border-semantic-success/30" :"bg-background/30 text-foreground/70 border-transparent")}>
  {safeSortinoRatio.toFixed(2)}
  </span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground text-xs">Calmar</span>
- <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeCalmarRatio > 1 ?"bg-semantic-success-bg text-semantic-success border-semantic-success/30" :"bg-background/30 text-foreground/70 border-border/30")}>
+ <span className={cn("text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full border", safeCalmarRatio > 1 ?"bg-semantic-success-bg text-semantic-success border-semantic-success/30" :"bg-background/30 text-foreground/70 border-transparent")}>
  {safeCalmarRatio.toFixed(2)}
  </span>
  </div>

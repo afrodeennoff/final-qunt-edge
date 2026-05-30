@@ -113,7 +113,7 @@ export function TradeComment({ tradeIds, comment: initialComment, onCommentChang
  value={localComment}
  onChange={(e) => setLocalComment(e.target.value)}
  className={cn("w-full px-3 py-2 text-sm bg-transparent border rounded min-h-[100px]","focus:outline-hidden focus:ring-2 focus:ring-primary resize-none transition-[opacity,background-color,border-color] duration-200",
- showSuccess &&"border-border/65 ring-2 ring-surface-subtle/20",
+ showSuccess &&"border-transparent ring-2 ring-surface-subtle/20",
  isUpdating &&"border-primary/50"
  )}
  />

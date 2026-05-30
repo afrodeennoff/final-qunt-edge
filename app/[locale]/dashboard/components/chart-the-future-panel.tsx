@@ -156,10 +156,10 @@ function AssistantPanel() {
  {messages.map((message) => (
  <div
  key={message.id}
- className={cn("rounded-xl border-border/30 px-3 py-2 text-xs leading-relaxed",
+ className={cn("rounded-xl border-transparent px-3 py-2 text-xs leading-relaxed",
  message.role ==="user"
  ?"border-primary/20 bg-primary/10 text-foreground"
- :"border-border/30 bg-muted/40 text-muted-foreground",
+ :"border-transparent bg-muted/40 text-muted-foreground",
  )}
  >
  {message.text}

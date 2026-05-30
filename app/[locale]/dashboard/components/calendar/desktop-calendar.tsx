@@ -118,9 +118,9 @@ function EventBadge({ events, impactLevels }: { events: FinancialEvent[], impact
  }, 0)
 
  const badgeStyles = {
- 2:"bg-background text-foreground border-border/30 hover:bg-background/35",
- 1:"bg-background text-foreground border-border/30 hover:bg-background/35",
- 0:"bg-background text-foreground border-border/30 hover:bg-background/35"
+ 2:"bg-background text-foreground border-transparent hover:bg-background/35",
+ 1:"bg-background text-foreground border-transparent hover:bg-background/35",
+ 0:"bg-background text-foreground border-transparent hover:bg-background/35"
  }
 
  return (
@@ -166,7 +166,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
  <PopoverTrigger asChild>
  <Badge
  variant="outline"
- className={cn("h-4 px-1.5 text-[8px] sm:text-[9px] font-medium cursor-pointer relative z-0 w-auto justify-center items-center gap-1","bg-secondary/22 text-foreground border-border/55 hover:bg-secondary/30 dark:bg-secondary/22 dark:text-foreground dark:border-border/55 dark:hover:bg-secondary/30","transition-[opacity,background-color,border-color] duration-200 ease-in-out","hover:scale-110 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]","active:scale-95"
+ className={cn("h-4 px-1.5 text-[8px] sm:text-[9px] font-medium cursor-pointer relative z-0 w-auto justify-center items-center gap-1","bg-secondary/22 text-foreground border-transparent hover:bg-secondary/30 dark:bg-secondary/22 dark:text-foreground dark:border-transparent dark:hover:bg-secondary/30","transition-[opacity,background-color,border-color] duration-200 ease-in-out","hover:scale-110 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]","active:scale-95"
  )}
  onClick={(e) => e.stopPropagation()}
  >
@@ -175,7 +175,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
  </Badge>
  </PopoverTrigger>
  <PopoverContent
- className="w-[320px] sm:w-[380px] md:w-[420px] max-w-[90vw] p-0 z-50 border shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] bg-background/0.14 border-border/55"
+ className="w-[320px] sm:w-[380px] md:w-[420px] max-w-[90vw] p-0 z-50 border shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] bg-background/0.14 border-transparent"
  align="start"
  side="right"
  sideOffset={8}
@@ -198,7 +198,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
  {renewals.map((account, index) => (
  <div
  key={account.id}
- className="group relative p-3 sm:p-4 rounded-lg border-05 bg-secondary/22 hover:bg-secondary/30 hover:border-border/55 transition-[opacity,background-color,border-color] duration-200 hover:shadow-xs"
+ className="group relative p-3 sm:p-4 rounded-lg border-05 bg-secondary/22 hover:bg-secondary/30 hover:border-transparent transition-[opacity,background-color,border-color] duration-200 hover:shadow-xs"
  >
  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-3">
  {/* Account Info */}
@@ -513,7 +513,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  }, [calendarData, currentDate, viewMode])
 
  return (
- <Card className="h-full flex flex-col overflow-hidden border-border/30 bg-background/0.14">
+ <Card className="h-full flex flex-col overflow-hidden border-transparent bg-background/0.14">
  <CardHeader
  className="shrink-0 border-b-0 px-4 py-3 sm:px-5 sm:py-4"
  >
@@ -560,7 +560,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  variant="outline"
  size="icon"
  onClick={() => viewMode === 'daily' ? handlePrevMonth() : setCurrentDate(new Date(getYear(currentDate) - 1, 0, 1))}
- className="h-8 w-8 border-border/30 bg-background/0.14 hover:bg-secondary/50"
+ className="h-8 w-8 border-transparent bg-background/0.14 hover:bg-secondary/50"
  aria-label={viewMode === 'daily' ?"Previous month" :"Previous year"}
  >
  <ChevronLeft className="h-4 w-4" />
@@ -569,7 +569,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  variant="outline"
  size="icon"
  onClick={() => viewMode === 'daily' ? handleNextMonth() : setCurrentDate(new Date(getYear(currentDate) + 1, 0, 1))}
- className="h-8 w-8 border-border/30 bg-background/0.14 hover:bg-secondary/50"
+ className="h-8 w-8 border-transparent bg-background/0.14 hover:bg-secondary/50"
  aria-label={viewMode === 'daily' ?"Next month" :"Next year"}
  >
  <ChevronRight className="h-4 w-4" />
@@ -625,7 +625,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
   <button
   type="button"
   className={cn("group relative flex h-full min-h-0 cursor-pointer flex-col overflow-hidden rounded-lg border p-1.5 transition-[opacity,background-color,border-color] duration-200 sm:p-2","hover:-translate-y-[1px] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]",
-  !dayData &&"bg-background/0.13 border-border/0.03",
+  !dayData &&"bg-background/0.13 border-transparent.03",
   dayPnl > 0 &&"bg-semantic-success/20 border-semantic-success-border/30",
   dayPnl < 0 &&"bg-semantic-error/20 border-semantic-error-border/30",
   !isCurrentMonth &&"opacity-45",

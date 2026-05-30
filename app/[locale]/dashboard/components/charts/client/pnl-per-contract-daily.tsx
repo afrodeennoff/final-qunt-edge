@@ -230,14 +230,14 @@ export default React.memo(function PnLPerContractDailyChart({
  >
  <SelectTrigger
  className={cn("w-[120px]",
- size ==="small" ?"h-6 text-[9px]" :"h-8 text-[10px]","bg-secondary/22 border-border/55 text-foreground font-black uppercase tracking-widest"
+ size ==="small" ?"h-6 text-[9px]" :"h-8 text-[10px]","bg-secondary/22 border-transparent text-foreground font-black uppercase tracking-widest"
  )}
  >
  <SelectValue
  placeholder={t("pnlPerContractDaily.selectInstrument")}
  />
  </SelectTrigger>
- <SelectContent className="bg-background/0.14 border-border/55">
+ <SelectContent className="bg-background/0.14 border-transparent">
  {availableInstruments.map((instrument) => (
  <SelectItem key={instrument} value={instrument} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground focus:text-foreground">
  {instrument}

@@ -24,7 +24,7 @@ export default async function MaintenancePage() {
 
   return (
     <div className="flex min-h-dvh items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md border-border/30 shadow-sm">
+      <Card className="w-full max-w-md border-transparent shadow-sm">
         <CardHeader className="space-y-3">
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-warning/10 border border-warning/20 text-warning">

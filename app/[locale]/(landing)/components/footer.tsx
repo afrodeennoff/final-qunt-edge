@@ -125,7 +125,7 @@ export default function Footer() {
                   viewport={{ once: true }}
                   transition={{ delay: 0.08 + index * 0.05, duration: 0.35 }}
                   className={cn(
-                    'flex h-9 w-9 items-center justify-center rounded-full border-0 bg-muted/10 text-muted-foreground shadow-sm transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-border/50 hover:bg-muted/40 hover:text-primary',
+                    'flex h-9 w-9 items-center justify-center rounded-full border-0 bg-muted/10 text-muted-foreground shadow-sm transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-transparent hover:bg-muted/40 hover:text-primary',
                   )}
                 >
                   <item.icon className="size-[18px]" />

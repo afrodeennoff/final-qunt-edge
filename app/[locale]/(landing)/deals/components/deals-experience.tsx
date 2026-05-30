@@ -605,7 +605,7 @@ function DealsTabSections({
             <div
               className={cn(
                 dealsInsetPanelClassName,
-                'p-6 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80',
+                'p-6 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-transparent',
               )}
             >
               <h3 className="text-base font-bold text-foreground">1. Set max month-one spend</h3>
@@ -616,7 +616,7 @@ function DealsTabSections({
             <div
               className={cn(
                 dealsInsetPanelClassName,
-                'p-6 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80',
+                'p-6 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-transparent',
               )}
             >
               <h3 className="text-base font-bold text-foreground">2. Pick executable drawdown</h3>
@@ -627,7 +627,7 @@ function DealsTabSections({
             <div
               className={cn(
                 dealsInsetPanelClassName,
-                'p-6 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80',
+                'p-6 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-transparent',
               )}
             >
               <h3 className="text-base font-bold text-foreground">3. Align payout cadence</h3>
@@ -1318,7 +1318,7 @@ function DealsFilterPanel({
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   selectedDiscount === option.value
                      ? 'border-primary/30 bg-primary text-primary-foreground'
-                    : 'border-border bg-card text-muted-foreground hover:border-border/80 hover:text-foreground'
+                    : 'border-border bg-card text-muted-foreground hover:border-transparent hover:text-foreground'
                 }`}
               >
                 {option.label}
@@ -1334,7 +1334,7 @@ function DealsFilterPanel({
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   sortKey === item.key
                      ? 'border-primary/30 bg-primary text-primary-foreground'
-                    : 'border-border bg-card text-muted-foreground hover:border-border/80 hover:text-foreground'
+                    : 'border-border bg-card text-muted-foreground hover:border-transparent hover:text-foreground'
                 }`}
               >
                 {item.label}

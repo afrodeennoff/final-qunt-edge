@@ -35,7 +35,7 @@ export function FinalCTA() {
             </Link>
           </Button>
 
-          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto h-12 px-8 text-[14px] border-border/50">
+          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto h-12 px-8 text-[14px] border-transparent">
             <Link href="/dashboard">Watch the 2-minute demo</Link>
           </Button>
         </div>

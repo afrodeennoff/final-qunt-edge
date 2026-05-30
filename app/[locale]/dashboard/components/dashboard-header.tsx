@@ -118,7 +118,7 @@ export function DashboardHeader() {
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/8 to-transparent" />
             <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2 pr-3 sm:gap-3 sm:pr-4">
-            <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border-0 bg-background/40 text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:border-border/50 hover:bg-background/60 hover:text-foreground md:h-9 md:w-9" />
+            <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border-0 bg-background/40 text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:border-transparent hover:bg-background/60 hover:text-foreground md:h-9 md:w-9" />
             <div className="flex min-w-0 items-center gap-3">
               <div className="hidden h-8 w-px bg-border/40 sm:block" />
               <div className="min-w-0 max-w-[min(32rem,44vw)]">
@@ -127,7 +127,7 @@ export function DashboardHeader() {
                     <span
                       className={cn(
                         'hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em]',
-                        'border-border/40 bg-background/60 text-muted-foreground',
+                        'border-transparent bg-background/60 text-muted-foreground',
                       )}
                     >
                       {sectionLabel}

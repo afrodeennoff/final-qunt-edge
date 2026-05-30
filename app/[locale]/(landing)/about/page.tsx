@@ -98,7 +98,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <h3 className="text-lg font-semibold tracking-tight text-foreground">Founder&apos;s Expertise</h3>
             <div className="mt-4 flex flex-wrap gap-2">
               {founderSkills.map((skill) => (
-                <Badge key={skill.name} variant="secondary" className="flex items-center gap-1 border-border/20 bg-muted/30 px-2.5 py-1 text-sm">
+                <Badge key={skill.name} variant="secondary" className="flex items-center gap-1 border-transparent bg-muted/30 px-2.5 py-1 text-sm">
                   {skill.icon}
                   {skill.name}
                 </Badge>

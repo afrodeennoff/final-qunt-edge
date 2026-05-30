@@ -41,7 +41,7 @@ export default function ExpectancyWidget({ size }: { size?: string }) {
  ?"bg-semantic-success-bg text-semantic-success border-semantic-success/30"
  : expectancy < 0
  ?"bg-semantic-error-bg text-semantic-error border-semantic-error/30"
- :"bg-background/30 text-foreground/70 border-border/30"
+ :"bg-background/30 text-foreground/70 border-transparent"
  )}>
  {expectancy > 0 ?"Positive edge" : expectancy < 0 ?"Negative edge" :"Neutral"}
  </div>

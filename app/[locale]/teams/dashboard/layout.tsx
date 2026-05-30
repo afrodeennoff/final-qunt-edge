@@ -90,7 +90,7 @@ export default async function DashboardLayout({
                       <div className="hidden h-8 w-px bg-border/40 sm:block" />
                       <div className="min-w-0 max-w-[min(32rem,44vw)]">
                         <div className="flex items-center gap-2">
-                          <span className="hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] border-border/40 bg-background/60 text-muted-foreground">
+                          <span className="hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] border-transparent bg-background/60 text-muted-foreground">
                             Teams
                           </span>
                           <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground sm:text-sm sm:uppercase sm:tracking-[0.12em]">

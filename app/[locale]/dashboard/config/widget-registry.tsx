@@ -183,7 +183,7 @@ function createTablePreview(type: 'tradeTableReview' | 'consistencyTable') {
       </CardHeader>
       <CardContent className="pb-2">
         <div className="w-full flex flex-col gap-2">
-          <div className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 bg-background/25 rounded-md border-border/30">
+          <div className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 bg-background/25 rounded-md border-transparent">
             {Array(type === 'tradeTableReview' ? 4 : 5).fill(0).map((_, i) => (
               <div key={i} className={cn(
                 "h-4 bg-muted rounded",
@@ -230,7 +230,7 @@ function createPropfirmPreview() {
       <CardContent className="pb-2">
         <div className="w-full flex flex-col gap-3">
           {[...Array(2)].map((_, index) => (
-            <div key={index} className="flex flex-col gap-2 p-3 bg-background/25 rounded-md border-border/30">
+            <div key={index} className="flex flex-col gap-2 p-3 bg-background/25 rounded-md border-transparent">
               <div className="flex justify-between items-center">
                 <div className="h-4 w-24 bg-muted rounded" />
                 <div className="h-4 w-16 bg-muted rounded" />
@@ -305,7 +305,7 @@ function createMindsetPreview() {
 
           <div className="flex flex-col gap-2">
             <div className="h-4 w-24 bg-muted rounded" />
-            <div className="h-16 w-full bg-background/25 rounded border-border/30" />
+            <div className="h-16 w-full bg-background/25 rounded border-transparent" />
           </div>
 
           <div className="flex flex-col gap-2">
@@ -447,7 +447,7 @@ function CreateChatPreview() {
         {/* Input area */}
         <div className="border-t p-3">
           <div className="flex items-center gap-2">
-            <div className="flex-1 h-9 bg-background/25 rounded-md border-border/30 flex items-center px-3">
+            <div className="flex-1 h-9 bg-background/25 rounded-md border-transparent flex items-center px-3">
               <div className="h-3 w-24 bg-muted rounded" />
             </div>
             <Button size="sm" className="h-9 px-3">
@@ -462,7 +462,7 @@ function CreateChatPreview() {
 
 function createSmartInsightsPreview() {
   return (
-    <Card className="h-[300px] flex flex-col relative overflow-hidden bg-popover/40 border-border/5">
+    <Card className="h-[300px] flex flex-col relative overflow-hidden bg-popover/40 border-transparent">
       <div className="absolute top-0 right-0 w-32 h-32 bg-semantic-info-bg/5 rounded-full blur-3xl -z-10" />
       <CardHeader className="flex flex-row items-center justify-between gap-0 pb-2 px-4 pt-4">
         <div className="space-y-1">

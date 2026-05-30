@@ -171,7 +171,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  return (
  <div className="h-full flex flex-col bg-transparent">
  <div
- className={cn("gap-0 border-b flex flex-col items-stretch border-border/55 shrink-0",
+ className={cn("gap-0 border-b flex flex-col items-stretch border-transparent shrink-0",
  size ==="small" ?"p-2 h-10 justify-center" :"p-3 sm:p-3.5 h-12 justify-center"
  )}
  >
@@ -262,7 +262,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  <Target className="h-3 w-3" />
  </Button>
  </DialogTrigger>
- <DialogContent className="border-border/55 bg-background/95">
+ <DialogContent className="border-transparent bg-background/95">
  <DialogHeader>
  <DialogTitle className="text-foreground">{t("widgets.dailyTickTarget.setTarget")}</DialogTitle>
  <DialogDescription className="text-muted-foreground">
@@ -283,11 +283,11 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  value={targetValue}
  onChange={(e) => setTargetValue(e.target.value)}
  placeholder={Math.round(convertToDisplayValue(progress.target)).toString()}
- className="bg-secondary/22 border-border/55 text-foreground placeholder:text-muted-foreground focus:border-border/65 focus:ring-border/20 transition-[opacity,background-color,border-color]"
+ className="bg-secondary/22 border-transparent text-foreground placeholder:text-muted-foreground focus:border-transparent focus:ring-border/20 transition-[opacity,background-color,border-color]"
  />
  </div>
  <div className="flex justify-end gap-2">
- <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border/55 hover:bg-secondary/22 text-muted-foreground">
+ <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-transparent hover:bg-secondary/22 text-muted-foreground">
  {t("common.cancel")}
  </Button>
  <Button onClick={handleSaveTarget} className="bg-primary/[0.03] hover:bg-background/0.14 text-foreground font-bold">

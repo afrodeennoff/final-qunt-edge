@@ -50,7 +50,7 @@ export function LiveInAction() {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-5xl p-0 overflow-hidden border-border/20 bg-background">
+        <DialogContent className="max-w-5xl p-0 overflow-hidden border-transparent bg-background">
           <DialogTitle className="sr-only">Product Demo Video</DialogTitle>
           <div className="relative aspect-video w-full bg-black">
             <video

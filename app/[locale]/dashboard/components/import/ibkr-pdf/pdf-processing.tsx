@@ -426,7 +426,7 @@ export default function PdfProcessing({
     if (!totals) return null;
 
     return (
-      <TableRow className="border-t-2 border-border/20 bg-card/30 font-medium">
+      <TableRow className="border-t-2 border-transparent bg-card/30 font-medium">
         <TableCell className="whitespace-nowrap px-4 py-2.5 text-sm font-semibold">
           {t('trade-table.total')} ({totals.totalTrades})
         </TableCell>

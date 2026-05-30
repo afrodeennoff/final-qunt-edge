@@ -64,7 +64,7 @@ export function AccountTable({
  if (!isConfigured) {
  return (
  <div className="space-y-4">
- <div className="rounded-md border-border/30">
+ <div className="rounded-md border-transparent">
  <Table>
  {renderTableHeader()}
  <TableBody>
@@ -309,7 +309,7 @@ export function AccountTable({
  <div className="mb-2 text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
  {t('propFirm.beforeReset')}
  </div>
- <div className="rounded-md border-border/30">
+ <div className="rounded-md border-transparent">
  <Table>
  {renderTableHeader()}
  <TableBody>
@@ -348,7 +348,7 @@ export function AccountTable({
  {t('propFirm.afterReset')}
  </div>
  )}
- <div className="rounded-md border-border/30">
+ <div className="rounded-md border-transparent">
  <Table>
  {renderTableHeader()}
  <TableBody>

@@ -153,7 +153,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  }, [calendarData])
 
  return (
- <Card className="h-full flex flex-col overflow-hidden border-border/30 bg-background/0.14">
+ <Card className="h-full flex flex-col overflow-hidden border-transparent bg-background/0.14">
  <div className="shrink-0 border-b-0 p-3">
  <div className="flex items-start justify-between gap-2">
  <div className="min-w-0">
@@ -167,10 +167,10 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  </div>
  </div>
  <div className="flex items-center gap-1.5">
- <Button variant="outline" size="icon" onClick={handlePrevMonth} className="h-10 w-10 border-border/30 bg-background/0.14" aria-label="Previous month">
+ <Button variant="outline" size="icon" onClick={handlePrevMonth} className="h-10 w-10 border-transparent bg-background/0.14" aria-label="Previous month">
  <ChevronLeft className="h-4 w-4" />
  </Button>
- <Button variant="outline" size="icon" onClick={handleNextMonth} className="h-10 w-10 border-border/30 bg-background/0.14" aria-label="Next month">
+ <Button variant="outline" size="icon" onClick={handleNextMonth} className="h-10 w-10 border-transparent bg-background/0.14" aria-label="Next month">
  <ChevronRight className="h-4 w-4" />
  </Button>
  </div>
@@ -217,7 +217,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  type="button"
  key={dateString} // Key is the timezone-correct date string
  className={cn("relative flex cursor-pointer flex-col justify-between rounded-lg border p-1 transition-[opacity,background-color,border-color]",
- dayData ?"border-border/55" :"border-border/55 bg-background/0.14",
+ dayData ?"border-transparent" :"border-transparent bg-background/0.14",
  dayPnl > 0 &&"border-semantic-success-border/40",
  dayPnl < 0 &&"border-semantic-error-border/40",
  isDateStringToday(dateString, timezone) &&"border-primary/70 bg-primary/10",

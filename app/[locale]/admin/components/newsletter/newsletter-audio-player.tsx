@@ -182,7 +182,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  className="p-2 bg-semantic-info-bg hover:bg-semantic-info-bg/90 dark:bg-semantic-info-bg dark:hover:bg-semantic-info-bg/90 text-card-foreground rounded-full transition-colors disabled:opacity-50"
  >
  {isLoading ? (
- <div className="w-4 h-4 border-2 border-border/0.42 border-t-transparent rounded-full animate-spin" />
+ <div className="w-4 h-4 border-2 border-transparent.42 border-t-transparent rounded-full animate-spin" />
  ) : isPlaying ? (
  <Pause className="w-4 h-4" />
  ) : (

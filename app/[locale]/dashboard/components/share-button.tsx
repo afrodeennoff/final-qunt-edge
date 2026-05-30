@@ -548,7 +548,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  <div className="flex-1">
  <div className="space-y-2">
  <Label>{t("share.startDateLabel")}</Label>
- <div className="border-border/30 rounded-lg bg-primary/[0.03] p-2">
+ <div className="border-transparent rounded-lg bg-primary/[0.03] p-2">
  <Calendar
  mode="single"
  selected={selectedDateRange.from}
@@ -570,7 +570,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  <div className="flex-1">
  <div className="space-y-2">
  <Label>{t("share.endDateLabel")}</Label>
- <div className="border-border/30 rounded-lg bg-primary/[0.03] p-2">
+ <div className="border-transparent rounded-lg bg-primary/[0.03] p-2">
  <Calendar
  mode="single"
  selected={selectedDateRange.to}

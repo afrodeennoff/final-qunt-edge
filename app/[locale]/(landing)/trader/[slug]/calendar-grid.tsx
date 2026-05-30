@@ -32,7 +32,7 @@ export function CalendarGrid({ dayPnl }: { dayPnl: Map<string, number> }) {
                   ? 'border-semantic-success/25 bg-semantic-success/8 hover:bg-semantic-success/15'
                   : value < 0
                     ? 'border-semantic-error/25 bg-semantic-error/8 hover:bg-semantic-error/15'
-                    : 'border-border/50 bg-muted/10 hover:bg-muted/30',
+                    : 'border-transparent bg-muted/10 hover:bg-muted/30',
               )}
               style={{ opacity: value !== 0 ? intensity : 0.6 }}
             >

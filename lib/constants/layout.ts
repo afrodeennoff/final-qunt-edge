@@ -5,7 +5,7 @@ export const HEADER_HEIGHT = 'h-[4.5rem]'
 
 export const HEADER_Z_INDEX = 'z-50'
 
-export const HEADER_BORDER = 'border-b border-border/30'
+export const HEADER_BORDER = 'border-b border-transparent'
 
 export const HEADER_BG = 'bg-card'
 

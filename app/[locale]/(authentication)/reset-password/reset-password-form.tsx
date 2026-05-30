@@ -109,7 +109,7 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  className="h-11 rounded-xl border-0 bg-card px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
  />
 
- <div className="space-y-1.5 rounded-xl border-0 bg-card p-3 transition-colors duration-200 hover:border-border/50">
+ <div className="space-y-1.5 rounded-xl border-0 bg-card p-3 transition-colors duration-200 hover:border-transparent">
  {requirements.map((req) => (
  <div
  key={req.key}

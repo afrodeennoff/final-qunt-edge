@@ -52,7 +52,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
                 {name}
               </h3>
               <div className="flex items-center gap-2 mt-1.5">
-                <Badge variant="outline" className="rounded-full border-border/30 bg-muted/20 text-[10px] font-medium tracking-wide text-muted-foreground">
+                <Badge variant="outline" className="rounded-full border-transparent bg-muted/20 text-[10px] font-medium tracking-wide text-muted-foreground">
                   {accountSizesCount} {accountSizesCount === 1 ? "Size" : "Sizes"}
                 </Badge>
                 <span className="text-[10px] text-muted-foreground/60">•</span>
@@ -75,7 +75,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
         </div>
 
         {/* KPI Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 divide-x divide-border/20 border-b-0">
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-x divide-transparent border-b-0">
           <div className="px-4 py-3 text-center">
             <div className="mb-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground/60">
               Account Value

@@ -345,7 +345,7 @@ export function AccountConfigurator({
 
  <Accordion type="multiple" defaultValue={["basic-info"]} className="w-full pt-2">
  {/* Basic Account Info */}
- <AccordionItem value="basic-info" className="border-border/40">
+ <AccordionItem value="basic-info" className="border-transparent">
  <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
  <div className="flex items-center gap-2.5">
  <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
@@ -400,7 +400,7 @@ export function AccountConfigurator({
  {accountSizeOpen && (
  <Command
  shouldFilter={false}
- className="absolute z-50 mt-1 w-full rounded-md border-border/30 bg-background/30 text-popover-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] top-full left-0 h-fit"
+ className="absolute z-50 mt-1 w-full rounded-md border-transparent bg-background/30 text-popover-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] top-full left-0 h-fit"
  >
  <CommandList className="max-h-24 overflow-y-auto">
  <CommandGroup>
@@ -549,7 +549,7 @@ export function AccountConfigurator({
  </AccordionItem>
 
  {/* Drawdown & Trading Rules */}
- <AccordionItem value="drawdown-rules" className="border-border/40">
+ <AccordionItem value="drawdown-rules" className="border-transparent">
  <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
  <div className="flex items-center gap-2.5">
  <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
@@ -685,7 +685,7 @@ export function AccountConfigurator({
  </div>
 
  {/* Daily Loss Rules */}
- <div className="flex flex-col gap-4 md:pl-5 md:border-l md:border-border/20">
+ <div className="flex flex-col gap-4 md:pl-5 md:border-l md:border-transparent">
  <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Daily Loss Rules</span>
  <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.dailyLoss')}</Label>
@@ -740,7 +740,7 @@ export function AccountConfigurator({
  </AccordionItem>
 
  {/* Consistency Settings */}
- <AccordionItem value="consistency" className="border-border/40">
+ <AccordionItem value="consistency" className="border-transparent">
  <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
  <div className="flex items-center gap-2.5">
  <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
@@ -798,7 +798,7 @@ export function AccountConfigurator({
  </AccordionItem>
 
  {/* Pricing & Payout Section */}
- <AccordionItem value="pricing-payout" className="border-border/40">
+ <AccordionItem value="pricing-payout" className="border-transparent">
  <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
  <div className="flex items-center gap-2.5">
  <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
@@ -973,7 +973,7 @@ export function AccountConfigurator({
  </AccordionItem>
 
  {/* Reset Date Section */}
- <AccordionItem value="reset-date" className="border-border/40">
+ <AccordionItem value="reset-date" className="border-transparent">
  <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
  <div className="flex items-center gap-2.5">
  <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">

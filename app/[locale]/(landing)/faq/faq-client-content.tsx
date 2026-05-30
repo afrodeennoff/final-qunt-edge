@@ -133,7 +133,7 @@ export function FAQClientContent({ locale, allFaqs }: FAQClientContentProps) {
             className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all border whitespace-nowrap ${
               !activeCategory
                 ? 'bg-primary text-primary-foreground border-primary'
-                : 'border-border/60 hover:bg-muted/30 text-muted-foreground'
+                : 'border-transparent hover:bg-muted/30 text-muted-foreground'
             }`}
           >
             All
@@ -145,7 +145,7 @@ export function FAQClientContent({ locale, allFaqs }: FAQClientContentProps) {
               className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all border whitespace-nowrap ${
                 activeCategory === cat
                   ? 'bg-primary text-primary-foreground border-primary'
-                  : 'border-border/60 hover:bg-muted/30 text-muted-foreground'
+                  : 'border-transparent hover:bg-muted/30 text-muted-foreground'
               }`}
             >
               {cat}

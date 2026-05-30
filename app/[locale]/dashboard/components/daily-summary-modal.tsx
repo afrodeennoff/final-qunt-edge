@@ -265,8 +265,8 @@ const getDisplayModeButtonClass = (mode: 'currency' | 'percent', currentMode: 'c
 
 const getBlurCardClass = (isActive: boolean) => cn("group border rounded-xl p-4 flex flex-col items-center justify-center text-center transition-[opacity,background-color,border-color] duration-700 cursor-pointer relative overflow-hidden",
  isActive
- ?"bg-background/0.11 border-border/8 blur-xl scale-[0.98] select-none"
- :"bg-background/0.08 border-border/14 hover:bg-accent/70 hover:border-border/30"
+ ?"bg-background/0.11 border-transparent blur-xl scale-[0.98] select-none"
+ :"bg-background/0.08 border-transparent hover:bg-accent/70 hover:border-transparent"
 )
 
 const getBlurIcon = (isActive: boolean): React.ReactElement => (
@@ -477,7 +477,7 @@ export function DailySummaryModal() {
  <div className="flex items-center gap-4">
  <button
  type="button"
- className="group flex items-center gap-2 cursor-pointer rounded-lg border border-transparent px-3 py-1.5 transition-[opacity,background-color,border-color] hover:border-border/30 hover:bg-secondary/30"
+ className="group flex items-center gap-2 cursor-pointer rounded-lg border border-transparent px-3 py-1.5 transition-[opacity,background-color,border-color] hover:border-transparent hover:bg-secondary/30"
  onClick={(e) => { e.stopPropagation(); setIsEditingHandle(true); }}
  aria-label="Edit handle"
  >
@@ -575,7 +575,7 @@ export function DailySummaryModal() {
  {/* Secondary Stats */}
  <div className="col-span-12 lg:col-span-5 flex flex-col gap-4 h-full justify-center">
  {/* Streak - Refined */}
- <div className="flex-1 bg-gradient-to-br from-card/70 to-muted/40 border-0 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:border-border/30 transition-[opacity,background-color,border-color]">
+ <div className="flex-1 bg-gradient-to-br from-card/70 to-muted/40 border-0 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:border-transparent transition-[opacity,background-color,border-color]">
  <div className="text-6xl font-black tracking-tighter text-foreground mb-2 relative z-10">{stats.currentStreak}</div>
  <div className="text-[9px] text-fg-muted uppercase tracking-[0.12em] font-black relative z-10">Win Streak</div>
  <Zap className="absolute -bottom-6 -right-6 w-32 h-32 text-foreground/[0.03] group-hover:text-foreground/[0.05] transition-colors" />

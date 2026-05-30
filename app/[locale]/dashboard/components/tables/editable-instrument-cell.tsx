@@ -90,7 +90,7 @@ export function EditableInstrumentCell({
  onKeyDown={handleKeyDown}
  onBlur={handleSave}
  placeholder="Instrument"
- className="h-7 text-xs font-medium border-border/65 focus-visible:ring-1"
+ className="h-7 text-xs font-medium border-transparent focus-visible:ring-1"
  disabled={isSaving}
  />
  <Button 
@@ -117,7 +117,7 @@ export function EditableInstrumentCell({
 
  return (
  <div
- className={cn("group cursor-pointer hover:bg-secondary/22 rounded px-2 py-1 transition-colors border border-transparent hover:border-border/55 flex items-center gap-2",
+ className={cn("group cursor-pointer hover:bg-secondary/22 rounded px-2 py-1 transition-colors border border-transparent hover:border-transparent flex items-center gap-2",
  className
  )}
  onClick={handleStartEdit}

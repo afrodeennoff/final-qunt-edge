@@ -103,7 +103,7 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  return (
  <div
  key={tag}
- className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 border-05 h-auto max-w-[150px] transition-[opacity,background-color,border-color] hover:border-border/65"
+ className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 border-05 h-auto max-w-[150px] transition-[opacity,background-color,border-color] hover:border-transparent"
  style={{
  backgroundColor: metadata?.color || 'hsl(var(--foreground) / 0.35)',
  color: 'var(--foreground)'
@@ -203,7 +203,7 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  </Command>
  {isUpdating && (
  <div className="absolute right-2 top-2">
- <div className="animate-spin rounded-full h-4 w-4 border-2 border-border/30 border-t-transparent" />
+ <div className="animate-spin rounded-full h-4 w-4 border-2 border-transparent border-t-transparent" />
  </div>
  )}
  </PopoverContent>

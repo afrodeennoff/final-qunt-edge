@@ -1367,7 +1367,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
                 value={value}
                 className={cn(
                   'shrink-0 rounded-xl border border-transparent px-4 py-2.5 text-sm text-foreground/80 transition-colors',
-                  'hover:border-border/60 hover:bg-muted',
+                  'hover:border-transparent hover:bg-muted',
                   'data-[state=active]:border-primary/30 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                 )}
               >

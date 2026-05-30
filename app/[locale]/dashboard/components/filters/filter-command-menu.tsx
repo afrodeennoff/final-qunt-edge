@@ -275,7 +275,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  variant="outline"
  className={cn(
  variant ==="navbar"
- ?"h-9 w-9 rounded-full border-border/30 bg-background/60 p-0 justify-center text-foreground shadow-none hover:border-border/30 hover:bg-background/80"
+ ?"h-9 w-9 rounded-full border-transparent bg-background/60 p-0 justify-center text-foreground shadow-none hover:border-transparent hover:bg-background/80"
  :"justify-start text-left font-normal",
  variant ==="toolbar" &&"h-10 rounded-full",
  className
@@ -341,8 +341,8 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  placeholder={t('filters.commandMenu.searchPlaceholder')}
  className={cn(
  variant ==="navbar"
- ?"h-9 w-full rounded-full border border-transparent bg-background/20 pl-9 pr-20 text-foreground shadow-none transition-[opacity,background-color,border-color] hover:bg-background/80/60 focus-visible:border-border/15 focus-visible:bg-background/80/70 focus-visible:ring-0"
- :"w-full rounded-full border-border/30 bg-background/60 pl-9 pr-20 text-foreground shadow-none transition-[opacity,background-color,border-color] hover:border-border/30 hover:bg-background/80 focus-visible:ring-1 focus-visible:ring-border/20",
+ ?"h-9 w-full rounded-full border border-transparent bg-background/20 pl-9 pr-20 text-foreground shadow-none transition-[opacity,background-color,border-color] hover:bg-background/80/60 focus-visible:border-transparent focus-visible:bg-background/80/70 focus-visible:ring-0"
+ :"w-full rounded-full border-transparent bg-background/60 pl-9 pr-20 text-foreground shadow-none transition-[opacity,background-color,border-color] hover:border-transparent hover:bg-background/80 focus-visible:ring-1 focus-visible:ring-border/20",
  variant ==="toolbar" &&"h-10 rounded-full",
  isParsingDate &&"opacity-50",
  isParsingDate &&"border-primary ring-2 ring-primary ring-offset-2 animate-pulse"

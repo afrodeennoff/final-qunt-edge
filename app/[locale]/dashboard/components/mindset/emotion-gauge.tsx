@@ -38,7 +38,7 @@ export function EmotionGauge({ value, onChange }: EmotionGaugeProps) {
 
  <div className="relative flex h-32 items-center justify-center">
  <div className="absolute inset-0 flex items-center justify-center">
- <div className="h-24 w-48 overflow-hidden rounded-t-full border-8 border-border/30" />
+ <div className="h-24 w-48 overflow-hidden rounded-t-full border-8 border-transparent" />
  </div>
 
  <div

@@ -312,37 +312,37 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
                     key={trade.id}
                     className="border-b-0 transition-all duration-200 hover:bg-primary/[0.02]"
                   >
-                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l">
+                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
                       {trade.accountNumber}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l">
+                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
                       {trade.instrument}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l">
+                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
                       {trade.side}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l">
+                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
                       {trade.quantity}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l">
+                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
                       {trade.entryPrice}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l">
+                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
                       {trade.closePrice || '-'}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l">
+                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
                       {new Date(trade.entryDate).toLocaleString()}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l">
+                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
                       {trade.closeDate ? new Date(trade.closeDate).toLocaleString() : '-'}
                     </TableCell>
-                    <TableCell className={`whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l ${trade.pnl && trade.pnl >= 0 ? 'text-success' : 'text-destructive'}`}>
+                    <TableCell className={`whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l ${trade.pnl && trade.pnl >= 0 ? 'text-success' : 'text-destructive'}`}>
                       {trade.pnl?.toFixed(2)}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l">
+                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
                       {`${Math.floor((trade.timeInPosition || 0) / 60)}m ${Math.floor((trade.timeInPosition || 0) % 60)}s`}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/50 last:border-r-0 first:border-l">
+                    <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
                       {trade.commission?.toFixed(2)}
                     </TableCell>
                   </TableRow>

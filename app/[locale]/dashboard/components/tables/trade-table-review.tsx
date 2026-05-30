@@ -1440,7 +1440,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
         ) : (
           <div className="relative w-full min-w-fit">
           <table className="type-body-sm w-full table-auto border-separate border-spacing-0 caption-bottom tabular-nums">
-            <thead className="sticky top-0 z-10 border-b-0 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-md [&_tr]:border-b [&_tr]:border-border/20">
+            <thead className="sticky top-0 z-10 border-b-0 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-md [&_tr]:border-b [&_tr]:border-transparent">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr
                   key={headerGroup.id}
@@ -1493,7 +1493,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                             <td
                               key={cell.id}
                               className={cn(
-                                'whitespace-nowrap border-r-0 px-3.5 py-2 text-sm align-middle first:border-l last:border-r-0 group-hover:border-border/60 [&:has([role=checkbox])]:pr-0',
+                                'whitespace-nowrap border-r-0 px-3.5 py-2 text-sm align-middle first:border-l last:border-r-0 group-hover:border-transparent [&:has([role=checkbox])]:pr-0',
                                 row.getIsSelected() && 'border-border',
                               )}
                               style={{ width: cell.column.getSize() }}

@@ -42,7 +42,7 @@ export default async function Hero({ locale }: { locale: string }) {
               </Link>
             </Button>
 
-            <Button asChild size="lg" variant="outline" className="h-12 border-border/50 bg-card/50 px-6 text-[14px] backdrop-blur-sm hover:bg-muted/50">
+            <Button asChild size="lg" variant="outline" className="h-12 border-transparent bg-card/50 px-6 text-[14px] backdrop-blur-sm hover:bg-muted/50">
               <Link href={`/${locale}/deals`}>
                 <Play className="mr-2 h-4 w-4" /> Watch 60s Demo
               </Link>

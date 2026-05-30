@@ -56,7 +56,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Left Side: Sidebar Toggle & Brand */}
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="h-8 w-8 rounded-[7px] text-muted-foreground/55 border border-transparent hover:border-border/30 hover:bg-muted/40 hover:text-foreground/80" />
+            <SidebarTrigger className="h-8 w-8 rounded-[7px] text-muted-foreground/55 border border-transparent hover:border-transparent hover:bg-muted/40 hover:text-foreground/80" />
             <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
           </div>
 

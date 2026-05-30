@@ -128,7 +128,7 @@ export default React.memo(function ContractQuantityChart({
  return (
  <ChartSurface>
  <div
- className={cn("gap-0 border-b flex flex-col items-stretch border-border/55 shrink-0",
+ className={cn("gap-0 border-b flex flex-col items-stretch border-transparent shrink-0",
  size ==="small" ?"p-2 h-10 justify-center" :"p-3 sm:p-3.5 h-12 justify-center",
  )}
  >

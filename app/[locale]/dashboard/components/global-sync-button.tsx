@@ -145,7 +145,7 @@ export function GlobalSyncButton() {
  {isAnySyncing ? (
  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[8px] animate-pulse">Syncing...</Badge>
  ) : (
- <Badge variant="outline" className="bg-background/25 text-muted-foreground border-border/30 text-[8px]">Standby</Badge>
+ <Badge variant="outline" className="bg-background/25 text-muted-foreground border-transparent text-[8px]">Standby</Badge>
  )}
  </DropdownMenuLabel>
 
@@ -192,7 +192,7 @@ export function GlobalSyncButton() {
  type="button"
  onClick={handleGlobalSync}
  disabled={isAnySyncing}
- className="flex h-9 w-full items-center justify-center gap-2 rounded-full border-0 bg-muted text-[10px] font-bold uppercase tracking-[0.12em] text-foreground transition-[opacity,background-color,border-color] hover:border-border/30 hover:bg-background/80 disabled:opacity-50"
+ className="flex h-9 w-full items-center justify-center gap-2 rounded-full border-0 bg-muted text-[10px] font-bold uppercase tracking-[0.12em] text-foreground transition-[opacity,background-color,border-color] hover:border-transparent hover:bg-background/80 disabled:opacity-50"
  >
  <RefreshCw className={cn("w-3.5 h-3.5", isAnySyncing &&"animate-spin")} />
  <span>Force Sync Now</span>

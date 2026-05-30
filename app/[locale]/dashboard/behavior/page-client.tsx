@@ -185,7 +185,7 @@ export default function DashboardBehaviorPage() {
               <div className="flex items-center gap-2">
                 <Brain className="h-5 w-5 text-foreground" />
                 <CardTitle className="text-xl md:text-2xl">Behavior AI Hub</CardTitle>
-                <Badge variant="secondary" className="border-border/20 text-foreground">
+                <Badge variant="secondary" className="border-transparent text-foreground">
                   <Sparkles className="mr-1 h-3.5 w-3.5" />
                   AI
                 </Badge>
@@ -270,7 +270,7 @@ export default function DashboardBehaviorPage() {
 
         <TabsContent value="insights" className="space-y-4">
           <section className="grid gap-4 lg:grid-cols-3">
-            <Card className="border-border/45 bg-primary/[0.03] lg:col-span-2">
+            <Card className="border-transparent bg-primary/[0.03] lg:col-span-2">
               <CardHeader>
                 <CardTitle className="text-base">Behavior Health</CardTitle>
               </CardHeader>
@@ -296,7 +296,7 @@ export default function DashboardBehaviorPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-border/45 bg-primary/[0.03]">
+            <Card className="border-transparent bg-primary/[0.03]">
               <CardHeader>
                 <CardTitle className="text-base">Live Prompt</CardTitle>
               </CardHeader>
@@ -333,7 +333,7 @@ export default function DashboardBehaviorPage() {
         ) : null}
 
         <section className="grid gap-4 lg:grid-cols-2">
-          <Card className="border-border/45 bg-primary/[0.03]">
+          <Card className="border-transparent bg-primary/[0.03]">
             <CardHeader>
               <CardTitle className="text-base">Training & Reflection</CardTitle>
             </CardHeader>
@@ -362,7 +362,7 @@ export default function DashboardBehaviorPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-border/45 bg-primary/[0.03]">
+          <Card className="border-transparent bg-primary/[0.03]">
             <CardHeader>
               <CardTitle className="text-base">Achievements & Guidance</CardTitle>
             </CardHeader>

@@ -360,7 +360,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  ?"text-destructive border-destructive/30"
  : account.riskLevel ==="medium"
  ?"text-semantic-warning border-semantic-warning-border/30"
- :"text-foreground border-border/30"
+ :"text-foreground border-transparent"
  }
  >
  {account.riskLevel ||"N/A"}
@@ -548,7 +548,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
 
  {/* Strengths and Improvements */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
- <Card className="p-6 border-border/40 bg-background/30">
+ <Card className="p-6 border-transparent bg-background/30">
  <h4 className="text-[10px] font-bold uppercase tracking-widest mb-3 text-primary">
  {t("analysis.strengths")}
  </h4>
@@ -569,7 +569,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  </ul>
  </Card>
 
- <Card className="p-6 border-border/40 bg-background/30">
+ <Card className="p-6 border-transparent bg-background/30">
  <h4 className="text-[10px] font-bold uppercase tracking-widest mb-3 text-semantic-warning">
  {t("analysis.improvements")}
  </h4>
@@ -592,7 +592,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  </div>
 
  {/* Recommendations */}
- <Card className="p-6 border-border/40 bg-background/30">
+ <Card className="p-6 border-transparent bg-background/30">
  <h4 className="text-[10px] font-bold uppercase tracking-widest mb-3 text-semantic-info">
  {t("analysis.recommendations")}
  </h4>

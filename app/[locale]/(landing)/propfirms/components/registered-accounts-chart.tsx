@@ -102,7 +102,7 @@ export function RegisteredAccountsChart({
 
   return (
     <Card className={cn(unifiedSectionPanelClassName, 'overflow-hidden')}>
-      <CardHeader className="border-b border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.58)_0%,transparent_100%)] px-6 pb-3 pt-4">
+      <CardHeader className="border-b border-transparent bg-[linear-gradient(180deg,hsl(var(--card)/0.58)_0%,transparent_100%)] px-6 pb-3 pt-4">
         <div className="flex flex-col gap-2">
           <div className="min-w-0">
             <CardTitle className="text-[clamp(1.2rem,2.4vw,1.55rem)] leading-tight tracking-tight">

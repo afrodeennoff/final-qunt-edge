@@ -146,7 +146,7 @@ export function LinkedAccounts() {
 
   if (loading) {
     return (
-      <Card className="border-border/30 bg-card/50 shadow-sm">
+      <Card className="border-transparent bg-card/50 shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Link className="h-5 w-5" />
@@ -166,7 +166,7 @@ export function LinkedAccounts() {
   }
 
   return (
-    <Card className="border-border/30 bg-card/50 shadow-sm">
+    <Card className="border-transparent bg-card/50 shadow-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Link className="h-5 w-5" />

@@ -41,7 +41,7 @@ export function DataDebug() {
  variant="outline"
  size="icon"
  onClick={() => setIsOpen(true)}
- className="rounded-full bg-background/80 border-border/30 hover:bg-foreground/10 shadow-sm"
+ className="rounded-full bg-background/80 border-transparent hover:bg-foreground/10 shadow-sm"
  >
  <Bug className="h-4 w-4 text-primary" />
  </Button>
@@ -96,7 +96,7 @@ export function DataDebug() {
  size="sm"
  onClick={() => refreshAllData({ force: true })}
  disabled={isLoading}
- className="h-8 text-[9px] font-bold uppercase tracking-widest border-border/30 bg-foreground/5 hover:bg-foreground/10"
+ className="h-8 text-[9px] font-bold uppercase tracking-widest border-transparent bg-foreground/5 hover:bg-foreground/10"
  >
  <RefreshCw className={cn("h-3 w-3 mr-2", isLoading &&"animate-spin")} />
  Sync Now

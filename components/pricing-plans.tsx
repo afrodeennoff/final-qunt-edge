@@ -408,13 +408,13 @@ function PlusPlanCard({
               ))}
             </div>
 
-            <div className="border-t border-border/0.04 pt-3">
+            <div className="border-t border-transparent.04 pt-3">
               <button
                 className={cn(
                   'flex w-full items-center justify-center gap-2 rounded-[1rem] border px-3 py-2 text-xs font-medium transition-[opacity,background-color,border-color,transform]',
                   billingPeriod === 'lifetime'
                     ? 'border-primary/28 bg-primary/8 text-primary'
-                    : 'border-border/0.06 text-muted-foreground hover:bg-background/0.09 hover:text-foreground',
+                    : 'border-transparent.06 text-muted-foreground hover:bg-background/0.09 hover:text-foreground',
                 )}
                 onClick={() => setBillingPeriod('lifetime')}
               >

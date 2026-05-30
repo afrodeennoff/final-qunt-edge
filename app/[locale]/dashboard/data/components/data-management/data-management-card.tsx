@@ -299,7 +299,7 @@ export function DataManagementCard() {
     </Alert>
   )
   return (
-    <Card className="border-border/30 bg-card shadow-sm">
+    <Card className="border-transparent bg-card shadow-sm">
       <CardHeader>
         <CardTitle className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 justify-between items-start md:items-center">
           <span className="text-xl md:text-2xl">{t('dataManagement.title')}</span>

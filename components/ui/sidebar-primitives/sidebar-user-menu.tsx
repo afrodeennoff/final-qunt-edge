@@ -71,7 +71,7 @@ export function SidebarUserMenu({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-xl border border-sidebar-border/35 bg-sidebar/98 shadow-md"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-xl border border-transparent bg-sidebar/98 shadow-md"
             side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={6}
@@ -99,10 +99,10 @@ export function SidebarUserMenu({
                   Timezone
                 </p>
                 <Select value={timezone.value} onValueChange={timezone.onChange}>
-                  <SelectTrigger className="w-full border-sidebar-border/24 bg-sidebar-accent/20 text-sm hover:border-sidebar-primary/18 hover:bg-sidebar-accent/34 data-[placeholder]:text-sidebar-foreground/40">
+                  <SelectTrigger className="w-full border-transparent bg-sidebar-accent/20 text-sm hover:border-sidebar-primary/18 hover:bg-sidebar-accent/34 data-[placeholder]:text-sidebar-foreground/40">
                     <SelectValue placeholder="Select timezone" />
                   </SelectTrigger>
-                  <SelectContent className="border-sidebar-border/24 bg-sidebar/98 text-sidebar-foreground">
+                  <SelectContent className="border-transparent bg-sidebar/98 text-sidebar-foreground">
                     {timezone.options.map((tz) => (
                       <SelectItem key={tz} value={tz}>
                         {tz}

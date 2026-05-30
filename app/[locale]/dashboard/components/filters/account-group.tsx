@@ -131,7 +131,7 @@ export function AccountGroup({
 
  <CardContent>
  {group.accounts.length === 0 ? (
- <div className="flex items-center justify-center h-16 border-2 border-dashed border-border/30 rounded-lg">
+ <div className="flex items-center justify-center h-16 border-2 border-dashed border-transparent rounded-lg">
  <p className="text-muted-foreground text-sm">{t("filters.dropAccountsHere")}</p>
  </div>
  ) : (

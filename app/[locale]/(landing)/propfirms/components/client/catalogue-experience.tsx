@@ -364,7 +364,7 @@ export function PropFirmCatalogueExperience({
                           ? 'border-primary/30 bg-primary/10 text-primary'
                           : firm.category === 'Futures'
                             ? 'border-success/30 bg-success/10 text-success'
-                            : 'border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.76)] text-muted-foreground'
+                            : 'border-transparent bg-[hsl(var(--mk-surface)/0.76)] text-muted-foreground'
                       }`}
                     >
                       {firm.category}
@@ -392,7 +392,7 @@ export function PropFirmCatalogueExperience({
                     />
                   </div>
 
-                  <div className="mt-5 flex items-center justify-between border-t border-[hsl(var(--mk-border)/0.38)] pt-4">
+                  <div className="mt-5 flex items-center justify-between border-t border-transparent pt-4">
                     <p className="max-w-[75%] text-sm text-muted-foreground">
                       {firm.stats.sizeBreakdown === 'No sized accounts'
                         ? `${firm.stats.accountsCount.toLocaleString()} accounts • ${formatCompactCurrency(firm.stats.totalAccountValue)} total`

@@ -464,7 +464,7 @@ export default async function PropFirmEditPage({
       <form action={handleAction}>
         <Card
           variant="elevated"
-          className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+          className="border-transparent bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
         >
           <CardHeader className="space-y-1 border-b-0">
             <CardTitle>Firm details</CardTitle>
@@ -658,7 +658,7 @@ function ReviewsSection({
   return (
     <Card
       variant="elevated"
-      className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+      className="border-transparent bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
       <CardHeader className="space-y-3 border-b-0">
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
@@ -820,7 +820,7 @@ function CouponsSection({
   return (
     <Card
       variant="elevated"
-      className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+      className="border-transparent bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
       <CardHeader className="space-y-3 border-b-0">
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
@@ -1038,7 +1038,7 @@ function CouponEditorCard({
               </Badge>
             ) : null}
             {timing.isExpired ? (
-              <Badge variant="outline" className="border-border/40 text-muted-foreground">
+              <Badge variant="outline" className="border-transparent text-muted-foreground">
                 Expired
               </Badge>
             ) : null}

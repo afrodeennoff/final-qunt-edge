@@ -64,7 +64,7 @@ export default function AuthenticationPageClient() {
       <div className="relative mx-auto flex min-h-dvh w-full items-center justify-center px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <div className={cn(unifiedHeroPanelClassName, 'w-full max-w-[1380px]')}>
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.06fr)_minmax(460px,0.94fr)]">
-            <section className="relative overflow-hidden p-6 sm:p-8 lg:border-r lg:border-border/20 lg:p-10 xl:p-12">
+            <section className="relative overflow-hidden p-6 sm:p-8 lg:border-r lg:border-transparent lg:p-10 xl:p-12">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/20 to-transparent" />
 
               <div className="flex items-center justify-between gap-3">

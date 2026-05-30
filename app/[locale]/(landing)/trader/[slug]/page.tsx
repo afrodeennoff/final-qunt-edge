@@ -360,7 +360,7 @@ export default async function TraderProfilePage({
 
             <div className="overflow-hidden rounded-3xl border-0 bg-card/90 shadow-sm">
               {snapshot.recentTrades.length > 0 ? (
-                <div className="divide-y divide-border/40">
+                <div className="divide-y divide-transparent">
                   {snapshot.recentTrades.map((trade, idx) => {
                     const isPositive = trade.pnl > 0
                     const isNegative = trade.pnl < 0
