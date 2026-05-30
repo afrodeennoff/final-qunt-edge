@@ -295,7 +295,7 @@ function AccountsTableSection({
  <div className="relative">
  <div className="overflow-x-auto" ref={tableWrapperRef}>
  <table className="w-full border-separate border-spacing-0 text-sm">
-  <thead className="sticky top-0 z-10 border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-md [&_tr]:border-b [&_tr]:border-border/20">
+  <thead className="sticky top-0 z-10 border-b border-border/20 bg-muted/30 backdrop-blur-md [&_tr]:border-b [&_tr]:border-border/20">
  {table.getHeaderGroups().map((headerGroup) => (
  <tr
  key={headerGroup.id}

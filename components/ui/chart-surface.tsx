@@ -122,7 +122,7 @@ export function ChartSurface({
       )}
       style={{
         ...(height ? { height } : {}),
-        background: 'linear-gradient(180deg, var(--chart-primary-faint) 0%, var(--card) 100%)',
+        background: 'var(--card)',
       }}
     >
   {hasHeader && (

@@ -35,7 +35,7 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: hsl(var(--border));
+    border-color: var(--border);
   }
 
   /* Interactive element transitions set below in micro-interactions block */
@@ -165,7 +165,7 @@
   /* Focus ring — macOS precision ring */
   :focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px hsl(var(--ring) / 0.45);
+    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px color-mix(in srgb, var(--ring) 45%, transparent);
     transition: box-shadow 130ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -302,7 +302,7 @@
 
   /* Focus visible ring for keyboard navigation */
   :focus-visible {
-    outline: 2px solid hsl(var(--primary));
+    outline: 2px solid var(--primary);
     outline-offset: 2px;
   }
 
@@ -354,7 +354,7 @@
   --chart-axis-muted: color-mix(in srgb, var(--foreground) 50%, transparent);
   --chart-grid: color-mix(in srgb, var(--border) 72%, transparent);
   --chart-grid-muted: color-mix(in srgb, var(--border) 42%, transparent);
-  --chart-grid-cursor: color-mix(in srgb, var(--border) 55%, transparent);
+  --chart-grid-cursor: transparent;
   --chart-tooltip: color-mix(in srgb, var(--card) 96%, transparent);
   --chart-tooltip-border: color-mix(in srgb, var(--border) 82%, transparent);
   --chart-foreground-muted: color-mix(in srgb, var(--foreground) 55%, transparent);
@@ -1359,7 +1359,7 @@
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted-foreground) / 0.35) transparent;
+    scrollbar-color: color-mix(in srgb, var(--muted-foreground) 35%, transparent) transparent;
   }
 
   *::-webkit-scrollbar {
@@ -1368,16 +1368,16 @@
   }
 
   *::-webkit-scrollbar-track {
-    background: hsl(var(--background));
+    background: var(--background);
   }
 
   *::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted-foreground) / 0.35);
+    background: color-mix(in srgb, var(--muted-foreground) 35%, transparent);
     border-radius: 999px;
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.55);
+    background: color-mix(in srgb, var(--muted-foreground) 55%, transparent);
   }
 
   body {
@@ -1386,7 +1386,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid hsl(var(--ring));
+    outline: 2px solid var(--ring);
     outline-offset: 2px;
   }
 
@@ -1443,8 +1443,8 @@
   }
 
   .recharts-wrapper .recharts-tooltip-cursor {
-    fill: hsl(var(--precision-cobalt) / 0.08);
-    stroke: hsl(var(--precision-cobalt) / 0.75);
+    fill: transparent !important;
+    stroke: var(--chart-axis-muted);
   }
 
   .recharts-default-tooltip {
@@ -1478,10 +1478,10 @@
     position: relative;
     overflow: hidden;
     border-radius: 0.85rem;
-    border: 1px solid hsl(var(--border) / 0.55);
+    border: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
     background: var(--card);
     box-shadow:
-      inset 0 1px 0 hsl(var(--foreground) / 0.04),
+      inset 0 1px 0 color-mix(in srgb, var(--foreground) 4%, transparent),
       0 1px 2px rgba(0, 0, 0, 0.06),
       0 4px 12px rgba(0, 0, 0, 0.2);
     transition:
@@ -1514,10 +1514,10 @@
   [data-chart-surface='v2'] {
     position: relative;
     overflow: hidden;
-    border-color: hsl(var(--border));
+    border-color: var(--border);
     background: var(--card);
     box-shadow:
-      inset 0 1px 0 hsl(var(--foreground) / 0.04),
+      inset 0 1px 0 color-mix(in srgb, var(--foreground) 4%, transparent),
       0 1px 2px rgba(0, 0, 0, 0.06),
       0 4px 10px rgba(0, 0, 0, 0.18);
   }
@@ -1562,10 +1562,10 @@
 
   [data-widget-shell='true']:hover,
   [data-widget-shell='v2']:hover {
-    border-color: hsl(var(--border) / 0.75);
+    border-color: color-mix(in srgb, var(--border) 75%, transparent);
     background: var(--card);
     box-shadow:
-      inset 0 1px 0 hsl(var(--foreground) / 0.06),
+      inset 0 1px 0 color-mix(in srgb, var(--foreground) 6%, transparent),
       0 2px 4px rgba(0, 0, 0, 0.08),
       0 8px 20px rgba(0, 0, 0, 0.28),
       0 16px 32px rgba(0, 0, 0, 0.16);
@@ -1581,8 +1581,8 @@
   & {
     outline: none;
     box-shadow:
-      0 0 0 2px hsl(var(--background)),
-      0 0 0 4px hsl(var(--ring));
+      0 0 0 2px var(--background),
+      0 0 0 4px var(--ring);
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -1625,14 +1625,14 @@
         padding-box,
       linear-gradient(
           140deg,
-          hsl(var(--foreground) / 0.14),
-          hsl(var(--foreground) / 0.04),
-          hsl(var(--foreground) / 0.1)
+          color-mix(in srgb, var(--foreground) 14%, transparent),
+          color-mix(in srgb, var(--foreground) 4%, transparent),
+          color-mix(in srgb, var(--foreground) 10%, transparent)
         )
         border-box;
     box-shadow:
-      inset 0 1px 0 hsl(var(--foreground) / 0.08),
-      inset 0 -1px 0 hsl(var(--foreground) / 0.02),
+      inset 0 1px 0 color-mix(in srgb, var(--foreground) 8%, transparent),
+      inset 0 -1px 0 color-mix(in srgb, var(--foreground) 2%, transparent),
       0 1px 2px rgba(0, 0, 0, 0.08),
       0 8px 20px rgba(0, 0, 0, 0.4),
       0 34px 48px -28px rgba(0, 0, 0, 0.92);
@@ -1646,9 +1646,9 @@
 
   .liquid-panel-hover:hover {
     box-shadow:
-      inset 0 1px 0 hsl(var(--foreground) / 0.1),
-      inset 0 -1px 0 hsl(var(--foreground) / 0.04),
-      0 0 0 1px hsl(var(--foreground) / 0.07),
+      inset 0 1px 0 color-mix(in srgb, var(--foreground) 10%, transparent),
+      inset 0 -1px 0 color-mix(in srgb, var(--foreground) 4%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--foreground) 7%, transparent),
       0 22px 36px -24px rgb(0 0 0 / 0.95);
   }
 
@@ -1691,11 +1691,11 @@
   }
 
   .status-dot-idle {
-    background: hsl(var(--muted-foreground));
+    background: var(--muted-foreground);
   }
 
   .status-dot-error {
-    background: hsl(var(--destructive));
+    background: var(--destructive);
   }
 
   .terminal-cursor::after {
@@ -1706,12 +1706,12 @@
   }
 
   .metric-positive {
-    color: hsl(var(--foreground) / 0.96);
+    color: color-mix(in srgb, var(--foreground) 96%, transparent);
     text-shadow: none;
   }
 
   .metric-negative {
-    color: hsl(var(--foreground) / 0.78);
+    color: color-mix(in srgb, var(--foreground) 78%, transparent);
     text-shadow: none;
   }
 
@@ -2125,7 +2125,7 @@
   /* .premium-glow removed (DESIGN.md compliance) */
 
   .premium-glow-hover:hover {
-    box-shadow: 0 0 0 1px hsl(var(--border) / 0.45);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--border) 45%, transparent);
   }
 
   /* float keyframe defined below (unlayered) */
@@ -2395,7 +2395,7 @@
   [data-dashboard-header='true'] {
     border-bottom: 0;
     box-shadow:
-      inset 0 -1px 0 hsl(var(--border) / 0.1),
+      inset 0 -1px 0 color-mix(in srgb, var(--border) 10%, transparent),
       0 1px 3px rgba(0, 0, 0, 0.18);
   }
 
@@ -2749,44 +2749,33 @@ img[loading='lazy'] {
 
 /* Tinted selection highlights */
 ::selection {
-  background: oklch(0.6083 0.2172 297.1153 / 0.28);
-  color: white;
+  background: color-mix(in srgb, var(--primary) 28%, transparent);
+  color: var(--primary-foreground);
 }
 
 /* Scrollbar with custom theme tint */
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.6083 0.2172 297.1153 / 0.18);
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
   border-radius: 100px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.6083 0.2172 297.1153 / 0.3);
+  background: color-mix(in srgb, var(--primary) 30%, transparent);
 }
 
 /* Focus rings — theme-aware accent */
 *:focus-visible {
-  outline-color: hsl(var(--ring) / 0.5);
+  outline-color: color-mix(in srgb, var(--ring) 50%, transparent);
 }
 
 /* Subtle custom ambient glow on cards (static, no performance cost) */
-[data-widget-shell='v2'] {
-  background: linear-gradient(
-    180deg,
-    oklch(0.6083 0.2172 297.1153 / 0.025) 0%,
-    oklch(0.6083 0.2172 297.1153 / 0.008) 100%
-  );
-}
-
+[data-widget-shell='v2'],
 [data-chart-surface] {
-  background: linear-gradient(
-    180deg,
-    oklch(0.6083 0.2172 297.1153 / 0.025) 0%,
-    oklch(0.6083 0.2172 297.1153 / 0.005) 100%
-  );
+  background: var(--card);
 }
 
 /* Active nav items — custom indicator */
 [data-sidebar='menu-item'][data-active='true']::before {
-  background: hsl(var(--sidebar-primary) / 0.6);
+  background: color-mix(in srgb, var(--sidebar-primary) 60%, transparent);
 }
 
 /* ===== HOME PAGE ANIMATIONS ===== */
@@ -2880,9 +2869,9 @@ img[loading='lazy'] {
 .animate-shimmer {
   background: linear-gradient(
     90deg,
-    hsl(var(--foreground) / 0.05) 0%,
-    hsl(var(--foreground) / 0.1) 50%,
-    hsl(var(--foreground) / 0.05) 100%
+    color-mix(in srgb, var(--foreground) 5%, transparent) 0%,
+    color-mix(in srgb, var(--foreground) 10%, transparent) 50%,
+    color-mix(in srgb, var(--foreground) 5%, transparent) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 2s ease-in-out infinite;
@@ -3644,7 +3633,7 @@ img[loading='lazy'] {
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 20px -4px hsl(var(--primary) / 0.4);
+  box-shadow: 0 0 20px -4px color-mix(in srgb, var(--primary) 40%, transparent);
 }
 
 .hover-scale {
@@ -3667,11 +3656,11 @@ img[loading='lazy'] {
 .shimmer-gradient {
   background: linear-gradient(
     90deg,
-    hsl(var(--foreground) / 0.05) 0%,
-    hsl(var(--foreground) / 0.1) 20%,
-    hsl(var(--foreground) / 0.15) 50%,
-    hsl(var(--foreground) / 0.1) 80%,
-    hsl(var(--foreground) / 0.05) 100%
+    color-mix(in srgb, var(--foreground) 5%, transparent) 0%,
+    color-mix(in srgb, var(--foreground) 10%, transparent) 20%,
+    color-mix(in srgb, var(--foreground) 15%, transparent) 50%,
+    color-mix(in srgb, var(--foreground) 10%, transparent) 80%,
+    color-mix(in srgb, var(--foreground) 5%, transparent) 100%
   );
   background-size: 200% 100%;
   animation: shimmer-gradient 2s linear infinite;
@@ -3920,8 +3909,8 @@ img[loading='lazy'] {
   }
 
   .qe-no-white-borders {
-    --qe-enforced-border: hsl(var(--border) / 0.12);
-    --qe-enforced-border-strong: hsl(var(--border) / 0.18);
+    --qe-enforced-border: color-mix(in srgb, var(--border) 12%, transparent);
+    --qe-enforced-border-strong: color-mix(in srgb, var(--border) 18%, transparent);
   }
 
   .qe-no-white-borders
@@ -3947,22 +3936,22 @@ img[loading='lazy'] {
   }
 
   .qe-soft-panel {
-    border: 1px solid hsl(var(--border) / 0.22);
-    background: hsl(var(--background));
+    border: 1px solid color-mix(in srgb, var(--border) 22%, transparent);
+    background: var(--background);
     box-shadow: 0 24px 48px -32px rgba(0, 0, 0, 0.72);
   }
 
   .qe-soft-surface {
-    border: 1px solid hsl(var(--border) / 0.18);
+    border: 1px solid color-mix(in srgb, var(--border) 18%, transparent);
     background: var(--card);
   }
 
   .qe-soft-divider {
-    border-color: hsl(var(--border) / 0.16);
+    border-color: color-mix(in srgb, var(--border) 16%, transparent);
   }
 
   .qe-soft-meter {
-    background: hsl(var(--border) / 0.08);
+    background: color-mix(in srgb, var(--border) 8%, transparent);
   }
 
   /* === MINIMAL PROFESSIONAL OVERRIDES (visual only, no behavior change) === */

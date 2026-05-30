@@ -215,7 +215,7 @@ function SortRuleItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'type-body-sm flex items-center gap-2 rounded-md border border-border/20 bg-gradient-to-br from-card/50 to-card/10 px-3 py-2 text-foreground',
+        'type-body-sm flex items-center gap-2 rounded-md border border-border/20 bg-card px-3 py-2 text-foreground',
         isDragging && 'opacity-80 shadow-md',
       )}
     >
@@ -471,7 +471,7 @@ function PayoutDialog({
             </div>
 
             {/* Inline Calendar with Custom Header */}
-            <div className="flex max-h-[400px] flex-col rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02]">
+            <div className="flex max-h-[400px] flex-col rounded-xl border border-border/20 bg-card ring-1 ring-inset ring-white/[0.02]">
               {/* Custom Month/Year Header */}
               <div className="p-3 border-b border-border/20 bg-gradient-to-br from-muted/50 to-muted/20 shrink-0">
                 <div className="flex items-center justify-between">
@@ -1116,13 +1116,13 @@ function AccountsOverviewComponent({
   return (
     <Card
       className={cn(
-        'group relative flex h-full w-full flex-col overflow-hidden rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02] transition-all',
+        'group relative flex h-full w-full flex-col overflow-hidden rounded-xl border border-border/20 bg-card ring-1 ring-inset ring-white/[0.02] transition-all',
         surface === 'embedded' && 'opacity-95',
       )}
     >
       <CardHeader
         className={cn(
-          'shrink-0 border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 px-4 py-3 sm:px-5',
+          'shrink-0 border-b border-border/20 bg-muted/30 px-4 py-3 sm:px-5',
           size === 'small' && 'px-3 py-3',
         )}
       >
@@ -1297,7 +1297,7 @@ function AccountsOverviewComponent({
 
       {/* Unconfigured accounts banner */}
        {unconfiguredAccounts.length > 0 && !isLoading && (
-          <div className="border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 px-4 py-3 sm:px-5">
+          <div className="border-b border-border/20 bg-muted/30 px-4 py-3 sm:px-5">
            <div className="flex flex-col gap-3">
              <div className="flex items-center gap-2">
                <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
@@ -1356,9 +1356,9 @@ function AccountsOverviewComponent({
               {sortedGroupEntries.map(({ group, accounts: orderedAccounts }) => (
                 <section
                   key={group.id}
-                  className="group relative overflow-hidden rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02] transition-all"
+                  className="group relative overflow-hidden rounded-xl border border-border/20 bg-card ring-1 ring-inset ring-white/[0.02] transition-all"
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 px-4 py-3">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/20 bg-muted/30 px-4 py-3">
                     <h3 className="type-overline text-muted-foreground">{group.name}</h3>
                      <div className="rounded-full border border-border/30 bg-muted/30 px-2.5 py-0.5 text-[10px] font-medium text-muted-foreground/80">
 
@@ -1403,9 +1403,9 @@ function AccountsOverviewComponent({
 
                 {sortedUngroupedAccounts.length > 0 ? (
                  <section
-                    className="group relative overflow-hidden rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02] transition-all"
+                    className="group relative overflow-hidden rounded-xl border border-border/20 bg-card ring-1 ring-inset ring-white/[0.02] transition-all"
                   >
-                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 px-4 py-3">
+                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/20 bg-muted/30 px-4 py-3">
 
                     <h3 className="type-overline text-muted-foreground">
                       {t('propFirm.ungrouped')}

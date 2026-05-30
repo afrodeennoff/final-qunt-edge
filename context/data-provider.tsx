@@ -1477,21 +1477,24 @@ export const DataProvider: React.FC<{
   }
 
   const clearDashboardBrowserCache = useCallback(
-    (scope: 'trades' | 'all', reason: string) => {
+    async (scope: 'trades' | 'all', reason: string) => {
       const userId = activeUserIdRef.current
       if (!userId) return
 
-      const clearPromise = scope === 'all' ? clearAllCache(userId) : clearTradesCache(userId)
-      clearPromise.catch((err) =>
-        logger.error({ err, reason, userId }, 'Failed to clear dashboard browser cache'),
-      )
+      try {
+        await (scope === 'all' ? clearAllCache(userId) : clearTradesCache(userId))
+      } catch (err) {
+        logger.error({ err, reason, userId }, 'Failed to clear dashboard browser cache')
+      }
     },
     [],
   )
 
+  const saveAccountUserId = supabaseUser?.id
+
   const saveAccount = useCallback(
     async (newAccount: Account) => {
-      if (!supabaseUser?.id) return
+      if (!saveAccountUserId) return
 
       try {
         // Get the current account to preserve other properties
@@ -1516,7 +1519,7 @@ export const DataProvider: React.FC<{
           )
           const accountWithMetrics = normalizeAccountForClient(accountsWithMetrics[0])
 
-          setAccounts([...accounts, accountWithMetrics])
+          setAccounts([...useUserStore.getState().accounts, accountWithMetrics])
 
           // If the new account has a groupId, update the groups state to include it
           if (accountWithMetrics.groupId) {
@@ -1532,7 +1535,7 @@ export const DataProvider: React.FC<{
               }),
             )
           }
-          clearDashboardBrowserCache('all', 'saveAccount:create')
+          await clearDashboardBrowserCache('all', 'saveAccount:create')
           return
         }
 
@@ -1560,7 +1563,7 @@ export const DataProvider: React.FC<{
         const groupIdChanged = oldGroupId !== newGroupId
 
         // Update the account in the local state with recalculated metrics
-        const updatedAccounts = accounts.map((account: Account) => {
+        const updatedAccounts = useUserStore.getState().accounts.map((account: Account) => {
           if (account.number === accountWithMetrics.number) {
             return accountWithMetrics
           }
@@ -1632,7 +1635,7 @@ export const DataProvider: React.FC<{
                 const newGroup = {
                   id: newGroupId,
                   name: 'New Group', // Temporary name
-                  userId: supabaseUser.id,
+                  userId: saveAccountUserId,
                   createdAt: new Date(),
                   updatedAt: new Date(),
                   accounts: [accountWithMetrics],
@@ -1654,7 +1657,7 @@ export const DataProvider: React.FC<{
               const newGroup = {
                 id: newGroupId,
                 name: 'New Group',
-                userId: supabaseUser.id,
+                userId: saveAccountUserId,
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 accounts: [accountWithMetrics],
@@ -1683,15 +1686,14 @@ export const DataProvider: React.FC<{
             )
           }
         }
-        clearDashboardBrowserCache('all', 'saveAccount:update')
+        await clearDashboardBrowserCache('all', 'saveAccount:update')
       } catch (error) {
         logger.error({ error }, 'Error updating account')
         throw error
       }
     },
     [
-      supabaseUser?.id,
-      accounts,
+      saveAccountUserId,
       setAccounts,
       groups,
       setGroups,

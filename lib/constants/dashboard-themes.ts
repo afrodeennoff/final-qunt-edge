@@ -10,7 +10,7 @@ export const VALID_DASHBOARD_THEMES = [
 
 export type DashboardTheme = typeof VALID_DASHBOARD_THEMES[number]
 
-export const DEFAULT_DASHBOARD_THEME: DashboardTheme = 'cmlh0x713000104jrgmds6vcd'
+export const DEFAULT_DASHBOARD_THEME: DashboardTheme = 'cmmi8o8ic000904l12ucn8i9p'
 
 export const THEME_LABELS: Record<DashboardTheme, string> = {
   cmlh0x713000104jrgmds6vcd: 'Deep Purple',
@@ -151,10 +151,10 @@ export const THEME_PALETTES: Record<DashboardTheme, Record<string, string>> = {
     '--input': 'oklch(1 0 0 / 15%)',
     '--ring': 'oklch(0.556 0 0)',
     '--chart-1': 'var(--card)',
-    '--chart-2': 'oklch(0.696 0.17 162.48)',
-    '--chart-3': 'oklch(0.769 0.188 70.08)',
-    '--chart-4': 'oklch(0.627 0.265 303.9)',
-    '--chart-5': 'oklch(0.205 0 0)',
+    '--chart-2': 'oklch(0.78 0 0)',
+    '--chart-3': 'oklch(0.62 0 0)',
+    '--chart-4': 'oklch(0.44 0 0)',
+    '--chart-5': 'oklch(0.30 0 0)',
     '--sidebar': 'oklch(0.1 0 0)',
     '--sidebar-background': 'oklch(0.1 0 0)',
     '--sidebar-foreground': 'oklch(0.99 0 0)',

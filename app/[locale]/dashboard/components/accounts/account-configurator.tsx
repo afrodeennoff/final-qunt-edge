@@ -255,7 +255,6 @@ export function AccountConfigurator({
   <PopoverTrigger asChild>
   <Card
     className="group relative cursor-pointer overflow-hidden rounded-xl border border-border bg-card transition-all basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
-    style={{ background: 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 2.5%, transparent) 0%, var(--card) 100%)' }}
   >
  <CardHeader>
  <CardTitle className='whitespace-nowrap text-sm'>{firm.name}</CardTitle>

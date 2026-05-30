@@ -55,12 +55,9 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
       hover
       clickable={Boolean(onClick)}
       className="group relative flex h-full min-h-[18rem] w-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-all"
-      style={{
-        background: 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 2.5%, transparent) 0%, var(--card) 100%)',
-      }}
       onClick={onClick}
     >
-      <CardHeader className="flex-none gap-2 border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 px-4 py-3">
+      <CardHeader className="flex-none gap-2 border-b border-border/20 bg-muted/30 px-4 py-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <CardTitle size={isCompact ? 'md' : 'lg'} className="truncate font-semibold tracking-tight">
