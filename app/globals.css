@@ -35,7 +35,7 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--border);
+    border-color: transparent;
   }
 
   /* Interactive element transitions set below in micro-interactions block */
@@ -781,7 +781,7 @@
 @layer utilities {
   .frost-surface {
     background: var(--card);
-    border: 1px solid var(--border);
+    border: 1px solid transparent;
   }
 
   /* ── MACOS NATIVE UTILITY CLASSES ── */
@@ -808,8 +808,8 @@
   .frost-gradient-card { background: var(--card); }
   .frost-gradient-elevated { background: var(--card); }
   .frost-gradient-panel { background: var(--card); }
-  .frost-shadow-inset { box-shadow: inset 0 1px 0 rgba(255,255,255,0.03); }
-  .frost-shadow-inset-sm { box-shadow: inset 0 1px 0 rgba(255,255,255,0.02); }
+  .frost-shadow-inset { box-shadow: inset 0 1px 0 transparent; }
+  .frost-shadow-inset-sm { box-shadow: inset 0 1px 0 transparent; }
   .frost-shadow-card { box-shadow: var(--shadow-widget); }
   .frost-shadow-card-lg { box-shadow: var(--shadow-panel); }
 
@@ -872,14 +872,14 @@
   .card-ultra,
   .btn-premium {
     background: var(--card);
-    border: 1px solid var(--border);
+    border: 1px solid transparent;
     box-shadow: none;
     transition: border-color 120ms ease, background-color 120ms ease;
   }
 
   .surface-premium-hover:hover,
   .card-ultra:hover {
-    border-color: var(--border);
+    border-color: transparent;
     background: var(--card);
     box-shadow: none;
   }
@@ -1448,7 +1448,7 @@
   }
 
   .recharts-default-tooltip {
-    border: 1px solid var(--chart-tooltip-border) !important;
+    border: 1px solid transparent !important;
     border-radius: 10px !important;
     background: var(--chart-tooltip) !important;
     box-shadow:
@@ -1478,7 +1478,7 @@
     position: relative;
     overflow: hidden;
     border-radius: 0.85rem;
-    border: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+    border: 1px solid transparent;
     background: var(--card);
     box-shadow:
       inset 0 1px 0 color-mix(in srgb, var(--foreground) 4%, transparent),
@@ -1514,7 +1514,7 @@
   [data-chart-surface='v2'] {
     position: relative;
     overflow: hidden;
-    border-color: var(--border);
+    border-color: transparent;
     background: var(--card);
     box-shadow:
       inset 0 1px 0 color-mix(in srgb, var(--foreground) 4%, transparent),
@@ -1605,13 +1605,13 @@
 
   .precision-panel {
     position: relative;
-    border: 1px solid hsl(var(--precision-panel-line) / 0.26);
+    border: 1px solid transparent;
     background: hsl(var(--precision-panel) / 0.9);
-    box-shadow: inset 0 0 0 1px hsl(var(--precision-panel-inner) / 0.025);
+    box-shadow: inset 0 0 0 1px transparent;
   }
 
   .precision-panel-elevated {
-    border: 1px solid hsl(var(--precision-panel-line) / 0.34);
+    border: 1px solid transparent;
     background: hsl(var(--precision-panel-elevated) / 0.94);
     box-shadow:
       inset 0 0 0 1px hsl(var(--precision-panel-inner) / 0.03),
@@ -2125,7 +2125,7 @@
   /* .premium-glow removed (DESIGN.md compliance) */
 
   .premium-glow-hover:hover {
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--border) 45%, transparent);
+    box-shadow: 0 0 0 1px transparent;
   }
 
   /* float keyframe defined below (unlayered) */
@@ -2276,7 +2276,7 @@
   /* .marketing-glass removed (DESIGN.md compliance) */
 
   .marketing-panel {
-    border: 1px solid hsl(var(--mk-border) / 0.24);
+    border: 1px solid transparent;
     background: hsl(var(--mk-surface) / 0.92);
     box-shadow:
       inset 0 1px 0 hsl(var(--mk-text) / 0.03),
@@ -2286,7 +2286,7 @@
   }
 
   .marketing-badge {
-    border: 1px solid hsl(var(--mk-border) / 0.24);
+    border: 1px solid transparent;
     background: hsl(var(--mk-surface) / 0.66);
     color: hsl(var(--mk-text-muted));
   }
@@ -2578,7 +2578,7 @@
   }
   .hover-binance:hover {
     background-color: var(--muted);
-    border-color: var(--border);
+    border-color: transparent;
   }
 
   /* Minimal scale for CTAs only */
@@ -3029,7 +3029,7 @@ img[loading='lazy'] {
       oklch(0.068 0.011 297 / 0.95) 0%,
       oklch(0.056 0.01 297 / 0.9) 100%
     );
-    border: 1px solid oklch(0.6083 0.2172 297.1153 / 0.08);
+    border: 1px solid transparent;
     box-shadow:
       inset 0 1px 0 oklch(0.6083 0.2172 297.1153 / 0.05),
       0 28px 70px -42px rgba(4, 10, 24, 0.88);
@@ -3360,7 +3360,7 @@ img[loading='lazy'] {
   /* Enhanced precision-panel with better gradients */
   .precision-panel-premium {
     position: relative;
-    border: 1px solid oklch(0.14 0 0 / 0.6);
+    border: 1px solid transparent;
     background:
       radial-gradient(ellipse at top, oklch(0.6083 0.2172 297.1153 / 0.04), transparent 70%),
       linear-gradient(180deg, oklch(0.08 0 0), oklch(0.06 0 0));
@@ -3371,7 +3371,7 @@ img[loading='lazy'] {
   }
 
   .precision-panel-premium:hover {
-    border-color: oklch(0.14 0 0 / 0.7);
+    border-color: transparent;
     box-shadow:
       inset 0 1px 0 oklch(1 0 0 / 0.08),
       inset 0 0 0 1px oklch(0.6083 0.2172 297.1153 / 0.05),
@@ -3936,13 +3936,13 @@ img[loading='lazy'] {
   }
 
   .qe-soft-panel {
-    border: 1px solid color-mix(in srgb, var(--border) 22%, transparent);
+    border: 1px solid transparent;
     background: var(--background);
     box-shadow: 0 24px 48px -32px rgba(0, 0, 0, 0.72);
   }
 
   .qe-soft-surface {
-    border: 1px solid color-mix(in srgb, var(--border) 18%, transparent);
+    border: 1px solid transparent;
     background: var(--card);
   }
 
@@ -3972,7 +3972,7 @@ img[loading='lazy'] {
   }
   /* Subtle consistent hovers */
   .group:hover .surface-premium-hover {
-    border-color: var(--border);
+    border-color: transparent;
   }
 }
 

@@ -76,3 +76,9 @@ export interface CreateJournalInput {
 }
 
 export type UpdateJournalInput = Partial<Omit<CreateJournalInput, 'tradeId' | 'accountNumber'>>
+
+export interface TagTab {
+  id: string
+  name: string
+  tags: string[]
+}

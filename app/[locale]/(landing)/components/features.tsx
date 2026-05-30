@@ -40,7 +40,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
 			<div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
 
 			<div className="relative h-full">
-				<CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-border pb-4">
+				<CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-transparent pb-4">
 					<CardTitle className="text-base font-medium tracking-tight text-foreground sm:text-lg">{feature.title}</CardTitle>
 					<div className="relative">
 						<div className="absolute inset-0 rounded-full bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

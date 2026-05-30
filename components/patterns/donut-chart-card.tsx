@@ -33,7 +33,7 @@ export function DonutChartCard({
 
   return (
     <div
-      className={cn('rounded-2xl p-6 bg-card shadow-card border border-[hsl(var(--border)/0.18)]', className)}
+      className={cn('rounded-2xl p-6 bg-card shadow-card border border-transparent', className)}
       data-slot="donut-chart-card"
     >
       <h3 className="text-[18px] font-black text-foreground mb-6">
@@ -74,7 +74,7 @@ export function DonutChartCard({
       </div>
 
       {bottomStats && bottomStats.length > 0 && (
-        <div className="border-t border-border pt-5 mt-6 grid grid-cols-2 gap-3">
+        <div className="border-t border-transparent pt-5 mt-6 grid grid-cols-2 gap-3">
           {bottomStats.map((stat, index) => (
             <div key={index} className="text-center">
               <p className="text-[12px] text-muted-foreground mb-1">{stat.label}</p>

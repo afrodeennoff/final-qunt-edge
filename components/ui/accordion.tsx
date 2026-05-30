@@ -16,7 +16,7 @@ const AccordionItem = React.forwardRef<
  <AccordionPrimitive.Item
  ref={ref}
  data-slot="accordion-item"
- className={cn("border-b border-border", className)}
+ className={cn("border-b border-transparent", className)}
  {...props}
  />
 ))

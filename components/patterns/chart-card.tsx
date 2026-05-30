@@ -54,7 +54,7 @@ export function ChartCard({
       <div className="-mx-2">{children}</div>
 
       {stats && stats.length > 0 && (
-        <div className="border-t border-border pt-5 mt-6 grid grid-cols-3 gap-3">
+        <div className="border-t border-transparent pt-5 mt-6 grid grid-cols-3 gap-3">
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
               <p className="text-[12px] text-muted-foreground mb-1">{stat.label}</p>

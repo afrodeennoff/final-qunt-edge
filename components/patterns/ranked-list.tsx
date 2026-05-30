@@ -66,7 +66,7 @@ export function RankedList({
         ))}
       </div>
       {footer && (
-        <div className="border-t border-border pt-4 mt-4 text-[12px] text-muted-foreground text-center">
+        <div className="border-t border-transparent pt-4 mt-4 text-[12px] text-muted-foreground text-center">
           {footer}
         </div>
       )}

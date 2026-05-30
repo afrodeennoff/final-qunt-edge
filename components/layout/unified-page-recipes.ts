@@ -1,14 +1,14 @@
 export const unifiedHeroPanelClassName =
-  'relative rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02]'
+  'relative rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10'
 
 export const unifiedSectionPanelClassName =
-  'rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02]'
+  'rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10'
 
 export const unifiedInsetPanelClassName =
-  'rounded-xl border-0 bg-gradient-to-br from-muted/50 to-muted/20 ring-1 ring-inset ring-white/[0.02]'
+  'rounded-xl border-0 bg-gradient-to-br from-muted/50 to-muted/20'
 
 export const unifiedMetricPanelClassName =
-  'rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10 p-4 ring-1 ring-inset ring-white/[0.02]'
+  'rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10 p-4'
 
 export const unifiedChipClassName =
   'inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary'
@@ -34,4 +34,4 @@ export const unifiedInfoValueClassName =
   'text-sm font-medium tracking-[-0.01em] text-foreground'
 
 export const unifiedStatePanelClassName =
-  'relative overflow-hidden rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10 ring-1 ring-inset ring-white/[0.02]'
+  'relative overflow-hidden rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10'

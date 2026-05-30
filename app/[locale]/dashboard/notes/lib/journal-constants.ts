@@ -1,4 +1,4 @@
-import type { JournalFilters, JournalSortField } from './journal-types'
+import type { JournalFilters, JournalSortField, TagTab } from './journal-types'
 
 export const DEFAULT_FILTERS: JournalFilters = {
   status: 'all',
@@ -43,3 +43,28 @@ export const RATING_LABELS: Record<number, string> = {
   4: 'Good',
   5: 'Excellent',
 }
+
+export const DEFAULT_TAG_TABS: TagTab[] = [
+  {
+    id: 'week-days',
+    name: 'Week Days',
+    tags: [
+      'Best Day',
+      'Worst Day',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ],
+  },
+  {
+    id: 'general',
+    name: 'General',
+    tags: [...SUGGESTED_TAGS],
+  },
+]
+
+export const TAG_TABS_STORAGE_KEY = 'journal-tag-tabs'

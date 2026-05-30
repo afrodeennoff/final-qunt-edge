@@ -284,7 +284,7 @@ function CouponEditCard({
       hover
       className="overflow-hidden border-border/45 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
-      <CardHeader size="sm" className="space-y-3 border-b border-border/45">
+      <CardHeader size="sm" className="space-y-3 border-b border-transparent">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -453,7 +453,7 @@ function CouponEditCard({
           </div>
         </form>
 
-        <div className="flex items-center justify-between gap-3 border-t border-border/45 pt-4">
+        <div className="flex items-center justify-between gap-3 border-t border-transparent/45 pt-4">
           <div className="text-xs text-muted-foreground">
             Updated {new Date(coupon.updatedAt).toLocaleString()}
           </div>
@@ -493,7 +493,7 @@ function CouponSuggestionCard({
       hover
       className="overflow-hidden border-border/45 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
-      <CardHeader size="sm" className="space-y-3 border-b border-border/45">
+      <CardHeader size="sm" className="space-y-3 border-b border-transparent">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">

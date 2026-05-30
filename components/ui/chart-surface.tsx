@@ -127,7 +127,7 @@ export function ChartSurface({
     >
   {hasHeader && (
   <div
-  className={cn("flex shrink-0 items-center border-b border-border bg-card",
+  className={cn("flex shrink-0 items-center border-b border-transparent bg-card",
   isSmall ?"h-9 px-2" :"h-10 px-3",
   headerClassName
   )}

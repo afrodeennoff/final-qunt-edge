@@ -1646,7 +1646,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
         </div>
         )}
       </CardContent>
-      <CardFooter className="flex flex-col gap-3 border-t border-border bg-muted px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <CardFooter className="flex flex-col gap-3 border-t border-transparent bg-muted px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="type-body-sm text-muted-foreground">
           {t('trade-table.totalTrades', { count: totalTradeCount })}
         </div>
