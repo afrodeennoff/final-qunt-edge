@@ -1,7 +1,7 @@
 import ErrorBoundary from '@/components/ui/error-boundary'
-import MarketingLayoutShell from '../(landing)/components/marketing-layout-shell'
 import { PublicRootProviders } from '@/components/providers/root-providers'
 
+// Clean layout for the new Velocity-style homepage (no old navbar/footer)
 export default function LocaleLayoutInner({
   children,
 }: {
@@ -10,18 +10,9 @@ export default function LocaleLayoutInner({
   return (
     <ErrorBoundary>
       <PublicRootProviders>
-        <MarketingLayoutShell
-          className="home-borderless-shell dark public-page"
-          contentClassName="w-full"
-          showRollingBanner={true}
-          topSpacingClassName=""
-          contentSpacingClassName="pb-safe"
-          shellVariant="black"
-        >
-          <div className="pb-safe">
-            {children}
-          </div>
-        </MarketingLayoutShell>
+        <div className="min-h-dvh bg-[#0a0a0a] text-white">
+          {children}
+        </div>
       </PublicRootProviders>
     </ErrorBoundary>
   )

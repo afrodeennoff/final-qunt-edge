@@ -43,9 +43,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     )
 
     const variantClasses = {
-      default: 'rounded-xl border border-border/30 bg-card shadow-none',
+      default: 'rounded-xl bg-card border border-border/10 shadow-none',
       flat: 'rounded-xl border-transparent bg-transparent shadow-none',
-      embedded: 'rounded-xl border border-border/40 bg-card shadow-none',
+      embedded: 'rounded-xl bg-card border border-border/10 shadow-none',
     }
 
     const sizeClasses = {

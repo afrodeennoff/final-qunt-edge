@@ -148,7 +148,7 @@ function ChartPreviewSkeleton({ title }: { title: string }) {
 
 function StatPreviewSkeleton({ height = 100 }: { height?: number }) {
   return (
-    <div className="h-[300px] rounded-xl border border-border/20 bg-gradient-to-br from-muted/50 to-muted/20 ring-1 ring-inset ring-white/[0.02] p-4">
+    <div className="h-[300px] rounded-xl bg-muted/30 p-4 border border-border/10">
       <div className="space-y-3">
         <Skeleton className="h-3 w-20 rounded" />
         <Skeleton className="h-8 w-28 rounded" />

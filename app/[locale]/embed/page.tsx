@@ -282,9 +282,9 @@ export default function EmbedPage() {
         <Toaster />
         <div className="relative z-10 mx-auto flex max-w-[1600px] flex-col gap-4 px-4 pt-4 lg:gap-6 lg:px-6 lg:pt-6">
           <MotionSection delay={0.03}>
-            <section className="overflow-hidden rounded-[2rem] border border-border/20 bg-gradient-to-br from-card/40 to-card/5 px-4 py-4 ring-1 ring-inset ring-white/[0.02] shadow-[0_0_35px_-18px] shadow-primary/10 lg:px-6">
+            <section className="overflow-hidden rounded-[2rem] bg-card px-4 py-4 border border-border/10 shadow-[0_0_35px_-18px] shadow-primary/10 lg:px-6">
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_320px]">
-                <div className="rounded-2xl border border-border/20 bg-gradient-to-br from-card/40 to-card/5 p-4 ring-1 ring-inset ring-white/[0.02]">
+                <div className="rounded-2xl bg-card p-4 border border-border/10">
                   <div className={unifiedChipClassName}>
                     Embed Library
                   </div>
@@ -299,13 +299,13 @@ export default function EmbedPage() {
                 </div>
                 <MotionStagger className="grid gap-2 text-xs text-muted-foreground/80 sm:grid-cols-2 lg:grid-cols-1">
                   <MotionStaggerItem>
-                    <div className="rounded-xl border border-border/20 bg-gradient-to-br from-card/40 to-card/5 px-3 py-2.5 ring-1 ring-inset ring-white/[0.02]">
+                    <div className="rounded-xl bg-card px-3 py-2.5 border border-border/10">
                       <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">Preset</span>
                       <span className="block pt-1 text-sm font-medium text-foreground">{preset ?? 'Default'}</span>
                     </div>
                   </MotionStaggerItem>
                   <MotionStaggerItem>
-                    <div className="rounded-xl border border-border/20 bg-gradient-to-br from-card/40 to-card/5 px-3 py-2.5 ring-1 ring-inset ring-white/[0.02]">
+                    <div className="rounded-xl bg-card px-3 py-2.5 border border-border/10">
                       <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">Charts</span>
                       <span className="block pt-1 text-sm font-medium text-foreground">
                         {selectedCharts ? Array.from(selectedCharts).length : 'All'}

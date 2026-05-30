@@ -30,10 +30,10 @@ export class ErrorBoundary extends Component<Props, State> {
       if (this.props.fallback !== undefined) return this.props.fallback
       return (
         <div
-          className="flex flex-col items-center justify-center gap-4 rounded-xl border border-destructive/20 bg-gradient-to-br from-destructive/10 to-destructive/5 ring-1 ring-inset ring-white/[0.02] p-8 text-center"
+          className="flex flex-col items-center justify-center gap-4 rounded-xl bg-destructive/10 border border-destructive/20 p-8 text-center"
           style={{ minHeight: this.props.minHeight ?? 200 }}
         >
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-destructive/20 bg-gradient-to-br from-destructive/20 to-destructive/5 ring-1 ring-inset ring-white/[0.02]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/15 border border-destructive/20">
             <AlertCircle className="h-6 w-6 text-destructive/70" />
           </div>
           <div className="space-y-1">

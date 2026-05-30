@@ -66,7 +66,7 @@ export async function PropFirmPreview() {
             return (
               <div
                 key={firm.propfirmName}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-border/30 bg-gradient-to-br from-card/50 to-card/10 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15"
+                className="group relative flex flex-col overflow-hidden rounded-2xl bg-card border border-border/10 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15"
               >
                 <div className="absolute top-0 right-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-primary/[0.03] blur-2xl transition-all duration-500 group-hover:bg-primary/[0.06] group-hover:scale-150" />
                 <div className="relative z-10 flex-1 p-6">

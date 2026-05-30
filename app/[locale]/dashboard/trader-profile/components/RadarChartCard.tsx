@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const insetPanelClassName =
-  'rounded-xl border border-border/20 bg-gradient-to-br from-muted/50 to-muted/20 ring-1 ring-inset ring-white/[0.02] shadow-none'
+  'rounded-xl bg-muted/30 border border-border/10 shadow-none'
 
 interface RadarChartDataPoint {
   metric: string

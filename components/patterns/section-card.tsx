@@ -14,7 +14,7 @@ export function SectionCard({
 }: SectionCardProps) {
   return (
     <div
-      className={cn('rounded-2xl p-6 bg-card shadow-card border border-[hsl(var(--border)/0.18)]', className)}
+      className={cn('rounded-2xl p-6 bg-card border border-border/10', className)}
       data-slot="section-card"
     >
       {title && (

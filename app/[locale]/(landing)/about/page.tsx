@@ -76,7 +76,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </Link>
             <Link
               href={`/${locale}/support`}
-              className="inline-flex items-center justify-center rounded-full border border-border/20 bg-gradient-to-br from-card/50 to-card/10 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-foreground transition-all hover:border-primary/25 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
+              className="inline-flex items-center justify-center rounded-full bg-card border border-border/10 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-foreground transition-all hover:border-primary/25 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
             >
               Contact Support
             </Link>

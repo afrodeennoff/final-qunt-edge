@@ -127,7 +127,7 @@ export function MarketingStatBlock({
   className?: string
 }) {
   return (
-    <div className={cn('rounded-xl border border-border/20 bg-gradient-to-br from-card/50 to-card/10 p-6 ring-1 ring-inset ring-white/[0.02] text-center', className)}>
+    <div className={cn('rounded-xl bg-card p-6 border border-border/10 text-center', className)}>
       <p className="text-[32px] font-light tracking-[-0.05em] tabular-nums text-foreground leading-none font-mono">
         {value}
       </p>
@@ -258,7 +258,7 @@ export function MarketingHyperframe({
           <span className="h-3 w-3 rounded-full bg-warning/80" />
           <span className="h-3 w-3 rounded-full bg-success/80" />
         </div>
-        <div className="rounded-full border border-border/20 bg-gradient-to-br from-muted/40 to-muted/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground ring-1 ring-inset ring-white/[0.02]">
+        <div className="rounded-full bg-muted/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground border border-border/10">
           {label}
         </div>
         <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/80 sm:flex">

@@ -222,7 +222,7 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
           className={cn(
-            'flex h-full w-full flex-col bg-gradient-to-br from-sidebar/92 to-sidebar/78 backdrop-blur-md border border-sidebar-border/8 ring-1 ring-inset ring-white/[0.015]',
+            'flex h-full w-full flex-col bg-sidebar border border-sidebar-border/10',
             'group-data-[variant=floating]:rounded-2xl',
             'group-data-[variant=inset]:rounded-2xl',
           )}
