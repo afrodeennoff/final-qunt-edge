@@ -63,7 +63,7 @@ export function ThemeProvider({
   useEffect(() => {
     // Only apply theme CSS variables on dashboard/teams. On public pages
     // (fixed-purple), the CSS defaults in globals.css provide pure #000000
-    // background with Deep Purple accent tokens — no runtime override needed.
+    // background with Neon Green accent tokens — no runtime override needed.
     if (isDashboard) {
       applyTheme(resolved)
     }

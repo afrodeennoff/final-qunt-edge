@@ -18,25 +18,25 @@ export default function AIHubVisual() {
         <line x1="202" y1="202" x2="178" y2="178" stroke="var(--qe-ref-card-border)" strokeWidth="1" />
       </svg>
 
-      {/* Center hub */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex h-16 w-16 items-center justify-center rounded-full border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)]">
+      {/* Center hub — bright neon glow matching reference central AI orb */}
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex h-16 w-16 items-center justify-center rounded-full border border-[var(--qe-ref-green)]/40 bg-[var(--qe-ref-surface-2)] shadow-[0_0_40px_rgba(0,255,159,0.25)]">
         <div className="text-center">
           <div className="text-[10px] font-semibold tracking-[0.08em] text-[var(--qe-ref-green)]">QUNT</div>
           <div className="text-[9px] text-[var(--qe-ref-text-muted)] -mt-0.5">AI</div>
         </div>
       </div>
 
-      {/* Nodes */}
-      <div className="ref-ai-node" style={{ left: '50%', top: '8px', transform: 'translateX(-50%)' }}>
+      {/* Nodes — bright reference green accents */}
+      <div className="ref-ai-node border-[var(--qe-ref-green)]/50" style={{ left: '50%', top: '8px', transform: 'translateX(-50%)' }}>
         <span>PULSE</span>
       </div>
-      <div className="ref-ai-node" style={{ left: '50%', bottom: '8px', transform: 'translateX(-50%)' }}>
+      <div className="ref-ai-node border-[var(--qe-ref-green)]/50" style={{ left: '50%', bottom: '8px', transform: 'translateX(-50%)' }}>
         <span>DEBRIEF</span>
       </div>
-      <div className="ref-ai-node" style={{ left: '8px', top: '50%', transform: 'translateY(-50%)' }}>
+      <div className="ref-ai-node border-[var(--qe-ref-green)]/50" style={{ left: '8px', top: '50%', transform: 'translateY(-50%)' }}>
         <span>SENTINEL</span>
       </div>
-      <div className="ref-ai-node" style={{ right: '8px', top: '50%', transform: 'translateY(-50%)' }}>
+      <div className="ref-ai-node border-[var(--qe-ref-green)]/50" style={{ right: '8px', top: '50%', transform: 'translateY(-50%)' }}>
         <span>EDGE</span>
       </div>
     </div>

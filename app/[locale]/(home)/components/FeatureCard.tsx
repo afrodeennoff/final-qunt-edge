@@ -11,7 +11,7 @@ interface FeatureCardProps {
 
 export default function FeatureCard({ icon, title, description, badge }: FeatureCardProps) {
   return (
-    <div className="ref-feature-card">
+    <div className="ref-feature-card border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] rounded-2xl p-5">
       <div className="ref-feature-icon mb-4">
         {icon}
       </div>

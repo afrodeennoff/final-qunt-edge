@@ -44,11 +44,7 @@ export default function MarketingLayoutShell({
         className,
       )}
     >
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(oklch(0.15_0.01_260)_0.8px,transparent_1px)] bg-[length:4px_4px] opacity-15" />
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-      <div className="pointer-events-none fixed inset-0 flex items-start justify-center">
-        <div className="h-[500px] w-[500px] rounded-full bg-primary/[0.03] blur-2xl" />
-      </div>
+      {/* Removed decorative elements for reference match on home — clean dark terminal bg */}
       <div className="relative z-10 flex min-h-dvh w-full">
         {/* Full-width content: no sidebar column */}
         <div className="flex-1 min-h-0 min-w-0 bg-transparent">

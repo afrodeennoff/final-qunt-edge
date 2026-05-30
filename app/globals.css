@@ -408,9 +408,9 @@
   --p3-sapphire: color(display-p3 0.20 0.45 0.98);
   --p3-sapphire-subtle: color(display-p3 0.20 0.45 0.98 / 0.12);
   --p3-sapphire-border: color(display-p3 0.20 0.45 0.98 / 0.25);
-  --p3-gold: hsl(263, 85%, 65%);
-  --p3-gold-subtle: hsla(263, 85%, 65%, 0.12);
-  --p3-gold-border: hsla(263, 85%, 65%, 0.25);
+  --p3-gold: hsl(150, 100%, 50%);
+  --p3-gold-subtle: hsla(150, 100%, 50%, 0.12);
+  --p3-gold-border: hsla(150, 100%, 50%, 0.25);
 
   /* Minimal shadows only */
   --shadow-ultra-sm: 0 1px 2px rgba(0,0,0,0.2);
@@ -577,11 +577,11 @@
   --muted-foreground: #888888;
   --subtle-foreground: #666666;
 
-  /* ── BRAND (Deep Purple — default palette locked for public pages) ── */
-  --primary: hsl(263, 88%, 68%);
+  /* ── BRAND (Neon Green — default palette locked for public pages) ── */
+  --primary: hsl(150, 100%, 50%);
   --primary-foreground: #000000;
-  --accent: hsl(263, 60%, 15%);
-  --accent-foreground: hsl(263, 85%, 65%);
+  --accent: hsl(150, 60%, 12%);
+  --accent-foreground: hsl(150, 100%, 50%);
 
   /* ── SEMANTIC TRADING COLORS (strong, high contrast) ── */
   --success: #0ECB81;
@@ -604,27 +604,27 @@
   --semantic-warning-fg: 0 0% 0%;
   --semantic-warning-bg: 38 92% 50% / 0.08;
   --semantic-warning-border: 38 92% 50% / 0.25;
-  --semantic-info: 263 85% 65%;
+  --semantic-info: 150 100% 50%;
   --semantic-info-fg: 0 0% 0%;
-  --semantic-info-bg: 263 85% 65% / 0.08;
-  --semantic-info-border: 263 85% 65% / 0.25;
+  --semantic-info-bg: 150 100% 50% / 0.08;
+  --semantic-info-border: 150 100% 50% / 0.25;
 
-  /* ── BORDER & RING — Deep Purple only for focus/ring ── */
-  --border: hsl(260, 12%, 16%);
-  --border-subtle: hsl(260, 8%, 13%);
-  --input: hsl(260, 10%, 12%);
-  --ring: hsl(263, 85%, 65%);
+  /* ── BORDER & RING — Neon Green only for focus/ring ── */
+  --border: hsl(150, 12%, 16%);
+  --border-subtle: hsl(150, 8%, 13%);
+  --input: hsl(150, 10%, 12%);
+  --ring: hsl(150, 100%, 50%);
 
   /* ── SIDEBAR */
   --sidebar: #000000;
   --sidebar-background: #000000;
   --sidebar-foreground: #EAEAEA;
-  --sidebar-primary: hsl(263, 85%, 65%);
+  --sidebar-primary: hsl(150, 100%, 50%);
   --sidebar-primary-foreground: #000000;
-  --sidebar-accent: hsl(263, 60%, 12%);
-  --sidebar-accent-foreground: hsl(263, 85%, 65%);
-  --sidebar-border: hsl(260, 10%, 12%);
-  --sidebar-ring: hsl(263, 85%, 65%);
+  --sidebar-accent: hsl(150, 60%, 10%);
+  --sidebar-accent-foreground: hsl(150, 100%, 50%);
+  --sidebar-border: hsl(150, 20%, 12%);
+  --sidebar-ring: hsl(150, 100%, 50%);
 
   /* ── COMPATIBILITY BRIDGE — neutral dark grays for legacy code */
   --legacy-50: 0 0% 6%;
@@ -686,7 +686,7 @@
   --type-metric-tracking: -0.02em;
 
   /* ═══════════════════════════════════════════════════════════
-      MARKETING / LANDING TOKENS — Pure Black + Deep Purple
+      MARKETING / LANDING TOKENS — Pure Black + Neon Green
    ═══════════════════════════════════════════════════════════ */
   --mkt-bg-base:        #000000;
   --mkt-bg-surface:     #000000;
@@ -697,16 +697,16 @@
   --mkt-text-secondary: #888888;
   --mkt-text-tertiary:  #666666;
 
-  --mkt-accent:           hsl(263, 85%, 65%);
-  --mkt-accent-hover:     hsl(263, 80%, 55%);
-  --mkt-accent-active:    hsl(263, 75%, 45%);
-  --mkt-accent-subtle:    hsla(263, 85%, 65%, 0.08);
-  --mkt-accent-border:    hsla(263, 85%, 65%, 0.25);
+  --mkt-accent:           hsl(150, 100%, 50%);
+  --mkt-accent-hover:     hsl(150, 100%, 45%);
+  --mkt-accent-active:    hsl(150, 100%, 38%);
+  --mkt-accent-subtle:    hsla(150, 100%, 50%, 0.08);
+  --mkt-accent-border:    hsla(150, 100%, 50%, 0.25);
 
-  --mkt-border-subtle:    hsl(260, 20%, 15%);
-  --mkt-border-default:   hsl(260, 20%, 15%);
-  --mkt-border-strong:    hsl(260, 20%, 20%);
-  --mkt-border-accent:    hsl(263, 85%, 65%);
+  --mkt-border-subtle:    hsl(150, 20%, 15%);
+  --mkt-border-default:   hsl(150, 20%, 15%);
+  --mkt-border-strong:    hsl(150, 20%, 20%);
+  --mkt-border-accent:    hsl(150, 100%, 50%);
 
   /* Clean no-glow marketing surfaces */
   --mkt-gradient-hero: none;
@@ -720,7 +720,7 @@
 
 
 .dark {
-  /* Public default — Pure Black + Deep Purple (overridden by dashboardTheme on dashboard/teams) */
+  /* Public default — Pure Black + Neon Green (overridden by dashboardTheme on dashboard/teams) */
   --background: #000000;
   --foreground: #EAEAEA;
   --card: #000000;
@@ -733,11 +733,11 @@
   --muted-foreground: #888888;
   --subtle-foreground: #666666;
 
-  /* Brand: Deep Purple (default) */
-  --primary: hsl(263, 88%, 68%);
+  /* Brand: Neon Green (default) */
+  --primary: hsl(150, 100%, 50%);
   --primary-foreground: #000000;
-  --accent: hsl(263, 60%, 15%);
-  --accent-foreground: hsl(263, 85%, 65%);
+  --accent: hsl(150, 60%, 12%);
+  --accent-foreground: hsl(150, 100%, 50%);
 
   /* Strong semantic trading colors */
   --success: #0ECB81;
@@ -748,26 +748,26 @@
   --destructive-foreground: #FFFFFF;
 
   /* Clean minimal borders */
-  --border: hsl(260, 12%, 16%);
-  --border-subtle: hsl(260, 8%, 13%);
-  --input: hsl(260, 10%, 12%);
-  --ring: hsl(263, 85%, 65%);
+  --border: hsl(150, 12%, 16%);
+  --border-subtle: hsl(150, 8%, 13%);
+  --input: hsl(150, 10%, 12%);
+  --ring: hsl(150, 100%, 50%);
 
   --sidebar-foreground: #EAEAEA;
-  --sidebar-primary: hsl(263, 85%, 65%);
+  --sidebar-primary: hsl(150, 100%, 50%);
   --sidebar-primary-foreground: #000000;
-  --sidebar-accent: hsl(263, 60%, 12%);
-  --sidebar-accent-foreground: hsl(263, 85%, 65%);
-  --sidebar-border: hsl(260, 10%, 12%);
-  --sidebar-ring: hsl(263, 85%, 65%);
+  --sidebar-accent: hsl(150, 60%, 10%);
+  --sidebar-accent-foreground: hsl(150, 100%, 50%);
+  --sidebar-border: hsl(150, 10%, 12%);
+  --sidebar-ring: hsl(150, 100%, 50%);
 
   /* Trading P&L semantics (strong, no tint bg unless needed) */
   --profit: #0ECB81;
   --profit-bg: rgba(14, 203, 129, 0.08);
   --loss: #F6465D;
   --loss-bg: rgba(246, 70, 93, 0.08);
-  --info: hsl(263, 85%, 65%);
-  --info-bg: hsla(263, 85%, 65%, 0.08);
+  --info: hsl(150, 100%, 50%);
+  --info-bg: hsla(150, 100%, 50%, 0.08);
 
   /* Legacy compat (minimal) */
   --legacy-50: 0 0% 6%;
@@ -823,14 +823,14 @@
   }
 
   .text-gradient-cobalt {
-    background: linear-gradient(135deg, hsl(263, 85%, 65%) 0%, hsl(263, 70%, 55%) 100%);
+    background: linear-gradient(135deg, hsl(150, 100%, 50%) 0%, hsl(150, 100%, 45%) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .border-gradient-cobalt {
-    border-image: linear-gradient(135deg, hsl(263, 85%, 65%) 0%, hsl(263, 60%, 50%) 100%) 1;
+    border-image: linear-gradient(135deg, hsl(150, 100%, 50%) 0%, hsl(150, 100%, 40%) 100%) 1;
   }
 
   /* ═══════════════════════════════════════════════════════════
@@ -860,7 +860,7 @@
   }
 
   .text-gradient-gold {
-    background: linear-gradient(135deg, hsl(263, 85%, 65%) 0%, hsl(263, 70%, 50%) 100%);
+    background: linear-gradient(135deg, hsl(150, 100%, 50%) 0%, hsl(150, 100%, 40%) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -975,9 +975,9 @@
   --font-mono: Geist Mono, monospace;
   --font-display: var(--font-dm-sans), 'DM Sans', sans-serif;
   --radius: 1rem;
-  --shadow-base: 263 70% 50%;
-  --shadow-2xs: 0px 8px 30px 0px hsl(263 70% 50% / 0.04);
-  --shadow-xs: 0px 8px 30px 0px hsl(263 70% 50% / 0.04);
+  --shadow-base: 150 100% 50%;
+  --shadow-2xs: 0px 8px 30px 0px hsl(150 100% 50% / 0.04);
+  --shadow-xs: 0px 8px 30px 0px hsl(150 100% 50% / 0.04);
   --shadow-sm: 0 0 transparent;
   --shadow: 0 0 transparent;
   --shadow-md: 0 0 transparent;
@@ -1009,10 +1009,10 @@
   --v2-text-muted: oklch(0.55 0.02 250);
   --v2-border: oklch(0.92 0 0);
   --v2-border-subtle: oklch(0.95 0 0);
-  --v2-accent: oklch(0.4865 0.2423 291.8661);
+  --v2-accent: oklch(0.55 0.2 150);
   --v2-accent-foreground: oklch(0.9838 0.0035 247.8583);
-  --v2-accent-hover: oklch(0.6192 0.2037 312.7283);
-  --v2-accent-subtle: oklch(0.4865 0.2423 291.8661 / 0.1);
+  --v2-accent-hover: oklch(0.6 0.22 150);
+  --v2-accent-subtle: oklch(0.55 0.2 150 / 0.1);
   --v2-success: oklch(0.55 0.15 166);
   --v2-warning: oklch(0.65 0.2 45);
   --v2-error: oklch(0.6 0.2 15);
@@ -1020,26 +1020,26 @@
   /* ===== V2 PREMIUM EXTENSIONS ===== */
   --v2-gradient-blue-purple: linear-gradient(
     135deg,
-    oklch(0.6192 0.2037 312.7283) 0%,
-    oklch(0.4865 0.2423 291.8661) 100%
+    hsl(150, 100%, 50%) 0%,
+    hsl(170, 80%, 45%) 100%
   );
   --v2-gradient-blue-cyan: linear-gradient(
     135deg,
-    oklch(0.6192 0.2037 312.7283) 0%,
-    oklch(0.7216 0.1282 217.8676) 100%
+    hsl(150, 100%, 50%) 0%,
+    hsl(170, 75%, 50%) 100%
   );
   --v2-gradient-subtle-mesh:
-    radial-gradient(ellipse at 30% 20%, oklch(0.4865 0.2423 291.8661 / 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 80%, oklch(0.6192 0.2037 312.7283 / 0.04) 0%, transparent 50%);
+    radial-gradient(ellipse at 30% 20%, oklch(0.5 0.2 150 / 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, oklch(0.55 0.2 150 / 0.04) 0%, transparent 50%);
   --v2-gradient-hero-mesh:
     radial-gradient(
       ellipse 1200px 800px at 20% 10%,
-      oklch(0.4865 0.2423 291.8661 / 0.08) 0%,
+      oklch(0.5 0.2 150 / 0.08) 0%,
       transparent 60%
     ),
     radial-gradient(
       ellipse 900px 600px at 80% 90%,
-      oklch(0.6192 0.2037 312.7283 / 0.05) 0%,
+      oklch(0.55 0.2 150 / 0.05) 0%,
       transparent 60%
     );
   --v2-glow-ambient: none;
@@ -3975,7 +3975,7 @@ img[loading='lazy'] {
   }
 }
 
-/* === PUBLIC PAGES: PURE BLACK CANVAS + LOCKED DEEP PURPLE DEFAULT === */
+/* === PUBLIC PAGES: PURE BLACK CANVAS + LOCKED NEON GREEN DEFAULT === */
 /* Applied on home, marketing, auth, landing, etc. — dashboard/teams keep user theme */
 /* .public-page is set on the shell div (home/landing/auth layouts) and cascades to all children */
 .public-page,
@@ -3986,25 +3986,25 @@ img[loading='lazy'] {
   --popover: #000000 !important;
   --sidebar: #000000 !important;
   --sidebar-background: #000000 !important;
-  --muted: hsl(263, 22%, 9%) !important;
-  --border: hsl(263, 24%, 16%) !important;
-  --input: hsl(260, 20%, 12%) !important;
+  --muted: hsl(150, 22%, 9%) !important;
+  --border: hsl(150, 20%, 16%) !important;
+  --input: hsl(150, 20%, 12%) !important;
   /* Pure black surface fallback */
   background: #000000 !important;
 
-  /* Locked Deep Purple accents from default palette (cmlh0x713000104jrgmds6vcd) */
-  --primary: hsl(263, 88%, 68%) !important;
-  --primary-foreground: hsl(260, 25%, 2%) !important;
-  --ring: hsl(263, 85%, 65%) !important;
-  --accent: hsl(263, 60%, 15%) !important;
-  --accent-foreground: hsl(263, 85%, 65%) !important;
-  --warning: hsl(263, 85%, 65%) !important;
+  /* Locked Neon Green accents from default palette */
+  --primary: hsl(150, 100%, 50%) !important;
+  --primary-foreground: #000000 !important;
+  --ring: hsl(150, 100%, 50%) !important;
+  --accent: hsl(150, 60%, 12%) !important;
+  --accent-foreground: hsl(150, 100%, 50%) !important;
+  --warning: hsl(150, 100%, 50%) !important;
   --warning-foreground: #000000 !important;
-  --chart-1: hsl(263, 88%, 68%) !important;
-  --chart-2: hsl(190, 85%, 58%) !important;
+  --chart-1: hsl(150, 100%, 50%) !important;
+  --chart-2: hsl(170, 85%, 58%) !important;
   --chart-3: hsl(150, 75%, 53%) !important;
-  --chart-4: hsl(280, 85%, 73%) !important;
-  --chart-5: hsl(330, 95%, 68%) !important;
+  --chart-4: hsl(190, 85%, 58%) !important;
+  --chart-5: hsl(130, 95%, 50%) !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -4015,21 +4015,21 @@ img[loading='lazy'] {
 ═══════════════════════════════════════════════════════════════ */
 
 .qe-home-ref {
-  /* Stronger lime/green accent used throughout the reference (both modes) */
-  --qe-ref-green: #22c55e;
-  --qe-ref-green-dark: #16a34a;
-  --qe-ref-green-light: #86efac;
+  /* Exact match to reference screenshot — bright cyber lime green + deep dark surfaces */
+  --qe-ref-green: #00ff9f;
+  --qe-ref-green-dark: #00cc7a;
+  --qe-ref-green-light: #5affc3;
 
-  /* Marketing surface tokens (dark mode first) */
+  /* Deep dark trading terminal surfaces from reference */
   --qe-ref-surface: #0a0c0a;
-  --qe-ref-surface-2: #111311;
-  --qe-ref-card: #161816;
-  --qe-ref-card-border: rgba(255,255,255,0.06);
-  --qe-ref-text: #f1f5f2;
-  --qe-ref-text-muted: #a1a8a3;
+  --qe-ref-surface-2: #0f1210;
+  --qe-ref-card: #111411;
+  --qe-ref-card-border: rgba(255,255,255,0.08);
+  --qe-ref-text: #f0f4f0;
+  --qe-ref-text-muted: #8a908a;
 }
 
-/* Light mode overrides for the reference aesthetic */
+/* Light mode overrides for the reference aesthetic (kept for completeness, primary is dark reference match) */
 :root.light .qe-home-ref,
 .qe-home-ref.light {
   --qe-ref-surface: #f8f9f7;
@@ -4038,6 +4038,27 @@ img[loading='lazy'] {
   --qe-ref-card-border: rgba(0,0,0,0.06);
   --qe-ref-text: #0f120f;
   --qe-ref-text-muted: #5a615c;
+}
+
+/* Subtle geometric background lines matching the reference screenshot */
+.qe-home-ref {
+  background-image:
+    linear-gradient(rgba(0,255,159,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,159,0.015) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Stronger glassy card treatment + green glow accents from reference */
+.qe-home-ref .ref-app-window,
+.qe-home-ref .ref-feature-card {
+  box-shadow: 0 25px 70px -20px rgb(0 0 0 / 0.55),
+              0 0 0 1px var(--qe-ref-card-border);
+  backdrop-filter: blur(12px);
+}
+
+.qe-home-ref .ref-green,
+.qe-home-ref .ref-feature-icon {
+  filter: drop-shadow(0 0 6px rgba(0,255,159,0.35));
 }
 
 /* Hero product preview chrome */
@@ -4105,11 +4126,12 @@ img[loading='lazy'] {
   width: 42px;
   height: 42px;
   border-radius: 12px;
-  background: rgba(34,197,94,0.12);
+  background: rgba(0,255,159,0.12);
   color: var(--qe-ref-green);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0 0 1px rgba(0,255,159,0.2);
 }
 
 /* AI Hub visual */
@@ -4120,20 +4142,165 @@ img[loading='lazy'] {
   margin: 0 auto;
 }
 
+/* Brighter reference-style lines in the AI hub */
+.qe-home-ref .ref-ai-hub line,
+.qe-home-ref .ref-ai-hub circle {
+  stroke: rgba(0, 255, 159, 0.25) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FULL REFERENCE MATCH OVERRIDES FOR HOME PAGE
+   Makes navbar + shell + overall feel 1:1 with the SAFECORE screenshot
+   (dark terminal, bright #00ff9f green, glassy cards, dense layout)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Force the entire home marketing shell + background to reference dark */
+.qe-home-ref .marketing-shell,
+.qe-home-ref {
+  background: #0a0c0a !important;
+}
+
+/* Top navbar — exact reference dark bar treatment */
+.qe-home-ref header {
+  background: #0a0c0a !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+.qe-home-ref header .unified-inset-panel,
+.qe-home-ref header > div > div {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Logo area — reference style bright green logo text */
+.qe-home-ref header a[href*="/"] .flex.h-9 {
+  background: transparent !important;
+  border: 1px solid rgba(0,255,159,0.3) !important;
+  color: #00ff9f !important;
+}
+
+.qe-home-ref header span.hidden.text-sm.font-semibold {
+  color: #00ff9f !important;
+  font-weight: 700 !important;
+}
+
+/* Nav links — clean, reference style */
+.qe-home-ref header nav a {
+  color: #9ca3af !important;
+  font-size: 13px !important;
+  padding: 8px 14px !important;
+}
+
+.qe-home-ref header nav a:hover {
+  color: #fff !important;
+  background: rgba(255,255,255,0.04) !important;
+}
+
+.qe-home-ref header nav a.bg-primary\/10,
+.qe-home-ref header nav a[aria-current] {
+  color: #00ff9f !important;
+  background: rgba(0,255,159,0.1) !important;
+}
+
+/* Auth buttons — reference exact: subtle + bright green pill */
+.qe-home-ref header a[href*="/authentication"] {
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  transition: all 0.15s ease !important;
+}
+
+/* Ghost "Log in" button */
+.qe-home-ref header a[href*="/authentication"]:first-of-type {
+  background: transparent !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+}
+
+.qe-home-ref header a[href*="/authentication"]:first-of-type:hover {
+  background: rgba(255,255,255,0.06) !important;
+  border-color: rgba(255,255,255,0.3) !important;
+}
+
+/* Primary bright green "Sign up" / CTA button */
+.qe-home-ref header a[href*="/authentication"]:last-of-type,
+.qe-home-ref .ref-cta-primary {
+  background: #00ff9f !important;
+  color: #0a0c0a !important;
+  border: none !important;
+  box-shadow: 0 0 0 1px rgba(0,255,159,0.3),
+              0 4px 14px rgba(0,255,159,0.25) !important;
+}
+
+.qe-home-ref header a[href*="/authentication"]:last-of-type:hover,
+.qe-home-ref .ref-cta-primary:hover {
+  background: #5affc3 !important;
+  color: #0a0c0a !important;
+  transform: translateY(-1px);
+}
+
+/* Make shell content tighter like reference */
+.qe-home-ref .marketing-shell .px-2.sm\\:px-4 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.qe-home-ref section {
+  padding-bottom: 72px !important;
+}
+
+.qe-home-ref section:last-of-type {
+  padding-bottom: 96px !important;
+}
+
+/* Hero — reference density and layout feel (no text changes) */
+.qe-home-ref .pt-20.pb-16,
+.qe-home-ref .sm\\:pt-24.sm\\:pb-20 {
+  padding-top: 64px !important;
+  padding-bottom: 80px !important;
+}
+
+.qe-home-ref .grid.gap-10.lg\\:grid-cols-2 {
+  gap: 48px !important;
+}
+
+.qe-home-ref .ref-h-display {
+  letter-spacing: -0.055em !important;
+}
+
+/* Feature grid tighter like reference cards */
+.qe-home-ref .grid.gap-4.sm\\:gap-5.md\\:grid-cols-2 {
+  gap: 16px !important;
+}
+
+/* All remaining cards (AI suite, How it Works, Analytics, Trust, CTA) forced to reference glassy style */
+.qe-home-ref .ref-feature-card,
+.qe-home-ref [class*="cardMain"],
+.qe-home-ref .rounded-xl.border.border-\\[var\\(--qe-ref-card-border\\)\\] {
+  background: #111411 !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 60px -15px rgb(0 0 0 / 0.5) !important;
+}
+
+/* Final CTA button already bright green from earlier rules */
+
 .qe-home-ref .ref-ai-node {
   position: absolute;
   width: 52px;
   height: 52px;
   border-radius: 999px;
   background: var(--qe-ref-card);
-  border: 1px solid var(--qe-ref-card-border);
+  border: 1px solid var(--qe-ref-green);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 11px;
   font-weight: 600;
   color: var(--qe-ref-text);
-  box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.2);
+  box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.2),
+              0 0 12px rgba(0,255,159,0.15);
 }
 
 /* Typography overrides for this page — match reference boldness */
