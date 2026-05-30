@@ -31,7 +31,7 @@ export function MarketingSection({
       id={id}
       className={cn(
         'scroll-smooth-butter relative px-4 py-8 sm:px-6 lg:px-8 sm:py-10',
-        'border-t border-border/10',
+        'border-t border-0',
         className,
       )}
     >
@@ -127,7 +127,7 @@ export function MarketingStatBlock({
   className?: string
 }) {
   return (
-    <div className={cn('rounded-xl bg-card p-6 border border-border/10 text-center', className)}>
+    <div className={cn('rounded-xl bg-card p-6 border-0 text-center', className)}>
       <p className="text-[32px] font-light tracking-[-0.05em] tabular-nums text-foreground leading-none font-mono">
         {value}
       </p>
