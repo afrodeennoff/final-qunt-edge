@@ -2,12 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { WidgetShell } from "@/components/ui/widget-shell"
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
-import { Journaling } from "./journaling"
 import { Timeline } from "./timeline"
 import { MindsetSummary } from "./mindset-summary"
 import { useI18n } from "@/locales/client"
-import { Info, ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from "lucide-react"
+import { Info, ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
  Tooltip as UITooltip,
@@ -17,178 +15,47 @@ import {
 } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 import { WidgetSize } from "@/app/[locale]/dashboard/types/dashboard"
-import type { EmblaCarouselType as CarouselApi } from "embla-carousel"
 import { toast } from "sonner"
-import { saveMindset, deleteMindset } from "@/server/journal"
-import { addTagsToTradesForDay } from "@/server/trades"
-import { isToday, format } from "date-fns"
+import { deleteMindset } from "@/server/journal"
+import { format } from "date-fns"
 import { useMoodStore } from "@/store/mood-store"
-import { useFinancialEventsStore } from "@/store/financial-events-store"
-import { useTradingDomainStore } from "@/store/trading-domain-store"
 import { useCurrentLocale } from "@/locales/client"
-import { FinancialEvent } from "@/prisma/generated/prisma"
-import { Trade } from "@/lib/data-types"
 
 interface MindsetWidgetProps {
  size: WidgetSize
 }
 
 export function MindsetWidget({ size }: MindsetWidgetProps) {
- const [api, setApi] = useState<CarouselApi>()
- const [current, setCurrent] = useState(0)
  const [emotionValue, setEmotionValue] = useState(0)
  const [selectedNews, setSelectedNews] = useState<string[]>([])
  const [journalContent, setJournalContent] = useState("")
  const [selectedDate, setSelectedDate] = useState(new Date())
- const [isEditing, setIsEditing] = useState(true)
  const [isTimelineVisible, setIsTimelineVisible] = useState(true)
  const moods = useMoodStore(state => state.moods)
  const setMoods = useMoodStore(state => state.setMoods)
- const financialEvents = useFinancialEventsStore(state => state.events)
- const trades = useTradingDomainStore(state => state.trades)
- const setTrades = useTradingDomainStore(state => state.setTrades)
  const locale = useCurrentLocale()
  const t = useI18n()
 
- // Consolidated effect for carousel and mood data handling
+ // Handle mood data when selected date changes
  useEffect(() => {
- if (!api) return
+ if (!moods) return
 
- const handleSelect = () => {
- setCurrent(api.selectedScrollSnap())
- }
-
- // Handle carousel selection
- api.on("select", handleSelect)
-
- // Handle initial load and mood data
- if (moods) {
- const today = new Date()
- const hasTodayData = moods.some(mood => {
- if (!mood?.day) return false
- const moodDate = mood.day instanceof Date ? mood.day : new Date(mood.day)
- return format(moodDate, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd')
- })
-
- // Handle selected date mood data
  const mood = moods.find(mood => {
  if (!mood?.day) return false
  const moodDate = mood.day instanceof Date ? mood.day : new Date(mood.day)
  return format(moodDate, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
  })
 
- // If it's today and we have data, show summary
- if (isToday(selectedDate) && hasTodayData) {
- // Set data to today's data
- setEmotionValue(mood?.emotionValue ?? 50)
- setSelectedNews(mood?.selectedNews ?? [])
- setJournalContent(mood?.journalContent ??"")
- setIsEditing(true)
- api.scrollTo(1) // Summary is now index 1
- } else if (mood) {
+ if (mood) {
  setEmotionValue(mood.emotionValue ?? 50)
  setSelectedNews(mood.selectedNews ?? [])
- setJournalContent(mood.journalContent ??"")
- api.scrollTo(1) // Summary is now index 1
+ setJournalContent(mood.journalContent ?? "")
  } else {
- // Reset all values if no mood data exists for the selected date
  setEmotionValue(0)
  setSelectedNews([])
  setJournalContent("")
  }
- }
-
- return () => {
- api.off("select", handleSelect)
- }
- }, [api, selectedDate, moods])
-
- const handleEmotionChange = (value: number) => {
- setEmotionValue(value)
- }
-
- const handleNewsSelection = (newsIds: string[]) => {
- setSelectedNews(newsIds)
- }
-
- const handleJournalChange = (content: string) => {
- setJournalContent(content)
- }
-
- const handleApplyTagToAll = async (tag: string) => {
- const previousTrades = useTradingDomainStore.getState().trades
- try {
- const dateKey = format(selectedDate, 'yyyy-MM-dd')
-
- // Find all trades for this day
- const tradesForDay = trades.filter(trade => {
- const entryDate = trade.entryDate
- const closeDate = trade.closeDate
- const entryMatches = entryDate && format(new Date(entryDate), 'yyyy-MM-dd') === dateKey
- const closeMatches = closeDate && format(new Date(closeDate), 'yyyy-MM-dd') === dateKey
- return entryMatches || closeMatches
- })
-
- const tradeIds = tradesForDay.map(trade => trade.id)
-
- // Update local state immediately for instant feedback
- const updatedTrades = trades.map(trade => {
- if (tradeIds.includes(trade.id)) {
- return {
- ...trade,
- tags: Array.from(new Set([...trade.tags, tag]))
- }
- }
- return trade
- })
- setTrades(updatedTrades)
-
- // Then update on server
- await addTagsToTradesForDay(dateKey, [tag])
-
- toast.success(t('mindset.tags.tagApplied'), {
- description: t('mindset.tags.tagAppliedDescription', { tag }),
- })
- } catch (error) {
- // Rollback trades to pre-mutation state
- setTrades(previousTrades)
- toast.error(t('mindset.tags.tagApplyError'), {
- description: t('mindset.tags.tagApplyErrorDescription'),
- })
- }
- }
-
- const handleSave = async () => {
- // Scroll to summary view after saving
- api?.scrollTo(1)
- try {
- const dateKey = format(selectedDate, 'yyyy-MM-dd')
- const savedMood = await saveMindset({
- emotionValue,
- selectedNews,
- journalContent,
- }, dateKey)
-
- // Update the moodHistory in context
- const updatedMoodHistory = moods?.filter(mood => {
- if (!mood?.day) return true
- const moodDate = mood.day instanceof Date ? mood.day : new Date(mood.day)
- const selectedDateKey = format(selectedDate, 'yyyy-MM-dd')
- const moodDateKey = format(moodDate, 'yyyy-MM-dd')
- return moodDateKey !== selectedDateKey
- }) || []
- setMoods([...updatedMoodHistory, savedMood])
-
- toast.success(t('mindset.saveSuccess'), {
- description: t('mindset.saveSuccessDescription'),
- })
-
- } catch (error) {
- toast.error(t('mindset.saveError'), {
- description: t('mindset.saveErrorDescription'),
- })
- }
- }
+ }, [selectedDate, moods])
 
  const handleDeleteEntry = async (date: Date) => {
  try {
@@ -208,8 +75,6 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
  setEmotionValue(50)
  setSelectedNews([])
  setJournalContent("")
- setIsEditing(true)
- api?.scrollTo(0)
  }
  } catch (error) {
  throw error // Let the Timeline component handle the error toast
@@ -218,146 +83,21 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
 
  const handleDateSelect = (date: Date) => {
  setSelectedDate(date)
-
- // Find if we have data for the selected date
- const moodForDate = moods?.find(mood => {
- if (!mood?.day) return false
- const moodDate = mood.day instanceof Date ? mood.day : new Date(mood.day)
- return format(moodDate, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
- })
-
- if (moodForDate) {
- // If we have data, update all the state values
-
- setEmotionValue(moodForDate.emotionValue ?? 50)
- setSelectedNews(moodForDate.selectedNews ?? [])
- setJournalContent(moodForDate.journalContent ??"")
- setIsEditing(true)
- api?.scrollTo(1) // Summary is now index 1
- } else {
- // If no data exists, reset the form
- setEmotionValue(50)
- setSelectedNews([])
- setJournalContent("")
- setIsEditing(true)
- api?.scrollTo(0) // Journaling is index 0
- }
- }
-
- const getEventsForDate = (date: Date): FinancialEvent[] => {
- return financialEvents.filter(event => {
- if (!event.date) return false;
- try {
- const eventDate = new Date(event.date)
- const compareDate = new Date(date)
-
- // Set hours to start of day for comparison
- eventDate.setHours(0, 0, 0, 0)
- compareDate.setHours(0, 0, 0, 0)
-
- return eventDate.getTime() === compareDate.getTime() && event.lang === locale
- } catch (error) {
-
- return false
- }
- })
  }
 
  const handleEdit = (section?: 'emotion' | 'journal' | 'news') => {
- setIsEditing(true)
-
- // Navigate to the appropriate section
- switch (section) {
- case 'news':
- api?.scrollTo(0) // News is now part of journaling
- break
- case 'journal':
- api?.scrollTo(0)
- break
- case 'emotion':
- api?.scrollTo(0)
- break
- default:
- api?.scrollTo(0)
- }
+ // No-op: journaling has been moved to the dedicated /notes page
  }
 
  const toggleTimeline = () => {
  setIsTimelineVisible(!isTimelineVisible)
  }
 
- const steps = [
- {
- title: t('mindset.journaling.title'),
- component: <Journaling
- content={journalContent}
- onChange={handleJournalChange}
- onSave={handleSave}
- emotionValue={emotionValue}
- onEmotionChange={handleEmotionChange}
- date={selectedDate}
- events={getEventsForDate(selectedDate)}
- selectedNews={selectedNews}
- onNewsSelection={handleNewsSelection}
- trades={trades}
- onApplyTagToAll={handleApplyTagToAll}
- />
- },
- {
- title: t('mindset.title'),
- component: <MindsetSummary
- date={selectedDate}
- emotionValue={emotionValue}
- selectedNews={selectedNews}
- journalContent={journalContent}
- onEdit={handleEdit}
- />
- }
- ]
-
- const widgetActions = (
- <div className="flex items-center gap-2">
- <div className="flex items-center gap-1.5">
- {steps.map((_, index) => (
- <div
- key={index}
- className={cn("h-1.5 w-1.5 rounded-full transition-colors",
- current === index
- ?"bg-primary"
- :"bg-background/25"
- )}
- />
- ))}
- </div>
- <div className="flex items-center gap-1">
- <Button 
- variant="ghost"
- size="icon"
- onClick={() => api?.scrollPrev()}
- disabled={current === 0}
- className="h-6 w-6"
- >
- <ChevronLeft className="h-3 w-3" />
- </Button>
- <Button 
- variant="ghost"
- size="icon"
- onClick={() => api?.scrollNext()}
- disabled={current === steps.length - 1}
- className="h-6 w-6"
- >
- <ChevronRight className="h-3 w-3" />
- </Button>
- </div>
- </div>
- )
-
  return (
  <WidgetShell
  title={t('mindset.title')}
  icon={<Info className={cn("text-muted-foreground", size === 'small' ?"h-3.5 w-3.5" :"h-4 w-4")} />}
  info={t('mindset.description')}
- actions={widgetActions}
  className="flex flex-col h-full w-full"
  contentClassName="flex-1 overflow-hidden p-0 flex flex-row relative"
  >
@@ -380,7 +120,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
  <TooltipProvider>
  <UITooltip>
  <TooltipTrigger asChild>
- <Button 
+ <Button
  variant="secondary"
  size="icon"
  onClick={toggleTimeline}
@@ -407,7 +147,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
  <TooltipProvider>
  <UITooltip>
  <TooltipTrigger asChild>
- <Button 
+ <Button
  variant="secondary"
  size="icon"
  onClick={toggleTimeline}
@@ -424,29 +164,16 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
  </div>
  )}
 
- {/* Carousel */}
- <Carousel
- opts={{
- loop: false,
- watchDrag: (api, event) => {
- // Disable drag on desktop
- if (window.innerWidth >= 768) {
- return false
- }
- return true
- }
- }}
- setApi={setApi}
- className="flex-1 min-w-0 h-full flex flex-col"
- >
- <CarouselContent className="h-full flex-1 pl-4">
- {steps.map((step, index) => (
- <CarouselItem key={index} className="h-full p-4">
- {step.component}
- </CarouselItem>
- ))}
- </CarouselContent>
- </Carousel>
+ {/* Summary view */}
+ <div className="flex-1 min-w-0 h-full p-4">
+ <MindsetSummary
+ date={selectedDate}
+ emotionValue={emotionValue}
+ selectedNews={selectedNews}
+ journalContent={journalContent}
+ onEdit={handleEdit}
+ />
+ </div>
  </WidgetShell>
  )
 } 
