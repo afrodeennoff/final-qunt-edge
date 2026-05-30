@@ -63,23 +63,23 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
 const HomeContent = dynamic(() => import('./components/HomeContent'), {
   loading: () => (
-      <div className="relative min-w-0 overflow-x-hidden bg-transparent">
-      <main className="relative z-10 mx-auto w-full max-w-[1280px] min-w-0 px-4 sm:px-6 lg:px-8">
-        <div className="pt-24 sm:pt-32 lg:pt-40">
-          <div className="mx-auto max-w-3xl space-y-8 text-center">
-            <Skeleton className="h-5 w-32 rounded mx-auto" />
-            <Skeleton className="h-14 sm:h-16 w-[min(100%,42rem)] rounded-2xl mx-auto" />
-            <Skeleton className="h-4 w-80 rounded mx-auto mt-4" />
-            <div className="flex justify-center gap-3 mt-8">
-              <Skeleton className="h-11 w-36 rounded-xl" />
+    <div className="qe-home-ref relative min-w-0 overflow-x-hidden bg-[#0a0c0a] text-[#f1f5f2]">
+      <main className="relative z-10 mx-auto w-full max-w-[1100px] min-w-0 px-6">
+        <div className="pt-20 pb-16 sm:pt-24 sm:pb-20">
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div className="space-y-5">
+              <Skeleton className="h-6 w-64 rounded-full bg-white/10" />
+              <Skeleton className="h-[92px] w-full max-w-[520px] rounded-2xl bg-white/10" />
+              <Skeleton className="h-4 w-[320px] rounded bg-white/10" />
+              <div className="flex gap-3 pt-4">
+                <Skeleton className="h-12 w-40 rounded-full bg-[#22c55e]" />
+                <Skeleton className="h-12 w-32 rounded-full bg-white/10" />
+              </div>
+            </div>
+            <div className="relative">
+              <Skeleton className="h-[320px] w-full max-w-[420px] rounded-2xl bg-white/5 mx-auto" />
             </div>
           </div>
-        </div>
-        {/* Live stats skeleton */}
-        <div className="mt-16 grid grid-cols-2 gap-6 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 w-full rounded-xl" />
-          ))}
         </div>
       </main>
     </div>
