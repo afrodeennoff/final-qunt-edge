@@ -1,8 +1,8 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Line, LineChart, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from 'recharts'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   ChartContainer,
   ChartTooltip,
@@ -11,27 +11,22 @@ import {
 import type { ChartConfig } from '@/components/ui/chart'
 import { formatCompactCurrency } from '@/lib/formatting/currency'
 import { cn } from '@/lib/utils'
-import { unifiedInsetPanelClassName, unifiedSectionPanelClassName } from '@/components/layout/unified-page-recipes'
+import { unifiedSectionPanelClassName } from '@/components/layout/unified-page-recipes'
 
-type MetricKey = 'accounts' | 'payouts' | 'pending' | 'refused'
+type MetricKey = 'accounts' | 'payouts' | 'value' | 'sized'
 
-const registeredAccountsChartConfig = {
-  accounts: {
-    label: "Num Accounts",
-    color: "var(--chart-1)",
-  },
-  payouts: {
-    label: "Paid",
-    color: "var(--chart-2)",
-  },
-  pending: {
-    label: "Pending",
-    color: "var(--chart-3)",
-  },
-  refused: {
-    label: "Refused",
-    color: "var(--chart-4)",
-  },
+const metricMeta: Record<MetricKey, { label: string; color: string; format: (v: number) => string }> = {
+  accounts: { label: 'Accounts', color: 'var(--chart-1)', format: (v) => v.toLocaleString() },
+  payouts: { label: 'Paid Out', color: 'var(--chart-2)', format: (v) => formatCompactCurrency(v) },
+  value: { label: 'Account Value', color: 'var(--chart-3)', format: (v) => formatCompactCurrency(v) },
+  sized: { label: 'Sized Accounts', color: 'var(--chart-4)', format: (v) => v.toLocaleString() },
+}
+
+const chartConfig = {
+  accounts: { label: 'Accounts', color: 'var(--chart-1)' },
+  payouts: { label: 'Paid Out', color: 'var(--chart-2)' },
+  value: { label: 'Account Value', color: 'var(--chart-3)' },
+  sized: { label: 'Sized Accounts', color: 'var(--chart-4)' },
 } satisfies ChartConfig
 
 export function RegisteredAccountsChart({
@@ -41,147 +36,121 @@ export function RegisteredAccountsChart({
 }) {
   const [activeMetric, setActiveMetric] = useState<MetricKey>('accounts')
 
-  const metricTabs: { key: MetricKey; label: string }[] = [
-    { key: 'accounts', label: 'Accounts' },
-    { key: 'payouts', label: 'Paid' },
-    { key: 'pending', label: 'Pending' },
-    { key: 'refused', label: 'Refused' },
-  ]
+  const sorted = useMemo(() => {
+    return [...data]
+      .sort((a, b) => (b[activeMetric] as number) - (a[activeMetric] as number))
+      .slice(0, 20)
+      .map((entry) => ({
+        firm: entry.name.length > 14 ? `${entry.name.slice(0, 13)}…` : entry.name,
+        value: entry[activeMetric] as number,
+      }))
+  }, [data, activeMetric])
 
-  const chartData = useMemo(
-    () =>
-      [...data].map((entry) => ({
-        firm: entry.name,
-        shortFirm: entry.name.length > 10 ? `${entry.name.slice(0, 10)}...` : entry.name,
-        accounts: entry.accounts,
-        payouts: entry.payouts,
-        pending: entry.value,     // mapping value → Pending for now
-        refused: entry.sized,     // mapping sized → Refused for now
-      })),
-    [data],
-  )
+  const total = useMemo(() => {
+    return data.reduce((sum, d) => sum + (d[activeMetric] as number), 0)
+  }, [data, activeMetric])
+
+  if (sorted.length === 0) {
+    return (
+      <div className={cn(unifiedSectionPanelClassName, 'px-6 py-12 text-center')}>
+        <p className="text-sm text-muted-foreground">No account registrations available yet.</p>
+      </div>
+    )
+  }
 
   return (
     <Card className={cn(unifiedSectionPanelClassName, 'overflow-hidden')}>
-      <CardHeader className="border-b border-border bg-[linear-gradient(180deg,hsl(var(--card)/0.58)_0%,transparent_100%)] px-6 pb-3 pt-4">
-        <div className="flex flex-col gap-2">
-          <div className="min-w-0">
-            <CardTitle className="text-[clamp(1.2rem,2.4vw,1.55rem)] leading-tight tracking-tight">
+      <CardHeader className="border-b border-border/15 bg-[linear-gradient(180deg,hsl(var(--card)/0.4)_0%,transparent_100%)] px-6 pb-3 pt-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <CardTitle className="text-lg font-semibold leading-tight tracking-tight">
               Registered Accounts by Prop Firm
             </CardTitle>
+            <p className="mt-1 text-xs text-muted-foreground/70">
+              {sorted.length} firms • Total: {metricMeta[activeMetric].format(total)}
+            </p>
           </div>
-          <div className="flex w-full items-center justify-between gap-3 overflow-x-auto">
-            <span className="shrink-0 text-xs text-muted-foreground">
-              {registeredAccountsChartConfig[activeMetric].label}
-            </span>
-            <div className="inline-flex shrink-0 rounded-full border border-border bg-muted/10 p-1">
-              {metricTabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  type="button"
-                  onClick={() => setActiveMetric(tab.key)}
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                    activeMetric === tab.key
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+
+          <div className="inline-flex shrink-0 rounded-full border border-border/30 bg-muted/10 p-0.5">
+            {(Object.keys(metricMeta) as MetricKey[]).map((key) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setActiveMetric(key)}
+                className={cn(
+                  'rounded-full px-3 py-1.5 text-[11px] font-medium transition-all',
+                  activeMetric === key
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground',
+                )}
+              >
+                {metricMeta[key].label}
+              </button>
+            ))}
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-3">
-        {chartData.length > 0 ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>Registered Accounts by Prop Firm</CardTitle>
-              <CardDescription>Num Accounts • Paid • Pending • Refused across all firms</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <ChartContainer
-                  config={registeredAccountsChartConfig}
-                  className="h-[340px] w-full"
-                  style={{
-                    minWidth: Math.max(1200, chartData.length * 80) + 'px',
-                  }}
-                >
-                  <LineChart
-                    accessibilityLayer
-                    data={chartData}
-                    margin={{
-                      left: 12,
-                      right: 12,
-                      top: 20,
-                      bottom: 70,
-                    }}
-                  >
-                    <CartesianGrid vertical={false} />
-                    <XAxis
-                      dataKey="shortFirm"
-                      tickLine={false}
-                      axisLine={false}
-                      tickMargin={8}
-                      tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
-                      angle={-40}
-                      textAnchor="end"
-                      height={75}
-                    />
-                    <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
 
-                    <Line
-                      dataKey="accounts"
-                      type="natural"
-                      stroke="var(--color-accounts)"
-                      strokeWidth={2.5}
-                      dot={false}
-                    />
-                    <Line
-                      dataKey="payouts"
-                      type="natural"
-                      stroke="var(--color-payouts)"
-                      strokeWidth={2.5}
-                      dot={false}
-                    />
-                    <Line
-                      dataKey="pending"
-                      type="natural"
-                      stroke="var(--color-pending)"
-                      strokeWidth={2.5}
-                      dot={false}
-                    />
-                    <Line
-                      dataKey="refused"
-                      type="natural"
-                      stroke="var(--color-refused)"
-                      strokeWidth={2.5}
-                      dot={false}
-                    />
-                  </LineChart>
-                </ChartContainer>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <div className="flex w-full items-start gap-2 text-sm">
-                <div className="grid gap-2">
-                  <div className="flex items-center gap-2 leading-none font-medium">
-                    All firms visible — scroll horizontally if needed
-                  </div>
-                  <div className="flex items-center gap-2 leading-none text-muted-foreground">
-                    Showing Num Accounts, Paid, Pending, and Refused per prop firm
-                  </div>
-                </div>
-              </div>
-            </CardFooter>
-          </Card>
-        ) : (
-          <div className="rounded-xl border border-dashed border-border bg-muted/30 px-4 py-6 text-sm text-muted-foreground">
-            No account registrations available yet.
-          </div>
-        )}
+      <CardContent className="p-0">
+        <div className="overflow-x-auto">
+          <ChartContainer
+            config={chartConfig}
+            className="h-[380px] w-full"
+            style={{ minWidth: Math.max(600, sorted.length * 56) + 'px' }}
+          >
+            <BarChart
+              data={sorted}
+              margin={{ left: 8, right: 16, top: 12, bottom: 8 }}
+              barCategoryGap="20%"
+            >
+              <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border)/0.3)" />
+              <XAxis
+                dataKey="firm"
+                tickLine={false}
+                axisLine={false}
+                tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+                angle={-35}
+                textAnchor="end"
+                height={80}
+                interval={0}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+                tickFormatter={(v) => activeMetric === 'payouts' || activeMetric === 'value' ? formatCompactCurrency(v) : v.toLocaleString()}
+                width={64}
+              />
+              <ChartTooltip
+                cursor={{ fill: 'hsl(var(--muted)/0.3)' }}
+                content={
+                  <ChartTooltipContent
+                    formatter={(value) => metricMeta[activeMetric].format(value as number)}
+                  />
+                }
+              />
+              <Bar
+                dataKey="value"
+                radius={[6, 6, 0, 0]}
+                maxBarSize={48}
+              >
+                {sorted.map((_, i) => (
+                  <Cell
+                    key={i}
+                    fill={metricMeta[activeMetric].color}
+                    opacity={1 - i * 0.03}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ChartContainer>
+        </div>
+
+        <div className="border-t border-border/10 px-6 py-3">
+          <p className="text-[11px] text-muted-foreground/50">
+            Top {sorted.length} firms ranked by {metricMeta[activeMetric].label.toLowerCase()} — scroll horizontally if needed
+          </p>
+        </div>
       </CardContent>
     </Card>
   )
