@@ -19,13 +19,23 @@ import {
   Target,
   Clock,
   Award,
+  BookOpen,
 } from 'lucide-react'
 
+import { cn } from '@/lib/utils'
 import HeroProductPreview from './HeroProductPreview'
 import FeatureCard from './FeatureCard'
 import AIHubVisual from './AIHubVisual'
 
 const HOME_WIDTH = 'mx-auto w-full max-w-[1100px] px-6'
+
+const cardMain = 'rounded-xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5 sm:p-6'
+const cardNested = 'rounded-lg bg-[var(--qe-ref-surface-2)] p-4'
+const headingSection = 'ref-h-section'
+const bodyDefault = 'ref-body'
+const eyebrowStyle = 'text-[11px] font-semibold tracking-[0.16em] text-[var(--qe-ref-green)]'
+const headingCard = 'text-[17px] font-semibold tracking-[-0.01em]'
+const bodySmall = 'text-[13px] leading-[1.55] text-[var(--qe-ref-text-muted)]'
 
 export default function HomeContent() {
   return (

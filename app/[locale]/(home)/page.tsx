@@ -56,7 +56,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <HomeContent locale={locale} />
+      <HomeContent />
     </>
   )
 }
