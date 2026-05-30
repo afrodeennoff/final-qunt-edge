@@ -274,7 +274,7 @@ export function ChatInput({
 
  {/* URL input */}
  {showUrlInput && (
- <div className="mb-3 p-3 border border-border/30 rounded-lg bg-background/50">
+ <div className="mb-3 p-3 border-0 rounded-lg bg-background/50">
  <div className="flex items-center gap-2">
  <Input
  value={urlInput}
@@ -319,7 +319,7 @@ export function ChatInput({
  <div className="mb-3 flex flex-wrap gap-2">
  {files.map((file, index) => (
  <div key={index} className="relative group">
- <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-border/30 bg-muted/50 flex items-center justify-center">
+ <div className="relative w-16 h-16 rounded-lg overflow-hidden border-0 bg-muted/50 flex items-center justify-center">
  {file.mediaType.startsWith('image/') ? (
  <img
  src={file.url}

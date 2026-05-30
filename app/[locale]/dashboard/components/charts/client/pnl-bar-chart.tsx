@@ -79,8 +79,8 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
  const data = payload[0].payload;
  const date = new Date(data.date +"T00:00:00Z");
  return (
- <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm min-w-[140px]">
- <p className="font-semibold text-muted-foreground text-[10px] uppercase tracking-widest mb-2 border-b border-border/40 pb-1">
+ <div className="bg-card/96 p-3 border-0 rounded-xl shadow-sm min-w-[140px]">
+ <p className="font-semibold text-muted-foreground text-[10px] uppercase tracking-widest mb-2 border-b-0 pb-1">
  {formatInTimeZone(date, timezone,"MMM d, yyyy", {
  locale: dateLocale,
  })}
@@ -91,7 +91,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
  {formatCurrency(data.pnl)}
  </span>
  </div>
- <div className="grid grid-cols-2 gap-x-4 pt-2 border-t border-border/40">
+ <div className="grid grid-cols-2 gap-x-4 pt-2 border-t-0">
  <div className="flex flex-col">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnl.tooltip.longTrades")}</span>
  <span className="text-sm font-bold text-foreground">{data.longNumber}</span>
@@ -146,7 +146,7 @@ export default React.memo(function PNLChart({ size ="medium" }: PNLChartProps) {
  return (
  <ChartSurface>
  <div
- className={cn("flex flex-col items-stretch gap-0 border-b border-border/55 shrink-0",
+ className={cn("flex flex-col items-stretch gap-0 border-b-0 shrink-0",
  size ==="small" ?"p-2 h-10 justify-center" :"p-3 sm:p-3.5 h-12 justify-center",
  )}
  >

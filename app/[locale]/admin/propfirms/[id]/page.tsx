@@ -325,7 +325,7 @@ function FormFieldGroup({
   children: ReactNode
 }) {
   return (
-    <div className="space-y-4 rounded-xl border border-border/30 bg-background/40 p-4">
+    <div className="space-y-4 rounded-xl border-0 bg-background/40 p-4">
       <div className="space-y-1">
         <p className="text-sm font-black text-foreground">{title}</p>
         {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
@@ -387,7 +387,7 @@ export default async function PropFirmEditPage({
 
   return (
     <div className="max-w-5xl space-y-5">
-      <div className="flex flex-col gap-3 border-b border-border/30 pb-6 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-3 border-b-0 pb-6 md:flex-row md:items-end md:justify-between">
         <div className="space-y-2">
           <Button variant="ghost" size="sm" asChild className="w-fit">
             <Link href={`/${locale}/admin/propfirms`}>← Back to firms</Link>
@@ -466,7 +466,7 @@ export default async function PropFirmEditPage({
           variant="elevated"
           className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
         >
-          <CardHeader className="space-y-1 border-b border-border/30">
+          <CardHeader className="space-y-1 border-b-0">
             <CardTitle>Firm details</CardTitle>
             <p className="text-sm text-muted-foreground">
               These fields drive the public catalogue, firm detail page, and admin suggestion
@@ -660,7 +660,7 @@ function ReviewsSection({
       variant="elevated"
       className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
-      <CardHeader className="space-y-3 border-b border-border/30">
+      <CardHeader className="space-y-3 border-b-0">
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
           <div className="space-y-1">
             <CardTitle>Reviews ({firm.reviews.length})</CardTitle>
@@ -684,7 +684,7 @@ function ReviewsSection({
 
         <form
           action={handleCreateReview}
-          className="rounded-xl border border-border/30 bg-background/40 p-4"
+          className="rounded-xl border-0 bg-background/40 p-4"
         >
           <input type="hidden" name="propFirmId" value={firm.id} />
           <input type="hidden" name="locale" value={locale} />
@@ -723,7 +723,7 @@ function ReviewsSection({
             {firm.reviews.map((review) => (
               <div
                 key={review.id}
-                className="rounded-xl border border-border/30 p-4"
+                className="rounded-xl border-0 p-4"
               >
                 <div className="space-y-3">
                   <form action={handleUpdateReview} className="space-y-2">
@@ -770,7 +770,7 @@ function ReviewsSection({
                       </div>
                     </fieldset>
                   </form>
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/30 pt-3">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t-0 pt-3">
                     <p className="text-xs text-muted-foreground">
                       Created: {new Date(review.createdAt).toLocaleDateString()}
                     </p>
@@ -822,7 +822,7 @@ function CouponsSection({
       variant="elevated"
       className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
-      <CardHeader className="space-y-3 border-b border-border/30">
+      <CardHeader className="space-y-3 border-b-0">
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
           <div className="space-y-1">
             <CardTitle>Coupons ({firm.coupons.length})</CardTitle>
@@ -851,7 +851,7 @@ function CouponsSection({
         {canManageCoupons ? (
           <form
             action={handleCreateCoupon}
-            className="space-y-4 rounded-xl border border-border/30 p-4"
+            className="space-y-4 rounded-xl border-0 p-4"
           >
             <input type="hidden" name="propFirmId" value={firm.id} />
             <input type="hidden" name="locale" value={locale} />
@@ -1019,8 +1019,8 @@ function CouponEditorCard({
   const timing = getCouponTimingState(coupon)
 
   return (
-    <div className="rounded-xl border border-border/30 p-4">
-      <div className="flex flex-col gap-4 border-b border-border/30 pb-4 md:flex-row md:items-start md:justify-between">
+    <div className="rounded-xl border-0 p-4">
+      <div className="flex flex-col gap-4 border-b-0 pb-4 md:flex-row md:items-start md:justify-between">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-base font-black tracking-tight">{coupon.code}</p>
@@ -1192,7 +1192,7 @@ function CouponEditorCard({
         </fieldset>
       </form>
 
-      <div className="mt-4 flex flex-col gap-3 border-t border-border/30 pt-4 md:flex-row md:items-center md:justify-between">
+      <div className="mt-4 flex flex-col gap-3 border-t-0 pt-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1 text-xs text-muted-foreground">
           <p>Created {new Date(coupon.createdAt).toLocaleString()}</p>
           <p>

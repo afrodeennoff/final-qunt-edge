@@ -45,7 +45,7 @@ export function JournalCardBody({ card, onCreateEntry, onUpdateEntry }: JournalC
 
   return (
     <div className="space-y-4 p-4">
-      <div className="grid grid-cols-2 gap-x-6 gap-y-2 rounded-lg border border-border/15 bg-muted/30 p-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-x-6 gap-y-2 rounded-lg border-0 bg-muted/30 p-3 sm:grid-cols-4">
         <div>
           <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60">Entry</span>
           <p className="text-xs font-medium tabular-nums">{formatPrice(trade.entryPrice)}</p>
@@ -98,7 +98,7 @@ export function JournalCardBody({ card, onCreateEntry, onUpdateEntry }: JournalC
               onChange={e => update('preTradeNotes', e.target.value || null)}
               placeholder="Why did you enter this trade? What setup did you see?"
               rows={2}
-              className="w-full resize-none rounded-md border border-border/30 bg-background/40 px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
+              className="w-full resize-none rounded-md border-0 bg-background/40 px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
             />
           </div>
 
@@ -109,7 +109,7 @@ export function JournalCardBody({ card, onCreateEntry, onUpdateEntry }: JournalC
               onChange={e => update('postTradeReview', e.target.value || null)}
               placeholder="What went well? What would you change?"
               rows={2}
-              className="w-full resize-none rounded-md border border-border/30 bg-background/40 px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
+              className="w-full resize-none rounded-md border-0 bg-background/40 px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
             />
           </div>
 
@@ -120,7 +120,7 @@ export function JournalCardBody({ card, onCreateEntry, onUpdateEntry }: JournalC
               onChange={e => update('emotions', e.target.value || null)}
               placeholder="How were you feeling during this trade?"
               rows={1}
-              className="w-full resize-none rounded-md border border-border/30 bg-background/40 px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
+              className="w-full resize-none rounded-md border-0 bg-background/40 px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
             />
           </div>
 

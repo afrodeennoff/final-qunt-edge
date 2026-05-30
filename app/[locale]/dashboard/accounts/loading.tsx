@@ -4,7 +4,7 @@ export default function AccountsLoading() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-4 border-b border-border/30 pb-6">
+      <div className="flex flex-col gap-4 border-b-0 pb-6">
         <Skeleton className="h-3 w-28" />
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-4 w-80" />

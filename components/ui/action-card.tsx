@@ -69,7 +69,7 @@ const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
  const currentSize = sizeClasses[size]
 
  const toneColors = {
- default:"bg-surface-subtle text-primary border border-border/30-subtle",
+ default:"bg-surface-subtle text-primary border-0-subtle",
  success:"bg-primary text-primary-foreground border border-primary",
  warning:"bg-background/30 text-secondary-foreground border border-secondary",
  error:"bg-destructive/20 text-destructive-foreground border border-destructive/40"

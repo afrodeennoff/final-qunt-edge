@@ -45,7 +45,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         {/* Header */}
-        <div className="border-b border-border/20 p-6 pb-4">
+        <div className="border-b-0 p-6 pb-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
               <h3 className="truncate text-xl font-semibold tracking-tight text-foreground">
@@ -75,7 +75,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
         </div>
 
         {/* KPI Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 divide-x divide-border/20 border-b border-border/20">
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-x divide-border/20 border-b-0">
           <div className="px-4 py-3 text-center">
             <div className="mb-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground/60">
               Account Value
@@ -144,7 +144,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
 
         {/* Footer CTA */}
         <div className="px-5 pb-4">
-          <span className="inline-flex h-9 w-full items-center justify-center rounded-full border border-border/30 text-xs font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 group-hover:border-primary/30 group-hover:bg-primary/5 group-hover:text-foreground">
+          <span className="inline-flex h-9 w-full items-center justify-center rounded-full border-0 text-xs font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 group-hover:border-primary/30 group-hover:bg-primary/5 group-hover:text-foreground">
             View Details
             <svg className="ml-1.5 h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

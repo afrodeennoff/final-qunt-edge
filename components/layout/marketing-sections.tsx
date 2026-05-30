@@ -252,13 +252,13 @@ export function MarketingHyperframe({
 }) {
   return (
     <Card id={id} className={cn('overflow-hidden p-0', className)}>
-      <div className="flex items-center justify-between border-b border-border/20 bg-gradient-to-br from-card/30 to-card/5 px-4 py-2.5">
+      <div className="flex items-center justify-between border-b-0 bg-gradient-to-br from-card/30 to-card/5 px-4 py-2.5">
         <div className="flex items-center gap-1.5 px-2 py-1" aria-hidden>
           <span className="h-3 w-3 rounded-full bg-destructive/80" />
           <span className="h-3 w-3 rounded-full bg-warning/80" />
           <span className="h-3 w-3 rounded-full bg-success/80" />
         </div>
-        <div className="rounded-full bg-muted/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground border border-border/10">
+        <div className="rounded-full bg-muted/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground border-0">
           {label}
         </div>
         <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/80 sm:flex">

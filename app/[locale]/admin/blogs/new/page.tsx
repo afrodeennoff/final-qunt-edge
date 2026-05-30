@@ -27,7 +27,7 @@ export default async function NewBlogPostPage({ params }: PageProps) {
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <div className="flex flex-col gap-3 border-b border-border/30 pb-6 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-3 border-b-0 pb-6 md:flex-row md:items-end md:justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" asChild>
             <Link href={`/${locale}/admin/blogs`}>
@@ -44,7 +44,7 @@ export default async function NewBlogPostPage({ params }: PageProps) {
         </div>
       </div>
 
-      <div className="rounded-xl border border-border/30 bg-background/40 p-5 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+      <div className="rounded-xl border-0 bg-background/40 p-5 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
         <BlogForm locale={locale} />
       </div>
     </div>

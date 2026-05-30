@@ -134,7 +134,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  </div>
  {isCustomizing && (
  <>
-  <div className="absolute inset-0 rounded-xl border border-border border-dashed" />
+  <div className="absolute inset-0 rounded-xl border-0 border-dashed" />
  <div className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.12),hsl(var(--background)/0.8)_62%)] opacity-100" />
  <div className="absolute inset-0 flex items-center justify-center opacity-100 drag-handle cursor-grab active:cursor-grabbing">
   <div className="flex flex-col items-center gap-2 rounded-xl bg-card px-4 py-3 text-foreground border-0">
@@ -319,7 +319,7 @@ function DebugDataBadge() {
  Boolean(dateRange?.from || dateRange?.to);
 
  return (
-  <div className="absolute left-2 top-2 z-30 rounded-md border border-border bg-card px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+  <div className="absolute left-2 top-2 z-30 rounded-md border-0 bg-card px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
  T:{trades.length} F:{formattedTrades.length}
  {isFiltered && (
  <span className="ml-2 text-muted-foreground">filtered</span>
@@ -655,7 +655,7 @@ export default function WidgetCanvas() {
  <div
  className={cn("relative h-full w-full overflow-hidden rounded-xl transition-[opacity,background-color,border-color] duration-300 group/widget",
  isCustomizing
- ?"border border-border bg-card shadow-md"
+ ?"border-0 bg-card shadow-md"
  :"border border-transparent bg-transparent"
  )}
  >

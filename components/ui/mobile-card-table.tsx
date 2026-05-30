@@ -69,7 +69,7 @@ export function MobileCardTable({
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="mt-2 pt-2 border-t border-border/20 space-y-1.5">
+                <div className="mt-2 pt-2 border-t-0 space-y-1.5">
                   {secondaryFields.map((field) => (
                     <div key={field.key} className="flex justify-between text-xs">
                       <span className="text-muted-foreground">{field.label}</span>

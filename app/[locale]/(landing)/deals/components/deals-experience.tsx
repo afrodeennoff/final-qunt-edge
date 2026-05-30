@@ -74,13 +74,13 @@ const TABS: ReadonlyArray<{ id: string; label: string }> = [
 
 const DEALS_SPOTLIGHT_AUTO_SLIDE_MS = 5000
 const dealsPanelClassName =
-  'rounded-xl border border-border bg-card shadow-sm'
+  'rounded-xl border-0 bg-card shadow-sm'
 const dealsInsetPanelClassName =
-  'rounded-2xl border border-border bg-card shadow-none'
+  'rounded-2xl border-0 bg-card shadow-none'
 const dealsChipClassName =
-  'rounded-full border border-border bg-card'
+  'rounded-full border-0 bg-card'
 const dealsGhostButtonClassName =
-  'inline-flex items-center justify-center gap-2 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted'
+  'inline-flex items-center justify-center gap-2 rounded-full border-0 bg-card px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted'
 const dealsPrimaryButtonClassName =
   'inline-flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-sm transition-[background-color,transform,box-shadow,filter] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-sm'
 
@@ -122,7 +122,7 @@ function DealsTabBar({
   return (
     <nav className="sticky top-16 z-40 border-y border-border bg-background/95">
       <div className="mx-auto max-w-[1360px] overflow-hidden px-4 sm:px-6 md:px-8 lg:px-12">
-        <div className="my-3 flex gap-1.5 overflow-x-auto overflow-y-hidden rounded-full border border-border bg-card p-1.5 scrollbar-none">
+        <div className="my-3 flex gap-1.5 overflow-x-auto overflow-y-hidden rounded-full border-0 bg-card p-1.5 scrollbar-none">
           {TABS.map((tab) => (
             <button
               key={tab.id}
@@ -130,7 +130,7 @@ function DealsTabBar({
               onClick={() => onTabClick(tab.id)}
               className={`relative whitespace-nowrap rounded-full px-4 py-2 text-[13px] font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-5 ${
                 activeTab === tab.id
-                  ? 'bg-muted text-foreground border border-border'
+                  ? 'bg-muted text-foreground border-0'
                   : 'text-muted-foreground hover:bg-muted hover:text-foreground'
               }`}
             >
@@ -1014,7 +1014,7 @@ function BiggestDealsCarousel({
 function BackgroundDealTeaser({ deal, align }: { deal: DealItem; align: 'left' | 'right' }) {
   return (
     <div
-      className={`w-[360px] overflow-hidden rounded-xl border border-border bg-card px-6 py-6 opacity-20 ${
+      className={`w-[360px] overflow-hidden rounded-xl border-0 bg-card px-6 py-6 opacity-20 ${
         align === 'left' ? 'translate-x-[-56%]' : 'translate-x-[56%]'
       }`}
     >
@@ -1143,7 +1143,7 @@ function BrowseDealsSection({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm leading-relaxed text-muted-foreground">
+        <div className="mt-6 rounded-2xl border-0 bg-card p-8 text-center text-sm leading-relaxed text-muted-foreground">
           {filteredDeals.length === 0
             ? 'No deals match the current filter stack. Try widening the firm or market selection.'
             : 'All matching deals are already highlighted above.'}
@@ -1295,7 +1295,7 @@ function DealsFilterPanel({
               value={search}
               onChange={(event) => onSearchChange(event.target.value)}
               placeholder="Search by firm, coupon, or platform..."
-              className="h-10 w-full rounded-full border border-border bg-card pl-11 pr-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] placeholder:text-muted-foreground/60 focus:border-primary/50"
+              className="h-10 w-full rounded-full border-0 bg-card pl-11 pr-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] placeholder:text-muted-foreground/60 focus:border-primary/50"
             />
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex">
@@ -1344,7 +1344,7 @@ function DealsFilterPanel({
         </div>
 
         {hasActiveFilters ? (
-          <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-dashed border-border bg-card px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+          <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border-0 bg-card px-4 py-3 text-sm leading-relaxed text-muted-foreground">
             <span>
               The deal board is narrowed right now. Reset to return to the full live tape.
             </span>
@@ -1377,7 +1377,7 @@ function DealsFilterPanel({
               <Link
                 key={firm.id}
                 href={getFirmHrefFromPrefix(localePrefix, firm.slug)}
-                 className="flex items-center justify-between rounded-full border border-border bg-card px-3 py-2 text-sm transition-colors hover:bg-muted"
+                 className="flex items-center justify-between rounded-full border-0 bg-card px-3 py-2 text-sm transition-colors hover:bg-muted"
               >
                 <span className="font-medium text-foreground">{firm.name}</span>
                 <span className="text-muted-foreground">
@@ -1466,7 +1466,7 @@ function DealCard({
   const isExternalClaim = Boolean(deal.claimUrl)
 
   return (
-    <div className="group overflow-hidden rounded-xl border border-border bg-card p-4 transition-colors hover:bg-muted">
+    <div className="group overflow-hidden rounded-xl border-0 bg-card p-4 transition-colors hover:bg-muted">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div
@@ -1598,7 +1598,7 @@ function SelectLike<T extends string>({
     <select
       value={value}
       onChange={(event) => onChange(event.target.value as T)}
-      className="h-10 rounded-full border border-border bg-card px-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-out focus:border-primary/50"
+      className="h-10 rounded-full border-0 bg-card px-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-out focus:border-primary/50"
     >
       {options.map((option) => (
         <option key={option} value={option}>

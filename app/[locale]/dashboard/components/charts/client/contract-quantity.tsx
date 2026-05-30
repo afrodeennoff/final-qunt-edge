@@ -102,8 +102,8 @@ export default React.memo(function ContractQuantityChart({
  const parsedLabel = typeof label ==="number" ? label : parseInt(label ??"0", 10)
  const hourLabel = Number.isFinite(parsedLabel) ? parsedLabel : 0
  return (
- <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm min-w-[140px]">
- <div className="flex justify-between items-center mb-2 border-b border-border/40 pb-1">
+ <div className="bg-card/96 p-3 border-0 rounded-xl shadow-sm min-w-[140px]">
+ <div className="flex justify-between items-center mb-2 border-b-0 pb-1">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("contracts.tooltip.time")}</span>
  <span className="font-bold text-foreground text-sm uppercase">{`${hourLabel}:00 - ${(hourLabel + 1) % 24}:00`}</span>
  </div>
@@ -112,7 +112,7 @@ export default React.memo(function ContractQuantityChart({
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("contracts.tooltip.totalContracts")}</span>
  <span className="font-bold text-foreground text-sm tabular-nums">{totalQuantity}</span>
  </div>
- <div className="flex justify-between items-center pt-1.5 border-t border-border/40">
+ <div className="flex justify-between items-center pt-1.5 border-t-0">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("contracts.tooltip.numberOfTrades")}</span>
  <span className="font-bold text-foreground text-sm tabular-nums">
  {tradeCount}

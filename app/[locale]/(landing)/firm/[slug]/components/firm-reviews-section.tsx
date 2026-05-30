@@ -140,7 +140,7 @@ function formatRelativeTime(date: Date): string {
 
 function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFlag: (id: string) => void; canFlag: boolean }) {
   return (
-    <div className="group rounded-xl border border-border bg-muted/40 p-6 transition-[opacity,background-color,border-color,transform] duration-200 hover:border-border hover:bg-muted/40">
+    <div className="group rounded-xl border-0 bg-muted/40 p-6 transition-[opacity,background-color,border-color,transform] duration-200 hover:border-border hover:bg-muted/40">
       <div className="flex items-start gap-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
           <span className="text-sm font-semibold text-primary">
@@ -200,7 +200,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
 
 function ReviewSkeleton() {
   return (
-    <div className="rounded-xl border border-border bg-muted/40 p-6">
+    <div className="rounded-xl border-0 bg-muted/40 p-6">
       <div className="flex items-start gap-4">
         <Skeleton className="h-10 w-10 rounded-full" />
         <div className="flex-1 gap-3">
@@ -419,7 +419,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
             {/* Average Rating Display */}
-            <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-muted/40 p-6">
+            <div className="flex flex-col items-center justify-center rounded-xl border-0 bg-muted/40 p-6">
               <div className="text-5xl font-bold tracking-tight text-foreground">
                 {stats.average > 0 ? stats.average.toFixed(1) : '—'}
               </div>
@@ -487,7 +487,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Not authenticated message */}
           {isAuthenticated === false && (
-            <div className="rounded-xl border border-border bg-muted/40 p-6 text-center">
+            <div className="rounded-xl border-0 bg-muted/40 p-6 text-center">
               <p className="text-sm text-muted-foreground">
                 Please <Link href={`/${locale}/authentication`} className="text-primary hover:underline">sign in</Link> to write a review
               </p>
@@ -496,7 +496,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Already reviewed message */}
           {hasUserReviewed && (
-            <div className="rounded-xl border border-border bg-muted/40 p-6">
+            <div className="rounded-xl border-0 bg-muted/40 p-6">
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 text-success" />
                 <p className="text-sm text-muted-foreground">
@@ -625,7 +625,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       {/* Flag Report Dialog */}
       {showFlagDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-muted/40">
-          <div className="w-full max-w-md rounded-xl border border-border/30 bg-muted/40 p-6 shadow-sm">
+          <div className="w-full max-w-md rounded-xl border-0 bg-muted/40 p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-foreground">Report Review</h3>
               <button onClick={() => setShowFlagDialog(false)} className="rounded p-1 hover:bg-muted/40">
@@ -638,7 +638,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                 <select
                   value={flagReason}
                   onChange={(e) => setFlagReason(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-muted/40 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                  className="w-full rounded-xl border-0 bg-muted/40 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
                   required
                 >
                   <option value="">Select a reason</option>
@@ -691,7 +691,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                   setSortBy(e.target.value as ReviewSortOption)
                   setCurrentPage(1)
                 }}
-                className="rounded-xl border border-border bg-muted/40 px-3 py-1.5 text-sm text-foreground focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+                className="rounded-xl border-0 bg-muted/40 px-3 py-1.5 text-sm text-foreground focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
@@ -712,7 +712,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
             ) : reviews.length === 0 ? (
               // Empty state
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-border bg-muted/40">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border-0 bg-muted/40">
                   <ReviewsIcon size={28} className="text-muted-foreground" />
                 </div>
                 <p className="text-sm font-medium text-muted-foreground">No reviews yet</p>

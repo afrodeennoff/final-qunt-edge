@@ -183,7 +183,7 @@ export function LinkedAccounts() {
             <h4 className="text-sm font-medium mb-3">{t('auth.primaryAccount')}</h4>
             <div className="gap-3">
               {identities.map((identity, index) => (
-                <div key={identity.id || index} className="flex items-center justify-between p-3 border border-border/30 rounded-lg">
+                <div key={identity.id || index} className="flex items-center justify-between p-3 border-0 rounded-lg">
                   <div className="flex items-center gap-3">
                     {getProviderIcon(identity.provider)}
                     <div>

@@ -204,7 +204,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  <TooltipProvider>
  <UITooltip>
  <TooltipTrigger asChild>
- <div className="flex items-center gap-1.5 p-1 rounded-md bg-secondary/22 border border-border/55">
+ <div className="flex items-center gap-1.5 p-1 rounded-md bg-secondary/22 border-05">
  <span
  className={cn("text-[9px] uppercase font-black tracking-widest cursor-pointer transition-[opacity,background-color,border-color]",
  displayMode ==="ticks" ?"text-foreground drop-shadow-none" :"text-muted-foreground hover:text-muted-foreground"
@@ -307,7 +307,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  >
  <div className="w-full h-full flex flex-col justify-center gap-4">
  {/* Current vs Target Display */}
- <div className="flex items-center justify-around w-full px-4 py-3 bg-secondary/22 rounded-lg border border-border/55">
+ <div className="flex items-center justify-around w-full px-4 py-3 bg-secondary/22 rounded-lg border-05">
  <div className="flex flex-col items-center gap-1">
  <span
  className={cn("text-muted-foreground uppercase tracking-[0.12em] font-black",
@@ -356,7 +356,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
 
  {/* Breakdown Display */}
  <div className="grid grid-cols-2 gap-3 w-full">
- <div className="flex items-center justify-between px-3 py-2 bg-secondary/22 border border-border/55 rounded-lg">
+ <div className="flex items-center justify-between px-3 py-2 bg-secondary/22 border-05 rounded-lg">
  <div className="flex flex-col">
  <span
  className={cn("text-[10px] uppercase font-bold tracking-wider text-foreground",
@@ -375,7 +375,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  <ArrowUp className="h-4 w-4 metric-positive" />
  </div>
 
- <div className="flex items-center justify-between px-3 py-2 bg-secondary/22 border border-border/55 rounded-lg">
+ <div className="flex items-center justify-between px-3 py-2 bg-secondary/22 border-05 rounded-lg">
  <div className="flex flex-col">
  <span
  className={cn("text-[10px] uppercase font-bold tracking-wider text-muted-foreground",

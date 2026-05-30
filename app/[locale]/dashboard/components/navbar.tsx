@@ -68,7 +68,7 @@ export default function Navbar() {
           {/* Right Side: Actions */}
           <div className="flex items-center gap-3">
             {/* Config Group */}
-            <div className="flex items-center gap-1.5 rounded-xl border border-border/45 bg-primary/6 p-1">
+            <div className="flex items-center gap-1.5 rounded-xl border-0 bg-primary/6 p-1">
               <Button
                 id="customize-mode"
                 variant="ghost"
@@ -92,7 +92,7 @@ export default function Navbar() {
                   variant="ghost"
                   size="sm"
                   onClick={flushPendingSaves}
-                  className="hidden sm:flex h-9 gap-2 rounded-xl border border-border/45 px-3 text-foreground transition-[opacity,background-color,border-color] hover:border-primary/18 hover:bg-primary/8"
+                  className="hidden sm:flex h-9 gap-2 rounded-xl border-0 px-3 text-foreground transition-[opacity,background-color,border-color] hover:border-primary/18 hover:bg-primary/8"
                 >
                   <CloudUpload className="w-3.5 h-3.5 animate-bounce" />
                   <span className="text-[10px] font-black uppercase tracking-widest">Save Now</span>
@@ -142,7 +142,7 @@ export default function Navbar() {
               <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
 
               {/* Real-time Actions */}
-              <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-background/55 p-1.5 shadow-inner">
+              <div className="flex items-center gap-2 rounded-xl border-0 bg-background/55 p-1.5 shadow-inner">
                 <Button
                   variant="ghost"
                   size="icon"

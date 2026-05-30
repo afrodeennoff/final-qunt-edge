@@ -73,19 +73,19 @@ export function TagInput({ tags, onChange, placeholder = 'Add tag...' }: TagInpu
               }
             }}
             placeholder={placeholder}
-            className="h-7 w-40 rounded-md border border-border/30 bg-background/40 px-2 text-xs text-foreground placeholder:text-muted-foreground/50 focus:border-primary/30 focus:outline-none"
+            className="h-7 w-40 rounded-md border-0 bg-background/40 px-2 text-xs text-foreground placeholder:text-muted-foreground/50 focus:border-primary/30 focus:outline-none"
           />
           <button
             type="button"
             onClick={() => input.trim() && addTag(input)}
-            className="flex h-7 w-7 items-center justify-center rounded-md border border-border/30 bg-background/40 text-muted-foreground hover:text-primary"
+            className="flex h-7 w-7 items-center justify-center rounded-md border-0 bg-background/40 text-muted-foreground hover:text-primary"
           >
             <Plus size={12} />
           </button>
         </div>
 
         {showSuggestions && suggestions.length > 0 && (
-          <div className="absolute top-full left-0 z-50 mt-1 max-h-32 overflow-y-auto rounded-md border border-border/30 bg-card shadow-lg">
+          <div className="absolute top-full left-0 z-50 mt-1 max-h-32 overflow-y-auto rounded-md border-0 bg-card shadow-lg">
             {suggestions.slice(0, 8).map(tag => (
               <button
                 key={tag}

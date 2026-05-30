@@ -419,7 +419,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  const CommandContent = (
  <Command 
  ref={commandRef} 
- className={cn("rounded-xl border border-border/30 bg-card/95 shadow-sm",
+ className={cn("rounded-xl border-0 bg-card/95 shadow-sm",
  (isMobileDevice || isMobile) &&"h-full"
  )} 
  shouldFilter={false}
@@ -467,7 +467,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  )}
  </div>
  )}
- <div className="border-b border-border/10 bg-background/55 px-3 pb-2 pt-3">
+ <div className="border-b-0 bg-background/55 px-3 pb-2 pt-3">
  <p className="text-xs font-medium text-muted-foreground mb-2">
  {t('filters.commandMenu.categories.title')}
  </p>

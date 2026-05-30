@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils'
 
 const rowDividerClassName = 'border-border'
 const tableSurfaceClassName =
-  'overflow-hidden rounded-xl border border-border bg-muted/40 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
+  'overflow-hidden rounded-xl border-0 bg-muted/40 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
 
 interface LeaderboardTableProps {
   entries: LeaderboardEntry[]
@@ -162,7 +162,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
 
       {entries.length === 0 ? (
         <div className="px-6 py-12">
-          <div className="rounded-xl border border-dashed border-border bg-muted/40 p-8 text-center text-[13px] text-muted-foreground">
+          <div className="rounded-xl border-0 bg-muted/40 p-8 text-center text-[13px] text-muted-foreground">
             No public traders are available yet. Once users opt in from Trader Profile, they will
             appear here.
           </div>

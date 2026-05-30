@@ -114,8 +114,8 @@ export default React.memo(function PnLPerContractChart({
  const data = payload[0]?.payload as ChartDatum | undefined;
  if (!data) return null;
  return (
- <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm min-w-[140px]">
- <div className="flex justify-between items-center mb-2 border-b border-border/40 pb-1">
+ <div className="bg-card/96 p-3 border-0 rounded-xl shadow-sm min-w-[140px]">
+ <div className="flex justify-between items-center mb-2 border-b-0 pb-1">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">Instrument</span>
  <span className="font-bold text-foreground text-sm uppercase">{data.instrument}</span>
  </div>
@@ -126,7 +126,7 @@ export default React.memo(function PnLPerContractChart({
  data.averagePnl >= 0 ?"metric-positive" :"metric-negative"
  )}>{formatCurrency(data.averagePnl)}</span>
  </div>
- <div className="flex justify-between items-center pt-1.5 border-t border-border/40">
+ <div className="flex justify-between items-center pt-1.5 border-t-0">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnlPerContract.tooltip.totalPnl")}</span>
  <span className="font-bold text-foreground text-sm tabular-nums">
  {formatCurrency(data.totalPnl)}

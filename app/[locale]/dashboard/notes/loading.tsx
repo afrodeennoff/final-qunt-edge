@@ -2,9 +2,9 @@ export default function JournalLoading() {
   return (
     <div className="flex h-full overflow-hidden rounded-xl border-0 bg-card/30">
       {/* Sidebar skeleton */}
-      <div className="flex w-[320px] shrink-0 flex-col border-r border-border/15 bg-background/20">
+      <div className="flex w-[320px] shrink-0 flex-col border-r-0 bg-background/20">
         {/* Search skeleton */}
-        <div className="border-b border-border/15 p-3">
+        <div className="border-b-0 p-3">
           <div className="h-8 animate-pulse rounded-lg bg-muted/20" />
         </div>
         {/* Trade list skeleton */}

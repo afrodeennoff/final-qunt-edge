@@ -91,8 +91,8 @@ function ChartPanel() {
  const [interval, setInterval] = useState<TimeframeValue>(TIMEFRAMES[2].value);
 
  return (
- <section className="rounded-xl border border-border/30 bg-primary/[0.03] overflow-hidden">
- <header className="flex flex-wrap items-center gap-2 border-b border-border/30 p-3">
+ <section className="rounded-xl border-0 bg-primary/[0.03] overflow-hidden">
+ <header className="flex flex-wrap items-center gap-2 border-b-0 p-3">
  <select
  value={symbol}
  onChange={(event) => setSymbol(event.target.value as SymbolValue)}
@@ -146,8 +146,8 @@ function AssistantPanel() {
  };
 
  return (
- <aside className="flex min-h-[500px] flex-col rounded-xl border border-border/30 bg-primary/[0.03] overflow-hidden">
- <div className="flex items-center justify-between border-b border-border/30 p-4">
+ <aside className="flex min-h-[500px] flex-col rounded-xl border-0 bg-primary/[0.03] overflow-hidden">
+ <div className="flex items-center justify-between border-b-0 p-4">
  <h3 className="text-[10px] font-black uppercase tracking-[0.12em] text-foreground">AI Assistant</h3>
  <Bot className="size-4 text-primary" />
  </div>
@@ -167,8 +167,8 @@ function AssistantPanel() {
  ))}
  </div>
 
- <div className="border-t border-border/30 p-3">
- <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-muted/40 px-2 py-1.5 focus-within:border-primary/50 transition-colors">
+ <div className="border-t-0 p-3">
+ <div className="flex items-center gap-2 rounded-xl border-0 bg-muted/40 px-2 py-1.5 focus-within:border-primary/50 transition-colors">
  <input
  value={draft}
  onChange={(event) => setDraft(event.target.value)}

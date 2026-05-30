@@ -27,7 +27,7 @@ export function JournalFiltersPanel({ filters, onChange, instruments }: JournalF
   const hasActive = filters.status !== 'all' || filters.pnl !== 'all' || filters.instrument !== null || filters.direction !== 'all' || filters.dateFrom !== null || filters.dateTo !== null
 
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border/20 bg-muted/20 px-3 py-2">
+    <div className="flex flex-wrap items-center gap-2 rounded-lg border-0 bg-muted/20 px-3 py-2">
       <div className="flex items-center gap-1">
         {STATUS_OPTIONS.map(opt => (
           <button
@@ -92,7 +92,7 @@ export function JournalFiltersPanel({ filters, onChange, instruments }: JournalF
           <select
             value={filters.instrument ?? ''}
             onChange={e => onChange({ instrument: e.target.value || null })}
-            className="h-6 rounded-md border border-border/30 bg-background/40 px-1.5 text-[11px] text-foreground"
+            className="h-6 rounded-md border-0 bg-background/40 px-1.5 text-[11px] text-foreground"
           >
             <option value="">All instruments</option>
             {instruments.map(inst => (
@@ -108,14 +108,14 @@ export function JournalFiltersPanel({ filters, onChange, instruments }: JournalF
         type="date"
         value={filters.dateFrom ?? ''}
         onChange={e => onChange({ dateFrom: e.target.value || null })}
-        className="h-6 rounded-md border border-border/30 bg-background/40 px-1.5 text-[11px] text-foreground"
+        className="h-6 rounded-md border-0 bg-background/40 px-1.5 text-[11px] text-foreground"
       />
       <span className="text-[11px] text-muted-foreground/50">to</span>
       <input
         type="date"
         value={filters.dateTo ?? ''}
         onChange={e => onChange({ dateTo: e.target.value || null })}
-        className="h-6 rounded-md border border-border/30 bg-background/40 px-1.5 text-[11px] text-foreground"
+        className="h-6 rounded-md border-0 bg-background/40 px-1.5 text-[11px] text-foreground"
       />
 
       {hasActive && (

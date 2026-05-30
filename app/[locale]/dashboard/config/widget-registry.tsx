@@ -148,7 +148,7 @@ function ChartPreviewSkeleton({ title }: { title: string }) {
 
 function StatPreviewSkeleton({ height = 100 }: { height?: number }) {
   return (
-    <div className="h-[300px] rounded-xl bg-muted/30 p-4 border border-border/10">
+    <div className="h-[300px] rounded-xl bg-muted/30 p-4 border-0">
       <div className="space-y-3">
         <Skeleton className="h-3 w-20 rounded" />
         <Skeleton className="h-8 w-28 rounded" />
@@ -194,7 +194,7 @@ function createTablePreview(type: 'tradeTableReview' | 'consistencyTable') {
             ))}
           </div>
           {[...Array(4)].map((_, rowIndex) => (
-            <div key={rowIndex} className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 border border-border/30 rounded-md">
+            <div key={rowIndex} className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 border-0 rounded-md">
               {Array(type === 'tradeTableReview' ? 4 : 5).fill(0).map((_, i) => (
                 <div key={i} className={cn(
                   "h-3 bg-muted rounded",
@@ -378,7 +378,7 @@ function CreateCalendarPreview() {
           {Array.from({ length: 35 }, (_, i) => (
             <div
               key={i}
-              className="flex flex-col items-center justify-center p-1 rounded border border-border/30 hover:bg-background/0.08 transition-colors cursor-pointer"
+              className="flex flex-col items-center justify-center p-1 rounded border-0 hover:bg-background/0.08 transition-colors cursor-pointer"
             >
               <div className="h-4 w-full bg-muted rounded mb-0.5" />
               <div className="h-2 w-3/4 bg-muted rounded" />
@@ -476,7 +476,7 @@ function createSmartInsightsPreview() {
         </div>
       </CardHeader>
       <CardContent className="flex-1 p-4 gap-3">
-        <div className="flex items-start gap-3 rounded-lg border border-border/5 bg-background/0.08 p-3">
+        <div className="flex items-start gap-3 rounded-lg border-0 bg-background/0.08 p-3">
           <div className="h-8 w-8 rounded-full bg-semantic-info-bg/10 border border-semantic-info-border/20 flex items-center justify-center">
             <Brain className="h-4 w-4 text-semantic-info" />
           </div>
@@ -485,7 +485,7 @@ function createSmartInsightsPreview() {
             <div className="h-3 w-full bg-background/0.08 rounded" />
           </div>
         </div>
-        <div className="flex items-start gap-3 rounded-lg border border-border/5 bg-background/0.08 p-3 opacity-60">
+        <div className="flex items-start gap-3 rounded-lg border-0 bg-background/0.08 p-3 opacity-60">
           <div className="h-8 w-8 rounded-full bg-semantic-error-bg/10 border border-semantic-error-border/20 flex items-center justify-center">
             <div className="h-4 w-4 rounded-sm bg-semantic-error-bg/50" />
           </div>

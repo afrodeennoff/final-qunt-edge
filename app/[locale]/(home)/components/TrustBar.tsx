@@ -4,7 +4,7 @@ import { TrendingUp } from 'lucide-react'
 
 export function TrustBar() {
   return (
-    <div className="relative border-b border-border/20 py-8">
+    <div className="relative border-b-0 py-8">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center gap-4 text-center">

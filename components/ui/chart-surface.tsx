@@ -162,7 +162,7 @@ export function ChartSurface({
  </div>
  {hasFooter && (
  <div
- className={cn("flex shrink-0 items-center border-t border-border/10",
+ className={cn("flex shrink-0 items-center border-t-0",
   isSmall ?"h-8 px-3" :"h-10 px-3",
  footerClassName
  )}

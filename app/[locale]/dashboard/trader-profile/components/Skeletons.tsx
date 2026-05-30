@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const insetPanelClassName =
-  'rounded-xl bg-muted/30 border border-border/10 shadow-none'
+  'rounded-xl bg-muted/30 border-0 shadow-none'
 
 export function MetricsSkeleton() {
   return (

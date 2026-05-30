@@ -308,9 +308,9 @@ const OptimizedTooltip = React.memo(
  });
 
  return (
- <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm min-w-[140px]">
+ <div className="bg-card/96 p-3 border-0 rounded-xl shadow-sm min-w-[140px]">
  <div className="grid gap-2">
- <div className="flex justify-between items-center border-b border-border/40 pb-1">
+ <div className="flex justify-between items-center border-b-0 pb-1">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
  {t("equity.tooltip.date")}
  </span>
@@ -332,7 +332,7 @@ const OptimizedTooltip = React.memo(
  </div>
 
  {resetAccounts.length > 0 && (
- <div className="flex flex-col gap-1.5 pt-1.5 border-t border-border/40">
+ <div className="flex flex-col gap-1.5 pt-1.5 border-t-0">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
  {t("equity.tooltip.resets")}
  </span>
@@ -357,7 +357,7 @@ const OptimizedTooltip = React.memo(
  )}
 
  {payoutAccounts.length > 0 && (
- <div className="flex flex-col gap-1.5 pt-1.5 border-t border-border/40">
+ <div className="flex flex-col gap-1.5 pt-1.5 border-t-0">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
  {t("equity.tooltip.payouts")}
  </span>
@@ -901,7 +901,7 @@ export default React.memo(function EquityChart({ size ="medium" }: EquityChartPr
  return (
  <ChartSurface>
  <div
- className={cn("flex shrink-0 flex-col items-stretch gap-0 border-b border-border/0.03",
+ className={cn("flex shrink-0 flex-col items-stretch gap-0 border-b-0",
  size ==="small" ?"p-2 h-10 justify-center" :"p-3 sm:p-3.5 h-12 justify-center"
  )}
  >

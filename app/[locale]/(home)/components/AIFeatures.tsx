@@ -77,7 +77,7 @@ export default function AIFeatures() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-primary/18 bg-primary/10 text-primary">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <span className="inline-flex w-fit items-center rounded-full border border-border/35 bg-background/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                    <span className="inline-flex w-fit items-center rounded-full border-0 bg-background/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                       {t('landing.home.ai.capabilityLabel')}
                     </span>
                     <h3 className="text-[1.06rem] font-semibold tracking-[-0.02em] text-foreground">

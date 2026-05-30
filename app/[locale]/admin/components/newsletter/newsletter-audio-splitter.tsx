@@ -177,7 +177,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  }
 
  return (
- <div className="p-4 bg-background/0.3 border border-border/0.42 rounded-lg">
+ <div className="p-4 bg-background/0.3 border-0 rounded-lg">
  {error && (
  <div className="mb-4 p-3 bg-semantic-error-bg dark:bg-semantic-error-bg/20 border border-semantic-error-border dark:border-semantic-error-border rounded-md text-semantic-error dark:text-semantic-error">
  {error}
@@ -226,7 +226,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  {segments.map((segment) => (
  <div 
  key={segment.index} 
- className="flex items-center justify-between p-3 bg-background/0.04 dark:bg-background/0.11 rounded-lg border border-border/0.42"
+ className="flex items-center justify-between p-3 bg-background/0.04 dark:bg-background/0.11 rounded-lg border-0"
  >
  <div className="flex-1">
  <div className="font-medium text-foreground">
@@ -274,7 +274,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
 
  {/* Transcription Component - Removed */}
  {segments.length > 0 && (
- <div className="mt-6 p-4 bg-background/0.06 rounded-lg border border-border/0.42">
+ <div className="mt-6 p-4 bg-background/0.06 rounded-lg border-0">
  <p className="text-sm text-muted-foreground">
  Transcription feature has been removed. Segments are ready for manual processing.
  </p>

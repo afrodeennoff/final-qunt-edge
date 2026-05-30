@@ -128,7 +128,7 @@ export function ConsentBanner() {
           ease: [0.32, 0.72, 0, 1]
         }}
       >
-        <div className="bg-background/80 border-t border-border/30 p-4 shadow-sm pointer-events-auto">
+        <div className="bg-background/80 border-t-0 p-4 shadow-sm pointer-events-auto">
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex-1">
@@ -174,7 +174,7 @@ export function ConsentBanner() {
           <>
             {showDetails && <div className="fixed inset-0 z-[98] bg-foreground/20" />}
             <Dialog open={showDetails} onOpenChange={setShowDetails}>
-              <DialogContent className="fixed left-[50%] top-[50%] z-[99] max-h-[80vh] w-[90vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-xl border border-border/30 bg-card shadow-sm">
+              <DialogContent className="fixed left-[50%] top-[50%] z-[99] max-h-[80vh] w-[90vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-xl border-0 bg-card shadow-sm">
                 <DialogHeader className="p-6 pb-4">
                   <DialogTitle className="text-lg font-medium text-foreground">
                     {t('landing.consent.preferences.title')}
@@ -256,7 +256,7 @@ export function ConsentBanner() {
           </>
         ) : (
           <Drawer open={showDetails} onOpenChange={setShowDetails}>
-            <DrawerContent className="z-10000 rounded-t-lg border border-border bg-card">
+            <DrawerContent className="z-10000 rounded-t-lg border-0 bg-card">
               <div className="h-[80vh] flex flex-col">
                 <DrawerHeader className="text-left px-6 py-6">
                   <DrawerTitle className="text-lg font-medium text-foreground">

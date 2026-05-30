@@ -259,7 +259,7 @@ function NotFoundContent() {
         }
       >
         <div className="flex flex-col items-center gap-6">
-          <div className="rounded-full border border-border/30 bg-background/40 px-6 py-2 text-4xl font-black tracking-tight text-foreground">
+          <div className="rounded-full border-0 bg-background/40 px-6 py-2 text-4xl font-black tracking-tight text-foreground">
             404
           </div>
         </div>
@@ -275,7 +275,7 @@ function NotFoundContent() {
       actions={primaryActions}
     >
       <div className="flex flex-col items-center gap-6">
-        <div className="rounded-full border border-border/30 bg-background/40 px-6 py-2 text-4xl font-black tracking-tight text-foreground">
+        <div className="rounded-full border-0 bg-background/40 px-6 py-2 text-4xl font-black tracking-tight text-foreground">
           404
         </div>
 

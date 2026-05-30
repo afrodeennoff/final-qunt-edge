@@ -25,7 +25,7 @@ export default function LocaleNotFound() {
       }
     >
       <div className="flex flex-col items-center gap-6">
-        <div className="rounded-2xl border border-border bg-card px-8 py-4 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
+        <div className="rounded-2xl border-0 bg-card px-8 py-4 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
           <span className="text-5xl font-semibold tracking-tight text-primary">404</span>
         </div>
       </div>

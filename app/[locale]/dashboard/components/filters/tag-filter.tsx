@@ -54,7 +54,7 @@ export function TagFilter({ className }: TagFilterProps) {
  return (
  <div className="space-y-2">
  <Label className="text-sm font-medium">{t('widgets.tags.title')}</Label>
- <Command className="rounded-lg border border-border/50" shouldFilter={false}>
+ <Command className="rounded-lg border-00" shouldFilter={false}>
  <div className="border-b">
  <div className="flex items-center gap-2 px-3 py-2">
  <Search className="h-4 w-4 text-muted-foreground" />

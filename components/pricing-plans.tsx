@@ -117,7 +117,7 @@ function formatPlanAmount(
 function getPlanCardClassName(popular: boolean): string {
   return cn(
     'relative flex w-full flex-col overflow-hidden transition-[opacity,background-color,border-color,transform] duration-300 hover:-translate-y-1',
-    !popular && 'rounded-2xl border border-border/30 bg-card shadow-sm',
+    !popular && 'rounded-2xl border-0 bg-card shadow-sm',
     popular && 'relative rounded-2xl border border-primary/35 bg-card shadow-sm shadow-primary/10',
   )
 }
@@ -385,12 +385,12 @@ function PlusPlanCard({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="mb-4 space-y-3 rounded-xl border border-border/0.06 bg-background/0.04 p-4">
+          <div className="mb-4 space-y-3 rounded-xl border-0 bg-background/0.04 p-4">
             <span className="block text-center text-[10px] font-black uppercase tracking-[0.12em] text-foreground/35">
               {t('pricing.billingPeriod')}
             </span>
 
-            <div className="grid grid-cols-3 gap-1 rounded-[1rem] border border-border/0.04 bg-background/25 p-1">
+            <div className="grid grid-cols-3 gap-1 rounded-[1rem] border-0 bg-background/25 p-1">
               {recurringBillingOptions.map((option) => (
                 <button
                   key={option.key}

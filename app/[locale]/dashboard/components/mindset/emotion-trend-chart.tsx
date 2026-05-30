@@ -29,7 +29,7 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
  if (data.length === 0) {
  return (
  <div
- className={cn("mb-4 rounded-xl border border-border/30 bg-card p-4",
+ className={cn("mb-4 rounded-xl border-0 bg-card p-4",
  className
  )}
  >
@@ -62,7 +62,7 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
 
  return (
  <div
- className={cn("mb-4 rounded-xl border border-border/30 bg-card p-4",
+ className={cn("mb-4 rounded-xl border-0 bg-card p-4",
  className
  )}
  >

@@ -134,7 +134,7 @@ export default React.memo(function WeekdayPNLChart({
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm min-w-[140px]">
+ <div className="bg-card/96 p-3 border-0 rounded-xl shadow-sm min-w-[140px]">
  <div className="flex flex-col mb-2">
  <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">
  {t("weekdayPnl.tooltip.day")}
@@ -151,7 +151,7 @@ export default React.memo(function WeekdayPNLChart({
  data.pnl >= 0 ?"metric-positive" :"metric-negative"
  )}>{formatCurrency(data.pnl)}</span>
  </div>
- <div className="flex flex-col pt-2 border-t border-border/40">
+ <div className="flex flex-col pt-2 border-t-0">
  <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">
  {t("weekdayPnl.tooltip.trades")}
  </span>
@@ -171,7 +171,7 @@ export default React.memo(function WeekdayPNLChart({
  return (
  <ChartSurface>
  <div
- className={cn("flex flex-col items-stretch gap-0 border-b border-border/55 shrink-0",
+ className={cn("flex flex-col items-stretch gap-0 border-b-0 shrink-0",
  size ==="small" ?"p-2 h-10 justify-center" :"p-3 sm:p-3.5 h-12 justify-center",
  )}
  >

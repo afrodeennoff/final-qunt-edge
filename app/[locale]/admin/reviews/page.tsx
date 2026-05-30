@@ -56,7 +56,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-3 border-b border-border/30 pb-6 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-3 border-b-0 pb-6 md:flex-row md:items-end md:justify-between">
         <div className="space-y-1">
           <p className="text-[10px] font-black uppercase tracking-[0.12em] text-primary/80">
             Moderation

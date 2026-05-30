@@ -60,7 +60,7 @@ export function RegisteredAccountsChart({
 
   return (
     <Card className={cn(unifiedSectionPanelClassName, 'overflow-hidden')}>
-      <CardHeader className="border-b border-border/15 bg-[linear-gradient(180deg,hsl(var(--card)/0.4)_0%,transparent_100%)] px-6 pb-3 pt-4">
+      <CardHeader className="border-b-0 bg-[linear-gradient(180deg,hsl(var(--card)/0.4)_0%,transparent_100%)] px-6 pb-3 pt-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <CardTitle className="text-lg font-semibold leading-tight tracking-tight">
@@ -71,7 +71,7 @@ export function RegisteredAccountsChart({
             </p>
           </div>
 
-          <div className="inline-flex shrink-0 rounded-full border border-border/30 bg-muted/10 p-0.5">
+          <div className="inline-flex shrink-0 rounded-full border-0 bg-muted/10 p-0.5">
             {(Object.keys(metricMeta) as MetricKey[]).map((key) => (
               <button
                 key={key}
@@ -146,7 +146,7 @@ export function RegisteredAccountsChart({
           </ChartContainer>
         </div>
 
-        <div className="border-t border-border/10 px-6 py-3">
+        <div className="border-t-0 px-6 py-3">
           <p className="text-[11px] text-muted-foreground/50">
             Top {sorted.length} firms ranked by {metricMeta[activeMetric].label.toLowerCase()} — scroll horizontally if needed
           </p>

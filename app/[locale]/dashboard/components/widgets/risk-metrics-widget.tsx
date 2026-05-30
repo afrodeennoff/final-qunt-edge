@@ -52,7 +52,7 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  <div className="flex-1 p-0 overflow-hidden">
  <div className="grid h-full grid-cols-2">
  {/* Return Risk Ratios */}
- <div className={cn("flex flex-col border-r border-b border-border/30",
+ <div className={cn("flex flex-col border-r border-b-0",
  size === 'tiny' ?"p-1.5" :"p-4"
  )}>
  <h3 className="text-[11px] font-black uppercase tracking-[0.12em] mb-3 text-muted-foreground">Ratios</h3>
@@ -79,7 +79,7 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  </div>
 
  {/* Position Sizing */}
- <div className={cn("flex flex-col border-b border-border/30",
+ <div className={cn("flex flex-col border-b-0",
  size === 'tiny' ?"p-1.5" :"p-4"
  )}>
  <h3 className="text-[11px] font-black uppercase tracking-[0.12em] mb-3 text-muted-foreground">Position sizing</h3>

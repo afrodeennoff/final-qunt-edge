@@ -57,7 +57,7 @@ export default async function WeeklyRecapPage({
   return (
     <WeeklyRecapProvider>
       <div className="space-y-6">
-        <div className="flex flex-col gap-3 border-b border-border/30 pb-6 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-3 border-b-0 pb-6 md:flex-row md:items-end md:justify-between">
           <div className="space-y-2">
             <p className="text-[10px] font-black uppercase tracking-[0.12em] text-primary/80">
               Email Management

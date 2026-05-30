@@ -46,8 +46,8 @@ export function DataDebug() {
  <Bug className="h-4 w-4 text-primary" />
  </Button>
  ) : (
- <div className="w-80 bg-background/90 border border-border/30 rounded-xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
- <div className="flex items-center justify-between mb-4 border-b border-border/30 pb-2">
+ <div className="w-80 bg-background/90 border-0 rounded-xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
+ <div className="flex items-center justify-between mb-4 border-b-0 pb-2">
  <div className="flex items-center gap-2">
  <Bug className="h-4 w-4 text-primary" />
  <span className="text-xs font-bold uppercase tracking-widest text-foreground">Debug Dashboard</span>

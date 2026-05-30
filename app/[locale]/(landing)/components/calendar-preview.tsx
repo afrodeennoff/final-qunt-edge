@@ -71,7 +71,7 @@ export function CalendarFeaturePreview() {
  Daily Calendar
  </p>
  </div>
-  <div className="h-full min-h-[380px] w-full overflow-hidden rounded-xl border border-border bg-card pointer-events-none lg:min-h-[440px]">
+  <div className="h-full min-h-[380px] w-full overflow-hidden rounded-xl border-0 bg-card pointer-events-none lg:min-h-[440px]">
  <DesktopCalendarPnl calendarData={calendarData} hideFiltersOnMobile />
  </div>
  </div>

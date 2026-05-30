@@ -361,7 +361,7 @@ export default function PdfProcessing({
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <TableRow className="border-b border-border/20 transition-all duration-200 hover:bg-primary/[0.02] cursor-default">
+            <TableRow className="border-b-0 transition-all duration-200 hover:bg-primary/[0.02] cursor-default">
               {row.getVisibleCells().map((cell: any) => (
                 <TableCell
                   key={cell.id}

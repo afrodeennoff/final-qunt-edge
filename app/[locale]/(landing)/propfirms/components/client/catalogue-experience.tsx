@@ -296,7 +296,7 @@ export function PropFirmCatalogueExperience({
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search firm..."
-                className="h-10 w-full rounded-xl border border-border bg-card pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/55 transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40"
+                className="h-10 w-full rounded-xl border-0 bg-card pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/55 transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40"
               />
             </div>
             <span className="shrink-0 text-xs text-muted-foreground">
@@ -407,7 +407,7 @@ export function PropFirmCatalogueExperience({
               ))}
             </div>
           ) : (
-            <div className="mt-6 rounded-2xl border border-dashed border-border bg-muted/40 p-8 text-center text-sm text-muted-foreground">
+            <div className="mt-6 rounded-2xl border-0 bg-muted/40 p-8 text-center text-sm text-muted-foreground">
               No firms match the current search and filter stack.
             </div>
           )}

@@ -47,7 +47,7 @@ export function FirmCouponsSection({
           <Skeleton className="h-16" />
         </div>
       ) : coupons.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border bg-muted/40 px-5 py-8 text-center text-sm text-muted-foreground">
+        <div className="rounded-xl border-0 bg-muted/40 px-5 py-8 text-center text-sm text-muted-foreground">
           <p>No active coupons are currently tracked in the database snapshot.</p>
           <p className="mx-auto mt-2 max-w-lg leading-6">
             We only show live codes when the firm record has an active coupon attached. Check the Deals board for current offers or visit the official site for the firm&apos;s latest pricing.
@@ -64,7 +64,7 @@ export function FirmCouponsSection({
                 href={referralUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-border bg-muted/30 px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-muted/40"
+                className="rounded-full border-0 bg-muted/30 px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-muted/40"
               >
                 Visit Official Site
               </a>
@@ -74,7 +74,7 @@ export function FirmCouponsSection({
       ) : (
         <div className="space-y-3">
           {coupons.map((coupon) => (
-            <div key={coupon.id} className="rounded-xl border border-border bg-muted/40 p-4">
+            <div key={coupon.id} className="rounded-xl border-0 bg-muted/40 p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-mono text-sm font-bold text-primary bg-primary/10 px-2 py-1 rounded">
                   {coupon.code}

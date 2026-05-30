@@ -58,7 +58,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         className={cn(
           'group relative overflow-hidden text-foreground',
           'rounded-xl bg-card border-0',
-          variant === 'outlined' && 'bg-transparent border border-border/25',
+          variant === 'outlined' && 'bg-transparent border-0',
           variant === 'flat' && 'border-0 bg-transparent',
           variant === 'default' && 'bg-card border-0',
           variant === 'elevated' && 'bg-card border-0 shadow-sm',
@@ -81,7 +81,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ) : null}
 
         {status ? (
-            <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full bg-muted/80 border border-border/30 px-2 py-0.5">
+            <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full bg-muted/80 border-0 px-2 py-0.5">
             <div
               className={cn(
                 'h-1 w-1 rounded-full',
@@ -228,7 +228,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-3 border-t border-border/50',
+        'flex items-center gap-3 border-t-0',
         {
           'p-3': size === 'sm',
           'p-3.5': size === 'md',

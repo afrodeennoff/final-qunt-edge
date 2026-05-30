@@ -6,7 +6,7 @@ import { ButtonV2 as Button } from '@/components/ui/v2'
 
 export function FinalCTA() {
   return (
-    <section className="relative border-t border-border/10 py-28 overflow-hidden">
+    <section className="relative border-t-0 py-28 overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(oklch(0.15_0.01_260)_0.8px,transparent_1px)] bg-[length:4px_4px] opacity-15" />
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">

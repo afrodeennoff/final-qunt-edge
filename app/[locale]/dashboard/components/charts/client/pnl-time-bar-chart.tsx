@@ -112,8 +112,8 @@ export default React.memo(function TimeOfDayTradeChart({
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm min-w-[140px]">
- <div className="flex justify-between items-center mb-2 border-b border-border/40 pb-1">
+ <div className="bg-card/96 p-3 border-0 rounded-xl shadow-sm min-w-[140px]">
+ <div className="flex justify-between items-center mb-2 border-b-0 pb-1">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnlTime.tooltip.time")}</span>
  <span className="font-bold text-foreground text-sm uppercase">{`${label}:00 - ${(label + 1) % 24}:00`}</span>
  </div>
@@ -124,7 +124,7 @@ export default React.memo(function TimeOfDayTradeChart({
  data.avgPnl >= 0 ?"metric-positive" :"metric-negative"
  )}>{formatCurrency(data.avgPnl)}</span>
  </div>
- <div className="flex justify-between items-center pt-1.5 border-t border-border/40">
+ <div className="flex justify-between items-center pt-1.5 border-t-0">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnlTime.tooltip.trades")}</span>
  <span className="font-bold text-foreground text-sm tabular-nums">
  {data.tradeCount}

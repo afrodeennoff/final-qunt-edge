@@ -15,7 +15,7 @@ const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
   <Card
   ref={ref}
   className={cn("rounded-lg transition-colors",
-  "border border-border bg-card",
+  "border-0 bg-card",
   hover && "hover:bg-muted/30",
   clickable && "cursor-pointer active:scale-[0.99]",
   {"p-3": size ==="sm","p-4": size ==="md","p-6": size ==="lg",

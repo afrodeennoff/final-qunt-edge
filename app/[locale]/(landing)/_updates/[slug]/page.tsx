@@ -183,7 +183,7 @@ export default async function Page({ params }: PageProps) {
         {/* Back link */}
         <Link
           href={`/${locale}/updates`}
-          className="mb-6 inline-flex items-center gap-2 rounded-lg border border-border bg-muted/10 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-muted/40 hover:text-foreground"
+          className="mb-6 inline-flex items-center gap-2 rounded-lg border-0 bg-muted/10 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-muted/40 hover:text-foreground"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           All Updates

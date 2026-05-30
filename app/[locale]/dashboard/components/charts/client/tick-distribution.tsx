@@ -63,8 +63,8 @@ function CustomTooltip({ active, payload, t }: CustomTooltipProps) {
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm min-w-[140px]">
- <div className="flex justify-between items-center mb-2 border-b border-border/40 pb-1">
+ <div className="bg-card/96 p-3 border-0 rounded-xl shadow-sm min-w-[140px]">
+ <div className="flex justify-between items-center mb-2 border-b-0 pb-1">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("tickDistribution.tooltip.ticks")}</span>
  <span className="font-bold text-foreground text-sm uppercase">{data.ticks}</span>
  </div>
@@ -139,7 +139,7 @@ export default React.memo(function TickDistributionChart({
  return (
  <ChartSurface>
  <div
- className={cn("flex flex-col items-stretch gap-0 border-b border-border/55 shrink-0",
+ className={cn("flex flex-col items-stretch gap-0 border-b-0 shrink-0",
  size ==="small" ?"p-2 h-10 justify-center" :"p-3 sm:p-3.5 h-12 justify-center",
  )}
  >

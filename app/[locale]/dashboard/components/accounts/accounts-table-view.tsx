@@ -295,16 +295,16 @@ function AccountsTableSection({
  <div className="relative">
  <div className="overflow-x-auto" ref={tableWrapperRef}>
  <table className="w-full border-separate border-spacing-0 text-sm">
-  <thead className="sticky top-0 z-10 border-b border-border/20 bg-muted/30 backdrop-blur-md [&_tr]:border-b [&_tr]:border-border/20">
+  <thead className="sticky top-0 z-10 border-b-0 bg-muted/30 backdrop-blur-md [&_tr]:border-b [&_tr]:border-border/20">
  {table.getHeaderGroups().map((headerGroup) => (
  <tr
  key={headerGroup.id}
-  className="border-b border-border/20 transition-colors"
+  className="border-b-0 transition-colors"
  >
  {headerGroup.headers.map((header) => (
  <th
  key={header.id}
-  className="type-label whitespace-nowrap px-3.5 py-2.5 text-left text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l align-middle text-muted-foreground"
+  className="type-label whitespace-nowrap px-3.5 py-2.5 text-left text-sm font-semibold border-r-0 last:border-r-0 first:border-l align-middle text-muted-foreground"
  style={{ width: header.getSize() }}
  >
  {header.isPlaceholder
@@ -324,12 +324,12 @@ function AccountsTableSection({
  return (
  <tr
  key={entry.summary.id}
-  className="border-b border-border/20 bg-card/20 font-semibold"
+  className="border-b-0 bg-card/20 font-semibold"
  >
  {table.getVisibleLeafColumns().map((column) => (
  <td
  key={`${entry.summary.id}-${column.id}`}
-  className="px-3.5 py-2 text-sm border-r border-border/20 last:border-r-0 first:border-l align-middle"
+  className="px-3.5 py-2 text-sm border-r-0 last:border-r-0 first:border-l align-middle"
  style={{ width: column.getSize() }}
  >
  {renderSummaryCell(column.id, entry.summary)}
@@ -343,7 +343,7 @@ function AccountsTableSection({
  return (
  <tr
  key={row.id}
-  className={cn("border-b border-border/20 transition-all duration-200 hover:bg-primary/[0.02]",
+  className={cn("border-b-0 transition-all duration-200 hover:bg-primary/[0.02]",
   rowIndex % 2 === 1 &&"bg-muted/10",
  row.getCanExpand() &&"bg-background/0.01 font-medium",
  isDrawdownBreached(row.original) &&"opacity-50",
@@ -360,7 +360,7 @@ function AccountsTableSection({
  {row.getVisibleCells().map((cell) => (
  <td
  key={cell.id}
-  className={cn("px-3.5 py-2 text-sm border-r border-border/20 last:border-r-0 first:border-l align-middle",
+  className={cn("px-3.5 py-2 text-sm border-r-0 last:border-r-0 first:border-l align-middle",
  row.depth > 0 && cell.column.id ==="account" &&"pl-6"
  )}
  style={{ width: cell.column.getSize() }}
@@ -379,7 +379,7 @@ function AccountsTableSection({
  </div>
  {showScrollHint && (
  <div className="pointer-events-none absolute bottom-2 right-2">
-  <div className="pointer-events-auto flex items-start gap-2 rounded-md border border-border/20 bg-gradient-to-br from-background/80 to-background/60 px-3 py-2 text-xs text-muted-foreground">
+  <div className="pointer-events-auto flex items-start gap-2 rounded-md border-0 bg-gradient-to-br from-background/80 to-background/60 px-3 py-2 text-xs text-muted-foreground">
 
  <span className="max-w-[220px] leading-snug">
  {t("accounts.table.scrollHint")}

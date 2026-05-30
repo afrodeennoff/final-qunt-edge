@@ -148,7 +148,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  }
 
  return (
- <div className={`p-4 bg-background/0.3 border border-border/0.42 rounded-lg ${className}`}>
+ <div className={`p-4 bg-background/0.3 border-0 rounded-lg ${className}`}>
  <div className="space-y-4">
  {/* File name */}
  <div className="text-sm font-medium text-foreground truncate">

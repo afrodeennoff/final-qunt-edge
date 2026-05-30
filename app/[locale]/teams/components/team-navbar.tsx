@@ -100,7 +100,7 @@ function MobileNavContent({
  <Link href={`/${locale}/teams/dashboard`}>{t('teams.cta')}</Link>
  </Button>
  <div className="py-4 border-t space-y-4">
-  <div className="flex items-center gap-2 rounded-md border border-border/20 bg-background/50 px-3 py-2 text-sm text-muted-foreground">
+  <div className="flex items-center gap-2 rounded-md border-0 bg-background/50 px-3 py-2 text-sm text-muted-foreground">
 
  <Moon className="h-4 w-4 text-primary" />
  <span>Unified dark theme</span>

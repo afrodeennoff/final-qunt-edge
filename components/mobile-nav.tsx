@@ -73,7 +73,7 @@ function UserSection({ onLogout }: { onLogout: () => void }) {
       <button
         type="button"
         onClick={onLogout}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/30 bg-background/60 text-sidebar-foreground/50 transition-[background-color,border-color,color] duration-200 hover:border-primary/20 hover:bg-primary/10 hover:text-sidebar-foreground"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-0 bg-background/60 text-sidebar-foreground/50 transition-[background-color,border-color,color] duration-200 hover:border-primary/20 hover:bg-primary/10 hover:text-sidebar-foreground"
         aria-label="Sign out"
       >
         <LogOut className="h-4 w-4" />
@@ -109,7 +109,7 @@ export function UnifiedMobileNav({
           type="button"
           variant="ghost"
           className={cn(
-            'h-11 w-11 rounded-xl border border-border/30 bg-background/40 p-0 text-sidebar-foreground/72 shadow-sm transition-[background-color,border-color,color] duration-200 hover:border-border/40 hover:bg-background/50 hover:text-sidebar-foreground lg:hidden',
+            'h-11 w-11 rounded-xl border-0 bg-background/40 p-0 text-sidebar-foreground/72 shadow-sm transition-[background-color,border-color,color] duration-200 hover:border-transparent hover:bg-background/50 hover:text-sidebar-foreground lg:hidden',
             triggerClassName
           )}
           aria-label="Open navigation menu"
@@ -153,7 +153,7 @@ export function UnifiedMobileNav({
                               'flex min-h-[44px] items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-[background-color,border-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2',
                               active
                                 ? 'border border-primary/18 bg-primary/10 text-sidebar-foreground shadow-[0_0_0_0.5px_hsl(var(--primary)/0.16),0_18px_28px_-24px_rgba(0,0,0,0.84)]'
-                                : 'border border-transparent text-sidebar-foreground/60 hover:border-border/35 hover:bg-background/72 hover:text-sidebar-foreground'
+                                : 'border border-transparent text-sidebar-foreground/60 hover:border-transparent hover:bg-background/72 hover:text-sidebar-foreground'
                             )}
                           >
                             {link.icon && (

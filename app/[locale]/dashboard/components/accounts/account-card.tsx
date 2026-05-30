@@ -54,10 +54,10 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
     <Card
       hover
       clickable={Boolean(onClick)}
-      className="group relative flex h-full min-h-[18rem] w-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-all"
+      className="group relative flex h-full min-h-[18rem] w-full flex-col overflow-hidden rounded-xl border-0 bg-card transition-all"
       onClick={onClick}
     >
-      <CardHeader className="flex-none gap-2 border-b border-border/20 bg-muted/30 px-4 py-3">
+      <CardHeader className="flex-none gap-2 border-b-0 bg-muted/30 px-4 py-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <CardTitle size={isCompact ? 'md' : 'lg'} className="truncate font-semibold tracking-tight">
@@ -70,7 +70,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
           {account.nextPaymentDate && daysUntilNextPayment !== null ? (
             <div
               className={cn(
-                'shrink-0 rounded-full border border-border/30 bg-muted/30 px-2 py-0.5 text-[10px] tabular-nums text-muted-foreground',
+                'shrink-0 rounded-full border-0 bg-muted/30 px-2 py-0.5 text-[10px] tabular-nums text-muted-foreground',
                 daysUntilNextPayment < 5 && 'text-destructive',
               )}
             >
@@ -80,7 +80,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col justify-center gap-3 p-4">
-        <div className="flex items-baseline justify-between gap-3 border-b border-border/20 pb-3">
+        <div className="flex items-baseline justify-between gap-3 border-b-0 pb-3">
           <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground/70">{t('propFirm.card.balance')}</span>
           <span className={cn('font-semibold tabular-nums text-foreground', isCompact ? 'text-lg' : 'text-2xl')}>
             $
@@ -125,7 +125,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
             </div>
 
             {metrics && (size === 'large' || size === 'extra-large') ? (
-              <div className="mt-auto space-y-1.5 border-t border-border/20 pt-3 text-[12px]">
+              <div className="mt-auto space-y-1.5 border-t-0 pt-3 text-[12px]">
                 <div className="flex justify-between text-muted-foreground/70">
                   <span>Consistency</span>
                   <span className={cn(
@@ -144,7 +144,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
                   <span>Highest Profit Day</span>
                   <span className="tabular-nums text-foreground">${metrics.highestProfitDay?.toFixed(0) || '—'}</span>
                 </div>
-                <div className="flex justify-between border-t border-border/20 pt-2 text-muted-foreground/70">
+                <div className="flex justify-between border-t-0 pt-2 text-muted-foreground/70">
                   <span>Trading Days</span>
                   <span className={cn(
                     'font-medium tabular-nums',

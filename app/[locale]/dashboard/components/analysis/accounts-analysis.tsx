@@ -310,7 +310,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  <div className="overflow-x-auto">
  <table className="w-full text-sm">
  <thead>
-  <tr className="border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm">
+  <tr className="border-b-0 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm">
  <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.account")}
  </th>
@@ -334,7 +334,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  <tbody>
  {accountPerformanceData.accounts.map(
  (account: any, index: number) => (
-  <tr key={index} className="border-b border-border/20 hover:bg-primary/[0.02] transition-colors">
+  <tr key={index} className="border-b-0 hover:bg-primary/[0.02] transition-colors">
  <td   className="p-2.5 font-medium">
  {account.accountNumber}
  </td>

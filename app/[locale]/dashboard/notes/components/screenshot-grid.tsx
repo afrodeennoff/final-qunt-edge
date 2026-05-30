@@ -38,7 +38,7 @@ export function ScreenshotGrid({ screenshots, onChange }: ScreenshotGridProps) {
   return (
     <div className="flex flex-wrap gap-2">
       {screenshots.map((src, i) => (
-        <div key={i} className="group relative h-16 w-24 overflow-hidden rounded-md border border-border/30">
+        <div key={i} className="group relative h-16 w-24 overflow-hidden rounded-md border-0">
           <img src={src} alt={`Screenshot ${i + 1}`} className="h-full w-full object-cover" />
           <button
             type="button"
@@ -53,7 +53,7 @@ export function ScreenshotGrid({ screenshots, onChange }: ScreenshotGridProps) {
         type="button"
         onClick={handleAdd}
         className={cn(
-          'flex h-16 w-24 items-center justify-center rounded-md border border-dashed border-border/40',
+          'flex h-16 w-24 items-center justify-center rounded-md border-0/40',
           'text-muted-foreground/50 hover:border-primary/30 hover:text-primary/60',
         )}
       >

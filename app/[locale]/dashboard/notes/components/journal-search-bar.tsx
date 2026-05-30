@@ -26,20 +26,20 @@ export function JournalSearchBar({ filters, onFiltersChange, onToggleFilters, sh
           value={filters.search}
           onChange={e => onFiltersChange({ search: e.target.value })}
           placeholder="Search notes, tags, instrument..."
-          className="h-8 w-full rounded-lg border border-border/30 bg-background/40 pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground/50 focus:border-primary/30 focus:outline-none"
+          className="h-8 w-full rounded-lg border-0 bg-background/40 pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground/50 focus:border-primary/30 focus:outline-none"
         />
       </div>
 
       <button
         type="button"
         onClick={onToggleFilters}
-        className={`flex h-8 items-center gap-1.5 rounded-lg border border-border/30 px-2.5 text-xs text-muted-foreground hover:text-foreground ${showFilters ? 'border-primary/30 bg-primary/5 text-primary' : 'bg-background/40'}`}
+        className={`flex h-8 items-center gap-1.5 rounded-lg border-0 px-2.5 text-xs text-muted-foreground hover:text-foreground ${showFilters ? 'border-primary/30 bg-primary/5 text-primary' : 'bg-background/40'}`}
       >
         <SlidersHorizontal size={13} />
         Filters
       </button>
 
-      <div className="relative flex h-8 items-center gap-1.5 rounded-lg border border-border/30 bg-background/40 px-2.5 text-xs">
+      <div className="relative flex h-8 items-center gap-1.5 rounded-lg border-0 bg-background/40 px-2.5 text-xs">
         <ArrowUpDown size={13} className="text-muted-foreground/50" />
         <select
           value={filters.sort}

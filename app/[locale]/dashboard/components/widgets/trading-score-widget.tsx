@@ -39,20 +39,20 @@ export default function TradingScoreWidget({ size }: { size?: string }) {
  <span className="text-base text-muted-foreground ml-1">/ 100</span>
  </div>
  </div>
- <div className={cn("inline-flex items-center gap-1 rounded-full bg-background/30 px-2 py-0.5 text-[11px] font-semibold text-foreground/70 border border-border/30"
+ <div className={cn("inline-flex items-center gap-1 rounded-full bg-background/30 px-2 py-0.5 text-[11px] font-semibold text-foreground/70 border-0"
  )}>
  {normalizedLabel}
  </div>
  <div className="mt-6 grid grid-cols-3 gap-2 w-full text-center">
- <div className="flex flex-col p-2.5 bg-background/25 rounded-xl border border-border/10">
+ <div className="flex flex-col p-2.5 bg-background/25 rounded-xl border-0">
  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Win Rate</span>
  <span className="mt-0.5 text-[15px] font-semibold tracking-tight tabular-nums text-foreground">{metrics.winRate.toFixed(1)}%</span>
  </div>
- <div className="flex flex-col p-2.5 bg-background/25 rounded-xl border border-border/10">
+ <div className="flex flex-col p-2.5 bg-background/25 rounded-xl border-0">
  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">P. Factor</span>
  <span className="mt-0.5 text-[15px] font-semibold tracking-tight tabular-nums text-foreground">{metrics.profitFactor.toFixed(2)}</span>
  </div>
- <div className="flex flex-col p-2.5 bg-background/25 rounded-xl border border-border/10">
+ <div className="flex flex-col p-2.5 bg-background/25 rounded-xl border-0">
  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Trades</span>
  <span className="mt-0.5 text-[15px] font-semibold tracking-tight tabular-nums text-foreground">{metrics.totalTrades}</span>
  </div>

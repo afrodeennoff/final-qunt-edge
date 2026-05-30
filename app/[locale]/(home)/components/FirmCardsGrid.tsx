@@ -13,7 +13,7 @@ interface FirmCardsGridProps {
 export default function FirmCardsGrid({ firms, locale }: FirmCardsGridProps) {
   if (firms.length === 0) {
     return (
-      <div className="mt-6 rounded-lg border border-border/0.04 bg-background/70 p-8 text-center">
+      <div className="mt-6 rounded-lg border-0 bg-background/70 p-8 text-center">
         <p className="text-sm text-muted-foreground">
           No firms match your current filters. Try adjusting your search.
         </p>

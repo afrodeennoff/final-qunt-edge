@@ -67,8 +67,8 @@ export default async function Hero({ locale }: { locale: string }) {
 
         <div className="relative hidden lg:block">
           <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-primary/20 via-transparent to-transparent blur-xl opacity-60" />
-          <div className="relative overflow-hidden rounded-xl border border-border/60 bg-card/80 backdrop-blur-sm shadow-[0_0_40px_-16px] shadow-primary/20">
-            <div className="flex items-center gap-2 border-b border-border/50 bg-muted/40 px-3 py-2.5 text-[10px] text-muted-foreground">
+          <div className="relative overflow-hidden rounded-xl border-0 bg-card/80 backdrop-blur-sm shadow-[0_0_40px_-16px] shadow-primary/20">
+            <div className="flex items-center gap-2 border-b-0 bg-muted/40 px-3 py-2.5 text-[10px] text-muted-foreground">
               <div className="flex gap-1">
                 <div className="h-1.5 w-1.5 rounded-full bg-destructive" />
                 <div className="h-1.5 w-1.5 rounded-full bg-warning" />
@@ -95,7 +95,7 @@ export default async function Hero({ locale }: { locale: string }) {
               ))}
             </div>
 
-            <div className="relative h-28 border-t border-border/40 bg-card/40 px-4 py-4">
+            <div className="relative h-28 border-t-0 bg-card/40 px-4 py-4">
               <svg viewBox="0 0 600 80" className="h-full w-full" preserveAspectRatio="none">
                 <defs>
                   <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">

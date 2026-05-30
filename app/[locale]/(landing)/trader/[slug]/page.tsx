@@ -273,7 +273,7 @@ export default async function TraderProfilePage({
       />
       <div className="mx-auto max-w-[1200px]">
         {/* Hero Header - Premium modern look */}
-        <div className="mb-8 overflow-hidden rounded-3xl border border-border/40 bg-card/80 shadow-xl backdrop-blur">
+        <div className="mb-8 overflow-hidden rounded-3xl border-0 bg-card/80 shadow-xl backdrop-blur">
           <div className="flex flex-col gap-6 p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
               <div className="relative">
@@ -309,7 +309,7 @@ export default async function TraderProfilePage({
             <div className="flex flex-wrap gap-3 lg:justify-end">
               <Link
                 href={`/${locale}/leaderboard`}
-                className="inline-flex items-center gap-2 rounded-2xl border border-border/60 bg-background/60 px-5 py-2.5 text-sm font-medium backdrop-blur transition hover:bg-muted/60"
+                className="inline-flex items-center gap-2 rounded-2xl border-0 bg-background/60 px-5 py-2.5 text-sm font-medium backdrop-blur transition hover:bg-muted/60"
               >
                 <ArrowLeft className="h-4 w-4" /> Leaderboard
               </Link>
@@ -323,15 +323,15 @@ export default async function TraderProfilePage({
           </div>
 
           {/* Premium Stats Row */}
-          <div className="grid border-t border-border/40 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid border-t-0 sm:grid-cols-2 lg:grid-cols-4">
             {publicStats.map((stat, idx) => {
               const Icon = stat.icon
               return (
                 <div
                   key={idx}
-                  className="group flex items-center gap-4 border-t border-border/40 p-6 transition hover:bg-muted/30 sm:border-l sm:first:border-l-0 lg:border-t-0"
+                  className="group flex items-center gap-4 border-t-0 p-6 transition hover:bg-muted/30 sm:border-l sm:first:border-l-0 lg:border-t-0"
                 >
-                  <div className="rounded-2xl border border-border/50 bg-background/60 p-3 transition group-hover:border-primary/30">
+                  <div className="rounded-2xl border-00 bg-background/60 p-3 transition group-hover:border-primary/30">
                     <Icon className="h-6 w-6 text-muted-foreground" />
                   </div>
                   <div>
@@ -358,7 +358,7 @@ export default async function TraderProfilePage({
               <div className="text-sm text-muted-foreground">{snapshot.recentTrades.length} trades</div>
             </div>
 
-            <div className="overflow-hidden rounded-3xl border border-border/40 bg-card/90 shadow-sm">
+            <div className="overflow-hidden rounded-3xl border-0 bg-card/90 shadow-sm">
               {snapshot.recentTrades.length > 0 ? (
                 <div className="divide-y divide-border/40">
                   {snapshot.recentTrades.map((trade, idx) => {
@@ -398,7 +398,7 @@ export default async function TraderProfilePage({
           {/* Performance + Calendar */}
           <div className="space-y-6 lg:col-span-5">
             {/* Win Rate Card with Ring */}
-            <div className="rounded-3xl border border-border/40 bg-card/90 p-6 shadow-sm">
+            <div className="rounded-3xl border-0 bg-card/90 p-6 shadow-sm">
               <div className="flex items-start justify-between">
                 <div>
                   <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Consistency</div>
@@ -431,13 +431,13 @@ export default async function TraderProfilePage({
 
             {/* Quick Insights */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-3xl border border-border/40 bg-card/90 p-5">
+              <div className="rounded-3xl border-0 bg-card/90 p-5">
                 <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Avg per trade</div>
                 <div className={cn("mt-2 text-3xl font-semibold tracking-tighter", snapshot.avgPnl >= 0 ? "text-emerald-400" : "text-rose-400")}>
                   {formatSigned(snapshot.avgPnl)}
                 </div>
               </div>
-              <div className="rounded-3xl border border-border/40 bg-card/90 p-5">
+              <div className="rounded-3xl border-0 bg-card/90 p-5">
                 <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Profile status</div>
                 <div className="mt-2 text-3xl font-semibold tracking-tighter text-foreground">Live &amp; Public</div>
                 <div className="mt-1 text-xs text-muted-foreground">Updated in real-time</div>
@@ -445,7 +445,7 @@ export default async function TraderProfilePage({
             </div>
 
             {/* Calendar */}
-            <div className="rounded-3xl border border-border/40 bg-card/90 p-6 shadow-sm">
+            <div className="rounded-3xl border-0 bg-card/90 p-6 shadow-sm">
               <div className="mb-4 flex items-center justify-between">
                 <div>
                   <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Rhythm</div>

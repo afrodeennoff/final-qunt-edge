@@ -4,16 +4,16 @@ import { motion } from 'motion/react'
 export default function ProblemStatement() {
  return (
  <section id="problem" className="py-24 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background border-t border-border relative">
- <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-border bg-muted/40 p-6 shadow-[0_0_0_0.5px_hsl(var(--primary)/0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
+ <div className="mx-6 overflow-hidden rounded-[2.2rem] border-0 bg-muted/40 p-6 shadow-[0_0_0_0.5px_hsl(var(--primary)/0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
  <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-start">
  <motion.div
  initial={{ opacity: 0, x: -30 }}
  whileInView={{ opacity: 1, x: 0 }}
  viewport={{ once: true }}
  transition={{ duration: 0.8 }}
- className="sticky top-20 rounded-2xl border border-border bg-muted/40 p-6 lg:top-32"
+ className="sticky top-20 rounded-2xl border-0 bg-muted/40 p-6 lg:top-32"
  >
- <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-muted/40 mb-6 sm:mb-8">
+ <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border-0 bg-muted/40 mb-6 sm:mb-8">
  <div className="w-1.5 h-1.5 rounded-full bg-foreground/60 animate-pulse"></div>
  <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.12em] text-fg-secondary">System Failure Detected</span>
  </div>
@@ -62,9 +62,9 @@ export default function ProblemStatement() {
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true }}
  transition={{ duration: 0.5, delay: i * 0.1 }}
- className="group relative rounded-xl border border-border bg-muted/40 p-6 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 hover:border-border"
+ className="group relative rounded-xl border-0 bg-muted/40 p-6 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 hover:border-border"
  >
- <div className="relative h-full overflow-hidden rounded-xl border border-border bg-background/25 p-4 transition-colors group-hover:border-border sm:p-6">
+ <div className="relative h-full overflow-hidden rounded-xl border-0 bg-background/25 p-4 transition-colors group-hover:border-border sm:p-6">
  <div className="absolute right-3 top-3 text-[8px] font-mono text-foreground/80 transition-colors group-hover:text-fg-primary sm:right-4 sm:top-4 sm:text-[9px]">
  {item.code}
  </div>

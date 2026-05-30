@@ -69,18 +69,18 @@ export default function JournalClient() {
   }
 
   return (
-    <div className="flex h-full overflow-hidden rounded-xl border border-border/20 bg-card/30">
+    <div className="flex h-full overflow-hidden rounded-xl border-0 bg-card/30">
       {/* Sidebar — trade list */}
-      <div className="flex w-[320px] shrink-0 flex-col border-r border-border/15 bg-background/20">
+      <div className="flex w-[320px] shrink-0 flex-col border-r-0 bg-background/20">
         {/* Search */}
-        <div className="border-b border-border/15 p-3">
+        <div className="border-b-0 p-3">
           <div className="relative">
             <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/50" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search trades..."
-              className="h-8 w-full rounded-lg border border-border/30 bg-background/40 pl-8 pr-3 text-xs placeholder:text-muted-foreground/50 focus:border-primary/30 focus:outline-none"
+              className="h-8 w-full rounded-lg border-0 bg-background/40 pl-8 pr-3 text-xs placeholder:text-muted-foreground/50 focus:border-primary/30 focus:outline-none"
             />
           </div>
         </div>
@@ -105,7 +105,7 @@ export default function JournalClient() {
                   type="button"
                   onClick={() => toggleExpand(card.trade.id)}
                   className={cn(
-                    'flex w-full flex-col gap-1 border-b border-border/10 px-4 py-3 text-left transition-colors',
+                    'flex w-full flex-col gap-1 border-b-0 px-4 py-3 text-left transition-colors',
                     isSelected ? 'bg-primary/10 border-l-2 border-l-primary' : 'hover:bg-muted/20 border-l-2 border-l-transparent',
                   )}
                 >
@@ -205,7 +205,7 @@ export default function JournalClient() {
                     onChange={e => update('preTradeNotes', e.target.value || null)}
                     placeholder="Why did you enter this trade?"
                     rows={3}
-                    className="w-full resize-none rounded-lg border border-border/30 bg-background/40 px-3 py-2.5 text-sm placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
+                    className="w-full resize-none rounded-lg border-0 bg-background/40 px-3 py-2.5 text-sm placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
                   />
                 </div>
 
@@ -216,7 +216,7 @@ export default function JournalClient() {
                     onChange={e => update('postTradeReview', e.target.value || null)}
                     placeholder="What went well? What would you change?"
                     rows={3}
-                    className="w-full resize-none rounded-lg border border-border/30 bg-background/40 px-3 py-2.5 text-sm placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
+                    className="w-full resize-none rounded-lg border-0 bg-background/40 px-3 py-2.5 text-sm placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
                   />
                 </div>
 
@@ -227,7 +227,7 @@ export default function JournalClient() {
                     onChange={e => update('emotions', e.target.value || null)}
                     placeholder="How were you feeling?"
                     rows={2}
-                    className="w-full resize-none rounded-lg border border-border/30 bg-background/40 px-3 py-2.5 text-sm placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
+                    className="w-full resize-none rounded-lg border-0 bg-background/40 px-3 py-2.5 text-sm placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
                   />
                 </div>
 

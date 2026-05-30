@@ -139,11 +139,11 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
  initial={{ opacity: 0, y: 10 }}
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.95 }}
- className="group/item relative rounded-xl border border-border/10 bg-card/60 shadow-sm overflow-hidden transition-[opacity,background-color,border-color] duration-300 hover:border-border/30 hover:shadow-sm flex flex-col gap-2 p-3"
+ className="group/item relative rounded-xl border-0 bg-card/60 shadow-sm overflow-hidden transition-[opacity,background-color,border-color] duration-300 hover:border-border/30 hover:shadow-sm flex flex-col gap-2 p-3"
  >
  <div className="flex items-start justify-between gap-2">
  <div className="flex items-center gap-2">
- <div className={cn("flex h-8 w-8 items-center justify-center rounded-full bg-secondary/30 border border-border/55",
+ <div className={cn("flex h-8 w-8 items-center justify-center rounded-full bg-secondary/30 border-05",
  insight.type === 'risk' &&"bg-secondary/35 border-border/55",
  insight.type === 'opportunity' &&"bg-secondary/35 border-border/55",
  )}>

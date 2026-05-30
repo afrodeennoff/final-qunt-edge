@@ -55,7 +55,7 @@ export default function AuthenticationPageClient() {
   return (
     <main className="qe-v2-app-shell relative min-h-dvh bg-background text-foreground">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-x-6 top-0 h-36 rounded-b-2xl border border-border/20 bg-primary/[0.02]" />
+        <div className="absolute inset-x-6 top-0 h-36 rounded-b-2xl border-0 bg-primary/[0.02]" />
         <div className="absolute left-[-10rem] top-[-8rem] h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.08),transparent_72%)] opacity-70" />
         <div className="absolute bottom-[-10rem] right-[-8rem] h-[32rem] w-[32rem] rounded-full bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.08),transparent_70%)] opacity-80" />
         <div className="absolute inset-0 marketing-grid opacity-[0.07]" />
@@ -83,7 +83,7 @@ export default function AuthenticationPageClient() {
 
               <div className="auth-entrance-1 mt-10 max-w-[39rem] lg:mt-14">
                 <span className={unifiedSectionEyebrowClassName}>Qunt Edge</span>
-                <div className="mt-4 inline-flex items-center gap-3 rounded-xl border border-border/20 bg-background/40 px-4 py-3">
+                <div className="mt-4 inline-flex items-center gap-3 rounded-xl border-0 bg-background/40 px-4 py-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-primary/16 bg-primary/10 text-primary">
                     <Logo className="h-4.5 w-4.5 fill-current" />
                   </div>

@@ -36,7 +36,7 @@ export function JournalCardHeader({ card, isExpanded, onToggle }: JournalCardHea
       className={cn(
         'flex w-full items-center gap-3 px-4 py-3 text-left transition-colors',
         'hover:bg-primary/[0.02]',
-        isExpanded && 'border-b border-border/15',
+        isExpanded && 'border-b-0',
       )}
     >
       <span className="min-w-[3rem] text-sm font-semibold">{trade.instrument}</span>

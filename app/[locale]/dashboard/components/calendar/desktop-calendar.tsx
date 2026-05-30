@@ -198,7 +198,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
  {renewals.map((account, index) => (
  <div
  key={account.id}
- className="group relative p-3 sm:p-4 rounded-lg border border-border/55 bg-secondary/22 hover:bg-secondary/30 hover:border-border/55 transition-[opacity,background-color,border-color] duration-200 hover:shadow-xs"
+ className="group relative p-3 sm:p-4 rounded-lg border-05 bg-secondary/22 hover:bg-secondary/30 hover:border-border/55 transition-[opacity,background-color,border-color] duration-200 hover:shadow-xs"
  >
  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-3">
  {/* Account Info */}
@@ -225,11 +225,11 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
  </div>
 
  <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-muted-foreground">
- <div className="px-2 py-1 bg-secondary/22 text-foreground/80 rounded-md font-medium whitespace-nowrap border border-border/55">
+ <div className="px-2 py-1 bg-secondary/22 text-foreground/80 rounded-md font-medium whitespace-nowrap border-05">
  {account.paymentFrequency?.toLowerCase()} {t('propFirm.renewal.frequency')}
  </div>
  {account.autoRenewal && (
- <div className="flex items-center gap-1 px-2 py-1 bg-secondary/30 text-foreground rounded-md whitespace-nowrap border border-border/55">
+ <div className="flex items-center gap-1 px-2 py-1 bg-secondary/30 text-foreground rounded-md whitespace-nowrap border-05">
  <div className="w-1.5 h-1.5 bg-foreground rounded-full shrink-0 animate-pulse"></div>
  <span className="text-xs font-medium">{t('propFirm.renewal.notification')}</span>
  </div>
@@ -515,7 +515,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  return (
  <Card className="h-full flex flex-col overflow-hidden border-border/30 bg-background/0.14">
  <CardHeader
- className="shrink-0 border-b border-border/30 px-4 py-3 sm:px-5 sm:py-4"
+ className="shrink-0 border-b-0 px-4 py-3 sm:px-5 sm:py-4"
  >
  <div className="flex items-start justify-between gap-4">
  <div className="min-w-0 space-y-1">
@@ -525,7 +525,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  ? formatInTimeZone(currentDate, timezone, 'MMMM yyyy', { locale: dateLocale })
  : formatInTimeZone(currentDate, timezone, 'yyyy', { locale: dateLocale })}
  </CardTitle>
- <span className="rounded-md border border-border/30 bg-secondary/40 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+ <span className="rounded-md border-0 bg-secondary/40 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
  {viewMode === 'daily' ? 'PnL Month' : 'PnL Year'}
  </span>
  </div>
@@ -537,19 +537,19 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  {formatCurrency(viewMode === 'daily' ? monthlyTotal : yearTotal)}
  </div>
  <div className="flex flex-wrap items-center gap-1.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
- <span className="rounded-md border border-border/55 bg-background/0.14 px-1.5 py-0.5">
+ <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5">
  {periodStats.activeDays}d
  </span>
- <span className="rounded-md border border-border/55 bg-background/0.14 px-1.5 py-0.5">
+ <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5">
  {periodStats.totalTrades}t
  </span>
- <span className="rounded-md border border-border/55 bg-background/0.14 px-1.5 py-0.5 text-semantic-success">
+ <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5 text-semantic-success">
  {periodStats.winningDays}w
  </span>
- <span className="rounded-md border border-border/55 bg-background/0.14 px-1.5 py-0.5 text-semantic-error">
+ <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5 text-semantic-error">
  {periodStats.losingDays}l
  </span>
- <span className="hidden sm:inline-flex rounded-md border border-border/55 bg-background/0.14 px-1.5 py-0.5">
+ <span className="hidden sm:inline-flex rounded-md border-05 bg-background/0.14 px-1.5 py-0.5">
  {periodStats.activeDays > 0 ? formatCurrency((viewMode === 'daily' ? monthlyTotal : yearTotal) / periodStats.activeDays, { maximumFractionDigits: 0 }) : "$0"}/d
  </span>
  </div>
@@ -596,11 +596,11 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
   <>
   <div className="mb-2 grid grid-cols-8 gap-1">
   {WEEKDAYS.map((day) => (
-  <div key={day} className="rounded-md border border-border/0.03 bg-secondary/18 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
+  <div key={day} className="rounded-md border-0 bg-secondary/18 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
   {translateWeekday(t, day)}
   </div>
   ))}
-  <div className="rounded-md border border-border/0.03 bg-secondary/18 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
+  <div className="rounded-md border-0 bg-secondary/18 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
   {t('calendar.weekdays.weekly')}
   </div>
   </div>
@@ -646,7 +646,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  style={{ opacity: pnlIntensity * 0.8 }}
  />
   <div className="flex items-start justify-between gap-0.5">
-  <span className={cn("min-w-[16px] rounded-md border border-border/0.03 bg-background/0.13 px-1 py-px text-center text-[9px] font-semibold leading-none sm:text-[10px]",
+  <span className={cn("min-w-[16px] rounded-md border-0 bg-background/0.13 px-1 py-px text-center text-[9px] font-semibold leading-none sm:text-[10px]",
   isToday(date) &&"text-primary font-semibold",
   !isCurrentMonth &&"opacity-60"
   )}>
@@ -706,7 +706,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  return (
   <button
   type="button"
-  className={cn("flex h-full min-h-0 cursor-pointer items-center justify-center rounded-lg border border-border/0.03 bg-background/0.13 px-1 transition-[opacity,background-color,border-color]","hover:bg-secondary/50 hover:border-primary/40",
+  className={cn("flex h-full min-h-0 cursor-pointer items-center justify-center rounded-lg border-0 bg-background/0.13 px-1 transition-[opacity,background-color,border-color]","hover:bg-secondary/50 hover:border-primary/40",
   index === 6 &&"rounded-tr-xl",
   index === 41 &&"rounded-br-xl"
   )}
@@ -752,9 +752,9 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  calendarData={calendarData}
  isLoading={isLoading}
  />
- <CardFooter className="flex justify-end border-t border-border/30 bg-background/30 px-3 py-2">
+ <CardFooter className="flex justify-end border-t-0 bg-background/30 px-3 py-2">
  {/* View Mode Toggle */}
- <div className="flex items-center gap-1 rounded-lg border border-border/30 bg-secondary/30 p-1">
+ <div className="flex items-center gap-1 rounded-lg border-0 bg-secondary/30 p-1">
  <Button 
  variant={viewMode === 'daily' ? 'default' : 'ghost'}
  size="sm"

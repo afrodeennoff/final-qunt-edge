@@ -30,7 +30,7 @@ export function AdminApiKeyGenerator() {
     setIsCreating(false)
   }
   return (
-    <Card className="bg-card border border-border/10">
+    <Card className="bg-card border-0">
       <CardHeader><CardTitle className="flex items-center gap-2"><Key className="h-5 w-5" /> Admin API Keys</CardTitle></CardHeader>
       <CardContent className="space-y-3">
         {createdKey ? (

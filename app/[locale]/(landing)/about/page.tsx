@@ -76,7 +76,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </Link>
             <Link
               href={`/${locale}/support`}
-              className="inline-flex items-center justify-center rounded-full bg-card border border-border/10 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-foreground transition-all hover:border-primary/25 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
+              className="inline-flex items-center justify-center rounded-full bg-card border-0 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-foreground transition-all hover:border-primary/25 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
             >
               Contact Support
             </Link>
@@ -86,7 +86,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {storyCards.map((card) => (
             <UnifiedSurface key={card.title} variant="subtle">
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-border/20 bg-gradient-to-br from-muted/50 to-muted/20 text-foreground">
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border-0 bg-gradient-to-br from-muted/50 to-muted/20 text-foreground">
                 {card.icon}
               </div>
               <h3 className="text-lg font-semibold tracking-tight text-foreground">{card.title}</h3>

@@ -136,7 +136,7 @@ function TeamSettingsCard({
               {userTeams.ownedTeams.map((team) => (
                 <div
                   key={team.id}
-                  className="flex items-center justify-between rounded-xl border border-border/30 p-3"
+                  className="flex items-center justify-between rounded-xl border-0 p-3"
                 >
                   <div>
                     <p className="font-medium">{team.name}</p>
@@ -149,7 +149,7 @@ function TeamSettingsCard({
               {userTeams.joinedTeams.map((team) => (
                 <div
                   key={team.id}
-                  className="flex items-center justify-between rounded-xl border border-border/30 p-3"
+                  className="flex items-center justify-between rounded-xl border-0 p-3"
                 >
                   <div>
                     <p className="font-medium">{team.name}</p>
@@ -241,7 +241,7 @@ function PasswordSettingsCard({
   onUpdatePassword: () => Promise<void>
 }) {
   return (
-    <Card className="rounded-xl border border-border/30 bg-card shadow-sm">
+    <Card className="rounded-xl border-0 bg-card shadow-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="h-5 w-5" />
@@ -367,7 +367,7 @@ function ApiKeySection() {
   }
 
   return (
-    <Card className="rounded-xl border border-border/30 bg-card shadow-sm lg:col-span-2">
+    <Card className="rounded-xl border-0 bg-card shadow-sm lg:col-span-2">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -434,7 +434,7 @@ function ApiKeySection() {
               {[1, 2].map((i) => <Skeleton key={i} className="h-16 w-full rounded-xl" />)}
             </div>
           ) : keys.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-border/60 bg-muted/20 p-6 text-center">
+            <div className="rounded-xl border-0/60 bg-muted/20 p-6 text-center">
               <Key className="mx-auto h-8 w-8 mb-3 text-muted-foreground/60" />
               <p className="text-sm text-muted-foreground mb-1">No API keys yet</p>
               <p className="text-xs text-muted-foreground">Create one to connect AI tools or external services.</p>
@@ -444,7 +444,7 @@ function ApiKeySection() {
               {keys.map((apiKey) => (
                 <div
                   key={apiKey.id}
-                  className="flex items-center justify-between rounded-xl border border-border/30 bg-card/50 p-4 hover:bg-muted/20 transition-colors"
+                  className="flex items-center justify-between rounded-xl border-0 bg-card/50 p-4 hover:bg-muted/20 transition-colors"
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-3">
@@ -492,7 +492,7 @@ function ApiKeySection() {
           <p className="text-sm font-semibold mb-3">Setup Guides</p>
           <div className="grid gap-3 md:grid-cols-2">
             {/* Claude Desktop */}
-            <div className="rounded-xl border border-border/30 bg-muted/20 p-4">
+            <div className="rounded-xl border-0 bg-muted/20 p-4">
               <div className="font-medium text-sm mb-2 flex items-center gap-2">Claude Desktop</div>
               <ol className="text-xs text-muted-foreground space-y-1.5 list-decimal list-inside">
                 <li>Open Claude Desktop → Settings → Developer</li>
@@ -521,7 +521,7 @@ function ApiKeySection() {
             </div>
 
             {/* Cursor */}
-            <div className="rounded-xl border border-border/30 bg-muted/20 p-4">
+            <div className="rounded-xl border-0 bg-muted/20 p-4">
               <div className="font-medium text-sm mb-2 flex items-center gap-2">Cursor</div>
               <ol className="text-xs text-muted-foreground space-y-1.5 list-decimal list-inside">
                 <li>Go to Settings → Features → MCP Servers</li>
@@ -543,7 +543,7 @@ function ApiKeySection() {
             </div>
 
             {/* Other Tools */}
-            <div className="rounded-xl border border-border/30 bg-muted/20 p-4 md:col-span-2">
+            <div className="rounded-xl border-0 bg-muted/20 p-4 md:col-span-2">
               <div className="font-medium text-sm mb-2">Windsurf, Cline & Other MCP Clients</div>
               <p className="text-xs text-muted-foreground mb-3">
                 Most modern MCP-compatible tools support remote servers. Use the endpoint above and authenticate with <code>Bearer YOUR_KEY</code>.
@@ -576,7 +576,7 @@ function ApiKeySection() {
         </div>
 
         {/* Guidebook */}
-        <div className="rounded-xl border border-border/30 bg-muted/10 p-5">
+        <div className="rounded-xl border-0 bg-muted/10 p-5">
           <p className="font-semibold text-sm mb-3">Guidebook — What You Can Do</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-sm text-muted-foreground">
             <div className="space-y-1">
@@ -599,7 +599,7 @@ function ApiKeySection() {
               </ul>
             </div>
           </div>
-          <p className="text-[11px] text-muted-foreground mt-4 border-t border-border/30 pt-3">
+          <p className="text-[11px] text-muted-foreground mt-4 border-t-0 pt-3">
             Your data stays private. The MCP server only responds to authenticated requests from your own AI tools.
           </p>
         </div>
@@ -631,13 +631,13 @@ function ApiKeySection() {
               <div className="space-y-4">
                 <div>
                   <p className="text-sm font-medium mb-2">Your new API key:</p>
-                  <div className="rounded-xl border border-border/30 bg-muted/40 p-4">
+                  <div className="rounded-xl border-0 bg-muted/40 p-4">
                     <code className="text-xs break-all select-all font-mono block">{createdKey}</code>
                   </div>
                   <p className="text-xs text-destructive mt-2 font-medium">Copy this key now — it will never be shown again.</p>
                 </div>
 
-                <div className="rounded-lg border border-border/20 bg-muted/20 p-3 text-xs">
+                <div className="rounded-lg border-0 bg-muted/20 p-3 text-xs">
                   <p className="font-semibold mb-1">Next steps:</p>
                   <ol className="list-decimal list-inside space-y-0.5 text-muted-foreground">
                     <li>Copy the key above</li>
@@ -791,7 +791,7 @@ export default function SettingsPage() {
     <UnifiedPageShell density="compact">
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Profile Section */}
-        <Card className="rounded-xl border border-border/30 bg-card shadow-sm">
+        <Card className="rounded-xl border-0 bg-card shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <User className="h-5 w-5" />
@@ -860,7 +860,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Preferences Section */}
-        <Card className="rounded-xl border border-border/30 bg-card shadow-sm">
+        <Card className="rounded-xl border-0 bg-card shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5" />
@@ -876,7 +876,7 @@ export default function SettingsPage() {
                 Accent Color
               </Label>
               <div className="mt-2">
-                <div className="rounded-md border border-border/30 bg-muted/40 p-3">
+                <div className="rounded-md border-0 bg-muted/40 p-3">
                   <p className="mb-3 text-sm text-muted-foreground">
                     Choose your dashboard accent color
                   </p>
@@ -985,7 +985,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Notifications Section */}
-        <Card className="rounded-xl border border-border/30 bg-card shadow-sm">
+        <Card className="rounded-xl border-0 bg-card shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
@@ -1075,7 +1075,7 @@ export default function SettingsPage() {
         <ApiKeySection />
 
         {/* Account Management Section */}
-        <Card className="rounded-xl border border-border/30 bg-card shadow-sm">
+        <Card className="rounded-xl border-0 bg-card shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />

@@ -267,7 +267,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  .map((result) => (
  <div
  key={result.segmentIndex}
- className="p-3 bg-muted/50 rounded-lg border border-border/0.42"
+ className="p-3 bg-muted/50 rounded-lg border-0"
  >
  <div className="flex items-start justify-between gap-3">
  <div className="flex-1">

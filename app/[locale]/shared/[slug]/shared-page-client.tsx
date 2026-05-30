@@ -89,7 +89,7 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
               "flex items-center rounded-xl border px-2 py-2 transition-[opacity,background-color,border-color,transform] duration-200 hover:-translate-y-0.5",
               accountNumbers.includes(account) 
                 ? "border-border/40 bg-card/80 text-foreground shadow-[0_18px_36px_-26px_rgba(255,255,255,0.08)]"
-                : "border-border/30 bg-background/30 text-muted-foreground hover:border-border/40 hover:bg-background/0.09"
+                : "border-border/30 bg-background/30 text-muted-foreground hover:border-transparent hover:bg-background/0.09"
             )}
           >
             <div
@@ -117,7 +117,7 @@ export function SharedPageClient() {
   if (isLoading) {
     return (
       <div className="qe-v2-app-shell flex flex-col items-center justify-center px-4 pt-28 sm:pt-32">
-        <div className="flex w-full max-w-lg flex-col items-center gap-3 rounded-[2rem] border border-border/30 bg-card px-6 py-8 text-center shadow-sm">
+        <div className="flex w-full max-w-lg flex-col items-center gap-3 rounded-[2rem] border-0 bg-card px-6 py-8 text-center shadow-sm">
           <Loader2 className="h-8 w-8 animate-spin text-foreground" />
           <p className="text-sm text-muted-foreground">{t('shared.loading')}</p>
         </div>
@@ -147,9 +147,9 @@ export function SharedPageClient() {
           <Card className="mb-6 w-full overflow-hidden border-border/30 bg-card shadow-sm">
             <CardContent className="p-4 sm:p-5 lg:p-6">
               <div className="grid gap-4 xl:grid-cols-[minmax(0,1.12fr)_340px] xl:gap-6">
-                <div className="rounded-2xl border border-border/30 bg-background/30 p-5 sm:p-6">
+                <div className="rounded-2xl border-0 bg-background/30 p-5 sm:p-6">
                   <CardHeader className="space-y-4 p-0">
-                    <div className="inline-flex w-fit rounded-full border border-border/0.08 bg-background/30 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
+                    <div className="inline-flex w-fit rounded-full border-0 bg-background/30 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
                       Shared Report
                     </div>
                     <div className="flex flex-col gap-2">

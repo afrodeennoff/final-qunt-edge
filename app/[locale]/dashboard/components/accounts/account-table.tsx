@@ -268,7 +268,7 @@ export function AccountTable({
  const hasInconsistentDays = metrics.some(metric => metric.pnl > maxAllowedDailyProfit)
 
  return (
-  <TableRow className="bg-card/30 font-medium border-t border-border/20">
+  <TableRow className="bg-card/30 font-medium border-t-0">
  <TableCell>{t('calendar.modal.total')}</TableCell>
  <TableCell className={cn("text-right",
  totalPnL > 0 ?"metric-positive" : totalPnL < 0 ?"metric-negative" :""
@@ -328,7 +328,7 @@ export function AccountTable({
  )}
 
  {resetDate && (
- <div className="rounded-md border border-border/30 bg-secondary/20 p-4">
+ <div className="rounded-md border-0 bg-secondary/20 p-4">
  <div className="flex items-center justify-between">
  <div>
  <div className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground mb-1">{t('propFirm.resetDate.label')}</div>

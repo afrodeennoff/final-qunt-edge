@@ -163,7 +163,7 @@ export default async function PropFirmsListPage({
       >
         <div className="space-y-3 lg:hidden">
           {firms.length === 0 ? (
-            <div className="rounded-xl border border-border/30 px-4 py-8 text-center text-sm text-muted-foreground">
+            <div className="rounded-xl border-0 px-4 py-8 text-center text-sm text-muted-foreground">
               No prop firms found yet.
             </div>
           ) : (
@@ -176,7 +176,7 @@ export default async function PropFirmsListPage({
               return (
                 <div
                   key={firm.id}
-                  className="rounded-xl border border-border/30 bg-background/40 p-4"
+                  className="rounded-xl border-0 bg-background/40 p-4"
                 >
                   <div className="flex flex-col gap-4">
                     <div className="space-y-1">
@@ -237,7 +237,7 @@ export default async function PropFirmsListPage({
         <div className="hidden overflow-x-auto lg:block">
           <table className="w-full text-sm">
             <thead>
-               <tr className="border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm">
+               <tr className="border-b-0 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm">
                 <th   className="type-label pb-3 pr-4 text-left font-medium text-muted-foreground">Name</th>
                 <th   className="type-label pb-3 pr-4 text-left font-medium text-muted-foreground">Category</th>
                 <th   className="type-label pb-3 pr-4 text-left font-medium text-muted-foreground">Platform</th>
@@ -264,7 +264,7 @@ export default async function PropFirmsListPage({
                   return (
                     <tr
                       key={firm.id}
-                      className="border-b border-border/20 last:border-0 hover:bg-primary/[0.02] transition-colors"
+                      className="border-b-0 last:border-0 hover:bg-primary/[0.02] transition-colors"
                     >
                       <td className="py-3 pr-4">
                         <div className="space-y-1">

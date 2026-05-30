@@ -154,7 +154,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
 
  return (
  <Card className="h-full flex flex-col overflow-hidden border-border/30 bg-background/0.14">
- <div className="shrink-0 border-b border-border/30 p-3">
+ <div className="shrink-0 border-b-0 p-3">
  <div className="flex items-start justify-between gap-2">
  <div className="min-w-0">
  <CardTitle className="truncate text-base font-semibold capitalize">
@@ -176,7 +176,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  </div>
  </div>
  <div className="mt-2 flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
- <span className="rounded-md border border-border/55 bg-background/0.14 px-1.5 py-0.5">Days {monthStats.activeDays}</span>
+ <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5">Days {monthStats.activeDays}</span>
  <span className="rounded-md border border-semantic-success-border/40 bg-semantic-success-bg/10 px-1.5 py-0.5 text-semantic-success">W {monthStats.wins}</span>
  <span className="rounded-md border border-semantic-error-border/40 bg-semantic-error-bg/10 px-1.5 py-0.5 text-semantic-error">L {monthStats.losses}</span>
  </div>
@@ -184,7 +184,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  <div className="flex-1 min-h-0 p-2">
  <div className="mb-2 grid grid-cols-7 gap-1">
  {weekdayHeaders.map((day) => (
- <div key={day.key} className="rounded-md border border-border/55 bg-secondary/30 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+ <div key={day.key} className="rounded-md border-05 bg-secondary/30 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
  {day.label}
  </div>
  ))}
@@ -233,7 +233,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  )}
  style={{ opacity: intensity * 0.8 }}
  />
- <div className={cn("inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/55 bg-background/0.14 text-xs font-semibold",
+ <div className={cn("inline-flex h-6 w-6 items-center justify-center rounded-md border-05 bg-background/0.14 text-xs font-semibold",
  dayPnl > 0 &&"text-semantic-success",
  dayPnl < 0 &&"text-semantic-error"
  )}>

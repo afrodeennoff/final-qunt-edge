@@ -8,7 +8,7 @@ export function LiveInAction() {
   const [open, setOpen] = useState(false)
 
   return (
-    <section className="py-24 border-t border-border/10">
+    <section className="py-24 border-t-0">
       <div className="mx-auto max-w-4xl px-6 text-center">
         <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-[10px] font-mono tracking-[3px] text-primary">
           <Play className="h-3 w-3 fill-primary" />
@@ -22,7 +22,7 @@ export function LiveInAction() {
         </p>
       </div>
 
-      <div className="group relative mx-auto mt-12 max-w-5xl overflow-hidden rounded-2xl border border-border/30 bg-card/50 shadow-[inset_0_0_50px_-25px] shadow-primary/5">
+      <div className="group relative mx-auto mt-12 max-w-5xl overflow-hidden rounded-2xl border-0 bg-card/50 shadow-[inset_0_0_50px_-25px] shadow-primary/5">
         <div className="aspect-video w-full bg-gradient-to-b from-background via-background to-background/90 flex items-center justify-center relative">
           <div className="absolute inset-0 bg-gradient-to-t from-primary/[0.03] to-transparent" />
           <div className="absolute inset-0 bg-[radial-gradient(oklch(0.15_0.01_260)_0.8px,transparent_1px)] bg-[length:4px_4px] opacity-30" />

@@ -10,7 +10,7 @@ export default function VelocityStyleHome() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-white/20 font-sans">
       {/* NAV - Matching Velocity style */}
-      <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0a0a]/95 backdrop-blur-md">
+      <nav className="sticky top-0 z-50 border-b-0 bg-[#0a0a0a]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-4">
           <div className="flex items-center gap-10">
             <Link href="/" className="text-xl font-semibold tracking-tight">
@@ -22,7 +22,7 @@ export default function VelocityStyleHome() {
                 <button className="flex items-center gap-1 text-white/80 hover:text-white">
                   The Lab <span className="text-[10px]">▼</span>
                 </button>
-                <div className="absolute left-0 mt-2 hidden w-56 rounded-xl border border-white/10 bg-[#111] py-2 text-sm shadow-xl group-hover:block">
+                <div className="absolute left-0 mt-2 hidden w-56 rounded-xl border-0 bg-[#111] py-2 text-sm shadow-xl group-hover:block">
                   <Link href="/analytics" className="block px-4 py-2 hover:bg-white/5">Analytics</Link>
                   <Link href="/propfirms" className="block px-4 py-2 hover:bg-white/5">Prop Firm Intelligence</Link>
                   <Link href="/dashboard" className="block px-4 py-2 hover:bg-white/5">Trade Journal</Link>
@@ -49,9 +49,9 @@ export default function VelocityStyleHome() {
       </nav>
 
       {/* HERO - Exact Velocity structure */}
-      <section className="border-b border-white/10 pt-20 pb-16">
+      <section className="border-b-0 pt-20 pb-16">
         <div className="mx-auto max-w-[1100px] px-6 text-center">
-          <div className="inline-flex items-center rounded-full border border-white/20 px-4 py-1 text-xs tracking-[2px] text-white/60 mb-6">
+          <div className="inline-flex items-center rounded-full border-0 px-4 py-1 text-xs tracking-[2px] text-white/60 mb-6">
             LIVE • AI-POWERED TRADING ANALYTICS
           </div>
 
@@ -73,7 +73,7 @@ export default function VelocityStyleHome() {
             </Link>
             <Link 
               href="#intelligence" 
-              className="inline-flex h-12 items-center justify-center rounded-full border border-white/30 px-6 text-base hover:bg-white/5"
+              className="inline-flex h-12 items-center justify-center rounded-full border-0 px-6 text-base hover:bg-white/5"
             >
               See the Intelligence →
             </Link>
@@ -89,7 +89,7 @@ export default function VelocityStyleHome() {
       </section>
 
       {/* EVERY PLATFORM GIVES YOU DATA. WE GIVE YOU INTELLIGENCE. */}
-      <section className="border-b border-white/10 py-20">
+      <section className="border-b-0 py-20">
         <div className="mx-auto max-w-[1100px] px-6">
           <div className="max-w-[720px]">
             <h2 className="text-5xl font-semibold tracking-[-1.2px] leading-[1.05]">
@@ -132,7 +132,7 @@ export default function VelocityStyleHome() {
       </section>
 
       {/* QUNT PULSE™ - Matching VI Pulse style */}
-      <section id="intelligence" className="border-b border-white/10 py-20">
+      <section id="intelligence" className="border-b-0 py-20">
         <div className="mx-auto max-w-[1100px] px-6">
           <div className="mb-10">
             <div className="text-xs tracking-[3px] text-white/50">QUNT PULSE™</div>
@@ -143,7 +143,7 @@ export default function VelocityStyleHome() {
           </div>
 
           {/* Mock Pulse Dashboard */}
-          <div className="rounded-2xl border border-white/10 bg-[#111] p-8">
+          <div className="rounded-2xl border-0 bg-[#111] p-8">
             <div className="flex items-baseline justify-between">
               <div>
                 <div className="text-sm text-white/60">Overall Pulse Score</div>
@@ -163,7 +163,7 @@ export default function VelocityStyleHome() {
                 { label: 'Execution', score: '71', tier: 'Good' },
                 { label: 'Consistency', score: '82', tier: 'Strong' },
               ].map((item, i) => (
-                <div key={i} className="rounded-xl border border-white/10 bg-[#0a0a0a] p-5">
+                <div key={i} className="rounded-xl border-0 bg-[#0a0a0a] p-5">
                   <div className="text-xs text-white/50">{item.label}</div>
                   <div className="mt-2 text-4xl font-semibold tabular-nums">{item.score}</div>
                   <div className="mt-1 text-xs text-emerald-400">{item.tier}</div>
@@ -175,7 +175,7 @@ export default function VelocityStyleHome() {
       </section>
 
       {/* QUNT DEBRIEF™ */}
-      <section className="border-b border-white/10 py-20">
+      <section className="border-b-0 py-20">
         <div className="mx-auto max-w-[1100px] px-6">
           <div className="mb-10">
             <div className="text-xs tracking-[3px] text-white/50">QUNT DEBRIEF™</div>
@@ -186,7 +186,7 @@ export default function VelocityStyleHome() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-[#111] p-8">
+            <div className="rounded-2xl border-0 bg-[#111] p-8">
               <div className="text-sm text-white/60">Today’s Score</div>
               <div className="text-[64px] font-semibold tracking-tight">67</div>
               <div className="text-amber-400">Solid</div>
@@ -197,7 +197,7 @@ export default function VelocityStyleHome() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-[#111] p-8">
+            <div className="rounded-2xl border-0 bg-[#111] p-8">
               <div className="mb-4 text-sm text-white/60">AI Pattern Detected</div>
               <div className="text-lg leading-tight">
                 Your win rate improves <span className="font-semibold text-emerald-400">27%</span> when you wait for the first 15-minute candle to close before entering.
@@ -209,7 +209,7 @@ export default function VelocityStyleHome() {
       </section>
 
       {/* QUNT SENTINEL™ */}
-      <section className="border-b border-white/10 py-20">
+      <section className="border-b-0 py-20">
         <div className="mx-auto max-w-[1100px] px-6">
           <div className="mb-10">
             <div className="text-xs tracking-[3px] text-white/50">QUNT SENTINEL™</div>
@@ -219,7 +219,7 @@ export default function VelocityStyleHome() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-[#111] p-8">
+          <div className="rounded-2xl border-0 bg-[#111] p-8">
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-sm text-white/60">Today’s Compliance</div>
@@ -239,7 +239,7 @@ export default function VelocityStyleHome() {
                 "No trading after 3:30pm rule engaged",
                 "Cooldown after 3 consecutive losses"
               ].map((rule, i) => (
-                <div key={i} className="flex items-center gap-3 rounded-lg border border-white/10 px-5 py-3 text-sm">
+                <div key={i} className="flex items-center gap-3 rounded-lg border-0 px-5 py-3 text-sm">
                   <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                   {rule}
                 </div>
@@ -250,7 +250,7 @@ export default function VelocityStyleHome() {
       </section>
 
       {/* WHY QUNT EDGE */}
-      <section className="border-b border-white/10 py-20">
+      <section className="border-b-0 py-20">
         <div className="mx-auto max-w-[1100px] px-6">
           <h3 className="text-5xl font-semibold tracking-[-1.2px]">Your edge. Amplified.</h3>
 
@@ -271,7 +271,7 @@ export default function VelocityStyleHome() {
       </section>
 
       {/* THE QUNT LAB */}
-      <section className="border-b border-white/10 py-20">
+      <section className="border-b-0 py-20">
         <div className="mx-auto max-w-[1100px] px-6 text-center">
           <div className="text-xs tracking-[3px] text-white/50">THE QUNT LAB</div>
           <h3 className="mt-3 text-5xl font-semibold tracking-[-1.2px]">Engineered for serious traders.</h3>
@@ -305,7 +305,7 @@ export default function VelocityStyleHome() {
       </section>
 
       {/* Minimal footer */}
-      <footer className="border-t border-white/10 py-8 text-center text-xs text-white/50">
+      <footer className="border-t-0 py-8 text-center text-xs text-white/50">
         © {new Date().getFullYear()} Qunt Edge. All rights reserved.
       </footer>
     </div>

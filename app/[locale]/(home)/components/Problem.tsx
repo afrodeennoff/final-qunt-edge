@@ -27,7 +27,7 @@ const items = [
 
 export function Problem() {
   return (
-    <section className="py-24 border-b border-border/20">
+    <section className="py-24 border-b-0">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-14">
           <div className="mb-3 inline-block rounded-full border border-destructive/20 bg-destructive/5 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-destructive">
@@ -47,7 +47,7 @@ export function Problem() {
             return (
               <div
                 key={i}
-                className="group relative rounded-2xl border border-border/30 bg-card/30 p-6 transition-all duration-300 hover:border-destructive/20 hover:bg-destructive/[0.02] hover:shadow-[0_0_30px_-15px] hover:shadow-destructive/10"
+                className="group relative rounded-2xl border-0 bg-card/30 p-6 transition-all duration-300 hover:border-destructive/20 hover:bg-destructive/[0.02] hover:shadow-[0_0_30px_-15px] hover:shadow-destructive/10"
               >
                 <div className="flex items-start gap-4">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-destructive/20 to-destructive/5 ring-1 ring-destructive/10">

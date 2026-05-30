@@ -28,7 +28,7 @@ export interface TableHeaderProps extends React.HTMLAttributes<HTMLTableSectionE
 
 const TableHeader = React.forwardRef<HTMLTableSectionElement, TableHeaderProps>(
   ({ className, ...props }, ref) => (
-    <thead ref={ref} className={cn('sticky top-0 z-10 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-md [&_tr]:border-b border-border/20', className)} {...props} />
+    <thead ref={ref} className={cn('sticky top-0 z-10 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-md [&_tr]:border-b-0', className)} {...props} />
   )
 )
 TableHeader.displayName = 'TableHeader'
@@ -61,7 +61,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
     <tr
       ref={ref}
       className={cn(
-        'border-b border-border/20 transition-all duration-200 hover:bg-primary/[0.02] data-[state=selected]:bg-primary/[0.03]',
+        'border-b-0 transition-all duration-200 hover:bg-primary/[0.02] data-[state=selected]:bg-primary/[0.03]',
         hover && 'hover:bg-muted/50',
         selected && 'bg-muted/50',
         className

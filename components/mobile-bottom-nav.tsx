@@ -114,7 +114,7 @@ function MobileBottomNav({ items }: { items?: MobileNavItem[] }) {
       className={cn('fixed inset-x-0 bottom-0 z-40 md:hidden', 'px-3 pb-safe mobile-landscape-compact transition-[opacity,background-color,border-color,transform] duration-200')}
       aria-label="Dashboard navigation"
     >
-      <div className="flex h-[4.35rem] items-center justify-around rounded-2xl border border-border/30 bg-card/95 px-2 shadow-[inset_0_1px_0_hsl(var(--primary)/0.04),0_18px_40px_-24px_rgba(0,0,0,0.84)]">
+      <div className="flex h-[4.35rem] items-center justify-around rounded-2xl border-0 bg-card/95 px-2 shadow-[inset_0_1px_0_hsl(var(--primary)/0.04),0_18px_40px_-24px_rgba(0,0,0,0.84)]">
         {navItems.map((item) => (
           <TabItem key={item.label} item={item} />
         ))}

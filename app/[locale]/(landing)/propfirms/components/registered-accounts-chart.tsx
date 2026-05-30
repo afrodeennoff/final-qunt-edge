@@ -113,7 +113,7 @@ export function RegisteredAccountsChart({
             <span className="shrink-0 text-xs text-muted-foreground">
               {registeredAccountsChartConfig[activeMetric].label}
             </span>
-            <div className="inline-flex shrink-0 rounded-full border border-border/35 bg-card/55 p-1">
+            <div className="inline-flex shrink-0 rounded-full border-0 bg-card/55 p-1">
               {metricTabs.map((tab) => (
                 <button
                   key={tab.key}
@@ -179,7 +179,7 @@ export function RegisteredAccountsChart({
             </ChartContainer>
           </div>
         ) : (
-          <div className="rounded-xl border border-dashed border-border/30 bg-background/60 px-4 py-6 text-sm text-muted-foreground">
+          <div className="rounded-xl border-0/30 bg-background/60 px-4 py-6 text-sm text-muted-foreground">
             No account registrations available yet.
           </div>
         )}

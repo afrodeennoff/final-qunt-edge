@@ -30,7 +30,7 @@ export default async function AdminPage({
         {/* Editor and Preview */}
         <ResizablePanelGroup
           direction="horizontal"
-          className="min-h-[600px] rounded-xl border border-border/30"
+          className="min-h-[600px] rounded-xl border-0"
         >
           <ResizablePanel defaultSize={50}>
             <div className="h-full p-5">
@@ -61,7 +61,7 @@ export default async function AdminPage({
               </p>
             </div>
           </div>
-          <div className="rounded-xl border border-border/30 bg-background/40 p-6">
+          <div className="rounded-xl border-0 bg-background/40 p-6">
             <Suspense fallback={null}>
               <SubscriberTable />
             </Suspense>

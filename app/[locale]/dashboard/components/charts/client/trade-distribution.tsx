@@ -78,8 +78,8 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
  if (!data) return null
 
  return (
- <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm min-w-[140px]">
- <div className="flex flex-col mb-1 border-b border-border/40 pb-1">
+ <div className="bg-card/96 p-3 border-0 rounded-xl shadow-sm min-w-[140px]">
+ <div className="flex flex-col mb-1 border-b-0 pb-1">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
  {t('tradeDistribution.tooltip.type')}
  </span>
@@ -103,7 +103,7 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
  <ChartSurface>
  <div
  className={cn(
- 'flex flex-col items-stretch gap-0 border-b border-border/55 shrink-0',
+ 'flex flex-col items-stretch gap-0 border-b-0 shrink-0',
  size === 'small' ? 'p-2 h-10 justify-center' : 'p-3 sm:p-3.5 h-12 justify-center'
  )}
  >

@@ -75,7 +75,7 @@ export function FAQClientContent({ locale, allFaqs }: FAQClientContentProps) {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search questions or answers..."
-            className="w-full rounded-xl border border-border/60 bg-background pl-10 pr-10 py-3 text-sm placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+            className="w-full rounded-xl border-0 bg-background pl-10 pr-10 py-3 text-sm placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
             aria-label="Search FAQ"
           />
           {searchTerm && (
@@ -113,7 +113,7 @@ export function FAQClientContent({ locale, allFaqs }: FAQClientContentProps) {
                   const el = document.getElementById(`faq-${item.id}`)
                   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
                 }}
-                className="group cursor-pointer rounded-xl border border-border/50 bg-card/50 p-4 transition-all hover:border-primary/40 hover:bg-card hover:shadow-sm"
+                className="group cursor-pointer rounded-xl border-00 bg-card/50 p-4 transition-all hover:border-primary/40 hover:bg-card hover:shadow-sm"
               >
                 <div className="text-xs uppercase tracking-widest text-muted-foreground/70 mb-1.5">
                   {item.category}
@@ -127,7 +127,7 @@ export function FAQClientContent({ locale, allFaqs }: FAQClientContentProps) {
         </UnifiedSurface>
 
         {/* Category Filters (tabs on desktop, scrollable chips on mobile) */}
-        <div className="-mx-1 flex flex-wrap gap-2 border-b border-border/50 pb-4 overflow-x-auto">
+        <div className="-mx-1 flex flex-wrap gap-2 border-b-0 pb-4 overflow-x-auto">
           <button
             onClick={() => setActiveCategory(null)}
             className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all border whitespace-nowrap ${
@@ -162,7 +162,7 @@ export function FAQClientContent({ locale, allFaqs }: FAQClientContentProps) {
                   key={faq.id}
                   id={`faq-${faq.id}`}
                   value={`item-${index}`}
-                  className="mb-2 rounded-xl border border-border/40 bg-muted/30 px-5 py-1 transition-colors hover:bg-muted/50"
+                  className="mb-2 rounded-xl border-0 bg-muted/30 px-5 py-1 transition-colors hover:bg-muted/50"
                 >
                   <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline py-4">
                     <span className="text-sm sm:text-[15px]">{faq.question}</span>
@@ -194,7 +194,7 @@ export function FAQClientContent({ locale, allFaqs }: FAQClientContentProps) {
           </p>
           <a
             href={`/${locale}/support`}
-            className="inline-flex items-center justify-center rounded-full border border-border/30 bg-card px-8 py-3 text-xs font-bold uppercase tracking-widest text-foreground transition-all hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
+            className="inline-flex items-center justify-center rounded-full border-0 bg-card px-8 py-3 text-xs font-bold uppercase tracking-widest text-foreground transition-all hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
           >
             Contact Support
           </a>

@@ -70,7 +70,7 @@ export function BlogManagementClient({
   return (
     <>
       <Card variant="flat" hover>
-        <div className="border-b border-border/30 p-4">
+        <div className="border-b-0 p-4">
           <div className="flex items-center gap-3">
             <Search className="h-4 w-4 text-muted-foreground" />
             <Input
@@ -95,7 +95,7 @@ export function BlogManagementClient({
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                 <tr className="border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm text-left text-sm">
+                 <tr className="border-b-0 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm text-left text-sm">
                   <th   className="type-label p-4 font-medium text-muted-foreground">Title</th>
                   <th   className="type-label p-4 font-medium text-muted-foreground">Slug</th>
                   <th   className="type-label p-4 font-medium text-muted-foreground">Category</th>
@@ -107,7 +107,7 @@ export function BlogManagementClient({
               </thead>
               <tbody>
                 {filteredPosts.map((post) => (
-                  <tr key={post.id} className="border-b border-border/20 last:border-0 hover:bg-primary/[0.02] transition-colors">
+                  <tr key={post.id} className="border-b-0 last:border-0 hover:bg-primary/[0.02] transition-colors">
                     <td className="p-4">
                       <div className="font-medium text-foreground">{post.title}</div>
                       {post.excerpt && (

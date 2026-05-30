@@ -27,7 +27,7 @@ const TableHeader = React.forwardRef<
     ref={ref}
     data-slot="table-header"
     className={cn(
-      'sticky top-0 z-10 border-b border-border/20 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-md [&_tr]:border-b [&_tr]:border-border/20',
+      'sticky top-0 z-10 border-b-0 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-md [&_tr]:border-b [&_tr]:border-border/20',
       className,
     )}
     {...props}
@@ -70,7 +70,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
       ref={ref}
       data-slot="table-row"
       className={cn(
-        'border-b border-border/20 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-primary/[0.02] data-[state=selected]:bg-primary/[0.03]',
+        'border-b-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-primary/[0.02] data-[state=selected]:bg-primary/[0.03]',
         className,
       )}
       {...props}
@@ -103,7 +103,7 @@ const TableCell = React.forwardRef<
     ref={ref}
     data-slot="table-cell"
       className={cn(
-        'border-b border-border/20 p-3.5 align-middle type-body-sm leading-[var(--leading-normal)] sm:p-4 [&:has([role=checkbox])]:pr-0',
+        'border-b-0 p-3.5 align-middle type-body-sm leading-[var(--leading-normal)] sm:p-4 [&:has([role=checkbox])]:pr-0',
       className,
     )}
     {...props}

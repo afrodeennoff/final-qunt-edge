@@ -79,7 +79,7 @@ type DateFilterPreset =
 
 type StatTone = 'default' | 'positive' | 'negative'
 
-const insetPanelClassName = 'rounded-xl border border-border/25 bg-card/95 shadow-sm'
+const insetPanelClassName = 'rounded-xl border-0 bg-card/95 shadow-sm'
 
 function clamp(v: number, min = 0, max = 100) {
   return Math.min(max, Math.max(min, v))
@@ -518,7 +518,7 @@ export default function TraderProfilePageClient() {
         <UnifiedSurface className="p-5 sm:p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex min-w-0 items-start gap-4">
-              <Avatar className="h-20 w-20 shrink-0 rounded-2xl border border-border sm:h-24 sm:w-24">
+              <Avatar className="h-20 w-20 shrink-0 rounded-2xl border-0 sm:h-24 sm:w-24">
                 <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
                 <AvatarFallback className="bg-background text-lg font-semibold">
                   {profileInitials}

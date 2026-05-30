@@ -258,7 +258,7 @@ function CouponFormGroup({
   children: ReactNode
 }) {
   return (
-    <div className="space-y-4 rounded-xl border border-border/30 bg-background/40 p-4">
+    <div className="space-y-4 rounded-xl border-0 bg-background/40 p-4">
       <div className="space-y-1">
         <p className="text-sm font-semibold text-foreground">{title}</p>
         {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}

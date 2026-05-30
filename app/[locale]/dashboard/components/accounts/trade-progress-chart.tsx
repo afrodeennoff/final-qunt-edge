@@ -241,8 +241,8 @@ export function TradeProgressChart({
  if (active && payload && payload.length) {
  const data = payload[0].payload as ChartDataPoint;
  return (
- <div className="bg-card/96 p-3 border border-border/30 rounded-xl shadow-sm text-[10px] space-y-2 min-w-[140px]">
- <div className="flex items-center justify-between border-b border-border/40 pb-1">
+ <div className="bg-card/96 p-3 border-0 rounded-xl shadow-sm text-[10px] space-y-2 min-w-[140px]">
+ <div className="flex items-center justify-between border-b-0 pb-1">
  <span className="font-bold text-foreground">TRADE #{data.tradeIndex}</span>
  <span className="text-muted-foreground">{data.date}</span>
  </div>
@@ -262,7 +262,7 @@ export function TradeProgressChart({
  </div>
  )}
  </div>
- <div className="space-y-1 pt-1 border-t border-border/40">
+ <div className="space-y-1 pt-1 border-t-0">
  <div className="flex justify-between items-center">
  <span className="text-muted-foreground uppercase font-semibold tracking-wider">Drawdown</span>
  <span className="text-muted-foreground font-medium tabular-nums">${data.drawdownLevel.toLocaleString()}</span>
@@ -273,12 +273,12 @@ export function TradeProgressChart({
  </div>
  </div>
  {data.isReset && (
- <div className="mt-1 pt-1 border-t border-border/40 metric-negative font-bold uppercase text-center tracking-wider">
+ <div className="mt-1 pt-1 border-t-0 metric-negative font-bold uppercase text-center tracking-wider">
  {t('propFirm.chart.accountReset')}
  </div>
  )}
  {data.isPayout && data.payoutStatus && (
- <div className="mt-1 pt-1 border-t border-border/40">
+ <div className="mt-1 pt-1 border-t-0">
  <div className="flex justify-between items-center">
  <span className="text-foreground font-bold uppercase tracking-wider">Payout</span>
  <span className="text-foreground font-bold tabular-nums">${data.payoutAmount.toLocaleString()}</span>

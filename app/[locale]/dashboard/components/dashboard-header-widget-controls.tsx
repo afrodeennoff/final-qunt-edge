@@ -110,7 +110,7 @@ function CustomizingControls({
  <button
  type="button"
  aria-label={t("widgets.restoreDefaults")}
- className="flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-transparent text-muted-foreground transition-[opacity,background-color,border-color,color] duration-200 hover:border-primary/18 hover:bg-primary/10 hover:text-foreground"
+ className="flex h-9 w-9 items-center justify-center rounded-full border-0 bg-transparent text-muted-foreground transition-[opacity,background-color,border-color,color] duration-200 hover:border-primary/18 hover:bg-primary/10 hover:text-foreground"
  title={t("widgets.restoreDefaults")}
  >
  <RotateCcw className="h-4 w-4" />
@@ -137,7 +137,7 @@ function CustomizingControls({
  <button
  type="button"
  aria-label={t("widgets.deleteAll")}
- className="flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-transparent text-muted-foreground transition-[opacity,background-color,border-color,color] duration-200 hover:border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
+ className="flex h-9 w-9 items-center justify-center rounded-full border-0 bg-transparent text-muted-foreground transition-[opacity,background-color,border-color,color] duration-200 hover:border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
  title={t("widgets.deleteAll")}
  >
  <Trash2 className="h-4 w-4" />

@@ -15,7 +15,7 @@ export async function LeaderboardPreview() {
   if (top.length === 0) return null
 
   return (
-    <section className="py-24 border-b border-border/20">
+    <section className="py-24 border-b-0">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-14">
           <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
@@ -34,7 +34,7 @@ export async function LeaderboardPreview() {
           {top.map((entry, i) => (
             <div
               key={entry.userId}
-              className="group relative flex items-center gap-4 overflow-hidden rounded-2xl bg-card border border-border/10 px-5 py-4 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15"
+              className="group relative flex items-center gap-4 overflow-hidden rounded-2xl bg-card border-0 px-5 py-4 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15"
             >
               <div className="absolute top-0 right-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-primary/[0.03] blur-2xl transition-all duration-500 group-hover:bg-primary/[0.06] group-hover:scale-150" />
               <div className="relative z-10 flex items-center gap-4 w-full min-w-0">

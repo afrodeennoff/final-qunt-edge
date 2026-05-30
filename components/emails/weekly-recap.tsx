@@ -469,7 +469,7 @@ export default function TraderStatsEmail({
                       {t.activityTitle}
                     </Heading>
                     <div className="overflow-auto">
-                      <table className="mx-auto border-collapse border border-border rounded-[6px] bg-white" cellPadding="16">
+                      <table className="mx-auto border-collapse border-0 rounded-[6px] bg-white" cellPadding="16">
                         <thead>
                           <tr>
                             <th className="text-[12px] text-muted-foreground pr-[8px] text-left"></th>

@@ -103,7 +103,7 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  return (
  <div
  key={tag}
- className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 border border-border/55 h-auto max-w-[150px] transition-[opacity,background-color,border-color] hover:border-border/65"
+ className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 border-05 h-auto max-w-[150px] transition-[opacity,background-color,border-color] hover:border-border/65"
  style={{
  backgroundColor: metadata?.color || 'hsl(var(--foreground) / 0.35)',
  color: 'var(--foreground)'
@@ -184,7 +184,7 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  >
  <div className="flex items-center gap-2">
  <div
- className="w-3 h-3 rounded-full shrink-0 border border-border/55"
+ className="w-3 h-3 rounded-full shrink-0 border-05"
  style={{ backgroundColor: tag.color || 'hsl(var(--foreground) / 0.35)' }}
  />
  <span>{tag.name}</span>

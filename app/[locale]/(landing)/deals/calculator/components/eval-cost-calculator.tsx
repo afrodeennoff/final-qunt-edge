@@ -50,7 +50,7 @@ export function EvalCostCalculator() {
             value={evaluationFee}
             onChange={(event) => setEvaluationFee(event.target.value)}
             inputMode="decimal"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-border"
+            className="w-full rounded-lg border-0 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-border"
             placeholder="149"
           />
         </label>
@@ -61,7 +61,7 @@ export function EvalCostCalculator() {
             value={expectedResets}
             onChange={(event) => setExpectedResets(event.target.value)}
             inputMode="numeric"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-border"
+            className="w-full rounded-lg border-0 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-border"
             placeholder="1"
           />
         </label>
@@ -72,7 +72,7 @@ export function EvalCostCalculator() {
             value={resetCost}
             onChange={(event) => setResetCost(event.target.value)}
             inputMode="decimal"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-border"
+            className="w-full rounded-lg border-0 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-border"
             placeholder="99"
           />
         </label>
@@ -83,7 +83,7 @@ export function EvalCostCalculator() {
             value={monthlyPlatformFees}
             onChange={(event) => setMonthlyPlatformFees(event.target.value)}
             inputMode="decimal"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-border"
+            className="w-full rounded-lg border-0 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-border"
             placeholder="35"
           />
         </label>
@@ -94,7 +94,7 @@ export function EvalCostCalculator() {
             value={targetPayout}
             onChange={(event) => setTargetPayout(event.target.value)}
             inputMode="decimal"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-border"
+            className="w-full rounded-lg border-0 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-border"
             placeholder="1200"
           />
         </label>

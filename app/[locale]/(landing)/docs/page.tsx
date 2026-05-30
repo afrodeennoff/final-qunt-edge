@@ -39,7 +39,7 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
 
         <div className="grid gap-6 md:grid-cols-2">
           <UnifiedSurface variant="subtle">
-            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-primary">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border-0 text-primary">
               <BookOpen className="h-5 w-5" />
             </div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground mb-2">Getting Started</h2>
@@ -52,7 +52,7 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
           </UnifiedSurface>
 
           <UnifiedSurface variant="subtle">
-            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-primary">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border-0 text-primary">
               <Cable className="h-5 w-5" />
             </div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground mb-2">Data Connectors</h2>
@@ -65,7 +65,7 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
           </UnifiedSurface>
 
           <UnifiedSurface variant="subtle">
-            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-primary">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border-0 text-primary">
               <Brain className="h-5 w-5" />
             </div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground mb-2">AI Journaling</h2>
@@ -78,7 +78,7 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
           </UnifiedSurface>
 
           <UnifiedSurface variant="subtle">
-            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border border-border/30 text-primary">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-muted/50 border-0 text-primary">
               <Code2 className="h-5 w-5" />
             </div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground mb-2">API Reference</h2>
@@ -91,7 +91,7 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
           </UnifiedSurface>
         </div>
 
-        <footer className="pt-6 border-t border-border/30 text-center">
+        <footer className="pt-6 border-t-0 text-center">
           <p className="text-sm text-muted-foreground">
             Need immediate help? Visit our{' '}
             <Link

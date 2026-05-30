@@ -45,7 +45,7 @@ export async function PropFirmPreview() {
   }
 
   return (
-    <section className="py-24 border-b border-border/20">
+    <section className="py-24 border-b-0">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-14">
           <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
@@ -66,7 +66,7 @@ export async function PropFirmPreview() {
             return (
               <div
                 key={firm.propfirmName}
-                className="group relative flex flex-col overflow-hidden rounded-2xl bg-card border border-border/10 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15"
+                className="group relative flex flex-col overflow-hidden rounded-2xl bg-card border-0 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15"
               >
                 <div className="absolute top-0 right-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-primary/[0.03] blur-2xl transition-all duration-500 group-hover:bg-primary/[0.06] group-hover:scale-150" />
                 <div className="relative z-10 flex-1 p-6">
@@ -88,7 +88,7 @@ export async function PropFirmPreview() {
                   </div>
                 </div>
                 {deal && (
-                  <div className="border-t border-border/20 bg-gradient-to-t from-background/80 to-background/60 p-4 pt-3 backdrop-blur-sm">
+                  <div className="border-t-0 bg-gradient-to-t from-background/80 to-background/60 p-4 pt-3 backdrop-blur-sm">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
@@ -107,7 +107,7 @@ export async function PropFirmPreview() {
                       </div>
                       <Link
                         href={deal.claimUrl || `/propfirms`}
-                        className="shrink-0 rounded-lg border border-border/30 bg-background/60 px-3 py-1.5 text-[10px] font-semibold text-foreground/80 transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
+                        className="shrink-0 rounded-lg border-0 bg-background/60 px-3 py-1.5 text-[10px] font-semibold text-foreground/80 transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
                       >
                         Claim
                       </Link>

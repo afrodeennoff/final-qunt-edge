@@ -830,7 +830,7 @@ export function FormatPreview({
                         key={row.id}
                         data-state={row.getIsSelected() && "selected"}
                         className={cn(
-                           "border-b border-border/20 transition-all duration-200 hover:bg-primary/[0.02]",
+                           "border-b-0 transition-all duration-200 hover:bg-primary/[0.02]",
                            row.getIsExpanded()
                              ? "bg-muted/40"
                              : row.getCanExpand()
