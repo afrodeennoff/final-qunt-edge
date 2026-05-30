@@ -81,12 +81,12 @@ export default function HeroMinimal({ }: HeroProps) {
                 <span className="font-semibold text-foreground">50K+</span>
                 <span>Traders</span>
               </div>
-              <div className="h-px w-16 bg-border/50" />
+              <div className="h-px w-16 bg-transparent/50" />
               <div className="flex items-center gap-2">
                 <span>4.9/5</span>
                 <span className="font-semibold text-foreground">Rating</span>
               </div>
-              <div className="h-px w-16 bg-border/50" />
+              <div className="h-px w-16 bg-transparent/50" />
               <div className="flex items-center gap-2">
                 <span>$2B+</span>
                 <span className="font-semibold text-foreground">Volume Tracked</span>

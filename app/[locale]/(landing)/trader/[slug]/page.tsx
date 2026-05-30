@@ -222,7 +222,7 @@ function WinRateRing({ value }: { value: number }) {
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="currentColor" strokeWidth={strokeWidth} className="text-border/30" />
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="currentColor" strokeWidth={strokeWidth} className="text-transparent/30" />
         <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" className={good ? 'text-semantic-success' : 'text-primary'} />
       </svg>
       <div className="absolute text-center">
@@ -292,7 +292,7 @@ export default async function TraderProfilePage({
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary ring-1 ring-inset ring-primary/20">
                     <Zap className="h-3.5 w-3.5" /> Public Trader
                   </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-4 py-1 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground ring-1 ring-inset ring-border/40">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-4 py-1 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground ring-1 ring-inset ring-transparent/40">
                     <Lock className="h-3.5 w-3.5" /> Live Profile
                   </span>
                 </div>
@@ -407,7 +407,7 @@ export default async function TraderProfilePage({
                 <div className="relative h-14 w-14">
                   <svg className="h-14 w-14 -rotate-90" viewBox="0 0 36 36">
                     <path
-                      className="stroke-border/40"
+                      className="stroke-transparent/40"
                       strokeWidth="3.5"
                       fill="none"
                       d="M18 2.5 a 15.5 15.5 0 0 1 0 31 a 15.5 15.5 0 0 1 0 -31"

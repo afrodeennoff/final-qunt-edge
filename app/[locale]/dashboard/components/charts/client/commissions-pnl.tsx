@@ -209,7 +209,7 @@ export default React.memo(function CommissionsPnLChart({
  </Pie>
  <Tooltip
  content={<CommissionsTooltip />}
- cursor={{ fill: 'var(--chart-grid-cursor)' }}
+ cursor={{ fill: 'transparent' }}
  />
  </PieChart>
  </ResponsiveContainer>

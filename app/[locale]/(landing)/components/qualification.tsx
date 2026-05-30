@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 
 export default function Qualification() {
  return (
- <section className="border-t border-border bg-background px-6 py-16 sm:py-20 lg:py-24">
+ <section className="border-t border-transparent bg-background px-6 py-16 sm:py-20 lg:py-24">
  <div className="mx-6 rounded-xl p-6 bg-muted/40 shadow-card">
  <div className="max-w-6xl mx-auto">
  <div className="grid md:grid-cols-2 gap-2 bg-muted/10 border-0 p-2 rounded-sm overflow-hidden">

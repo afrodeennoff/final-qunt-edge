@@ -149,7 +149,7 @@ export function GlobalSyncButton() {
  )}
  </DropdownMenuLabel>
 
- <DropdownMenuSeparator className="bg-border/40" />
+ <DropdownMenuSeparator className="bg-transparent/40" />
 
  <div className="p-2 space-y-3">
  {/* Auto Sync Rithmic */}
@@ -177,7 +177,7 @@ export function GlobalSyncButton() {
  </div>
  </div>
 
- <DropdownMenuSeparator className="bg-border/40" />
+ <DropdownMenuSeparator className="bg-transparent/40" />
 
  <div className="p-2">
  <div className="flex items-center justify-between text-[9px] text-muted-foreground mb-2">

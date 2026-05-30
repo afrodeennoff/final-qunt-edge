@@ -50,7 +50,7 @@ function CustomTooltip({ active, payload, t }: CustomTooltipProps) {
         className="rounded-lg border bg-background p-2 shadow-xs"
         style={{
           background: "hsl(var(--embed-tooltip-bg, var(--background)))",
-          borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
+          borderColor: "hsl(transparent))",
           borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
         }}
       >
@@ -176,7 +176,7 @@ export default function DailyPnLChartEmbed({
             >
               <CartesianGrid
                 strokeDasharray="3 3"
-                className="text-border dark:opacity-[0.12] opacity-[0.2]"
+                className="text-transparent dark:opacity-[0.12] opacity-[0.2]"
               />
               <XAxis
                 dataKey="date"

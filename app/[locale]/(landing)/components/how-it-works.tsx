@@ -28,7 +28,7 @@ export default function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="relative overflow-hidden border-t border-border bg-background px-4 py-24 sm:px-6 sm:py-24 lg:px-8"
+      className="relative overflow-hidden border-t border-transparent bg-background px-4 py-24 sm:px-6 sm:py-24 lg:px-8"
     >
       <div className="mx-6 overflow-hidden rounded-[2.2rem] border-0 bg-muted/40 p-6 shadow-[0_0_0_0.5px_hsl(var(--primary)/0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
@@ -104,7 +104,7 @@ export default function HowItWorks() {
             {steps.map((_, i) => (
               <button
                 key={i}
-                className="w-2 h-2 rounded-full bg-border/40 hover:bg-border/60 transition-colors"
+                className="w-2 h-2 rounded-full bg-transparent/40 hover:bg-transparent/60 transition-colors"
                 aria-label={`Go to step ${i + 1}`}
               />
             ))}

@@ -148,13 +148,13 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  <Button 
  variant="outline"
  size="icon"
-  className="h-8 w-8 rounded-full border-border bg-card text-foreground hover:bg-accent/10 hover:border-border"
+  className="h-8 w-8 rounded-full border-transparent bg-card text-foreground hover:bg-accent/10 hover:border-transparent"
  aria-label="Change widget size"
  >
  <Maximize2 className="h-4 w-4" />
  </Button>
  </PopoverTrigger>
-  <PopoverContent className="w-56 border-border bg-card p-2 text-foreground">
+  <PopoverContent className="w-56 border-transparent bg-card p-2 text-foreground">
  <div className="flex flex-col gap-1">
  {isMobile ? (
  <>
@@ -586,7 +586,7 @@ export default function WidgetCanvas() {
  <Button 
  variant="outline"
  onClick={() => setIsCustomizing(true)}
-  className="border-border bg-transparent text-foreground hover:bg-accent/10 hover:text-foreground rounded-lg"
+  className="border-transparent bg-transparent text-foreground hover:bg-accent/10 hover:text-foreground rounded-lg"
  >
  {translate("widgets.edit") ||"Edit"}
  </Button>

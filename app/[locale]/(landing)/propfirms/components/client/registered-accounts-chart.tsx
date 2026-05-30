@@ -103,7 +103,7 @@ export function RegisteredAccountsChart({
               margin={{ left: 8, right: 16, top: 12, bottom: 8 }}
               barCategoryGap="20%"
             >
-              <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border)/0.3)" />
+              <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="transparent" />
               <XAxis
                 dataKey="firm"
                 tickLine={false}

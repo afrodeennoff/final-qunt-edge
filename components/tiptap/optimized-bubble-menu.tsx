@@ -107,7 +107,7 @@ export function OptimizedBubbleMenu({
       {/* Table Menu - Show when inside a table */}
       {editorState.isTable && (
         <>
-          <div className="w-px h-6 bg-border mx-1" />
+          <div className="w-px h-6 bg-transparent mx-1" />
           <Popover open={isTableMenuOpen} onOpenChange={setIsTableMenuOpen}>
             <PopoverTrigger asChild>
               <Button 
@@ -164,7 +164,7 @@ export function OptimizedBubbleMenu({
                 <Plus className="h-4 w-4" />
                 Add Row After
               </button>
-              <div className="h-px bg-border my-1" />
+              <div className="h-px bg-transparent my-1" />
               <button
                 className="w-full px-3 py-2 text-left text-sm hover:bg-muted rounded transition-colors flex items-center gap-2 text-destructive"
                 onClick={() => {
@@ -204,7 +204,7 @@ export function OptimizedBubbleMenu({
       )}
 
       {/* AI Menu */}
-      <div className="w-px h-6 bg-border mx-1" />
+      <div className="w-px h-6 bg-transparent mx-1" />
       <Popover open={isAIOpen} onOpenChange={setIsAIOpen}>
         <PopoverTrigger asChild>
           <Button 
@@ -245,7 +245,7 @@ export function OptimizedBubbleMenu({
           >
             {t("editor.ai.actions.improvements")}
           </button>
-          <div className="h-px bg-border my-1" />
+          <div className="h-px bg-transparent my-1" />
           <button
             className="w-full px-3 py-2 text-left text-sm hover:bg-muted rounded transition-colors"
             onClick={() => {

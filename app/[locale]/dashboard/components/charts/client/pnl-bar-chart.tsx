@@ -187,7 +187,7 @@ export default React.memo(function PNLChart({ size ="medium" }: PNLChartProps) {
  <BarChart data={chartData} margin={getChartMargins()}>
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="var(--chart-grid)"
+ stroke="transparent"
  strokeOpacity={0.3}
  vertical={false}
  />
@@ -224,7 +224,7 @@ export default React.memo(function PNLChart({ size ="medium" }: PNLChartProps) {
  />
  <Tooltip
  content={<CustomTooltip />}
- cursor={{ fill: 'var(--chart-grid-cursor)' }}
+ cursor={{ fill: 'transparent' }}
  />
  <Bar
  dataKey="pnl"

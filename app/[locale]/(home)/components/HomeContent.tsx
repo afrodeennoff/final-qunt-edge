@@ -118,7 +118,7 @@ export default function HomeContent() {
               </div>
             </div>
 
-            <div className="my-6 h-px bg-border/20" />
+            <div className="my-6 h-px bg-transparent/20" />
 
             {/* Pre-trade notes */}
             <div className="grid gap-6 md:grid-cols-2">

@@ -120,7 +120,7 @@ export const animationVariants = {
   },
   // Subtle card/widget hover
   hoverSubtle: {
-    borderColor: 'var(--border)',
+    borderColor: 'transparent',
     transition: { duration: 0.1, ease: easing.snappy },
   },
   // Page/section enter — tiny, fast

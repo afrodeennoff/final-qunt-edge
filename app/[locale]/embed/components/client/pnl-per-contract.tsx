@@ -38,7 +38,7 @@ function CustomTooltip({ active, payload, t }: CustomTooltipProps) {
     return (
       <div className="rounded-lg border bg-background p-2 shadow-xs" style={{
         background: 'hsl(var(--embed-tooltip-bg, var(--background)))',
-        borderColor: 'hsl(var(--embed-tooltip-border, var(--border)))',
+        borderColor: 'hsl(transparent))',
         borderRadius: 'var(--embed-tooltip-radius, 0.5rem)'
       }}>
         <div className="grid gap-2">
@@ -129,7 +129,7 @@ export default function PnLPerContractChartEmbed({ trades }: { trades: TradeLike
         <div className="w-full h-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ left: 10, right: 8, top: 8, bottom: 24 }}>
-              <CartesianGrid strokeDasharray="3 3" className="text-border dark:opacity-[0.12] opacity-[0.2]" />
+              <CartesianGrid strokeDasharray="3 3" className="text-transparent dark:opacity-[0.12] opacity-[0.2]" />
               <XAxis
                 dataKey="instrument"
                 tickLine={false}
@@ -149,7 +149,7 @@ export default function PnLPerContractChartEmbed({ trades }: { trades: TradeLike
                 tickFormatter={formatCurrency}
                 domain={[Math.min(minPnL * 1.1, 0), Math.max(maxPnL * 1.1, 0)]}
               />
-              <ReferenceLine y={0} stroke="hsl(var(--border))" />
+              <ReferenceLine y={0} stroke="transparent" />
               <Tooltip content={<CustomTooltip t={t} />} wrapperStyle={{ fontSize: '12px', zIndex: 1000 }} />
               <Bar dataKey="averagePnl" radius={[3, 3, 0, 0]} maxBarSize={40} className="transition-[opacity,fill] duration-300 ease-in-out">
                 {chartData.map((entry, idx) => (

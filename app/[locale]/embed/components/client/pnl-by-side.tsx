@@ -46,7 +46,7 @@ function CustomTooltip({ active, payload, t }: CustomTooltipProps) {
         className="rounded-lg border bg-background p-2 shadow-xs"
         style={{
           background: "hsl(var(--embed-tooltip-bg, var(--background)))",
-          borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
+          borderColor: "hsl(transparent))",
           borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
         }}
       >
@@ -190,7 +190,7 @@ export default function PnLBySideChartEmbed({
             >
               <CartesianGrid
                 strokeDasharray="3 3"
-                className="text-border dark:opacity-[0.12] opacity-[0.2]"
+                className="text-transparent dark:opacity-[0.12] opacity-[0.2]"
               />
               <XAxis
                 dataKey="side"
@@ -209,7 +209,7 @@ export default function PnLBySideChartEmbed({
                 tickFormatter={formatCurrency}
                 domain={[Math.min(minPnL * 1.1, 0), Math.max(maxPnL * 1.1, 0)]}
               />
-              <ReferenceLine y={0} stroke="hsl(var(--border))" />
+              <ReferenceLine y={0} stroke="transparent" />
               <Tooltip
                 content={<CustomTooltip t={t} />}
                 wrapperStyle={{ fontSize: "12px", zIndex: 1000 }}

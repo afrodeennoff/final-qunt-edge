@@ -107,7 +107,7 @@ const CommandSeparator = React.forwardRef<
  <CommandPrimitive.Separator
  ref={ref}
  data-slot="command-separator"
- className={cn("-mx-1 h-px bg-border", className)}
+ className={cn("-mx-1 h-px bg-transparent", className)}
  {...props}
  />
 ))

@@ -7,7 +7,7 @@ const alertVariants = cva("relative w-full rounded-xl border p-4 shadow-[0_18px_
  {
  variants: {
  variant: {
-  default:"border-border bg-card text-foreground",
+  default:"border-transparent bg-card text-foreground",
   destructive:"border-destructive/50 bg-destructive/10 text-destructive [&>svg]:text-destructive",
   warning:"border-warning/50 bg-warning/10 text-warning [&>svg]:text-warning",
   success:"border-success/50 bg-success/10 text-success [&>svg]:text-success",

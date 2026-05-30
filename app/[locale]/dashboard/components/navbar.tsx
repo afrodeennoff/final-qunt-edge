@@ -57,7 +57,7 @@ export default function Navbar() {
           {/* Left Side: Sidebar Toggle & Brand */}
           <div className="flex items-center gap-4">
             <SidebarTrigger className="h-8 w-8 rounded-[7px] text-muted-foreground/55 border border-transparent hover:border-transparent hover:bg-muted/40 hover:text-foreground/80" />
-            <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
+            <div className="mx-1 hidden h-5 w-px bg-transparent/50 sm:block" />
           </div>
 
           {/* Center: PnL Metrics (Desktop Only) */}
@@ -112,7 +112,7 @@ export default function Navbar() {
                 showLabelOnMobile
               />
 
-              <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
+              <div className="mx-1 hidden h-5 w-px bg-transparent/50 sm:block" />
 
               <ShareButton currentLayout={currentLayout} />
             </div>
@@ -139,7 +139,7 @@ export default function Navbar() {
                 )}
               </div>
 
-              <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
+              <div className="mx-1 hidden h-5 w-px bg-transparent/50 sm:block" />
 
               {/* Real-time Actions */}
               <div className="flex items-center gap-2 rounded-xl border-0 bg-background/55 p-1.5 shadow-inner">

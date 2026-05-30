@@ -321,7 +321,7 @@ export default function TradingChatAssistant({ className ="", maxMessages = 3 }:
  message.showAnalysis ?"max-h-32 opacity-100 mt-2" :"max-h-0 opacity-0 mt-0"
  }`}
  >
- <div className="pt-2 border-t border-border transition-colors duration-300">
+ <div className="pt-2 border-t border-transparent transition-colors duration-300">
  <div className="flex items-center justify-between mb-1">
  <span className="font-medium text-foreground text-xs">
  {message.analysis.metric}

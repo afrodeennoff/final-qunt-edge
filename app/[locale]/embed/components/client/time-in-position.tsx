@@ -32,7 +32,7 @@ function CustomTooltip({ active, payload, label, t }: CustomTooltipProps) {
     return (
       <div className="rounded-lg border bg-background p-2 shadow-xs" style={{
         background: 'hsl(var(--embed-tooltip-bg, var(--background)))',
-        borderColor: 'hsl(var(--embed-tooltip-border, var(--border)))',
+        borderColor: 'hsl(transparent))',
         borderRadius: 'var(--embed-tooltip-radius, 0.5rem)'
       }}>
         <div className="grid gap-2">
@@ -104,7 +104,7 @@ export default function TimeInPositionByHourChart({ trades }: { trades: TradeLik
         <div className="w-full h-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ left: 0, right: 8, top: 8, bottom: 24 }}>
-              <CartesianGrid strokeDasharray="3 3" className="text-border dark:opacity-[0.12] opacity-[0.2]" />
+              <CartesianGrid strokeDasharray="3 3" className="text-transparent dark:opacity-[0.12] opacity-[0.2]" />
               <XAxis
                 dataKey="hour"
                 tickLine={false}

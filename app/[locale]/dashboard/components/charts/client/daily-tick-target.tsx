@@ -283,7 +283,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  value={targetValue}
  onChange={(e) => setTargetValue(e.target.value)}
  placeholder={Math.round(convertToDisplayValue(progress.target)).toString()}
- className="bg-secondary/22 border-transparent text-foreground placeholder:text-muted-foreground focus:border-transparent focus:ring-border/20 transition-[opacity,background-color,border-color]"
+ className="bg-secondary/22 border-transparent text-foreground placeholder:text-muted-foreground focus:border-transparent focus:ring-transparent/20 transition-[opacity,background-color,border-color]"
  />
  </div>
  <div className="flex justify-end gap-2">

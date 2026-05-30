@@ -32,7 +32,7 @@ const categoryColors: Record<BlogCategory, string> = {
   [BlogCategory.MARKET_ANALYSIS]: 'bg-primary/10 text-primary border-primary/30',
   [BlogCategory.PSYCHOLOGY]: 'bg-secondary/50 text-secondary-foreground border-secondary/30',
   [BlogCategory.RISK_MANAGEMENT]: 'bg-destructive/10 text-destructive border-destructive/30',
-  [BlogCategory.PLATFORM_UPDATES]: 'bg-muted/10 text-muted-foreground border-border',
+  [BlogCategory.PLATFORM_UPDATES]: 'bg-muted/10 text-muted-foreground border-transparent',
 }
 
 const categoryLabels: Record<BlogCategory, string> = {
@@ -73,7 +73,7 @@ export function BlogCard({ post }: Props) {
           <p className="text-sm text-muted-foreground line-clamp-3">
             {post.excerpt}
           </p>
-          <div className="flex items-center justify-between pt-2 border-t border-border text-xs text-muted-foreground">
+          <div className="flex items-center justify-between pt-2 border-t border-transparent text-xs text-muted-foreground">
             <span className="truncate max-w-[150px]">{post.author.email}</span>
             <span className="whitespace-nowrap">
               {formatDistanceToNow(new Date(post.createdAt), { locale: dateLocale, addSuffix: true })}

@@ -140,7 +140,7 @@ function formatRelativeTime(date: Date): string {
 
 function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFlag: (id: string) => void; canFlag: boolean }) {
   return (
-    <div className="group rounded-xl border-0 bg-muted/40 p-6 transition-[opacity,background-color,border-color,transform] duration-200 hover:border-border hover:bg-muted/40">
+    <div className="group rounded-xl border-0 bg-muted/40 p-6 transition-[opacity,background-color,border-color,transform] duration-200 hover:border-transparent hover:bg-muted/40">
       <div className="flex items-start gap-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
           <span className="text-sm font-semibold text-primary">
@@ -407,7 +407,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
   return (
     <div className="space-y-6">
       {/* Statistics Card */}
-      <Card className="rounded-xl border-border bg-muted/40">
+      <Card className="rounded-xl border-transparent bg-muted/40">
         <CardContent className="p-6">
           <div className="flex items-center gap-2 mb-6">
             <ReviewsIcon size={20} className="text-primary" />
@@ -470,7 +470,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Review Form Section */}
-      <Card className="rounded-xl border-border bg-muted/40">
+      <Card className="rounded-xl border-transparent bg-muted/40">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-foreground">Write a Review</h3>
@@ -672,7 +672,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Reviews List */}
-      <Card className="rounded-xl border-border bg-muted/40">
+      <Card className="rounded-xl border-transparent bg-muted/40">
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
             <h3 className="text-lg font-semibold text-foreground">
@@ -745,7 +745,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="mt-6 flex items-center justify-center gap-2 border-t border-border pt-4">
+            <div className="mt-6 flex items-center justify-center gap-2 border-t border-transparent pt-4">
               <Button
                 variant="ghost"
                 size="sm"

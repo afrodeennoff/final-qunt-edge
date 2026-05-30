@@ -202,7 +202,7 @@ export default React.memo(function PnLPerContractChart({
  >
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="var(--chart-grid)"
+ stroke="transparent"
  strokeOpacity={0.3}
  vertical={false}
  />
@@ -236,7 +236,7 @@ export default React.memo(function PnLPerContractChart({
  <ReferenceLine y={0} stroke="var(--chart-axis)" />
  <Tooltip
  content={renderTooltip}
- cursor={{ fill: 'var(--chart-grid-cursor)' }}
+ cursor={{ fill: 'transparent' }}
  />
  <Bar
  dataKey="averagePnl"

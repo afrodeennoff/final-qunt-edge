@@ -45,7 +45,7 @@ export default function RadarChartCard({
         <div className="h-64 2xl:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={radarData}>
-              <PolarGrid stroke="var(--border)" strokeOpacity={0.5} />
+              <PolarGrid stroke="transparent" strokeOpacity={0} />
               <PolarAngleAxis
                 dataKey="metric"
                 tick={{

@@ -109,7 +109,7 @@ const NavigationMenuIndicator = React.forwardRef<
  )}
  {...props}
  >
- <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-border shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]" />
+ <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-transparent shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]" />
  </NavigationMenuPrimitive.Indicator>
 ))
 NavigationMenuIndicator.displayName =

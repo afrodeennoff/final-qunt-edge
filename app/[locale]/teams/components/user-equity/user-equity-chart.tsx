@@ -228,7 +228,7 @@ export function UserEquityChart({ equityCurve, userId, totalPnL, showDailyView =
  </defs>
  <CartesianGrid 
  strokeDasharray="3 3" 
- className="text-border dark:opacity-[0.12] opacity-[0.2]"
+ className="text-transparent dark:opacity-[0.12] opacity-[0.2]"
  />
  <XAxis 
  dataKey={showDailyView ?"date" :"tradeNumber"}

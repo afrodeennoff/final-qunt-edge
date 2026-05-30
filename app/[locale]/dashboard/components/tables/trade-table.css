@@ -38,14 +38,14 @@
 .trade-table th,
 .trade-table td {
  padding: 0.75rem;
- border-bottom: 1px solid var(--border);
+ border-bottom: 1px solid transparent;
 }
 
 .trade-table th {
  position: sticky;
  top: 0;
  z-index: 100;
- border-bottom: 5px solid var(--border);
+ border-bottom: 5px solid transparent;
 }
 
 .trade-table tbody tr:hover {

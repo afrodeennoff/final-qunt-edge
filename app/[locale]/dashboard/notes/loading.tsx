@@ -24,7 +24,7 @@ export default function JournalLoading() {
             <div className="h-5 w-12 animate-pulse rounded bg-muted/20" />
             <div className="ml-auto h-7 w-24 animate-pulse rounded bg-muted/20" />
           </div>
-          <div className="h-px bg-border/15" />
+          <div className="h-px bg-transparent/15" />
           {/* Fields skeleton */}
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="space-y-2">

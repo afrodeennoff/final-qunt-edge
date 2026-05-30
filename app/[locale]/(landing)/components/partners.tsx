@@ -17,7 +17,7 @@ export default function Partners() {
  {t('landing.partners.description')}
  </p>
  </div>
- <div className="h-px w-full max-w-[700px] bg-border" />
+ <div className="h-px w-full max-w-[700px] bg-transparent" />
  <div className="grid grid-cols-2 md:grid-cols-5 gap-6 w-full">
  <a className="relative w-full h-20 flex items-center justify-center touch-optimized grayscale opacity-60 transition-[opacity,filter] duration-300 hover:grayscale-0 hover:opacity-100" href="https://ninjatraderdomesticvendor.sjv.io/e1VQMz" target="_blank" rel="noopener noreferrer">
  <Image

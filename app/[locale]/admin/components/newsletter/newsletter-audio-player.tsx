@@ -238,7 +238,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  border-radius: 50%;
  background: hsl(var(--primary));
  cursor: pointer;
- border: 2px solid hsl(var(--border));
+ border: 2px solid transparent;
  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
  }
  
@@ -248,7 +248,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  border-radius: 50%;
  background: hsl(var(--primary));
  cursor: pointer;
- border: 2px solid hsl(var(--border));
+ border: 2px solid transparent;
  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
  }
  `}</style>

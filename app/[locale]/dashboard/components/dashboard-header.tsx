@@ -120,7 +120,7 @@ export function DashboardHeader() {
             <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2 pr-3 sm:gap-3 sm:pr-4">
             <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border-0 bg-background/40 text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:border-transparent hover:bg-background/60 hover:text-foreground md:h-9 md:w-9" />
             <div className="flex min-w-0 items-center gap-3">
-              <div className="hidden h-8 w-px bg-border/40 sm:block" />
+              <div className="hidden h-8 w-px bg-transparent/40 sm:block" />
               <div className="min-w-0 max-w-[min(32rem,44vw)]">
                 <div className="flex items-center gap-2">
                   {showSectionLabel && (

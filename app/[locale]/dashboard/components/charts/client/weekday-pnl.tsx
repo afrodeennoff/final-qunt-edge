@@ -234,7 +234,7 @@ export default React.memo(function WeekdayPNLChart({
  >
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="var(--chart-grid)"
+ stroke="transparent"
  strokeOpacity={0.3}
  vertical={false}
  />
@@ -268,7 +268,7 @@ export default React.memo(function WeekdayPNLChart({
  />
  <Tooltip
  content={<CustomTooltip />}
- cursor={{ fill: 'var(--chart-grid-cursor)' }}
+ cursor={{ fill: 'transparent' }}
  />
  <Bar
  dataKey="pnl"

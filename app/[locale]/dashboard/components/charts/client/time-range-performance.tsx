@@ -235,7 +235,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  >
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="var(--chart-grid)"
+ stroke="transparent"
  strokeOpacity={0.3}
  vertical={false}
  />
@@ -280,7 +280,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  />
  <Tooltip
  content={<CustomTooltip />}
- cursor={{ fill: 'var(--chart-grid-cursor)' }}
+ cursor={{ fill: 'transparent' }}
  />
  <Bar
  dataKey="avgPnl"

@@ -69,7 +69,7 @@ export function PerformanceVisualizationChart() {
  <div className="w-full h-[280px]">
  <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-full w-full">
  {/* Baseline */}
- <line x1={0} x2={chartWidth} y1={mid} y2={mid} className="stroke-border" strokeWidth={1} />
+ <line x1={0} x2={chartWidth} y1={mid} y2={mid} className="stroke-transparent" strokeWidth={1} />
 
  {/* Bars for per-contract PnL */}
  {normalized.map((point, idx) => {

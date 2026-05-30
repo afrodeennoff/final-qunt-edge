@@ -352,11 +352,11 @@
   --chart-8: #6E6E73;
   --chart-axis: color-mix(in srgb, var(--foreground) 58%, transparent);
   --chart-axis-muted: color-mix(in srgb, var(--foreground) 50%, transparent);
-  --chart-grid: color-mix(in srgb, var(--border) 72%, transparent);
-  --chart-grid-muted: color-mix(in srgb, var(--border) 42%, transparent);
+  --chart-grid: transparent;
+  --chart-grid-muted: transparent;
   --chart-grid-cursor: transparent;
   --chart-tooltip: color-mix(in srgb, var(--card) 96%, transparent);
-  --chart-tooltip-border: color-mix(in srgb, var(--border) 82%, transparent);
+  --chart-tooltip-border: transparent;
   --chart-foreground-muted: color-mix(in srgb, var(--foreground) 55%, transparent);
   --chart-foreground-faint: color-mix(in srgb, var(--foreground) 8%, transparent);
   --chart-primary-faint: color-mix(in srgb, var(--primary) 3%, transparent);
@@ -664,7 +664,7 @@
   --shadow-panel: 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px -4px rgba(0,0,0,0.4);
   --shadow-widget: 0 1px 0 rgba(255,255,255,0.02), 0 2px 8px -2px rgba(0,0,0,0.3);
   --shadow-modal: 0 8px 32px -8px rgba(0,0,0,0.6);
-  --shadow-dropdown: 0 4px 16px -4px rgba(0,0,0,0.5), 0 0 0 1px var(--border);
+  --shadow-dropdown: 0 4px 16px -4px rgba(0,0,0,0.5);
 
   /* Fast professional motion (no spring luxury) */
   --duration-instant: 60ms;
@@ -1340,7 +1340,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-transparent outline-ring/50;
   }
 
   html {
@@ -1562,7 +1562,7 @@
 
   [data-widget-shell='true']:hover,
   [data-widget-shell='v2']:hover {
-    border-color: color-mix(in srgb, var(--border) 75%, transparent);
+    border-color: transparent;
     background: var(--card);
     box-shadow:
       inset 0 1px 0 color-mix(in srgb, var(--foreground) 6%, transparent),
@@ -2395,7 +2395,6 @@
   [data-dashboard-header='true'] {
     border-bottom: 0;
     box-shadow:
-      inset 0 -1px 0 color-mix(in srgb, var(--border) 10%, transparent),
       0 1px 3px rgba(0, 0, 0, 0.18);
   }
 
@@ -2636,8 +2635,8 @@
     opacity: 1;
   }
   .react-grid-item > .react-resizable-handle::after {
-    border-right-color: var(--border);
-    border-bottom-color: var(--border);
+    border-right-color: transparent;
+    border-bottom-color: transparent;
     width: 8px;
     height: 8px;
   }
@@ -3909,15 +3908,15 @@ img[loading='lazy'] {
   }
 
   .qe-no-white-borders {
-    --qe-enforced-border: color-mix(in srgb, var(--border) 12%, transparent);
-    --qe-enforced-border-strong: color-mix(in srgb, var(--border) 18%, transparent);
+    --qe-enforced-border: transparent;
+    --qe-enforced-border-strong: transparent;
   }
 
   .qe-no-white-borders
     :where(
-      [class*='border-border'],
-      [class*='divide-border'],
-      [class*='ring-border'],
+      [class*='border-transparent'],
+      [class*='divide-transparent'],
+      [class*='ring-transparent'],
       [class*='border-v2-border'],
       [class*='border-foreground/'],
       [class*='--mk-border'],
@@ -3927,11 +3926,11 @@ img[loading='lazy'] {
     border-color: var(--qe-enforced-border) !important;
   }
 
-  .qe-no-white-borders :where([class*='ring-border']) {
+  .qe-no-white-borders :where([class*='ring-transparent']) {
     --tw-ring-color: var(--qe-enforced-border-strong) !important;
   }
 
-  .qe-no-white-borders :where([class*='divide-border']) > :not([hidden]) ~ :not([hidden]) {
+  .qe-no-white-borders :where([class*='divide-transparent']) > :not([hidden]) ~ :not([hidden]) {
     border-color: var(--qe-enforced-border) !important;
   }
 
@@ -3947,11 +3946,11 @@ img[loading='lazy'] {
   }
 
   .qe-soft-divider {
-    border-color: color-mix(in srgb, var(--border) 16%, transparent);
+    border-color: transparent;
   }
 
   .qe-soft-meter {
-    background: color-mix(in srgb, var(--border) 8%, transparent);
+    background: transparent;
   }
 
   /* === MINIMAL PROFESSIONAL OVERRIDES (visual only, no behavior change) === */

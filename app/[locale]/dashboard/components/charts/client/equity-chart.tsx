@@ -971,7 +971,7 @@ export default React.memo(function EquityChart({ size ="medium" }: EquityChartPr
  >
  <CartesianGrid
  strokeDasharray="3 3"
- stroke="var(--chart-grid)"
+ stroke="transparent"
  strokeOpacity={0.3}
  vertical={false}
  />

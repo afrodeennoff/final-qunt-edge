@@ -120,7 +120,7 @@ function DealsTabBar({
   onTabClick: (id: string) => void
 }) {
   return (
-    <nav className="sticky top-16 z-40 border-y border-border bg-background/95">
+    <nav className="sticky top-16 z-40 border-y border-transparent bg-background/95">
       <div className="mx-auto max-w-[1360px] overflow-hidden px-4 sm:px-6 md:px-8 lg:px-12">
         <div className="my-3 flex gap-1.5 overflow-x-auto overflow-y-hidden rounded-full border-0 bg-card p-1.5 scrollbar-none">
           {TABS.map((tab) => (
@@ -996,7 +996,7 @@ function BiggestDealsCarousel({
                   className={`h-2.5 rounded-full transition-[width,background-color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                     isActive
                       ? 'w-10 bg-primary opacity-100'
-                       : 'w-2.5 bg-border opacity-55 hover:opacity-100'
+                       : 'w-2.5 bg-transparent opacity-55 hover:opacity-100'
                   }`}
                 />
               )
@@ -1162,7 +1162,7 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
       )}
     >
       <div className="space-y-4">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-primary/10 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+        <div className="inline-flex items-center gap-2 rounded-full border border-transparent bg-primary/10 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
           <Sparkles className="h-3.5 w-3.5 text-primary" />
           Verified prop firm discounts
         </div>
@@ -1318,7 +1318,7 @@ function DealsFilterPanel({
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   selectedDiscount === option.value
                      ? 'border-primary/30 bg-primary text-primary-foreground'
-                    : 'border-border bg-card text-muted-foreground hover:border-transparent hover:text-foreground'
+                    : 'border-transparent bg-card text-muted-foreground hover:border-transparent hover:text-foreground'
                 }`}
               >
                 {option.label}
@@ -1334,7 +1334,7 @@ function DealsFilterPanel({
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   sortKey === item.key
                      ? 'border-primary/30 bg-primary text-primary-foreground'
-                    : 'border-border bg-card text-muted-foreground hover:border-transparent hover:text-foreground'
+                    : 'border-transparent bg-card text-muted-foreground hover:border-transparent hover:text-foreground'
                 }`}
               >
                 {item.label}

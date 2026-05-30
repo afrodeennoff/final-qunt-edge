@@ -393,13 +393,13 @@ export function TiptapEditor({
           "[&_p]:my-2 [&_p]:leading-relaxed",
           "[&_ul]:pl-6 [&_ol]:pl-6 [&_ul]:my-2 [&_ol]:my-2",
           "[&_li]:my-1",
-          "[&_blockquote]:border-l-4 [&_blockquote]:border-border [&_blockquote]:pl-4 [&_blockquote]:my-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground",
+          "[&_blockquote]:border-l-4 [&_blockquote]:border-transparent [&_blockquote]:pl-4 [&_blockquote]:my-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground",
           "[&_img]:rounded-lg [&_img]:my-4 [&_img]:shadow-md [&_img]:cursor-pointer",
           "[&_img:hover]:shadow-lg [&_img:hover]:opacity-90",
           "[&_a]:text-primary [&_a]:underline [&_a]:cursor-pointer [&_a]:hover:text-foreground [&_a]:transition-colors",
           "[&_table]:border-collapse [&_table]:my-4 [&_table]:w-full [&_table]:table-fixed",
-          "[&_td]:border [&_td]:border-border [&_td]:p-2 [&_td]:text-left [&_td]:break-words",
-          "[&_th]:border [&_th]:border-border [&_th]:p-2 [&_th]:text-left [&_th]:bg-muted/30 [&_th]:font-semibold",
+          "[&_td]:border [&_td]:border-transparent [&_td]:p-2 [&_td]:text-left [&_td]:break-words",
+          "[&_th]:border [&_th]:border-transparent [&_th]:p-2 [&_th]:text-left [&_th]:bg-muted/30 [&_th]:font-semibold",
           "[&_.selectedCell]:bg-muted [&_.selectedCell]:dark:bg-muted/70",
           "[&_.column-resize-handle]:absolute [&_.column-resize-handle]:right-[-2px] [&_.column-resize-handle]:top-0 [&_.column-resize-handle]:bottom-0 [&_.column-resize-handle]:w-1 [&_.column-resize-handle]:bg-primary [&_.column-resize-handle]:cursor-col-resize",
           "[&_.task-list-item]:list-none [&_.task-list-item]:flex [&_.task-list-item]:items-start [&_.task-list-item]:my-1",
@@ -409,9 +409,9 @@ export function TiptapEditor({
           "[&_.text-left]:text-left [&_.text-center]:text-center [&_.text-right]:text-right [&_.text-justify]:text-justify",
           "[&_.text-muted-foreground]:text-muted-foreground [&_.text-muted-foreground]:italic [&_.text-muted-foreground]:opacity-40",
           // News event styles
-          "[&_.news-event]:border-l-4 [&_.news-event]:border-border [&_.news-event]:pl-4 [&_.news-event]:py-2 [&_.news-event]:my-2 [&_.news-event]:bg-muted/40 [&_.news-event]:dark:bg-muted/30 [&_.news-event]:rounded-r-lg",
+          "[&_.news-event]:border-l-4 [&_.news-event]:border-transparent [&_.news-event]:pl-4 [&_.news-event]:py-2 [&_.news-event]:my-2 [&_.news-event]:bg-muted/40 [&_.news-event]:dark:bg-muted/30 [&_.news-event]:rounded-r-lg",
           // Inline news event styles
-          "[&_.news-event-inline]:text-sm [&_.news-event-inline]:text-foreground [&_.news-event-inline]:dark:text-foreground [&_.news-event-inline]:bg-muted/40 [&_.news-event-inline]:dark:bg-muted/30 [&_.news-event-inline]:px-2 [&_.news-event-inline]:py-1 [&_.news-event-inline]:rounded [&_.news-event-inline]:border-l-2 [&_.news-event-inline]:border-border [&_.news-event-inline]:my-1",
+          "[&_.news-event-inline]:text-sm [&_.news-event-inline]:text-foreground [&_.news-event-inline]:dark:text-foreground [&_.news-event-inline]:bg-muted/40 [&_.news-event-inline]:dark:bg-muted/30 [&_.news-event-inline]:px-2 [&_.news-event-inline]:py-1 [&_.news-event-inline]:rounded [&_.news-event-inline]:border-l-2 [&_.news-event-inline]:border-transparent [&_.news-event-inline]:my-1",
           // Placeholder styles - using CSS custom properties for complex selectors
           "[&_p.is-editor-empty:first-child::before]:text-muted-foreground [&_p.is-editor-empty:first-child::before]:float-left [&_p.is-editor-empty:first-child::before]:h-0 [&_p.is-editor-empty:first-child::before]:pointer-events-none [&_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]",
           // AI-generated content styles
@@ -520,7 +520,7 @@ export function TiptapEditor({
           const eventName = event.title;
           const impactLevel = event.importance.toUpperCase();
 
-          return `<p data-news-id="${event.id}" class="news-event-inline text-sm text-foreground dark:text-foreground bg-muted/40 dark:bg-muted/30 px-2 py-1 rounded border-l-2 border-border my-1">${eventTime} - ${location} - ${eventName} - ${impactLevel}</p>`;
+          return `<p data-news-id="${event.id}" class="news-event-inline text-sm text-foreground dark:text-foreground bg-muted/40 dark:bg-muted/30 px-2 py-1 rounded border-l-2 border-transparent my-1">${eventTime} - ${location} - ${eventName} - ${impactLevel}</p>`;
         })
         .join("");
 
@@ -610,7 +610,7 @@ export function TiptapEditor({
 
           {/* Mobile floating toolbar */}
           {isMobile && editor && (
-            <div className="fixed bottom-16 inset-x-0 z-40 flex items-center justify-center gap-1 rounded-t-2xl border-t border-border bg-card px-2 py-2 pb-safe">
+            <div className="fixed bottom-16 inset-x-0 z-40 flex items-center justify-center gap-1 rounded-t-2xl border-t border-transparent bg-card px-2 py-2 pb-safe">
               <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleBold().run()}
@@ -682,7 +682,7 @@ export function TiptapEditor({
 
             {/* Mobile floating toolbar */}
             {isMobile && editor && (
-              <div className="fixed bottom-16 inset-x-0 z-40 flex items-center justify-center gap-1 rounded-t-2xl border-t border-border bg-card px-2 py-2 pb-safe">
+              <div className="fixed bottom-16 inset-x-0 z-40 flex items-center justify-center gap-1 rounded-t-2xl border-t border-transparent bg-card px-2 py-2 pb-safe">
                 <button
                   type="button"
                   onClick={() => editor.chain().focus().toggleBold().run()}

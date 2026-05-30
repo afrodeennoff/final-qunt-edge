@@ -468,7 +468,7 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
   }
 
   return (
-    <Card className="rounded-xl border-border bg-card">
+    <Card className="rounded-xl border-transparent bg-card">
       <CardContent className="flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Referral link</p>
@@ -516,7 +516,7 @@ function ChallengeCard({
   const dailyLossValue = getDailyLossValue(size)
 
   return (
-    <Card className="rounded-xl border-border bg-card">
+    <Card className="rounded-xl border-transparent bg-card">
       <CardContent className="p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
@@ -612,7 +612,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
 
   if (entries.length === 0) {
     return (
-      <Card className="rounded-xl border-border bg-card">
+      <Card className="rounded-xl border-transparent bg-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <Target className="h-5 w-5 text-primary" />
@@ -628,7 +628,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
 
   return (
     <div className="space-y-4">
-      <Card className="rounded-xl border-border bg-card">
+      <Card className="rounded-xl border-transparent bg-card">
         <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <Target className="h-5 w-5 text-primary" />
@@ -653,7 +653,7 @@ function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
   const details = buildAdditionalDetails(firm)
 
   return (
-    <Card className="rounded-xl border-border bg-card">
+    <Card className="rounded-xl border-transparent bg-card">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -693,7 +693,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
 
   return (
     <div className="space-y-4">
-      <Card className="rounded-xl border-border bg-card">
+      <Card className="rounded-xl border-transparent bg-card">
         <CardContent className="p-6 sm:p-8">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Research snapshot</p>
           <CardTitle className="mt-4 text-3xl text-foreground">A quick read on reviews, payouts, and fit.</CardTitle>
@@ -740,7 +740,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
       </Card>
 
       <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-        <Card className="rounded-xl border-border bg-card">
+        <Card className="rounded-xl border-transparent bg-card">
           <CardContent className="p-6 sm:p-8">
             <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Profile summary</p>
             <CardTitle className="mt-4 text-3xl text-foreground">Firm profile at a glance</CardTitle>
@@ -756,7 +756,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-xl border-border bg-card">
+        <Card className="rounded-xl border-transparent bg-card">
           <CardContent className="p-6 sm:p-8">
             <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Trust signals</p>
             <CardTitle className="mt-4 text-3xl text-foreground">What to check before you click out</CardTitle>
@@ -856,7 +856,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
   const stats = firm.catalogueStats
   if (!stats) {
     return (
-      <Card className="rounded-xl border-border bg-card">
+      <Card className="rounded-xl border-transparent bg-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-primary" />
@@ -873,7 +873,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
   const avgPayout = stats.paidPayoutCount > 0 ? stats.paidPayoutAmount / stats.paidPayoutCount : 0
 
   return (
-    <Card className="rounded-xl border-border bg-card">
+    <Card className="rounded-xl border-transparent bg-card">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <DollarSign className="h-5 w-5 text-primary" />
@@ -925,7 +925,7 @@ function ROISection({ firm }: { firm: FirmData }) {
 
   if (accountSizes.length === 0) {
     return (
-      <Card className="rounded-xl border-border bg-card">
+      <Card className="rounded-xl border-transparent bg-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-primary" />
@@ -940,7 +940,7 @@ function ROISection({ firm }: { firm: FirmData }) {
   }
 
   return (
-    <Card className="rounded-xl border-border bg-card">
+    <Card className="rounded-xl border-transparent bg-card">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-primary" />
@@ -1005,7 +1005,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
 
   return (
     <div className="space-y-4">
-      <Card className="rounded-xl border-border bg-card">
+      <Card className="rounded-xl border-transparent bg-card">
         <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-primary" />
@@ -1042,7 +1042,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
       </Card>
 
       {accountSizes.length > 0 && (
-        <Card className="rounded-xl border-border bg-card">
+        <Card className="rounded-xl border-transparent bg-card">
           <CardContent className="p-6">
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-primary" />
@@ -1111,7 +1111,7 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
   const stats = firm.catalogueStats
 
   return (
-    <Card className="rounded-xl border-border bg-card">
+    <Card className="rounded-xl border-transparent bg-card">
       <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <Award className="h-5 w-5 text-primary" />
@@ -1233,7 +1233,7 @@ function HeaderRadarMini({ firm }: { firm: FirmData }) {
 
   return (
     <div className="w-full lg:w-auto">
-      <Card className="w-full rounded-xl border-border bg-card lg:w-[276px]">
+      <Card className="w-full rounded-xl border-transparent bg-card lg:w-[276px]">
         <CardContent className="flex flex-col items-center p-3.5">
           <p className="text-center text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Radar Snapshot</p>
           <ChartContainer

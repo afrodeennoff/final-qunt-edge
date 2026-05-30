@@ -18,7 +18,7 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
     return (
       <div className="bg-background p-2 border rounded shadow-xs" style={{
         background: 'hsl(var(--embed-tooltip-bg, var(--background)))',
-        borderColor: 'hsl(var(--embed-tooltip-border, var(--border)))',
+        borderColor: 'hsl(transparent))',
         borderRadius: 'var(--embed-tooltip-radius, 0.5rem)'
       }}>
           <p className="font-semibold">{`${Number(label ?? 0)}:00 - ${(Number(label ?? 0) + 1) % 24}:00`}</p>
@@ -73,12 +73,12 @@ export default function ContractQuantityChartEmbed({ trades }: { trades: { quant
         <div className="w-full h-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ left: 12, right: 12, top: 12, bottom: 12 }}>
-              <CartesianGrid strokeDasharray="3 3" className="text-border dark:opacity-[0.12] opacity-[0.2]" />
+              <CartesianGrid strokeDasharray="3 3" className="text-transparent dark:opacity-[0.12] opacity-[0.2]" />
               <XAxis dataKey="hour" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(v) => `${v}h`} ticks={[0,3,6,9,12,15,18,21]} />
               <YAxis tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(v: number) => v.toFixed(0)} />
               <Tooltip content={<CustomTooltip />} contentStyle={{
                 background: 'hsl(var(--embed-tooltip-bg, var(--background)))',
-                borderColor: 'hsl(var(--embed-tooltip-border, var(--border)))',
+                borderColor: 'hsl(transparent))',
                 borderRadius: 'var(--embed-tooltip-radius, 0.5rem)'
               }} />
               <Bar dataKey="totalQuantity" radius={[4,4,0,0]} className="transition-[opacity,fill] duration-300 ease-in-out">

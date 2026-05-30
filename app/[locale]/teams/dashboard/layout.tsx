@@ -87,7 +87,7 @@ export default async function DashboardLayout({
                   <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2 pr-3 sm:gap-3 sm:pr-4">
                     <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border-0 bg-background/60 text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:border-primary/25 hover:bg-primary/5 hover:text-foreground md:h-9 md:w-9" />
                     <div className="flex min-w-0 items-center gap-3">
-                      <div className="hidden h-8 w-px bg-border/40 sm:block" />
+                      <div className="hidden h-8 w-px bg-transparent/40 sm:block" />
                       <div className="min-w-0 max-w-[min(32rem,44vw)]">
                         <div className="flex items-center gap-2">
                           <span className="hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] border-transparent bg-background/60 text-muted-foreground">

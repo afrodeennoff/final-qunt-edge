@@ -217,7 +217,7 @@ export function TradeProgressChart({
  bottom: 20,
  }}
  >
- <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--chart-grid-cursor)" />
+ <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="transparent" />
  <XAxis
  dataKey="tradeIndex"
  tickLine={false}

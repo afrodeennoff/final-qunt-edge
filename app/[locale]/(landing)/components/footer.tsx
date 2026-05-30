@@ -55,7 +55,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-border bg-background py-12 sm:py-16"
+      className="border-t border-transparent bg-background py-12 sm:py-16"
     >
       <h2 id="footer-heading" className="sr-only">
         {t('footer.heading')}
@@ -110,7 +110,7 @@ export default function Footer() {
               </Link>
             </div>
 
-            <div className="h-px w-full max-w-md bg-border/45" />
+            <div className="h-px w-full max-w-md bg-transparent/45" />
 
             <div className="flex items-center gap-2.5">
               {socialLinks.map((item, index) => (
@@ -141,7 +141,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-border pt-5 space-y-3">
+        <div className="mt-8 border-t border-transparent pt-5 space-y-3">
           <div className="text-xs text-muted-foreground/70">
             <span className="font-semibold text-foreground/60">Public API (MCP):</span>{' '}
             <code className="font-mono text-[10px] bg-muted/40 px-1.5 py-0.5 rounded select-all">{typeof window !== 'undefined' ? window.location.origin : ''}/api/mcp/public</code>

@@ -11,7 +11,7 @@ import {
 } from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
 
-const rowDividerClassName = 'border-border'
+const rowDividerClassName = 'border-transparent'
 const tableSurfaceClassName =
   'overflow-hidden rounded-xl border-0 bg-muted/40 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
 
@@ -35,9 +35,9 @@ function profileHref(locale: string, userId: string): string {
 
 function rankClasses(rank: number): string {
   if (rank === 1) return 'border-primary/30 bg-primary/10 text-primary'
-  if (rank === 2) return 'border-border bg-muted/10 text-muted-foreground'
+  if (rank === 2) return 'border-transparent bg-muted/10 text-muted-foreground'
   if (rank === 3) return 'border-warning/28 bg-warning/8 text-warning'
-  return 'border-border bg-muted/40 text-muted-foreground'
+  return 'border-transparent bg-muted/40 text-muted-foreground'
 }
 
 export function LeaderboardTableSkeleton() {

@@ -124,7 +124,7 @@ export default function AnalysisDemo() {
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
                   {t('landing.home.analysis.anomalyProbability')}
                 </p>
-                <div className="mt-3 h-2 overflow-hidden rounded-full bg-border/60">
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-transparent/60">
                   <div className="h-full w-[72%] rounded-full bg-primary" />
                 </div>
               </div>

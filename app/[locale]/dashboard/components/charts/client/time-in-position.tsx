@@ -190,7 +190,7 @@ export default React.memo(function TimeInPositionChart({
  >
  <CartesianGrid
  strokeDasharray="3 3"
- className="text-border dark:opacity-[0.1] opacity-[0.2]"
+ className="text-transparent dark:opacity-[0.1] opacity-[0.2]"
  vertical={false}
  />
  <XAxis
@@ -225,7 +225,7 @@ export default React.memo(function TimeInPositionChart({
  />
  <Tooltip
  content={<CustomTooltip t={t} />}
- cursor={{ fill: 'var(--chart-grid-cursor)' }}
+ cursor={{ fill: 'transparent' }}
  />
  <Bar
  dataKey="avgTimeInPosition"

@@ -69,7 +69,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
           placeholder="Search prop firms..."
           defaultValue={search}
           onChange={(e) => updateParams("q", e.target.value)}
-          className="h-12 rounded-xl border-border bg-muted/40 pl-10 placeholder:text-muted-foreground/40 focus-visible:ring-1 focus-visible:ring-[hsl(var(--primary))] focus-visible:ring-offset-0"
+          className="h-12 rounded-xl border-transparent bg-muted/40 pl-10 placeholder:text-muted-foreground/40 focus-visible:ring-1 focus-visible:ring-[hsl(var(--primary))] focus-visible:ring-offset-0"
         />
       </div>
 
@@ -99,7 +99,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
         </div>
 
         {/* Divider */}
-        <div className="w-px h-4 bg-border/40" />
+        <div className="w-px h-4 bg-transparent/40" />
 
         {/* Sort Controls */}
         <div className="flex items-center gap-1.5">
@@ -132,7 +132,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
         {/* Clear Filters */}
         {hasActiveFilters && (
           <>
-            <div className="w-px h-4 bg-border/40" />
+            <div className="w-px h-4 bg-transparent/40" />
             <Button 
               variant="ghost"
               size="sm"

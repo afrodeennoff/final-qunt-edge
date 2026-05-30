@@ -27,12 +27,12 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
 
  return (
  <div className="relative">
- <div className="absolute left-4 top-0 h-full w-0.5 bg-border/70 dark:bg-border/85" />
+ <div className="absolute left-4 top-0 h-full w-0.5 bg-transparent/70 dark:bg-transparent/85" />
  
  <div className="space-y-12 pl-12">
  {completedMilestones.map((milestone) => (
  <div key={milestone.id} className="relative">
- <div className="absolute -left-[44px] flex h-7 w-7 items-center justify-center rounded-full border-0 bg-muted/30 dark:border-border dark:bg-muted/30">
+ <div className="absolute -left-[44px] flex h-7 w-7 items-center justify-center rounded-full border-0 bg-muted/30 dark:border-transparent dark:bg-muted/30">
  <div className="h-3 w-3 rounded-full bg-muted/40 dark:bg-muted/30" />
  </div>
  

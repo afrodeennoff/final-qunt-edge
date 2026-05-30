@@ -81,7 +81,7 @@ export default async function Hero({ locale }: { locale: string }) {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-px bg-border/40">
+            <div className="grid grid-cols-3 gap-px bg-transparent/40">
               {[
                 { label: 'TODAY PNL', value: '+$4,872', change: '+18.4%' },
                 { label: 'WIN RATE', value: '74%', change: '+6%' },

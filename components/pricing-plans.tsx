@@ -499,7 +499,7 @@ function PlusPlanCard({
           </ul>
 
           {billingPeriod === 'lifetime' && (
-            <div className="mt-4 border-t border-border pt-3">
+            <div className="mt-4 border-t border-transparent pt-3">
               <div className="gap-1">
                 <p className="text-xs text-muted-foreground">
                   • {t('pricing.lifetimeDisclaimer1')}

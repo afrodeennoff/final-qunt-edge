@@ -46,7 +46,7 @@ export function JournalFiltersPanel({ filters, onChange, instruments }: JournalF
         ))}
       </div>
 
-      <div className="h-4 w-px bg-border/20" />
+      <div className="h-4 w-px bg-transparent/20" />
 
       <div className="flex items-center gap-1">
         {PNL_OPTIONS.map(opt => (
@@ -66,7 +66,7 @@ export function JournalFiltersPanel({ filters, onChange, instruments }: JournalF
         ))}
       </div>
 
-      <div className="h-4 w-px bg-border/20" />
+      <div className="h-4 w-px bg-transparent/20" />
 
       <div className="flex items-center gap-1">
         {(['all', 'LONG', 'SHORT'] as const).map(dir => (
@@ -88,7 +88,7 @@ export function JournalFiltersPanel({ filters, onChange, instruments }: JournalF
 
       {instruments.length > 0 && (
         <>
-          <div className="h-4 w-px bg-border/20" />
+          <div className="h-4 w-px bg-transparent/20" />
           <select
             value={filters.instrument ?? ''}
             onChange={e => onChange({ instrument: e.target.value || null })}
@@ -102,7 +102,7 @@ export function JournalFiltersPanel({ filters, onChange, instruments }: JournalF
         </>
       )}
 
-      <div className="h-4 w-px bg-border/20" />
+      <div className="h-4 w-px bg-transparent/20" />
 
       <input
         type="date"

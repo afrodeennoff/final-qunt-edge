@@ -324,7 +324,7 @@ export default function JournalClient() {
                 )}
               </div>
 
-              <div className="h-px bg-border/15" />
+              <div className="h-px bg-transparent/15" />
 
               {/* Journal fields or start prompt */}
               {!selectedCard.journal ? (

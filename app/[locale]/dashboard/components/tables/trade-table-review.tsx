@@ -1301,7 +1301,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
       style={cardStyle}
     >
       {showHeader && (
-        <CardHeader className="shrink-0 border-b border-border bg-muted px-4 py-4 sm:px-6">
+        <CardHeader className="shrink-0 border-b border-transparent bg-muted px-4 py-4 sm:px-6">
           <div className="flex w-full flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-2">
               <CardTitle size="xl" className="line-clamp-1">
@@ -1494,7 +1494,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                               key={cell.id}
                               className={cn(
                                 'whitespace-nowrap border-r-0 px-3.5 py-2 text-sm align-middle first:border-l last:border-r-0 group-hover:border-transparent [&:has([role=checkbox])]:pr-0',
-                                row.getIsSelected() && 'border-border',
+                                row.getIsSelected() && 'border-transparent',
                               )}
                               style={{ width: cell.column.getSize() }}
                             >

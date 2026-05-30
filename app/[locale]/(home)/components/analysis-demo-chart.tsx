@@ -36,7 +36,7 @@ export default function AnalysisDemoChart({ data }: AnalysisDemoChartProps) {
         <Tooltip
           contentStyle={{
             backgroundColor: 'hsl(var(--card))',
-            border: '1px solid hsl(var(--border))',
+            border: '1px solid transparent',
             borderRadius: '6px',
             fontSize: '12px',
           }}

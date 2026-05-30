@@ -3,7 +3,7 @@ import { motion } from 'motion/react'
 
 export default function ProblemStatement() {
  return (
- <section id="problem" className="py-24 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background border-t border-border relative">
+ <section id="problem" className="py-24 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background border-t border-transparent relative">
  <div className="mx-6 overflow-hidden rounded-[2.2rem] border-0 bg-muted/40 p-6 shadow-[0_0_0_0.5px_hsl(var(--primary)/0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
  <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-start">
  <motion.div
@@ -29,7 +29,7 @@ export default function ProblemStatement() {
  <p>
  Profit masks incompetence. You can violate every rule in your system, get lucky, and book a win. This reinforcement loop is the silent killer of careers.
  </p>
- <div className="mt-8 border-t border-border pt-6 sm:mt-10 sm:pt-8">
+ <div className="mt-8 border-t border-transparent pt-6 sm:mt-10 sm:pt-8">
  <p className="text-foreground font-black uppercase tracking-[0.12em] text-[10px] sm:text-xs mono mb-2">The Paradigm Shift</p>
  <p className="text-foreground font-medium text-lg sm:text-xl tracking-tight">
  Stop auditing the money. Audit the execution.
@@ -62,9 +62,9 @@ export default function ProblemStatement() {
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true }}
  transition={{ duration: 0.5, delay: i * 0.1 }}
- className="group relative rounded-xl border-0 bg-muted/40 p-6 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 hover:border-border"
+ className="group relative rounded-xl border-0 bg-muted/40 p-6 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 hover:border-transparent"
  >
- <div className="relative h-full overflow-hidden rounded-xl border-0 bg-background/25 p-4 transition-colors group-hover:border-border sm:p-6">
+ <div className="relative h-full overflow-hidden rounded-xl border-0 bg-background/25 p-4 transition-colors group-hover:border-transparent sm:p-6">
  <div className="absolute right-3 top-3 text-[8px] font-mono text-foreground/80 transition-colors group-hover:text-fg-primary sm:right-4 sm:top-4 sm:text-[9px]">
  {item.code}
  </div>

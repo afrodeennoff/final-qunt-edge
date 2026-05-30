@@ -78,7 +78,7 @@ export function EmotionPresets({ value, onChange }: EmotionPresetsProps) {
  )}
  style={{
  backgroundColor: active ? tone.bg :"color-mix(in srgb, var(--card) 55%, transparent)",
- borderColor: active ? tone.border :"color-mix(in srgb, var(--border) 70%, transparent)",
+ borderColor: active ? tone.border : "transparent",
  }}
  >
  <span style={{ color: tone.color }}>{preset.icon}</span>

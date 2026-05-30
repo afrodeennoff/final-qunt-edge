@@ -92,7 +92,7 @@ export function AccountCoin({
  return {
  base: bases[level],
  bg:"hsl(var(--muted) / 0.35)",
- border:"hsl(var(--border) / 0.85)",
+ border:"transparent",
  text:"var(--foreground)",
  }
  }

@@ -254,7 +254,7 @@ export function PropFirmCatalogueExperience({
                     href={`/${locale}/firm/${firm.slug}`}
                     className={cn(
                       unifiedInsetPanelClassName,
-                      'animate-scale-reveal px-4 py-4 transition-[transform,background-color,border-color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border hover:bg-muted/40',
+                      'animate-scale-reveal px-4 py-4 transition-[transform,background-color,border-color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-transparent hover:bg-muted/40',
                       index === 0 && 'animate-scale-reveal-d1',
                       index === 1 && 'animate-scale-reveal-d2',
                       index === 2 && 'animate-scale-reveal-d3',
@@ -342,7 +342,7 @@ export function PropFirmCatalogueExperience({
                   href={`/${locale}/firm/${firm.slug}`}
                   className={cn(
                     unifiedInsetPanelClassName,
-                    'group animate-scale-reveal p-4 transition-[transform,background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border hover:bg-muted/30 hover:shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
+                    'group animate-scale-reveal p-4 transition-[transform,background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-transparent hover:bg-muted/30 hover:shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
                     index % 3 === 0 && 'animate-scale-reveal-d1',
                     index % 3 === 1 && 'animate-scale-reveal-d2',
                     index % 3 === 2 && 'animate-scale-reveal-d3',

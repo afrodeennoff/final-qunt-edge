@@ -165,7 +165,7 @@ function MeterRow({
         </p>
         <p className="text-sm font-semibold tabular-nums">{value}</p>
       </div>
-      <div className="mt-2 h-1.5 rounded-full bg-border/20">
+      <div className="mt-2 h-1.5 rounded-full bg-transparent/20">
         <div
           className="h-full rounded-full bg-primary/50 transition-[width] duration-300"
           style={{ width: `${Math.min(100, Math.max(8, progress))}%` }}
@@ -620,7 +620,7 @@ export default function TraderProfilePageClient() {
                   value={dateFilterPreset}
                   onValueChange={(v: DateFilterPreset) => setDateFilterPreset(v)}
                 >
-                  <SelectTrigger className="h-10 flex-1 border-border bg-muted">
+                  <SelectTrigger className="h-10 flex-1 border-transparent bg-muted">
                     <SelectValue placeholder="Range" />
                   </SelectTrigger>
                   <SelectContent>
@@ -635,7 +635,7 @@ export default function TraderProfilePageClient() {
                 {dateFilterPreset === 'custom' && (
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" className="h-10 border-border bg-muted">
+                      <Button variant="outline" className="h-10 border-transparent bg-muted">
                         <CalendarIcon className="h-4 w-4" />
                       </Button>
                     </PopoverTrigger>

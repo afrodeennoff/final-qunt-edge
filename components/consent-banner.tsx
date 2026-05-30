@@ -193,7 +193,7 @@ export function ConsentBanner() {
                         type="checkbox"
                         checked={true}
                         disabled
-                        className="mt-1 h-5 w-5 rounded border-border bg-muted"
+                        className="mt-1 h-5 w-5 rounded border-transparent bg-muted"
                       />
                       <div>
                         <label htmlFor="consent-necessary-desktop" className="text-sm font-medium text-foreground">
@@ -211,7 +211,7 @@ export function ConsentBanner() {
                         type="checkbox"
                         checked={settings.analytics_storage}
                         onChange={(e) => setSettings({ ...settings, analytics_storage: e.target.checked })}
-                        className="mt-1 h-5 w-5 rounded border-border bg-background"
+                        className="mt-1 h-5 w-5 rounded border-transparent bg-background"
                       />
                       <div>
                         <label htmlFor="consent-analytics-desktop" className="text-sm font-medium text-foreground">
@@ -229,7 +229,7 @@ export function ConsentBanner() {
                         type="checkbox"
                         checked={settings.ad_storage}
                         onChange={(e) => setSettings({ ...settings, ad_storage: e.target.checked })}
-                        className="mt-1 h-5 w-5 rounded border-border bg-background"
+                        className="mt-1 h-5 w-5 rounded border-transparent bg-background"
                       />
                       <div>
                         <label htmlFor="consent-marketing-desktop" className="text-sm font-medium text-foreground">
@@ -276,7 +276,7 @@ export function ConsentBanner() {
                         type="checkbox"
                         checked={true}
                         disabled
-                        className="mt-1 h-4 w-4 rounded border-border bg-muted"
+                        className="mt-1 h-4 w-4 rounded border-transparent bg-muted"
                       />
                       <div>
                         <label htmlFor="consent-necessary-mobile" className="text-sm font-medium text-foreground">
@@ -294,7 +294,7 @@ export function ConsentBanner() {
                         type="checkbox"
                         checked={settings.analytics_storage}
                         onChange={(e) => setSettings({ ...settings, analytics_storage: e.target.checked })}
-                        className="mt-1 h-4 w-4 rounded border-border bg-background"
+                        className="mt-1 h-4 w-4 rounded border-transparent bg-background"
                       />
                       <div>
                         <label htmlFor="consent-analytics-mobile" className="text-sm font-medium text-foreground">
@@ -312,7 +312,7 @@ export function ConsentBanner() {
                         type="checkbox"
                         checked={settings.ad_storage}
                         onChange={(e) => setSettings({ ...settings, ad_storage: e.target.checked })}
-                        className="mt-1 h-4 w-4 rounded border-border bg-background"
+                        className="mt-1 h-4 w-4 rounded border-transparent bg-background"
                       />
                       <div>
                         <label htmlFor="consent-marketing-mobile" className="text-sm font-medium text-foreground">

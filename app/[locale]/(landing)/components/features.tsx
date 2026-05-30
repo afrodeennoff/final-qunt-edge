@@ -25,7 +25,7 @@ type FeatureCard = {
 function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; index: number; isVisible: boolean }) {
 	return (
 		<div
-			className={cn("group relative overflow-hidden rounded-xl border transition-colors","border-border bg-card","hover:bg-muted","opacity-0 translate-y-8",
+			className={cn("group relative overflow-hidden rounded-xl border transition-colors","border-transparent bg-card","hover:bg-muted","opacity-0 translate-y-8",
 			isVisible &&"opacity-100 translate-y-0",
 			index < 2 ? 'lg:col-span-3' :
 			index === 2 ? 'lg:col-span-4' : 'lg:col-span-2',
@@ -58,7 +58,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
 							</p>
 						</div>
 						<div
-							className={cn("relative flex w-full items-center justify-center overflow-hidden rounded-xl","border-0 bg-background/25","group-hover:border-border group-hover:bg-muted/40 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500",
+							className={cn("relative flex w-full items-center justify-center overflow-hidden rounded-xl","border-0 bg-background/25","group-hover:border-transparent group-hover:bg-muted/40 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500",
 							feature.wrapperClass ??"h-[250px] sm:h-[300px] md:h-[350px]"
 							)}
 						>

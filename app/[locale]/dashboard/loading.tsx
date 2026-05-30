@@ -74,7 +74,7 @@ function SidebarSkeleton() {
 export default function DashboardLoading() {
   return (
     <div className="flex h-full">
-      <aside className="hidden lg:block w-64 border-r border-border bg-muted/40 p-4">
+      <aside className="hidden lg:block w-64 border-r border-transparent bg-muted/40 p-4">
         <SidebarSkeleton />
       </aside>
 

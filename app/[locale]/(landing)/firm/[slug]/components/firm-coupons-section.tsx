@@ -31,7 +31,7 @@ export function FirmCouponsSection({
   }, [firmId])
 
   return (
-    <Card className="rounded-xl border-border bg-muted/40 p-6">
+    <Card className="rounded-xl border-transparent bg-muted/40 p-6">
       <div className="mb-2 flex items-center gap-2">
         <DealsIcon size={18} className="text-primary" />
         <span className="text-lg font-semibold text-foreground">Current coupons</span>

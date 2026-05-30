@@ -443,7 +443,7 @@ export function ResponsiveMenuBar({
         {visibleItemsList.map((item) => {
           if (item.type === "separator") {
             return (
-              <div key={item.id} className="w-px h-6 bg-border mx-1 shrink-0" />
+              <div key={item.id} className="w-px h-6 bg-transparent mx-1 shrink-0" />
             );
           }
 
@@ -489,7 +489,7 @@ export function ResponsiveMenuBar({
                   >
                     {t("editor.ai.actions.improvements")}
                   </DropdownMenuItem>
-                  <div className="h-px bg-border my-1" />
+                  <div className="h-px bg-transparent my-1" />
                   <DropdownMenuItem
                     onClick={() => onRunAIAction("suggest_question")}
                     disabled={status === "streaming"}
@@ -542,7 +542,7 @@ export function ResponsiveMenuBar({
             return (
               <div
                 key={`m-${item.id}`}
-                className="w-px h-6 bg-border shrink-0"
+                className="w-px h-6 bg-transparent shrink-0"
               />
             );
           }
@@ -574,7 +574,7 @@ export function ResponsiveMenuBar({
             <DropdownMenuContent align="end" className="w-48" sideOffset={4}>
               {overflowItems.map((item) => {
                 if (item.type === "separator") {
-                  return <div key={item.id} className="h-px bg-border my-1" />;
+                  return <div key={item.id} className="h-px bg-transparent my-1" />;
                 }
 
                 const IconComponent = item.icon;
@@ -594,7 +594,7 @@ export function ResponsiveMenuBar({
                       >
                         {t("editor.ai.actions.improvements")}
                       </DropdownMenuItem>
-                      <div className="h-px bg-border my-1" />
+                      <div className="h-px bg-transparent my-1" />
                       <DropdownMenuItem
                         onClick={() => onRunAIAction("suggest_question")}
                         disabled={status === "streaming"}
