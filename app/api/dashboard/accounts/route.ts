@@ -9,7 +9,7 @@ function serializeWithDecimals<T>(value: T): T {
   return JSON.parse(
     JSON.stringify(value, (_key, nested) => {
       if (nested instanceof Prisma.Decimal) {
-        return nested.toString()
+        return nested.toNumber()
       }
       return nested
     }),

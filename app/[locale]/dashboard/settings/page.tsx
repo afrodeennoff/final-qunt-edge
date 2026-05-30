@@ -50,7 +50,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { leaveTeam, getUserTeams, updateUsernameAction } from './actions'
+import { leaveTeam, getUserTeams, updateUsernameAction, updateUserProfile } from './actions'
 import { toast } from 'sonner'
 import {
   AlertDialog,
@@ -693,10 +693,22 @@ export default function SettingsPage() {
   const [userTeams, setUserTeams] = useState<UserTeamsState>({ ownedTeams: [], joinedTeams: [] })
   const [username, setUsername] = useState(() => storedUsername ?? '')
   const [isUpdatingUsername, setIsUpdatingUsername] = useState(false)
+  const fullName = user?.user_metadata?.full_name || ''
+  const parsedFirstName = fullName.includes(' ') ? fullName.split(' ').slice(0, -1).join(' ') : fullName
+  const parsedLastName = fullName.includes(' ') ? fullName.split(' ').slice(-1)[0] : ''
+  const [firstName, setFirstName] = useState(() => parsedFirstName)
+  const [lastName, setLastName] = useState(() => parsedLastName)
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false)
 
   useEffect(() => {
     setUsername(storedUsername ?? '')
   }, [storedUsername])
+
+  useEffect(() => {
+    const fn = user?.user_metadata?.full_name || ''
+    setFirstName(fn.includes(' ') ? fn.split(' ').slice(0, -1).join(' ') : fn)
+    setLastName(fn.includes(' ') ? fn.split(' ').slice(-1)[0] : '')
+  }, [user?.user_metadata?.full_name])
 
   const languages: { value: Locale; label: string }[] = [
     { value: 'en', label: 'English' },
@@ -763,6 +775,27 @@ export default function SettingsPage() {
     }
   }
 
+  const handleUpdateProfile = async () => {
+    const combined = `${firstName.trim()} ${lastName.trim()}`.trim()
+    if (!combined) {
+      toast.error('Name cannot be empty')
+      return
+    }
+    setIsUpdatingProfile(true)
+    try {
+      const result = await updateUserProfile(combined)
+      if (result.success) {
+        toast.success('Profile updated successfully')
+      } else {
+        toast.error(result.error || 'Failed to update profile')
+      }
+    } catch {
+      toast.error('Failed to update profile')
+    } finally {
+      setIsUpdatingProfile(false)
+    }
+  }
+
   const handlePasswordUpdate = async () => {
     const newPwd = newPassword || ''
     const confirmPwd = confirmPassword || ''
@@ -820,11 +853,11 @@ export default function SettingsPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" placeholder="Enter your first name" />
+                  <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Enter your first name" />
                 </div>
                 <div>
                   <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" placeholder="Enter your last name" />
+                  <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Enter your last name" />
                 </div>
               </div>
               <div>
@@ -854,7 +887,7 @@ export default function SettingsPage() {
                   Unique username for your profile (3-30 characters, letters, numbers, underscores)
                 </p>
               </div>
-              <Button>Update Profile</Button>
+              <Button onClick={handleUpdateProfile} disabled={isUpdatingProfile}>{isUpdatingProfile ? 'Updating...' : 'Update Profile'}</Button>
             </div>
           </CardContent>
         </Card>

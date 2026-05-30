@@ -14,7 +14,7 @@ function serializeWithDecimals<T>(value: T): T {
   return JSON.parse(
     JSON.stringify(value, (_key, nested) => {
       if (nested instanceof Prisma.Decimal) {
-        return nested.toString()
+        return nested.toNumber()
       }
       if (nested instanceof Date) {
         return nested.toISOString()
@@ -69,11 +69,25 @@ async function handleGet(request: NextRequest) {
       userId: dbUser.id,
     }
 
-    // Status filter
+    // Build journal filter incrementally so status + tags are AND-ed correctly.
+    const journalFilter: Record<string, unknown> = {}
     if (status === 'journaled') {
-      where.journal = { isNot: null }
+      journalFilter.isNot = null
     } else if (status === 'not-journaled') {
-      where.journal = { is: null }
+      journalFilter.is = null
+    }
+    if (tags && tags.length > 0) {
+      journalFilter.customTags = { hasEvery: tags }
+    }
+    if (Object.keys(journalFilter).length > 0) {
+      if (journalFilter.isNot !== undefined) {
+        const { isNot: _isNot, ...rest } = journalFilter
+        where.journal = Object.keys(rest).length > 0 ? rest : { isNot: null }
+      } else if (journalFilter.is !== undefined) {
+        where.journal = { is: null }
+      } else {
+        where.journal = journalFilter
+      }
     }
 
     // Instrument filter
@@ -97,17 +111,8 @@ async function handleGet(request: NextRequest) {
       }
     }
 
-    // Tags filter — journal must have all specified custom tags
-    if (tags && tags.length > 0) {
-      where.journal = {
-        ...((where.journal as any) || {}),
-        customTags: { hasEvery: tags },
-      }
-    }
-
     // Search filter
     if (search) {
-      const searchContains = `%${search}%`
       where.OR = [
         { instrument: { contains: search, mode: 'insensitive' } },
         { journal: { preTradeNotes: { contains: search, mode: 'insensitive' } } },

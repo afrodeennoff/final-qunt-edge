@@ -1,15 +1,264 @@
 'use client'
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
-import { Search, Star, Pin, Trash2, Check, Loader2 } from 'lucide-react'
+import {
+  Search, Star, Pin, Trash2, Check, Loader2,
+  ChevronDown, Clock, Hash, Image as ImageIcon, PenLine,
+  ArrowUpRight, ArrowDownRight, BookOpen, X,
+} from 'lucide-react'
 import { useUserStore } from '@/store/user-store'
 import { useJournal } from './lib/use-journal'
 import { RatingStars } from './components/rating-stars'
 import { TagTabs } from './components/tag-tabs'
 import { JournalStatsBar } from './components/journal-stats-bar'
 import { ScreenshotGrid } from './components/screenshot-grid'
-import type { JournalEntry } from './lib/journal-types'
+import { SUGGESTED_TAGS } from './lib/journal-constants'
+import type { JournalEntry, TradeJournalCard } from './lib/journal-types'
 import { cn } from '@/lib/utils'
+
+// ── Formatters ──
+
+function formatPnl(pnl: number) {
+  const sign = pnl >= 0 ? '+' : ''
+  return `${sign}$${Math.abs(pnl).toFixed(2)}`
+}
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString(undefined, {
+    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+  })
+}
+
+/**
+ * Formats a duration stored in **seconds** into a human-readable string.
+ * The database `timeInPosition` field is stored in seconds.
+ */
+function formatDuration(seconds: number) {
+  if (!seconds || seconds <= 0) return '—'
+  const minutes = Math.floor(seconds / 60)
+  if (minutes < 60) return `${minutes}m`
+  const hours = Math.floor(minutes / 60)
+  const remaining = minutes % 60
+  if (hours < 24) return `${hours}h ${remaining}m`
+  const days = Math.floor(hours / 24)
+  return `${days}d ${hours % 24}h`
+}
+
+// ── Inline Tag Input ──
+
+function InlineTagInput({
+  tags,
+  onAdd,
+  onRemove,
+}: {
+  tags: string[]
+  onAdd: (tag: string) => void
+  onRemove: (tag: string) => void
+}) {
+  const [input, setInput] = useState('')
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const suggestions = useMemo(() => {
+    if (!input.trim()) return []
+    return SUGGESTED_TAGS.filter(
+      t => t.toLowerCase().includes(input.toLowerCase()) && !tags.includes(t),
+    ).slice(0, 6)
+  }, [input, tags])
+
+  const handleAdd = useCallback((tag: string) => {
+    if (tag.trim() && !tags.includes(tag.trim())) {
+      onAdd(tag.trim())
+    }
+    setInput('')
+    setShowSuggestions(false)
+    inputRef.current?.focus()
+  }, [tags, onAdd])
+
+  return (
+    <div className="space-y-2">
+      {/* Existing tags */}
+      {tags.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {tags.map(tag => (
+            <span
+              key={tag}
+              className="inline-flex items-center gap-1 rounded-full bg-primary/12 px-2.5 py-1 text-[11px] font-medium text-primary/90"
+            >
+              {tag}
+              <button
+                type="button"
+                onClick={() => onRemove(tag)}
+                className="rounded-full p-0.5 hover:bg-primary/20"
+              >
+                <X size={9} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Input */}
+      <div className="relative">
+        <div className="flex items-center gap-1.5 rounded-lg bg-background/50 px-2.5 py-1.5">
+          <Hash size={12} className="shrink-0 text-muted-foreground/40" />
+          <input
+            ref={inputRef}
+            value={input}
+            onChange={e => { setInput(e.target.value); setShowSuggestions(true) }}
+            onFocus={() => setShowSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && input.trim()) handleAdd(input)
+              if (e.key === 'Escape') { setInput(''); setShowSuggestions(false) }
+            }}
+            placeholder="Add a tag..."
+            className="flex-1 bg-transparent text-xs placeholder:text-muted-foreground/40 focus:outline-none"
+          />
+        </div>
+
+        {/* Autocomplete dropdown */}
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="absolute left-0 right-0 top-full z-20 mt-1 rounded-lg bg-popover p-1 shadow-lg">
+            {suggestions.map(s => (
+              <button
+                key={s}
+                type="button"
+                onMouseDown={() => handleAdd(s)}
+                className="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-xs hover:bg-muted/30"
+              >
+                <Hash size={10} className="text-muted-foreground/50" />
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ── Section Header (collapsible) ──
+
+function SectionHeader({
+  icon,
+  title,
+  isOpen,
+  onToggle,
+  badge,
+}: {
+  icon: React.ReactNode
+  title: string
+  isOpen: boolean
+  onToggle: () => void
+  badge?: string
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className="flex w-full items-center gap-2 py-2 text-left"
+    >
+      {icon}
+      <span className="text-xs font-semibold uppercase tracking-wider text-foreground/80">{title}</span>
+      {badge && (
+        <span className="rounded-full bg-primary/12 px-1.5 py-0.5 text-[9px] font-bold text-primary">
+          {badge}
+        </span>
+      )}
+      <ChevronDown
+        size={12}
+        className={cn(
+          'ml-auto text-muted-foreground/40 transition-transform duration-150',
+          isOpen && 'rotate-180',
+        )}
+      />
+    </button>
+  )
+}
+
+// ── Trade List Item ──
+
+function TradeListItem({
+  card,
+  isSelected,
+  onSelect,
+}: {
+  card: TradeJournalCard
+  isSelected: boolean
+  onSelect: () => void
+}) {
+  const isWin = card.trade.pnl > 0
+  const isBreakeven = Math.abs(card.trade.pnl) < 0.01
+  const hasJournal = card.journal !== null
+  const pnlColor = isBreakeven
+    ? 'text-muted-foreground'
+    : isWin ? 'text-semantic-success' : 'text-semantic-danger'
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className={cn(
+        'group flex w-full flex-col gap-1.5 rounded-xl px-3 py-3 text-left transition-all duration-100',
+        isSelected
+          ? 'bg-primary/8 shadow-sm'
+          : 'hover:bg-muted/20',
+      )}
+    >
+      {/* Row 1: instrument + side + journal dot */}
+      <div className="flex items-center gap-2">
+        <div className={cn(
+          'h-1.5 w-1.5 shrink-0 rounded-full transition-colors',
+          hasJournal ? 'bg-primary' : 'bg-muted-foreground/20',
+        )} />
+        <span className="text-[13px] font-semibold tracking-tight truncate">
+          {card.trade.instrument}
+        </span>
+        <span className={cn(
+          'ml-auto shrink-0 rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider',
+          card.trade.side?.toUpperCase() === 'LONG'
+            ? 'bg-semantic-success/10 text-semantic-success'
+            : 'bg-semantic-danger/10 text-semantic-danger',
+        )}>
+          {card.trade.side || '—'}
+        </span>
+      </div>
+
+      {/* Row 2: PnL + duration */}
+      <div className="flex items-center gap-2 pl-3.5">
+        <span className="text-[11px] text-muted-foreground/70">
+          {formatDate(card.trade.entryDate)}
+        </span>
+        <span className={cn('ml-auto text-[12px] font-bold tabular-nums', pnlColor)}>
+          {formatPnl(card.trade.pnl)}
+        </span>
+      </div>
+
+      {/* Row 3: tags + confidence */}
+      {card.journal && (
+        <div className="flex items-center gap-1 pl-3.5">
+          {card.journal.customTags.slice(0, 3).map(tag => (
+            <span key={tag} className="rounded-full bg-primary/8 px-1.5 py-0.5 text-[8px] font-medium text-primary/80">
+              {tag}
+            </span>
+          ))}
+          {card.journal.confidenceRating != null && (
+            <div className="ml-auto flex items-center gap-0.5">
+              <Star size={8} className="fill-primary/60 text-primary/60" />
+              <span className="text-[8px] text-muted-foreground/60 tabular-nums">
+                {card.journal.confidenceRating}
+              </span>
+            </div>
+          )}
+          {card.journal.pinned && <Pin size={8} className="text-primary/50" />}
+        </div>
+      )}
+    </button>
+  )
+}
+
+// ── Main Component ──
 
 export default function JournalClient() {
   const userId = useUserStore(s => s.supabaseUser?.id ?? s.user?.id ?? null)
@@ -17,6 +266,15 @@ export default function JournalClient() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'journaled' | 'not-journaled'>('all')
   const [deleteConfirm, setDeleteConfirm] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [activeSection, setActiveSection] = useState<Record<string, boolean>>({
+    context: true,
+    preTrade: true,
+    postTrade: true,
+    emotions: true,
+    ratings: true,
+    tags: true,
+    screenshots: false,
+  })
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const {
@@ -80,9 +338,7 @@ export default function JournalClient() {
   )
 
   useEffect(() => {
-    return () => {
-      if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
-    }
+    return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current) }
   }, [])
 
   const handleDelete = useCallback(async () => {
@@ -97,37 +353,40 @@ export default function JournalClient() {
     update('pinned', !selectedCard.journal.pinned)
   }, [selectedCard, update])
 
-  function formatPnl(pnl: number) {
-    return `${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}`
-  }
+  const handleSelectTrade = useCallback((tradeId: string) => {
+    toggleExpand(tradeId)
+    const card = cards.find(c => c.trade.id === tradeId)
+    if (card && !card.journal) {
+      handleCreate(tradeId, card.trade.accountNumber)
+    }
+  }, [cards, toggleExpand, handleCreate])
 
-  function formatDate(dateStr: string) {
-    return new Date(dateStr).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-  }
+  const toggleSection = useCallback((section: string) => {
+    setActiveSection(prev => ({ ...prev, [section]: !prev[section] }))
+  }, [])
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
       {/* Stats bar */}
-      <div className="shrink-0 px-4 pb-3 pt-4">
+      <div className="shrink-0 px-5 pb-4 pt-5">
         <JournalStatsBar stats={stats} />
       </div>
 
-      {/* Main split */}
-      <div className="flex flex-1 overflow-hidden rounded-xl bg-card/30 border-0">
-        {/* Sidebar — trade list */}
-        <div className="flex w-[320px] shrink-0 flex-col border-r-0 bg-background/20">
+      {/* Main split pane */}
+      <div className="flex flex-1 overflow-hidden rounded-xl bg-card/30">
+        {/* ── Sidebar — Trade list ── */}
+        <div className="flex w-[340px] shrink-0 flex-col bg-background/20">
           {/* Search + filters */}
-          <div className="space-y-2 border-b-0 p-3 pb-2">
+          <div className="space-y-2.5 p-3 pb-3">
             <div className="relative">
-              <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/50" />
+              <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/40" />
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Search trades..."
-                className="h-8 w-full rounded-lg border-0 bg-background/40 pl-8 pr-3 text-xs placeholder:text-muted-foreground/50 focus:border-primary/30 focus:outline-none"
+                placeholder="Search instruments, notes, tags..."
+                className="h-8 w-full rounded-lg border-0 bg-background/40 pl-8 pr-3 text-xs placeholder:text-muted-foreground/40 focus:ring-1 focus:ring-primary/20 focus:outline-none"
               />
             </div>
-            {/* Status filter pills */}
             <div className="flex gap-1">
               {(['all', 'journaled', 'not-journaled'] as const).map(s => (
                 <button
@@ -135,9 +394,9 @@ export default function JournalClient() {
                   type="button"
                   onClick={() => setStatusFilter(s)}
                   className={cn(
-                    'rounded-full px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider transition-colors',
+                    'rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors',
                     statusFilter === s
-                      ? 'bg-primary/15 text-primary'
+                      ? 'bg-primary/12 text-primary'
                       : 'text-muted-foreground/50 hover:text-foreground hover:bg-muted/20',
                   )}
                 >
@@ -148,123 +407,96 @@ export default function JournalClient() {
           </div>
 
           {/* Trade list */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto scrollbar-thin">
             {isLoading ? (
               <div className="space-y-2 p-3">
                 {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="h-16 animate-pulse rounded-lg bg-muted/20" />
+                  <div key={i} className="h-[72px] animate-pulse rounded-xl bg-muted/15" />
                 ))}
               </div>
             ) : filteredCards.length === 0 ? (
-              <div className="p-6 text-center text-sm text-muted-foreground">No trades found</div>
+              <div className="flex flex-col items-center gap-2 p-8 text-center">
+                <BookOpen size={20} className="text-muted-foreground/25" />
+                <p className="text-xs text-muted-foreground/50">No trades found</p>
+              </div>
             ) : (
-              <div className="space-y-0.5 px-1.5 py-1">
-                {filteredCards.map(card => {
-                  const isSelected = expandedId === card.trade.id
-                  const isWin = card.trade.pnl > 0
-                  const hasJournal = card.journal !== null
-                  return (
-                    <button
-                      key={card.trade.id}
-                      type="button"
-                      onClick={() => toggleExpand(card.trade.id)}
-                      className={cn(
-                        'flex w-full flex-col gap-1 rounded-lg px-3 py-2.5 text-left transition-colors',
-                        isSelected
-                          ? 'bg-primary/10'
-                          : 'hover:bg-muted/20',
-                      )}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <div className={cn(
-                            'h-1.5 w-1.5 shrink-0 rounded-full',
-                            hasJournal ? 'bg-primary' : 'bg-muted-foreground/25',
-                          )} />
-                          <span className="text-sm font-semibold truncate">{card.trade.instrument}</span>
-                        </div>
-                        <span className={cn(
-                          'shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase',
-                          card.trade.side?.toUpperCase() === 'LONG' ? 'bg-semantic-success/15 text-semantic-success' : 'bg-semantic-danger/15 text-semantic-danger',
-                        )}>
-                          {card.trade.side || '—'}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between gap-2 pl-3.5">
-                        <span className="text-[10px] text-muted-foreground">{formatDate(card.trade.entryDate)}</span>
-                        <span className={cn(
-                          'text-xs font-bold tabular-nums',
-                          isWin ? 'text-semantic-success' : 'text-semantic-danger',
-                        )}>
-                          {formatPnl(card.trade.pnl)}
-                        </span>
-                      </div>
-                      {card.journal && (
-                        <div className="flex items-center gap-1 pl-3.5">
-                          {card.journal.customTags.slice(0, 2).map(tag => (
-                            <span key={tag} className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[8px] text-primary">{tag}</span>
-                          ))}
-                          {card.journal.pinned && <Pin size={8} className="text-primary/60" />}
-                          {card.journal.confidenceRating && (
-                            <div className="ml-auto flex items-center gap-0.5">
-                              <Star size={8} className="fill-primary text-primary" />
-                              <span className="text-[8px] text-muted-foreground">{card.journal.confidenceRating}</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </button>
-                  )
-                })}
+              <div className="space-y-0.5 px-2 py-1">
+                {filteredCards.map(card => (
+                  <TradeListItem
+                    key={card.trade.id}
+                    card={card}
+                    isSelected={expandedId === card.trade.id}
+                    onSelect={() => handleSelectTrade(card.trade.id)}
+                  />
+                ))}
               </div>
             )}
           </div>
 
-          {/* Summary footer */}
-          <div className="shrink-0 border-t-0 px-3 py-2 text-[9px] text-muted-foreground/40">
-            {cards.length} trades · {stats.journaledCount} journaled
+          {/* Footer */}
+          <div className="shrink-0 px-3 py-2 text-[10px] text-muted-foreground/35 tabular-nums">
+            {filteredCards.length} of {cards.length} trades · {stats.journaledCount} journaled
           </div>
         </div>
 
-        {/* Main panel — journal editor */}
-        <div className="flex-1 overflow-y-auto">
+        {/* ── Main panel — Journal editor ── */}
+        <div className="flex-1 overflow-y-auto scrollbar-thin">
           {!selectedCard ? (
-            <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
-              <div className="rounded-full bg-muted/30 p-4">
-                <BookOpen size={24} className="text-muted-foreground/40" />
+            /* Empty state */
+            <div className="flex h-full flex-col items-center justify-center gap-4 text-center px-8">
+              <div className="rounded-2xl bg-muted/15 p-5">
+                <BookOpen size={28} className="text-muted-foreground/30" />
               </div>
-              <p className="text-sm font-medium text-muted-foreground">Select a trade to journal</p>
-              <p className="text-xs text-muted-foreground/50 max-w-[240px]">Choose a trade from the sidebar to add notes, tags, and reflections</p>
+              <div>
+                <p className="text-sm font-semibold text-foreground/70">Select a trade to journal</p>
+                <p className="mt-1 text-xs text-muted-foreground/45 max-w-[260px]">
+                  Choose a closed trade from the sidebar to review performance and add notes, tags, and reflections
+                </p>
+              </div>
             </div>
           ) : (
-            <div className="space-y-6 p-6">
-              {/* Trade context header */}
-              <div className="space-y-2">
+            <div className="p-6 space-y-1">
+              {/* ── Trade context header ── */}
+              <div className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <h2 className="text-xl font-bold">{selectedCard.trade.instrument}</h2>
+                  <h2 className="text-lg font-bold tracking-tight">{selectedCard.trade.instrument}</h2>
                   <span className={cn(
-                    'rounded px-2 py-0.5 text-[10px] font-bold uppercase',
-                    selectedCard.trade.side?.toUpperCase() === 'LONG' ? 'bg-semantic-success/15 text-semantic-success' : 'bg-semantic-danger/15 text-semantic-danger',
+                    'inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider',
+                    selectedCard.trade.side?.toUpperCase() === 'LONG'
+                      ? 'bg-semantic-success/10 text-semantic-success'
+                      : 'bg-semantic-danger/10 text-semantic-danger',
                   )}>
+                    {selectedCard.trade.side?.toUpperCase() === 'LONG'
+                      ? <ArrowUpRight size={10} />
+                      : <ArrowDownRight size={10} />
+                    }
                     {selectedCard.trade.side || '—'}
                   </span>
                   <span className={cn(
-                    'ml-auto text-lg font-bold tabular-nums',
-                    selectedCard.trade.pnl > 0 ? 'text-semantic-success' : 'text-semantic-danger',
+                    'ml-auto text-base font-bold tabular-nums',
+                    selectedCard.trade.pnl > 0 ? 'text-semantic-success' : Math.abs(selectedCard.trade.pnl) < 0.01 ? 'text-muted-foreground' : 'text-semantic-danger',
                   )}>
                     {formatPnl(selectedCard.trade.pnl)}
                   </span>
                 </div>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
-                  <span>Entry: ${selectedCard.trade.entryPrice.toFixed(2)}</span>
-                  <span>Exit: ${selectedCard.trade.closePrice.toFixed(2)}</span>
-                  <span>Qty: {selectedCard.trade.quantity}</span>
-                  <span>Comm: ${selectedCard.trade.commission.toFixed(2)}</span>
-                  <span>{formatDate(selectedCard.trade.entryDate)}</span>
+
+                {/* Trade metrics row */}
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-muted-foreground/65">
+                  <span>Entry ${selectedCard.trade.entryPrice.toFixed(2)}</span>
+                  <span>Exit ${selectedCard.trade.closePrice.toFixed(2)}</span>
+                  <span>Qty {selectedCard.trade.quantity}</span>
+                  <span className="flex items-center gap-1">
+                    <Clock size={10} />
+                    {formatDuration(selectedCard.trade.timeInPosition)}
+                  </span>
+                  <span>Comm ${selectedCard.trade.commission.toFixed(2)}</span>
                   {selectedCard.journal?.pinned && (
-                    <span className="flex items-center gap-1 text-primary/60"><Pin size={10} />Pinned</span>
+                    <span className="flex items-center gap-1 text-primary/60">
+                      <Pin size={10} /> Pinned
+                    </span>
                   )}
                 </div>
+
                 {/* Action bar */}
                 {selectedCard.journal && (
                   <div className="flex items-center gap-2 pt-1">
@@ -272,10 +504,10 @@ export default function JournalClient() {
                       type="button"
                       onClick={handlePinToggle}
                       className={cn(
-                        'flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors',
+                        'flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[10px] font-medium transition-colors',
                         selectedCard.journal.pinned
-                          ? 'bg-primary/15 text-primary'
-                          : 'text-muted-foreground/50 hover:text-foreground hover:bg-muted/20',
+                          ? 'bg-primary/12 text-primary'
+                          : 'text-muted-foreground/45 hover:text-foreground hover:bg-muted/20',
                       )}
                     >
                       <Pin size={10} />
@@ -286,14 +518,14 @@ export default function JournalClient() {
                         <button
                           type="button"
                           onClick={handleDelete}
-                          className="flex items-center gap-1 rounded-md bg-destructive/15 px-2 py-1 text-[10px] font-medium text-destructive hover:bg-destructive/25"
+                          className="flex items-center gap-1 rounded-lg bg-destructive/12 px-2.5 py-1.5 text-[10px] font-medium text-destructive hover:bg-destructive/20"
                         >
-                          <Trash2 size={10} /> Confirm
+                          <Trash2 size={10} /> Confirm delete
                         </button>
                         <button
                           type="button"
                           onClick={() => setDeleteConfirm(false)}
-                          className="rounded-md px-2 py-1 text-[10px] text-muted-foreground/50 hover:text-foreground"
+                          className="rounded-lg px-2.5 py-1.5 text-[10px] text-muted-foreground/50 hover:text-foreground"
                         >
                           Cancel
                         </button>
@@ -302,21 +534,21 @@ export default function JournalClient() {
                       <button
                         type="button"
                         onClick={() => setDeleteConfirm(true)}
-                        className="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors"
+                        className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[10px] text-muted-foreground/45 hover:text-destructive hover:bg-destructive/8 transition-colors"
                       >
                         <Trash2 size={10} /> Delete
                       </button>
                     )}
-                    <div className="ml-auto flex items-center gap-1">
+                    <div className="ml-auto flex items-center gap-1.5">
                       {saving ? (
                         <>
-                          <Loader2 size={10} className="animate-spin text-muted-foreground/50" />
-                          <span className="text-[9px] text-muted-foreground/40">Saving...</span>
+                          <Loader2 size={10} className="animate-spin text-primary/60" />
+                          <span className="text-[9px] text-primary/50">Saving...</span>
                         </>
                       ) : selectedCard.journal.updatedAt ? (
                         <>
-                          <Check size={10} className="text-semantic-success" />
-                          <span className="text-[9px] text-muted-foreground/40">Saved</span>
+                          <Check size={10} className="text-semantic-success/70" />
+                          <span className="text-[9px] text-muted-foreground/35">Saved</span>
                         </>
                       ) : null}
                     </div>
@@ -324,74 +556,148 @@ export default function JournalClient() {
                 )}
               </div>
 
-              <div className="h-px bg-transparent/15" />
+              <div className="h-px bg-foreground/[0.04]" />
 
-              {/* Journal fields or start prompt */}
+              {/* ── Journal sections ── */}
               {!selectedCard.journal ? (
-                <div className="flex flex-col items-center gap-3 py-12">
-                  <p className="text-sm text-muted-foreground">No journal entry yet for this trade.</p>
+                <div className="flex flex-col items-center gap-4 py-16">
+                  <div className="rounded-2xl bg-primary/6 p-4">
+                    <PenLine size={24} className="text-primary/40" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm font-medium text-foreground/60">No journal entry yet</p>
+                    <p className="mt-1 text-xs text-muted-foreground/45">Click below to start reflecting on this trade</p>
+                  </div>
                   <button
                     type="button"
                     onClick={() => handleCreate(selectedCard.trade.id, selectedCard.trade.accountNumber)}
-                    className="rounded-lg bg-primary/10 px-5 py-2.5 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
+                    className="rounded-xl bg-primary/10 px-6 py-2.5 text-sm font-semibold text-primary hover:bg-primary/18 transition-colors"
                   >
                     Start journaling
                   </button>
                 </div>
               ) : (
-                <div className="space-y-5">
+                <div className="space-y-1">
+                  {/* Pre-trade notes */}
                   <div>
-                    <label className="mb-1.5 block text-[10px] uppercase tracking-wider text-muted-foreground/60">Pre-trade notes</label>
-                    <textarea
-                      value={selectedCard.journal.preTradeNotes ?? ''}
-                      onChange={e => update('preTradeNotes', e.target.value || null)}
-                      placeholder="Why did you enter this trade? What was your setup?"
-                      rows={3}
-                      className="w-full resize-none rounded-lg border-0 bg-background/40 px-3 py-2.5 text-sm placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
+                    <SectionHeader
+                      icon={<PenLine size={12} className="text-primary/50" />}
+                      title="Pre-trade notes"
+                      isOpen={activeSection.preTrade}
+                      onToggle={() => toggleSection('preTrade')}
                     />
+                    {activeSection.preTrade && (
+                      <textarea
+                        value={selectedCard.journal.preTradeNotes ?? ''}
+                        onChange={e => update('preTradeNotes', e.target.value || null)}
+                        placeholder="Why did you enter this trade? What was your setup and reasoning?"
+                        rows={3}
+                        className="w-full resize-none rounded-lg bg-background/30 px-3.5 py-2.5 text-[13px] leading-relaxed placeholder:text-muted-foreground/30 focus:ring-1 focus:ring-primary/15 focus:outline-none"
+                      />
+                    )}
                   </div>
 
+                  {/* Post-trade review */}
                   <div>
-                    <label className="mb-1.5 block text-[10px] uppercase tracking-wider text-muted-foreground/60">Post-trade review</label>
-                    <textarea
-                      value={selectedCard.journal.postTradeReview ?? ''}
-                      onChange={e => update('postTradeReview', e.target.value || null)}
-                      placeholder="What went well? What would you change next time?"
-                      rows={3}
-                      className="w-full resize-none rounded-lg border-0 bg-background/40 px-3 py-2.5 text-sm placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
+                    <SectionHeader
+                      icon={<BookOpen size={12} className="text-semantic-success/50" />}
+                      title="Post-trade review"
+                      isOpen={activeSection.postTrade}
+                      onToggle={() => toggleSection('postTrade')}
                     />
+                    {activeSection.postTrade && (
+                      <textarea
+                        value={selectedCard.journal.postTradeReview ?? ''}
+                        onChange={e => update('postTradeReview', e.target.value || null)}
+                        placeholder="What went well? What would you change? Lessons learned?"
+                        rows={3}
+                        className="w-full resize-none rounded-lg bg-background/30 px-3.5 py-2.5 text-[13px] leading-relaxed placeholder:text-muted-foreground/30 focus:ring-1 focus:ring-primary/15 focus:outline-none"
+                      />
+                    )}
                   </div>
 
+                  {/* Emotions */}
                   <div>
-                    <label className="mb-1.5 block text-[10px] uppercase tracking-wider text-muted-foreground/60">Emotions</label>
-                    <textarea
-                      value={selectedCard.journal.emotions ?? ''}
-                      onChange={e => update('emotions', e.target.value || null)}
-                      placeholder="How were you feeling during this trade?"
-                      rows={2}
-                      className="w-full resize-none rounded-lg border-0 bg-background/40 px-3 py-2.5 text-sm placeholder:text-muted-foreground/40 focus:border-primary/30 focus:outline-none"
+                    <SectionHeader
+                      icon={<Star size={12} className="text-semantic-warning/50" />}
+                      title="Emotions"
+                      isOpen={activeSection.emotions}
+                      onToggle={() => toggleSection('emotions')}
                     />
+                    {activeSection.emotions && (
+                      <textarea
+                        value={selectedCard.journal.emotions ?? ''}
+                        onChange={e => update('emotions', e.target.value || null)}
+                        placeholder="How were you feeling during this trade? Confident, anxious, FOMO?"
+                        rows={2}
+                        className="w-full resize-none rounded-lg bg-background/30 px-3.5 py-2.5 text-[13px] leading-relaxed placeholder:text-muted-foreground/30 focus:ring-1 focus:ring-primary/15 focus:outline-none"
+                      />
+                    )}
                   </div>
 
-                  <div className="flex items-center gap-8">
-                    <div>
-                      <label className="mb-1.5 block text-[10px] uppercase tracking-wider text-muted-foreground/60">Confidence</label>
-                      <RatingStars value={selectedCard.journal.confidenceRating} onChange={v => update('confidenceRating', v)} />
-                    </div>
-                    <div>
-                      <label className="mb-1.5 block text-[10px] uppercase tracking-wider text-muted-foreground/60">Discipline</label>
-                      <RatingStars value={selectedCard.journal.disciplineScore} onChange={v => update('disciplineScore', v)} />
-                    </div>
-                  </div>
-
+                  {/* Ratings */}
                   <div>
-                    <label className="mb-1.5 block text-[10px] uppercase tracking-wider text-muted-foreground/60">Tags</label>
-                    <TagTabs activeTags={selectedCard.journal.customTags} onChange={v => update('customTags', v)} />
+                    <SectionHeader
+                      icon={<Star size={12} className="text-primary/50" />}
+                      title="Ratings"
+                      isOpen={activeSection.ratings}
+                      onToggle={() => toggleSection('ratings')}
+                    />
+                    {activeSection.ratings && (
+                      <div className="flex items-start gap-8 pt-1 pb-2">
+                        <div>
+                          <p className="mb-1.5 text-[10px] uppercase tracking-wider text-muted-foreground/50">Confidence</p>
+                          <RatingStars value={selectedCard.journal.confidenceRating} onChange={v => update('confidenceRating', v)} />
+                        </div>
+                        <div>
+                          <p className="mb-1.5 text-[10px] uppercase tracking-wider text-muted-foreground/50">Discipline</p>
+                          <RatingStars value={selectedCard.journal.disciplineScore} onChange={v => update('disciplineScore', v)} />
+                        </div>
+                      </div>
+                    )}
                   </div>
 
+                  {/* Tags — inline quick add + TagTabs */}
                   <div>
-                    <label className="mb-1.5 block text-[10px] uppercase tracking-wider text-muted-foreground/60">Screenshots</label>
-                    <ScreenshotGrid screenshots={selectedCard.journal.screenshots} onChange={v => update('screenshots', v)} />
+                    <SectionHeader
+                      icon={<Hash size={12} className="text-primary/50" />}
+                      title="Tags"
+                      isOpen={activeSection.tags}
+                      onToggle={() => toggleSection('tags')}
+                      badge={selectedCard.journal.customTags.length > 0 ? String(selectedCard.journal.customTags.length) : undefined}
+                    />
+                    {activeSection.tags && (
+                      <div className="space-y-4">
+                        <InlineTagInput
+                          tags={selectedCard.journal.customTags}
+                          onAdd={tag => update('customTags', [...selectedCard.journal.customTags, tag])}
+                          onRemove={tag => update('customTags', selectedCard.journal.customTags.filter(t => t !== tag))}
+                        />
+                        <div className="pt-1">
+                          <TagTabs
+                            activeTags={selectedCard.journal.customTags}
+                            onChange={v => update('customTags', v)}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Screenshots */}
+                  <div>
+                    <SectionHeader
+                      icon={<ImageIcon size={12} className="text-primary/50" />}
+                      title="Screenshots"
+                      isOpen={activeSection.screenshots}
+                      onToggle={() => toggleSection('screenshots')}
+                      badge={selectedCard.journal.screenshots.length > 0 ? String(selectedCard.journal.screenshots.length) : undefined}
+                    />
+                    {activeSection.screenshots && (
+                      <ScreenshotGrid
+                        screenshots={selectedCard.journal.screenshots}
+                        onChange={v => update('screenshots', v)}
+                      />
+                    )}
                   </div>
                 </div>
               )}
@@ -400,14 +706,5 @@ export default function JournalClient() {
         </div>
       </div>
     </div>
-  )
-}
-
-function BookOpen(props: { size?: number; className?: string }) {
-  return (
-    <svg width={props.size ?? 24} height={props.size ?? 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
-      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-    </svg>
   )
 }

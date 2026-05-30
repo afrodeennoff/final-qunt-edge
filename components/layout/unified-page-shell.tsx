@@ -27,6 +27,7 @@ type UnifiedSurfaceProps = {
   variant?: 'default' | 'elevated' | 'subtle'
   hover?: boolean
   glowOnHover?: boolean
+  density?: 'default' | 'compact' | 'comfortable'
 }
 
 export function UnifiedPageShell({
@@ -116,11 +117,18 @@ export function UnifiedPageHeader({
   )
 }
 
-export function UnifiedSurface({ children, className, variant = 'default', hover = false, glowOnHover = false }: UnifiedSurfaceProps) {
+export function UnifiedSurface({ children, className, variant = 'default', hover = false, glowOnHover = false, density = 'default' }: UnifiedSurfaceProps) {
+  const densityPadding = density === 'compact'
+    ? 'p-3 sm:p-4'
+    : density === 'comfortable'
+      ? 'p-5 sm:p-8'
+      : 'p-4 sm:p-6'
+
   return (
     <section
       className={cn(
-        'group relative overflow-hidden rounded-xl bg-card p-4 sm:p-6 border-0',
+        'group relative overflow-hidden rounded-xl bg-card border-0',
+        densityPadding,
         'transition-all duration-300',
         hover && 'hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15',
         glowOnHover && 'hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15',

@@ -20,7 +20,7 @@ export interface ActionCardProps extends CardProps {
  primaryAction?: {
  label: string
  onClick: () => void
- variant?:"default" |"error" |"outline" |"secondary" |"ghost" |"link"
+ variant?:"default" |"destructive" |"outline" |"secondary" |"ghost" |"link" |"solid"
  }
  secondaryAction?: {
  label: string

@@ -24,8 +24,7 @@ const TooltipContent = React.forwardRef<
 
   if (!mounted) return null
 
-  const portalContainer = document.getElementById('tooltip-portal')
-  if (!portalContainer) return null
+  const portalContainer = document.getElementById('tooltip-portal') ?? document.body
 
   return createPortal(
     <TooltipPrimitive.Content

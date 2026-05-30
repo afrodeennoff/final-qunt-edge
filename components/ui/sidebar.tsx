@@ -399,9 +399,8 @@ function SidebarGroupAction({
       data-slot="sidebar-group-action"
       data-sidebar="group-action"
         className={cn(
-          'flex h-full w-[var(--sidebar-width)] flex-col',
-          'bg-sidebar text-sidebar-foreground',
-          'fixed inset-y-0 z-50 shadow-2xl',
+          'absolute right-3 top-3.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground/50 outline-hidden transition-transform hover:bg-sidebar-accent hover:text-sidebar-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring [&>svg]:size-4 [&>svg]:shrink-0',
+          'group-data-[collapsible=icon]:hidden',
           className,
         )}
         {...props}

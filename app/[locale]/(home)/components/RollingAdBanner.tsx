@@ -39,7 +39,7 @@ export default function RollingAdBanner() {
           {repeatedItems.map((item, idx) => (
             <Link
               key={`${item.id}-${idx}`}
-              href={`/${currentLocale === 'en' ? '' : currentLocale}/firm/${item.firmSlug}`}
+              href={`/${currentLocale === 'en' ? 'en' : currentLocale}/firm/${item.firmSlug}`}
               className={cn(
                 'inline-flex items-center gap-2.5 px-5 text-[0.8rem] font-medium tracking-wide transition-all duration-300 hover:opacity-80',
               )}

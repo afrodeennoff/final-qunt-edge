@@ -23,6 +23,7 @@ import {
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
+import { useCurrentLocale } from '@/locales/client'
 import HeroProductPreview from './HeroProductPreview'
 import FeatureCard from './FeatureCard'
 import AIHubVisual from './AIHubVisual'
@@ -38,6 +39,8 @@ const headingCard = 'text-[17px] font-semibold tracking-[-0.01em]'
 const bodySmall = 'text-[13px] leading-[1.55] text-[var(--qe-ref-text-muted)]'
 
 export default function HomeContent() {
+  const locale = useCurrentLocale()
+
   return (
     <div className="qe-home-ref flex flex-col overflow-x-hidden bg-[var(--qe-ref-surface)] text-[var(--qe-ref-text)]">
       {/* ─── HERO (Reference-matched: bold typography + live product preview) ─── */}
@@ -60,7 +63,7 @@ export default function HomeContent() {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/authentication" className="ref-cta-primary">
+                <Link href={`/${locale}/authentication`} className="ref-cta-primary">
                   Start Free Journal <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link href="#journal-preview" className="ref-cta-secondary">
@@ -86,7 +89,7 @@ export default function HomeContent() {
       </section>
 
       {/* ─── POWERFUL FEATURES 2x2 (exact visual match to reference) ─── */}
-      <section className="pb-16 sm:pb-20">
+      <section id="features" className="pb-16 sm:pb-20">
         <div className={HOME_WIDTH}>
           <div className="text-center mb-10">
             <div className="text-[11px] font-semibold tracking-[0.16em] text-[var(--qe-ref-green)]">POWERFUL JOURNAL + AI FEATURES</div>
@@ -432,7 +435,7 @@ export default function HomeContent() {
               <p className="ref-body mt-4">
                 Not marketing pages — real performance from actual traders. Compare 13+ firms across rules, payouts, costs, survival rates. Track your own compliance live.
               </p>
-              <Link href="/propfirms" className="mt-5 inline-flex items-center gap-2 text-[14px] font-medium text-[var(--qe-ref-green)] hover:opacity-80">
+              <Link href={`/${locale}/propfirms`} className="mt-5 inline-flex items-center gap-2 text-[14px] font-medium text-[var(--qe-ref-green)] hover:opacity-80">
                 Browse Prop Firms <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -535,7 +538,7 @@ export default function HomeContent() {
             <h2 className="ref-h-section max-w-[600px] mx-auto">Start journaling.<br />Your edge will follow.</h2>
             <p className="ref-body mt-4">Free to start. No credit card. Your journal is waiting.</p>
 
-            <Link href="/authentication" className="ref-cta-primary mt-8 h-[52px] px-10 text-base">
+            <Link href={`/${locale}/authentication`} className="ref-cta-primary mt-8 h-[52px] px-10 text-base">
               Open Your Journal <ArrowRight className="h-4 w-4" />
             </Link>
             <div className="mt-3 text-[11px] text-[var(--qe-ref-text-muted)]">30-second setup • Works on desktop + mobile</div>

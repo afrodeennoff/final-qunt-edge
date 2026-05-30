@@ -366,10 +366,16 @@ export async function saveJournal(
 // Journal Trades — reliable server action (not REST API)
 // ---------------------------------------------------------------------------
 
+/**
+ * Converts Prisma results into plain JSON-safe objects.
+ * Prisma Decimal fields are converted to **numbers** so that client-side
+ * code can use numeric operations (`.toFixed()`, comparisons, etc.)
+ * without an extra parsing step.
+ */
 function serializeDecimals<T>(value: T): T {
   return JSON.parse(
     JSON.stringify(value, (_key, nested) => {
-      if (nested instanceof Prisma.Decimal) return nested.toString()
+      if (nested instanceof Prisma.Decimal) return nested.toNumber()
       if (nested instanceof Date) return nested.toISOString()
       return nested
     }),
@@ -420,20 +426,37 @@ export async function getJournalTradesAction(
 
   const where: Prisma.TradeWhereInput = { userId }
 
-  if (status === 'journaled') where.journal = { isNot: null }
-  else if (status === 'not-journaled') where.journal = { is: null }
+  // Build journal filter incrementally so status + tags are AND-ed correctly.
+  const journalFilter: Record<string, unknown> = {}
+  if (status === 'journaled') journalFilter.isNot = null
+  else if (status === 'not-journaled') journalFilter.is = null
+  if (tags && tags.length > 0) {
+    journalFilter.customTags = { hasEvery: tags }
+  }
+  if (Object.keys(journalFilter).length > 0) {
+    // When status was set we need to flip the semantics:
+    // `isNot: null` means "journal exists", but spreading it into the relation
+    // filter requires the Prisma compound form: { NOT: [{ journal: null }] }.
+    // Simplification: just set `where.journal` directly.
+    if (journalFilter.isNot !== undefined) {
+      // journaled — journal must exist (and optionally have specific tags)
+      const { isNot: _isNot, ...rest } = journalFilter
+      where.journal = Object.keys(rest).length > 0 ? rest : { isNot: null }
+    } else if (journalFilter.is !== undefined) {
+      // not-journaled — journal must not exist; tags filter is contradictory here
+      where.journal = { is: null }
+    } else {
+      // only tags filter, no status filter
+      where.journal = journalFilter
+    }
+  }
+
   if (instrument) where.instrument = instrument
   if (direction) where.side = direction
   if (dateFrom || dateTo) {
     where.entryDate = {}
     if (dateFrom) (where.entryDate as Prisma.DateTimeFilter).gte = new Date(dateFrom)
     if (dateTo) (where.entryDate as Prisma.DateTimeFilter).lte = new Date(dateTo)
-  }
-  if (tags && tags.length > 0) {
-    where.journal = {
-      ...((where.journal as any) || {}),
-      customTags: { hasEvery: tags },
-    }
   }
   if (search) {
     where.OR = [
