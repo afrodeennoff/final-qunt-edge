@@ -75,7 +75,7 @@ export function WidgetShell({
  if (state ==="empty") {
  return (
   <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-3 p-4">
-  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border/20 bg-gradient-to-br from-muted/40 to-muted/10 ring-1 ring-inset ring-white/[0.02]">
+  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted/30 border border-border/10">
   <Inbox className="size-4 text-muted-foreground/50" />
   </div>
  <p className="text-center text-[13px] text-muted-foreground/70">{emptyMessage}</p>
@@ -133,7 +133,7 @@ export function WidgetShell({
   )}
 
 
- <CardContent className={cn("flex-1 min-h-0 p-0", contentClassName)}>
+ <CardContent className={cn("flex-1 min-h-0 p-0 flex flex-col justify-center", contentClassName)}>
  {renderContent()}
  </CardContent>
 

@@ -154,7 +154,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
  variant={variant}
  hover={!!onClick}
  clickable={!!onClick}
- className={cn("group", config.padding, className)}
+ className={cn("group flex flex-col justify-center", config.padding, className)}
  onClick={onClick}
  aria-label={title}
  {...props}
@@ -191,7 +191,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
  </CardHeader>
  )}
 
- <CardContent size={size} className="gap-1.5">
+ <CardContent size={size} className="gap-1.5 flex flex-col justify-center">
  <div
  className={cn("font-bold tracking-tight tabular-nums",
  config.value,

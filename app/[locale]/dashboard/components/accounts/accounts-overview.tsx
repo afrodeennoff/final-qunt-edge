@@ -471,7 +471,7 @@ function PayoutDialog({
             </div>
 
             {/* Inline Calendar with Custom Header */}
-            <div className="flex max-h-[400px] flex-col rounded-xl border border-border/20 bg-card ring-1 ring-inset ring-white/[0.02]">
+            <div className="flex max-h-[400px] flex-col rounded-xl bg-card border border-border/10">
               {/* Custom Month/Year Header */}
               <div className="p-3 border-b border-border/20 bg-gradient-to-br from-muted/50 to-muted/20 shrink-0">
                 <div className="flex items-center justify-between">
@@ -1116,7 +1116,7 @@ function AccountsOverviewComponent({
   return (
     <Card
       className={cn(
-        'group relative flex h-full w-full flex-col overflow-hidden rounded-xl border border-border/20 bg-card ring-1 ring-inset ring-white/[0.02] transition-all',
+        'group relative flex h-full w-full flex-col overflow-hidden rounded-xl bg-card border border-border/10 transition-all',
         surface === 'embedded' && 'opacity-95',
       )}
     >
@@ -1345,7 +1345,7 @@ function AccountsOverviewComponent({
       )}
 
       <CardContent className="flex-1 overflow-hidden p-0">
-        <div className="h-full flex-1 overflow-y-auto">
+        <div className="h-full flex-1 overflow-y-auto flex flex-col justify-center">
           {filteredAccounts.length === 0 && unconfiguredAccounts.length === 0 && !isLoading ? (
             <div className="flex h-full flex-col items-center justify-center px-6 py-16 text-center text-muted-foreground">
               <Table className="mb-4 h-10 w-10 opacity-20" />
@@ -1356,7 +1356,7 @@ function AccountsOverviewComponent({
               {sortedGroupEntries.map(({ group, accounts: orderedAccounts }) => (
                 <section
                   key={group.id}
-                  className="group relative overflow-hidden rounded-xl border border-border/20 bg-card ring-1 ring-inset ring-white/[0.02] transition-all"
+                  className="group relative overflow-hidden rounded-xl bg-card border border-border/10 transition-all"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/20 bg-muted/30 px-4 py-3">
                     <h3 className="type-overline text-muted-foreground">{group.name}</h3>
@@ -1403,7 +1403,7 @@ function AccountsOverviewComponent({
 
                 {sortedUngroupedAccounts.length > 0 ? (
                  <section
-                    className="group relative overflow-hidden rounded-xl border border-border/20 bg-card ring-1 ring-inset ring-white/[0.02] transition-all"
+                    className="group relative overflow-hidden rounded-xl bg-card border border-border/10 transition-all"
                   >
                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/20 bg-muted/30 px-4 py-3">
 

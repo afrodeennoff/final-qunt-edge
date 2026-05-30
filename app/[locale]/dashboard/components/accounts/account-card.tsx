@@ -79,7 +79,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
           ) : null}
         </div>
       </CardHeader>
-      <CardContent className="flex flex-1 flex-col gap-3 p-4">
+      <CardContent className="flex flex-1 flex-col justify-center gap-3 p-4">
         <div className="flex items-baseline justify-between gap-3 border-b border-border/20 pb-3">
           <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground/70">{t('propFirm.card.balance')}</span>
           <span className={cn('font-semibold tabular-nums text-foreground', isCompact ? 'text-lg' : 'text-2xl')}>
