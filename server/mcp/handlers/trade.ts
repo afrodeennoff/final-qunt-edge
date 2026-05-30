@@ -47,7 +47,7 @@ export async function getRiskMetricsHandler(ctx: AccountHealthContext, args: Rec
   assertNoCrossUserAccess(requestedUserId, userId)
   const where: Record<string, unknown> = { userId }
   if (args.accountId) where.accountId = args.accountId
-  const trades = await prisma.trade.findMany({ where, select: { pnl: true, entryPrice: true, exitPrice: true } })
+  const trades = await prisma.trade.findMany({ where, select: { pnl: true, entryPrice: true, closePrice: true } })
   const pnls = trades.map(t => Number(t.pnl))
   const wins = pnls.filter(p => p > 0)
   const losses = pnls.filter(p => p < 0)
