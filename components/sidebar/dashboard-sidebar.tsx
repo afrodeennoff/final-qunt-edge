@@ -59,7 +59,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
         {
             href: `/${locale}/dashboard/notes`,
             icon: <FileText className={NAV_ICON_SIZE} />,
-            label: "Notes",
+            label: "Journal",
             group: "Workspace"
         },
         {
