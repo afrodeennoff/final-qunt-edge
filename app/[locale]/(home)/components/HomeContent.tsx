@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import Link from 'next/link'
 import {
   BookOpen,
@@ -17,8 +17,11 @@ import {
   Tag,
   Activity,
   Zap,
-  Eye,
 } from 'lucide-react'
+
+import { Skeleton } from '@/components/ui/skeleton'
+
+const FeaturesSection = lazy(() => import('../../(landing)/components/features').then(m => ({ default: m.default })))
 
 const HOME_WIDTH = 'mx-auto w-full max-w-[1100px] px-6'
 
@@ -282,6 +285,10 @@ export default function HomeContent() {
           </div>
         </div>
       </section>
+
+      <Suspense fallback={<div className="pb-20 sm:pb-24"><div className={HOME_WIDTH}><Skeleton className="h-[600px] w-full rounded-2xl" /></div></div>}>
+        <FeaturesSection />
+      </Suspense>
 
       {/* ─── ANALYTICS DEEP DIVE ─── */}
       <section className="pb-20 sm:pb-24">
