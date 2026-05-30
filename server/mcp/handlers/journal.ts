@@ -5,7 +5,7 @@
  */
 
 import { prisma } from '@/lib/prisma'
-import type { McpAuthContext } from '../mcp-auth'
+import type { McpAuthContext } from '../../mcp-auth'
 import { requireUserId, assertNoCrossUserAccess } from '../security'
 
 export async function createJournalEntryHandler(ctx: McpAuthContext, args: Record<string, unknown>) {

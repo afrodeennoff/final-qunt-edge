@@ -100,7 +100,7 @@ async function handleGet(request: NextRequest) {
     // Tags filter — journal must have all specified custom tags
     if (tags && tags.length > 0) {
       where.journal = {
-        ...(where.journal as Prisma.JournalEntryNullableCompositeFilter | undefined || {}),
+        ...((where.journal as any) || {}),
         customTags: { hasEvery: tags },
       }
     }
