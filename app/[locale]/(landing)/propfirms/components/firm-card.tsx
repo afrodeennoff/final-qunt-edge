@@ -1,1 +1,1 @@
-export { FirmCard } from './client/firm-card.tsx'
+export { FirmCard } from './client/firm-card'

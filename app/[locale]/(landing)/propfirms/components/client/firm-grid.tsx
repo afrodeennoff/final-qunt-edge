@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { FirmCard } from "./firm-card"
 import { cn } from "@/lib/utils"
 import { useCallback, useTransition } from "react"
-import type { PropfirmCatalogueStats } from "../actions/types"
+import type { PropfirmCatalogueStats } from "../../actions/types"
 
 interface FirmGridProps {
   firms: Array<{

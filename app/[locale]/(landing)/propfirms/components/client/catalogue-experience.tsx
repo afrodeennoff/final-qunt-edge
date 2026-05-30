@@ -11,7 +11,7 @@ import {
   Sparkles,
   Wallet,
 } from 'lucide-react'
-import type { PropfirmCatalogueStats } from '../actions/types'
+import type { PropfirmCatalogueStats } from '../../actions/types'
 import { StatsSummaryRow } from './stats-summary-row'
 import { formatCompactCurrency } from '@/lib/formatting/currency'
 import { UnifiedPageShell } from '@/components/layout/unified-page-shell'

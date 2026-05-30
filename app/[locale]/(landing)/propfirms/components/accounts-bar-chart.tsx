@@ -1,1 +1,1 @@
-export { AccountsBarChart } from './client/accounts-bar-chart.tsx'
+export { AccountsBarChart } from './client/accounts-bar-chart'

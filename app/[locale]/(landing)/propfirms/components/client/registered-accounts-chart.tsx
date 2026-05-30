@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { Line, LineChart, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   ChartContainer,
   ChartTooltip,
@@ -13,7 +13,7 @@ import { formatCompactCurrency } from '@/lib/formatting/currency'
 import { cn } from '@/lib/utils'
 import { unifiedInsetPanelClassName, unifiedSectionPanelClassName } from '@/components/layout/unified-page-recipes'
 
-type MetricKey = 'payouts' | 'value' | 'accounts' | 'sized'
+type MetricKey = 'accounts' | 'payouts' | 'pending' | 'refused'
 
 const registeredAccountsChartConfig = {
   accounts: {
@@ -39,6 +39,15 @@ export function RegisteredAccountsChart({
 }: {
   data: Array<{ name: string; accounts: number; sized: number; value: number; payouts: number }>
 }) {
+  const [activeMetric, setActiveMetric] = useState<MetricKey>('accounts')
+
+  const metricTabs: { key: MetricKey; label: string }[] = [
+    { key: 'accounts', label: 'Accounts' },
+    { key: 'payouts', label: 'Paid' },
+    { key: 'pending', label: 'Pending' },
+    { key: 'refused', label: 'Refused' },
+  ]
+
   const chartData = useMemo(
     () =>
       [...data].map((entry) => ({

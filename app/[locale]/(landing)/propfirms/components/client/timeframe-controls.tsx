@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import type { Timeframe } from "../actions/timeframe-utils"
+import type { Timeframe } from "../../actions/timeframe-utils"
 
 interface TimeframeControlsProps {
   timeframeLabel: string

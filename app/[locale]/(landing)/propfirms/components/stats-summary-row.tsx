@@ -1,1 +1,1 @@
-export { StatsSummaryRow } from './client/stats-summary-row.tsx'
+export { StatsSummaryRow } from './client/stats-summary-row'
