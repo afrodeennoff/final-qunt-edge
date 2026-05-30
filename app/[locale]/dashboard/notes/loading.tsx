@@ -1,6 +1,6 @@
 export default function JournalLoading() {
   return (
-    <div className="flex h-full overflow-hidden rounded-xl border border-border/20 bg-card/30">
+    <div className="flex h-full overflow-hidden rounded-xl border-0 bg-card/30">
       {/* Sidebar skeleton */}
       <div className="flex w-[320px] shrink-0 flex-col border-r border-border/15 bg-background/20">
         {/* Search skeleton */}

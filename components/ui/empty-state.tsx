@@ -21,7 +21,7 @@ export function EmptyState({ icon, title, description, action, className, size =
     )}>
       {icon && (
         <div className={cn(
-          'flex items-center justify-center rounded-full bg-muted/30 border border-border/10 text-muted-foreground/50',
+          'flex items-center justify-center rounded-full bg-muted/30 border-0 text-muted-foreground/50',
           size === 'sm' && 'h-10 w-10',
           size === 'md' && 'h-12 w-12',
           size === 'lg' && 'h-16 w-16',

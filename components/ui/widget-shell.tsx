@@ -75,7 +75,7 @@ export function WidgetShell({
  if (state ==="empty") {
  return (
   <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-3 p-4">
-  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted/30 border border-border/10">
+  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted/30 border-0">
   <Inbox className="size-4 text-muted-foreground/50" />
   </div>
  <p className="text-center text-[13px] text-muted-foreground/70">{emptyMessage}</p>

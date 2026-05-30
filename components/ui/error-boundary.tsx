@@ -122,7 +122,7 @@ export interface ErrorFallbackProps {
 
 export function ErrorFallback({ error, errorInfo, onReset }: ErrorFallbackProps) {
       return (
-        <div className="flex min-h-[400px] flex-col items-center justify-center gap-6 rounded-xl bg-muted/30 border border-border/10 p-8 text-center">
+        <div className="flex min-h-[400px] flex-col items-center justify-center gap-6 rounded-xl bg-muted/30 border-0 p-8 text-center">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10 border border-destructive/20">
           <AlertCircle className="h-8 w-8 text-destructive" />
         </div>
@@ -136,7 +136,7 @@ export function ErrorFallback({ error, errorInfo, onReset }: ErrorFallbackProps)
 
       {/* Error details (hidden by default, can be shown for debugging) */}
       {process.env.NODE_ENV === 'development' && (
-        <details className="max-h-48 max-w-md overflow-auto rounded-lg bg-muted/30 border border-border/10 p-4 text-left">
+        <details className="max-h-48 max-w-md overflow-auto rounded-lg bg-muted/30 border-0 p-4 text-left">
           <summary className="cursor-pointer type-body-sm font-medium text-muted-foreground">
             Error Details (Development Only)
           </summary>

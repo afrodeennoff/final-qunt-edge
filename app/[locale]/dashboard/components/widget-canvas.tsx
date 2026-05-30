@@ -137,7 +137,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
   <div className="absolute inset-0 rounded-xl border border-border border-dashed" />
  <div className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.12),hsl(var(--background)/0.8)_62%)] opacity-100" />
  <div className="absolute inset-0 flex items-center justify-center opacity-100 drag-handle cursor-grab active:cursor-grabbing">
-  <div className="flex flex-col items-center gap-2 rounded-xl bg-card px-4 py-3 text-foreground border border-border/10">
+  <div className="flex flex-col items-center gap-2 rounded-xl bg-card px-4 py-3 text-foreground border-0">
  <GripVertical className="h-6 w-4" />
  <p className="text-sm font-medium">{t('widgets.dragToMove')}</p>
  </div>
@@ -547,7 +547,7 @@ export default function WidgetCanvas() {
  if (!layouts) {
  return (
  <div className="relative mt-0 w-full min-h-0" role="status" aria-label="Loading dashboard">
-    <div className="rounded-xl bg-card p-4 border border-border/10 space-y-3" aria-hidden="true">
+    <div className="rounded-xl bg-card p-4 border-0 space-y-3" aria-hidden="true">
 
  <Skeleton className="h-4 w-48" />
  <Skeleton className="h-3 w-80 max-w-full" />
@@ -564,9 +564,9 @@ export default function WidgetCanvas() {
  if (currentLayout.length === 0) {
  return (
  <div className="relative mt-0 w-full min-h-0" role="status">
-    <div className="mx-auto mt-8 max-w-lg rounded-xl bg-card p-6 text-center border border-border/10" role="alert">
+    <div className="mx-auto mt-8 max-w-lg rounded-xl bg-card p-6 text-center border-0" role="alert">
 
-    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-card text-muted-foreground border border-border/10">
+    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-card text-muted-foreground border-0">
 
  <Maximize2 className="h-5 w-5" />
  </div>

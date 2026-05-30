@@ -6,7 +6,7 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
   ({ className, ...props }, ref) => (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-auto overscroll-x-contain rounded-lg bg-card border border-border/10"
+      className="relative w-full overflow-auto overscroll-x-contain rounded-lg bg-card border-0"
     >
       <table
         ref={ref}

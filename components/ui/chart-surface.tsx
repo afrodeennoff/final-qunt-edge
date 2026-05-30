@@ -117,7 +117,7 @@ export function ChartSurface({
   return (
     <div
       data-chart-surface="modern"
-      className={cn("relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card",
+      className={cn("relative flex h-full flex-col overflow-hidden rounded-xl border-0 bg-card",
       className
       )}
       style={{

@@ -37,7 +37,7 @@ export function MobileCardTable({
       {data.map((row, i) => (
         <div
           key={i}
-          className="rounded-xl bg-card border border-border/10 p-3 touch-target cursor-pointer"
+          className="rounded-xl bg-card border-0 p-3 touch-target cursor-pointer"
           onClick={() => {
             if (expandable) setExpandedIndex(expandedIndex === i ? null : i)
             onRowTap?.(row)

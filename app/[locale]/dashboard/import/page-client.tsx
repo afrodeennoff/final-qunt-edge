@@ -162,7 +162,7 @@ export default function ImportCallbackPageClient() {
   return (
     <UnifiedPageShell density="compact" widthClassName="max-w-[1600px]">
       <div className="mx-auto w-full max-w-md">
-        <Card className="rounded-xl border border-border/30 bg-card p-4 shadow-sm sm:p-6">
+        <Card className="rounded-xl border-0 bg-card p-4 shadow-sm sm:p-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               {status === 'loading' && <Loader2 className="h-5 w-5 animate-spin" />}

@@ -26,7 +26,7 @@ export function ChartCard({
 }: ChartCardProps) {
   return (
     <div
-      className={cn('rounded-2xl p-6 bg-card border border-border/10', className)}
+      className={cn('rounded-2xl p-6 bg-card border-0', className)}
       data-slot="chart-card"
     >
       <div className="flex items-center justify-between mb-6">

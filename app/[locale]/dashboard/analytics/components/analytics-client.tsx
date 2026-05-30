@@ -208,7 +208,7 @@ export default function AnalyticsClient() {
           </TabsContent>
 
           <TabsContent value="market">
-            <Card className="bg-card border border-border/10">
+            <Card className="bg-card border-0">
               <CardHeader><CardTitle className="text-lg">Market Overview</CardTitle></CardHeader>
               <CardContent>
                 <MarketChart data={sampleMarketData} height={300} className="min-h-[200px] h-[40vh] max-h-[400px]" />
@@ -217,7 +217,7 @@ export default function AnalyticsClient() {
           </TabsContent>
 
           <TabsContent value="coach">
-            <Card className="bg-card border border-border/10">
+            <Card className="bg-card border-0">
               <CardHeader>
                 <div className="flex items-center gap-2"><Bot className="h-5 w-5 text-primary" /><CardTitle className="text-lg">AI Trading Coach</CardTitle></div>
               </CardHeader>

@@ -12,7 +12,7 @@ function Skeleton({
   return (
   <Component
   className={cn(
-  "skeleton-pulse rounded-xl bg-muted/30 border border-border/10",
+  "skeleton-pulse rounded-xl bg-muted/30 border-0",
   className
   )}
   {...props}

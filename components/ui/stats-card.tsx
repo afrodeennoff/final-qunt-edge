@@ -85,7 +85,7 @@ function StatsCardSkeleton({ size ="md", className }: StatsCardSkeletonProps) {
 
  return (
   <div
-   className={cn("rounded-xl bg-card border border-border/30",
+   className={cn("rounded-xl bg-card border-0",
   config.padding,
   className
   )}
