@@ -1,9 +1,9 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
+import { Prisma, Mood } from '@/prisma/generated/prisma';
 import { cacheLife, cacheTag } from 'next/cache'
 import { getDatabaseUserId } from './auth';
-import { Mood, Prisma } from '@/prisma/generated/prisma';
 import { CACHE_TAGS, invalidateJournalRelatedCaches } from '@/lib/cache/cache-invalidation';
 import { isStoredChatConversationExpired, readStoredChatConversation } from '@/lib/chat-retention';
 
@@ -360,4 +360,107 @@ export async function saveJournal(
     console.error('Error saving journal:', error)
     throw error
   }
+}
+
+// ---------------------------------------------------------------------------
+// Journal Trades — reliable server action (not REST API)
+// ---------------------------------------------------------------------------
+
+function serializeDecimals<T>(value: T): T {
+  return JSON.parse(
+    JSON.stringify(value, (_key, nested) => {
+      if (nested instanceof Prisma.Decimal) return nested.toString()
+      if (nested instanceof Date) return nested.toISOString()
+      return nested
+    }),
+  ) as T
+}
+
+export interface JournalTradesFilters {
+  status?: string
+  search?: string
+  instrument?: string
+  direction?: string
+  dateFrom?: string
+  dateTo?: string
+  tags?: string[]
+  sort?: string
+}
+
+export interface JournalTradesResult {
+  entries: Array<{
+    trade: Record<string, unknown>
+    journal: Record<string, unknown> | null
+  }>
+  total: number
+  page: number
+  pageSize: number
+  totalPages: number
+}
+
+export async function getJournalTradesAction(
+  page: number = 1,
+  pageSize: number = 30,
+  filters?: JournalTradesFilters,
+): Promise<JournalTradesResult> {
+  const userId = await getDatabaseUserId()
+
+  const status = filters?.status || undefined
+  const search = filters?.search || undefined
+  const instrument = filters?.instrument || undefined
+  const direction = filters?.direction || undefined
+  const dateFrom = filters?.dateFrom || undefined
+  const dateTo = filters?.dateTo || undefined
+  const tags = filters?.tags?.filter(Boolean) || undefined
+  const sort = filters?.sort || 'date-desc'
+
+  const where: Prisma.TradeWhereInput = { userId }
+
+  if (status === 'journaled') where.journal = { isNot: null }
+  else if (status === 'not-journaled') where.journal = { is: null }
+  if (instrument) where.instrument = instrument
+  if (direction) where.side = direction
+  if (dateFrom || dateTo) {
+    where.entryDate = {}
+    if (dateFrom) (where.entryDate as Prisma.DateTimeFilter).gte = new Date(dateFrom)
+    if (dateTo) (where.entryDate as Prisma.DateTimeFilter).lte = new Date(dateTo)
+  }
+  if (tags && tags.length > 0) {
+    where.journal = {
+      ...((where.journal as any) || {}),
+      customTags: { hasEvery: tags },
+    }
+  }
+  if (search) {
+    where.OR = [
+      { instrument: { contains: search, mode: 'insensitive' } },
+      { journal: { preTradeNotes: { contains: search, mode: 'insensitive' } } },
+      { journal: { postTradeReview: { contains: search, mode: 'insensitive' } } },
+      { journal: { emotions: { contains: search, mode: 'insensitive' } } },
+      { journal: { customTags: { has: search } } },
+    ]
+  }
+
+  let orderBy: Prisma.TradeOrderByWithRelationInput = { entryDate: 'desc' }
+  if (sort === 'date-asc') orderBy = { entryDate: 'asc' }
+  else if (sort === 'pnl-desc') orderBy = { pnl: 'desc' }
+  else if (sort === 'pnl-asc') orderBy = { pnl: 'asc' }
+
+  const [trades, total] = await Promise.all([
+    prisma.trade.findMany({
+      where,
+      include: { journal: true },
+      orderBy,
+      skip: (page - 1) * pageSize,
+      take: Math.min(pageSize, 200),
+    }),
+    prisma.trade.count({ where }),
+  ])
+
+  const entries = trades.map(trade => ({
+    trade: serializeDecimals(trade),
+    journal: trade.journal ? serializeDecimals(trade.journal) : null,
+  }))
+
+  return { entries, total, page, pageSize, totalPages: Math.ceil(total / pageSize) }
 } 

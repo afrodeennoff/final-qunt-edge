@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { getJournalTradesAction } from '@/server/journal'
 import type {
   TradeJournalCard,
   JournalEntry,
@@ -85,23 +86,18 @@ export function useJournal(userId: string | null): UseJournalReturn {
     if (!userId) return
     setIsLoading(true)
     try {
-      const params = new URLSearchParams({
-        page: String(page),
-        pageSize: String(JOURNAL_PAGE_SIZE),
-        status: filters.status,
+      const result = await getJournalTradesAction(page, JOURNAL_PAGE_SIZE, {
+        status: filters.status !== 'all' ? filters.status : undefined,
+        search: filters.search || undefined,
+        instrument: filters.instrument || undefined,
+        direction: filters.direction !== 'all' ? filters.direction : undefined,
+        dateFrom: filters.dateFrom || undefined,
+        dateTo: filters.dateTo || undefined,
+        tags: filters.tags.length > 0 ? filters.tags : undefined,
         sort: filters.sort,
       })
-      if (filters.search) params.set('search', filters.search)
-      if (filters.instrument) params.set('instrument', filters.instrument)
-      if (filters.direction !== 'all') params.set('direction', filters.direction)
-      if (filters.dateFrom) params.set('dateFrom', filters.dateFrom)
-      if (filters.dateTo) params.set('dateTo', filters.dateTo)
-      if (filters.tags.length > 0) params.set('tags', filters.tags.join(','))
 
-      const res = await fetch(`/api/dashboard/journal?${params}`)
-      if (!res.ok) throw new Error('Failed to fetch journal')
-      const data = await res.json()
-      const serverCards: TradeJournalCard[] = data.data.entries
+      const serverCards = result.entries as unknown as TradeJournalCard[]
 
       // Merge with localStorage pending entries
       const pending = loadPending(userId)
@@ -122,7 +118,7 @@ export function useJournal(userId: string | null): UseJournalReturn {
         setStats(computeStats(serverCards))
       }
 
-      setTotalPages(data.data.totalPages)
+      setTotalPages(result.totalPages)
     } catch (err) {
       console.error('Failed to fetch journal:', err)
     } finally {
