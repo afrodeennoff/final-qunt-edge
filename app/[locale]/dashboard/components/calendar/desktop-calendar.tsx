@@ -536,21 +536,21 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  )}>
  {formatCurrency(viewMode === 'daily' ? monthlyTotal : yearTotal)}
  </div>
- <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
- <span className="rounded-md border border-border/55 bg-background/0.14 px-2 py-1">
- Active Days: {periodStats.activeDays}
+ <div className="flex flex-wrap items-center gap-1.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+ <span className="rounded-md border border-border/55 bg-background/0.14 px-1.5 py-0.5">
+ {periodStats.activeDays}d
  </span>
- <span className="rounded-md border border-border/55 bg-background/0.14 px-2 py-1">
- Trades: {periodStats.totalTrades}
+ <span className="rounded-md border border-border/55 bg-background/0.14 px-1.5 py-0.5">
+ {periodStats.totalTrades}t
  </span>
- <span className="rounded-md border border-border/55 bg-background/0.14 px-2 py-1 text-semantic-success">
- Wins: {periodStats.winningDays}
+ <span className="rounded-md border border-border/55 bg-background/0.14 px-1.5 py-0.5 text-semantic-success">
+ {periodStats.winningDays}w
  </span>
- <span className="rounded-md border border-border/55 bg-background/0.14 px-2 py-1 text-semantic-error">
- Losses: {periodStats.losingDays}
+ <span className="rounded-md border border-border/55 bg-background/0.14 px-1.5 py-0.5 text-semantic-error">
+ {periodStats.losingDays}l
  </span>
- <span className="rounded-md border border-border/55 bg-background/0.14 px-2 py-1">
- Avg/Active: {periodStats.activeDays > 0 ? formatCurrency((viewMode === 'daily' ? monthlyTotal : yearTotal) / periodStats.activeDays, { maximumFractionDigits: 0 }) :"$0"}
+ <span className="hidden sm:inline-flex rounded-md border border-border/55 bg-background/0.14 px-1.5 py-0.5">
+ {periodStats.activeDays > 0 ? formatCurrency((viewMode === 'daily' ? monthlyTotal : yearTotal) / periodStats.activeDays, { maximumFractionDigits: 0 }) : "$0"}/d
  </span>
  </div>
  </div>
@@ -605,7 +605,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
   </div>
   </div>
   {/* Always show full month: explicit 6 rows so all dates of the month are visible in any widget size */}
-  <div className="grid min-h-[260px] flex-1 grid-cols-8 grid-rows-6 gap-1 sm:min-h-[300px] lg:min-h-[340px]">
+  <div className="grid min-h-[280px] flex-1 grid-cols-8 grid-rows-6 gap-1 sm:min-h-[320px] lg:min-h-[380px]">
  {calendarDays.map((date, index) => {
  const dateString = format(date, 'yyyy-MM-dd')
  const dayData = calendarData[dateString]
@@ -687,12 +687,12 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  style={{ width: `${Math.max(10, Math.round(pnlIntensity * 100))}%` }}
  />
  </div>
- <div className={cn("truncate text-center text-[8px] text-muted-foreground",
+ <div className={cn("hidden lg:block truncate text-center text-[8px] text-muted-foreground",
  !isCurrentMonth &&"opacity-50"
  )}>
  {t('calendar.maxProfit')}: {formatCurrency(maxProfit)}
  </div>
- <div className={cn("truncate text-center text-[8px] text-muted-foreground/80",
+ <div className={cn("hidden lg:block truncate text-center text-[8px] text-muted-foreground/80",
  !isCurrentMonth &&"opacity-50"
  )}>
  {t('calendar.maxDD')}: -{formatCurrency(maxDrawdown)}
