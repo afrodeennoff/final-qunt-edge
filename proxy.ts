@@ -840,4 +840,16 @@ function applySecurityHeaders(response: NextResponse) {
   response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
 }
 
-// Config moved to middleware.ts to avoid Next.js 16 dual-config conflict
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - opengraph-image (Open Graph image generation)
+     * - public files with extensions
+     */
+    '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|opengraph-image|twitter-image|icon|.*\\..*).*)',
+  ],
+}
