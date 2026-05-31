@@ -1,4 +1,5 @@
 export const VALID_DASHBOARD_THEMES = [
+  'cmpa7000000004l78abcdefg',
   'cmlh0x713000104jrgmds6vcd',
   'cmmi8o8ic000904l12ucn8i9p',
   'cmntqpq8v000004l78eqihlx5',
@@ -10,9 +11,10 @@ export const VALID_DASHBOARD_THEMES = [
 
 export type DashboardTheme = typeof VALID_DASHBOARD_THEMES[number]
 
-export const DEFAULT_DASHBOARD_THEME: DashboardTheme = 'cmmi8o8ic000904l12ucn8i9p'
+export const DEFAULT_DASHBOARD_THEME: DashboardTheme = 'cmpa7000000004l78abcdefg'
 
 export const THEME_LABELS: Record<DashboardTheme, string> = {
+  cmpa7000000004l78abcdefg: 'Edge',
   cmlh0x713000104jrgmds6vcd: 'Neon',
   cmmi8o8ic000904l12ucn8i9p: 'Efferd',
   cmntqpq8v000004l78eqihlx5: 'Hass',
@@ -50,6 +52,8 @@ const LEGACY_DASHBOARD_THEME_ALIASES: Record<string, DashboardTheme> = {
   emerald: 'cmo6ofmje000104jub1yg4bos',
   teal: 'cmo6ofmje000104jub1yg4bos',
   steel: 'cmmi8o8ic000904l12ucn8i9p',
+  edge: 'cmpa7000000004l78abcdefg',
+  default: 'cmpa7000000004l78abcdefg',
   // Removed theme fallbacks — redirect to default
   greenAlt: 'cmlh0x713000104jrgmds6vcd',
   'my-theme': 'cmlh0x713000104jrgmds6vcd',
@@ -82,6 +86,54 @@ export function getThemeSwatches(theme: DashboardTheme | string | null | undefin
  * Keep this list unique and synchronized with VALID_DASHBOARD_THEMES.
  */
 export const THEME_PALETTES: Record<DashboardTheme, Record<string, string>> = {
+  cmpa7000000004l78abcdefg: {
+    '--background': '#0a0c0a',
+    '--foreground': '#f0f4f0',
+    '--card': '#111411',
+    '--card-foreground': '#f0f4f0',
+    '--popover': '#111411',
+    '--popover-foreground': '#f0f4f0',
+    '--primary': '#00ff9f',
+    '--primary-foreground': '#000000',
+    '--secondary': '#1a1e1a',
+    '--secondary-foreground': '#f0f4f0',
+    '--muted': '#1a1e1a',
+    '--muted-foreground': '#8a908a',
+    '--accent': '#1a1e1a',
+    '--accent-foreground': '#00ff9f',
+    '--destructive': 'hsl(0, 84%, 60%)',
+    '--destructive-foreground': '#f0f4f0',
+    '--border': '#1e221e',
+    '--input': '#1e221e',
+    '--ring': '#00ff9f',
+    '--chart-1': '#00ff9f',
+    '--chart-2': '#00cc7a',
+    '--chart-3': '#5affc3',
+    '--chart-4': '#00aa66',
+    '--chart-5': '#80ffd4',
+    '--sidebar': '#0a0c0a',
+    '--sidebar-background': '#0a0c0a',
+    '--sidebar-foreground': '#f0f4f0',
+    '--sidebar-primary': '#00ff9f',
+    '--sidebar-primary-foreground': '#000000',
+    '--sidebar-accent': '#1a1e1a',
+    '--sidebar-accent-foreground': '#00ff9f',
+    '--sidebar-border': '#1e221e',
+    '--sidebar-ring': '#00ff9f',
+    '--success': '#0ECB81',
+    '--success-foreground': '#FFFFFF',
+    '--warning': 'hsl(38, 92%, 50%)',
+    '--warning-foreground': '#000000',
+    '--radius': '1rem',
+    '--shadow-color': 'hsl(0, 0%, 0%)',
+    '--shadow-opacity': '0.6',
+    '--shadow-blur': '40px',
+    '--shadow-spread': '-10px',
+    '--shadow-offset-x': '0px',
+    '--shadow-offset-y': '20px',
+    '--letter-spacing': '-0.015em',
+    '--spacing': '0.25rem',
+  },
   cmlh0x713000104jrgmds6vcd: {
     '--background': 'hsl(150, 25%, 2%)',
     '--foreground': 'hsl(150, 40%, 98%)',
