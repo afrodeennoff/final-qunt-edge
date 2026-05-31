@@ -5,6 +5,7 @@ import { SUPPORTED_TIMEZONES } from "@/lib/constants/timezones"
 import { NAV_ICON_SIZE } from "@/lib/constants/sidebar"
 import {
     Activity,
+    BarChart3,
     BookOpen,
     Building2,
     CreditCard,
@@ -74,6 +75,12 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             href: `/${locale}/dashboard/analytics`,
             icon: <Sparkles className={NAV_ICON_SIZE} />,
             label: "Copilot",
+            group: "Review"
+        },
+        {
+            href: `/${locale}/dashboard/analytics/statistics`,
+            icon: <BarChart3 className={NAV_ICON_SIZE} />,
+            label: "Statistics",
             group: "Review"
         },
         {
