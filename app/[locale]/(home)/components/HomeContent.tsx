@@ -454,127 +454,139 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
          </section>
 
         {/* ═══════════════════════════════════════════════════════════════
-            LIVE FROM THE PLATFORM — Redesigned per mockup
+            LIVE FROM THE PLATFORM — Refined
            ═══════════════════════════════════════════════════════════════ */}
         <section className="pb-16 sm:pb-20">
           <div className={HOME_WIDTH}>
-            <div className="mb-6">
+            <div className="mb-8">
               <div className={eyebrowStyle}>LIVE FROM THE PLATFORM</div>
-              <h2 className="ref-h-section mt-1">Platform Pulse • Top Firms • Deals • Traders</h2>
+              <h2 className="ref-h-section mt-1">Platform Pulse</h2>
+              <p className="ref-body mt-2 max-w-lg">Real-time data from funded traders, active deals, and the leaderboard.</p>
             </div>
 
+            <div className="space-y-4">
             {/* Row 1: Top Firms */}
             <motion.div
-              className="mb-6 rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5"
+              className="rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5 sm:p-6"
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div className="min-w-[160px]">
+              <div className="flex items-center justify-between mb-4">
+                <div>
                   <div className="text-[11px] font-semibold tracking-[0.14em] text-[var(--qe-ref-green)]">TOP FIRMS</div>
-                  <div className="mt-1 text-[15px] font-semibold tracking-[-0.01em]">Leading Prop Firms by Payouts</div>
+                  <div className="mt-0.5 text-[13px] text-[var(--qe-ref-text-muted)]">Leading prop firms by total payouts</div>
                 </div>
+                <Link href={`/${locale}/propfirms`} className="text-[12px] text-[var(--qe-ref-green)] hover:underline font-medium">
+                  View all →
+                </Link>
+              </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
-                  {highlights.topFirms.length > 0 ? (
-                    highlights.topFirms.map((f, i) => (
-                      <div key={i} className="rounded-xl bg-[var(--qe-ref-surface-2)] p-4 text-sm">
-                        <div className="font-semibold text-[var(--qe-ref-text)] truncate">{f.name}</div>
-                        <div className="mt-1 text-[12px] text-[var(--qe-ref-text-muted)]">Accounts: {f.accounts}</div>
-                        <div className="mt-1 font-semibold tabular-nums text-[var(--qe-ref-green)]">
-                          ${Math.round(f.paidPayout).toLocaleString()} paid
-                        </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {highlights.topFirms.length > 0 ? (
+                  highlights.topFirms.map((f, i) => (
+                    <div key={i} className="flex items-center gap-3 rounded-xl bg-[var(--qe-ref-surface-2)] px-4 py-3">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold text-[var(--qe-ref-text-muted)] bg-[var(--qe-ref-card)]">
+                        {i + 1}
                       </div>
-                    ))
-                  ) : (
-                    <div className="text-[var(--qe-ref-text-muted)] text-sm">Live data loading…</div>
-                  )}
-                </div>
-
-                <div className="min-w-[110px] text-right">
-                  <Link href={`/${locale}/propfirms`} className="text-[13px] text-[var(--qe-ref-green)] hover:underline font-medium">
-                    View all →
-                  </Link>
-                </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[13px] font-semibold text-[var(--qe-ref-text)] truncate">{f.name}</div>
+                        <div className="text-[11px] text-[var(--qe-ref-text-muted)]">{f.accounts} accounts</div>
+                      </div>
+                      <div className="text-[13px] font-semibold tabular-nums text-[var(--qe-ref-green)] shrink-0">
+                        ${Math.round(f.paidPayout).toLocaleString()}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-[var(--qe-ref-text-muted)] text-sm col-span-3 py-6 text-center">Live data loading…</div>
+                )}
               </div>
             </motion.div>
 
             {/* Row 2: Hot Deals */}
             <motion.div
-              className="mb-6 rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5"
+              className="rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5 sm:p-6"
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.4, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div className="min-w-[160px]">
+              <div className="flex items-center justify-between mb-4">
+                <div>
                   <div className="text-[11px] font-semibold tracking-[0.14em] text-[var(--qe-ref-green)]">HOT DEALS</div>
-                  <div className="mt-1 text-[15px] font-semibold tracking-[-0.01em]">Active Prop Firm Discounts</div>
+                  <div className="mt-0.5 text-[13px] text-[var(--qe-ref-text-muted)]">Active prop firm discounts right now</div>
                 </div>
+                <Link href={`/${locale}/deals`} className="text-[12px] text-[var(--qe-ref-green)] hover:underline font-medium">
+                  View all →
+                </Link>
+              </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
-                  {highlights.topCoupons.length > 0 ? (
-                    highlights.topCoupons.map((c, i) => (
-                      <div key={i} className="rounded-xl bg-[var(--qe-ref-surface-2)] p-4 text-sm">
-                        <div className="font-semibold text-[var(--qe-ref-text)] truncate">{c.firmName}</div>
-                        <div className="mt-1 text-[13px] text-[var(--qe-ref-green)] font-semibold">
-                          {c.discount}% OFF
-                        </div>
-                        <div className="mt-0.5 text-[12px] font-mono text-[var(--qe-ref-text-muted)]">{c.code}</div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {highlights.topCoupons.length > 0 ? (
+                  highlights.topCoupons.map((c, i) => (
+                    <div key={i} className="flex items-center gap-3 rounded-xl bg-[var(--qe-ref-surface-2)] px-4 py-3">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)]">
+                        <Percent className="h-4 w-4" />
                       </div>
-                    ))
-                  ) : (
-                    <div className="text-[var(--qe-ref-text-muted)] text-sm">Live promos loading…</div>
-                  )}
-                </div>
-
-                <div className="min-w-[110px] text-right">
-                  <Link href={`/${locale}/deals`} className="text-[13px] text-[var(--qe-ref-green)] hover:underline font-medium">
-                    View all →
-                  </Link>
-                </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[13px] font-semibold text-[var(--qe-ref-text)] truncate">{c.firmName}</div>
+                        <div className="text-[11px] font-mono text-[var(--qe-ref-text-muted)]">{c.code}</div>
+                      </div>
+                      <div className="text-[13px] font-bold tabular-nums text-[var(--qe-ref-green)] shrink-0">
+                        {c.discount}% OFF
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-[var(--qe-ref-text-muted)] text-sm col-span-3 py-6 text-center">Live promos loading…</div>
+                )}
               </div>
             </motion.div>
 
             {/* Row 3: Top Traders */}
             <motion.div
-              className="rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5"
+              className="rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5 sm:p-6"
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.4, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div className="min-w-[160px]">
+              <div className="flex items-center justify-between mb-4">
+                <div>
                   <div className="text-[11px] font-semibold tracking-[0.14em] text-[var(--qe-ref-green)]">TOP TRADERS</div>
-                  <div className="mt-1 text-[15px] font-semibold tracking-[-0.01em]">This Month’s Standouts</div>
+                  <div className="mt-0.5 text-[13px] text-[var(--qe-ref-text-muted)]">This month's highest performers</div>
                 </div>
+                <Link href={`/${locale}/leaderboard`} className="text-[12px] text-[var(--qe-ref-green)] hover:underline font-medium">
+                  View all →
+                </Link>
+              </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
-                  {highlights.topLeaders.length > 0 ? (
-                    highlights.topLeaders.map((l, i) => (
-                      <div key={i} className="rounded-xl bg-[var(--qe-ref-surface-2)] p-4 text-sm">
-                        <div className="font-semibold text-[var(--qe-ref-text)]">#{i + 1} {l.username}</div>
-                        <div className="mt-1 text-[13px] text-[var(--qe-ref-green)] font-semibold tabular-nums">
-                          +${Math.round(l.monthlyPnl).toLocaleString()}
-                        </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {highlights.topLeaders.length > 0 ? (
+                  highlights.topLeaders.map((l, i) => (
+                    <div key={i} className="flex items-center gap-3 rounded-xl bg-[var(--qe-ref-surface-2)] px-4 py-3">
+                      <div className={cn(
+                        "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold",
+                        i === 0 ? "bg-amber-400/15 text-amber-400" : i === 1 ? "bg-gray-400/15 text-gray-400" : i === 2 ? "bg-orange-400/15 text-orange-400" : "bg-[var(--qe-ref-card)] text-[var(--qe-ref-text-muted)]"
+                      )}>
+                        {i + 1}
                       </div>
-                    ))
-                  ) : (
-                    <div className="text-[var(--qe-ref-text-muted)] text-sm">Leaderboard syncing…</div>
-                  )}
-                </div>
-
-                <div className="min-w-[110px] text-right">
-                  <Link href={`/${locale}/leaderboard`} className="text-[13px] text-[var(--qe-ref-green)] hover:underline font-medium">
-                    View all →
-                  </Link>
-                </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[13px] font-semibold text-[var(--qe-ref-text)] truncate">{l.username}</div>
+                      </div>
+                      <div className="text-[13px] font-semibold tabular-nums text-[var(--qe-ref-green)] shrink-0">
+                        +${Math.round(l.monthlyPnl).toLocaleString()}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-[var(--qe-ref-text-muted)] text-sm col-span-3 py-6 text-center">Leaderboard syncing…</div>
+                )}
               </div>
             </motion.div>
+            </div>
           </div>
         </section>
 
