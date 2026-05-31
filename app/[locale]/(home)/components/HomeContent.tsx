@@ -30,10 +30,25 @@ import { useCurrentLocale } from '@/locales/client'
 import HeroProductPreview from './HeroProductPreview'
 import AIHubVisual from './AIHubVisual'
 import type { HomeLiveHighlights } from '../page'
+import { motion } from 'framer-motion'
 
 const HOME_WIDTH = 'mx-auto w-full max-w-[1100px] px-6'
 
 const cardMain = 'rounded-xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5 sm:p-6'
+
+const fadeUp = {
+  initial: { opacity: 0, y: 30 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+}
+
+const staggerContainer = {
+  animate: {
+    transition: {
+      staggerChildren: 0.08
+    }
+  }
+}
 const cardNested = 'rounded-lg bg-[var(--qe-ref-surface-2)] p-4'
 const eyebrowStyle = 'text-[11px] font-semibold tracking-[0.16em] text-[var(--qe-ref-green)] uppercase'
 const headingSection = 'ref-h-section'
@@ -58,7 +73,11 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
         <div className={HOME_WIDTH}>
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             {/* Left column — text + CTAs */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
               <div className="inline-flex items-center rounded-full border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] px-3 py-1 text-[11px] font-medium tracking-[0.14em] text-[var(--qe-ref-text-muted)]">
                 AI-POWERED TRADING JOURNAL PLATFORM
               </div>
@@ -81,13 +100,13 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
               </div>
 
               <div className="mt-6 flex flex-wrap gap-x-5 gap-y-1.5 text-[12px] text-[var(--qe-ref-text-muted)]">
-                {['Pre & post trade notes', 'AI pattern detection', '17+ custom tags', 'Prop firm compliance', 'Screenshot analysis'].map((t) => (
+                {['Pre & post trade notes', 'AI pattern detection', '17+ custom tags', 'Prop firm compliance', 'Screenshot analysis'].map((t, i) => (
                   <div key={t} className="flex items-center gap-1.5">
                     <Check className="h-3.5 w-3.5 text-[var(--qe-ref-green)]" /> {t}
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Right column — live product preview */}
             <div className="relative -mx-2 lg:mx-0">
@@ -110,8 +129,14 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
              </p>
            </div>
 
-          <div className="grid gap-4 sm:gap-5 md:grid-cols-2">
-            {/* Card 1: Multi-Asset Power */}
+           <motion.div 
+             className="grid gap-4 sm:gap-5 md:grid-cols-2"
+             variants={staggerContainer}
+             initial="initial"
+             whileInView="animate"
+             viewport={{ once: true, margin: "-50px" }}
+           >
+             {/* Card 1: Multi-Asset Power */}
              <div className={cardMain}>
                <div className="flex items-start justify-between">
                  <div>
@@ -387,84 +412,86 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
               </div>
             </div>
 
-            {/* ═══════════════════════════════════════════════════════════════
-                LIVE HIGHLIGHTS CARD — Top 3 Firms + Coupons + Leaderboard (live data)
-               ═══════════════════════════════════════════════════════════════ */}
-            <div className={cardMain} style={{ marginTop: '16px' }}>
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <div className={eyebrowStyle}>LIVE FROM THE PLATFORM</div>
-                  <h3 className={headingCard}>Platform Pulse • Top Firms • Deals • Traders</h3>
-                </div>
-                <Link href={`/${locale}/propfirms`} className="text-[11px] text-[var(--qe-ref-green)] hover:underline">View all →</Link>
-              </div>
+             {/* ═══════════════════════════════════════════════════════════════
+                 LIVE FROM THE PLATFORM — 3 Separate Cards
+                ═══════════════════════════════════════════════════════════════ */}
+             <div className="mt-4">
+               <div className="mb-3 flex items-center justify-between px-1">
+                 <div>
+                   <div className={eyebrowStyle}>LIVE FROM THE PLATFORM</div>
+                   <div className="text-[15px] font-semibold tracking-[-0.01em]">Platform Pulse • Top Firms • Deals • Traders</div>
+                 </div>
+               </div>
 
-              <div className="grid gap-4 md:grid-cols-3">
-                {/* Top 3 Firms */}
-                <div className={cardNested}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Building2 className="h-4 w-4 text-[var(--qe-ref-green)]" />
-                    <span className="text-[12px] font-semibold tracking-[0.08em] text-[var(--qe-ref-text)]">TOP FIRMS</span>
-                  </div>
-                  {highlights.topFirms.length > 0 ? (
-                    <div className="space-y-2">
-                      {highlights.topFirms.map((f, i) => (
-                        <div key={i} className="flex items-center justify-between text-[12px]">
-                          <span className="font-medium text-[var(--qe-ref-text)] truncate pr-2">{f.name}</span>
-                          <span className="tabular-nums text-[var(--qe-ref-green)] font-semibold">${Math.round(f.paidPayout).toLocaleString()}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-[11px] text-[var(--qe-ref-text-muted)]">Live data updating…</div>
-                  )}
-                  <Link href={`/${locale}/propfirms`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">Browse catalogue →</Link>
-                </div>
+               <div className="grid gap-4 md:grid-cols-3">
+                 {/* Top Firms Card */}
+                 <motion.div 
+                   className={cardMain}
+                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                   variants={fadeUp}
+                 >
+                   <div className="flex items-center gap-2 mb-3">
+                     <Building2 className="h-4 w-4 text-[var(--qe-ref-green)]" />
+                     <span className="text-[12px] font-semibold tracking-[0.08em] text-[var(--qe-ref-text)]">TOP FIRMS</span>
+                   </div>
+                   {highlights.topFirms.length > 0 ? (
+                     <div className="space-y-2">
+                       {highlights.topFirms.map((f, i) => (
+                         <div key={i} className="flex items-center justify-between text-[12px]">
+                           <span className="font-medium text-[var(--qe-ref-text)] truncate pr-2">{f.name}</span>
+                           <span className="tabular-nums text-[var(--qe-ref-green)] font-semibold">${Math.round(f.paidPayout).toLocaleString()}</span>
+                         </div>
+                       ))}
+                     </div>
+                   ) : (
+                     <div className="text-[11px] text-[var(--qe-ref-text-muted)]">Live data updating…</div>
+                   )}
+                   <Link href={`/${locale}/propfirms`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">Browse catalogue →</Link>
+                 </div>
 
-                {/* Top 3 Coupons */}
-                <div className={cardNested}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Percent className="h-4 w-4 text-[var(--qe-ref-green)]" />
-                    <span className="text-[12px] font-semibold tracking-[0.08em] text-[var(--qe-ref-text)]">HOT COUPONS</span>
-                  </div>
-                  {highlights.topCoupons.length > 0 ? (
-                    <div className="space-y-2">
-                      {highlights.topCoupons.map((c, i) => (
-                        <div key={i} className="flex items-center justify-between text-[12px]">
-                          <span className="font-medium text-[var(--qe-ref-text)] truncate pr-2">{c.firmName}</span>
-                          <span className="font-semibold text-[var(--qe-ref-green)] tabular-nums">{c.discount}% • {c.code}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-[11px] text-[var(--qe-ref-text-muted)]">Fresh promos loading…</div>
-                  )}
-                  <Link href={`/${locale}/deals`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">See all deals →</Link>
-                </div>
+                 {/* Hot Deals Card */}
+                 <div className={cardMain}>
+                   <div className="flex items-center gap-2 mb-3">
+                     <Percent className="h-4 w-4 text-[var(--qe-ref-green)]" />
+                     <span className="text-[12px] font-semibold tracking-[0.08em] text-[var(--qe-ref-text)]">HOT DEALS</span>
+                   </div>
+                   {highlights.topCoupons.length > 0 ? (
+                     <div className="space-y-2">
+                       {highlights.topCoupons.map((c, i) => (
+                         <div key={i} className="flex items-center justify-between text-[12px]">
+                           <span className="font-medium text-[var(--qe-ref-text)] truncate pr-2">{c.firmName}</span>
+                           <span className="font-semibold text-[var(--qe-ref-green)] tabular-nums">{c.discount}% • {c.code}</span>
+                         </div>
+                       ))}
+                     </div>
+                   ) : (
+                     <div className="text-[11px] text-[var(--qe-ref-text-muted)]">Fresh promos loading…</div>
+                   )}
+                   <Link href={`/${locale}/deals`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">See all deals →</Link>
+                 </div>
 
-                {/* Top 3 Leaderboard */}
-                <div className={cardNested}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Trophy className="h-4 w-4 text-[var(--qe-ref-green)]" />
-                    <span className="text-[12px] font-semibold tracking-[0.08em] text-[var(--qe-ref-text)]">TOP TRADERS</span>
-                  </div>
-                  {highlights.topLeaders.length > 0 ? (
-                    <div className="space-y-2">
-                      {highlights.topLeaders.map((l, i) => (
-                        <div key={i} className="flex items-center justify-between text-[12px]">
-                          <span className="font-medium text-[var(--qe-ref-text)] truncate pr-2">#{i+1} {l.username}</span>
-                          <span className="font-semibold text-[var(--qe-ref-green)] tabular-nums">+${Math.round(l.monthlyPnl).toLocaleString()}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-[11px] text-[var(--qe-ref-text-muted)]">Leaderboard syncing…</div>
-                  )}
-                  <Link href={`/${locale}/leaderboard`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">Full leaderboard →</Link>
-                </div>
-              </div>
-            </div>
-            {/* end live highlights card */}
+                 {/* Top Traders Card */}
+                 <div className={cardMain}>
+                   <div className="flex items-center gap-2 mb-3">
+                     <Trophy className="h-4 w-4 text-[var(--qe-ref-green)]" />
+                     <span className="text-[12px] font-semibold tracking-[0.08em] text-[var(--qe-ref-text)]">TOP TRADERS</span>
+                   </div>
+                   {highlights.topLeaders.length > 0 ? (
+                     <div className="space-y-2">
+                       {highlights.topLeaders.map((l, i) => (
+                         <div key={i} className="flex items-center justify-between text-[12px]">
+                           <span className="font-medium text-[var(--qe-ref-text)] truncate pr-2">#{i+1} {l.username}</span>
+                           <span className="font-semibold text-[var(--qe-ref-green)] tabular-nums">+${Math.round(l.monthlyPnl).toLocaleString()}</span>
+                         </div>
+                       ))}
+                     </div>
+                   ) : (
+                     <div className="text-[11px] text-[var(--qe-ref-text-muted)]">Leaderboard syncing…</div>
+                   )}
+                   <Link href={`/${locale}/leaderboard`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">Full leaderboard →</Link>
+                 </div>
+               </div>
+             </div>
 
          </div>
        </section>
@@ -545,8 +572,14 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
              </p>
            </div>
 
-           <div className="grid gap-5 md:grid-cols-3">
-             {/* Card 1: Trade Capture & Review */}
+            <motion.div 
+              className="grid gap-5 md:grid-cols-3"
+              variants={staggerContainer}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+            >
+              {/* Card 1: Trade Capture & Review */}
              <div className={cardMain}>
                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)]">
                  <Cpu className="h-5 w-5" />
@@ -749,8 +782,14 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
              </div>
            </div>
 
-          {/* Testimonial cards */}
-          <div className="grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-4">
+           {/* Testimonial cards */}
+           <motion.div 
+             className="grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-4"
+             variants={staggerContainer}
+             initial="initial"
+             whileInView="animate"
+             viewport={{ once: true }}
+           >
              {[
                {
                  name: 'Sarah J.',

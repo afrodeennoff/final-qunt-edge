@@ -5,104 +5,98 @@ import { motion } from 'framer-motion'
 
 export default function AIHubVisual() {
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[380px] md:max-w-[420px] lg:max-w-[460px]">
-      {/* Outer faint radar ring */}
-      <div className="absolute inset-[6%] rounded-full border border-[rgba(0,255,159,0.08)]" />
+    <div className="relative mx-auto aspect-square w-full max-w-[440px] md:max-w-[480px]">
+      {/* Background subtle rings */}
+      <div className="absolute inset-[3%] rounded-full border border-[rgba(0,255,159,0.05)]" />
+      <div className="absolute inset-[10%] rounded-full border border-[rgba(0,255,159,0.06)]" />
 
-      {/* Main SVG connections + X marks + energy flows */}
+      {/* Rotating SVG Layers - Radar / Hub Style */}
       <svg
         className="absolute inset-0"
-        viewBox="0 0 440 440"
+        viewBox="0 0 480 480"
         fill="none"
-        preserveAspectRatio="xMidYMid meet"
       >
-        <defs>
-          <linearGradient id="lineGlow" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="rgba(0,255,159,0.15)" />
-            <stop offset="50%" stopColor="rgba(0,255,159,0.35)" />
-            <stop offset="100%" stopColor="rgba(0,255,159,0.15)" />
-          </linearGradient>
-        </defs>
+        {/* Slow outer segmented ring (radar style) */}
+        <motion.g
+          animate={{ rotate: 360 }}
+          transition={{ duration: 42, repeat: Infinity, ease: 'linear' }}
+        >
+          <circle cx="240" cy="240" r="172" stroke="rgba(0,255,159,0.15)" strokeWidth="1" />
+          {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg, i) => (
+            <line
+              key={i}
+              x1="240" y1="68" x2="240" y2="88"
+              stroke="rgba(0,255,159,0.3)"
+              strokeWidth="1.5"
+              transform={`rotate(${deg} 240 240)`}
+            />
+          ))}
+        </motion.g>
 
-        {/* Outer faint ring */}
-        <circle cx="220" cy="220" r="138" stroke="rgba(0,255,159,0.12)" strokeWidth="1" />
-        {/* Inner ring */}
-        <circle cx="220" cy="220" r="102" stroke="rgba(0,255,159,0.18)" strokeWidth="1" />
+        {/* Medium rotating dashed ring */}
+        <motion.g
+          animate={{ rotate: -360 }}
+          transition={{ duration: 26, repeat: Infinity, ease: 'linear' }}
+        >
+          <circle 
+            cx="240" cy="240" r="132" 
+            stroke="rgba(0,255,159,0.28)" 
+            strokeWidth="1.5" 
+            strokeDasharray="8 14" 
+          />
+        </motion.g>
 
-        {/* X marks */}
-        <line x1="120" y1="120" x2="148" y2="148" stroke="rgba(0,255,159,0.25)" strokeWidth="1" />
-        <line x1="292" y1="120" x2="264" y2="148" stroke="rgba(0,255,159,0.25)" strokeWidth="1" />
-        <line x1="120" y1="320" x2="148" y2="292" stroke="rgba(0,255,159,0.25)" strokeWidth="1" />
-        <line x1="292" y1="320" x2="264" y2="292" stroke="rgba(0,255,159,0.25)" strokeWidth="1" />
+        {/* Fast inner ring */}
+        <motion.g
+          animate={{ rotate: 360 }}
+          transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+        >
+          <circle cx="240" cy="240" r="92" stroke="rgba(0,255,159,0.4)" strokeWidth="1" />
+        </motion.g>
 
-        {/* Cardinal lines */}
-        <line x1="220" y1="82" x2="220" y2="135" stroke="url(#lineGlow)" strokeWidth="1.5" />
-        <line x1="220" y1="358" x2="220" y2="305" stroke="url(#lineGlow)" strokeWidth="1.5" />
-        <line x1="82" y1="220" x2="135" y2="220" stroke="url(#lineGlow)" strokeWidth="1.5" />
-        <line x1="358" y1="220" x2="305" y2="220" stroke="url(#lineGlow)" strokeWidth="1.5" />
-
-        {/* Moving energy dots */}
-        <g>
-          <circle r="2.5" fill="#00ff9f" opacity="0.75">
-            <animate attributeName="cy" values="82;135;82" dur="2.7s" repeatCount="indefinite" />
-          </circle>
-        </g>
-        <g>
-          <circle r="2.5" fill="#00ff9f" opacity="0.75">
-            <animate attributeName="cy" values="358;305;358" dur="3.2s" repeatCount="indefinite" />
-          </circle>
-        </g>
-        <g>
-          <circle r="2.5" fill="#00ff9f" opacity="0.75">
-            <animate attributeName="cx" values="82;135;82" dur="2.5s" repeatCount="indefinite" />
-          </circle>
-        </g>
-        <g>
-          <circle r="2.5" fill="#00ff9f" opacity="0.75">
-            <animate attributeName="cx" values="358;305;358" dur="3.5s" repeatCount="indefinite" />
-          </circle>
-        </g>
+        {/* Orbiting dots - different speeds */}
+        <motion.g
+          animate={{ rotate: 360 }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'linear' }}
+        >
+          <circle cx="240" cy="68" r="3.5" fill="#00ff9f" />
+        </motion.g>
+        <motion.g
+          animate={{ rotate: -360 }}
+          transition={{ duration: 13, repeat: Infinity, ease: 'linear' }}
+        >
+          <circle cx="240" cy="68" r="2.5" fill="#00ff9f" opacity="0.6" transform="translate(0 56)" />
+        </motion.g>
       </svg>
 
-      {/* CENTER ORB - Premium layered version */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        {/* Outer breathing glow */}
-        <div className="absolute left-1/2 top-1/2 h-[132px] w-[132px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[rgba(0,255,159,0.065)] blur-[26px]" />
+      {/* CENTER ORB */}
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+        {/* Outer soft glow */}
+        <div className="absolute left-1/2 top-1/2 h-[158px] w-[158px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[rgba(0,255,159,0.07)] blur-[50px]" />
 
-        {/* Slow rotating thin ring */}
+        {/* Rotating ring around center */}
         <motion.div
-          className="absolute left-1/2 top-1/2 h-[106px] w-[106px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(0,255,159,0.22)]"
+          className="absolute left-1/2 top-1/2 h-[120px] w-[120px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(0,255,159,0.35)]"
           animate={{ rotate: 360 }}
-          transition={{ duration: 26, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
         />
 
-        {/* Main glowing orb with strong breathing animation */}
-        <motion.div
-          className="relative flex h-[78px] w-[78px] items-center justify-center rounded-full border border-[rgba(0,255,159,0.6)] bg-[#0a0c0a]"
-          animate={{
-            boxShadow: [
-              '0 0 16px rgba(0,255,159,0.22), 0 0 36px rgba(0,255,159,0.11)',
-              '0 0 30px rgba(0,255,159,0.36), 0 0 58px rgba(0,255,159,0.17)',
-              '0 0 16px rgba(0,255,159,0.22), 0 0 36px rgba(0,255,159,0.11)',
-            ],
-          }}
-          transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          {/* Inner ring */}
-          <div className="absolute h-[46px] w-[46px] rounded-full border border-[rgba(0,255,159,0.32)]" />
-
+        {/* Main glowing orb */}
+        <div className="relative flex h-[88px] w-[88px] items-center justify-center rounded-full border border-[rgba(0,255,159,0.75)] bg-[#0a0c0a] shadow-[0 0 70px rgba(0,255,159,0.3)]">
+          <div className="absolute h-[54px] w-[54px] rounded-full border border-[rgba(0,255,159,0.45)]" />
+          
           <div className="relative z-10 text-center">
-            <div className="text-[12px] font-semibold tracking-[0.11em] text-[#00ff9f]">QUNT</div>
-            <div className="text-[9.5px] font-medium tracking-[0.07em] text-[rgba(255,255,255,0.65)] -mt-px">AI</div>
+            <div className="text-[14px] font-semibold tracking-[0.13em] text-[#00ff9f]">QUNT</div>
+            <div className="text-[10px] font-medium tracking-[0.08em] text-white/70 -mt-px">AI</div>
           </div>
-        </motion.div>
+        </div>
       </div>
 
-      {/* NODES - Larger with staggered breathing glow */}
-      <Node label="PULSE" style={{ left: '50%', top: '18px', transform: 'translateX(-50%)' }} delay={0} />
-      <Node label="DEBRIEF" style={{ left: '50%', bottom: '18px', transform: 'translateX(-50%)' }} delay={0.9} />
-      <Node label="SENTINEL" style={{ left: '18px', top: '50%', transform: 'translateY(-50%)' }} delay={1.6} />
-      <Node label="EDGE" style={{ right: '18px', top: '50%', transform: 'translateY(-50%)' }} delay={0.4} />
+      {/* 4 Glowing Nodes */}
+      <Node label="PULSE"     style={{ left: '50%', top: '10%', transform: 'translateX(-50%)' }} delay={0} />
+      <Node label="DEBRIEF"   style={{ left: '50%', bottom: '10%', transform: 'translateX(-50%)' }} delay={0.7} />
+      <Node label="SENTINEL"  style={{ left: '10%', top: '50%', transform: 'translateY(-50%)' }} delay={1.4} />
+      <Node label="EDGE"      style={{ right: '10%', top: '50%', transform: 'translateY(-50%)' }} delay={0.35} />
     </div>
   )
 }
@@ -110,16 +104,16 @@ export default function AIHubVisual() {
 function Node({ label, style, delay }: { label: string; style: React.CSSProperties; delay: number }) {
   return (
     <motion.div
-      className="absolute flex h-16 w-16 items-center justify-center rounded-full border border-[rgba(0,255,159,0.65)] bg-[#111411] text-[12.5px] font-semibold tracking-[0.065em] text-[#e4e8e3] shadow-[0_0_12px_rgba(0,255,159,0.18)]"
+      className="absolute z-20 flex h-[66px] w-[66px] items-center justify-center rounded-full border border-[rgba(0,255,159,0.7)] bg-[#0a0c0a] text-[13px] font-semibold tracking-[0.05em] text-[#e4e8e3] shadow-[0_0_28px_rgba(0,255,159,0.4)]"
       style={style}
       animate={{
         boxShadow: [
-          '0 0 12px rgba(0,255,159,0.18)',
-          '0 0 24px rgba(0,255,159,0.30)',
-          '0 0 12px rgba(0,255,159,0.18)',
+          '0 0 20px rgba(0,255,159,0.3)',
+          '0 0 42px rgba(0,255,159,0.55)',
+          '0 0 20px rgba(0,255,159,0.3)',
         ],
       }}
-      transition={{ duration: 2.9, repeat: Infinity, ease: 'easeInOut', delay }}
+      transition={{ duration: 3.1, repeat: Infinity, ease: 'easeInOut', delay }}
     >
       {label}
     </motion.div>
