@@ -438,6 +438,7 @@ model JournalTagTemplate {
 
   user User @relation("UserJournalTagTemplates", fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, name])
   @@index([userId])
   @@schema("public")
 }

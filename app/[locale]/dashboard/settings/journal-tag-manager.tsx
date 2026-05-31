@@ -6,14 +6,33 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Loader2, RefreshCw, Save, Trash2 } from 'lucide-react'
-import {
-  getJournalTagTemplatesAction,
-  saveJournalTagTemplateAction,
-  deleteJournalTagTemplateAction,
-  resetJournalTagTemplatesToDefaultsAction,
-  DEFAULT_TAG_CATEGORIES,
-} from '@/server/journal-tags'
+import { DEFAULT_TAG_CATEGORIES } from '@/lib/journal-utils'
 import { toast } from 'sonner'
+
+// Server Actions defined locally to prevent Prisma/pg from being bundled on the client
+async function getJournalTagTemplatesAction() {
+  'use server'
+  const { getJournalTagTemplatesAction: realAction } = await import('@/server/journal-tags')
+  return realAction()
+}
+
+async function saveJournalTagTemplateAction(name: string, tags: string[]) {
+  'use server'
+  const { saveJournalTagTemplateAction: realAction } = await import('@/server/journal-tags')
+  return realAction(name, tags)
+}
+
+async function deleteJournalTagTemplateAction(name: string) {
+  'use server'
+  const { deleteJournalTagTemplateAction: realAction } = await import('@/server/journal-tags')
+  return realAction(name)
+}
+
+async function resetJournalTagTemplatesToDefaultsAction() {
+  'use server'
+  const { resetJournalTagTemplatesToDefaultsAction: realAction } = await import('@/server/journal-tags')
+  return realAction()
+}
 
 type TagTemplates = Record<string, string[]>
 

@@ -1,37 +1,5 @@
 import { prisma } from '@/lib/prisma'
-
-export const DEFAULT_TAG_CATEGORIES: Record<string, string[]> = {
-  'Week Days': [
-    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday',
-    'Best Day', 'Worst Day'
-  ],
-  'Setup Types': [
-    'Breakout', 'Reversal', 'Trend Following', 'Scalp', 'Swing', 'Momentum',
-    'Mean Reversion', 'Gap Fill', 'Range Break', 'News Play', 'Opening Range', 'Closing Range',
-    'Fader', 'Break and Retest', 'Pullback Entry', 'Continuation'
-  ],
-  'Market Conditions': [
-    'Trending', 'Ranging', 'Volatile', 'Low Vol', 'Pre-News', 'Post-News',
-    'Overnight', 'Session Open', 'High Impact News', 'Low Liquidity'
-  ],
-  'Mistakes': [
-    'FOMO', 'Revenge Trade', 'Overtrading', 'Premature Entry', 'Late Entry',
-    'Moving Stops', 'Abandoning Plan', 'Overconfidence', 'Hesitation', 'Tilt',
-    'Chasing', 'Averaging Down', 'No Stop', 'Too Big Size'
-  ],
-  'Psychology': [
-    'Confident', 'Anxious', 'Focused', 'Distracted', 'Patient', 'Impatient',
-    'Disciplined', 'Tired', 'Euphoric', 'Fearful', 'Greedy', 'Calm'
-  ],
-  'Execution': [
-    'Perfect Entry', 'Slippage', 'Good Risk', 'Poor Risk', 'Scaled In',
-    'Scaled Out', 'Held Too Long', 'Cut Too Early', 'Good Exit', 'Bad Exit'
-  ],
-  'Environment': [
-    'Home', 'Office', 'Mobile', 'Desktop', 'With Mentor', 'Alone',
-    'Tired', 'Well Rested', 'Distracted Environment'
-  ]
-}
+import { DEFAULT_TAG_CATEGORIES } from '@/lib/journal-utils'
 
 export async function getUserTagTemplates(userId: string) {
   const userTemplates = await prisma.journalTagTemplate.findMany({
@@ -77,10 +45,7 @@ export async function resetToDefaults(userId: string) {
   return getUserTagTemplates(userId)
 }
 
-// ---------------------------------------------------------------------------
-// Server actions for client components (daily journal + Settings)
-// ---------------------------------------------------------------------------
-
+// Thin server action wrappers (only loaded dynamically from client components)
 import { getDatabaseUserId } from './auth'
 
 export async function getJournalTagTemplatesAction() {
@@ -89,7 +54,8 @@ export async function getJournalTagTemplatesAction() {
     return await getUserTagTemplates(userId)
   } catch (error) {
     console.error('Error getting journal tag templates:', error)
-    return DEFAULT_TAG_CATEGORIES // graceful fallback to rich defaults
+    const { DEFAULT_TAG_CATEGORIES } = await import('@/lib/journal-utils')
+    return DEFAULT_TAG_CATEGORIES
   }
 }
 
