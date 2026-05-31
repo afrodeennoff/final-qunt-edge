@@ -145,7 +145,7 @@ export const useUserStore = create<UserStore>()(
       isSharedView: false,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       setTimezone: (timezone: string) => set({ timezone }),
-      setUser: (user) => set({ user }),
+      setUser: (user) => set({ user, username: user?.username ?? null }),
       setSupabaseUser: (supabaseUser) => set({ supabaseUser }),
       setSubscription: (subscription) =>
         set({
@@ -270,11 +270,12 @@ export const useUserStore = create<UserStore>()(
     {
       name: "qunt-edge-user-store",
       storage: createJSONStorage(() => localStorage),
-      // Only persist timezone and other non-sensitive settings
+      // Only persist non-sensitive settings
       partialize: (state) => ({
         timezone: state.timezone,
         isMobile: state.isMobile,
         isSharedView: state.isSharedView,
+        username: state.username,
       }),
     },
   ),

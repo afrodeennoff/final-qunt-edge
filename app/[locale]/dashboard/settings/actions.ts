@@ -5,6 +5,7 @@ import auth from '@/locales/en/auth'
 import { createClient } from '@/server/auth'
 import { revalidatePath } from 'next/cache'
 import { Resend } from 'resend'
+import { usernameSchema } from '@/lib/validations/user'
 import { render } from '@react-email/render'
 import TeamInvitationEmail from '@/components/emails/team-invitation'
 import { MemberRole } from '@/prisma/generated/prisma'
@@ -25,8 +26,8 @@ export async function updateUsername(username: string) {
       throw new Error('Username must be 3-30 characters')
     }
 
-    if (!/^[a-zA-Z0-9_-]+$/.test(normalized)) {
-      throw new Error('Username can only contain letters, numbers, underscores, and hyphens')
+    if (!/^[a-zA-Z0-9_]+$/.test(normalized)) {
+      throw new Error('Username can only contain letters, numbers, and underscores')
     }
 
     const existing = await prisma.user.findFirst({
@@ -1150,6 +1151,9 @@ export async function joinTeamByInvitation(invitationToken: string) {
 
 export async function updateUsernameAction(username: string) {
   try {
+    const parsed = usernameSchema.parse(username)
+    const normalized = parsed
+
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
@@ -1157,15 +1161,12 @@ export async function updateUsernameAction(username: string) {
       throw new Error('Unauthorized')
     }
 
-    // Hash the username for validation
-    const usernameHash = Buffer.from(username).toString('hex')
-
     const { error } = await supabase
-      .from('users')
+      .from('User')
       .update({
-        username,
-        username_hash: usernameHash,
-        updated_at: new Date().toISOString()
+        username: normalized,
+        usernameHash: normalized,
+        updatedAt: new Date().toISOString()
       })
       .eq('id', user.id)
 

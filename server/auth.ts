@@ -558,11 +558,12 @@ export async function getUserByUsername(username: string) {
 export async function isUsernameAvailable(username: string): Promise<boolean> {
   const supabase = await createClient()
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('User')
     .select('id')
     .eq('username', username.toLowerCase())
-    .limit(1)
+    .maybeSingle()
 
-  return !error
+  if (error) return false
+  return !data
 }

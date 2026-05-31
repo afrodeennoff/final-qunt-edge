@@ -40,7 +40,7 @@ type TraderSnapshot = {
   dayPnl: Map<string, number>
 }
 
-type PublicTraderUser = { id: string; email: string | null; showOnLeaderboard: boolean }
+type PublicTraderUser = { id: string; email: string | null; username: string | null; showOnLeaderboard: boolean }
 type PublicTrade = { id: string; instrument: string | null; pnl: unknown; closeDate: Date }
 
 const USER_TABLE_CANDIDATES = ['User', 'user'] as const
@@ -98,7 +98,8 @@ function buildPublicStats(snapshot: TraderSnapshot) {
   ]
 }
 
-function toUsername(email: string | null | undefined, fallbackId: string): string {
+function toUsername(email: string | null | undefined, username: string | null | undefined, fallbackId: string): string {
+  if (username) return username
   const base = email?.split('@')[0]?.trim()
   return base || `Trader ${fallbackId.slice(0, 8)}`
 }
@@ -114,7 +115,7 @@ async function getPublicTraderUser(slug: string): Promise<PublicTraderUser | nul
   try {
     return await prisma.user.findUnique({
       where: { id: slug },
-      select: { id: true, email: true, showOnLeaderboard: true },
+      select: { id: true, email: true, username: true, showOnLeaderboard: true },
     })
   } catch (error) {
     if (isPrismaSchemaMismatchError(error)) return null
@@ -144,7 +145,7 @@ function buildTraderSnapshot(publicUser: PublicTraderUser, trades: PublicTrade[]
 
   return {
     id: publicUser.id,
-    username: toUsername(publicUser.email, publicUser.id),
+    username: toUsername(publicUser.email, publicUser.username, publicUser.id),
     totalPnl,
     totalTrades,
     winRate,
