@@ -277,6 +277,8 @@ export default function JournalClient() {
     tags: true,
     screenshots: false,
   })
+  const [hasUnsaved, setHasUnsaved] = useState(false)
+  const [pendingTradeId, setPendingTradeId] = useState<string | null>(null)
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const {
@@ -331,6 +333,7 @@ export default function JournalClient() {
       const entryId = selectedCard.journal.id
       setSaving(true)
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
+      setHasUnsaved(true)
       saveTimerRef.current = setTimeout(() => setSaving(false), 1500)
       if (entryId.startsWith('temp-')) {
         handleCreate(selectedCard.trade.id, selectedCard.trade.accountNumber)
@@ -338,7 +341,7 @@ export default function JournalClient() {
       }
       handleUpdate(entryId, { [field]: value })
     },
-    [selectedCard, handleCreate, handleUpdate],
+    [selectedCard, handleCreate, handleUpdate, hasUnsaved, setHasUnsaved],
   )
 
   useEffect(() => {
@@ -358,12 +361,16 @@ export default function JournalClient() {
   }, [selectedCard, update])
 
   const handleSelectTrade = useCallback((tradeId: string) => {
+    if (hasUnsaved && selectedCard?.journal) {
+      setPendingTradeId(tradeId)
+      return
+    }
     toggleExpand(tradeId)
     const card = displayCards.find(c => c.trade.id === tradeId)
     if (card && !card.journal) {
       handleCreate(tradeId, card.trade.accountNumber)
     }
-  }, [displayCards, toggleExpand, handleCreate])
+  }, [displayCards, toggleExpand, handleCreate, hasUnsaved, selectedCard])
 
   const toggleSection = useCallback((section: string) => {
     setActiveSection(prev => ({ ...prev, [section]: !prev[section] }))
@@ -710,6 +717,42 @@ export default function JournalClient() {
           )}
         </div>
       </div>
+
+      {/* Unsaved changes confirmation */}
+      {pendingTradeId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="w-[380px] rounded-2xl border bg-card p-6 shadow-2xl">
+            <h3 className="text-sm font-semibold">Unsaved changes</h3>
+            <p className="mt-2 text-xs text-muted-foreground">
+              You have unsaved journal content. Switching trades will discard these changes.
+            </p>
+            <div className="mt-5 flex items-center gap-2 justify-end">
+              <button
+                type="button"
+                onClick={() => setPendingTradeId(null)}
+                className="rounded-lg px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setHasUnsaved(false)
+                  setPendingTradeId(null)
+                  toggleExpand(pendingTradeId)
+                  const card = displayCards.find(c => c.trade.id === pendingTradeId)
+                  if (card && !card.journal) {
+                    handleCreate(pendingTradeId, card.trade.accountNumber)
+                  }
+                }}
+                className="rounded-lg bg-destructive px-4 py-2 text-xs font-medium text-destructive-foreground hover:bg-destructive/90 transition-colors"
+              >
+                Discard & switch
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
