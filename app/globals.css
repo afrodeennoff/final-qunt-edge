@@ -1684,7 +1684,7 @@
   }
 
   .status-dot-synced {
-    background: hsl(var(--precision-cobalt));
+    background: var(--primary);
   }
 
   .status-dot-idle {
@@ -1698,7 +1698,7 @@
   .terminal-cursor::after {
     content: '_';
     margin-left: 0.125rem;
-    color: hsl(var(--precision-cobalt));
+    color: var(--primary);
     animation: terminal-cursor-blink 1s steps(1, end) infinite;
   }
 

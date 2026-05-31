@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import {
   Search, Star, Pin, Trash2, Check, Loader2,
   ChevronDown, Clock, Hash, Image as ImageIcon, PenLine,
-  ArrowUpRight, ArrowDownRight, BookOpen, X, Sparkles,
+  ArrowUpRight, ArrowDownRight, BookOpen, X,
 } from 'lucide-react'
 import { useUserStore } from '@/store/user-store'
 import { useJournal } from './lib/use-journal'
