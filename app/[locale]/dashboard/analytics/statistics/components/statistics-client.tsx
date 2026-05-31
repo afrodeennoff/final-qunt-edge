@@ -7,7 +7,7 @@ import type { StatisticsResult } from '../types'
 import { unifiedInsetPanelClassName } from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
 
-export function StatisticsClient() {
+export default function StatisticsClient() {
   const [data, setData] = useState<StatisticsResult | null>(null)
   const [loading, setLoading] = useState(true)
 
