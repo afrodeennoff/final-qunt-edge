@@ -22,6 +22,7 @@ export default function Navbar() {
 
   const links: NavLink[] = useMemo(
     () => [
+      { title: 'Docs', href: '/docs' },
       { title: 'Features', href: '/#features' },
       { title: 'Pricing', href: '/pricing' },
       { title: 'Prop Firms Catalogue', href: '/propfirms' },

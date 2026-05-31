@@ -1,20 +1,22 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function DocsLoading() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl space-y-4">
-        <Skeleton className="h-8 w-1/4" />
-        <Skeleton className="h-32 w-full" />
-        <div className="grid grid-cols-3 gap-4">
-          <Skeleton className="h-48 w-full" />
-          <Skeleton className="h-48 w-full" />
-          <Skeleton className="h-48 w-full" />
+    <div className="flex gap-8">
+      <aside className="hidden w-56 shrink-0 lg:block">
+        <div className="space-y-4">
+          <Skeleton className="h-4 w-20" />
+          {[1,2,3,4,5].map(i => <Skeleton key={i} className="h-8 w-full rounded-lg" />)}
         </div>
-        <Skeleton className="h-64 w-full" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-3/4" />
-      </div>
+      </aside>
+      <main className="min-w-0 flex-1">
+        <div className="rounded-xl bg-background/30 p-6 space-y-4">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-3/4" />
+          <Skeleton className="h-32 w-full" />
+        </div>
+      </main>
     </div>
   )
 }
