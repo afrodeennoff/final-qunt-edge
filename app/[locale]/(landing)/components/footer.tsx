@@ -23,6 +23,7 @@ export default function Footer() {
 
   const supportLinks: FooterLink[] = [
     { name: 'Support', href: '/support' },
+    { name: 'Docs', href: '/docs' },
     { name: 'Community', href: '/community' },
     { name: 'Changelog', href: '/updates' },
     { name: 'FAQ', href: '/faq' },
