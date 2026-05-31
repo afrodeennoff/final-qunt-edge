@@ -149,6 +149,12 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             label: "Deals",
             group: "Resources"
         },
+        {
+            href: `/${locale}/docs`,
+            icon: <BookOpen className={NAV_ICON_SIZE} />,
+            label: "Docs",
+            group: "Resources"
+        },
 
         // ── System ──
         ...(isAdmin ? [{
