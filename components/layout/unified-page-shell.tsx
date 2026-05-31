@@ -81,7 +81,7 @@ export function UnifiedPageHeader({
     <header
       className={cn(
         'relative overflow-hidden rounded-xl bg-card px-4 py-4 sm:py-6 sm:px-6 border-0',
-        'animate-fade-up-smooth transition-all duration-300',
+        'animate-fade-up-smooth transition-[opacity,transform] duration-300',
         variant === 'gradient' && 'border-primary/20',
         variant === 'elevated' && 'shadow-[0_0_35px_-18px] shadow-primary/15',
         className,
@@ -129,7 +129,7 @@ export function UnifiedSurface({ children, className, variant = 'default', hover
       className={cn(
         'group relative overflow-hidden rounded-xl bg-card border-0',
         densityPadding,
-        'transition-all duration-300',
+        'transition-[border-color,box-shadow] duration-300',
         hover && 'hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15',
         glowOnHover && 'hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15',
         variant === 'elevated' && 'shadow-[0_0_35px_-18px] shadow-primary/10',
@@ -138,7 +138,7 @@ export function UnifiedSurface({ children, className, variant = 'default', hover
       )}
     >
       {glowOnHover && (
-        <div className="pointer-events-none absolute top-0 right-0 h-24 w-24 rounded-full bg-primary/[0.03] blur-2xl transition-all duration-500 group-hover:bg-primary/[0.06] group-hover:scale-150" />
+        <div className="pointer-events-none absolute top-0 right-0 h-24 w-24 rounded-full bg-primary/[0.03] blur-2xl transition-[background-color,transform] duration-500 group-hover:bg-primary/[0.06] group-hover:scale-150" />
       )}
       <div className="relative z-10">{children}</div>
     </section>

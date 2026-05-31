@@ -72,7 +72,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
       <div
         ref={ref}
         className={cn(
-          'rounded-lg border-0 bg-card shadow-sm transition-all duration-[200ms] ease-out',
+          'rounded-lg border-0 bg-card shadow-sm transition-[box-shadow,background-color] duration-[200ms] ease-out',
           'hover:shadow-md hover:-translate-y-0.5',
           sizeClasses[size],
           className

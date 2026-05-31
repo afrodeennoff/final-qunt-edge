@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
   BookOpen, LayoutDashboard, FileText, BarChart3, Sparkles, Activity, FileUp, Settings,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, Brain, Building2, Users, Trophy, DollarSign, Target,
 } from 'lucide-react'
 
 const SECTIONS = [
@@ -25,9 +25,20 @@ const SECTIONS = [
       { title: 'Trade Journal', href: '/docs/journal', icon: FileText },
       { title: 'Statistics', href: '/docs/statistics', icon: BarChart3 },
       { title: 'Analytics & Copilot', href: '/docs/analytics', icon: Sparkles },
+      { title: 'Behavior', href: '/docs/behavior', icon: Brain },
       { title: 'Accounts', href: '/docs/accounts', icon: Activity },
       { title: 'Data Import', href: '/docs/import', icon: FileUp },
       { title: 'Settings & Profile', href: '/docs/settings', icon: Settings },
+    ],
+  },
+  {
+    group: 'Advanced',
+    items: [
+      { title: 'Prop Firms', href: '/docs/propfirms', icon: Building2 },
+      { title: 'Teams', href: '/docs/teams', icon: Users },
+      { title: 'Leaderboard', href: '/docs/leaderboard', icon: Trophy },
+      { title: 'Deals', href: '/docs/deals', icon: DollarSign },
+      { title: 'Playbook', href: '/docs/playbook', icon: Target },
     ],
   },
 ]

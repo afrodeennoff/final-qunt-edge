@@ -68,7 +68,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <label
             htmlFor={inputId}
             className={cn(
-              'absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground transition-all duration-[150ms]',
+              'absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground transition-[transform,color] duration-[150ms]',
               (isFocused || hasValue) && '-translate-y-7 text-foreground text-sm',
               leftIcon && (isFocused || hasValue) && 'left-10',
               error && 'text-destructive',

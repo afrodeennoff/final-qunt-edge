@@ -53,6 +53,9 @@ export default function DocsImportPage() {
     { name: "TradeZella", type: "File Upload", method: ".csv", desc: "Migrate from TradeZella to Qunt Edge with full trade history." },
     { name: "Topstep", type: "File Upload", method: ".csv", desc: "Topstep Trader performance reports and trade data exports." },
     { name: "FTMO", type: "File Upload", method: ".csv", desc: "FTMO challenge trading reports and statement exports." },
+    { name: "ETP", type: "Sync", method: "API", desc: "Sync trade data from ETP platform integration." },
+    { name: "Thor", type: "Sync", method: "API", desc: "Sync trade data from Thor platform integration." },
+    { name: "ATAS", type: "File Upload", method: ".csv", desc: "Import ATAS trade logs and market profile data." },
     { name: "CSV / Excel", type: "Generic", method: "Column Mapping", desc: "Import any CSV or Excel file with custom column mapping. The system remembers your mappings for repeat imports." },
     { name: "Manual Entry", type: "Manual", method: "Form Entry", desc: "Enter trades one at a time or in bulk via the manual trade entry form. Perfect for paper trading or adding missing trades." },
   ]
@@ -65,11 +68,11 @@ export default function DocsImportPage() {
         <h1 className="ref-h-section mt-2 text-[var(--qe-ref-text)]">Trade Import & Platform Sync</h1>
         <p className="ref-body mt-3 max-w-[68ch] text-[var(--qe-ref-text-muted)]">
           Get your trade history into Qunt Edge — fast, accurate, and reliable. Auto-sync with major brokers for real-time 
-          trade capture, or import from 15+ platforms via file upload. Every importer includes smart parsing, duplicate 
+          trade capture, or            import from leading brokers and platforms via file upload. Every importer includes smart parsing, duplicate 
           detection, and automatic tag suggestions.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Link href={`/${locale}/dashboard`} className="ref-cta-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-semibold text-black">
+          <Link href={`/${locale}/dashboard/import`} className="ref-cta-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-semibold text-black">
             Open Import Page <ArrowRight className="h-4 w-4" />
           </Link>
           <Link href={`/${locale}/docs/getting-started`} className="ref-cta-secondary inline-flex items-center gap-2 rounded-full border px-5 py-2 text-[13px]">

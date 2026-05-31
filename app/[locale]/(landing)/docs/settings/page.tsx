@@ -61,7 +61,7 @@ export default function DocsSettingsPage() {
           preferences to account linking, notification rules, billing, and team management.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Link href={`/${locale}/dashboard`} className="ref-cta-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-semibold text-black">
+          <Link href={`/${locale}/dashboard/settings`} className="ref-cta-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-semibold text-black">
             Open Settings <ArrowRight className="h-4 w-4" />
           </Link>
           <Link href={`/${locale}/docs/getting-started`} className="ref-cta-secondary inline-flex items-center gap-2 rounded-full border px-5 py-2 text-[13px]">
@@ -269,7 +269,7 @@ export default function DocsSettingsPage() {
               <Download className="h-4 w-4 text-[var(--qe-ref-green)]" />
               <div className={headingCard}>Data Export</div>
             </div>
-            <p className={bodySmall}>Export all your data at any time: trades (CSV), journal entries (CSV/JSON), settings (JSON), and screenshots (ZIP). Request a full account archive from Settings → Account → Export Data. No lock-in, your data is always portable.</p>
+            <p className={bodySmall}>Export all your data at any time: trades (CSV or Excel), journal entries (CSV/JSON), settings (JSON), and screenshots (ZIP). Request a full account archive from Settings → Account → Export Data. No lock-in, your data is always portable.</p>
           </div>
         </div>
       </div>

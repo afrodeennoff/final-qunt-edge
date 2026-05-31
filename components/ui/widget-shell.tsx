@@ -90,7 +90,7 @@ export function WidgetShell({
     <Card
       variant="default"
       className={cn(
-        "group relative flex h-full flex-col overflow-hidden rounded-xl transition-all",
+        "group relative flex h-full flex-col overflow-hidden rounded-xl transition-[border-color,background-color,box-shadow,transform]",
         variant === "hoverable" && "hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15",
         className
       )}

@@ -61,7 +61,7 @@ export function DashboardStatCard({
       className={cn(
         unifiedMetricPanelClassName,
         sizeClasses[size],
-        "group transition-all duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15",
+        "group transition-[border-color,box-shadow] duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15",
         className
       )}
       {...props}

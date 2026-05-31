@@ -54,7 +54,7 @@ export default function DocsBehaviorPage() {
           the habits that separate consistently profitable traders from the rest.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Link href={`/${locale}/dashboard`} className="ref-cta-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-semibold text-black">
+          <Link href={`/${locale}/dashboard/behavior`} className="ref-cta-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-semibold text-black">
             View My Behavior <ArrowRight className="h-4 w-4" />
           </Link>
           <Link href={`/${locale}/docs/playbook`} className="ref-cta-secondary inline-flex items-center gap-2 rounded-full border px-5 py-2 text-[13px]">

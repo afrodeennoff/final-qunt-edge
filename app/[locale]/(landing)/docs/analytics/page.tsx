@@ -26,7 +26,7 @@ export default function DocsAnalyticsPage() {
     },
     {
       q: "Is the AI actually helpful for improving trading, or just a gimmick?",
-      a: "The Copilot is used daily by thousands of traders to catch blind spots. The most common feedback is 'it pointed out something I knew deep down but never quantified.' The AI does not give trade recommendations. It surfaces objective correlations in your data: time-of-day biases, emotional cycle patterns, plan adherence drift, and setup-specific performance."
+      a: "The Copilot is used daily by thousands of traders to catch blind spots. The most common feedback is 'it pointed out something I knew deep down but never quantified.' The AI does not give buy/sell trade recommendations or predict price movements. It surfaces objective correlations in your data: time-of-day biases, emotional cycle patterns, plan adherence drift, setup-specific performance, and risk compliance alerts based on prop firm rules."
     },
     {
       q: "Can I ask the Copilot about specific trades?",
@@ -50,7 +50,7 @@ export default function DocsAnalyticsPage() {
           and drift detection all powered by a single engine.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Link href={`/${locale}/dashboard`} className="ref-cta-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-semibold text-black">
+          <Link href={`/${locale}/dashboard/analytics`} className="ref-cta-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-semibold text-black">
             Open Copilot <ArrowRight className="h-4 w-4" />
           </Link>
           <Link href={`/${locale}/docs/journal`} className="ref-cta-secondary inline-flex items-center gap-2 rounded-full border px-5 py-2 text-[13px]">
@@ -368,7 +368,7 @@ export default function DocsAnalyticsPage() {
         <div className="mt-4 text-[11px] text-[var(--qe-ref-text-muted)]">Also see: <Link href={`/${locale}/docs/journal`} className="underline underline-offset-2 hover:no-underline">Trade Journal</Link> • <Link href={`/${locale}/docs/playbook`} className="underline underline-offset-2 hover:no-underline">Strategy Playbook</Link></div>
       </div>
 
-      <div className="text-center text-[10px] text-[var(--qe-ref-text-muted)] pt-4">The Copilot AI is updated continuously based on trader feedback and trading-specific LLM advances.</div>
+      <div className="text-center text-[10px] text-[var(--qe-ref-text-muted)] pt-4">The Copilot is updated continuously based on trader feedback and trading-specific LLM advances.</div>
     </div>
   )
 }

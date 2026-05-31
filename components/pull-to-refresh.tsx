@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useGestures } from '@/components/providers/gesture-provider'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'motion/react'
 
 export function PullToRefreshIndicator() {
   const [refreshing, setRefreshing] = useState(false)

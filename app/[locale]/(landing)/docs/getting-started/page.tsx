@@ -78,7 +78,7 @@ export default function GettingStartedPage() {
             <div className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-[var(--qe-ref-green)]" /> <strong>Emotion:</strong> Select how you felt during the trade.</div>
             <div className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-[var(--qe-ref-green)]" /> <strong>Tags:</strong> Add a setup tag like "breakout" or "reversal."</div>
           </div>
-          <p>That's it. One journaled trade is all it takes to start feeding the Copilot AI.</p>
+          <p>That's it. One journaled trade is all it takes to start feeding the Copilot.</p>
           <Link href={`/${locale}/docs/journal`} className="inline-flex text-xs text-[var(--qe-ref-green)] hover:underline">Full Journal documentation →</Link>
         </div>
       )

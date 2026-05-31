@@ -59,7 +59,7 @@ export default function DocsJournalPage() {
           Emotions, screenshots, and tags add the context that no broker statement can provide — and they power the AI Copilot.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Link href={`/${locale}/dashboard`} className="ref-cta-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-semibold text-black">
+          <Link href={`/${locale}/dashboard/trades`} className="ref-cta-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-semibold text-black">
             Open Trade Journal <ArrowRight className="h-4 w-4" />
           </Link>
           <Link href={`/${locale}/docs/analytics`} className="ref-cta-secondary inline-flex items-center gap-2 rounded-full border px-5 py-2 text-[13px]">
@@ -318,7 +318,7 @@ export default function DocsJournalPage() {
       {/* COPILOT INTEGRATION */}
       <div id="copilot">
         <div className={eyebrowStyle}>AI INTEGRATION</div>
-        <h2 className="ref-h-section mt-2">How Journaling Powers Copilot AI</h2>
+        <h2 className="ref-h-section mt-2">How Journaling Powers the Copilot</h2>
 
         <div className="mt-4 space-y-4">
           <div className={cardMain}>
