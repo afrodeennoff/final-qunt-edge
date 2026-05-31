@@ -31,10 +31,10 @@ const THEME_SWATCH_KEYS = [
 ] as const
 
 const LEGACY_DASHBOARD_THEME_ALIASES: Record<string, DashboardTheme> = {
-  purple: 'cmlh0x713000104jrgmds6vcd',
+  green: 'cmlh0x713000104jrgmds6vcd',
   plum: 'cmlh0x713000104jrgmds6vcd',
-  deepPurple: 'cmlh0x713000104jrgmds6vcd',
-  'deep-purple': 'cmlh0x713000104jrgmds6vcd',
+  deepGreen: 'cmlh0x713000104jrgmds6vcd',
+  'deep-green': 'cmlh0x713000104jrgmds6vcd',
   efferd: 'cmmi8o8ic000904l12ucn8i9p',
   midnight: 'cmmi8o8ic000904l12ucn8i9p',
   ocean: 'cmmi8o8ic000904l12ucn8i9p',
@@ -51,7 +51,7 @@ const LEGACY_DASHBOARD_THEME_ALIASES: Record<string, DashboardTheme> = {
   teal: 'cmo6ofmje000104jub1yg4bos',
   steel: 'cmmi8o8ic000904l12ucn8i9p',
   // Removed theme fallbacks — redirect to default
-  violet: 'cmlh0x713000104jrgmds6vcd',
+  greenAlt: 'cmlh0x713000104jrgmds6vcd',
   'my-theme': 'cmlh0x713000104jrgmds6vcd',
   black: 'cmlh0x713000104jrgmds6vcd',
 }

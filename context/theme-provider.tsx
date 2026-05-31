@@ -52,7 +52,7 @@ export function ThemeProvider({
   initialTheme,
 }: {
   children: React.ReactNode
-  scope?: 'dashboard' | 'fixed-purple'
+  scope?: 'dashboard' | 'fixed-green'
   initialTheme?: DashboardTheme | string
 }) {
   const resolved = resolveTheme(initialTheme)
@@ -62,7 +62,7 @@ export function ThemeProvider({
 
   useEffect(() => {
     // Only apply theme CSS variables on dashboard/teams. On public pages
-    // (fixed-purple), the CSS defaults in globals.css provide pure #000000
+    // (fixed-green), the CSS defaults in globals.css provide pure #000000
     // background with Neon Green accent tokens — no runtime override needed.
     if (isDashboard) {
       applyTheme(resolved)

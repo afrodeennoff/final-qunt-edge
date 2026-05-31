@@ -156,13 +156,13 @@ function findMostActiveDay(dailyPnL: TraderStatsEmailProps['dailyPnL']) {
 
 // Trading activity cell component like GitHub contribution graph
 const TradingActivityCell = ({ level }: { level: number }) => {
-  // Level 0-4 representing trading activity intensity with purple color scheme
+  // Level 0-4 representing trading activity intensity with green color scheme
   const colors = [
     'bg-[#ebedf0]', // No activity
-    'bg-[#e9d5ff]', // Low activity
-    'bg-[#c4b5fd]', // Moderate activity
-    'bg-[#a78bfa]', // High activity
-    'bg-[#7c3aed]', // Very high activity - main purple color
+    'bg-[#ccffdd]', // Low activity
+    'bg-[#66ffaa]', // Moderate activity
+    'bg-[#33ff85]', // High activity
+    'bg-[#00b347]', // Very high activity - main green color
   ];
 
   return (

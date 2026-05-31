@@ -198,7 +198,7 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
                         </div>
                         <div>
                             <h3 className="text-lg font-semibold mb-2">Total Cost</h3>
-                            <p className="text-xl font-bold text-purple-600">
+                            <p className="text-xl font-bold text-green-600">
                                 ${totalCost.toFixed(2)}
                             </p>
                         </div>

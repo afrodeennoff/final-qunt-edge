@@ -20,8 +20,8 @@ function ThemeProbe() {
       <button data-testid="toggleTheme" onClick={toggleTheme} type="button">
         toggle
       </button>
-      <button data-testid="setPurple" onClick={() => setTheme('cmlh0x713000104jrgmds6vcd')} type="button">
-        purple
+      <button data-testid="setGreen" onClick={() => setTheme('cmlh0x713000104jrgmds6vcd')} type="button">
+        green
       </button>
     </div>
   )

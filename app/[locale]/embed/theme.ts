@@ -87,7 +87,7 @@ export const THEME_PRESETS: Record<string, EmbedThemeVars> = {
     '--chart-1': '0 70% 60%', 
     '--chart-2': '190 92% 45%', // cyan
     '--chart-3': '160 84% 40%', // green
-    '--chart-4': '260 84% 60%', // violet
+    '--chart-4': '150 84% 60%', // green
     '--chart-5': '340 80% 60%', // magenta
     '--chart-loss': '0 70% 60%',
     '--chart-win': '160 84% 40%',
