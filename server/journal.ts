@@ -18,6 +18,22 @@ export type MindsetData = {
   emotionValue: number;
   selectedNews: string[];
   journalContent: string;
+  screenshots?: string[];
+  customTags?: string[];
+};
+
+/**
+ * Rich daily reflection / journal entry data (used by the advanced daily journal view).
+ * Extends the classic mindset with attachments and structured tags.
+ */
+export type DailyJournalData = {
+  emotionValue?: number;
+  journalContent?: string;
+  selectedNews?: string[];
+  screenshots?: string[];
+  customTags?: string[];
+  // Future: separate structured fields (Mental State, Daily Goals, Market Bias, Rate Your Day)
+  // can be stored inside journalContent (rich text) or as dedicated JSON if needed.
 };
 
 export async function saveMindset(
@@ -66,6 +82,8 @@ export async function saveMindset(
           selectedNews: data.selectedNews,
           journalContent: data.journalContent,
           mood: getMoodLabel(data.emotionValue),
+          screenshots: data.screenshots ?? [],
+          customTags: data.customTags ?? [],
           updatedAt: now,
         },
       })
@@ -82,6 +100,8 @@ export async function saveMindset(
         selectedNews: data.selectedNews,
         journalContent: data.journalContent,
         mood: getMoodLabel(data.emotionValue),
+        screenshots: data.screenshots ?? [],
+        customTags: data.customTags ?? [],
       },
     })
 
@@ -304,8 +324,11 @@ export async function deleteMindset(date: string) {
 
 export async function saveJournal(
   journalContent: string,
-  date?: string
+  dateOrOptions?: string | { date?: string; screenshots?: string[]; customTags?: string[] }
 ) {
+  const date = typeof dateOrOptions === 'string' ? dateOrOptions : dateOrOptions?.date;
+  const screenshots = typeof dateOrOptions === 'object' ? (dateOrOptions.screenshots ?? []) : [];
+  const customTags = typeof dateOrOptions === 'object' ? (dateOrOptions.customTags ?? []) : [];
   try {
     const userId = await getDatabaseUserId()
 
@@ -331,11 +354,13 @@ export async function saveJournal(
     })
 
     if (existingMood) {
-      // Update existing mood with only journal content
+      // Update existing mood with journal content + optional daily reflection attachments/tags
       const updatedMood = await prisma.mood.update({
         where: { id: existingMood.id },
         data: {
           journalContent,
+          screenshots: screenshots.length ? screenshots : undefined,
+          customTags: customTags.length ? customTags : undefined,
           updatedAt: now,
         },
       })
@@ -343,7 +368,7 @@ export async function saveJournal(
       return updatedMood
     }
 
-    // Create new mood with only journal content
+    // Create new mood with journal content + optional daily reflection attachments/tags
     const newMood = await prisma.mood.create({
       data: {
         userId: userId,
@@ -351,6 +376,8 @@ export async function saveJournal(
         journalContent,
         mood: 'NEUTRAL', // Default mood
         emotionValue: 50, // Default emotion value
+        screenshots,
+        customTags,
       },
     })
 
@@ -489,5 +516,30 @@ export async function getJournalTradesAction(
     journal: trade.journal ? serializeDecimals(trade.journal) : null,
   }))
 
-  return { entries, total, page, pageSize, totalPages: Math.ceil(total / pageSize) }
-} 
+    return { entries, total, page, pageSize, totalPages: Math.ceil(total / pageSize) }
+ }
+
+// ---------------------------------------------------------------------------
+// Daily journal helpers (rich reflection support for the advanced daily view)
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns the weekday auto-tag for a given date (no French).
+ * Used for automatic tagging of daily journal entries.
+ */
+export function getWeekdayAutoTag(date: Date | string): string {
+  const d = typeof date === 'string' ? new Date(date) : date
+  const day = d.getUTCDay() // 0=Sunday ... 6=Saturday
+  const map = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  return map[day] || 'Weekday'
+}
+
+/**
+ * Merges weekday auto-tag into a customTags array (idempotent).
+ */
+export function withWeekdayAutoTag(customTags: string[] | undefined, date: Date | string): string[] {
+  const tag = getWeekdayAutoTag(date)
+  const base = customTags || []
+  if (base.includes(tag)) return base
+  return [...base, tag]
+}

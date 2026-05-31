@@ -48,6 +48,7 @@ model User {
   teamSubscriptions     TeamSubscription[]     @relation("UserTeamSubscriptions")
   businessSubscriptions BusinessSubscription[] @relation("UserBusinessSubscriptions")
   comments              Comment[]              @relation("UserComments")
+  journalTagTemplates   JournalTagTemplate[]   @relation("UserJournalTagTemplates")
   groups                Group[]                @relation("UserGroups")
   moods                 Mood[]                 @relation("UserMoods")
   notifications         Notification[]         @relation("UserNotifications")
@@ -424,6 +425,20 @@ model JournalEntry {
 
   @@index([userId])
   @@index([tradeId])
+  @@schema("public")
+}
+
+model JournalTagTemplate {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  tags      String[] @default([])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation("UserJournalTagTemplates", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
   @@schema("public")
 }
 
@@ -954,6 +969,8 @@ model Mood {
   conversation   Json?
   journalContent String?
   selectedNews   String[] @default([])
+  screenshots    String[] @default([])   // daily reflection screenshots (optimized storage paths)
+  customTags     String[] @default([])   // tags for the day (from rich tag templates)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

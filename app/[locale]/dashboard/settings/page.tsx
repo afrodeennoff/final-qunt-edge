@@ -74,6 +74,7 @@ import {
 } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { LinkedAccounts } from '@/components/linked-accounts'
+import { JournalTagManager } from './journal-tag-manager'
 import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
 
 type Locale = 'en' | 'fr'
@@ -1091,6 +1092,9 @@ export default function SettingsPage() {
 
         {/* Linked Accounts Section */}
         <LinkedAccounts />
+
+        {/* Rich Journal Tag Templates — powers daily journal + per-trade notes */}
+        <JournalTagManager />
 
         <PasswordSettingsCard
           t={t}
