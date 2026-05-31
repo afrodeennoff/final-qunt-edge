@@ -25,7 +25,7 @@ import { toast } from "sonner"
 import { defaultLayouts } from "@/lib/default-layouts"
 import type { DashboardLayout } from "@/prisma/generated/prisma"
 import { useDashboard } from '../dashboard-context'
-import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
 import { WidgetShell } from "@/components/ui/widget-shell"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { isUiV2Enabled } from "@/lib/ui-v2"
@@ -643,10 +643,8 @@ export default function WidgetCanvas() {
  >
  <motion.div
  className="h-full min-h-0"
- layout
  initial={shouldAnimateWidget ? { opacity: 0, y: 12 } : false}
  animate={shouldAnimateWidget ? { opacity: 1, y: 0 } : undefined}
- exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
  transition={
  shouldAnimateWidget
  ? {
