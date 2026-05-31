@@ -16,6 +16,10 @@ import {
   Lock,
   Globe,
   Users,
+  Users2,
+  Building2,
+  Percent,
+  Trophy,
   Cpu,
   MessageCircle,
   Plus,
@@ -196,22 +200,167 @@ export default function HomeContent() {
                </div>
              </div>
 
-            {/* Card 4: Polkadot + 2FA */}
-             <div className={cardMain}>
-               <div className="flex items-start justify-between">
-                 <div>
-                   <h3 className={headingCard}>Prop Firm Compliance Tools</h3>
-                   <p className={cn(bodySmall, 'mt-2')}>
-                     Drawdown tracking, rule adherence monitoring, and payout-ready reports for funded prop firm accounts.
-                   </p>
-                 </div>
-                 <div className="text-right">
-                   <div className="text-[10px] text-[var(--qe-ref-text-muted)]">Compliance</div>
-                   <div className="text-lg font-semibold tabular-nums text-[var(--qe-ref-green)]">98%</div>
-                 </div>
-               </div>
-             </div>
-          </div>
+             {/* Card 4: Polkadot + 2FA */}
+              <div className={cardMain}>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className={headingCard}>Prop Firm Compliance Tools</h3>
+                    <p className={cn(bodySmall, 'mt-2')}>
+                      Drawdown tracking, rule adherence monitoring, and payout-ready reports for funded prop firm accounts.
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[10px] text-[var(--qe-ref-text-muted)]">Compliance</div>
+                    <div className="text-lg font-semibold tabular-nums text-[var(--qe-ref-green)]">98%</div>
+                  </div>
+                </div>
+              </div>
+
+             {/* Card 5: Prop Firms Catalogue */}
+              <Link href={`/${locale}/propfirms`} className={`${cardMain} block transition-all hover:border-[var(--qe-ref-green)]/30 hover:bg-[var(--qe-ref-surface)]/30`}>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className={headingCard}>Prop Firms Catalogue</h3>
+                    <p className={cn(bodySmall, 'mt-2')}>
+                      Browse 50+ verified prop firms with live user stats on accounts, payouts and success.
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[10px] text-[var(--qe-ref-text-muted)]">Firms</div>
+                    <div className="text-lg font-semibold tabular-nums text-[var(--qe-ref-green)]">120+</div>
+                  </div>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  <div className={cardNested}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)]">
+                        <Building2 className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-[var(--qe-ref-text-muted)]">Verified</div>
+                        <div className="text-sm font-semibold tabular-nums">4.2d payout</div>
+                      </div>
+                    </div>
+                    <p className="text-[11px] leading-relaxed text-[var(--qe-ref-text-muted)]">
+                      Real aggregated data from thousands of funded traders.
+                    </p>
+                  </div>
+                  <div className={cardNested}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-semantic-info/10 text-semantic-info">
+                        <Globe className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-[var(--qe-ref-text-muted)]">Tracked</div>
+                        <div className="text-sm font-semibold tabular-nums">2.4k accounts</div>
+                      </div>
+                    </div>
+                    <p className="text-[11px] leading-relaxed text-[var(--qe-ref-text-muted)]">
+                      Payout performance, platform & drawdown filters.
+                    </p>
+                  </div>
+                </div>
+              </Link>
+
+             {/* Card 6: Deals */}
+              <Link href={`/${locale}/deals`} className={`${cardMain} block transition-all hover:border-[var(--qe-ref-green)]/30 hover:bg-[var(--qe-ref-surface)]/30`}>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className={headingCard}>Deals</h3>
+                    <p className={cn(bodySmall, 'mt-2')}>
+                      Real-time prop firm challenge discounts. Compare fees, promos & move to full research.
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[10px] text-[var(--qe-ref-text-muted)]">Max Save</div>
+                    <div className="text-lg font-semibold tabular-nums text-[var(--qe-ref-green)]">40%</div>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <div className={cardNested}>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-semantic-warning/10 text-semantic-warning">
+                        <Percent className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-sm font-semibold">12 active promos • Expiring soon</div>
+                        <p className="text-[11px] text-[var(--qe-ref-text-muted)]">Futures challenges from top firms. Instant funding options too.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+
+             {/* Card 7: Leaderboard */}
+              <Link href={`/${locale}/leaderboard`} className={`${cardMain} block transition-all hover:border-[var(--qe-ref-green)]/30 hover:bg-[var(--qe-ref-surface)]/30`}>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className={headingCard}>Leaderboard</h3>
+                    <p className={cn(bodySmall, 'mt-2')}>
+                      Public performance rankings. Real monthly PnL, win rates from opted-in traders.
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[10px] text-[var(--qe-ref-text-muted)]">Traders</div>
+                    <div className="text-lg font-semibold tabular-nums text-[var(--qe-ref-green)]">1.2k+</div>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)]">
+                    <Trophy className="h-5 w-5" />
+                  </div>
+                  <div className="text-[11px] leading-relaxed text-[var(--qe-ref-text-muted)]">
+                    Top performer this month: +$47k realized PnL. Filter by win rate or trade count.
+                  </div>
+                </div>
+              </Link>
+
+             {/* Card 8: Teams */}
+              <Link href={`/${locale}/teams`} className={`${cardMain} block transition-all hover:border-[var(--qe-ref-green)]/30 hover:bg-[var(--qe-ref-surface)]/30`}>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className={headingCard}>Teams</h3>
+                    <p className={cn(bodySmall, 'mt-2')}>
+                      Shared workspaces for prop firms & funds. Unified analytics, risk & reviews.
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[10px] text-[var(--qe-ref-text-muted)]">Teams</div>
+                    <div className="text-lg font-semibold tabular-nums text-[var(--qe-ref-green)]">50+</div>
+                  </div>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  <div className={cardNested}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-semantic-success/10 text-semantic-success">
+                        <Users2 className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-[var(--qe-ref-text-muted)]">Desk</div>
+                        <div className="text-sm font-semibold tabular-nums">Live sync</div>
+                      </div>
+                    </div>
+                    <p className="text-[11px] leading-relaxed text-[var(--qe-ref-text-muted)]">
+                      Manager visibility across all traders in one surface.
+                    </p>
+                  </div>
+                  <div className={cardNested}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-semantic-info/10 text-semantic-info">
+                        <Users className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-[var(--qe-ref-text-muted)]">Coaching</div>
+                        <div className="text-sm font-semibold tabular-nums">Weekly rhythm</div>
+                      </div>
+                    </div>
+                    <p className="text-[11px] leading-relaxed text-[var(--qe-ref-text-muted)]">
+                      Turn reviews into repeatable team process.
+                    </p>
+                  </div>
+                </div>
+              </Link>
+           </div>
 
           {/* Two-Factor Authentication card (full width below) */}
            <div className={cardMain} style={{ marginTop: '16px' }}>
