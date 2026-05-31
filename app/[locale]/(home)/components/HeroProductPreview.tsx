@@ -49,8 +49,8 @@ export default function HeroProductPreview() {
 
           <div className="mt-2 ref-mini-chart rounded-md">
             <svg width="100%" height="58" viewBox="0 0 260 58" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 44 L28 37 L52 39 L76 24 L100 28 L124 15 L148 20 L172 8 L196 13 L220 2 L244 5 L258 -1" stroke="#00ff9f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M4 44 L28 37 L52 39 L76 24 L100 28 L124 15 L148 20 L172 8 L196 13 L220 2 L244 5 L258 -1" stroke="#00ff9f" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" opacity="0.18"/>
+              <path d="M4 44 L28 37 L52 39 L76 24 L100 28 L124 15 L148 20 L172 8 L196 13 L220 2 L244 5 L258 -1" stroke="var(--qe-ref-green)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M4 44 L28 37 L52 39 L76 24 L100 28 L124 15 L148 20 L172 8 L196 13 L220 2 L244 5 L258 -1" stroke="var(--qe-ref-green)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" opacity="0.18"/>
             </svg>
           </div>
 
