@@ -6,7 +6,6 @@ import {
   ArrowRight,
   Check,
   ChevronDown,
-  Star,
   Zap,
   Brain,
   Shield,
@@ -622,59 +621,6 @@ export default function HomeContent() {
           </div>
         </div>
       </section>
-
-      {/* ═══════════════════════════════════════════════════════════════
-          SECTION 8: FOOTER (Reference: logo, subscribe, links columns)
-         ═══════════════════════════════════════════════════════════════ */}
-      <footer className="border-t border-[var(--qe-ref-card-border)] pt-12 pb-8">
-        <div className={HOME_WIDTH}>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
-            {/* Logo + Subscribe */}
-            <div className="lg:col-span-2">
-              <div className="text-2xl font-bold tracking-tight text-[var(--qe-ref-green)]">QUNT EDGE</div>
-              <p className="mt-3 text-[13px] leading-relaxed text-[var(--qe-ref-text-muted)] max-w-[280px]">
-                The AI-powered trading journal platform built for serious traders who want lasting edge.
-              </p>
-              <div className="mt-5 flex gap-2">
-                {['twitter', 'github', 'discord'].map((social) => (
-                  <a key={social} href="#" className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] text-[var(--qe-ref-text-muted)] transition-colors hover:border-[var(--qe-ref-green)]/30 hover:text-[var(--qe-ref-green)]">
-                    {social === 'twitter' && <Globe className="h-4 w-4" />}
-                    {social === 'github' && <Star className="h-4 w-4" />}
-                    {social === 'discord' && <MessageCircle className="h-4 w-4" />}
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            {/* Product links */}
-            <div>
-              <h4 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[var(--qe-ref-text)] mb-3">Product</h4>
-              <ul className="space-y-2 text-[13px] text-[var(--qe-ref-text-muted)]">
-                <li><Link href={`/${locale}/dashboard`} className="hover:text-[var(--qe-ref-green)] transition-colors">Features</Link></li>
-                <li><Link href={`/${locale}/pricing`} className="hover:text-[var(--qe-ref-green)] transition-colors">Pricing</Link></li>
-                <li><Link href={`/${locale}/propfirms`} className="hover:text-[var(--qe-ref-green)] transition-colors">About us</Link></li>
-                <li><Link href={`/${locale}/careers`} className="hover:text-[var(--qe-ref-green)] transition-colors">Careers</Link></li>
-                <li><Link href={`/${locale}/blog`} className="hover:text-[var(--qe-ref-green)] transition-colors">Blog</Link></li>
-              </ul>
-            </div>
-
-            {/* Company links */}
-            <div>
-              <h4 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[var(--qe-ref-text)] mb-3">Company</h4>
-              <ul className="space-y-2 text-[13px] text-[var(--qe-ref-text-muted)]">
-                <li><Link href="/terms" className="hover:text-[var(--qe-ref-green)] transition-colors">Terms of Service</Link></li>
-                <li><Link href="/privacy" className="hover:text-[var(--qe-ref-green)] transition-colors">Privacy Policy</Link></li>
-                <li><Link href="/support" className="hover:text-[var(--qe-ref-green)] transition-colors">Regulatory Information</Link></li>
-                <li><Link href="/how-it-works" className="hover:text-[var(--qe-ref-green)] transition-colors">How It Works</Link></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-8 border-t border-[var(--qe-ref-card-border)] pt-6 text-center text-[11px] text-[var(--e-ref-text-muted)]">
-            &copy; {new Date().getFullYear()} Qunt Edge. All rights reserved. Built for traders who demand excellence.
-          </div>
-        </div>
-      </footer>
 
     </div>
   )

@@ -3,13 +3,13 @@
 import type { ComponentType } from 'react'
 import Link from 'next/link'
 import { motion } from 'motion/react'
-import { Github, MessageCircle, Youtube } from 'lucide-react'
 import {
-  unifiedGhostActionClassName,
-  unifiedPrimaryActionClassName,
-} from '@/components/layout/unified-page-recipes'
-import { MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
-import { Logo } from '@/components/logo'
+  ArrowRight,
+  Github,
+  Youtube,
+  MessageCircle,
+  Twitter,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useCurrentLocale, useI18n } from '@/locales/client'
 
@@ -21,28 +21,29 @@ export default function Footer() {
   const locale = useCurrentLocale()
 
   const productLinks: FooterLink[] = [
-    { name: String(t('landing.footerNew.features')), href: '/#features' },
-    { name: String(t('landing.footerNew.pricing')), href: '/pricing' },
-    { name: String(t('landing.navbar.propFirms')), href: '/propfirms' },
-    { name: String(t('landing.navbar.propFirmPerk')), href: '/deals' },
-    { name: String(t('landing.navbar.teams')), href: '/teams' },
+    { name: 'Features', href: '/#features' },
+    { name: 'Pricing', href: '/pricing' },
+    { name: 'Prop Firms Catalogue', href: '/propfirms' },
+    { name: 'Deals', href: '/deals' },
+    { name: 'Teams', href: '/teams' },
   ]
 
   const supportLinks: FooterLink[] = [
-    { name: String(t('landing.footerNew.support')), href: '/support' },
-    { name: String(t('landing.footerNew.community')), href: '/community' },
-    { name: String(t('landing.footerNew.changelog')), href: '/updates' },
-    { name: String(t('landing.footerNew.faq')), href: '/faq' },
+    { name: 'Support', href: '/support' },
+    { name: 'Community', href: '/community' },
+    { name: 'Changelog', href: '/updates' },
+    { name: 'FAQ', href: '/faq' },
   ]
 
   const legalLinks: FooterLink[] = [
-    { name: String(t('landing.footerNew.about')), href: '/about' },
-    { name: String(t('landing.footerNew.privacy')), href: '/privacy' },
-    { name: String(t('landing.footerNew.terms')), href: '/terms' },
-    { name: String(t('landing.footerNew.disclaimers')), href: '/disclaimers' },
+    { name: 'About', href: '/about' },
+    { name: 'Privacy', href: '/privacy' },
+    { name: 'Terms', href: '/terms' },
+    { name: 'Disclaimers', href: '/disclaimers' },
   ]
 
   const socialLinks: SocialLink[] = [
+    { name: 'Twitter', href: '#', icon: Twitter },
     { name: 'GitHub', href: 'https://github.com/afrodeennoff/qunt-edge', icon: Github },
     { name: 'YouTube', href: 'https://www.youtube.com/@TIMON', icon: Youtube },
     {
@@ -53,66 +54,64 @@ export default function Footer() {
   ].filter((item) => item.href)
 
   return (
-    <footer
-      aria-labelledby="footer-heading"
-      className="border-t border-transparent bg-background py-12 sm:py-16"
-    >
-      <h2 id="footer-heading" className="sr-only">
-        {t('footer.heading')}
-      </h2>
+    <footer className="relative w-full border-t border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface)] pt-14 pb-8">
+      <div className="mx-auto w-full max-w-[1100px] px-6">
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-80px' }}
-        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-        className={cn('mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-10', MARKETING_SHELL_WIDTH)}
-      >
-        <div
-          className={cn(
-            'rounded-2xl border-0 bg-background shadow-sm',
-            'grid gap-8 p-7 sm:p-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)] lg:p-10',
-          )}
+        {/* Main footer grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr]"
         >
+          {/* Left column — brand + CTA + social */}
           <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border-0 bg-muted/40 text-muted-foreground">
-                <Logo className="h-5 w-5 fill-current" />
+            {/* Brand */}
+            <motion.div
+              initial={{ opacity: 0, x: -12 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <div className="text-2xl font-bold tracking-tight text-[var(--qe-ref-green)]">
+                QUNT EDGE
               </div>
-              <div className="leading-none">
-                <div className="text-sm font-semibold tracking-tight text-foreground">
-                  Qunt Edge
-                </div>
-                <div className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  {t('landing.footerNew.brandLabel')}
-                </div>
-              </div>
-            </div>
+              <p className="mt-3 max-w-[300px] text-[13px] leading-relaxed text-[var(--qe-ref-text-muted)]">
+                The AI-powered trading journal platform built for serious traders who demand lasting edge.
+              </p>
+            </motion.div>
 
-            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground/80">
-              {t('landing.footerNew.tagline')}
-            </p>
-
-            <div className="flex flex-wrap items-center gap-3">
+            {/* CTA buttons */}
+            <motion.div
+              initial={{ opacity: 0, x: -12 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="flex flex-wrap gap-3"
+            >
+              <Link
+                href={`/${locale}/authentication`}
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--qe-ref-green)] px-5 py-2.5 text-[13px] font-semibold text-black transition-opacity hover:opacity-90"
+              >
+                Get Started <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
               <Link
                 href={`/${locale}/support`}
-                prefetch={false}
-                className={cn(unifiedGhostActionClassName, 'px-4 py-2 text-xs')}
+                className="inline-flex items-center rounded-full border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] px-5 py-2.5 text-[13px] font-medium text-[var(--qe-ref-text-muted)] transition-colors hover:border-[var(--qe-ref-green)]/30 hover:text-[var(--qe-ref-text)]"
               >
-                {t('landing.footerNew.contactSupport')}
+                Contact Support
               </Link>
-              <Link
-                href={`/${locale}/authentication?next=dashboard`}
-                prefetch={false}
-                className={cn(unifiedPrimaryActionClassName, 'px-4 py-2 text-xs')}
-              >
-                {t('landing.footerNew.startAudit')}
-              </Link>
-            </div>
+            </motion.div>
 
-            <div className="h-px w-full max-w-md bg-transparent/45" />
-
-            <div className="flex items-center gap-2.5">
+            {/* Social links */}
+            <motion.div
+              initial={{ opacity: 0, x: -12 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex items-center gap-2.5"
+            >
               {socialLinks.map((item, index) => (
                 <motion.a
                   key={item.name}
@@ -120,72 +119,138 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={item.name}
-                  initial={{ opacity: 0, y: 8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.08 + index * 0.05, duration: 0.35 }}
-                  className={cn(
-                    'flex h-9 w-9 items-center justify-center rounded-full border-0 bg-muted/10 text-muted-foreground shadow-sm transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-transparent hover:bg-muted/40 hover:text-primary',
-                  )}
+                  transition={{ delay: 0.22 + index * 0.05, duration: 0.35 }}
+                  whileHover={{ scale: 1.08, borderColor: 'rgba(0,255,159,0.4)' }}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] text-[var(--qe-ref-text-muted)] transition-colors hover:border-[var(--qe-ref-green)]/30 hover:text-[var(--qe-ref-green)]"
                 >
-                  <item.icon className="size-[18px]" />
+                  <item.icon className="h-4 w-4" />
                 </motion.a>
               ))}
+            </motion.div>
+          </div>
+
+          {/* Right column — link groups */}
+          <div className="grid grid-cols-3 gap-6">
+            {/* Product */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: 0.1 }}
+            >
+              <h4 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[var(--qe-ref-text)] mb-3.5">
+                Product
+              </h4>
+              <ul className="space-y-2.5">
+                {productLinks.map((item, index) => (
+                  <motion.li
+                    key={item.name}
+                    initial={{ opacity: 0, x: -4 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.15 + index * 0.04, duration: 0.3 }}
+                  >
+                    <Link
+                      href={`/${locale}${item.href}`}
+                      prefetch={false}
+                      className="text-[13px] text-[var(--qe-ref-text-muted)] transition-colors hover:text-[var(--qe-ref-green)]"
+                    >
+                      {item.name}
+                    </Link>
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* Support */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: 0.15 }}
+            >
+              <h4 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[var(--qe-ref-text)] mb-3.5">
+                Support
+              </h4>
+              <ul className="space-y-2.5">
+                {supportLinks.map((item, index) => (
+                  <motion.li
+                    key={item.name}
+                    initial={{ opacity: 0, x: -4 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 + index * 0.04, duration: 0.3 }}
+                  >
+                    <Link
+                      href={`/${locale}${item.href}`}
+                      prefetch={false}
+                      className="text-[13px] text-[var(--qe-ref-text-muted)] transition-colors hover:text-[var(--qe-ref-green)]"
+                    >
+                      {item.name}
+                    </Link>
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* Legal */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: 0.2 }}
+            >
+              <h4 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[var(--qe-ref-text)] mb-3.5">
+                Legal
+              </h4>
+              <ul className="space-y-2.5">
+                {legalLinks.map((item, index) => (
+                  <motion.li
+                    key={item.name}
+                    initial={{ opacity: 0, x: -4 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.25 + index * 0.04, duration: 0.3 }}
+                  >
+                    <Link
+                      href={`/${locale}${item.href}`}
+                      prefetch={false}
+                      className="text-[13px] text-[var(--qe-ref-text-muted)] transition-colors hover:text-[var(--qe-ref-green)]"
+                    >
+                      {item.name}
+                    </Link>
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Bottom divider + copyright */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-10 border-t border-[var(--qe-ref-card-border)] pt-6"
+        >
+          <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
+            <p className="text-[11px] text-[var(--qe-ref-text-muted)]">
+              &copy; {new Date().getFullYear()} Qunt Edge. All rights reserved. Built for traders who demand excellence.
+            </p>
+            <div className="flex items-center gap-4 text-[11px] text-[var(--qe-ref-text-muted)]">
+              <span>Public API (MCP):</span>
+              <code className="rounded bg-[var(--qe-ref-surface-2)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--qe-ref-text-muted)]">
+                /api/mcp/public
+              </code>
+              <span>&mdash; no auth required</span>
             </div>
           </div>
-
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
-            <FooterColumn title={String(t('landing.footerNew.product'))} links={productLinks} />
-            <FooterColumn title={String(t('landing.footerNew.support'))} links={supportLinks} />
-            <FooterColumn title={String(t('landing.footerNew.legal'))} links={legalLinks} />
-          </div>
-        </div>
-
-        <div className="mt-8 border-t border-transparent pt-5 space-y-3">
-          <div className="text-xs text-muted-foreground/70">
-            <span className="font-semibold text-foreground/60">Public API (MCP):</span>{' '}
-            <code className="font-mono text-[10px] bg-muted/40 px-1.5 py-0.5 rounded select-all">{typeof window !== 'undefined' ? window.location.origin : ''}/api/mcp/public</code>
-            {' '}— no auth required, browse prop firms, deals, blog, leaderboard, benchmarks
-          </div>
-          <p className="text-xs tracking-[-0.005em] text-muted-foreground">
-            {t('footer.copyright', { year: new Date().getFullYear() })}
-          </p>
-          <p className="text-xs leading-relaxed text-muted-foreground/50">
-            {t('disclaimer.risk.content')}
-          </p>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </footer>
-  )
-}
-
-function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) {
-  const locale = useCurrentLocale()
-
-  return (
-    <div>
-      <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-foreground/70">
-        {title}
-      </h3>
-      <ul className="space-y-2">
-        {links.map((item, index) => (
-          <motion.li
-            key={item.name}
-            initial={{ opacity: 0, y: 6 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.04, duration: 0.3 }}
-          >
-            <Link
-              href={`/${locale}${item.href}`}
-              prefetch={false}
-              className="inline-flex rounded-lg px-2 py-1 text-sm text-muted-foreground/80 transition-[color,background-color] duration-200 hover:bg-muted/60 hover:text-foreground"
-            >
-              {item.name}
-            </Link>
-          </motion.li>
-        ))}
-      </ul>
-    </div>
   )
 }
