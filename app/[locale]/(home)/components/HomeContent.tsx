@@ -387,35 +387,35 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                     </p>
                   </div>
                 </div>
-              </Link>
-           </div>
+               </Link>
+            </motion.div>
 
-          {/* Two-Factor Authentication card (full width below) */}
-           <div className={cardMain} style={{ marginTop: '16px' }}>
-             <h3 className={headingCard}>Enterprise-Grade Security</h3>
-             <p className={cn(bodySmall, 'mt-2', 'max-w-[600px]')}>
-               Bank-level encryption and SOC2 compliance protect your trading journal data, review history, and performance records.
-             </p>
-             <div className="mt-4 flex items-center gap-6">
-               <div className="flex flex-col items-center gap-2">
-                 <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)]">
-                   <Shield className="h-6 w-6 text-[var(--qe-ref-green)]" />
-                 </div>
-                 <span className="text-[11px] text-[var(--qe-ref-text-muted)]">Time-based<br/>one-time password</span>
-               </div>
-               <div className="flex flex-col items-center gap-2">
-                 <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)]">
-                   <Lock className="h-6 w-6 text-[var(--qe-ref-text-muted)]" />
-                 </div>
-                 <span className="text-[11px] text-[var(--qe-ref-text-muted)]">End-to-end<br/>encrypted storage</span>
-               </div>
+            {/* Enterprise-Grade Security (full width below the grid) */}
+            <div className={cardMain} style={{ marginTop: '16px' }}>
+              <h3 className={headingCard}>Enterprise-Grade Security</h3>
+              <p className={cn(bodySmall, 'mt-2', 'max-w-[600px]')}>
+                Bank-level encryption and SOC2 compliance protect your trading journal data, review history, and performance records.
+              </p>
+              <div className="mt-4 flex items-center gap-6">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)]">
+                    <Shield className="h-6 w-6 text-[var(--qe-ref-green)]" />
+                  </div>
+                  <span className="text-[11px] text-[var(--qe-ref-text-muted)]">Time-based<br/>one-time password</span>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)]">
+                    <Lock className="h-6 w-6 text-[var(--qe-ref-text-muted)]" />
+                  </div>
+                  <span className="text-[11px] text-[var(--qe-ref-text-muted)]">End-to-end<br/>encrypted storage</span>
+                </div>
               </div>
             </div>
 
-             {/* ═══════════════════════════════════════════════════════════════
-                 LIVE FROM THE PLATFORM — 3 Separate Cards
-                ═══════════════════════════════════════════════════════════════ */}
-             <div className="mt-4">
+            {/* ═══════════════════════════════════════════════════════════════
+                LIVE FROM THE PLATFORM — 3 Separate Cards
+               ═══════════════════════════════════════════════════════════════ */}
+            <div className="mt-4">
                <div className="mb-3 flex items-center justify-between px-1">
                  <div>
                    <div className={eyebrowStyle}>LIVE FROM THE PLATFORM</div>
@@ -446,10 +446,10 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                    ) : (
                      <div className="text-[11px] text-[var(--qe-ref-text-muted)]">Live data updating…</div>
                    )}
-                   <Link href={`/${locale}/propfirms`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">Browse catalogue →</Link>
-                 </div>
-
-                 {/* Hot Deals Card */}
+                    <Link href={`/${locale}/propfirms`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">Browse catalogue →</Link>
+                  </motion.div>
+ 
+                  {/* Hot Deals Card */}
                  <div className={cardMain}>
                    <div className="flex items-center gap-2 mb-3">
                      <Percent className="h-4 w-4 text-[var(--qe-ref-green)]" />
@@ -637,13 +637,13 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                    )
                  })}
                </div>
-               <p className={cn(bodySmall, 'mt-4')}>
-                 When review is complete, the journal generates a concise debrief with specific, actionable improvement steps.
-               </p>
-             </div>
-           </div>
-        </div>
-      </section>
+                <p className={cn(bodySmall, 'mt-4')}>
+                  When review is complete, the journal generates a concise debrief with specific, actionable improvement steps.
+                </p>
+              </div>
+            </motion.div>
+         </div>
+       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 5: WHY MILLIONS TRUST OUR AI (Reference: 3 pillar cards)
@@ -827,12 +827,12 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                    </div>
                 </div>
                 <p className="text-[12px] leading-relaxed text-[var(--qe-ref-text-muted)]">{t.quote}</p>
-                <div className="mt-3 text-[10px] text-[var(--qe-ref-text-muted)]">{t.date}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+                 <div className="mt-3 text-[10px] text-[var(--qe-ref-text-muted)]">{t.date}</div>
+               </div>
+             ))}
+           </motion.div>
+         </div>
+       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 7: FAQ ACCORDION (Reference: expandable FAQ items)
