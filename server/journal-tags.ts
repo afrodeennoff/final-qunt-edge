@@ -1,3 +1,5 @@
+'use server'
+
 import { prisma } from '@/lib/prisma'
 import { DEFAULT_TAG_CATEGORIES } from '@/lib/journal-utils'
 
