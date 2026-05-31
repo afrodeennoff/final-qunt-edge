@@ -46,7 +46,7 @@ export function JournalCardHeader({ card, isExpanded, onToggle }: JournalCardHea
           'rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider',
           isLong
             ? 'bg-semantic-success/15 text-semantic-success'
-            : 'bg-semantic-danger/15 text-semantic-danger',
+            : 'bg-semantic-error/15 text-semantic-error',
         )}
       >
         {trade.side || '—'}
@@ -55,7 +55,7 @@ export function JournalCardHeader({ card, isExpanded, onToggle }: JournalCardHea
       <span
         className={cn(
           'min-w-[4.5rem] text-sm font-semibold tabular-nums',
-          isWin ? 'text-semantic-success' : isLoss ? 'text-semantic-danger' : 'text-muted-foreground',
+          isWin ? 'text-semantic-success' : isLoss ? 'text-semantic-error' : 'text-muted-foreground',
         )}
       >
         {trade.pnl >= 0 ? '+' : ''}${Math.abs(trade.pnl).toFixed(2)}

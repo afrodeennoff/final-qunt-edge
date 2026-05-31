@@ -81,6 +81,8 @@ export function useJournal(userId: string | null): UseJournalReturn {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const syncQueueRef = useRef<Map<string, { type: 'create' | 'update'; data: any }>>(new Map())
   const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const fetchDataRef = useRef(fetchData)
+  fetchDataRef.current = fetchData
 
   const fetchData = useCallback(async () => {
     if (!userId) {
@@ -149,17 +151,26 @@ export function useJournal(userId: string | null): UseJournalReturn {
     for (const [tradeId, op] of batch) {
       try {
         if (op.type === 'create') {
-          await fetch('/api/dashboard/journal', {
+          const res = await fetch('/api/dashboard/journal', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(op.data),
           })
+          if (res.ok) {
+            const realEntry: JournalEntry = await res.json()
+            setCards(prev => prev.map(card =>
+              card.trade.id === tradeId ? { ...card, journal: realEntry } : card
+            ))
+          } else if (res.status === 409) {
+            fetchDataRef.current()
+          }
         } else if (op.type === 'update') {
-          await fetch(`/api/dashboard/journal/${op.data.id}`, {
+          const res = await fetch(`/api/dashboard/journal/${op.data.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(op.data),
           })
+          if (!res.ok) throw new Error(`PUT failed: ${res.status}`)
         }
       } catch {
         syncQueueRef.current.set(tradeId, op)

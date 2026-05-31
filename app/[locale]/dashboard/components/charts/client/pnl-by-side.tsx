@@ -91,7 +91,7 @@ export default React.memo(function PnLBySideChart({
  winCount: shortWins,
  isAverage: showAverage,
  value: 0,
- color:"var(--chart-4)",
+  color:"var(--destructive)",
  },
  ];
 

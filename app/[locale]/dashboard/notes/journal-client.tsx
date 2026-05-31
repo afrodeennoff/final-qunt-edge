@@ -15,6 +15,7 @@ import { ScreenshotGrid } from './components/screenshot-grid'
 import { SUGGESTED_TAGS } from './lib/journal-constants'
 import type { JournalEntry, TradeJournalCard } from './lib/journal-types'
 import { cn } from '@/lib/utils'
+import { MotionStagger, MotionStaggerItem } from '@/components/animation/enhanced-motion'
 
 
 
@@ -195,7 +196,7 @@ function TradeListItem({
   const hasJournal = card.journal !== null
   const pnlColor = isBreakeven
     ? 'text-muted-foreground'
-    : isWin ? 'text-semantic-success' : 'text-semantic-danger'
+    : isWin ? 'text-semantic-success' : 'text-semantic-error'
 
   return (
     <button
@@ -221,7 +222,7 @@ function TradeListItem({
           'ml-auto shrink-0 rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider',
           card.trade.side?.toUpperCase() === 'LONG'
             ? 'bg-semantic-success/10 text-semantic-success'
-            : 'bg-semantic-danger/10 text-semantic-danger',
+            : 'bg-semantic-error/10 text-semantic-error',
         )}>
           {card.trade.side || '—'}
         </span>
@@ -279,6 +280,8 @@ export default function JournalClient() {
   })
   const [hasUnsaved, setHasUnsaved] = useState(false)
   const [pendingTradeId, setPendingTradeId] = useState<string | null>(null)
+  const [tradePage, setTradePage] = useState(1)
+  const PER_PAGE = 10
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const {
@@ -313,9 +316,16 @@ export default function JournalClient() {
     return result
   }, [displayCards, search, statusFilter])
 
+  const totalTradePages = Math.max(1, Math.ceil(filteredCards.length / PER_PAGE))
+  const safeTradePage = Math.min(tradePage, totalTradePages)
+  const paginatedCards = useMemo(
+    () => filteredCards.slice((safeTradePage - 1) * PER_PAGE, safeTradePage * PER_PAGE),
+    [filteredCards, safeTradePage],
+  )
+
   const handleCreate = useCallback(
-    async (tradeId: string, accountNumber: string): Promise<JournalEntry> => {
-      return createEntry({ tradeId, accountNumber })
+    async (tradeId: string, accountNumber: string, additionalData?: Record<string, any>): Promise<JournalEntry> => {
+      return createEntry({ tradeId, accountNumber, ...additionalData })
     },
     [createEntry],
   )
@@ -336,12 +346,12 @@ export default function JournalClient() {
       setHasUnsaved(true)
       saveTimerRef.current = setTimeout(() => setSaving(false), 1500)
       if (entryId.startsWith('temp-')) {
-        handleCreate(selectedCard.trade.id, selectedCard.trade.accountNumber)
+        handleCreate(selectedCard.trade.id, selectedCard.trade.accountNumber, { [field]: value })
         return
       }
       handleUpdate(entryId, { [field]: value })
     },
-    [selectedCard, handleCreate, handleUpdate, hasUnsaved, setHasUnsaved],
+    [selectedCard, handleCreate, handleUpdate],
   )
 
   useEffect(() => {
@@ -359,6 +369,8 @@ export default function JournalClient() {
     if (!selectedCard?.journal) return
     update('pinned', !selectedCard.journal.pinned)
   }, [selectedCard, update])
+
+  useEffect(() => { setTradePage(1) }, [search, statusFilter])
 
   const handleSelectTrade = useCallback((tradeId: string) => {
     if (hasUnsaved && selectedCard?.journal) {
@@ -432,22 +444,63 @@ export default function JournalClient() {
                 <p className="text-[10px] text-muted-foreground/30 mt-1">Import trades or create your first journal entry</p>
               </div>
             ) : (
-              <div className="space-y-0.5 px-2 py-1">
-                {filteredCards.map(card => (
-                  <TradeListItem
-                    key={card.trade.id}
-                    card={card}
-                    isSelected={expandedId === card.trade.id}
-                    onSelect={() => handleSelectTrade(card.trade.id)}
-                  />
+              <MotionStagger className="space-y-0.5 px-2 py-1" delay={0.02} staggerSpeed={0.8}>
+                {paginatedCards.map(card => (
+                  <MotionStaggerItem key={card.trade.id}>
+                    <TradeListItem
+                      card={card}
+                      isSelected={expandedId === card.trade.id}
+                      onSelect={() => handleSelectTrade(card.trade.id)}
+                    />
+                  </MotionStaggerItem>
                 ))}
-              </div>
+              </MotionStagger>
             )}
           </div>
 
           {/* Footer */}
-          <div className="shrink-0 px-3 py-2 text-[10px] text-muted-foreground/35 tabular-nums">
-            {filteredCards.length} of {displayCards.length} trades · {displayCards.filter(c => c.journal !== null).length} journaled
+          <div className="shrink-0 border-t border-foreground/[0.04] px-3 py-2">
+            <div className="flex items-center justify-between text-[10px] text-muted-foreground/35 tabular-nums">
+              <span>{filteredCards.length} of {displayCards.length} trades · {displayCards.filter(c => c.journal !== null).length} journaled</span>
+              {totalTradePages > 1 && (
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setTradePage(p => Math.max(1, p - 1))}
+                    disabled={safeTradePage <= 1}
+                    className="rounded px-1.5 py-0.5 hover:bg-muted/20 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Prev
+                  </button>
+                  {Array.from({ length: Math.min(totalTradePages, 5) }, (_, i) => {
+                    const start = Math.max(1, Math.min(safeTradePage - 2, totalTradePages - 4))
+                    const pageNum = start + i
+                    if (pageNum > totalTradePages) return null
+                    return (
+                      <button
+                        key={pageNum}
+                        type="button"
+                        onClick={() => setTradePage(pageNum)}
+                        className={cn(
+                          'rounded px-1.5 py-0.5 transition-colors',
+                          pageNum === safeTradePage ? 'bg-primary/12 text-primary font-semibold' : 'hover:bg-muted/20',
+                        )}
+                      >
+                        {pageNum}
+                      </button>
+                    )
+                  })}
+                  <button
+                    type="button"
+                    onClick={() => setTradePage(p => Math.min(totalTradePages, p + 1))}
+                    disabled={safeTradePage >= totalTradePages}
+                    className="rounded px-1.5 py-0.5 hover:bg-muted/20 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -476,7 +529,7 @@ export default function JournalClient() {
                     'inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider',
                     selectedCard.trade.side?.toUpperCase() === 'LONG'
                       ? 'bg-semantic-success/10 text-semantic-success'
-                      : 'bg-semantic-danger/10 text-semantic-danger',
+                      : 'bg-semantic-error/10 text-semantic-error',
                   )}>
                     {selectedCard.trade.side?.toUpperCase() === 'LONG'
                       ? <ArrowUpRight size={10} />
@@ -486,7 +539,7 @@ export default function JournalClient() {
                   </span>
                   <span className={cn(
                     'ml-auto text-base font-bold tabular-nums',
-                    selectedCard.trade.pnl > 0 ? 'text-semantic-success' : Math.abs(selectedCard.trade.pnl) < 0.01 ? 'text-muted-foreground' : 'text-semantic-danger',
+                    selectedCard.trade.pnl > 0 ? 'text-semantic-success' : Math.abs(selectedCard.trade.pnl) < 0.01 ? 'text-muted-foreground' : 'text-semantic-error',
                   )}>
                     {formatPnl(selectedCard.trade.pnl)}
                   </span>

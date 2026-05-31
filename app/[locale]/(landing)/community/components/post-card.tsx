@@ -349,6 +349,7 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
                           src={screenshot}
                           alt={`Screenshot ${index + 1}`}
                           fill
+                          sizes="96px"
                           className="object-cover"
                         />
                       </Button>
@@ -360,6 +361,7 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
                             src={screenshot}
                             alt={`Screenshot ${index + 1}`}
                             fill
+                            sizes="(max-width: 1200px) 100vw, 960px"
                             className="object-contain"
                           />
                         </div>
