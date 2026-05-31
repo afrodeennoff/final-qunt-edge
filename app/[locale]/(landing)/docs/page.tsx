@@ -90,26 +90,6 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
             </span>
           </UnifiedSurface>
         </div>
-
-        <footer className="pt-6 border-t-0 text-center">
-          <p className="text-sm text-muted-foreground">
-            Need immediate help? Visit our{' '}
-            <Link
-              href={`/${locale}/support`}
-              className="text-primary underline underline-offset-4 transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
-            >
-              Support Center
-            </Link>{' '}
-            or join our{' '}
-            <a
-              href="https://discord.gg/efHDc43M"
-              className="text-primary underline underline-offset-4 transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
-            >
-              Discord
-            </a>
-            .
-          </p>
-        </footer>
       </UnifiedSurface>
     </UnifiedPageShell>
   )

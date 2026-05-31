@@ -47,8 +47,8 @@ export default function Footer() {
   ].filter((item) => item.href)
 
   return (
-    <footer className="relative w-full border-t border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface)] pt-16 pb-8">
-      <div className="mx-auto w-full max-w-[1200px] px-6">
+    <footer className="relative w-full bg-[var(--qe-ref-surface)] pt-16 pb-8">
+      <div className="mx-auto w-full max-w-[1100px] px-6">
 
         {/* Main grid: brand col + 3 link cols */}
         <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr_1fr_1fr]">
@@ -183,7 +183,7 @@ export default function Footer() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.25 }}
-          className="mt-14 border-t border-[var(--qe-ref-card-border)] pt-5"
+          className="mt-14 pt-5"
         >
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[11px] text-[var(--qe-ref-text-muted)]/50">
             <p>

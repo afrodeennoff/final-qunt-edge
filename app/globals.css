@@ -4014,7 +4014,8 @@ img[loading='lazy'] {
    All rules are strictly scoped under .qe-home-ref
 ═══════════════════════════════════════════════════════════════ */
 
-.qe-home-ref {
+.qe-home-ref,
+.public-page {
   /* Exact match to reference screenshot — bright cyber lime green + deep dark surfaces */
   --qe-ref-green: #00ff9f;
   --qe-ref-green-dark: #00cc7a;
@@ -4031,7 +4032,9 @@ img[loading='lazy'] {
 
 /* Light mode overrides for the reference aesthetic (kept for completeness, primary is dark reference match) */
 :root.light .qe-home-ref,
-.qe-home-ref.light {
+.qe-home-ref.light,
+:root.light .public-page,
+.public-page.light {
   --qe-ref-surface: #f8f9f7;
   --qe-ref-surface-2: #f0f2ef;
   --qe-ref-card: #ffffff;

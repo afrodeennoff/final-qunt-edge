@@ -9,7 +9,7 @@ export default function SharedSlugLayout({
 }>) {
   return (
     <PublicRootProviders>
-      <MarketingLayoutShell contentClassName={`mx-auto w-full ${WORKSPACE_SHELL_WIDTH}`}>
+      <MarketingLayoutShell contentClassName={`mx-auto w-full ${WORKSPACE_SHELL_WIDTH}`} className="public-page">
         {children}
       </MarketingLayoutShell>
     </PublicRootProviders>
