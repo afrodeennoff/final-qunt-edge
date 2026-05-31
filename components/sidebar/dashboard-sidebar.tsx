@@ -83,13 +83,6 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             label: "Statistics",
             group: "Review"
         },
-        {
-            href: `/${locale}/dashboard/strategies`,
-            icon: <BookOpen className={NAV_ICON_SIZE} />,
-            label: "Playbook",
-            group: "Review"
-        },
-
         // ── Tools ──
         {
             href: `/${locale}/dashboard/import`,

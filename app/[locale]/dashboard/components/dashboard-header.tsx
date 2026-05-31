@@ -60,7 +60,6 @@ export function DashboardHeader() {
     if (pathname.includes('/dashboard/accounts')) return 'Accounts'
     if (pathname.includes('/dashboard/analytics/statistics')) return 'Statistics'
     if (pathname.includes('/dashboard/analytics')) return 'Trading Copilot'
-    if (pathname.includes('strategies')) return 'Playbook'
     if (pathname.includes('trader-profile')) return 'Profile'
     if (pathname.includes('calendar')) return 'Calendar'
     if (pathname.includes('data')) return 'Data'
@@ -80,8 +79,6 @@ export function DashboardHeader() {
           ? 'Performance breakdown by ticker, day, and setup tag'
           : pathname.includes('/dashboard/analytics')
             ? 'Behavioral analytics, performance reports, and AI-driven trade insights'
-          : pathname.includes('strategies')
-            ? 'Build and test trading strategies'
             : pathname.includes('trader-profile')
                   ? 'Your public trader profile'
                   : pathname.includes('calendar')
