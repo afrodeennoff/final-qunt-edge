@@ -16,105 +16,7 @@ import { SUGGESTED_TAGS } from './lib/journal-constants'
 import type { JournalEntry, TradeJournalCard } from './lib/journal-types'
 import { cn } from '@/lib/utils'
 
-// ── Sample/Demo Data for Empty State ──
-const DEMO_TRADES: TradeJournalCard[] = [
-  {
-    trade: {
-      id: 'demo-1',
-      userId: 'demo-user',
-      accountNumber: 'PRO-001',
-      instrument: 'NQ',
-      side: 'LONG',
-      pnl: 1250.50,
-      entryDate: new Date(Date.now() - 86400000 * 2).toISOString(), // 2 days ago
-      size: 3,
-      stopLoss: null,
-      takeProfit: null,
-      notes: 'Clean breakout from consolidation. Confirmed momentum with volume spike.',
-    },
-    journal: {
-      id: 'demo-1-journal',
-      userId: 'demo-user',
-      tradeId: 'demo-1',
-      accountNumber: 'PRO-001',
-      preTradeNotes: 'Breakout pattern confirmed at $18,500. Size reduced by 30%.',
-      postTradeReview: 'Excellent execution. Did not chase the pullback. Strict discipline.',
-      emotions: null,
-      confidenceRating: 85,
-      disciplineScore: 92,
-      customTags: ['breakout', 'momentum'],
-      screenshots: [],
-      pinned: false,
-      archived: false,
-      createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-      updatedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-    },
-  },
-  {
-    trade: {
-      id: 'demo-2',
-      userId: 'demo-user',
-      accountNumber: 'PRO-001',
-      instrument: 'ES',
-      side: 'SHORT',
-      pnl: -340.25,
-      entryDate: new Date(Date.now() - 86400000 * 5).toISOString(), // 5 days ago
-      size: 5,
-      stopLoss: null,
-      takeProfit: null,
-      notes: 'Failed attempt to fade the gap. Re-entry on pullback would have been better.',
-    },
-    journal: {
-      id: 'demo-2-journal',
-      userId: 'demo-user',
-      tradeId: 'demo-2',
-      accountNumber: 'PRO-001',
-      preTradeNotes: 'Gap up at open. Was tempting to fade but decided to wait for retest.',
-      postTradeReview: 'Should have entered on the first pullback to midday range. No valid reason to stay out.',
-      emotions: null,
-      confidenceRating: 65,
-      disciplineScore: 58,
-      customTags: ['gap', 'discipline'],
-      screenshots: [],
-      pinned: true,
-      archived: false,
-      createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
-      updatedAt: new Date(Date.now() - 86400000 * 5).toISOString(),
-    },
-  },
-  {
-    trade: {
-      id: 'demo-3',
-      userId: 'demo-user',
-      accountNumber: 'PRO-002',
-      instrument: 'RTY',
-      side: 'LONG',
-      pnl: 480.00,
-      entryDate: new Date(Date.now() - 86400000 * 1).toISOString(), // 1 day ago
-      size: 2,
-      stopLoss: null,
-      takeProfit: null,
-      notes: 'Morning range breakout with tight stops. Good use of 3R risk management.',
-    },
-    journal: {
-      id: 'demo-3-journal',
-      userId: 'demo-user',
-      tradeId: 'demo-3',
-      accountNumber: 'PRO-002',
-      preTradeNotes: 'Waiting for retest of morning high. Stop placed 3R below entry.',
-      postTradeReview: 'Perfect risk-reward execution. Booked half profit at +2R, let rest run.',
-      emotions: null,
-      confidenceRating: 90,
-      disciplineScore: 88,
-      customTags: ['risk', 'profit-taking'],
-      screenshots: [],
-      pinned: false,
-      archived: false,
-      createdAt: new Date(Date.now() - 86400000 * 1).toISOString(),
-      updatedAt: new Date(Date.now() - 86400000 * 1).toISOString(),
-    },
-  },
-]
+
 
 // ── Formatters ──
 
@@ -383,14 +285,9 @@ export default function JournalClient() {
     createEntry, updateEntry, deleteEntry,
   } = useJournal(userId)
 
-  // Use demo data when no real trades exist
-  const displayCards = useMemo(() => {
-    if (cards.length > 0) return cards
-    // Show demo data for visual demonstration
-    return isLoading ? [] : DEMO_TRADES
-  }, [cards, isLoading])
+  const displayCards = cards
 
-  const selectedCard = cards.find(c => c.trade.id === expandedId) ?? null
+  const selectedCard = displayCards.find(c => c.trade.id === expandedId) ?? null
 
   const filteredCards = useMemo(() => {
     let result = displayCards
@@ -462,11 +359,11 @@ export default function JournalClient() {
 
   const handleSelectTrade = useCallback((tradeId: string) => {
     toggleExpand(tradeId)
-    const card = cards.find(c => c.trade.id === tradeId)
+    const card = displayCards.find(c => c.trade.id === tradeId)
     if (card && !card.journal) {
       handleCreate(tradeId, card.trade.accountNumber)
     }
-  }, [cards, toggleExpand, handleCreate])
+  }, [displayCards, toggleExpand, handleCreate])
 
   const toggleSection = useCallback((section: string) => {
     setActiveSection(prev => ({ ...prev, [section]: !prev[section] }))
@@ -474,20 +371,6 @@ export default function JournalClient() {
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      {/* Demo indicator */}
-      {displayCards.length > 0 && displayCards.every(c => c.trade.id.startsWith('demo-')) && (
-        <div className="shrink-0 px-5 py-2 bg-primary/5 border-b border-primary/10">
-          <div className="flex items-center gap-2">
-            <div className="h-4 w-4 rounded-full bg-primary/20 flex items-center justify-center">
-              <Sparkles size={3} className="text-primary" />
-            </div>
-            <span className="text-[10px] font-medium uppercase tracking-wider text-primary">
-              Demo Mode — Sample Data
-            </span>
-          </div>
-        </div>
-      )}
-
       {/* Stats bar */}
       <div className="shrink-0 px-5 pb-4 pt-5">
         <JournalStatsBar stats={stats} />

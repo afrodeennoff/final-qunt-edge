@@ -12,7 +12,7 @@ export const DEFAULT_FILTERS: JournalFilters = {
   sort: 'date-desc' as JournalSortField,
 }
 
-export const JOURNAL_PAGE_SIZE = 30
+export const JOURNAL_PAGE_SIZE = 500
 
 export const LOCALSTORAGE_KEY_PREFIX = 'journal-pending'
 

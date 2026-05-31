@@ -77,32 +77,43 @@ export function useJournal(userId: string | null): UseJournalReturn {
   const [filters, setFiltersState] = useState<JournalFilters>(DEFAULT_FILTERS)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(!userId)
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const syncQueueRef = useRef<Map<string, { type: 'create' | 'update'; data: any }>>(new Map())
   const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const fetchData = useCallback(async () => {
-    if (!userId) return
+    if (!userId) {
+      setIsLoading(false)
+      return
+    }
     setIsLoading(true)
     try {
-      const result = await getJournalTradesAction(userId, page, JOURNAL_PAGE_SIZE, {
-        status: filters.status !== 'all' ? filters.status : undefined,
-        search: filters.search || undefined,
-        instrument: filters.instrument || undefined,
-        direction: filters.direction !== 'all' ? filters.direction : undefined,
-        dateFrom: filters.dateFrom || undefined,
-        dateTo: filters.dateTo || undefined,
-        tags: filters.tags.length > 0 ? filters.tags : undefined,
-        sort: filters.sort,
-      })
+      let allServerCards: TradeJournalCard[] = []
+      let currentPage = 1
+      let hasMore = true
 
-      const serverCards = result.entries as unknown as TradeJournalCard[]
+      while (hasMore) {
+        const result = await getJournalTradesAction(userId, currentPage, JOURNAL_PAGE_SIZE, {
+          status: filters.status !== 'all' ? filters.status : undefined,
+          search: filters.search || undefined,
+          instrument: filters.instrument || undefined,
+          direction: filters.direction !== 'all' ? filters.direction : undefined,
+          dateFrom: filters.dateFrom || undefined,
+          dateTo: filters.dateTo || undefined,
+          tags: filters.tags.length > 0 ? filters.tags : undefined,
+          sort: filters.sort,
+        })
 
-      // Merge with localStorage pending entries
+        const pageCards = result.entries as unknown as TradeJournalCard[]
+        allServerCards = [...allServerCards, ...pageCards]
+        hasMore = currentPage < result.totalPages
+        currentPage += 1
+      }
+
       const pending = loadPending(userId)
       if (pending.size > 0) {
-        const merged = serverCards.map(card => {
+        const merged = allServerCards.map(card => {
           const pendingEntry = pending.get(card.trade.id)
           if (pendingEntry) {
             pending.delete(card.trade.id)
@@ -114,17 +125,17 @@ export function useJournal(userId: string | null): UseJournalReturn {
         setCards(merged)
         setStats(computeStats(merged))
       } else {
-        setCards(serverCards)
-        setStats(computeStats(serverCards))
+        setCards(allServerCards)
+        setStats(computeStats(allServerCards))
       }
 
-      setTotalPages(result.totalPages)
+      setTotalPages(Math.ceil(allServerCards.length / JOURNAL_PAGE_SIZE))
     } catch (err) {
       console.error('Failed to fetch journal:', err)
     } finally {
       setIsLoading(false)
     }
-  }, [userId, page, filters])
+  }, [userId, filters])
 
   useEffect(() => {
     fetchData()
