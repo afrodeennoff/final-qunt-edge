@@ -26,10 +26,21 @@ export type SetupStat = {
   totalRR: number
 }
 
+export type TradePnlEntry = {
+  pnl: number
+  entryDate: string
+}
+
 export type StatisticsResult = {
   tickerStats: TickerStat[]
   dailyStats: DailyStat[]
   setupStats: SetupStat[]
+  allPnls: TradePnlEntry[]
   grandTotal: number
   grandWinRate: number
+  grandPnl: number
+  bestDay: number
+  worstDay: number
+  profitFactor: number
+  avgRR: number
 }

@@ -111,11 +111,26 @@ export async function getStatisticsAction(): Promise<StatisticsResult> {
   const grandResult = computeRR(trades.map(t => ({ pnl: Number(t.pnl) })))
   const grandResolved = grandResult.wins + grandResult.losses
 
+  // Daily PnL aggregation for best/worst day
+  const dayPnlMap = new Map<string, number>()
+  for (const t of trades) {
+    const d = t.entryDate instanceof Date ? t.entryDate : new Date(t.entryDate)
+    const key = d.toISOString().slice(0, 10)
+    dayPnlMap.set(key, (dayPnlMap.get(key) || 0) + Number(t.pnl))
+  }
+  const dayPnls = Array.from(dayPnlMap.values())
+
   return {
     tickerStats,
     dailyStats,
     setupStats,
+    allPnls: trades.map(t => ({ pnl: Number(t.pnl), entryDate: t.entryDate instanceof Date ? t.entryDate.toISOString() : String(t.entryDate) })),
     grandTotal: trades.length,
     grandWinRate: grandResolved > 0 ? (grandResult.wins / grandResolved) * 100 : 0,
+    grandPnl: trades.reduce((s, t) => s + Number(t.pnl), 0),
+    bestDay: dayPnls.length > 0 ? Math.max(...dayPnls) : 0,
+    worstDay: dayPnls.length > 0 ? Math.min(...dayPnls) : 0,
+    profitFactor: grandResult.totalRR,
+    avgRR: grandResult.avgRR,
   }
 }
