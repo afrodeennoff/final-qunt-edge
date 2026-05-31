@@ -15,7 +15,7 @@ export default async function DocsLayout({
   return (
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
       <div className="flex gap-8">
-        <aside className="hidden w-56 shrink-0 lg:block">
+        <aside className="hidden shrink-0 lg:block transition-all">
           <DocsSidebar locale={locale} />
         </aside>
         <main className="min-w-0 flex-1">
