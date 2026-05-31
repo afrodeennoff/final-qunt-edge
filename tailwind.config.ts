@@ -383,6 +383,22 @@ const config = {
             height: '0',
           },
         },
+        'collapsible-down': {
+          from: {
+            height: '0',
+          },
+          to: {
+            height: 'var(--radix-collapsible-content-height)',
+          },
+        },
+        'collapsible-up': {
+          from: {
+            height: 'var(--radix-collapsible-content-height)',
+          },
+          to: {
+            height: '0',
+          },
+        },
         'scanner-smooth': {
           '0%': {
             top: '0%',
@@ -428,6 +444,8 @@ const config = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'collapsible-down': 'collapsible-down 0.2s ease-out',
+        'collapsible-up': 'collapsible-up 0.2s ease-out',
         'scanner-smooth': 'scanner-smooth 8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'success-pulse': 'success-pulse 3s ease-in-out infinite',
         'success-sweep': 'success-sweep 1.5s ease-in-out forwards',

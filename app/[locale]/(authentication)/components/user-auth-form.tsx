@@ -32,6 +32,7 @@ import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { useAuthPreferenceStore } from "@/store/auth-preference-store"
 import { useCurrentLocale } from "@/locales/client"
+import { motion, AnimatePresence } from 'motion/react'
 
 const formSchema = z.object({
  email: z.string().email(),
@@ -511,7 +512,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
  return (
  <div className={cn("grid gap-6", className)} {...props}>
+ <AnimatePresence>
  {alreadySignedIn && (
+ <motion.div
+ initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+ animate={{ opacity: 1, height: 'auto', marginBottom: 24 }}
+ exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+ transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+ style={{ overflow: 'hidden' }}
+ >
  <div className="flex items-center justify-between gap-3 rounded-2xl border border-success/40 bg-success/10 px-4 py-3 shadow-sm transition-shadow duration-200 hover:shadow-md">
  <div className="flex items-center gap-3">
  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-success/15">
@@ -532,7 +541,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  Go to Dashboard
  </Button>
  </div>
+ </motion.div>
  )}
+ </AnimatePresence>
  <Tabs value={tab} onValueChange={(v) => { setTab(v as 'magic' | 'password'); setLastAuthPreference(v as 'magic' | 'password'); }}>
  <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border-0 bg-muted/40 p-1 hover:bg-muted/30 transition-colors duration-200">
  <TabsTrigger
@@ -581,7 +592,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </FormItem>
  )}
  />
+ <AnimatePresence mode="wait">
  {!isEmailSent ? (
+ <motion.div
+ key="submit-btn"
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ exit={{ opacity: 0 }}
+ transition={{ duration: 0.15 }}
+ >
  <Button
  disabled={isLoading || countdown > 0 || authMethod === 'discord' || authMethod === 'google'}
  type="submit"
@@ -592,7 +611,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  )}
  {t('auth.signInWithEmail')}
  </Button>
+ </motion.div>
  ) : (
+ <motion.div
+ key="sent-actions"
+ initial={{ opacity: 0, y: 8 }}
+ animate={{ opacity: 1, y: 0 }}
+ exit={{ opacity: 0 }}
+ transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+ >
  <div className="space-y-2">
  <Button
  type="button"
@@ -617,12 +644,22 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  )}
  </Button>
  </div>
+ </motion.div>
  )}
+ </AnimatePresence>
  </form>
  </Form>
+ <AnimatePresence>
  {showOtpInput && (
+ <motion.div
+ initial={{ opacity: 0, height: 0, marginTop: 0 }}
+ animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+ exit={{ opacity: 0, height: 0, marginTop: 0 }}
+ transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+ style={{ overflow: 'hidden' }}
+ >
  <Form {...otpForm}>
- <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-xl border-0 bg-background/30 p-4">
+ <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="space-y-4 rounded-xl border-0 bg-background/30 p-4">
  <FormField
  control={otpForm.control}
  name="otp"
@@ -669,7 +706,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </Button>
  </form>
  </Form>
+ </motion.div>
  )}
+ </AnimatePresence>
  </TabsContent>
 
  <TabsContent value="password" className="mt-4">

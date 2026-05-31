@@ -30,7 +30,7 @@ import { useCurrentLocale } from '@/locales/client'
 import HeroProductPreview from './HeroProductPreview'
 import AIHubVisual from './AIHubVisual'
 import type { HomeLiveHighlights } from '../page'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence, type Variants } from 'motion/react'
 
 const HOME_WIDTH = 'mx-auto w-full max-w-[1100px] px-6'
 
@@ -42,11 +42,23 @@ const fadeUp = {
   transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
 }
 
-const staggerContainer = {
+const staggerContainer: Variants = {
+  initial: { opacity: 0 },
   animate: {
+    opacity: 1,
     transition: {
-      staggerChildren: 0.08
+      staggerChildren: 0.07,
+      delayChildren: 0.1,
     }
+  }
+}
+
+const staggerItem: Variants = {
+  initial: { opacity: 0, y: 16 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const }
   }
 }
 const cardNested = 'rounded-lg bg-[var(--qe-ref-surface-2)] p-4'
@@ -101,17 +113,28 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
 
               <div className="mt-6 flex flex-wrap gap-x-5 gap-y-1.5 text-[12px] text-[var(--qe-ref-text-muted)]">
                 {['Pre & post trade notes', 'AI pattern detection', '17+ custom tags', 'Prop firm compliance', 'Screenshot analysis'].map((t, i) => (
-                  <div key={t} className="flex items-center gap-1.5">
+                  <motion.div
+                    key={t}
+                    className="flex items-center gap-1.5"
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.6 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                  >
                     <Check className="h-3.5 w-3.5 text-[var(--qe-ref-green)]" /> {t}
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>
 
             {/* Right column — live product preview */}
-            <div className="relative -mx-2 lg:mx-0">
+            <motion.div
+              className="relative -mx-2 lg:mx-0"
+              initial={{ opacity: 0, y: 20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            >
               <HeroProductPreview />
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -137,7 +160,7 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
              viewport={{ once: true, margin: "-50px" }}
            >
              {/* Card 1: Multi-Asset Power */}
-             <div className={cardMain}>
+             <motion.div variants={staggerItem} className={cardMain}>
                <div className="flex items-start justify-between">
                  <div>
                    <h3 className={headingCard}>Multi-Asset Journal: One Workspace for All Trades.</h3>
@@ -176,10 +199,10 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                    </p>
                  </div>
                </div>
-             </div>
+             </motion.div>
 
             {/* Card 2: 24/7 Customer Support */}
-             <div className={cardMain}>
+             <motion.div variants={staggerItem} className={cardMain}>
                <h3 className={headingCard}>AI-Powered Debriefs 24/7</h3>
                <p className={cn(bodySmall, 'mt-2')}>
                  Get instant AI session debriefs, behavior analysis, and actionable insights anytime from your trading journal.
@@ -210,10 +233,10 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                    </div>
                  </div>
                </div>
-             </div>
+             </motion.div>
 
             {/* Card 3: Solana stats */}
-             <div className={cardMain}>
+             <motion.div variants={staggerItem} className={cardMain}>
                <div className="flex items-start justify-between">
                  <div>
                    <h3 className={headingCard}>Advanced Analytics Widgets</h3>
@@ -226,10 +249,10 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                    <div className="text-lg font-semibold tabular-nums text-[var(--qe-ref-green)]">74%</div>
                  </div>
                </div>
-             </div>
+             </motion.div>
 
              {/* Card 4: Polkadot + 2FA */}
-              <div className={cardMain}>
+              <motion.div variants={staggerItem} className={cardMain}>
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className={headingCard}>Prop Firm Compliance Tools</h3>
@@ -242,9 +265,10 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                     <div className="text-lg font-semibold tabular-nums text-[var(--qe-ref-green)]">98%</div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
              {/* Card 5: Prop Firms Catalogue */}
+              <motion.div variants={staggerItem}>
               <Link href={`/${locale}/propfirms`} className={`${cardMain} block transition-all hover:border-[var(--qe-ref-green)]/30 hover:bg-[var(--qe-ref-surface)]/30`}>
                 <div className="flex items-start justify-between">
                   <div>
@@ -289,8 +313,10 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                   </div>
                 </div>
               </Link>
+              </motion.div>
 
              {/* Card 6: Deals */}
+              <motion.div variants={staggerItem}>
               <Link href={`/${locale}/deals`} className={`${cardMain} block transition-all hover:border-[var(--qe-ref-green)]/30 hover:bg-[var(--qe-ref-surface)]/30`}>
                 <div className="flex items-start justify-between">
                   <div>
@@ -318,8 +344,10 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                   </div>
                 </div>
               </Link>
+              </motion.div>
 
              {/* Card 7: Leaderboard */}
+              <motion.div variants={staggerItem}>
               <Link href={`/${locale}/leaderboard`} className={`${cardMain} block transition-all hover:border-[var(--qe-ref-green)]/30 hover:bg-[var(--qe-ref-surface)]/30`}>
                 <div className="flex items-start justify-between">
                   <div>
@@ -342,8 +370,10 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                   </div>
                 </div>
               </Link>
+              </motion.div>
 
              {/* Card 8: Teams */}
+              <motion.div variants={staggerItem}>
               <Link href={`/${locale}/teams`} className={`${cardMain} block transition-all hover:border-[var(--qe-ref-green)]/30 hover:bg-[var(--qe-ref-surface)]/30`}>
                 <div className="flex items-start justify-between">
                   <div>
@@ -388,122 +418,179 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                   </div>
                 </div>
                </Link>
+              </motion.div>
             </motion.div>
 
-            {/* Enterprise-Grade Security (full width below the grid) */}
-            <div className={cardMain} style={{ marginTop: '16px' }}>
-              <h3 className={headingCard}>Enterprise-Grade Security</h3>
-              <p className={cn(bodySmall, 'mt-2', 'max-w-[600px]')}>
-                Bank-level encryption and SOC2 compliance protect your trading journal data, review history, and performance records.
-              </p>
-              <div className="mt-4 flex items-center gap-6">
-                <div className="flex flex-col items-center gap-2">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)]">
-                    <Shield className="h-6 w-6 text-[var(--qe-ref-green)]" />
-                  </div>
-                  <span className="text-[11px] text-[var(--qe-ref-text-muted)]">Time-based<br/>one-time password</span>
-                </div>
-                <div className="flex flex-col items-center gap-2">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)]">
-                    <Lock className="h-6 w-6 text-[var(--qe-ref-text-muted)]" />
-                  </div>
-                  <span className="text-[11px] text-[var(--qe-ref-text-muted)]">End-to-end<br/>encrypted storage</span>
-                </div>
-              </div>
+             {/* Enterprise-Grade Security (full width below the grid) */}
+             <motion.div
+               className={cardMain}
+               style={{ marginTop: '16px' }}
+               initial={{ opacity: 0, y: 16 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true, margin: "-50px" }}
+               transition={{ duration: 0.4, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+             >
+               <h3 className={headingCard}>Enterprise-Grade Security</h3>
+               <p className={cn(bodySmall, 'mt-2', 'max-w-[600px]')}>
+                 Bank-level encryption and SOC2 compliance protect your trading journal data, review history, and performance records.
+               </p>
+               <div className="mt-4 flex items-center gap-6">
+                 <div className="flex flex-col items-center gap-2">
+                   <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)]">
+                     <Shield className="h-6 w-6 text-[var(--qe-ref-green)]" />
+                   </div>
+                   <span className="text-[11px] text-[var(--qe-ref-text-muted)]">Time-based<br/>one-time password</span>
+                 </div>
+                 <div className="flex flex-col items-center gap-2">
+                   <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)]">
+                     <Lock className="h-6 w-6 text-[var(--qe-ref-text-muted)]" />
+                   </div>
+                   <span className="text-[11px] text-[var(--qe-ref-text-muted)]">End-to-end<br/>encrypted storage</span>
+                 </div>
+               </div>
+             </motion.div>
+
+           </div>
+         </section>
+
+        {/* ═══════════════════════════════════════════════════════════════
+            LIVE FROM THE PLATFORM — Redesigned per mockup
+           ═══════════════════════════════════════════════════════════════ */}
+        <section className="pb-16 sm:pb-20">
+          <div className={HOME_WIDTH}>
+            <div className="mb-6">
+              <div className={eyebrowStyle}>LIVE FROM THE PLATFORM</div>
+              <h2 className="ref-h-section mt-1">Platform Pulse • Top Firms • Deals • Traders</h2>
             </div>
 
-            {/* ═══════════════════════════════════════════════════════════════
-                LIVE FROM THE PLATFORM — 3 Separate Cards
-               ═══════════════════════════════════════════════════════════════ */}
-            <div className="mt-4">
-               <div className="mb-3 flex items-center justify-between px-1">
-                 <div>
-                   <div className={eyebrowStyle}>LIVE FROM THE PLATFORM</div>
-                   <div className="text-[15px] font-semibold tracking-[-0.01em]">Platform Pulse • Top Firms • Deals • Traders</div>
-                 </div>
-               </div>
+            {/* Row 1: Top Firms */}
+            <motion.div
+              className="mb-6 rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="min-w-[160px]">
+                  <div className="text-[11px] font-semibold tracking-[0.14em] text-[var(--qe-ref-green)]">TOP FIRMS</div>
+                  <div className="mt-1 text-[15px] font-semibold tracking-[-0.01em]">Leading Prop Firms by Payouts</div>
+                </div>
 
-               <div className="grid gap-4 md:grid-cols-3">
-                 {/* Top Firms Card */}
-                 <motion.div 
-                   className={cardMain}
-                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                   variants={fadeUp}
-                 >
-                   <div className="flex items-center gap-2 mb-3">
-                     <Building2 className="h-4 w-4 text-[var(--qe-ref-green)]" />
-                     <span className="text-[12px] font-semibold tracking-[0.08em] text-[var(--qe-ref-text)]">TOP FIRMS</span>
-                   </div>
-                   {highlights.topFirms.length > 0 ? (
-                     <div className="space-y-2">
-                       {highlights.topFirms.map((f, i) => (
-                         <div key={i} className="flex items-center justify-between text-[12px]">
-                           <span className="font-medium text-[var(--qe-ref-text)] truncate pr-2">{f.name}</span>
-                           <span className="tabular-nums text-[var(--qe-ref-green)] font-semibold">${Math.round(f.paidPayout).toLocaleString()}</span>
-                         </div>
-                       ))}
-                     </div>
-                   ) : (
-                     <div className="text-[11px] text-[var(--qe-ref-text-muted)]">Live data updating…</div>
-                   )}
-                    <Link href={`/${locale}/propfirms`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">Browse catalogue →</Link>
-                  </motion.div>
- 
-                  {/* Hot Deals Card */}
-                 <div className={cardMain}>
-                   <div className="flex items-center gap-2 mb-3">
-                     <Percent className="h-4 w-4 text-[var(--qe-ref-green)]" />
-                     <span className="text-[12px] font-semibold tracking-[0.08em] text-[var(--qe-ref-text)]">HOT DEALS</span>
-                   </div>
-                   {highlights.topCoupons.length > 0 ? (
-                     <div className="space-y-2">
-                       {highlights.topCoupons.map((c, i) => (
-                         <div key={i} className="flex items-center justify-between text-[12px]">
-                           <span className="font-medium text-[var(--qe-ref-text)] truncate pr-2">{c.firmName}</span>
-                           <span className="font-semibold text-[var(--qe-ref-green)] tabular-nums">{c.discount}% • {c.code}</span>
-                         </div>
-                       ))}
-                     </div>
-                   ) : (
-                     <div className="text-[11px] text-[var(--qe-ref-text-muted)]">Fresh promos loading…</div>
-                   )}
-                   <Link href={`/${locale}/deals`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">See all deals →</Link>
-                 </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
+                  {highlights.topFirms.length > 0 ? (
+                    highlights.topFirms.map((f, i) => (
+                      <div key={i} className="rounded-xl bg-[var(--qe-ref-surface-2)] p-4 text-sm">
+                        <div className="font-semibold text-[var(--qe-ref-text)] truncate">{f.name}</div>
+                        <div className="mt-1 text-[12px] text-[var(--qe-ref-text-muted)]">Accounts: {f.accounts}</div>
+                        <div className="mt-1 font-semibold tabular-nums text-[var(--qe-ref-green)]">
+                          ${Math.round(f.paidPayout).toLocaleString()} paid
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-[var(--qe-ref-text-muted)] text-sm">Live data loading…</div>
+                  )}
+                </div>
 
-                 {/* Top Traders Card */}
-                 <div className={cardMain}>
-                   <div className="flex items-center gap-2 mb-3">
-                     <Trophy className="h-4 w-4 text-[var(--qe-ref-green)]" />
-                     <span className="text-[12px] font-semibold tracking-[0.08em] text-[var(--qe-ref-text)]">TOP TRADERS</span>
-                   </div>
-                   {highlights.topLeaders.length > 0 ? (
-                     <div className="space-y-2">
-                       {highlights.topLeaders.map((l, i) => (
-                         <div key={i} className="flex items-center justify-between text-[12px]">
-                           <span className="font-medium text-[var(--qe-ref-text)] truncate pr-2">#{i+1} {l.username}</span>
-                           <span className="font-semibold text-[var(--qe-ref-green)] tabular-nums">+${Math.round(l.monthlyPnl).toLocaleString()}</span>
-                         </div>
-                       ))}
-                     </div>
-                   ) : (
-                     <div className="text-[11px] text-[var(--qe-ref-text-muted)]">Leaderboard syncing…</div>
-                   )}
-                   <Link href={`/${locale}/leaderboard`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">Full leaderboard →</Link>
-                 </div>
-               </div>
-             </div>
+                <div className="min-w-[110px] text-right">
+                  <Link href={`/${locale}/propfirms`} className="text-[13px] text-[var(--qe-ref-green)] hover:underline font-medium">
+                    View all →
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
 
-         </div>
-       </section>
+            {/* Row 2: Hot Deals */}
+            <motion.div
+              className="mb-6 rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.4, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="min-w-[160px]">
+                  <div className="text-[11px] font-semibold tracking-[0.14em] text-[var(--qe-ref-green)]">HOT DEALS</div>
+                  <div className="mt-1 text-[15px] font-semibold tracking-[-0.01em]">Active Prop Firm Discounts</div>
+                </div>
 
-       {/* ═══════════════════════════════════════════════════════════════
-           SECTION 3: ADVANCED TRADING (Reference: left accordion + right circular diagram)
-          ═══════════════════════════════════════════════════════════════ */}
-      <section className="pb-16 sm:pb-20">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
+                  {highlights.topCoupons.length > 0 ? (
+                    highlights.topCoupons.map((c, i) => (
+                      <div key={i} className="rounded-xl bg-[var(--qe-ref-surface-2)] p-4 text-sm">
+                        <div className="font-semibold text-[var(--qe-ref-text)] truncate">{c.firmName}</div>
+                        <div className="mt-1 text-[13px] text-[var(--qe-ref-green)] font-semibold">
+                          {c.discount}% OFF
+                        </div>
+                        <div className="mt-0.5 text-[12px] font-mono text-[var(--qe-ref-text-muted)]">{c.code}</div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-[var(--qe-ref-text-muted)] text-sm">Live promos loading…</div>
+                  )}
+                </div>
+
+                <div className="min-w-[110px] text-right">
+                  <Link href={`/${locale}/deals`} className="text-[13px] text-[var(--qe-ref-green)] hover:underline font-medium">
+                    View all →
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Row 3: Top Traders */}
+            <motion.div
+              className="rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.4, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="min-w-[160px]">
+                  <div className="text-[11px] font-semibold tracking-[0.14em] text-[var(--qe-ref-green)]">TOP TRADERS</div>
+                  <div className="mt-1 text-[15px] font-semibold tracking-[-0.01em]">This Month’s Standouts</div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
+                  {highlights.topLeaders.length > 0 ? (
+                    highlights.topLeaders.map((l, i) => (
+                      <div key={i} className="rounded-xl bg-[var(--qe-ref-surface-2)] p-4 text-sm">
+                        <div className="font-semibold text-[var(--qe-ref-text)]">#{i + 1} {l.username}</div>
+                        <div className="mt-1 text-[13px] text-[var(--qe-ref-green)] font-semibold tabular-nums">
+                          +${Math.round(l.monthlyPnl).toLocaleString()}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-[var(--qe-ref-text-muted)] text-sm">Leaderboard syncing…</div>
+                  )}
+                </div>
+
+                <div className="min-w-[110px] text-right">
+                  <Link href={`/${locale}/leaderboard`} className="text-[13px] text-[var(--qe-ref-green)] hover:underline font-medium">
+                    View all →
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════════
+            SECTION 3: ADVANCED TRADING (Reference: left accordion + right circular diagram)
+           ═══════════════════════════════════════════════════════════════ */}
+       <section className="pb-16 sm:pb-20">
         <div className={HOME_WIDTH}>
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             {/* Left: Accordion feature list */}
-             <div>
+             <motion.div
+               initial={{ opacity: 0, x: -16 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               viewport={{ once: true, margin: "-80px" }}
+               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+             >
                <div className={eyebrowStyle}>ADVANCED INTELLIGENCE</div>
                <h2 className="ref-h-section mt-3">Advanced Trading Journal Intelligence</h2>
                <p className="ref-body mt-4 max-w-[42ch]">
@@ -536,9 +623,20 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                        </div>
                        <div>
                          <div className="font-medium tracking-[-0.01em] text-[14px]">{item.title}</div>
-                         {openAccordion === idx && (
-                           <p className="mt-1 text-[12px] leading-relaxed text-[var(--qe-ref-text-muted)]">{item.desc}</p>
-                         )}
+                         <AnimatePresence initial={false}>
+                           {openAccordion === idx && (
+                             <motion.p
+                               className="mt-1 text-[12px] leading-relaxed text-[var(--qe-ref-text-muted)]"
+                               initial={{ opacity: 0, height: 0 }}
+                               animate={{ opacity: 1, height: 'auto' }}
+                               exit={{ opacity: 0, height: 0 }}
+                               transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                               style={{ overflow: 'hidden' }}
+                             >
+                               {item.desc}
+                             </motion.p>
+                           )}
+                         </AnimatePresence>
                        </div>
                      </div>
                      <ChevronDown className={cn('h-4 w-4 text-[var(--qe-ref-text-muted)] transition-transform duration-200', openAccordion === idx && 'rotate-180')} />
@@ -549,12 +647,18 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                <Link href={`/${locale}/authentication`} className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--qe-ref-green)] px-6 py-2.5 text-[13px] font-semibold text-black transition-opacity hover:opacity-90">
                  Try Now
                </Link>
-             </div>
+             </motion.div>
 
             {/* Right: Circular AI Hub diagram */}
-            <div className="flex justify-center">
+            <motion.div
+              className="flex justify-center"
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
               <AIHubVisual />
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -580,7 +684,7 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
               viewport={{ once: true }}
             >
               {/* Card 1: Trade Capture & Review */}
-             <div className={cardMain}>
+             <motion.div variants={staggerItem} className={cardMain}>
                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)]">
                  <Cpu className="h-5 w-5" />
                </div>
@@ -596,10 +700,10 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                <p className={cn(bodySmall, 'mt-4')}>
                  Import broker data and journal notes. AI surfaces timing, sizing, and rule breaks for immediate review.
                </p>
-             </div>
+             </motion.div>
 
              {/* Card 2: Risk & Drift Analysis */}
-             <div className={cardMain}>
+             <motion.div variants={staggerItem} className={cardMain}>
                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)]">
                  <Shield className="h-5 w-5" />
                </div>
@@ -621,10 +725,10 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                <p className={cn(bodySmall, 'mt-4')}>
                  Every session is scored for risk adherence, behavior drift, and execution quality against your rules.
                </p>
-             </div>
+             </motion.div>
 
              {/* Card 3: AI Debrief & Action */}
-             <div className={cardMain}>
+             <motion.div variants={staggerItem} className={cardMain}>
                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)]">
                  <Zap className="h-5 w-5" />
                </div>
@@ -640,7 +744,7 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                 <p className={cn(bodySmall, 'mt-4')}>
                   When review is complete, the journal generates a concise debrief with specific, actionable improvement steps.
                 </p>
-              </div>
+              </motion.div>
             </motion.div>
          </div>
        </section>
@@ -658,9 +762,15 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
              </p>
            </div>
 
-          <div className="grid gap-5 md:grid-cols-3">
+          <motion.div
+            className="grid gap-5 md:grid-cols-3"
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true, margin: "-50px" }}
+          >
             {/* Enterprise-Grade Security */}
-            <div className={cardMain}>
+            <motion.div variants={staggerItem} className={cardMain}>
               <h3 className={headingCard}>Enterprise-Grade Security</h3>
               <div className="mt-4 flex items-center justify-center py-6">
                 <div className="relative h-36 w-full max-w-[200px]">
@@ -685,10 +795,10 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                   </svg>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Verified Performance */}
-             <div className={cardMain}>
+             <motion.div variants={staggerItem} className={cardMain}>
                <h3 className={headingCard}>Verified Execution Quality</h3>
                <div className="mt-4 flex items-center justify-center py-6">
                  <div className="relative h-36 w-full max-w-[200px]">
@@ -717,10 +827,10 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                    See the Review Loop
                  </Link>
                </div>
-             </div>
+             </motion.div>
 
             {/* Transparent System */}
-            <div className={cardMain}>
+            <motion.div variants={staggerItem} className={cardMain}>
               <h3 className={headingCard}>Transparent System</h3>
               <div className="mt-4 flex items-center justify-center py-6">
                 <div className="relative h-36 w-full max-w-[200px]">
@@ -748,8 +858,8 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                   </svg>
                 </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
@@ -767,7 +877,13 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
            </div>
 
            {/* Stats row */}
-           <div className="mb-10 grid grid-cols-3 gap-5 text-center">
+           <motion.div
+             className="mb-10 grid grid-cols-3 gap-5 text-center"
+             initial={{ opacity: 0, y: 12 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+           >
              <div>
                <div className="text-4xl font-bold tracking-tight text-[var(--qe-ref-text)]">5k+</div>
                <div className="mt-1 text-[13px] text-[var(--qe-ref-text-muted)]">Traders</div>
@@ -780,7 +896,7 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                <div className="text-4xl font-bold tracking-tight text-[var(--qe-ref-text)]">4.9</div>
                <div className="mt-1 text-[13px] text-[var(--qe-ref-text-muted)]">Avg Rating</div>
              </div>
-           </div>
+           </motion.div>
 
            {/* Testimonial cards */}
            <motion.div 
@@ -816,7 +932,7 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                  quote: 'The weekly brief is the single most useful tool I have. It surfaces patterns I literally could not see on my own.',
                },
              ].map((t, i) => (
-              <div key={i} className={cardMain}>
+              <motion.div key={i} variants={staggerItem} className={cardMain}>
                 <div className="flex items-center gap-3 mb-3">
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)]">
                     <Users className="h-4 w-4" />
@@ -828,7 +944,7 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                 </div>
                 <p className="text-[12px] leading-relaxed text-[var(--qe-ref-text-muted)]">{t.quote}</p>
                  <div className="mt-3 text-[10px] text-[var(--qe-ref-text-muted)]">{t.date}</div>
-               </div>
+               </motion.div>
              ))}
            </motion.div>
          </div>
@@ -844,7 +960,13 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
             <h2 className="ref-h-section mt-3">Frequently Asked Questions</h2>
           </div>
 
-          <div className="mx-auto max-w-[800px] space-y-3">
+          <motion.div
+            className="mx-auto max-w-[800px] space-y-3"
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+          >
              {[
                {
                  q: 'What is the trading journal?',
@@ -871,8 +993,8 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                  a: 'Sign up, connect your first broker or import a CSV, and the journal immediately begins turning your trade history into clear, actionable review.',
                },
              ].map((faq, idx) => (
+              <motion.div key={idx} variants={staggerItem}>
               <button
-                key={idx}
                 onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                 className="flex w-full items-start justify-between gap-4 rounded-xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] px-5 py-4 text-left transition-colors hover:border-[var(--qe-ref-green)]/30"
               >
@@ -883,13 +1005,25 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                       {openFaq === idx ? <span className="inline-block h-3 w-[2px] rounded-sm bg-[var(--qe-ref-green)]" /> : <Plus className="h-3 w-3" />}
                     </div>
                   </div>
-                  {openFaq === idx && (
-                    <p className="mt-2 text-[13px] leading-relaxed text-[var(--qe-ref-text-muted)]">{faq.a}</p>
-                  )}
+                  <AnimatePresence initial={false}>
+                    {openFaq === idx && (
+                      <motion.p
+                        className="mt-2 text-[13px] leading-relaxed text-[var(--qe-ref-text-muted)]"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                        style={{ overflow: 'hidden' }}
+                      >
+                        {faq.a}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
                 </div>
               </button>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 

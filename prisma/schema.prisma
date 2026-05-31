@@ -48,7 +48,6 @@ model User {
   teamSubscriptions     TeamSubscription[]     @relation("UserTeamSubscriptions")
   businessSubscriptions BusinessSubscription[] @relation("UserBusinessSubscriptions")
   comments              Comment[]              @relation("UserComments")
-  journalTagTemplates   JournalTagTemplate[]   @relation("UserJournalTagTemplates")
   groups                Group[]                @relation("UserGroups")
   moods                 Mood[]                 @relation("UserMoods")
   notifications         Notification[]         @relation("UserNotifications")
@@ -425,21 +424,6 @@ model JournalEntry {
 
   @@index([userId])
   @@index([tradeId])
-  @@schema("public")
-}
-
-model JournalTagTemplate {
-  id        String   @id @default(uuid())
-  userId    String
-  name      String
-  tags      String[] @default([])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation("UserJournalTagTemplates", fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, name])
-  @@index([userId])
   @@schema("public")
 }
 

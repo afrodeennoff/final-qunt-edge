@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible"
+import { cn } from "@/lib/utils"
 
 const Collapsible = CollapsiblePrimitive.Root
 
@@ -25,7 +26,10 @@ const CollapsibleContent = React.forwardRef<
  <CollapsiblePrimitive.CollapsibleContent
  ref={ref}
  data-slot="collapsible-content"
- className={className}
+ className={cn(
+   'overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up',
+   className
+ )}
  {...props}
  />
 ))

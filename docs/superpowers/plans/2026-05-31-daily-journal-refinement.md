@@ -19,7 +19,6 @@
 - Prisma schema (minor extensions if needed for attachments/tags)
 
 ### New Files (Minimal)
-- `server/journal-tags.ts` — Tag template CRUD and defaults
 - `components/journal/daily-attachment.tsx` (or reuse existing) — Logic for screenshots + tags in daily sections (non-visual)
 - `hooks/use-daily-journal.ts` (extend if exists) — State and sync for rich daily reflections
 - `docs/` updates if needed
@@ -30,66 +29,7 @@
 
 ---
 
-### Task 1: Set Up Tag Template System (Server + Defaults)
-
-**Goal:** Create persistent, rich tag templates that can be used across the daily journal.
-
-**Files:**
-- Create: `server/journal-tags.ts`
-- Modify: `prisma/schema.prisma`
-- Modify: `server/journal.ts` (re-export tags)
-
-- [ ] **Step 1.1: Add TagTemplate model to Prisma**
-
-```prisma
-model JournalTagTemplate {
-  id        String   @id @default(uuid())
-  userId    String
-  name      String
-  tags      String[] @default([])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-}
-```
-
-Run migration later.
-
-- [ ] **Step 1.2: Create server/journal-tags.ts with defaults and CRUD**
-
-```typescript
-// server/journal-tags.ts
-import { prisma } from '@/lib/prisma'
-
-export const DEFAULT_TAG_CATEGORIES = {
-  'Week Days': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Best Day', 'Worst Day'],
-  'Setup Types': ['Breakout', 'Reversal', 'Trend Following', 'Scalp', 'Swing', 'Momentum', 'Mean Reversion', ...], // full list from spec
-  // ... other categories
-}
-
-export async function getUserTagTemplates(userId: string) {
-  // return user templates + defaults merged
-}
-
-export async function saveTagTemplate(userId: string, name: string, tags: string[]) {
-  // upsert logic
-}
-
-export async function deleteTagTemplate(userId: string, id: string) { ... }
-```
-
-- [ ] **Step 1.3: Add basic API routes or server actions for tag management (used later by Settings)**
-
-- [ ] **Step 1.4: Run prisma migrate and verify**
-
-Command: `npx prisma migrate dev --name add-journal-tag-templates`
-
----
-
-### Task 2: Add Optimized Screenshot Support to Daily Journal
+### Task 1: Add Optimized Screenshot Support to Daily Journal
 
 **Goal:** Allow multiple compressed images in Notes and daily reflection sections using existing Supabase infrastructure.
 
@@ -122,7 +62,7 @@ Only the upload call and state update — no JSX changes.
 
 ---
 
-### Task 3: Enable Rich Content in Daily Reflection Sections
+### Task 2: Enable Rich Content in Daily Reflection Sections
 
 **Goal:** Mental State, Daily Goals, Market Bias, and Rate Your Day can hold screenshots + tags.
 
@@ -140,7 +80,7 @@ Zero visual changes.
 
 ---
 
-### Task 4: Complete Per-Trade Notes in Modal
+### Task 3: Complete Per-Trade Notes in Modal
 
 **Goal:** The Notes area in the per-trade modal (shown in screenshot 3) supports full screenshots + rich tags.
 
@@ -155,7 +95,7 @@ Zero visual changes.
 
 ---
 
-### Task 5: Improve Weekly Strip and Daily Aggregation
+### Task 4: Improve Weekly Strip and Daily Aggregation
 
 **Goal:** The top calendar and daily metrics better reflect journaled data (tags, whether journaled, etc.).
 
@@ -171,7 +111,7 @@ Zero visual changes.
 
 ---
 
-### Task 6: Default Settings Inheritance + Polish
+### Task 5: Default Settings Inheritance + Polish
 
 **Goal:** New daily entries inherit sensible defaults.
 
@@ -181,7 +121,7 @@ Zero visual changes.
 
 ---
 
-### Task 7: Verification & Testing
+### Task 6: Verification & Testing
 
 - [ ] Write integration tests for new attachment and tag flows
 - [ ] Manual test: add screenshots in modal and daily sections

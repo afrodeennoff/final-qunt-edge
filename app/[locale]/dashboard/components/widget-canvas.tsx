@@ -25,7 +25,7 @@ import { toast } from "sonner"
 import { defaultLayouts } from "@/lib/default-layouts"
 import type { DashboardLayout } from "@/prisma/generated/prisma"
 import { useDashboard } from '../dashboard-context'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
 import { WidgetShell } from "@/components/ui/widget-shell"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { isUiV2Enabled } from "@/lib/ui-v2"
@@ -547,6 +547,11 @@ export default function WidgetCanvas() {
  if (!layouts) {
  return (
  <div className="relative mt-0 w-full min-h-0" role="status" aria-label="Loading dashboard">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
     <div className="rounded-xl bg-card p-4 border-0 space-y-3" aria-hidden="true">
 
  <Skeleton className="h-4 w-48" />
@@ -556,6 +561,7 @@ export default function WidgetCanvas() {
  <Skeleton className="h-8 w-24 rounded-lg" />
  </div>
  </div>
+    </motion.div>
  <span className="sr-only">Loading dashboard widgets...</span>
  </div>
  )
@@ -564,6 +570,11 @@ export default function WidgetCanvas() {
  if (currentLayout.length === 0) {
  return (
  <div className="relative mt-0 w-full min-h-0" role="status">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+    >
     <div className="mx-auto mt-8 max-w-lg rounded-xl bg-card p-6 text-center border-0" role="alert">
 
     <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-card text-muted-foreground border-0">
@@ -577,13 +588,13 @@ export default function WidgetCanvas() {
  {translate("widgets.emptyLayoutDescription") ||"Restore the default layout to show charts and stats, or switch to Edit mode to add widgets."}
  </div>
   <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
- <Button 
+ <Button
  onClick={restoreDefaultLayout}
  className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold rounded-lg"
  >
  {translate("widgets.restoreDefaults") ||"Restore default layout"}
  </Button>
- <Button 
+ <Button
  variant="outline"
  onClick={() => setIsCustomizing(true)}
   className="border-transparent bg-transparent text-foreground hover:bg-accent/10 hover:text-foreground rounded-lg"
@@ -592,6 +603,7 @@ export default function WidgetCanvas() {
  </Button>
  </div>
  </div>
+    </motion.div>
  </div>
  )
  }
@@ -631,8 +643,10 @@ export default function WidgetCanvas() {
  >
  <motion.div
  className="h-full min-h-0"
+ layout
  initial={shouldAnimateWidget ? { opacity: 0, y: 12 } : false}
  animate={shouldAnimateWidget ? { opacity: 1, y: 0 } : undefined}
+ exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
  transition={
  shouldAnimateWidget
  ? {
