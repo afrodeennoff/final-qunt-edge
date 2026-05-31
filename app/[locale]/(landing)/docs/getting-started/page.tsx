@@ -19,6 +19,7 @@ const cn = (...classes: (string | boolean | undefined | null)[]) => classes.filt
 export default function GettingStartedPage() {
   const locale = useCurrentLocale()
   const [openStep, setOpenStep] = useState<number | null>(0)
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const steps = [
     {

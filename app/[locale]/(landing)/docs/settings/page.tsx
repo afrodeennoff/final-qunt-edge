@@ -6,7 +6,7 @@ import { useCurrentLocale } from '@/locales/client'
 import {
   Settings, Palette, User, Bell, Clock, Globe, CreditCard, Users,
   ArrowRight, Check, Shield, Monitor, Moon, Sun, Smartphone,
-  Key, Lock, Mail, Sliders
+  Key, Lock, Mail, Sliders, Award, Download
 } from 'lucide-react'
 
 const cardMain = 'rounded-xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5 sm:p-6'
@@ -182,7 +182,7 @@ export default function DocsSettingsPage() {
         <h2 className="ref-h-section mt-2">Account Linking</h2>
         <div className="cardMain">
           <div className="flex items-start gap-4">
-            <div className="rounded-lg bg-[var(--qe-ref-green)]/10 p-2 text-[var(--qe-ref-green)]"><Link className="h-5 w-5" /></div>
+            <div className="rounded-lg bg-[var(--qe-ref-green)]/10 p-2 text-[var(--qe-ref-green)]"><div className="h-5 w-5" /></div>
             <div>
               <div className="font-semibold mb-2">Manage Connected Accounts</div>
               <p className="text-sm text-[var(--qe-ref-text-muted)]">The Settings → Accounts section shows every connected account: broker connections, prop firm challenges, and manual accounts. For each connection you can: view status (connected/disconnected/error), sync manually, revoke access, rename, or delete. Broker connections show the last sync timestamp and trade count. Revoking a connection stops future syncs but preserves imported trade history.</p>

@@ -13,6 +13,7 @@ const cardMain = 'rounded-xl border border-[var(--qe-ref-card-border)] bg-[var(-
 const cardNested = 'rounded-lg bg-[var(--qe-ref-surface-2)] p-4'
 const eyebrowStyle = 'text-[11px] font-semibold tracking-[0.16em] text-[var(--qe-ref-green)] uppercase'
 const headingCard = 'text-[17px] font-semibold tracking-[-0.01em]'
+const cn = (...classes: (string | boolean | undefined | null)[]) => classes.filter(Boolean).join(' ')
 const bodySmall = 'text-[13px] leading-[1.55] text-[var(--qe-ref-text-muted)]'
 
 export default function DocsStatisticsPage() {

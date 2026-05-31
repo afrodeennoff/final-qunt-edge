@@ -741,8 +741,8 @@ export default function JournalClient() {
                       <div className="space-y-4">
                         <InlineTagInput
                           tags={selectedCard.journal.customTags ?? []}
-                          onAdd={tag => update('customTags', [...(selectedCard.journal.customTags ?? []), tag])}
-                          onRemove={tag => update('customTags', (selectedCard.journal.customTags ?? []).filter(t => t !== tag))}
+                          onAdd={tag => update('customTags', [...(selectedCard.journal!.customTags ?? []), tag])}
+                          onRemove={tag => update('customTags', (selectedCard.journal!.customTags ?? []).filter(t => t !== tag))}
                         />
                         <div className="pt-1">
                           <TagTabs

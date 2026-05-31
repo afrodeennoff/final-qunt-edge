@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useCurrentLocale } from '@/locales/client'
 import {
   DollarSign, ShoppingCart, Tag, Percent, Calculator, ArrowRight, Check,
-  TrendingDown, Gift, Star, Award, Shield, Zap, Clock, Users
+  TrendingDown, Gift, Star, Award, Shield, Zap, Clock, Users, Search
 } from 'lucide-react'
 
 const cardMain = 'rounded-xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5 sm:p-6'

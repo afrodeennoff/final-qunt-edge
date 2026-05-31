@@ -137,7 +137,10 @@ export function useJournal(userId: string | null): UseJournalReturn {
   }, [userId, filters])
 
   const fetchDataRef = useRef(fetchData)
-  fetchDataRef.current = fetchData
+
+  useEffect(() => {
+    fetchDataRef.current = fetchData
+  }, [fetchData])
 
   useEffect(() => {
     fetchData()
