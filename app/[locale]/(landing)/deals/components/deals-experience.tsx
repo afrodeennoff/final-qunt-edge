@@ -74,15 +74,15 @@ const TABS: ReadonlyArray<{ id: string; label: string }> = [
 
 const DEALS_SPOTLIGHT_AUTO_SLIDE_MS = 5000
 const dealsPanelClassName =
-  'rounded-xl border-0 bg-card shadow-sm'
+  'rounded-xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)]'
 const dealsInsetPanelClassName =
-  'rounded-2xl border-0 bg-card shadow-none'
+  'rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)]'
 const dealsChipClassName =
-  'rounded-full border-0 bg-card'
+  'rounded-full border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)]'
 const dealsGhostButtonClassName =
-  'inline-flex items-center justify-center gap-2 rounded-full border-0 bg-card px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted'
+  'inline-flex items-center justify-center gap-2 rounded-full border border-[var(--qe-ref-card-border)] bg-transparent px-4 py-2.5 text-sm font-medium text-[var(--qe-ref-text-muted)] transition hover:border-[var(--qe-ref-green)]/40 hover:text-[var(--qe-ref-text)]'
 const dealsPrimaryButtonClassName =
-  'inline-flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-sm transition-[background-color,transform,box-shadow,filter] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-sm'
+  'inline-flex items-center justify-center gap-2 rounded-full bg-[var(--qe-ref-green)] px-5 py-2.5 text-sm font-semibold text-black transition hover:opacity-90'
 
 const faqFallbackItems: ReadonlyArray<{ question: string; answer: string }> = [
   {

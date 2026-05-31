@@ -29,6 +29,7 @@ import { cn } from '@/lib/utils'
 import { useCurrentLocale } from '@/locales/client'
 import HeroProductPreview from './HeroProductPreview'
 import AIHubVisual from './AIHubVisual'
+import type { HomeLiveHighlights } from '../page'
 
 const HOME_WIDTH = 'mx-auto w-full max-w-[1100px] px-6'
 
@@ -40,10 +41,12 @@ const bodyDefault = 'ref-body'
 const headingCard = 'text-[17px] font-semibold tracking-[-0.01em]'
 const bodySmall = 'text-[13px] leading-[1.55] text-[var(--qe-ref-text-muted)]'
 
-export default function HomeContent() {
+export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeLiveHighlights }) {
   const locale = useCurrentLocale()
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [openAccordion, setOpenAccordion] = useState<number | null>(null)
+
+  const highlights = liveHighlights ?? { topFirms: [], topCoupons: [], topLeaders: [] }
 
   return (
     <div className="qe-home-ref flex flex-col overflow-x-hidden bg-[var(--qe-ref-surface)] text-[var(--qe-ref-text)]">
@@ -381,14 +384,94 @@ export default function HomeContent() {
                  </div>
                  <span className="text-[11px] text-[var(--qe-ref-text-muted)]">End-to-end<br/>encrypted storage</span>
                </div>
-             </div>
-           </div>
-        </div>
-      </section>
+              </div>
+            </div>
 
-      {/* ═══════════════════════════════════════════════════════════════
-          SECTION 3: ADVANCED TRADING (Reference: left accordion + right circular diagram)
-         ═══════════════════════════════════════════════════════════════ */}
+            {/* ═══════════════════════════════════════════════════════════════
+                LIVE HIGHLIGHTS CARD — Top 3 Firms + Coupons + Leaderboard (live data)
+               ═══════════════════════════════════════════════════════════════ */}
+            <div className={cardMain} style={{ marginTop: '16px' }}>
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <div className={eyebrowStyle}>LIVE FROM THE PLATFORM</div>
+                  <h3 className={headingCard}>Platform Pulse • Top Firms • Deals • Traders</h3>
+                </div>
+                <Link href={`/${locale}/propfirms`} className="text-[11px] text-[var(--qe-ref-green)] hover:underline">View all →</Link>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-3">
+                {/* Top 3 Firms */}
+                <div className={cardNested}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Building2 className="h-4 w-4 text-[var(--qe-ref-green)]" />
+                    <span className="text-[12px] font-semibold tracking-[0.08em] text-[var(--qe-ref-text)]">TOP FIRMS</span>
+                  </div>
+                  {highlights.topFirms.length > 0 ? (
+                    <div className="space-y-2">
+                      {highlights.topFirms.map((f, i) => (
+                        <div key={i} className="flex items-center justify-between text-[12px]">
+                          <span className="font-medium text-[var(--qe-ref-text)] truncate pr-2">{f.name}</span>
+                          <span className="tabular-nums text-[var(--qe-ref-green)] font-semibold">${Math.round(f.paidPayout).toLocaleString()}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-[11px] text-[var(--qe-ref-text-muted)]">Live data updating…</div>
+                  )}
+                  <Link href={`/${locale}/propfirms`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">Browse catalogue →</Link>
+                </div>
+
+                {/* Top 3 Coupons */}
+                <div className={cardNested}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Percent className="h-4 w-4 text-[var(--qe-ref-green)]" />
+                    <span className="text-[12px] font-semibold tracking-[0.08em] text-[var(--qe-ref-text)]">HOT COUPONS</span>
+                  </div>
+                  {highlights.topCoupons.length > 0 ? (
+                    <div className="space-y-2">
+                      {highlights.topCoupons.map((c, i) => (
+                        <div key={i} className="flex items-center justify-between text-[12px]">
+                          <span className="font-medium text-[var(--qe-ref-text)] truncate pr-2">{c.firmName}</span>
+                          <span className="font-semibold text-[var(--qe-ref-green)] tabular-nums">{c.discount}% • {c.code}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-[11px] text-[var(--qe-ref-text-muted)]">Fresh promos loading…</div>
+                  )}
+                  <Link href={`/${locale}/deals`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">See all deals →</Link>
+                </div>
+
+                {/* Top 3 Leaderboard */}
+                <div className={cardNested}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Trophy className="h-4 w-4 text-[var(--qe-ref-green)]" />
+                    <span className="text-[12px] font-semibold tracking-[0.08em] text-[var(--qe-ref-text)]">TOP TRADERS</span>
+                  </div>
+                  {highlights.topLeaders.length > 0 ? (
+                    <div className="space-y-2">
+                      {highlights.topLeaders.map((l, i) => (
+                        <div key={i} className="flex items-center justify-between text-[12px]">
+                          <span className="font-medium text-[var(--qe-ref-text)] truncate pr-2">#{i+1} {l.username}</span>
+                          <span className="font-semibold text-[var(--qe-ref-green)] tabular-nums">+${Math.round(l.monthlyPnl).toLocaleString()}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-[11px] text-[var(--qe-ref-text-muted)]">Leaderboard syncing…</div>
+                  )}
+                  <Link href={`/${locale}/leaderboard`} className="mt-3 inline-block text-[10px] text-[var(--qe-ref-green)] hover:underline">Full leaderboard →</Link>
+                </div>
+              </div>
+            </div>
+            {/* end live highlights card */}
+
+         </div>
+       </section>
+
+       {/* ═══════════════════════════════════════════════════════════════
+           SECTION 3: ADVANCED TRADING (Reference: left accordion + right circular diagram)
+          ═══════════════════════════════════════════════════════════════ */}
       <section className="pb-16 sm:pb-20">
         <div className={HOME_WIDTH}>
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
@@ -699,10 +782,10 @@ export default function HomeContent() {
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)]">
                     <Users className="h-4 w-4" />
                   </div>
-                  <div>
-                    <div className="text-[13px] font-semibold">{t.name}</div>
-                    <div className="text-[10px] text-[var(--qe-ref-text-muted)]">{t.email || t.role}</div>
-                  </div>
+                   <div>
+                     <div className="text-[13px] font-semibold">{t.name}</div>
+                     <div className="text-[10px] text-[var(--qe-ref-text-muted)]">{t.role}</div>
+                   </div>
                 </div>
                 <p className="text-[12px] leading-relaxed text-[var(--qe-ref-text-muted)]">{t.quote}</p>
                 <div className="mt-3 text-[10px] text-[var(--qe-ref-text-muted)]">{t.date}</div>

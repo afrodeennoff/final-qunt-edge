@@ -4,11 +4,6 @@ import { useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { UnifiedMobileNav } from '@/components/mobile-nav'
-import {
-  unifiedInsetPanelClassName,
-  unifiedGhostActionClassName,
-  unifiedPrimaryActionClassName,
-} from '@/components/layout/unified-page-recipes'
 import { Logo } from '@/components/logo'
 import { cn } from '@/lib/utils'
 import { useCurrentLocale, useI18n } from '@/locales/client'
@@ -48,19 +43,18 @@ export default function Navbar() {
       <div className="mx-auto w-full max-w-[1400px]">
         <div
           className={cn(
-            unifiedInsetPanelClassName,
-            'relative flex min-h-[3.5rem] items-center justify-between overflow-hidden rounded-xl px-3 py-1.5 sm:min-h-[4rem] sm:px-4 sm:py-2',
+            'relative flex min-h-[3.5rem] items-center justify-between overflow-hidden rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] px-3 py-1.5 sm:min-h-[4rem] sm:px-4 sm:py-2',
           )}
         >
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/30 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--qe-ref-green)]/20 to-transparent" />
           <Link
             href={`/${locale}`}
-            className="flex items-center gap-2 rounded-lg px-2 py-2 min-h-[44px] min-w-[44px] transition-colors hover:bg-muted/40"
+            className="flex items-center gap-2 rounded-lg px-2 py-2 min-h-[44px] min-w-[44px] transition-colors hover:bg-[var(--qe-ref-surface-2)]"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg border-0 bg-muted text-muted-foreground">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)] text-[var(--qe-ref-green)]">
               <Logo className="h-4 w-4 fill-current" />
             </div>
-            <span className="hidden text-sm font-semibold tracking-tight text-foreground sm:inline-flex">
+            <span className="hidden text-sm font-semibold tracking-tight text-[var(--qe-ref-text)] sm:inline-flex">
               Qunt Edge
             </span>
           </Link>
@@ -71,10 +65,10 @@ export default function Navbar() {
                 key={link.href}
                 href={`/${locale}${link.href}`}
                 className={cn(
-                  'rounded-lg px-3.5 py-2 text-[13px] font-medium transition-[background-color,color] duration-150 min-h-[36px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                  'rounded-lg px-3.5 py-2 text-[13px] font-medium transition-all duration-150 min-h-[36px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--qe-ref-green)]/40',
                   isActive(link.href)
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground',
+                    ? 'bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)] border border-[var(--qe-ref-green)]/30'
+                    : 'text-[var(--qe-ref-text-muted)] hover:bg-[var(--qe-ref-surface-2)] hover:text-[var(--qe-ref-text)]',
                 )}
               >
                 {link.title}
@@ -85,17 +79,14 @@ export default function Navbar() {
           <div className="ml-auto flex items-center gap-2">
             <Link
               href={`/${locale}/authentication`}
-              className={cn(unifiedGhostActionClassName, 'hidden px-3 py-2 text-sm min-h-[44px] md:inline-flex items-center')}
+              className="hidden md:inline-flex items-center rounded-full border border-[var(--qe-ref-card-border)] bg-transparent px-4 py-2 text-sm font-medium text-[var(--qe-ref-text-muted)] transition hover:border-[var(--qe-ref-green)]/40 hover:text-[var(--qe-ref-text)] min-h-[44px]"
             >
               {t('landing.navbar.signIn')}
             </Link>
 
             <Link
               href={`/${locale}/authentication`}
-              className={cn(
-                unifiedPrimaryActionClassName,
-                'hidden h-10 px-5 text-sm min-h-[44px] md:inline-flex items-center',
-              )}
+              className="hidden md:inline-flex items-center rounded-full bg-[var(--qe-ref-green)] px-5 py-2 text-sm font-semibold text-black transition hover:opacity-90 min-h-[44px]"
             >
               {t('landing.hero.ctaPrimary')}
             </Link>
@@ -105,7 +96,7 @@ export default function Navbar() {
               footer={
                 <Link
                   href={`/${locale}/authentication`}
-                  className={cn(unifiedPrimaryActionClassName, 'w-full min-h-[44px]')}
+                  className="w-full inline-flex items-center justify-center rounded-full bg-[var(--qe-ref-green)] px-5 py-3 text-sm font-semibold text-black min-h-[44px]"
                 >
                   {t('landing.hero.ctaPrimary')}
                 </Link>

@@ -9,8 +9,17 @@ import {
   buildSoftwareApplicationSchema,
 } from '@/lib/seo'
 import { Skeleton } from '@/components/ui/skeleton'
+import { getUnifiedFirms } from '@/server/deals'
+import { getActiveDeals } from '@/server/deals'
+import { getLeaderboardData } from '@/app/[locale]/(landing)/leaderboard/data/leaderboard-query'
 
 type Locale = 'en' | 'fr'
+
+export interface HomeLiveHighlights {
+  topFirms: Array<{ name: string; paidPayout: number; accounts: number }>
+  topCoupons: Array<{ firmName: string; code: string; discount: number }>
+  topLeaders: Array<{ username: string; monthlyPnl: number }>
+}
 
 export function generateStaticParams() {
   return getStaticParams()
@@ -36,11 +45,36 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   const { locale } = await params
   setStaticParamsLocale(locale)
 
-  const [softwareSchema, organizationSchema, breadcrumbSchema] = await Promise.all([
+  const [softwareSchema, organizationSchema, breadcrumbSchema, unifiedFirms, activeDeals, leaders] = await Promise.all([
     buildSoftwareApplicationSchema(locale, '/'),
     buildOrganizationSchema(),
     buildBreadcrumbSchema(locale, [{ name: 'Home', path: '/' }]),
+    getUnifiedFirms(),
+    getActiveDeals(),
+    getLeaderboardData('monthly_pnl'),
   ])
+
+  const topFirms = [...unifiedFirms]
+    .sort((a, b) => (b.catalogueStats?.paidPayoutAmount ?? 0) - (a.catalogueStats?.paidPayoutAmount ?? 0))
+    .slice(0, 3)
+    .map((f) => ({
+      name: f.name,
+      paidPayout: f.catalogueStats?.paidPayoutAmount ?? 0,
+      accounts: f.catalogueStats?.accountsCount ?? 0,
+    }))
+
+  const topCoupons = activeDeals.slice(0, 3).map((d) => ({
+    firmName: d.firmName,
+    code: d.couponCode,
+    discount: d.discountPercent ?? 0,
+  }))
+
+  const topLeaders = leaders.slice(0, 3).map((l) => ({
+    username: l.username,
+    monthlyPnl: l.monthlyPnl ?? 0,
+  }))
+
+  const liveHighlights: HomeLiveHighlights = { topFirms, topCoupons, topLeaders }
 
   return (
     <>
@@ -56,7 +90,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <HomeContent />
+      <HomeContent liveHighlights={liveHighlights} />
     </>
   )
 }
@@ -116,4 +150,4 @@ const HomeContent = dynamic(() => import('./components/HomeContent'), {
     </div>
   ),
   ssr: true
-})
+}) as unknown as React.ComponentType<{ liveHighlights?: HomeLiveHighlights }>
