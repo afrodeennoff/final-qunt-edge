@@ -1,7 +1,4 @@
 @import 'tailwindcss';
-@import '../styles/styleseed-tokens.css';
-@import '../styles/styleseed-base.css';
-@import '../styles/tokens.css';
 @import '../styles/animations.css';
 
 @config '../tailwind.config.ts';
