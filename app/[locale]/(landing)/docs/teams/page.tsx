@@ -40,7 +40,7 @@ export default function DocsTeamsPage() {
   ]
 
   return (
-    <div className="qe-home-ref space-y-10 text-[var(--qe-ref-text)]">
+    <div className="public-page space-y-10 text-[var(--qe-ref-text)]">
       {/* HERO */}
       <div>
         <div className={eyebrowStyle}>TEAMS</div>

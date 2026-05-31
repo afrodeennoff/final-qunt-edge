@@ -146,7 +146,7 @@ export default function GettingStartedPage() {
   ]
 
   return (
-    <div className="qe-home-ref space-y-10 text-[var(--qe-ref-text)]">
+    <div className="public-page space-y-10 text-[var(--qe-ref-text)]">
       {/* HERO */}
       <div>
         <div className={eyebrowStyle}>GETTING STARTED</div>

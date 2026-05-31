@@ -56,7 +56,7 @@ export default function DocsContent() {
   ]
 
   return (
-    <div className="qe-home-ref space-y-12 text-[var(--qe-ref-text)]">
+    <div className="public-page space-y-12 text-[var(--qe-ref-text)]">
       <div>
         <div className={eyebrowStyle}>OFFICIAL DOCUMENTATION</div>
         <h1 className="ref-h-display mt-3 tracking-[-0.02em]">
