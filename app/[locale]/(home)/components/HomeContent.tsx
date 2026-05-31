@@ -52,7 +52,7 @@ export default function HomeContent() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             {/* Left column — text + CTAs */}
             <div>
-              <div className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-medium tracking-[0.14em] text-[var(--qe-ref-text-muted)]">
+              <div className="inline-flex items-center rounded-full border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] px-3 py-1 text-[11px] font-medium tracking-[0.14em] text-[var(--qe-ref-text-muted)]">
                 AI-POWERED TRADING JOURNAL PLATFORM
               </div>
 

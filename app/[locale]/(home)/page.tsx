@@ -69,16 +69,16 @@ const HomeContent = dynamic(() => import('./components/HomeContent'), {
         <section className="pt-20 pb-16 sm:pt-24 sm:pb-20">
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div className="space-y-5">
-              <Skeleton className="h-6 w-56 rounded-full bg-white/8" />
-              <Skeleton className="h-[92px] w-full max-w-[520px] rounded-2xl bg-white/8" />
-              <Skeleton className="h-4 w-[340px] rounded bg-white/8" />
+              <Skeleton className="h-6 w-56 rounded-full bg-[var(--qe-ref-card)]" />
+              <Skeleton className="h-[92px] w-full max-w-[520px] rounded-2xl bg-[var(--qe-ref-card)]" />
+              <Skeleton className="h-4 w-[340px] rounded bg-[var(--qe-ref-card)]" />
               <div className="flex gap-3 pt-4">
                 <Skeleton className="h-12 w-40 rounded-full bg-[var(--qe-ref-green)]/30" />
-                <Skeleton className="h-12 w-32 rounded-full bg-white/8" />
+                <Skeleton className="h-12 w-32 rounded-full bg-[var(--qe-ref-card)]" />
               </div>
             </div>
             <div className="relative">
-              <Skeleton className="h-[360px] w-full max-w-[460px] rounded-2xl bg-white/5 mx-auto" />
+              <Skeleton className="h-[360px] w-full max-w-[460px] rounded-2xl bg-[var(--qe-ref-surface-2)] mx-auto" />
             </div>
           </div>
         </section>
@@ -86,13 +86,13 @@ const HomeContent = dynamic(() => import('./components/HomeContent'), {
         {/* Features skeleton */}
         <section className="pb-16 sm:pb-20">
           <div className="text-center mb-10 space-y-3">
-            <Skeleton className="mx-auto h-4 w-48 rounded-full bg-white/8" />
-            <Skeleton className="mx-auto h-[52px] w-[420px] rounded-2xl bg-white/8" />
-            <Skeleton className="mx-auto h-4 w-[520px] rounded bg-white/8" />
+            <Skeleton className="mx-auto h-4 w-48 rounded-full bg-[var(--qe-ref-card)]" />
+            <Skeleton className="mx-auto h-[52px] w-[420px] rounded-2xl bg-[var(--qe-ref-card)]" />
+            <Skeleton className="mx-auto h-4 w-[520px] rounded bg-[var(--qe-ref-card)]" />
           </div>
           <div className="grid gap-4 sm:gap-5 md:grid-cols-2">
             {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={i} className="h-[280px] rounded-xl bg-white/5" />
+              <Skeleton key={i} className="h-[280px] rounded-xl bg-[var(--qe-ref-surface-2)]" />
             ))}
           </div>
         </section>
@@ -101,15 +101,15 @@ const HomeContent = dynamic(() => import('./components/HomeContent'), {
         <section className="pb-16 sm:pb-20">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div className="space-y-4">
-              <Skeleton className="h-4 w-40 rounded-full bg-white/8" />
-              <Skeleton className="h-[48px] w-full max-w-[480px] rounded-2xl bg-white/8" />
-              <Skeleton className="h-4 w-[320px] rounded bg-white/8" />
+              <Skeleton className="h-4 w-40 rounded-full bg-[var(--qe-ref-card)]" />
+              <Skeleton className="h-[48px] w-full max-w-[480px] rounded-2xl bg-[var(--qe-ref-card)]" />
+              <Skeleton className="h-4 w-[320px] rounded bg-[var(--qe-ref-card)]" />
               {Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-14 w-full rounded-xl bg-white/5" />
+                <Skeleton key={i} className="h-14 w-full rounded-xl bg-[var(--qe-ref-surface-2)]" />
               ))}
               <Skeleton className="h-10 w-24 rounded-full bg-[var(--qe-ref-green)]/30 mt-4" />
             </div>
-            <Skeleton className="h-[300px] w-full max-w-[400px] rounded-2xl bg-white/5 mx-auto" />
+            <Skeleton className="h-[300px] w-full max-w-[400px] rounded-2xl bg-[var(--qe-ref-surface-2)] mx-auto" />
           </div>
         </section>
       </main>

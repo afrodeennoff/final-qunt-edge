@@ -564,15 +564,15 @@
   --easing-enter: cubic-bezier(0.4, 0, 1, 1); /* Elements entering */
   --easing-leave: cubic-bezier(0, 0, 0.2, 1); /* Elements leaving */
 
-  /* ── BACKGROUND & SURFACE — Pure Black Canvas (Public) ── */
-  --background: #000000;
+  /* ── BACKGROUND & SURFACE — Dark Green-Black Canvas (Public) ── */
+  --background: #0a0c0a;
   --foreground: #EAEAEA;
-  --card: #000000;
+  --card: #0a0c0a;
   --card-foreground: #EAEAEA;
-  --popover: #000000;
+  --popover: #0a0c0a;
   --popover-foreground: #EAEAEA;
-  --sidebar: #000000;
-  --sidebar-background: #000000;
+  --sidebar: #0a0c0a;
+  --sidebar-background: #0a0c0a;
   --muted: hsl(0, 0%, 5%);
   --muted-foreground: #888888;
   --subtle-foreground: #666666;
@@ -616,8 +616,8 @@
   --ring: hsl(150, 100%, 50%);
 
   /* ── SIDEBAR */
-  --sidebar: #000000;
-  --sidebar-background: #000000;
+  --sidebar: #0a0c0a;
+  --sidebar-background: #0a0c0a;
   --sidebar-foreground: #EAEAEA;
   --sidebar-primary: hsl(150, 100%, 50%);
   --sidebar-primary-foreground: #000000;
@@ -686,12 +686,12 @@
   --type-metric-tracking: -0.02em;
 
   /* ═══════════════════════════════════════════════════════════
-      MARKETING / LANDING TOKENS — Pure Black + Neon Green
+      MARKETING / LANDING TOKENS — Dark Green-Black + Neon Green
    ═══════════════════════════════════════════════════════════ */
-  --mkt-bg-base:        #000000;
-  --mkt-bg-surface:     #000000;
-  --mkt-bg-elevated:    #000000;
-  --mkt-bg-overlay:     #000000;
+  --mkt-bg-base:        #0a0c0a;
+  --mkt-bg-surface:     #0a0c0a;
+  --mkt-bg-elevated:    #0a0c0a;
+  --mkt-bg-overlay:     #0a0c0a;
 
   --mkt-text-primary:   #EAEAEA;
   --mkt-text-secondary: #888888;
@@ -720,15 +720,15 @@
 
 
 .dark {
-  /* Public default — Pure Black + Neon Green (overridden by dashboardTheme on dashboard/teams) */
-  --background: #000000;
+  /* Public default — Dark Green-Black + Neon Green (overridden by dashboardTheme on dashboard/teams) */
+  --background: #0a0c0a;
   --foreground: #EAEAEA;
-  --card: #000000;
+  --card: #0a0c0a;
   --card-foreground: #EAEAEA;
-  --popover: #000000;
+  --popover: #0a0c0a;
   --popover-foreground: #EAEAEA;
-  --sidebar: #000000;
-  --sidebar-background: #000000;
+  --sidebar: #0a0c0a;
+  --sidebar-background: #0a0c0a;
   --muted: #0D0D0D;
   --muted-foreground: #888888;
   --subtle-foreground: #666666;
@@ -3981,16 +3981,16 @@ img[loading='lazy'] {
 .public-page,
 .public-page .marketing-shell,
 .public-page .qe-v2-app-shell {
-  --background: #000000 !important;
-  --card: #000000 !important;
-  --popover: #000000 !important;
-  --sidebar: #000000 !important;
-  --sidebar-background: #000000 !important;
+  --background: #0a0c0a !important;
+  --card: #0a0c0a !important;
+  --popover: #0a0c0a !important;
+  --sidebar: #0a0c0a !important;
+  --sidebar-background: #0a0c0a !important;
   --muted: hsl(150, 22%, 9%) !important;
   --border: hsl(150, 20%, 16%) !important;
   --input: hsl(150, 20%, 12%) !important;
-  /* Pure black surface fallback */
-  background: #000000 !important;
+  /* Dark green-black surface fallback */
+  background: #0a0c0a !important;
 
   /* Locked Neon Green accents from default palette */
   --primary: hsl(150, 100%, 50%) !important;

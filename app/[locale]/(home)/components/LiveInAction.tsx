@@ -36,10 +36,10 @@ export function LiveInAction() {
             className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full border border-primary/30 bg-primary/10 transition-all duration-300 hover:border-primary/60 hover:bg-primary/20 hover:scale-105 active:scale-[0.98] shadow-lg shadow-primary/10 animate-[pulse-ring_2.5s_ease-in-out_infinite]"
             aria-label="Play demo video"
           >
-            <Play className="h-7 w-7 text-white/90 ml-0.5" />
+            <Play className="h-7 w-7 text-[var(--qe-ref-text)]/90 ml-0.5" />
           </button>
 
-          <div className="absolute bottom-5 right-5 rounded-full bg-background/60 px-3 py-1 text-[10px] font-mono tracking-[2px] text-white/50 backdrop-blur-sm">
+          <div className="absolute bottom-5 right-5 rounded-full bg-background/60 px-3 py-1 text-[10px] font-mono tracking-[2px] text-[var(--qe-ref-text-muted)]/50 backdrop-blur-sm">
             2:14 &bull; REAL SESSION
           </div>
         </div>
@@ -52,7 +52,7 @@ export function LiveInAction() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-5xl p-0 overflow-hidden border-transparent bg-background">
           <DialogTitle className="sr-only">Product Demo Video</DialogTitle>
-          <div className="relative aspect-video w-full bg-black">
+          <div className="relative aspect-video w-full bg-[var(--qe-ref-surface)]">
             <video
               controls
               autoPlay
@@ -63,7 +63,7 @@ export function LiveInAction() {
             </video>
             <button
               onClick={() => setOpen(false)}
-              className="absolute right-4 top-4 z-50 rounded-full bg-background/60 p-2 text-white/80 hover:bg-background/80 hover:text-white backdrop-blur-sm transition-all"
+              className="absolute right-4 top-4 z-50 rounded-full bg-background/60 p-2 text-[var(--qe-ref-text-muted)]/80 hover:bg-background/80 hover:text-[var(--qe-ref-text)] backdrop-blur-sm transition-all"
             >
               <X className="h-5 w-5" />
             </button>
