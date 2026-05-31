@@ -22,8 +22,10 @@ import { MotionStagger, MotionStaggerItem } from '@/components/animation/enhance
 // ── Formatters ──
 
 function formatPnl(pnl: number) {
-  const sign = pnl >= 0 ? '+' : ''
-  return `${sign}$${Math.abs(pnl).toFixed(2)}`
+  const num = Number(pnl)
+  if (isNaN(num)) return '$0.00'
+  const sign = num >= 0 ? '+' : ''
+  return `${sign}$${Math.abs(num).toFixed(2)}`
 }
 
 function formatDate(dateStr: string) {
@@ -241,7 +243,7 @@ function TradeListItem({
       {/* Row 3: tags + confidence */}
       {card.journal && (
         <div className="flex items-center gap-1 pl-3.5">
-          {card.journal.customTags.slice(0, 3).map(tag => (
+          {(card.journal.customTags ?? []).slice(0, 3).map(tag => (
             <span key={tag} className="rounded-full bg-primary/8 px-1.5 py-0.5 text-[8px] font-medium text-primary/80">
               {tag}
             </span>
@@ -345,11 +347,15 @@ export default function JournalClient() {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
       setHasUnsaved(true)
       saveTimerRef.current = setTimeout(() => setSaving(false), 1500)
-      if (entryId.startsWith('temp-')) {
-        handleCreate(selectedCard.trade.id, selectedCard.trade.accountNumber, { [field]: value })
+      if (entryId?.startsWith('temp-')) {
+        const { preTradeNotes, postTradeReview, emotions, confidenceRating, disciplineScore, customTags, screenshots } = selectedCard.journal
+        handleCreate(selectedCard.trade.id, selectedCard.trade.accountNumber, {
+          preTradeNotes, postTradeReview, emotions, confidenceRating, disciplineScore, customTags, screenshots,
+          [field]: value,
+        })
         return
       }
-      handleUpdate(entryId, { [field]: value })
+      if (entryId) handleUpdate(entryId, { [field]: value })
     },
     [selectedCard, handleCreate, handleUpdate],
   )
@@ -547,14 +553,14 @@ export default function JournalClient() {
 
                 {/* Trade metrics row */}
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-muted-foreground/65">
-                  <span>Entry ${selectedCard.trade.entryPrice.toFixed(2)}</span>
-                  <span>Exit ${selectedCard.trade.closePrice.toFixed(2)}</span>
+                  <span>Entry ${Number(selectedCard.trade.entryPrice).toFixed(2)}</span>
+                  <span>Exit ${Number(selectedCard.trade.closePrice).toFixed(2)}</span>
                   <span>Qty {selectedCard.trade.quantity}</span>
                   <span className="flex items-center gap-1">
                     <Clock size={10} />
                     {formatDuration(selectedCard.trade.timeInPosition)}
                   </span>
-                  <span>Comm ${selectedCard.trade.commission.toFixed(2)}</span>
+                  <span>Comm ${Number(selectedCard.trade.commission).toFixed(2)}</span>
                   {selectedCard.journal?.pinned && (
                     <span className="flex items-center gap-1 text-primary/60">
                       <Pin size={10} /> Pinned
@@ -729,18 +735,18 @@ export default function JournalClient() {
                       title="Tags"
                       isOpen={activeSection.tags}
                       onToggle={() => toggleSection('tags')}
-                      badge={selectedCard.journal.customTags.length > 0 ? String(selectedCard.journal.customTags.length) : undefined}
+                      badge={(selectedCard.journal.customTags ?? []).length > 0 ? String((selectedCard.journal.customTags ?? []).length) : undefined}
                     />
                     {activeSection.tags && (
                       <div className="space-y-4">
                         <InlineTagInput
-                          tags={selectedCard.journal.customTags}
-                          onAdd={tag => update('customTags', [...selectedCard.journal.customTags, tag])}
-                          onRemove={tag => update('customTags', selectedCard.journal.customTags.filter(t => t !== tag))}
+                          tags={selectedCard.journal.customTags ?? []}
+                          onAdd={tag => update('customTags', [...(selectedCard.journal.customTags ?? []), tag])}
+                          onRemove={tag => update('customTags', (selectedCard.journal.customTags ?? []).filter(t => t !== tag))}
                         />
                         <div className="pt-1">
                           <TagTabs
-                            activeTags={selectedCard.journal.customTags}
+                            activeTags={selectedCard.journal.customTags ?? []}
                             onChange={v => update('customTags', v)}
                           />
                         </div>
@@ -755,11 +761,11 @@ export default function JournalClient() {
                       title="Screenshots"
                       isOpen={activeSection.screenshots}
                       onToggle={() => toggleSection('screenshots')}
-                      badge={selectedCard.journal.screenshots.length > 0 ? String(selectedCard.journal.screenshots.length) : undefined}
+                      badge={(selectedCard.journal.screenshots ?? []).length > 0 ? String((selectedCard.journal.screenshots ?? []).length) : undefined}
                     />
                     {activeSection.screenshots && (
                       <ScreenshotGrid
-                        screenshots={selectedCard.journal.screenshots}
+                        screenshots={selectedCard.journal.screenshots ?? []}
                         onChange={v => update('screenshots', v)}
                       />
                     )}

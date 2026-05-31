@@ -504,6 +504,17 @@ export default function DocsDashboardPage() {
         </div>
       </div>
 
+      {/* PRACTICE & DRILLS */}
+      <div id="drills">
+        <div className={eyebrowStyle}>COMING SOON</div>
+        <h2 className="ref-h-section mt-2">Practice &amp; Drills</h2>
+        <div className="mt-4 rounded-xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5">
+          <p className="text-sm text-[var(--qe-ref-text-muted)]">
+            Qunt Edge currently supports structured review through the <Link href={`/${locale}/docs/playbook`} className="text-[var(--qe-ref-green)] hover:underline">Playbook (Strategies)</Link> and <Link href={`/${locale}/docs/behavior`} className="text-[var(--qe-ref-green)] hover:underline">Behavior Analysis</Link> pages. You can create deliberate practice rules and then use <Link href={`/${locale}/docs/analytics`} className="text-[var(--qe-ref-green)] hover:underline">Copilot + Statistics</Link> to run your own drill-style reviews against historical data. A dedicated simulation/drills sandbox is on the roadmap.
+          </p>
+        </div>
+      </div>
+
       {/* FINAL CTA */}
       <div className="rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-8 text-center">
         <div className="text-lg font-semibold tracking-tight">Ready to build your edge?</div>

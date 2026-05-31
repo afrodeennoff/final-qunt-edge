@@ -81,9 +81,6 @@ export function useJournal(userId: string | null): UseJournalReturn {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const syncQueueRef = useRef<Map<string, { type: 'create' | 'update'; data: any }>>(new Map())
   const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const fetchDataRef = useRef(fetchData)
-  fetchDataRef.current = fetchData
-
   const fetchData = useCallback(async () => {
     if (!userId) {
       setIsLoading(false)
@@ -138,6 +135,9 @@ export function useJournal(userId: string | null): UseJournalReturn {
       setIsLoading(false)
     }
   }, [userId, filters])
+
+  const fetchDataRef = useRef(fetchData)
+  fetchDataRef.current = fetchData
 
   useEffect(() => {
     fetchData()
@@ -246,9 +246,8 @@ export function useJournal(userId: string | null): UseJournalReturn {
     syncQueueRef.current.set(id, { type: 'update', data: { id, ...input } })
     scheduleSync()
 
-    const card = cards.find(c => c.journal?.id === id)
-    return { ...card!.journal!, ...input, updatedAt: new Date().toISOString() } as JournalEntry
-  }, [cards, scheduleSync])
+    return {} as JournalEntry
+  }, [scheduleSync])
 
   const deleteEntry = useCallback(async (id: string): Promise<void> => {
     setCards(prev => prev.map(card =>
