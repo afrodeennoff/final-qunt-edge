@@ -68,12 +68,14 @@ export async function getStatisticsAction(
   for (const [ticker, tList] of tickerMap) {
     const { avgRR, totalRR, wins, losses, grossWin, grossLoss } = computeRR(tList)
     const resolved = wins + losses
+    const pnl = tList.reduce((s, t) => s + t.pnl, 0)
     tickerStats.push({
       ticker,
       totalTrades: tList.length,
       winRate: resolved > 0 ? (wins / resolved) * 100 : 0,
       avgRR,
       totalRR,
+      pnl,
       wins,
       losses,
       grossWin,
@@ -95,12 +97,14 @@ export async function getStatisticsAction(
   for (const [date, tList] of dateMap) {
     const { avgRR, totalRR, wins, losses } = computeRR(tList)
     const resolved = wins + losses
+    const pnl = tList.reduce((s, t) => s + t.pnl, 0)
     dailyStats.push({
       date,
       totalTrades: tList.length,
       winRate: resolved > 0 ? (wins / resolved) * 100 : 0,
       avgRR,
       totalRR,
+      pnl,
     })
   }
   dailyStats.sort((a, b) => b.date.localeCompare(a.date))
@@ -127,12 +131,14 @@ export async function getStatisticsAction(
   for (const [tag, tList] of tagMap) {
     const { avgRR, totalRR, wins, losses } = computeRR(tList)
     const resolved = wins + losses
+    const pnl = tList.reduce((s, t) => s + t.pnl, 0)
     setupStats.push({
       tag,
       totalTrades: tList.length,
       winRate: resolved > 0 ? (wins / resolved) * 100 : 0,
       avgRR,
       totalRR,
+      pnl,
     })
   }
   setupStats.sort((a, b) => b.totalTrades - a.totalTrades)
@@ -142,12 +148,14 @@ export async function getStatisticsAction(
   for (const [tf, tList] of timeframeMap) {
     const { avgRR, totalRR, wins, losses } = computeRR(tList)
     const resolved = wins + losses
+    const pnl = tList.reduce((s, t) => s + t.pnl, 0)
     timeframeStats.push({
       tag: tf,
       totalTrades: tList.length,
       winRate: resolved > 0 ? (wins / resolved) * 100 : 0,
       avgRR,
       totalRR,
+      pnl,
     })
   }
   timeframeStats.sort((a, b) => b.totalTrades - a.totalTrades)
@@ -168,12 +176,14 @@ export async function getStatisticsAction(
     if (!tList || tList.length === 0) continue
     const { avgRR, totalRR, wins, losses } = computeRR(tList)
     const resolved = wins + losses
+    const pnl = tList.reduce((s, t) => s + t.pnl, 0)
     weekdayStats.push({
       day: WEEKDAY_NAMES[idx],
       totalTrades: tList.length,
       winRate: resolved > 0 ? (wins / resolved) * 100 : 0,
       avgRR,
       totalRR,
+      pnl,
       wins,
       losses,
     })

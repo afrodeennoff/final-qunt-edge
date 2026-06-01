@@ -4,6 +4,7 @@ export type TickerStat = {
   winRate: number
   avgRR: number
   totalRR: number
+  pnl: number
   wins: number
   losses: number
   grossWin: number
@@ -16,6 +17,7 @@ export type DailyStat = {
   winRate: number
   avgRR: number
   totalRR: number
+  pnl: number
 }
 
 export type SetupStat = {
@@ -24,6 +26,7 @@ export type SetupStat = {
   winRate: number
   avgRR: number
   totalRR: number
+  pnl: number
 }
 
 export type WeekdayStat = {
@@ -32,6 +35,7 @@ export type WeekdayStat = {
   winRate: number
   avgRR: number
   totalRR: number
+  pnl: number
   wins: number
   losses: number
 }

@@ -254,95 +254,16 @@ export default React.memo(function PnLPerContractDailyChart({
  )}
  >
  <div className={cn("w-full h-full")}>
- {isLoading ? (
- (() => {
- const loadingMockData = [
- {
- date:"2024-12-02",
- averagePnl: 12.444999999999999,
- totalPnl: 99.55999999999999,
- tradeCount: 8,
- winCount: 2,
- totalContracts: 8,
- },
- // ... (truncated for brevity, keep existing mock data if needed or simplify) ...
- {
- date:"2024-12-03",
- averagePnl: 59.32,
- totalPnl: 237.28,
- tradeCount: 4,
- winCount: 4,
- totalContracts: 4,
- },
- {
- date:"2024-12-11",
- averagePnl: 28.069999999999997,
- totalPnl: 224.55999999999997,
- tradeCount: 8,
- winCount: 4,
- totalContracts: 8,
- },
- ];
- const maxP = Math.max(
- ...loadingMockData.map((d) => d.averagePnl),
- );
- const minP = Math.min(
- ...loadingMockData.map((d) => d.averagePnl),
- );
- const domainMin = Math.min(minP * 1.1, 0);
- const domainMax = Math.max(maxP * 1.1, 0);
- const margin =
- size ==="small"
- ? { left: 0, right: 0, top: 4, bottom: 20 }
- : { left: 0, right: 0, top: 8, bottom: 24 };
- return (
- <div className={cn("w-full h-full animate-pulse relative")}>
- <ResponsiveContainer width="100%" height="100%">
- <BarChart data={loadingMockData} margin={margin}>
- <CartesianGrid
- strokeDasharray="3 3"
- stroke="transparent"
- strokeOpacity={0.3}
- vertical={false}
- />
- <XAxis
- dataKey="date"
- tickLine={false}
- axisLine={false}
- height={size ==="small" ? 20 : 24}
- tick={false}
- hide
- minTickGap={size ==="small" ? 30 : 50}
- />
- <YAxis
- tickLine={false}
- axisLine={false}
- width={60}
- tickMargin={4}
- hide
- tick={false}
- domain={[domainMin, domainMax]}
- />
- <ReferenceLine y={0} stroke="var(--chart-axis)" />
- <Bar
- dataKey="averagePnl"
- radius={[2, 2, 2, 2]}
- maxBarSize={size ==="small" ? 25 : 40}
- className="transition-none"
- fill="var(--chart-axis)"
- >
- {loadingMockData.map((_, index) => (
- <Cell
- key={`skeleton-cell-${index}`}
- fill="var(--chart-axis)"
- />
- ))}
- </Bar>
- </BarChart>
- </ResponsiveContainer>
- </div>
- );
- })()
+  {isLoading ? (
+  <div className="w-full h-full flex items-end gap-2 p-2 animate-pulse">
+    {Array.from({ length: 14 }).map((_, i) => (
+      <div
+        key={i}
+        className="flex-1 rounded-sm bg-foreground/[0.04]"
+        style={{ height: `${30 + Math.sin(i * 1.5) * 25 + 20}%` }}
+      />
+    ))}
+  </div>
  ) : chartData.length > 0 ? (
  <ResponsiveContainer width="100%" height="100%">
  <BarChart

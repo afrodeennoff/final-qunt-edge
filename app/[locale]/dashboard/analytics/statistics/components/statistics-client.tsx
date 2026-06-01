@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { getStatisticsAction } from '@/server/statistics'
 import { StatsTable, type StatsTableRow } from './stats-table'
 import type { StatisticsResult, SetupStat, WeekdayStat, TickerStat } from '../types'
@@ -59,12 +59,14 @@ function computeRiskMetrics(pnls: number[], profitFactor: number) {
 }
 
 function statToRow(s: TickerStat | SetupStat | WeekdayStat): StatsTableRow {
+  const pnl = 'pnl' in s ? s.pnl : 0
   return {
     name: 'ticker' in s ? s.ticker : 'day' in s ? s.day : s.tag,
     totalTrades: s.totalTrades,
     winRate: s.winRate,
     avgRR: s.avgRR,
     totalRR: s.totalRR,
+    pnl,
   }
 }
 
@@ -83,23 +85,25 @@ export default function StatisticsClient() {
 
   if (loading) {
     return (
-      <div className="space-y-6 animate-pulse p-4">
-        <div className="grid grid-cols-6 gap-4">
+      <div className="max-w-[1400px] mx-auto px-6 py-6 space-y-5 bg-[#0a0c0a] min-h-screen">
+        <div className="h-5 w-24 bg-white/10 rounded" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="rounded-xl bg-card/20 p-4 h-20" />
+            <div key={i} className="rounded-2xl bg-[#111311] border border-white/5 p-4 h-20 animate-pulse" />
           ))}
         </div>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="rounded-2xl bg-card/20 p-4 h-48" />
+            <div key={i} className="rounded-2xl bg-[#111311] border border-white/5 p-4 h-64 animate-pulse" />
           ))}
         </div>
+        <div className="rounded-2xl bg-[#111311] border border-white/5 p-5 h-32 animate-pulse" />
       </div>
     )
   }
 
   if (!data) {
-    return <p className="text-sm text-muted-foreground p-4">Failed to load statistics.</p>
+    return <div className="p-6 text-white/40 text-sm">Failed to load statistics from database.</div>
   }
 
   const tickerRows: StatsTableRow[] = data.tickerStats.map(statToRow)
@@ -111,115 +115,103 @@ export default function StatisticsClient() {
   const risk = computeRiskMetrics(pnlValues, data.profitFactor)
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-6 space-y-6">
+    <div className="max-w-[1400px] mx-auto px-6 py-6 space-y-5 bg-[#0a0c0a] min-h-screen text-white">
 
-      {/* Header + Time Filters */}
+      {/* Header + Time Filters — exact match */}
       <div className="flex items-center justify-between">
-        <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-primary">Statistics</div>
-        <div className="flex gap-1 p-1 rounded-xl bg-card">
-          {(['7d', '14d', '30d', '90d', 'all'] as TimePeriod[]).map(p => (
+        <div className="text-[11px] font-semibold tracking-[2px] uppercase text-[#00ff9f]">STATISTICS</div>
+        <div className="flex gap-1 p-1 rounded-2xl bg-[#111311] border border-white/5">
+          {([
+            { key: '7d' as const, label: '7D' },
+            { key: '14d' as const, label: '14D' },
+            { key: '30d' as const, label: '30D' },
+            { key: '90d' as const, label: '90D' },
+            { key: 'all' as const, label: 'All Time' },
+          ]).map(({ key, label }) => (
             <button
-              key={p}
+              key={key}
               type="button"
-              onClick={() => setPeriod(p)}
+              onClick={() => setPeriod(key)}
               className={cn(
-                'px-4 py-1.5 rounded-lg text-xs font-medium transition-all duration-150',
-                period === p
-                  ? 'bg-primary text-primary-foreground font-semibold'
-                  : 'text-muted-foreground/50 hover:text-foreground',
+                'px-5 py-1 rounded-xl text-xs font-semibold transition-all',
+                period === key
+                  ? 'bg-[#00ff9f] text-black'
+                  : 'text-white/40 hover:text-white',
               )}
             >
-              {p === 'all' ? 'All Time' : p.toUpperCase()}
+              {label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* KPI Bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-        <div className="rounded-xl bg-card/30 border border-foreground/[0.06] p-4">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50">Total PnL</div>
-          <div className={cn('text-xl font-bold tabular-nums mt-1', data.grandPnl >= 0 ? 'text-semantic-success' : 'text-semantic-error')}>
-            {formatPnl(data.grandPnl)}
+      {/* KPI Bar — exact 6 cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        {[
+          { label: 'TOTAL PNL', value: formatPnl(data.grandPnl), positive: data.grandPnl >= 0 },
+          { label: 'WIN RATE', value: `${data.grandWinRate.toFixed(1)}%` },
+          { label: 'AVG R', value: `${data.avgRR >= 1 ? '+' : ''}${data.avgRR.toFixed(2)}R`, positive: data.avgRR >= 1 },
+          { label: 'PROFIT FACTOR', value: data.profitFactor.toFixed(2) },
+          { label: 'TOTAL TRADES', value: data.grandTotal.toString() },
+          { label: 'BEST DAY', value: formatPnl(data.bestDay), positive: true },
+        ].map((kpi, i) => (
+          <div key={i} className="rounded-2xl bg-[#111311] border border-white/5 p-4">
+            <div className="text-[9px] tracking-[1.5px] uppercase text-white/40">{kpi.label}</div>
+            <div className={cn('text-2xl font-semibold tabular-nums mt-1 tracking-[-0.5px]', kpi.positive ? 'text-[#00ff9f]' : 'text-[#ff4d4d]')}>
+              {kpi.value}
+            </div>
           </div>
-        </div>
-        <div className="rounded-xl bg-card/30 border border-foreground/[0.06] p-4">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50">Win Rate</div>
-          <div className="text-xl font-bold tabular-nums mt-1">{data.grandWinRate.toFixed(1)}%</div>
-        </div>
-        <div className="rounded-xl bg-card/30 border border-foreground/[0.06] p-4">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50">Avg R</div>
-          <div className={cn('text-xl font-bold tabular-nums mt-1', data.avgRR >= 1 ? 'text-semantic-success' : 'text-semantic-error')}>
-            {data.avgRR >= 1 ? '+' : ''}{data.avgRR.toFixed(2)}R
-          </div>
-        </div>
-        <div className="rounded-xl bg-card/30 border border-foreground/[0.06] p-4">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50">Profit Factor</div>
-          <div className="text-xl font-bold tabular-nums mt-1">{data.profitFactor.toFixed(2)}</div>
-        </div>
-        <div className="rounded-xl bg-card/30 border border-foreground/[0.06] p-4">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50">Total Trades</div>
-          <div className="text-xl font-bold tabular-nums mt-1">{data.grandTotal}</div>
-        </div>
-        <div className="rounded-xl bg-card/30 border border-foreground/[0.06] p-4">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50">Best Day</div>
-          <div className="text-xl font-bold tabular-nums mt-1 text-semantic-success">{formatPnl(data.bestDay)}</div>
-        </div>
+        ))}
       </div>
 
-      {/* 2x2 Performance Tables */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* 2x2 Tables — pixel perfect */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <StatsTable
-          title="Symbol Performance"
+          title="SYMBOL PERFORMANCE"
           rows={tickerRows}
+          firstColLabel="SYMBOL"
           emptyMessage="No trades found"
         />
         <StatsTable
-          title="Weekday Performance"
+          title="WEEKDAY PERFORMANCE"
           rows={weekdayRows}
+          firstColLabel="DAY"
           emptyMessage="No trades found"
         />
         <StatsTable
-          title="Concept / Tag Performance"
+          title="CONCEPT / TAG PERFORMANCE"
           rows={setupRows}
+          firstColLabel="TAG"
           emptyMessage="Tag your trades in the journal to see setup stats"
         />
         <StatsTable
-          title="Timeframe Performance"
+          title="TIMEFRAME PERFORMANCE"
           rows={timeframeRows}
+          firstColLabel="TIMEFRAME"
           emptyMessage="Tag your trades with timeframe tags (5m, 15m, 1H, etc.)"
         />
       </div>
 
-      {/* Risk & Performance Metrics */}
+      {/* Risk & Performance Metrics — exact bottom section */}
       {risk && (
-        <div className="rounded-2xl bg-card/30 border border-foreground/[0.06] p-6">
-          <div className={cn('text-[11px] font-semibold tracking-[0.16em] uppercase text-primary', 'mb-4')}>Risk & Performance Metrics</div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
-            <div className="rounded-xl p-4 bg-background/20">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50">Sharpe Ratio</div>
-              <div className="text-xl font-bold tabular-nums mt-2">{risk.sharpe}</div>
-            </div>
-            <div className="rounded-xl p-4 bg-background/20">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50">Sortino Ratio</div>
-              <div className="text-xl font-bold tabular-nums mt-2">{risk.sortino}</div>
-            </div>
-            <div className="rounded-xl p-4 bg-background/20">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50">Expectancy</div>
-              <div className="text-xl font-bold tabular-nums mt-2">${risk.expectancy}</div>
-            </div>
-            <div className="rounded-xl p-4 bg-background/20">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50">Max Drawdown</div>
-              <div className="text-xl font-bold tabular-nums mt-2 text-semantic-error">-${risk.maxDrawdown}</div>
-            </div>
-            <div className="rounded-xl p-4 bg-background/20">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50">Profit Factor</div>
-              <div className="text-xl font-bold tabular-nums mt-2">{risk.profitFactor}</div>
-            </div>
-            <div className="rounded-xl p-4 bg-background/20">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50">Win / Loss Ratio</div>
-              <div className="text-xl font-bold tabular-nums mt-2">{risk.winLossRatio}</div>
-            </div>
+        <div className="rounded-2xl bg-[#111311] border border-white/5 p-5">
+          <div className="text-[10px] tracking-[2px] uppercase text-[#00ff9f]/70 mb-4">RISK & PERFORMANCE METRICS</div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            {[
+              { label: 'SHARPE RATIO', value: risk.sharpe },
+              { label: 'SORTINO RATIO', value: risk.sortino },
+              { label: 'EXPECTANCY', value: `+$${risk.expectancy}` },
+              { label: 'MAX DRAWDOWN', value: `-$${risk.maxDrawdown}`, negative: true },
+              { label: 'PROFIT FACTOR', value: risk.profitFactor },
+              { label: 'WIN / LOSS RATIO', value: risk.winLossRatio },
+            ].map((m, i) => (
+              <div key={i} className="rounded-xl bg-black/40 p-3">
+                <div className="text-[9px] tracking-widest text-white/40">{m.label}</div>
+                <div className={cn('text-2xl font-semibold tabular-nums mt-1', m.negative ? 'text-[#ff4d4d]' : 'text-white')}>
+                  {m.value}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

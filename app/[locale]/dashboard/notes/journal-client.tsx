@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect, Fragment } from 'react'
 import {
-  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts'
 import {
   Plus, X, ArrowUpRight, ArrowDownRight, BookOpen, Clock,
@@ -335,7 +335,7 @@ export default function JournalClient() {
     if (!selectedCard?.journal) return
     await deleteEntry(selectedCard.journal.id)
     setDeleteConfirm(false)
-    closeModal()
+    setModalOpen(false)
   }, [selectedCard, deleteEntry])
 
   const handlePinToggle = useCallback(() => {
@@ -474,24 +474,26 @@ export default function JournalClient() {
 
   // ── Render ──
   return (
-    <div className="flex h-full flex-col overflow-hidden space-y-5 p-4 lg:p-6">
-      {/* ── Header Bar ── */}
+    <div className="flex h-full flex-col overflow-hidden bg-[#0a0c0a] text-white space-y-4 p-4 lg:p-6">
+      {/* ── Week Header ── */}
       <div className="flex items-center justify-between">
-        <div className={unifiedSectionEyebrowClassName}>
-          {selectedDayKey ? `Week of ${formatFullDate(selectedDayKey)}` : 'Recent Days'}
+        <div className="text-[11px] font-semibold tracking-[2px] uppercase text-[#00ff9f]">
+          {dayGroups.length > 0
+            ? `WEEK OF ${dayGroups[dayGroups.length-1]?.label.toUpperCase()} – ${dayGroups[0]?.label.toUpperCase()}`
+            : 'WEEK OF'}
         </div>
         <button
           type="button"
           onClick={openNewTradeModal}
-          className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:bg-primary/90 shadow-lg shadow-primary/25"
+          className="inline-flex items-center gap-2 rounded-xl bg-[#00ff9f] px-4 py-2 text-sm font-semibold text-black transition-all hover:bg-[#00ff9f]/90"
         >
-          <Plus size={14} strokeWidth={2.5} />
+          <Plus size={14} strokeWidth={3} />
           New Trade
         </button>
       </div>
 
-      {/* ── Weekly Performance Strip ── */}
-      <div className="grid grid-cols-7 gap-2.5">
+      {/* ── Weekly Performance Strip (exact match to reference) ── */}
+      <div className="grid grid-cols-7 gap-2">
         {dayGroups.map(g => {
           const isSelected = selectedDayKey === g.dateKey
           const pnlPositive = g.totalPnl > 0
@@ -501,162 +503,140 @@ export default function JournalClient() {
               type="button"
               onClick={() => setSelectedDayKey(isSelected ? null : g.dateKey)}
               className={cn(
-                'rounded-xl p-3.5 text-left transition-all duration-200',
-                'bg-card/50 border border-foreground/[0.06] hover:border-primary/20',
-                isSelected && 'border-primary shadow-[0_0_0_1px,var(--primary),0_8px_24px_rgba(0,255,159,0.1)]',
-                'hover:-translate-y-0.5 hover:shadow-lg',
+                'rounded-xl p-3 text-left transition-all border',
+                'bg-[#111311] border-white/5 hover:border-white/10',
+                isSelected && 'border-[#00ff9f] ring-1 ring-[#00ff9f]/30',
               )}
             >
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50">{g.shortDay}</div>
-              <div className="text-[10px] text-muted-foreground/40 mt-0.5">{g.label}</div>
+              <div className="text-[10px] font-medium tracking-widest text-white/60">{g.shortDay}</div>
+              <div className="text-[10px] text-white/40 mt-0.5">{g.label}</div>
               <div className={cn(
-                'text-sm font-semibold tabular-nums mt-2',
-                pnlPositive ? 'text-semantic-success' : g.totalPnl < 0 ? 'text-semantic-error' : 'text-muted-foreground/50',
+                'text-[15px] font-semibold tabular-nums mt-2 tracking-tight',
+                pnlPositive ? 'text-[#00ff9f]' : g.totalPnl < 0 ? 'text-[#ff4d4d]' : 'text-white/40',
               )}>
-                {g.totalPnl > 0 ? '+' : ''}{g.totalPnl === 0 ? '--' : formatPnl(g.totalPnl)}
+                {g.totalPnl > 0 ? '+' : ''}{g.totalPnl === 0 ? '—' : formatPnl(g.totalPnl)}
               </div>
-              <div className="text-[10px] text-muted-foreground/35 mt-1">{g.trades.length} trades</div>
+              <div className="text-[10px] text-white/30 mt-1">{g.trades.length} trades</div>
             </button>
           )
         })}
         {dayGroups.length === 0 && !isLoading && (
-          <div className="col-span-7 text-center py-4 text-xs text-muted-foreground/40">
-            No trades yet. Import trades to see weekly performance.
+          <div className="col-span-7 text-center py-6 text-xs text-white/30 border border-white/5 rounded-xl">
+            No trades yet. Use “New Trade” or import to begin journaling.
           </div>
         )}
       </div>
 
-      {/* ── Day Summary + Equity Curve ── */}
-      <div className="grid grid-cols-12 gap-4">
-        {/* Day Summary Panel */}
-        <div className="col-span-12 lg:col-span-5 rounded-2xl p-6 space-y-5 bg-card/50 border border-foreground/[0.06]">
-          <div className="flex items-center justify-between">
+      {/* ── Day Summary + Equity Curve (exact visual match) ── */}
+      <div className="grid grid-cols-12 gap-3">
+        {/* Left: Day Summary */}
+        <div className="col-span-12 lg:col-span-5 rounded-2xl p-5 bg-[#111311] border border-white/5">
+          <div className="flex items-start justify-between">
             <div>
-              <div className={unifiedInfoLabelClassName}>
-                {selectedDayKey ? formatFullDate(selectedDayKey) : 'All trades'}
+              <div className="text-[11px] text-white/50 tracking-widest">
+                {selectedDayKey ? formatFullDate(selectedDayKey) : 'ALL TRADES'}
               </div>
-              <div className="mt-2 flex items-baseline gap-2">
-                <span className={cn(
-                  'text-4xl font-bold tracking-tight tabular-nums',
-                  daySummary.totalPnl > 0 ? 'text-semantic-success' : daySummary.totalPnl < 0 ? 'text-semantic-error' : 'text-muted-foreground',
-                )}>
-                  {formatPnl(daySummary.totalPnl)}
-                </span>
+              <div className={cn(
+                'text-[42px] font-semibold tabular-nums tracking-[-1.5px] mt-1 leading-none',
+                daySummary.totalPnl > 0 ? 'text-[#00ff9f]' : daySummary.totalPnl < 0 ? 'text-[#ff4d4d]' : 'text-white/60'
+              )}>
+                {formatPnl(daySummary.totalPnl)}
               </div>
             </div>
             <div className="text-right">
-              <div className={unifiedInfoLabelClassName}>Net R</div>
+              <div className="text-[10px] text-white/40 tracking-[1px]">NET R</div>
               <div className={cn(
-                'text-xl font-semibold tabular-nums mt-0.5',
-                daySummary.netR >= 0 ? 'text-semantic-success' : 'text-semantic-error',
+                'text-2xl font-semibold tabular-nums mt-0.5',
+                daySummary.netR >= 0 ? 'text-[#00ff9f]' : 'text-[#ff4d4d]'
               )}>
                 {daySummary.netR >= 0 ? '+' : ''}{daySummary.netR.toFixed(1)}R
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-4">
-            <div>
-              <div className={unifiedInfoLabelClassName}>Trades</div>
-              <div className="text-lg font-semibold tabular-nums mt-1">{daySummary.trades}</div>
+
+          <div className="grid grid-cols-4 gap-3 mt-5">
+            <div className="rounded-lg bg-black/40 p-2.5">
+              <div className="text-[9px] text-white/40 tracking-widest">TRADES</div>
+              <div className="text-xl font-semibold tabular-nums mt-1 text-white">{daySummary.trades}</div>
             </div>
-            <div>
-              <div className={unifiedInfoLabelClassName}>Win Rate</div>
-              <div className="text-lg font-semibold tabular-nums mt-1">{daySummary.winRate}%</div>
+            <div className="rounded-lg bg-black/40 p-2.5">
+              <div className="text-[9px] text-white/40 tracking-widest">WIN RATE</div>
+              <div className="text-xl font-semibold tabular-nums mt-1 text-white">{daySummary.winRate}%</div>
             </div>
-            <div>
-              <div className={unifiedInfoLabelClassName}>Best</div>
-              <div className={cn(
-                'text-lg font-semibold tabular-nums mt-1',
-                daySummary.best > 0 ? 'text-semantic-success' : 'text-muted-foreground',
-              )}>
-                {formatPnl(daySummary.best)}
-              </div>
+            <div className="rounded-lg bg-black/40 p-2.5">
+              <div className="text-[9px] text-white/40 tracking-widest">BEST</div>
+              <div className="text-xl font-semibold tabular-nums mt-1 text-[#00ff9f]">{formatPnl(daySummary.best)}</div>
             </div>
-            <div>
-              <div className={unifiedInfoLabelClassName}>Worst</div>
-              <div className={cn(
-                'text-lg font-semibold tabular-nums mt-1',
-                daySummary.worst < 0 ? 'text-semantic-error' : 'text-muted-foreground',
-              )}>
-                {formatPnl(daySummary.worst)}
-              </div>
+            <div className="rounded-lg bg-black/40 p-2.5">
+              <div className="text-[9px] text-white/40 tracking-widest">WORST</div>
+              <div className="text-xl font-semibold tabular-nums mt-1 text-[#ff4d4d]">{formatPnl(daySummary.worst)}</div>
             </div>
           </div>
         </div>
 
-        {/* Equity Curve */}
-        <div className="col-span-12 lg:col-span-7 rounded-2xl p-6 bg-card/50 border border-foreground/[0.06]">
-          <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-muted-foreground/50 mb-3">
-            Equity Curve
-          </div>
-          <div className="h-[140px]">
+        {/* Right: Equity Curve (styled to match reference) */}
+        <div className="col-span-12 lg:col-span-7 rounded-2xl p-5 bg-[#111311] border border-white/5">
+          <div className="text-[10px] font-medium tracking-[2px] text-[#00ff9f]/80 mb-2">EQUITY CURVE</div>
+          <div className="h-[138px]">
             {equityData.length > 1 ? (
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={equityData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
+                <LineChart data={equityData.map((p, i) => ({...p, idx: i+1}))} margin={{ top: 8, right: 12, left: 4, bottom: 0 }}>
+                  <CartesianGrid stroke="#1f2421" strokeDasharray="2 2" />
                   <XAxis
-                    dataKey="trade"
-                    tick={{ fill: 'rgba(138,144,138,0.5)', fontSize: 11 }}
-                    axisLine={false}
+                    dataKey="idx"
+                    tick={{ fill: '#4a524d', fontSize: 10 }}
+                    axisLine={{ stroke: '#1f2421' }}
                     tickLine={false}
+                    tickFormatter={(v) => `#${v}`}
                   />
                   <YAxis
-                    tick={{ fill: 'rgba(138,144,138,0.5)', fontSize: 11, fontFamily: 'monospace' }}
-                    axisLine={false}
+                    tick={{ fill: '#4a524d', fontSize: 10, fontFamily: 'monospace' }}
+                    axisLine={{ stroke: '#1f2421' }}
                     tickLine={false}
                     tickFormatter={(v: number) => `$${v}`}
+                    domain={['dataMin - 50', 'dataMax + 50']}
                   />
                   <Tooltip
-                    contentStyle={{
-                      background: 'var(--surface, #111411)',
-                      border: '1px solid rgba(255,255,255,0.06)',
-                      borderRadius: 8,
-                      padding: 10,
-                      color: '#f0f4f0',
-                      fontSize: 12,
-                    }}
-                    labelStyle={{ color: '#8a908a' }}
-                    formatter={(value: number) => [`$${value.toFixed(2)}`, 'PnL']}
+                    contentStyle={{ background: '#0a0c0a', border: '1px solid #222', borderRadius: 6, fontSize: 11, color: '#ddd' }}
+                    formatter={(value: number) => [`$${value.toFixed(2)}`, 'Equity']}
                   />
                   <Line
                     type="monotone"
                     dataKey="value"
-                    stroke="var(--primary, #00ff9f)"
-                    strokeWidth={2}
-                    dot={{ fill: 'var(--primary, #00ff9f)', r: 4, strokeWidth: 0 }}
-                    activeDot={{ r: 6, fill: 'var(--primary, #00ff9f)' }}
-                    fill="rgba(0,255,159,0.05)"
+                    stroke="#00ff9f"
+                    strokeWidth={2.5}
+                    dot={{ fill: '#00ff9f', r: 3, stroke: '#0a0c0a', strokeWidth: 1 }}
+                    activeDot={{ r: 5, fill: '#00ff9f' }}
                   />
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-xs text-muted-foreground/30">
-                No trade data for equity curve
-              </div>
+              <div className="h-full flex items-center justify-center text-xs text-white/20">No trades yet — equity will appear here</div>
             )}
           </div>
         </div>
       </div>
 
-      {/* ── Trade Log ── */}
+      {/* ── Trade Log (styled to match reference) ── */}
       <div className="flex-1 min-h-0">
-        <div className="flex items-center justify-between mb-3">
-          <div className={unifiedSectionEyebrowClassName}>Trade Log</div>
-          <div className="text-xs text-muted-foreground/40">Click any row to journal</div>
+        <div className="flex items-center justify-between mb-2 px-1">
+          <div className="text-[10px] font-medium tracking-[2px] text-[#00ff9f]">TRADE LOG</div>
+          <div className="text-[10px] text-white/30">Click any row to journal</div>
         </div>
-        <div className="rounded-2xl overflow-hidden bg-card/50 border border-foreground/[0.06] flex flex-col" style={{ maxHeight: 'calc(100vh - 480px)' }}>
+        <div className="rounded-2xl overflow-hidden bg-[#111311] border border-white/5 flex flex-col" style={{ maxHeight: 'calc(100vh - 460px)' }}>
           <div className="overflow-x-auto flex-1 overflow-y-auto">
-            <table className="w-full">
-              <thead className="sticky top-0 z-10 bg-card/90 backdrop-blur-sm">
-                <tr className="text-[11px] uppercase tracking-wider text-muted-foreground/50 border-b border-foreground/[0.06]">
-                  <th className="text-left px-5 py-3 font-medium">Time</th>
-                  <th className="text-left px-5 py-3 font-medium">Symbol</th>
-                  <th className="text-left px-5 py-3 font-medium">Side</th>
-                  <th className="text-right px-5 py-3 font-medium">Entry</th>
-                  <th className="text-right px-5 py-3 font-medium">Exit</th>
-                  <th className="text-right px-5 py-3 font-medium">PnL</th>
-                  <th className="text-right px-5 py-3 font-medium">R</th>
-                  <th className="text-right px-5 py-3 font-medium">Duration</th>
-                  <th className="text-left px-5 py-3 font-medium">Tags</th>
+            <table className="w-full text-sm">
+              <thead className="sticky top-0 z-10 bg-[#0d0f0d]">
+                <tr className="text-[10px] uppercase tracking-[1px] text-white/40 border-b border-white/5">
+                  <th className="text-left pl-4 pr-3 py-2.5 font-medium">TIME</th>
+                  <th className="text-left px-3 py-2.5 font-medium">SYMBOL</th>
+                  <th className="text-left px-3 py-2.5 font-medium">SIDE</th>
+                  <th className="text-right px-3 py-2.5 font-medium">ENTRY</th>
+                  <th className="text-right px-3 py-2.5 font-medium">EXIT</th>
+                  <th className="text-right px-3 py-2.5 font-medium">PNL</th>
+                  <th className="text-right px-3 py-2.5 font-medium">R</th>
+                  <th className="text-right px-3 py-2.5 font-medium">DURATION</th>
+                  <th className="text-left pl-3 pr-4 py-2.5 font-medium">TAGS</th>
                 </tr>
               </thead>
               <tbody>
@@ -689,54 +669,54 @@ export default function JournalClient() {
 
                     // Separate ICT tags from session/timeframe tags
                     const ictTags = (card.journal?.customTags ?? []).filter(t =>
-                      ICT_DEFAULTS.includes(t as any)
+                      ICT_DEFAULTS.includes(t as (typeof ICT_DEFAULTS)[number])
                     )
 
-                    return (
-                      <tr
-                        key={card.trade.id}
-                        onClick={() => handleSelectTrade(card.trade.id)}
-                        className="trade-row border-b border-foreground/[0.03] cursor-pointer transition-all duration-150 hover:-translate-y-[1px] hover:shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:bg-muted/15"
-                      >
-                        <td className="px-5 py-3.5 text-sm tabular-nums text-muted-foreground/70">{formatTime(card.trade.entryDate)}</td>
-                        <td className="px-5 py-3.5 text-sm font-semibold">{card.trade.instrument}</td>
-                        <td className="px-5 py-3.5">
-                          <span className={cn(
-                            'text-xs font-medium',
-                            card.trade.side?.toUpperCase() === 'LONG' ? 'text-semantic-success' : 'text-semantic-error',
-                          )}>
-                            {card.trade.side || '--'}
-                          </span>
-                        </td>
-                        <td className="px-5 py-3.5 text-sm tabular-nums text-right text-muted-foreground/70">
-                          {Number(card.trade.entryPrice).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                        </td>
-                        <td className="px-5 py-3.5 text-sm tabular-nums text-right text-muted-foreground/70">
-                          {Number(card.trade.closePrice).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                        </td>
-                        <td className={cn('px-5 py-3.5 text-sm tabular-nums text-right font-semibold', pnlColor)}>
-                          {formatPnl(card.trade.pnl)}
-                        </td>
-                        <td className={cn('px-5 py-3.5 text-sm tabular-nums text-right font-medium', pnlColor)}>
-                          {rMultiple >= 0 ? '+' : ''}{rMultiple.toFixed(1)}R
-                        </td>
-                        <td className="px-5 py-3.5 text-xs text-right text-muted-foreground/50">
-                          <span className="inline-flex items-center gap-1">
-                            <Clock size={10} />
-                            {formatDuration(card.trade.timeInPosition)}
-                          </span>
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <div className="flex gap-1 flex-wrap">
-                            {ictTags.slice(0, 3).map(tag => (
-                              <span key={tag} className="rounded bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        </td>
-                      </tr>
-                    )
+                     return (
+                       <tr
+                         key={card.trade.id}
+                         onClick={() => handleSelectTrade(card.trade.id)}
+                         className="border-b border-white/5 cursor-pointer hover:bg-white/5 transition-colors"
+                       >
+                         <td className="pl-4 pr-3 py-2.5 tabular-nums text-white/50 text-xs">{formatTime(card.trade.entryDate)}</td>
+                         <td className="px-3 py-2.5 font-semibold text-white tracking-tight">{card.trade.instrument}</td>
+                         <td className="px-3 py-2.5">
+                           <span className={cn(
+                             'text-xs font-semibold tracking-wider',
+                             card.trade.side?.toUpperCase() === 'LONG' ? 'text-[#00ff9f]' : 'text-[#ff4d4d]',
+                           )}>
+                             {card.trade.side || '—'}
+                           </span>
+                         </td>
+                         <td className="px-3 py-2.5 tabular-nums text-right text-white/70 text-xs">
+                           {Number(card.trade.entryPrice).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                         </td>
+                         <td className="px-3 py-2.5 tabular-nums text-right text-white/70 text-xs">
+                           {Number(card.trade.closePrice).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                         </td>
+                         <td className={cn('px-3 py-2.5 tabular-nums text-right font-semibold text-xs', pnlColor)}>
+                           {formatPnl(card.trade.pnl)}
+                         </td>
+                         <td className={cn('px-3 py-2.5 tabular-nums text-right font-medium text-xs', pnlColor)}>
+                           {rMultiple >= 0 ? '+' : ''}{rMultiple.toFixed(1)}R
+                         </td>
+                         <td className="px-3 py-2.5 text-right text-white/40 text-[10px]">
+                           <span className="inline-flex items-center gap-1">
+                             <Clock size={9} />
+                             {formatDuration(card.trade.timeInPosition)}
+                           </span>
+                         </td>
+                         <td className="pl-3 pr-4 py-2.5">
+                           <div className="flex gap-1 flex-wrap">
+                             {ictTags.slice(0, 3).map(tag => (
+                               <span key={tag} className="rounded bg-[#00ff9f]/10 px-1.5 py-px text-[9px] font-medium text-[#00ff9f] border border-[#00ff9f]/30">
+                                 {tag}
+                               </span>
+                             ))}
+                           </div>
+                         </td>
+                       </tr>
+                     )
                   })
                 )}
               </tbody>
@@ -799,92 +779,56 @@ export default function JournalClient() {
               className="w-full max-w-2xl rounded-2xl overflow-hidden bg-card border border-foreground/[0.06] animate-in slide-in-from-bottom-4 duration-250"
               onClick={e => e.stopPropagation()}
             >
-              {/* Modal Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-foreground/[0.06]">
-                <div>
-                  <div className="text-lg font-semibold">
-                    {isNewTrade
-                      ? `New Trade — ${selectedDayKey ? formatDate(selectedDayKey) : formatDate(new Date().toISOString())}`
-                      : selectedCard
-                        ? `${selectedCard.trade.instrument} ${formatDate(selectedCard.trade.entryDate)} ${formatTime(selectedCard.trade.entryDate)}`
-                        : 'Trade Details'
-                    }
-                  </div>
-                  <div className="text-xs mt-0.5 text-muted-foreground/60">
-                    {isNewTrade
-                      ? "Add a new entry to today's log"
-                      : selectedCard
-                        ? `${selectedCard.trade.side || '--'} \u2022 ${activeDayTrades.length} trades on this day`
-                        : ''
-                    }
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {selectedCard?.journal && !isNewTrade && (
-                    <Fragment>
-                      {saving ? (
-                        <div className="flex items-center gap-1.5">
-                          <Loader2 size={12} className="animate-spin text-primary/60" />
-                          <span className="text-[9px] text-primary/50">Saving...</span>
-                        </div>
-                      ) : selectedCard.journal.updatedAt ? (
-                        <div className="flex items-center gap-1.5">
-                          <Check size={12} className="text-semantic-success/70" />
-                          <span className="text-[9px] text-muted-foreground/35">Saved</span>
-                        </div>
-                      ) : null}
-                    </Fragment>
-                  )}
-                  <button
-                    type="button"
-                    onClick={closeModal}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center bg-background/50 text-muted-foreground/60 hover:text-foreground transition-colors"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              </div>
+               {/* Modal Header — exact match to reference */}
+               <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#111311]">
+                 <div>
+                   <div className="text-[17px] font-semibold tracking-tight">
+                     {isNewTrade
+                       ? `New Trade — ${selectedDayKey ? formatDate(selectedDayKey) : formatDate(new Date().toISOString())}`
+                       : selectedCard
+                         ? `${selectedCard.trade.instrument} ${formatDate(selectedCard.trade.entryDate)} ${formatTime(selectedCard.trade.entryDate)}`
+                         : 'Trade Details'
+                     }
+                   </div>
+                   <div className="text-[11px] text-white/50 mt-0.5">
+                     {isNewTrade
+                       ? "Add a new entry to today's log"
+                       : selectedCard
+                         ? `${selectedCard.trade.side || '—'} • ${activeDayTrades.length} trades on this day`
+                         : ''
+                     }
+                   </div>
+                 </div>
+                 <button type="button" onClick={closeModal} className="text-white/40 hover:text-white p-1">
+                   <X size={18} />
+                 </button>
+               </div>
 
-              {/* Modal Body */}
-              <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
-                {/* New Trade: instrument & side */}
+              {/* Modal Body — redesigned to 100% match reference image */}
+              <div className="p-6 space-y-5 max-h-[68vh] overflow-y-auto bg-[#0a0c0a] text-white">
+
+                {/* New Trade instrument + side (only for new) */}
                 {isNewTrade && (
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <div className={unifiedInfoLabelClassName}>Instrument</div>
+                      <div className="text-[10px] text-white/50 tracking-widest mb-1.5">INSTRUMENT</div>
                       <input
                         type="text"
                         value={newInstrument}
                         onChange={e => setNewInstrument(e.target.value.toUpperCase())}
-                        placeholder="e.g. ES, NQ, CL…"
-                        className="w-full mt-2 rounded-xl px-3 py-2 text-sm outline-none bg-background/50 border border-foreground/[0.06] text-foreground placeholder:text-muted-foreground/30 focus:ring-1 focus:ring-primary/20"
+                        placeholder="ES, NQ, CL…"
+                        className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-[#00ff9f]/50"
                       />
                     </div>
                     <div>
-                      <div className={unifiedInfoLabelClassName}>Side</div>
-                      <div className="flex gap-2 mt-2">
-                        <button
-                          type="button"
-                          onClick={() => setNewSide('LONG')}
-                          className={cn(
-                            'flex-1 rounded-xl px-3 py-2 text-sm font-medium border transition-all',
-                            newSide === 'LONG'
-                              ? 'border-semantic-success bg-semantic-success/10 text-semantic-success'
-                              : 'border-foreground/[0.06] text-muted-foreground/60 hover:text-foreground',
-                          )}
-                        >
+                      <div className="text-[10px] text-white/50 tracking-widest mb-1.5">SIDE</div>
+                      <div className="flex gap-2">
+                        <button type="button" onClick={() => setNewSide('LONG')}
+                          className={cn('flex-1 rounded-lg py-2 text-sm font-medium border', newSide==='LONG' ? 'border-[#00ff9f] bg-[#00ff9f]/10 text-[#00ff9f]' : 'border-white/10 text-white/50 hover:text-white')}>
                           Long
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => setNewSide('SHORT')}
-                          className={cn(
-                            'flex-1 rounded-xl px-3 py-2 text-sm font-medium border transition-all',
-                            newSide === 'SHORT'
-                              ? 'border-semantic-error bg-semantic-error/10 text-semantic-error'
-                              : 'border-foreground/[0.06] text-muted-foreground/60 hover:text-foreground',
-                          )}
-                        >
+                        <button type="button" onClick={() => setNewSide('SHORT')}
+                          className={cn('flex-1 rounded-lg py-2 text-sm font-medium border', newSide==='SHORT' ? 'border-[#ff4d4d] bg-[#ff4d4d]/10 text-[#ff4d4d]' : 'border-white/10 text-white/50 hover:text-white')}>
                           Short
                         </button>
                       </div>
@@ -892,227 +836,159 @@ export default function JournalClient() {
                   </div>
                 )}
 
-                {/* Quick Stats */}
-                {!isNewTrade && selectedCard && (
-                  <div className="grid grid-cols-5 gap-3">
-                    <div className="rounded-lg p-3 bg-background/50">
-                      <div className={unifiedInfoLabelClassName}>Entry</div>
-                      <div className="text-sm font-semibold tabular-nums mt-1">
-                        {Number(selectedCard.trade.entryPrice).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                      </div>
+                {/* 5 Stat Cards Row (exact visual from image) — only for existing trades */}
+                {!isNewTrade && selectedCard && (() => {
+                  const avgWin = activeDayTrades.filter(c => c.trade.pnl > 0).reduce((s,c)=>s+c.trade.pnl,0) / Math.max(1, activeDayTrades.filter(c=>c.trade.pnl>0).length || 1)
+                  const r = avgWin > 0 ? selectedCard.trade.pnl / avgWin : 0
+                  return (
+                    <div className="grid grid-cols-5 gap-2">
+                      {[
+                        {label:'ENTRY', val: Number(selectedCard.trade.entryPrice).toLocaleString('en-US',{minimumFractionDigits:2})},
+                        {label:'EXIT', val: Number(selectedCard.trade.closePrice).toLocaleString('en-US',{minimumFractionDigits:2})},
+                        {label:'PNL', val: formatPnl(selectedCard.trade.pnl), green: selectedCard.trade.pnl>0, red: selectedCard.trade.pnl<0},
+                        {label:'R-MULTIPLE', val: `${r>=0?'+':''}${r.toFixed(1)}R`},
+                        {label:'DURATION', val: formatDuration(selectedCard.trade.timeInPosition)},
+                      ].map((s,i) => (
+                        <div key={i} className="rounded-lg bg-black p-2.5 text-center border border-white/5">
+                          <div className="text-[9px] text-white/40 tracking-[1px]">{s.label}</div>
+                          <div className={cn('text-sm font-semibold tabular-nums mt-1', s.green ? 'text-[#00ff9f]' : s.red ? 'text-[#ff4d4d]' : 'text-white')}>
+                            {s.val}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div className="rounded-lg p-3 bg-background/50">
-                      <div className={unifiedInfoLabelClassName}>Exit</div>
-                      <div className="text-sm font-semibold tabular-nums mt-1">
-                        {Number(selectedCard.trade.closePrice).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                      </div>
-                    </div>
-                    <div className="rounded-lg p-3 bg-background/50">
-                      <div className={unifiedInfoLabelClassName}>PnL</div>
-                      <div className={cn(
-                        'text-sm font-semibold tabular-nums mt-1',
-                        selectedCard.trade.pnl > 0 ? 'text-semantic-success' : 'text-semantic-error',
-                      )}>
-                        {formatPnl(selectedCard.trade.pnl)}
-                      </div>
-                    </div>
-                    <div className="rounded-lg p-3 bg-background/50">
-                      <div className={unifiedInfoLabelClassName}>R-Multiple</div>
-                      <div className="text-sm font-semibold tabular-nums mt-1">
-                        {(() => {
-                          const avgWin = activeDayTrades
-                            .filter(c => c.trade.pnl > 0)
-                            .reduce((s, c) => s + c.trade.pnl, 0) / Math.max(1, activeDayTrades.filter(c => c.trade.pnl > 0).length)
-                          const r = avgWin > 0 ? selectedCard.trade.pnl / avgWin : 0
-                          return `${r >= 0 ? '+' : ''}${r.toFixed(1)}R`
-                        })()}
-                      </div>
-                    </div>
-                    <div className="rounded-lg p-3 bg-background/50">
-                      <div className={unifiedInfoLabelClassName}>Duration</div>
-                      <div className="text-sm font-semibold mt-1">
-                        {formatDuration(selectedCard.trade.timeInPosition)}
-                      </div>
-                    </div>
-                  </div>
-                )}
+                  )
+                })()}
 
-                {/* Session Tags */}
+                {/* SESSION */}
                 <div>
-                  <div className={unifiedInfoLabelClassName}>Session</div>
-                  <TagInput
-                    tags={modalSession}
-                    onAdd={tag => setModalSession(prev => prev.includes(tag) ? prev : [...prev, tag])}
-                    onRemove={tag => setModalSession(prev => prev.filter(t => t !== tag))}
-                    placeholder="e.g. London, NY, Asia…"
-                  />
-                </div>
-
-                {/* Timeframe Tags */}
-                <div>
-                  <div className={unifiedInfoLabelClassName}>Timeframe</div>
-                  <TagInput
-                    tags={modalTimeframe}
-                    onAdd={tag => setModalTimeframe(prev => prev.includes(tag) ? prev : [...prev, tag])}
-                    onRemove={tag => setModalTimeframe(prev => prev.filter(t => t !== tag))}
-                    placeholder="e.g. 5m, 15m, 1H…"
-                  />
-                </div>
-
-                {/* ICT Concept Tags */}
-                <div>
-                  <div className={unifiedInfoLabelClassName}>ICT Concepts</div>
-                  <TagInput
-                    tags={modalIctTags}
-                    onAdd={tag => setModalIctTags(prev => prev.includes(tag) ? prev : [...prev, tag])}
-                    onRemove={tag => setModalIctTags(prev => prev.filter(t => t !== tag))}
-                    placeholder="e.g. OB, FVG, Liq Sweep…"
-                  />
-                </div>
-
-                {/* Emotion Chips */}
-                <div>
-                  <div className={unifiedInfoLabelClassName}>Emotion</div>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {EMOTION_CHIPS.map(emotion => (
-                      <Chip
-                        key={emotion}
-                        label={emotion}
-                        active={modalEmotion === emotion}
-                        onClick={() => setModalEmotion(prev => prev === emotion ? null : emotion)}
-                      />
-                    ))}
+                  <div className="text-[10px] text-white/50 tracking-widest mb-1.5">SESSION</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {SESSION_DEFAULTS.map(s => {
+                      const active = modalSession.includes(s)
+                      return <button key={s} type="button" onClick={() => setModalSession(active ? modalSession.filter(x=>x!==s) : [...modalSession, s])}
+                        className={cn('px-3 py-1 rounded-full text-xs border transition', active ? 'border-[#00ff9f] bg-[#00ff9f]/10 text-[#00ff9f]' : 'border-white/10 text-white/50 hover:border-white/30')}>
+                        {s}
+                      </button>
+                    })}
                   </div>
                 </div>
 
-                {/* Star Rating */}
+                {/* TIMEFRAME */}
                 <div>
-                  <div className={unifiedInfoLabelClassName}>Execution Rating</div>
-                  <div className="flex gap-1 mt-2">
-                    <RatingStars
-                      value={modalStars}
-                      onChange={v => setModalStars(v)}
-                      size="md"
-                    />
+                  <div className="text-[10px] text-white/50 tracking-widest mb-1.5">TIMEFRAME</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {TIMEFRAME_DEFAULTS.map(tf => {
+                      const active = modalTimeframe.includes(tf)
+                      return <button key={tf} type="button" onClick={() => setModalTimeframe(active ? modalTimeframe.filter(x=>x!==tf) : [...modalTimeframe, tf])}
+                        className={cn('px-3 py-1 rounded-full text-xs border transition', active ? 'border-[#00ff9f] bg-[#00ff9f]/10 text-[#00ff9f]' : 'border-white/10 text-white/50 hover:border-white/30')}>
+                        {tf}
+                      </button>
+                    })}
                   </div>
                 </div>
 
-                {/* Notes */}
-                <div className="grid grid-cols-2 gap-4">
+                {/* ICT CONCEPTS */}
+                <div>
+                  <div className="text-[10px] text-white/50 tracking-widest mb-1.5">ICT CONCEPTS</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {ICT_DEFAULTS.map(c => {
+                      const active = modalIctTags.includes(c)
+                      return <button key={c} type="button" onClick={() => setModalIctTags(active ? modalIctTags.filter(x=>x!==c) : [...modalIctTags, c])}
+                        className={cn('px-3 py-1 rounded-full text-xs border transition', active ? 'border-[#00ff9f] bg-[#00ff9f]/10 text-[#00ff9f]' : 'border-white/10 text-white/50 hover:border-white/30')}>
+                        {c}
+                      </button>
+                    })}
+                  </div>
+                </div>
+
+                {/* EMOTION */}
+                <div>
+                  <div className="text-[10px] text-white/50 tracking-widest mb-1.5">EMOTION</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {EMOTION_CHIPS.map(em => {
+                      const active = modalEmotion === em
+                      return <button key={em} type="button" onClick={() => setModalEmotion(active ? null : em)}
+                        className={cn('px-3 py-1 rounded-full text-xs border transition', active ? 'border-[#00ff9f] bg-[#00ff9f]/10 text-[#00ff9f]' : 'border-white/10 text-white/50 hover:border-white/30')}>
+                        {em}
+                      </button>
+                    })}
+                  </div>
+                </div>
+
+                {/* EXECUTION RATING — stars */}
+                <div>
+                  <div className="text-[10px] text-white/50 tracking-widest mb-1.5">EXECUTION RATING</div>
+                  <div className="flex gap-1 mt-1">
+                    <RatingStars value={modalStars} onChange={v => setModalStars(v)} size="md" />
+                  </div>
+                </div>
+
+                {/* Notes — side by side */}
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <div className={unifiedInfoLabelClassName}>Pre-Trade Notes</div>
-                    <textarea
-                      rows={4}
-                      value={modalPreNotes}
-                      onChange={e => setModalPreNotes(e.target.value)}
+                    <div className="text-[10px] text-white/50 tracking-widest mb-1.5">PRE-TRADE NOTES</div>
+                    <textarea rows={3} value={modalPreNotes} onChange={e=>setModalPreNotes(e.target.value)}
                       placeholder="What was the plan?"
-                      className="w-full mt-2 rounded-xl p-3 text-sm resize-none outline-none bg-background/50 border border-foreground/[0.06] text-foreground placeholder:text-muted-foreground/30 focus:ring-1 focus:ring-primary/20"
-                    />
+                      className="w-full rounded-lg p-3 text-sm bg-black border border-white/10 text-white placeholder:text-white/20 resize-y" />
                   </div>
                   <div>
-                    <div className={unifiedInfoLabelClassName}>Post-Trade Review</div>
-                    <textarea
-                      rows={4}
-                      value={modalPostNotes}
-                      onChange={e => setModalPostNotes(e.target.value)}
+                    <div className="text-[10px] text-white/50 tracking-widest mb-1.5">POST-TRADE REVIEW</div>
+                    <textarea rows={3} value={modalPostNotes} onChange={e=>setModalPostNotes(e.target.value)}
                       placeholder="What happened? How did you execute?"
-                      className="w-full mt-2 rounded-xl p-3 text-sm resize-none outline-none bg-background/50 border border-foreground/[0.06] text-foreground placeholder:text-muted-foreground/30 focus:ring-1 focus:ring-primary/20"
-                    />
+                      className="w-full rounded-lg p-3 text-sm bg-black border border-white/10 text-white placeholder:text-white/20 resize-y" />
                   </div>
                 </div>
 
                 {/* Screenshots */}
-                {!isNewTrade && selectedCard?.journal && (
-                  <div>
-                    <div className={unifiedInfoLabelClassName}>Screenshots</div>
-                    <div className="mt-2">
-                      <ScreenshotGrid
-                        screenshots={selectedCard.journal.screenshots ?? []}
-                        onChange={v => update('screenshots', v)}
-                      />
-                    </div>
-                  </div>
-                )}
-                {isNewTrade && (
-                  <div>
-                    <div className={unifiedInfoLabelClassName}>Screenshots</div>
-                    <div className="mt-2 flex gap-3">
-                      <div className="w-24 h-20 rounded-xl flex items-center justify-center cursor-pointer border border-dashed border-foreground/[0.06] text-muted-foreground/40 hover:border-primary/30">
-                        <Plus size={24} />
-                      </div>
-                    </div>
-                  </div>
-                )}
+                <div>
+                  <div className="text-[10px] text-white/50 tracking-widest mb-1.5">SCREENSHOTS</div>
+                  {!isNewTrade && selectedCard?.journal ? (
+                    <ScreenshotGrid screenshots={selectedCard.journal.screenshots ?? []} onChange={v => update('screenshots', v)} />
+                  ) : (
+                    <div className="h-16 rounded-lg border border-dashed border-white/10 flex items-center justify-center text-white/20 text-xs">Drop screenshots here (coming soon)</div>
+                  )}
+                </div>
               </div>
 
               {/* Modal Footer */}
-              <div className="flex items-center justify-between px-6 py-4 border-t border-foreground/[0.06]">
-                <div className="flex items-center gap-2">
+                 <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-[#0a0c0a]">
+                <div className="flex items-center gap-2 text-xs">
                   {selectedCard?.journal && !isNewTrade && (
                     <Fragment>
-                      <button
-                        type="button"
-                        onClick={handlePinToggle}
-                        className={cn(
-                          'flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[10px] font-medium transition-colors',
-                          selectedCard.journal?.pinned
-                            ? 'bg-primary/12 text-primary'
-                            : 'text-muted-foreground/45 hover:text-foreground hover:bg-muted/20',
-                        )}
-                      >
-                        <Pin size={10} />
-                        {selectedCard.journal?.pinned ? 'Pinned' : 'Pin'}
+                      <button type="button" onClick={handlePinToggle}
+                        className={cn('flex items-center gap-1 px-2 py-1 rounded border', selectedCard.journal.pinned ? 'border-[#00ff9f] text-[#00ff9f]' : 'border-white/10 text-white/40 hover:text-white')}>
+                        <Pin size={11}/> {selectedCard.journal.pinned ? 'Pinned' : 'Pin'}
                       </button>
                       {deleteConfirm ? (
-                        <div className="flex items-center gap-1">
-                          <button
-                            type="button"
-                            onClick={handleDelete}
-                            className="flex items-center gap-1 rounded-lg bg-destructive/12 px-2.5 py-1.5 text-[10px] font-medium text-destructive hover:bg-destructive/20"
-                          >
-                            <Trash2 size={10} /> Confirm
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setDeleteConfirm(false)}
-                            className="rounded-lg px-2.5 py-1.5 text-[10px] text-muted-foreground/50 hover:text-foreground"
-                          >
-                            Cancel
-                          </button>
-                        </div>
+                        <span className="flex items-center gap-2 text-[#ff4d4d]">
+                          <button onClick={handleDelete} className="hover:underline">Confirm delete</button>
+                          <button onClick={() => setDeleteConfirm(false)} className="text-white/40">cancel</button>
+                        </span>
                       ) : (
-                        <button
-                          type="button"
-                          onClick={() => setDeleteConfirm(true)}
-                          className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[10px] text-muted-foreground/45 hover:text-destructive hover:bg-destructive/8 transition-colors"
-                        >
-                          <Trash2 size={10} /> Delete
+                        <button onClick={() => setDeleteConfirm(true)} className="text-white/30 hover:text-[#ff4d4d] flex items-center gap-1">
+                          <Trash2 size={11}/> Delete
                         </button>
                       )}
                     </Fragment>
                   )}
                 </div>
+
                 <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={closeModal}
-                    className="px-5 py-2 rounded-xl text-sm font-medium text-muted-foreground/60 border border-foreground/[0.06] hover:text-foreground transition-colors"
-                  >
+                  <button type="button" onClick={closeModal}
+                    className="px-5 py-1.5 text-sm text-white/50 hover:text-white border border-white/10 rounded-xl">
                     Cancel
                   </button>
-                  <button
-                    type="button"
-                    onClick={handleSaveModal}
-                    className="px-5 py-2 rounded-xl text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                  >
+                  <button type="button" onClick={handleSaveModal}
+                    className="px-6 py-1.5 text-sm font-semibold bg-[#00ff9f] text-black rounded-xl hover:bg-[#00ff9f]/90 active:scale-[0.985] transition">
                     Save Journal Entry
                   </button>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+               </div>
+             </div>
+           </div>
+         </div>
+       )}
 
       {/* ── Unsaved changes confirmation ── */}
       {pendingTradeId && (
