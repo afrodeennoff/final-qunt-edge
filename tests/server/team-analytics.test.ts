@@ -2,6 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
+    team: {
+      findFirst: vi.fn(),
+    },
     teamAnalytics: {
       findFirst: vi.fn(),
       create: vi.fn(),
@@ -26,6 +29,11 @@ vi.mock("next/cache", () => ({
   updateTag: vi.fn(),
 }))
 
+vi.mock("@/server/auth", () => ({
+  getDatabaseUserId: vi.fn(),
+  createClient: vi.fn(),
+}))
+
 import { prisma } from "@/lib/prisma"
 import { getTeamAnalytics, updateTeamAnalytics } from "@/server/teams"
 
@@ -35,6 +43,7 @@ describe("getTeamAnalytics", () => {
   })
 
   it("returns an existing analytics record when it exists", async () => {
+    vi.mocked(prisma.team.findFirst).mockResolvedValue({ id: "t_1" } as never)
     const existing = { id: "a", teamId: "t_1", period: "daily" }
     vi.mocked(prisma.teamAnalytics.findFirst).mockResolvedValue(existing as never)
 
@@ -45,6 +54,7 @@ describe("getTeamAnalytics", () => {
   })
 
   it("creates and returns a stub when analytics are missing", async () => {
+    vi.mocked(prisma.team.findFirst).mockResolvedValue({ id: "t_1" } as never)
     vi.mocked(prisma.teamAnalytics.findFirst).mockResolvedValue(null)
     const created = { id: "b", teamId: "t_1", period: "weekly" }
     vi.mocked(prisma.teamAnalytics.create).mockResolvedValue(created as never)

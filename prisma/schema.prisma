@@ -342,6 +342,8 @@ model Account {
   @@index([userId, number]) // Performance scan index
   @@index([userId, groupId])
   @@index([userId, propfirm]) // Composite for propfirm filtering
+  @@index([userId, evaluation]) // Evaluation account filtering
+  @@index([autoRenewal, nextPaymentDate]) // Renewal notice cron
   @@schema("public")
 }
 
@@ -381,7 +383,6 @@ model Trade {
   account Account @relation(fields: [accountNumber, userId], references: [number, userId], onDelete: Cascade)
   journal  JournalEntry?
 
-  @@index([accountNumber])
   @@index([groupId])
   @@index([entryDate])
   @@index([closeDate])
@@ -390,9 +391,7 @@ model Trade {
   @@index([userId, accountNumber, instrument])
   @@index([userId, accountNumber, entryDate, pnl])
   @@index([userId, instrument])
-  @@index([userId, accountNumber, entryDate]) // Composite for dashboard trade queries
   @@index([userId, pnl]) // Composite for PnL filtering
-  @@index([userId, tags]) // GIN index for array column filtering
   @@index([userId]) // Single-field index for userId-only lookups
   @@index([accountNumber, userId]) // Composite FK index for Account relation (critical for joins and enforcement)
   @@schema("public")
@@ -431,6 +430,7 @@ model JournalEntry {
 
   @@index([userId])
   @@index([tradeId])
+  @@index([accountNumber, userId]) // FK enforcement for Account relation cascade deletes
   @@schema("public")
 }
 
@@ -630,6 +630,7 @@ model HistoricalData {
   @@index([symbol])
   @@index([databentSymbol])
   @@index([timestamp])
+  @@index([symbol, timestamp]) // Time-series range queries
   @@schema("public")
 }
 
@@ -1005,6 +1006,7 @@ model Notification {
 
   @@index([userId])
   @@index([createdAt])
+  @@index([userId, readAt]) // Unread notification count
   @@schema("public")
 }
 

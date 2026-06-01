@@ -334,7 +334,7 @@ describe('deleteTradeImageHandler', () => {
     vi.clearAllMocks()
   })
 
-  it('deletes (nulls) image strictly scoped to ctx userId, uses assertNoCrossUserAccess', async () => {
+  it('deletes (nulls) image strictly scoped to ctx userId, ignores args.userId', async () => {
     vi.mocked(prisma.trade.findMany).mockResolvedValue([{ id: 't1' }] as any)
     vi.mocked(prisma.trade.updateMany).mockResolvedValue({ count: 1 } as any)
 

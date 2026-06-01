@@ -232,9 +232,7 @@ export async function uploadTradeImageHandler(ctx: McpAuthContext, args: Record<
   }
   if (tradeIds.length === 0) throw new Error('tradeId or tradeIds (non-empty array of strings) is required')
 
-  const requestedUserId = typeof args.userId === 'string' ? args.userId : undefined
-  assertNoCrossUserAccess(requestedUserId, userId)
-
+  // args.userId is intentionally ignored — all DB operations use ctx.userId only
   const imageData = (typeof args.imageBase64 === 'string' || args.imageBase64 === null)
     ? args.imageBase64
     : (typeof args.image === 'string' || args.image === null ? args.image : undefined)
@@ -277,9 +275,7 @@ export async function deleteTradeImageHandler(ctx: McpAuthContext, args: Record<
   }
   if (tradeIds.length === 0) throw new Error('tradeId or tradeIds (non-empty) is required')
 
-  const requestedUserId = typeof args.userId === 'string' ? args.userId : undefined
-  assertNoCrossUserAccess(requestedUserId, userId)
-
+  // args.userId is intentionally ignored — all DB operations use ctx.userId only
   const field: 'imageBase64' | 'imageBase64Second' =
     args.field === 'imageBase64Second' ? 'imageBase64Second' : 'imageBase64'
 

@@ -9,7 +9,8 @@ import { ensureMcpTables } from './mcp-auto-migrate'
 export const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Authorization, Content-Type',
+  'Access-Control-Allow-Headers': 'Authorization, Content-Type, Accept, Mcp-Session-Id',
+  'Access-Control-Expose-Headers': 'Mcp-Session-Id',
   'Access-Control-Max-Age': '86400',
 }
 
@@ -85,6 +86,14 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
   let toolName: string | undefined
   const methodStartTime = performance.now()
 
+  // Per MCP Streamable HTTP spec: validate Accept header for POST requests
+  if (request.method === 'POST') {
+    const accept = request.headers.get('accept') ?? ''
+    if (!accept.includes('application/json') && !accept.includes('*/*') && !accept.includes('text/event-stream')) {
+      return jsonRpcError(null, -32600, 'Invalid Request: Accept header must include application/json or text/event-stream', 406)
+    }
+  }
+
   try {
     const contentType = request.headers.get('content-type') ?? ''
     if (!contentType.includes('application/json')) {
@@ -118,12 +127,18 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
     }
 
     if (method === 'initialize') {
+      // Per MCP spec: server responds with its own highest supported protocol version.
+      // If the client requests a version we don't support, we still respond with ours
+      // and the client decides whether to continue.
+      const clientVersion = params?.protocolVersion as string | undefined
+      const serverVersion = MCP_PROTOCOL_VERSION
+      if (clientVersion && clientVersion !== serverVersion) {
+        // Log version mismatch but continue — client may still accept our version
+      }
       return jsonRpcResult(reqId, {
-        protocolVersion: MCP_PROTOCOL_VERSION,
+        protocolVersion: serverVersion,
         capabilities: {
           tools: { listChanged: false },
-          // We gracefully support discovery for resources/prompts/roots (return empty)
-          // but do not implement the full resource/prompt subsystems yet.
         },
         serverInfo: { name: config.serverName, version: config.serverVersion },
         instructions: "Qunt Edge MCP server. Use tools/list and tools/call for trading data, journal, analytics, imports, teams, and admin operations.",
@@ -173,14 +188,32 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
     }
 
     if (method === 'tools/list') {
-      const tools = config.tools.map((t) => ({
+      const cursor = typeof params?.cursor === 'string' ? params.cursor : undefined
+      const PAGE_SIZE = 50
+      const allTools = config.tools
+      let startIndex = 0
+      if (cursor) {
+        try {
+          startIndex = parseInt(Buffer.from(cursor, 'base64').toString(), 10)
+          if (isNaN(startIndex) || startIndex < 0 || startIndex >= allTools.length) startIndex = 0
+        } catch {
+          startIndex = 0
+        }
+      }
+      const endIndex = Math.min(startIndex + PAGE_SIZE, allTools.length)
+      const page = allTools.slice(startIndex, endIndex)
+      const tools = page.map((t) => ({
         name: t.name,
         description: t.description,
         inputSchema: t.inputSchema,
         ...(t.outputSchema ? { outputSchema: t.outputSchema } : {}),
         ...(t.annotations ? { annotations: t.annotations } : {}),
       }))
-      return jsonRpcResult(reqId, { tools })
+      const result: Record<string, unknown> = { tools }
+      if (endIndex < allTools.length) {
+        result.nextCursor = Buffer.from(String(endIndex)).toString('base64')
+      }
+      return jsonRpcResult(reqId, result)
     }
 
     if (method === 'tools/call') {

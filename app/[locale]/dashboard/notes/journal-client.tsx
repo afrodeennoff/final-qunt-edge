@@ -535,15 +535,11 @@ export default function JournalClient() {
   }, [selectedCard, modalSession, modalTimeframe, modalIctTags, modalEmotion, modalStars, modalPreNotes, modalPostNotes, selectedDayKey, handleCreate, handleUpdate, modalExcerptTitle, modalFeaturedExcerpt])
 
   const handleSelectTrade = useCallback((tradeId: string) => {
-    if (hasUnsaved && selectedCard?.journal) {
-      setPendingTradeId(tradeId)
-      return
-    }
     const card = displayCards.find(c => c.trade.id === tradeId)
     if (card) {
       openModal(card)
     }
-  }, [displayCards, openModal, hasUnsaved, selectedCard])
+  }, [displayCards, openModal])
 
   // ── Render ──
   return (

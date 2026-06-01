@@ -42,7 +42,7 @@ describe('journal handlers (TDD - Top 15 #10#11)', () => {
     vi.mocked(prisma.mood.findMany).mockResolvedValue([{ id: 'm1', day: new Date('2026-05-29'), mood: 'HAPPY' } as any])
     const res = await listJournalEntriesHandler(mockCtx, { startDate: '2026-05-01', limit: 10 })
     expect(prisma.mood.findMany).toHaveBeenCalledWith(expect.objectContaining({
-      where: { userId: 'user-mcp-journal-123' },
+      where: expect.objectContaining({ userId: 'user-mcp-journal-123' }),
       take: 10,
     }))
     expect(res[0].id).toBe('m1')

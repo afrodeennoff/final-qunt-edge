@@ -54,7 +54,7 @@ export async function getStatisticsAction(
 
   const trades = await prisma.trade.findMany({
     where,
-    include: { journal: true },
+    include: { journal: { select: { customTags: true, excerptTitle: true, featuredExcerpt: true } } },
     orderBy: { entryDate: 'desc' },
   })
 
