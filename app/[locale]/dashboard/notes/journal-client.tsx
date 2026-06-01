@@ -6,7 +6,7 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts'
 import {
-  X, ArrowUpRight, ArrowDownRight, BookOpen, Clock,
+  X, ChevronLeft, ChevronRight, BookOpen, Clock,
   Check, Loader2, Trash2, Pin, Image as ImageIcon, ChevronDown,
 } from 'lucide-react'
 import { useUserStore } from '@/store/user-store'
@@ -557,18 +557,18 @@ export default function JournalClient() {
                 type="button"
                 onClick={() => setDayPage(p => Math.max(0, p - 1))}
                 disabled={safeDayPage <= 0}
-                className="rounded-lg p-1 text-white/30 hover:text-white/60 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+                className="rounded-lg p-1 text-white/30 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
               >
-                <ArrowUpRight size={14} className="rotate-[-45deg]" />
+                <ChevronLeft size={16} />
               </button>
-              <span className="text-[10px] tabular-nums text-white/30">{safeDayPage + 1} / {totalDayPages}</span>
+              <span className="text-[10px] tabular-nums text-white/30 min-w-[40px] text-center">{safeDayPage + 1} / {totalDayPages}</span>
               <button
                 type="button"
                 onClick={() => setDayPage(p => Math.min(totalDayPages - 1, p + 1))}
                 disabled={safeDayPage >= totalDayPages - 1}
-                className="rounded-lg p-1 text-white/30 hover:text-white/60 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+                className="rounded-lg p-1 text-white/30 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
               >
-                <ArrowDownRight size={14} className="rotate-[-45deg]" />
+                <ChevronRight size={16} />
               </button>
             </div>
           )}
