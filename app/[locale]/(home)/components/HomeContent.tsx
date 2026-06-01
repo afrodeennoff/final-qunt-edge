@@ -140,6 +140,11 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
+          LIVE FROM THE PLATFORM — Auto-sliding carousel
+         ═══════════════════════════════════════════════════════════════ */}
+      <PlatformPulse highlights={highlights} locale={locale} />
+
+      {/* ═══════════════════════════════════════════════════════════════
           SECTION 2: POWERFUL FEATURES (Reference: 2x2 grid with stat cards)
          ═══════════════════════════════════════════════════════════════ */}
       <section id="features" className="pb-16 sm:pb-20">
@@ -452,11 +457,6 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
 
            </div>
          </section>
-
-        {/* ═══════════════════════════════════════════════════════════════
-            LIVE FROM THE PLATFORM — Auto-sliding carousel
-           ═══════════════════════════════════════════════════════════════ */}
-        <PlatformPulse highlights={highlights} locale={locale} />
 
         {/* ═══════════════════════════════════════════════════════════════
             SECTION 3: ADVANCED TRADING (Reference: left accordion + right circular diagram)
@@ -1012,7 +1012,7 @@ function PlatformPulse({ highlights, locale }: { highlights: HomeLiveHighlights;
           </div>
 
           {/* Slide content */}
-          <div className="relative p-5 sm:p-6" style={{ minHeight: 120 }}>
+          <div className="relative p-6 sm:p-7" style={{ minHeight: 160 }}>
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={current.key}
