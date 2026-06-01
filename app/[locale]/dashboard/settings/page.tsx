@@ -344,7 +344,7 @@ function ApiKeySection() {
     const { generateUserApiKey } = await import('@/server/mcp-key-service')
     const result = await generateUserApiKey(newKeyName.trim())
     if (result.success) {
-      setCreatedKey(result.result.key)
+      setCreatedKey(result.result.key ?? null)
       setNewKeyName('')
       await loadKeys()
     } else {

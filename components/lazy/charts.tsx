@@ -8,32 +8,32 @@ import { ChartSurface } from '@/components/ui/chart-surface'
 type AnyComponent = ComponentType<any>
 
 export const EquityChart = dynamic(
-  () => import('@/app/[locale]/dashboard/components/charts/equity-chart'),
+  () => import('@/app/[locale]/dashboard/components/charts/equity-chart').then(m => m.EquityChart),
   { loading: () => <ChartSkeleton /> }
 ) as AnyComponent
 
 export const PnLBarChart = dynamic(
-  () => import('@/app/[locale]/dashboard/components/charts/pnl-bar-chart'),
+  () => import('@/app/[locale]/dashboard/components/charts/pnl-bar-chart').then(m => m.PNLChart),
   { loading: () => <ChartSkeleton /> }
 ) as AnyComponent
 
 export const WeekdayPnL = dynamic(
-  () => import('@/app/[locale]/dashboard/components/charts/weekday-pnl'),
+  () => import('@/app/[locale]/dashboard/components/charts/weekday-pnl').then(m => m.WeekdayPNLChart),
   { loading: () => <ChartSkeleton /> }
 ) as AnyComponent
 
 export const TimeRangePerformance = dynamic(
-  () => import('@/app/[locale]/dashboard/components/charts/time-range-performance'),
+  () => import('@/app/[locale]/dashboard/components/charts/time-range-performance').then(m => m.TimeRangePerformanceChart),
   { loading: () => <ChartSkeleton /> }
 ) as AnyComponent
 
 export const TradeDistribution = dynamic(
-  () => import('@/app/[locale]/dashboard/components/charts/trade-distribution'),
+  () => import('@/app/[locale]/dashboard/components/charts/trade-distribution').then(m => m.TradeDistributionChart),
   { loading: () => <ChartSkeleton /> }
 ) as AnyComponent
 
 export const PnLBySide = dynamic(
-  () => import('@/app/[locale]/dashboard/components/charts/pnl-by-side'),
+  () => import('@/app/[locale]/dashboard/components/charts/pnl-by-side').then(m => m.PnLBySideChart),
   { loading: () => <ChartSkeleton /> }
 ) as AnyComponent
 

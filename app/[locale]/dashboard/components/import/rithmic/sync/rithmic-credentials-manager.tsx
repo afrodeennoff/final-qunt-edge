@@ -73,7 +73,7 @@ export function RithmicCredentialsManager({
   onAddNew,
 }: RithmicCredentialsManagerProps) {
   const [credentials, setCredentials] =
-    useState<Record<string, RithmicCredentialSet>>(getAllRithmicData());
+    useState<Record<string, RithmicCredentialSet>>({});
   const [synchronizations, setSynchronizations] = useState<Synchronization[]>(
     []
   );
@@ -95,6 +95,11 @@ export function RithmicCredentialsManager({
   const user = useUserStore((state) => state.user);
   const { syncInterval, setSyncInterval, isAutoSyncing } =
     useRithmicSyncStore();
+
+  // Load credentials from storage
+  useEffect(() => {
+    getAllRithmicData().then(setCredentials);
+  }, []);
 
   // Fetch synchronizations from API
   useEffect(() => {
@@ -307,9 +312,9 @@ export function RithmicCredentialsManager({
 
   const allEntries = [...syncEntries, ...localOnlyCredentials];
 
-  function handleDelete(id: string) {
+  async function handleDelete(id: string) {
     clearRithmicData(id);
-    setCredentials(getAllRithmicData());
+    setCredentials(await getAllRithmicData());
     setIsDeleteDialogOpen(false);
   }
 

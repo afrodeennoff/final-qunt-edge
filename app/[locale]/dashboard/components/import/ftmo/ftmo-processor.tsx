@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { Trade } from '@/prisma/generated/prisma/browser'
+import { Trade } from '@/prisma/generated/prisma'
 import { useI18n } from '@/locales/client'
 import { createTradeWithDefaults } from '@/lib/trade-factory'
 import { PlatformProcessorProps } from '../config/platforms'
@@ -92,8 +92,8 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
             const trade = createTradeWithDefaults({
                 quantity,
                 instrument: symbol,
-                entryPrice: entryPrice.toString(),
-                closePrice: exitPrice.toString(),
+                entryPrice,
+                closePrice: exitPrice,
                 entryDate: openDate.toISOString(),
                 closeDate: closeDate.toISOString(),
                 pnl: profit,
@@ -105,7 +105,7 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
 
             // FTMO provides all cost information directly, no need for commission handling
 
-            newTrades.push(trade as Trade)
+            newTrades.push(trade as unknown as Trade)
         }
 
         setProcessedTrades(newTrades);
@@ -116,10 +116,10 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
     }, [processTrades]);
 
 
-    const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0), [processedTrades]);
-    const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + ((trade as any).commissionOnly || 0), 0), [processedTrades]);
-    const totalSwap = useMemo(() => processedTrades.reduce((sum, trade) => sum + ((trade as any).swap || 0), 0), [processedTrades]);
-    const totalCost = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.commission || 0), 0), [processedTrades]);
+    const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (Number(trade.pnl) || 0), 0), [processedTrades]);
+    const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + (Number((trade as any).commissionOnly) || 0), 0), [processedTrades]);
+    const totalSwap = useMemo(() => processedTrades.reduce((sum, trade) => sum + (Number((trade as any).swap) || 0), 0), [processedTrades]);
+    const totalCost = useMemo(() => processedTrades.reduce((sum, trade) => sum + (Number(trade.commission) || 0), 0), [processedTrades]);
     const uniqueInstruments = useMemo(() => Array.from(new Set(processedTrades.map(trade => trade.instrument))), [processedTrades]);
 
     return (
@@ -158,15 +158,15 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
                                         <TableCell>{trade.accountNumber}</TableCell>
                                         <TableCell>{trade.instrument}</TableCell>
                                         <TableCell>{trade.side}</TableCell>
-                                        <TableCell>{trade.quantity}</TableCell>
-                                        <TableCell>{trade.entryPrice}</TableCell>
-                                        <TableCell>{trade.closePrice || '-'}</TableCell>
+                                        <TableCell>{trade.quantity?.toString()}</TableCell>
+                                        <TableCell>{trade.entryPrice?.toString()}</TableCell>
+                                        <TableCell>{trade.closePrice?.toString() ?? '-'}</TableCell>
                                         <TableCell>{trade.entryDate ? new Date(trade.entryDate).toLocaleString() : '-'}</TableCell>
                                         <TableCell>{trade.closeDate ? new Date(trade.closeDate).toLocaleString() : '-'}</TableCell>
-                                        <TableCell className={trade.pnl && trade.pnl >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}>
-                                            {trade.pnl?.toFixed(2)}
+                                        <TableCell className={trade.pnl && Number(trade.pnl) >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}>
+                                            {Number(trade.pnl).toFixed(2)}
                                         </TableCell>
-                                        <TableCell>{formatDuration(trade.timeInPosition || 0)}</TableCell>
+                                        <TableCell>{formatDuration(Number(trade.timeInPosition) || 0)}</TableCell>
                                         <TableCell>${(trade as any).commissionOnly?.toFixed(2) || '0.00'}</TableCell>
                                         <TableCell className={(trade as any).swap >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}>
                                             ${(trade as any).swap?.toFixed(2) || '0.00'}

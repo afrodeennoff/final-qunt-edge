@@ -6,7 +6,7 @@
  * Admin tools must additionally call requireAdmin(ctx).
  */
 
-import type { McpAuthContext } from '../mcp-auth'
+import type { McpAuthContext } from '../../mcp-auth'
 import { requireUserId } from '../security'
 import { prisma } from '@/lib/prisma'
 import { MemberRole } from '@/prisma/generated/prisma'

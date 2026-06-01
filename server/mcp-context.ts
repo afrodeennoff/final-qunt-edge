@@ -66,7 +66,7 @@ export async function buildAccountHealthSnapshot(ctx: McpAuthContext, accountId?
   if (accountId) where.id = accountId
 
   const accounts = await prisma.account.findMany({
-    where: where as Parameters<typeof prisma.account.findMany>[0]['where'],
+    where: where as any,
   })
 
   const results = await Promise.all(accounts.map(async (acc) => {
@@ -138,10 +138,10 @@ export async function buildPerformanceContext(ctx: McpAuthContext, days?: number
       _count: { id: true },
     }),
     prisma.trade.count({
-      where: { ...where, pnl: { gt: 0 } } as Parameters<typeof prisma.trade.count>[0]['where'],
+      where: { ...where, pnl: { gt: 0 } } as any,
     }),
     prisma.trade.count({
-      where: { ...where, pnl: { lt: 0 } } as Parameters<typeof prisma.trade.count>[0]['where'],
+      where: { ...where, pnl: { lt: 0 } } as any,
     }),
     prisma.trade.aggregate({
       where: { ...where, pnl: { gt: 0 } } as Parameters<typeof prisma.trade.aggregate>[0]['where'],

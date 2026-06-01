@@ -1,1 +1,1 @@
-export { PNLChart } from './client/pnl-bar-chart.tsx'
+export { default as PNLChart } from './client/pnl-bar-chart'

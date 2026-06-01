@@ -1,5 +1,5 @@
 // server/mcp/security.ts
-import type { McpAuthContext } from './mcp-auth'
+import type { McpAuthContext } from '../mcp-auth'
 
 /**
  * SECURITY GUARDS — every MCP handler and tool MUST use these.

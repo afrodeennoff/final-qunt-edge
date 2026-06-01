@@ -138,6 +138,7 @@ function toCompatUser(record: CoreUserCompatRecord, authUserId: string): User {
     thorTokenExpiresAt: null,
     mt5TokenHash: null,
     mt5TokenExpiresAt: null,
+    journalTagDefaults: {},
     createdAt: record.createdAt,
     updatedAt: record.updatedAt
   }

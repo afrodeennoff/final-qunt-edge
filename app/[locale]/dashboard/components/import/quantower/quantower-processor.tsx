@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import { Trade } from '@/prisma/generated/prisma/browser'
+import { Trade, Prisma } from '@/prisma/generated/prisma'
 import { Input } from "@/components/ui/input"
 
 interface ContractSpec {
@@ -464,20 +464,20 @@ export default function QuantowerOrderProcessor({ csvData, headers, processedTra
 
             const trade: Partial<Trade> = {
               accountNumber: openPosition.accountNumber,
-              quantity: openPosition.originalQuantity,
+              quantity: new Prisma.Decimal(openPosition.originalQuantity),
               entryId: openPosition.entryOrders.map(o => o.orderId).join('-'),
               closeId: openPosition.exitOrders.map(o => o.orderId).join('-'),
               instrument: getFinalInstrumentSymbol(symbol),
-              entryPrice: openPosition.averageEntryPrice.toFixed(2),
-              closePrice: (openPosition.exitOrders.reduce((sum, o) => sum + o.price * o.quantity, 0) / 
-                           openPosition.exitOrders.reduce((sum, o) => sum + o.quantity, 0)).toFixed(2),
-              entryDate: parseDateTime(openPosition.entryDate),
-              closeDate: parseDateTime(dateTime),
-              pnl: pnl,
-              timeInPosition: (new Date(parseDateTime(dateTime)).getTime() - new Date(parseDateTime(openPosition.entryDate)).getTime()) / 1000,
+              entryPrice: new Prisma.Decimal(openPosition.averageEntryPrice.toFixed(2)),
+              closePrice: new Prisma.Decimal((openPosition.exitOrders.reduce((sum, o) => sum + o.price * o.quantity, 0) / 
+                           openPosition.exitOrders.reduce((sum, o) => sum + o.quantity, 0)).toFixed(2)),
+              entryDate: new Date(parseDateTime(openPosition.entryDate)),
+              closeDate: new Date(parseDateTime(dateTime)),
+              pnl: new Prisma.Decimal(pnl),
+              timeInPosition: new Prisma.Decimal((new Date(parseDateTime(dateTime)).getTime() - new Date(parseDateTime(openPosition.entryDate)).getTime()) / 1000),
               userId: openPosition.userId,
               side: openPosition.side,
-              commission: openPosition.totalCommission,
+              commission: new Prisma.Decimal(openPosition.totalCommission),
             }
 
             processedTrades.push(trade)
@@ -555,8 +555,8 @@ export default function QuantowerOrderProcessor({ csvData, headers, processedTra
 
   const uniqueSymbols = useMemo(() => Array.from(new Set(processedTrades.map(trade => trade.instrument).filter(Boolean))), [processedTrades])
 
-  const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0), [processedTrades])
-  const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.commission || 0), 0), [processedTrades])
+  const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (Number(trade.pnl) || 0), 0), [processedTrades])
+  const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + (Number(trade.commission) || 0), 0), [processedTrades])
 
   const handleContractSpecChange = (symbol: string, field: keyof ContractSpec, value: string) => {
     setContractSpecs(prev => ({
@@ -639,16 +639,16 @@ export default function QuantowerOrderProcessor({ csvData, headers, processedTra
                   <TableRow key={trade.entryId || index}>
                     <TableCell>{trade.instrument}</TableCell>
                     <TableCell>{trade.side}</TableCell>
-                    <TableCell>{trade.quantity}</TableCell>
-                    <TableCell>{trade.entryPrice}</TableCell>
-                    <TableCell>{trade.closePrice || '-'}</TableCell>
+                    <TableCell>{String(trade.quantity ?? '')}</TableCell>
+                    <TableCell>{String(trade.entryPrice ?? '')}</TableCell>
+                    <TableCell>{trade.closePrice ? String(trade.closePrice) : '-'}</TableCell>
                     <TableCell>{trade.entryDate ? new Date(trade.entryDate).toLocaleString() : '-'}</TableCell>
                     <TableCell>{trade.closeDate ? new Date(trade.closeDate).toLocaleString() : '-'}</TableCell>
-                    <TableCell className={(trade.pnl || 0) >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}>
-                      {(trade.pnl || 0).toFixed(2)}
+                    <TableCell className={(Number(trade.pnl) || 0) >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}>
+                      {(Number(trade.pnl) || 0).toFixed(2)}
                     </TableCell>
-                    <TableCell>{trade.timeInPosition ? `${Math.floor(trade.timeInPosition / 60)}m ${Math.floor(trade.timeInPosition % 60)}s` : '-'}</TableCell>
-                    <TableCell>{(trade.commission || 0).toFixed(2)}</TableCell>
+                    <TableCell>{trade.timeInPosition ? `${Math.floor((Number(trade.timeInPosition) || 0) / 60)}m ${Math.floor((Number(trade.timeInPosition) || 0) % 60)}s` : '-'}</TableCell>
+                    <TableCell>{(Number(trade.commission) || 0).toFixed(2)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

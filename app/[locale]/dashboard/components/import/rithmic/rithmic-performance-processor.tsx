@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import { Trade } from '@/prisma/generated/prisma/browser'
+import { Prisma, Trade } from '@/prisma/generated/prisma'
 import { PlatformProcessorProps } from '../config/platforms'
 
 const newMappings: { [key: string]: string } = {
@@ -40,17 +40,17 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
                     switch (key) {
                         case 'quantity':
                             quantity = parseFloat(cellValue) || 0;
-                            item[key] = quantity;
+                            item[key] = new Prisma.Decimal(quantity) as any;
                             break;
                         case 'pnl':
                             const pnl = parseFloat(cellValue) || 0;
-                            item[key] = pnl;
+                            item[key] = new Prisma.Decimal(pnl) as any;
                             break;
                         case 'commission':
-                            item[key] = parseFloat(cellValue) || 0;
+                            item[key] = new Prisma.Decimal(parseFloat(cellValue) || 0) as any;
                             break;
                         case 'timeInPosition':
-                            item[key] = parseFloat(cellValue) || 0;
+                            item[key] = new Prisma.Decimal(parseFloat(cellValue) || 0) as any;
                             break;
                         default:
                             item[key] = cellValue as any;
@@ -61,10 +61,10 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
             // Ensure time values are stored as ISO strings
             try {
                 if (item.entryDate) {
-                    item.entryDate = new Date(item.entryDate).toISOString();
+                    item.entryDate = new Date(item.entryDate);
                 }
                 if (item.closeDate) {
-                    item.closeDate = new Date(item.closeDate).toISOString();
+                    item.closeDate = new Date(item.closeDate);
                 }
             } catch (e) {
                 toast.error("Error", {
@@ -96,8 +96,8 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
         processTrades();
     }, [processTrades]);
 
-    const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0), [processedTrades]);
-    const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.commission || 0), 0), [processedTrades]);
+    const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.pnl?.toNumber() ?? 0), 0), [processedTrades]);
+    const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.commission?.toNumber() ?? 0), 0), [processedTrades]);
     const uniqueInstruments = useMemo(() => Array.from(new Set(processedTrades.map(trade => trade.instrument))), [processedTrades]);
 
     return (
@@ -124,13 +124,13 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
                             <TableRow key={trade.id}>
                                 <TableCell>{trade.instrument}</TableCell>
                                 <TableCell>{trade.side}</TableCell>
-                                <TableCell>{trade.quantity}</TableCell>
-                                <TableCell>{trade.entryPrice}</TableCell>
-                                <TableCell>{trade.closePrice || '-'}</TableCell>
+                                <TableCell>{trade.quantity?.toNumber()}</TableCell>
+                                <TableCell>{trade.entryPrice?.toNumber()}</TableCell>
+                                <TableCell>{trade.closePrice?.toNumber() ?? '-'}</TableCell>
                                 <TableCell>{trade.entryDate ? new Date(trade.entryDate).toLocaleString() : '-'}</TableCell>
                                 <TableCell>{trade.closeDate ? new Date(trade.closeDate).toLocaleString() : '-'}</TableCell>
                                 <TableCell>{trade.pnl?.toFixed(2)}</TableCell>
-                                <TableCell>{`${Math.floor((trade.timeInPosition || 0) / 60)}m ${Math.floor((trade.timeInPosition || 0) % 60)}s`}</TableCell>
+                                <TableCell>{`${Math.floor((trade.timeInPosition?.toNumber() ?? 0) / 60)}m ${Math.floor((trade.timeInPosition?.toNumber() ?? 0) % 60)}s`}</TableCell>
                                 <TableCell>{trade.commission?.toFixed(2)}</TableCell>
                             </TableRow>
                         ))}

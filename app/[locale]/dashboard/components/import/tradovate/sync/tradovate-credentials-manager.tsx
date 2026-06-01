@@ -44,9 +44,21 @@ export function TradovateCredentialsManager() {
     accounts,
     deleteAccount,
     loadAccounts,
-    getIncludedFeeTypesForAccount,
-    updateIncludedFeeTypesForAccount,
   } = useTradovateSyncContext();
+
+  const getIncludedFeeTypesForAccount = useCallback((accountId: string): Record<string, boolean> => {
+    const account = accounts.find(acc => acc.accountId === accountId);
+    if (!account) return {};
+    return ((account as Record<string, unknown>).includedFeeTypes as Record<string, boolean>) ?? {};
+  }, [accounts]);
+
+  const updateIncludedFeeTypesForAccount = useCallback(async (
+    accountId: string,
+    feeTypes: Record<string, boolean>
+  ): Promise<{ success: boolean; error?: string }> => {
+    const { updateTradovateIncludedFeeTypes } = await import('./actions');
+    return updateTradovateIncludedFeeTypes(accountId, feeTypes);
+  }, []);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isTimeDialogOpen, setIsTimeDialogOpen] = useState(false);
   const [isFeeDialogOpen, setIsFeeDialogOpen] = useState(false);
@@ -245,10 +257,10 @@ export function TradovateCredentialsManager() {
       feeDialogState
     );
     if (result.success) {
-      toast.success(t("tradovateSync.multiAccount.feeConfigUpdated"));
+      toast.success(t("tradovateSync.multiAccount.feeConfigUpdated" as never));
       setIsFeeDialogOpen(false);
     } else {
-      toast.error(result.error || t("tradovateSync.multiAccount.feeConfigUpdateError"));
+      toast.error(result.error || t("tradovateSync.multiAccount.feeConfigUpdateError" as never));
     }
   }, [selectedAccountId, feeDialogState, updateIncludedFeeTypesForAccount, t]);
 
@@ -423,7 +435,7 @@ export function TradovateCredentialsManager() {
                             className="justify-start"
                             onClick={() => handleOpenFeeDialog(account.accountId)}
                           >
-                            {t("tradovateSync.multiAccount.configureFees")}
+                            {t("tradovateSync.multiAccount.configureFees" as never)}
                           </Button>
                           <Button
                             variant="ghost"
@@ -493,12 +505,12 @@ export function TradovateCredentialsManager() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {t("tradovateSync.multiAccount.feeConfigTitle", {
+              {(t as any)("tradovateSync.multiAccount.feeConfigTitle", {
                 accountId: selectedAccountId,
               })}
             </DialogTitle>
             <DialogDescription>
-              {t("tradovateSync.multiAccount.feesToIncludeDescription")}
+              {t("tradovateSync.multiAccount.feesToIncludeDescription" as never)}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 mt-4">
@@ -532,8 +544,8 @@ export function TradovateCredentialsManager() {
                 onClick={handleFeeSelectAll}
               >
                 {allFeeSelected
-                  ? t("tradovateSync.multiAccount.deselectAllFees")
-                  : t("tradovateSync.multiAccount.selectAllFees")}
+                  ? t("tradovateSync.multiAccount.deselectAllFees" as never)
+                  : t("tradovateSync.multiAccount.selectAllFees" as never)}
               </Button>
               <div className="flex gap-2">
                 <Button variant="outline" onClick={() => setIsFeeDialogOpen(false)}>

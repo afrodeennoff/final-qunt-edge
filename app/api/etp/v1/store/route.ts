@@ -73,7 +73,10 @@ export async function POST(req: NextRequest) {
       orders.map(async (order) => {
         return prisma.order.upsert({
           where: {
-            orderId: order.OrderId
+            userId_orderId: {
+              userId: user.id,
+              orderId: order.OrderId,
+            },
           },
           update: {
             accountId: order.AccountId,

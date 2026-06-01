@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from 'sonner'
-import { Trade } from '@/prisma/generated/prisma/browser'
+import { Prisma, Trade } from '@/prisma/generated/prisma'
 import { useI18n } from '@/locales/client'
 import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { generateTradeHash } from '@/lib/utils'
@@ -102,17 +102,18 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
                     switch (key) {
                         case 'quantity':
                             quantity = parseFloat(cellValue) || 0;
-                            item[key] = quantity;
+                            item[key] = new Prisma.Decimal(quantity);
                             break;
                         case 'pnl':
                             const { pnl, error } = formatPnl(cellValue)
                             if (error) {
                                 return
                             }
-                            item[key] = pnl
+                            item[key] = new Prisma.Decimal(pnl)
                             break;
                         case 'timeInPosition':
-                            item[key] = convertTimeInPosition(cellValue);
+                            const timeVal = convertTimeInPosition(cellValue);
+                            item[key] = timeVal !== undefined ? new Prisma.Decimal(timeVal) : undefined;
                             break;
                         case 'entryDate':
                         case 'closeDate':
@@ -154,7 +155,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
                                     const utcDate = new Date(localDate.toISOString());
                                     
                                     // Format with explicit +00:00 timezone
-                                    item[key] = utcDate.toISOString().replace('Z', '+00:00');
+                                    item[key] = new Date(utcDate.toISOString());
 
                                 } catch (error) {
                                     console.error(`Error parsing date: ${cellValue}`, error);
@@ -182,7 +183,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
             if (item.instrument) {
                 item.instrument = item.instrument.slice(0, -2)
                 if (existingCommissions[item.instrument]) {
-                    item.commission = existingCommissions[item.instrument] * item.quantity!
+                    item.commission = new Prisma.Decimal(existingCommissions[item.instrument] * item.quantity!.toNumber())
                 } else {
                     missingCommissionsTemp[item.instrument] = true
                 }
@@ -231,8 +232,8 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
             if (missingCommissions.hasOwnProperty(trade.instrument)) {
                 return {
                     ...trade,
-                    commission: missingCommissions[trade.instrument] * trade.quantity
-                };
+                    commission: new Prisma.Decimal(missingCommissions[trade.instrument] * trade.quantity.toNumber())
+                } as Partial<Trade>;
             }
             return trade;
         }
@@ -245,8 +246,8 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
         });
     };
 
-    const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0), [processedTrades]);
-    const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.commission || 0), 0), [processedTrades]);
+    const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.pnl?.toNumber() || 0), 0), [processedTrades]);
+    const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.commission?.toNumber() || 0), 0), [processedTrades]);
     const uniqueInstruments = useMemo(() => Array.from(new Set(processedTrades.map(trade => trade.instrument))), [processedTrades]);
 
     return (
@@ -309,16 +310,16 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
                                     <TableRow key={trade.id}>
                                         <TableCell>{trade.instrument}</TableCell>
                                         <TableCell>{trade.side}</TableCell>
-                                        <TableCell>{trade.quantity}</TableCell>
-                                        <TableCell>{trade.entryPrice}</TableCell>
-                                        <TableCell>{trade.closePrice || '-'}</TableCell>
+                                        <TableCell>{trade.quantity?.toNumber()}</TableCell>
+                                        <TableCell>{trade.entryPrice?.toNumber()}</TableCell>
+                                        <TableCell>{trade.closePrice?.toNumber() ?? '-'}</TableCell>
                                         <TableCell>{trade.entryDate ? new Date(trade.entryDate).toLocaleString() : '-'}</TableCell>
                                         <TableCell>{trade.closeDate ? new Date(trade.closeDate).toLocaleString() : '-'}</TableCell>
-                                        <TableCell className={trade.pnl && trade.pnl >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}>
-                                            {trade.pnl?.toFixed(2)}
+                                        <TableCell className={trade.pnl && trade.pnl.toNumber() >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}>
+                                            {trade.pnl?.toNumber()?.toFixed(2)}
                                         </TableCell>
-                                        <TableCell>{`${Math.floor((trade.timeInPosition || 0) / 60)}m ${Math.floor((trade.timeInPosition || 0) % 60)}s`}</TableCell>
-                                        <TableCell>{trade.commission?.toFixed(2)}</TableCell>
+                                        <TableCell>{`${Math.floor((trade.timeInPosition?.toNumber() || 0) / 60)}m ${Math.floor((trade.timeInPosition?.toNumber() || 0) % 60)}s`}</TableCell>
+                                        <TableCell>{trade.commission?.toNumber()?.toFixed(2)}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

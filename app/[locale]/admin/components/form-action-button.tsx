@@ -1,1 +1,1 @@
-export { FormActionButton } from './client/form-action-button.tsx'
+export { FormActionButton } from './client/form-action-button'

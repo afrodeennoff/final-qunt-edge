@@ -1039,21 +1039,30 @@ export async function createSingleTradeAction(data: {
   instrument?: string
   side?: string
   entryDate?: string
+  quantity?: number | string
+  entryPrice?: number | string
+  closePrice?: number | string
+  pnl?: number | string
 }): Promise<SerializedTrade> {
   const rawUserId = await getUserId()
   const userId = await resolveWritableUserId(rawUserId)
   const now = new Date()
   const entryDate = data.entryDate ? new Date(data.entryDate) : now
 
-  const tradeData: Prisma.TradeCreateInput = {
+  const qty = new Prisma.Decimal(data.quantity ?? 1)
+  const entry = new Prisma.Decimal(data.entryPrice ?? 0)
+  const close = new Prisma.Decimal(data.closePrice ?? 0)
+  const pnl = new Prisma.Decimal(data.pnl ?? 0)
+
+  const tradeData: Prisma.TradeUncheckedCreateInput = {
     userId,
     accountNumber: 'Manual',
     instrument: data.instrument || 'Manual',
     side: data.side || null,
-    quantity: new Prisma.Decimal(0),
-    entryPrice: new Prisma.Decimal(0),
-    closePrice: new Prisma.Decimal(0),
-    pnl: new Prisma.Decimal(0),
+    quantity: qty,
+    entryPrice: entry,
+    closePrice: close,
+    pnl,
     commission: new Prisma.Decimal(0),
     entryDate,
     closeDate: entryDate,

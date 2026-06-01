@@ -1,1 +1,1 @@
-export { ConfirmDeleteButton } from './client/confirm-delete-button.tsx'
+export { ConfirmDeleteButton } from './client/confirm-delete-button'

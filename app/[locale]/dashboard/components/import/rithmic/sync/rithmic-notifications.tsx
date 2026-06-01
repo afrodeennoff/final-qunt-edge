@@ -116,7 +116,7 @@ export function RithmicSyncNotifications() {
         }
       } else if (lastMessage.type === 'log' && lastMessage.level === 'info') {
         // Parse progress from processing date messages
-        const processingMatch = lastMessage.message.match(/Processing date (\d+) of (\d+): (\d+)/)
+        const processingMatch = lastMessage.message?.match(/Processing date (\d+) of (\d+): (\d+)/)
         if (processingMatch) {
           const [_, current, total, date] = processingMatch
           setNotifications(prev => ({
@@ -152,7 +152,7 @@ export function RithmicSyncNotifications() {
           }
         }))
       } else if (lastMessage.type === 'progress') {
-        const progressMatch = lastMessage.message.match(/\[(.*?)\] Processing date (\d+)\/(\d+)(?:: (\d{8}))?/)
+        const progressMatch = lastMessage.message?.match(/\[(.*?)\] Processing date (\d+)\/(\d+)(?:: (\d{8}))?/)
         if (progressMatch) {
           const [, accountId, current, total, date] = progressMatch
           setNotifications(prev => ({

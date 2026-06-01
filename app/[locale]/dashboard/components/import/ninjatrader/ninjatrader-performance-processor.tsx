@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { Trade } from '@/prisma/generated/prisma/browser'
+import { Trade, Prisma } from '@/prisma/generated/prisma'
 import { generateTradeHash } from '@/lib/utils'
 import { PlatformProcessorProps } from '../config/platforms'
 import {
@@ -175,29 +175,29 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
           switch (key) {
             case 'quantity':
               quantity = parseFloat(cellValue) || 0;
-              item[key] = quantity;
+              item[key] = new Prisma.Decimal(quantity);
               break;
             case 'entryPrice':
               const { price: entryPrice, error: entryPriceError } = formatPriceValue(cellValue);
               if (entryPriceError) {
                 return; // Entry price is required
               }
-              item[key] = entryPrice.toString();
+              item[key] = new Prisma.Decimal(entryPrice.toString());
               break;
             case 'closePrice':
               const { price: closePrice, error: closePriceError } = formatPriceValue(cellValue);
               // Close price can be missing for open trades
-              item[key] = closePriceError ? undefined : closePrice.toString();
+              item[key] = closePriceError ? undefined : new Prisma.Decimal(closePrice.toString());
               break;
             case 'pnl':
               const { pnl, error } = formatCurrencyValue(cellValue);
               // Don't skip the trade if PnL is missing, just default to 0
-              item[key] = error ? 0 : pnl;
+              item[key] = new Prisma.Decimal(error ? 0 : pnl);
               break;
             case 'commission':
               const { pnl: commission, error: commissionError } = formatCurrencyValue(cellValue);
               // Don't skip the trade if commission is missing, just default to 0
-              item[key] = commissionError ? 0 : commission;
+              item[key] = new Prisma.Decimal(commissionError ? 0 : commission);
               break;
             case 'side':
               item[key] = cellValue.toLowerCase();
@@ -219,18 +219,18 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
         return;
       }
 
-      const entryDate = convertToValidDate(item.entryDate as string);
-      const closeDate = convertToValidDate(item.closeDate as string);
+      const parsedEntryDate = convertToValidDate(item.entryDate as unknown as string);
+      const parsedCloseDate = convertToValidDate(item.closeDate as unknown as string);
 
-      if (entryDate && closeDate) {
-        item.entryDate = entryDate.toISOString();
-        item.closeDate = closeDate.toISOString();
+      if (parsedEntryDate && parsedCloseDate) {
+        item.entryDate = parsedEntryDate;
+        item.closeDate = parsedCloseDate;
       } else {
         return;
       }
 
       if (item.entryDate && item.closeDate) {
-        item.timeInPosition = (new Date(item.closeDate).getTime() - new Date(item.entryDate).getTime()) / 1000
+        item.timeInPosition = new Prisma.Decimal((new Date(item.closeDate).getTime() - new Date(item.entryDate).getTime()) / 1000)
       }
 
       if (item.instrument) {
@@ -254,8 +254,8 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
     processTrades();
   }, [processTrades]);
 
-  const totalPnL = useMemo(() => trades.reduce((sum, trade) => sum + (trade.pnl || 0), 0), [trades]);
-  const totalCommission = useMemo(() => trades.reduce((sum, trade) => sum + (trade.commission || 0), 0), [trades]);
+  const totalPnL = useMemo(() => trades.reduce((sum, trade) => sum + (Number(trade.pnl) || 0), 0), [trades]);
+  const totalCommission = useMemo(() => trades.reduce((sum, trade) => sum + (Number(trade.commission) || 0), 0), [trades]);
   const uniqueInstruments = useMemo(() => Array.from(new Set(trades.map(trade => trade.instrument))), [trades]);
 
   return (
@@ -322,13 +322,13 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
                       {trade.side}
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
-                      {trade.quantity}
+                      {String(trade.quantity)}
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
-                      {trade.entryPrice}
+                      {String(trade.entryPrice)}
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
-                      {trade.closePrice || '-'}
+                      {trade.closePrice ? String(trade.closePrice) : '-'}
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
                       {new Date(trade.entryDate).toLocaleString()}
@@ -336,11 +336,11 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
                     <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
                       {trade.closeDate ? new Date(trade.closeDate).toLocaleString() : '-'}
                     </TableCell>
-                    <TableCell className={`whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l ${trade.pnl && trade.pnl >= 0 ? 'text-success' : 'text-destructive'}`}>
+                    <TableCell className={`whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l ${Number(trade.pnl) >= 0 ? 'text-success' : 'text-destructive'}`}>
                       {trade.pnl?.toFixed(2)}
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
-                      {`${Math.floor((trade.timeInPosition || 0) / 60)}m ${Math.floor((trade.timeInPosition || 0) % 60)}s`}
+                      {`${Math.floor((Number(trade.timeInPosition) || 0) / 60)}m ${Math.floor((Number(trade.timeInPosition) || 0) % 60)}s`}
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-transparent last:border-r-0 first:border-l">
                       {trade.commission?.toFixed(2)}

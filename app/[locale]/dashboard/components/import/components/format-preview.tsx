@@ -1,6 +1,6 @@
 "use client";
 
-import { Trade } from "@/prisma/generated/prisma/browser";
+import { Trade } from "@/prisma/generated/prisma";
 import { useEffect, useState, useMemo, useRef } from "react";
 import {
   Table,
@@ -383,7 +383,7 @@ export function FormatPreview({
   // Handle streaming results from first useObject
   useEffect(() => {
     if (object1) {
-      const newTrades = object1.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as Trade[];
+      const newTrades = object1.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as unknown as Trade[];
       const uniqueTrades = newTrades.filter(newTrade =>
         !processedTradesRef.current.some(existingTrade =>
           existingTrade.entryDate === newTrade.entryDate &&
@@ -408,7 +408,7 @@ export function FormatPreview({
   // Handle streaming results from second useObject
   useEffect(() => {
     if (object2) {
-      const newTrades = object2.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as Trade[];
+      const newTrades = object2.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as unknown as Trade[];
       const uniqueTrades = newTrades.filter(newTrade =>
         !processedTradesRef.current.some(existingTrade =>
           existingTrade.entryDate === newTrade.entryDate &&
@@ -515,7 +515,7 @@ export function FormatPreview({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                {row.original.quantity}
+                {row.original.quantity?.toString() ?? ''}
               </TooltipTrigger>
               {originalData && (
                 <TooltipContent>
@@ -539,7 +539,7 @@ export function FormatPreview({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                ${row.original.entryPrice}
+                  ${row.original.entryPrice?.toString() ?? ''}
               </TooltipTrigger>
               {originalData && (
                 <TooltipContent>
@@ -563,7 +563,7 @@ export function FormatPreview({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                ${row.original.closePrice}
+                ${row.original.closePrice?.toString() ?? ''}
               </TooltipTrigger>
               {originalData && (
                 <TooltipContent>
@@ -582,7 +582,7 @@ export function FormatPreview({
         <div className="font-medium">{t('trade-table.pnl')}</div>
       ),
       cell: ({ row }) => {
-        const pnl = row.original.pnl ?? 0;
+        const pnl = row.original.pnl?.toNumber() ?? 0;
         const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'pnl')];
         const originalPnl = originalData ? parseFloat(originalData.replace(/[,$]/g, '')) : null;
         const isMismatch = originalPnl !== null && Math.abs(pnl - originalPnl) > 0.01;
@@ -656,7 +656,7 @@ export function FormatPreview({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                {parsePositionTime(row.original.timeInPosition || 0)}
+                {parsePositionTime(row.original.timeInPosition?.toNumber() ?? 0)}
               </TooltipTrigger>
               {originalData && (
                 <TooltipContent>
@@ -695,8 +695,8 @@ export function FormatPreview({
 
   // Calculate totals for footer
   const totals = useMemo(() => {
-    const totalPnl = processedTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0);
-    const totalCommission = processedTrades.reduce((sum, trade) => sum + (trade.commission || 0), 0);
+    const totalPnl = processedTrades.reduce((sum, trade) => sum + (trade.pnl?.toNumber() ?? 0), 0);
+    const totalCommission = processedTrades.reduce((sum, trade) => sum + (trade.commission?.toNumber() ?? 0), 0);
     const netPnl = totalPnl - totalCommission;
     
     return {

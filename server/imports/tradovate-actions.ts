@@ -56,6 +56,9 @@ const TRADOVATE_ENVIRONMENTS = {
   }
 }
 
+const TRADOVATE_DEFAULT_ENV: 'demo' | 'live' =
+  (process.env.TRADOVATE_ENVIRONMENT as 'demo' | 'live') || 'demo'
+
 const MAX_TRADOVATE_TRADES = 5_000
 
 interface TradovateAccount {
@@ -732,7 +735,7 @@ export async function handleTradovateCallback(code: string, state: string): Prom
     const storeResult = await storeTradovateToken(
       tokens.access_token,
       expiresAt,
-      'demo', //Environment default to demo for now
+      TRADOVATE_DEFAULT_ENV,
       accountId
     )
     if (storeResult.error) {
@@ -759,7 +762,7 @@ export async function handleTradovateCallback(code: string, state: string): Prom
 }
 
 // New function using Tradovate's renewAccessToken endpoint
-export async function renewTradovateAccessToken(accessToken: string, environment: 'demo' | 'live' = 'demo', accountId?: string): Promise<TradovateOAuthResult> {
+export async function renewTradovateAccessToken(accessToken: string, environment: 'demo' | 'live' = TRADOVATE_DEFAULT_ENV, accountId?: string): Promise<TradovateOAuthResult> {
   try {
     const apiBaseUrl = environment === 'demo' ? TRADOVATE_ENVIRONMENTS.demo.api : 'https://live.tradovateapi.com'
 
@@ -1138,7 +1141,7 @@ async function buildTradesFromFillPairs(
 export async function storeTradovateToken(
   accessToken: string,
   expiresAt: string,
-  environment: 'demo' | 'live' = 'demo',
+  environment: 'demo' | 'live' = TRADOVATE_DEFAULT_ENV,
   accountId: string = 'default'
 ) {
   try {
@@ -1286,7 +1289,7 @@ export async function getTradovateToken(accountId: string = 'default', userId?: 
     return {
       accessToken,
       expiresAt: syncData.tokenExpiresAt?.toISOString() || '',
-      environment: 'demo', // Default to demo for now
+      environment: TRADOVATE_DEFAULT_ENV,
       accountId: syncData.accountId
     }
   } catch (error) {
@@ -1376,7 +1379,7 @@ export async function setCustomTradovateToken(
   accessToken: string,
   expiresAt: string,
   accountId: string = 'custom',
-  environment: 'demo' | 'live' = 'demo'
+  environment: 'demo' | 'live' = TRADOVATE_DEFAULT_ENV
 ) {
   try {
     const supabase = await createClient()
@@ -1425,7 +1428,7 @@ export async function setCustomTradovateToken(
 // Function to test a custom access token without storing it
 export async function testCustomTradovateToken(
   accessToken: string,
-  environment: 'demo' | 'live' = 'demo'
+  environment: 'demo' | 'live' = TRADOVATE_DEFAULT_ENV
 ) {
   try {
     // Validate token format (basic check)

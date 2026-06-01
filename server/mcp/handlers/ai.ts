@@ -5,7 +5,7 @@
  * All AI calls log to AiRequestLog via telemetry. Zero cross-user leakage.
  */
 
-import type { McpAuthContext } from '../mcp-auth'
+import type { McpAuthContext } from '../../mcp-auth'
 import { requireUserId } from '../security'
 import { prisma } from '@/lib/prisma'
 import { getAiLanguageModel } from '@/lib/ai/client'

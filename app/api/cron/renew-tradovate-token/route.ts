@@ -187,7 +187,8 @@ async function renewUserToken(synchronization: SynchronizationRecord): Promise<b
 
     // This app uses Tradovate demo endpoints for OAuth/sync flows.
     // `Synchronization` has no persisted `environment` field, so default to demo.
-    const apiBaseUrl = 'https://demo.tradovateapi.com';
+    const DEFAULT_TRADOVATE_ENV = (process.env.TRADOVATE_ENVIRONMENT || 'demo') as string;
+    const apiBaseUrl = DEFAULT_TRADOVATE_ENV === 'live' ? 'https://live.tradovateapi.com' : 'https://demo.tradovateapi.com';
 
     const renewal = await fetch(`${apiBaseUrl}/auth/renewAccessToken`, {
       headers: {

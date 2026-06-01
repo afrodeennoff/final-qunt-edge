@@ -16,7 +16,7 @@ import { getNextWidgetPlacement, normalizeWidgetSize, sizeToGrid } from "@/lib/w
 interface DashboardContextType {
     isCustomizing: boolean
     setIsCustomizing: (val: boolean) => void
-    toggleCustomizing: () => void
+    toggleCustomizing: () => void | Promise<void>
     layouts: DashboardLayoutWithWidgets | null
     currentLayout: Widget[]
     activeLayout: 'desktop' | 'mobile'
@@ -54,7 +54,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
     const [isCustomizing, setIsCustomizing] = useState(false)
     const [pendingSaves, setPendingSaves] = useState(0)
 
-    const activeLayout = useMemo(() => isMobile ? 'mobile' : 'desktop', [isMobile])
+    const activeLayout = useMemo<'desktop' | 'mobile'>(() => isMobile ? 'mobile' : 'desktop', [isMobile])
 
     const userId = user?.id || supabaseUser?.id
 

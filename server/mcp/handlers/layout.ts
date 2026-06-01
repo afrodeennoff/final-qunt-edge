@@ -4,7 +4,7 @@
  * Admin tools must additionally call requireAdmin(ctx).
  */
 
-import type { McpAuthContext } from '../mcp-auth'
+import type { McpAuthContext } from '../../mcp-auth'
 import { requireUserId, assertNoCrossUserAccess } from '../security'
 import { getDashboardLayoutForUser, saveDashboardLayoutForUser } from '@/server/layouts'
 

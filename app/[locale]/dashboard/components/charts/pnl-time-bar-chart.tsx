@@ -1,1 +1,1 @@
-export { TimeOfDayTradeChart } from './client/pnl-time-bar-chart.tsx'
+export { default as TimeOfDayTradeChart } from './client/pnl-time-bar-chart'

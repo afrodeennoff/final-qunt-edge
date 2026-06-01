@@ -41,7 +41,6 @@ const LEGACY_DASHBOARD_THEME_ALIASES: Record<string, DashboardTheme> = {
   midnight: 'cmmi8o8ic000904l12ucn8i9p',
   ocean: 'cmmi8o8ic000904l12ucn8i9p',
   hass: 'cmntqpq8v000004l78eqihlx5',
-  green: 'cmntqpq8v000004l78eqihlx5',
   hex: 'cmninq0c3000604l25wvb3xgh',
   rose: 'cmninq0c3000604l25wvb3xgh',
   crimson: 'cmninq0c3000604l25wvb3xgh',

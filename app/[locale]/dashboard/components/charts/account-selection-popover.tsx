@@ -1,1 +1,1 @@
-export { AccountSelectionPopover } from './client/account-selection-popover.tsx'
+export { AccountSelectionPopover } from './client/account-selection-popover'

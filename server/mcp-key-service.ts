@@ -139,7 +139,7 @@ export async function listUserApiKeys(): Promise<{ success: true; keys: ApiKeyRe
 
     return {
       success: true,
-      keys: keys.map((k) => ({ id: k.id, keyPrefix: k.keyPrefix, name: k.name, role: k.role, createdAt: k.createdAt, lastUsedAt: k.lastUsedAt })),
+      keys: keys.map((k) => ({ id: k.id, keyPrefix: k.keyPrefix, name: k.name, role: k.role as 'user' | 'admin', createdAt: k.createdAt, lastUsedAt: k.lastUsedAt })),
     }
   } catch (error) {
     if (isMissingTableError(error)) {

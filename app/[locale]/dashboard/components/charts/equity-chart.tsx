@@ -1,1 +1,1 @@
-export { EquityChart } from './client/equity-chart.tsx'
+export { default as EquityChart } from './client/equity-chart'

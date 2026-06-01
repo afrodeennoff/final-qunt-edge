@@ -7,12 +7,9 @@
 import { prisma } from '@/lib/prisma'
 import { computeDrawdown } from '../../mcp-tools' // temporary reuse of existing helper during migration
 import { requireUserId, assertNoCrossUserAccess } from '../security'
+import type { McpAuthContext } from '../../mcp-auth'
 
-export interface AccountHealthContext {
-  userId: string
-}
-
-export async function getAccountHealthHandler(ctx: AccountHealthContext, args: Record<string, unknown>) {
+export async function getAccountHealthHandler(ctx: McpAuthContext, args: Record<string, unknown>) {
   const userId = requireUserId(ctx)
   const requestedUserId = typeof args.userId === 'string' ? args.userId : undefined
   assertNoCrossUserAccess(requestedUserId, userId)

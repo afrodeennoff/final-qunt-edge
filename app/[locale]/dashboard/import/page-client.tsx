@@ -103,7 +103,7 @@ export default function ImportCallbackPageClient() {
           return
         }
 
-        if (!result.success) {
+        if (!result.accessToken) {
           setError('Invalid response from token exchange')
           setStatus('error')
           return

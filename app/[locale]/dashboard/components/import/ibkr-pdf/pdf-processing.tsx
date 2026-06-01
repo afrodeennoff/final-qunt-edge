@@ -38,7 +38,7 @@ import { experimental_useObject as useObject } from '@ai-sdk/react'
 import { z } from 'zod/v3';
 import { ChevronDown, ChevronRight } from "lucide-react"
 import { DataTableColumnHeader } from '../../tables/column-header'
-import { Trade as PrismaTrade } from '@/prisma/generated/prisma/browser'
+import { Trade as PrismaTrade } from '@/prisma/generated/prisma'
 import { generateDeterministicTradeId } from '@/lib/trade-id-utils'
 import { createTradeWithDefaults } from '@/lib/trade-factory'
 
@@ -138,23 +138,23 @@ export default function PdfProcessing({
       setTrades(newTrades);
       
       // Convert ApiTrade to Prisma Trade format for processedTrades
-      const convertedTrades: PrismaTrade[] = newTrades.map(trade => {
+      const convertedTrades = newTrades.map(trade => {
         return createTradeWithDefaults({
           accountNumber: '',
           quantity: trade.quantity,
           entryId: trade.entryId || '',
           closeId: trade.closeId || '',
           instrument: trade.instrument,
-          entryPrice: trade.entryPrice,
-          closePrice: trade.closePrice,
+          entryPrice: Number(trade.entryPrice),
+          closePrice: Number(trade.closePrice),
           entryDate: trade.entryDate,
           closeDate: trade.closeDate,
-          pnl: trade.pnl,
-          timeInPosition: trade.timeInPosition,
+          pnl: Number(trade.pnl),
+          timeInPosition: Number(trade.timeInPosition),
           userId: userId,
           side: trade.side || '',
-          commission: Math.abs(trade.commission || 0),
-        });
+          commission: Math.abs(Number(trade.commission) || 0),
+        }) as unknown as PrismaTrade;
       });
       
       setProcessedTrades(convertedTrades);

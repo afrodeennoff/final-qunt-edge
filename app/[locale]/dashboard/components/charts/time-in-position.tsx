@@ -1,1 +1,1 @@
-export { TimeInPositionChart } from './client/time-in-position.tsx'
+export { default as TimeInPositionChart } from './client/time-in-position'

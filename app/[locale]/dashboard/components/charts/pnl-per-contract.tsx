@@ -1,1 +1,1 @@
-export { PnLPerContractChart } from './client/pnl-per-contract.tsx'
+export { default as PnLPerContractChart } from './client/pnl-per-contract'

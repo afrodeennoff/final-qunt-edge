@@ -6,7 +6,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { requireUserId } from '../security'
-import type { McpAuthContext } from '../mcp-auth'
+import type { McpAuthContext } from '../../mcp-auth'
 import { parseOrders, parseInstrumentInformation } from '@/app/api/imports/ibkr/extract-orders/route'
 import { matchOrdersWithFIFO } from '@/app/api/imports/ibkr/fifo-computation/route'
 import { extractTextFromPdf } from '@/app/api/imports/ibkr/ocr/route'

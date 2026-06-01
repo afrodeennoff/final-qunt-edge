@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Trade } from '@/prisma/generated/prisma/client'
+import { Prisma, Trade } from '@/prisma/generated/prisma/client'
 import { Button } from "@/components/ui/button"
 import { formatInTimeZone } from 'date-fns-tz'
 import { useUserStore } from '@/store/user-store'
@@ -50,7 +50,7 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
                                 isValidTrade = false;
                                 return;
                             }
-                            item[key] = quantity;
+                            item[key] = new Prisma.Decimal(quantity);
                             break;
                         case 'pnl':
                             const pnl = parseFloat(cellValue);
@@ -58,7 +58,7 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
                                 isValidTrade = false;
                                 return;
                             }
-                            item[key] = pnl;
+                            item[key] = new Prisma.Decimal(pnl);
                             break;
                         case 'commission':
                             const commission = parseFloat(cellValue) || 0;
@@ -66,7 +66,7 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
                                 isValidTrade = false;
                                 return;
                             }
-                            item[key] = commission;
+                            item[key] = new Prisma.Decimal(commission);
                             break;
                         case 'side':
                             if (!cellValue) {
@@ -82,7 +82,7 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
                                 isValidTrade = false;
                                 return;
                             }
-                            item[key] = price.toString();
+                            item[key] = new Prisma.Decimal(price);
                             break;
                         case 'instrument':
                             if (!cellValue) {
@@ -107,7 +107,7 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
                     }
                     
                     // The date is already in UTC when parsed from a string with timezone info
-                    item.entryDate = date.toISOString().replace('Z', '+00:00');
+                    item.entryDate = new Date(date.toISOString());
                 }
 
                 if (item.closeDate) {
@@ -118,7 +118,7 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
                     }
                     
                     // The date is already in UTC when parsed from a string with timezone info
-                    item.closeDate = date.toISOString().replace('Z', '+00:00');
+                    item.closeDate = new Date(date.toISOString());
                 }
             } catch (e) {
                 isValidTrade = false;
@@ -129,7 +129,7 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
             if (item.entryDate && item.closeDate) {
                 const entryTime = new Date(item.entryDate).getTime();
                 const closeTime = new Date(item.closeDate).getTime();
-                item.timeInPosition = Math.round((closeTime - entryTime) / 1000);
+                item.timeInPosition = new Prisma.Decimal(Math.round((closeTime - entryTime) / 1000));
             } else {
                 isValidTrade = false;
                 return;
@@ -151,8 +151,8 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
         processTrades();
     }, [processTrades]);
 
-    const totalPnL = processedTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0);
-    const totalCommission = processedTrades.reduce((sum, trade) => sum + (trade.commission || 0), 0);
+    const totalPnL = processedTrades.reduce((sum, trade) => sum + (trade.pnl?.toNumber() || 0), 0);
+    const totalCommission = processedTrades.reduce((sum, trade) => sum + (trade.commission?.toNumber() || 0), 0);
     const uniqueInstruments = Array.from(new Set(processedTrades.map(trade => trade.instrument)));
 
     return (
@@ -180,19 +180,19 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
                                     <TableRow key={trade.id}>
                                         <TableCell>{trade.instrument}</TableCell>
                                         <TableCell>{trade.side}</TableCell>
-                                        <TableCell>{trade.quantity}</TableCell>
-                                        <TableCell>{trade.entryPrice}</TableCell>
-                                        <TableCell>{trade.closePrice}</TableCell>
+                                        <TableCell>{trade.quantity?.toNumber()}</TableCell>
+                                        <TableCell>{trade.entryPrice?.toNumber()}</TableCell>
+                                        <TableCell>{trade.closePrice?.toNumber()}</TableCell>
                                         <TableCell>
                                             {trade.entryDate ? formatInTimeZone(new Date(trade.entryDate), timezone, 'yyyy-MM-dd HH:mm:ss') : '-'}
                                         </TableCell>
                                         <TableCell>
                                             {trade.closeDate ? formatInTimeZone(new Date(trade.closeDate), timezone, 'yyyy-MM-dd HH:mm:ss') : '-'}
                                         </TableCell>
-                                        <TableCell className={trade.pnl ? trade.pnl < 0 ? 'text-[color:var(--destructive)]' : 'text-[color:var(--success)]' : ''}>
-                                            {trade.pnl?.toFixed(2)}
+                                        <TableCell className={trade.pnl ? (trade.pnl.toNumber() < 0 ? 'text-[color:var(--destructive)]' : 'text-[color:var(--success)]') : ''}>
+                                            {trade.pnl?.toNumber()?.toFixed(2)}
                                         </TableCell>
-                                        <TableCell>{trade.commission?.toFixed(2)}</TableCell>
+                                        <TableCell>{trade.commission?.toNumber()?.toFixed(2)}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

@@ -1,1 +1,1 @@
-export { WeekdayPNLChart } from './client/weekday-pnl.tsx'
+export { default as WeekdayPNLChart } from './client/weekday-pnl'

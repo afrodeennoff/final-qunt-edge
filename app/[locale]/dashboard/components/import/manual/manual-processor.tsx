@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from 'sonner'
-import { Trade } from '@/prisma/generated/prisma/browser'
+import { Trade, Prisma } from '@/prisma/generated/prisma'
 import { useI18n } from '@/locales/client'
 import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { generateTradeHash } from '@/lib/utils'
@@ -74,14 +74,14 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
     setFormData({
       instrument: trade.instrument || '',
       side: (trade.side as 'long' | 'short') || 'long',
-      quantity: trade.quantity || 0,
-      entryPrice: trade.entryPrice ? parseFloat(trade.entryPrice) : 0,
-      closePrice: trade.closePrice ? parseFloat(trade.closePrice) : null,
+      quantity: Number(trade.quantity) || 0,
+      entryPrice: trade.entryPrice ? Number(trade.entryPrice) : 0,
+      closePrice: trade.closePrice ? Number(trade.closePrice) : null,
       entryDate: trade.entryDate ? new Date(trade.entryDate).toISOString().slice(0, 16) : '',
       closeDate: trade.closeDate ? new Date(trade.closeDate).toISOString().slice(0, 16) : null,
-      pnl: trade.pnl || 0,
-      timeInPosition: trade.timeInPosition || null,
-      commission: trade.commission || null,
+      pnl: Number(trade.pnl) || 0,
+      timeInPosition: trade.timeInPosition ? Number(trade.timeInPosition) : null,
+      commission: trade.commission ? Number(trade.commission) : null,
     })
     setEditingIndex(index)
     setIsDialogOpen(true)
@@ -122,14 +122,14 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
     const trade: Partial<Trade> = {
       instrument: formData.instrument,
       side: formData.side,
-      quantity: formData.quantity,
-      entryPrice: formData.entryPrice.toString(),
-      closePrice: formData.closePrice ? formData.closePrice.toString() : undefined,
-      entryDate: new Date(formData.entryDate).toISOString().replace('Z', '+00:00'),
-      closeDate: formData.closeDate ? new Date(formData.closeDate).toISOString().replace('Z', '+00:00') : undefined,
-      pnl: formData.pnl,
-      timeInPosition: timeInPosition || undefined,
-      commission: commission || undefined,
+      quantity: new Prisma.Decimal(formData.quantity),
+      entryPrice: new Prisma.Decimal(formData.entryPrice.toString()),
+      closePrice: formData.closePrice ? new Prisma.Decimal(formData.closePrice.toString()) : undefined,
+      entryDate: new Date(formData.entryDate),
+      closeDate: formData.closeDate ? new Date(formData.closeDate) : undefined,
+      pnl: new Prisma.Decimal(formData.pnl),
+      timeInPosition: timeInPosition ? new Prisma.Decimal(timeInPosition) : undefined,
+      commission: commission ? new Prisma.Decimal(commission) : undefined,
       tags: ['manual'],
     }
 
@@ -152,8 +152,8 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
     setEditingIndex(null)
   }
 
-  const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0), [processedTrades])
-  const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.commission || 0), 0), [processedTrades])
+  const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (Number(trade.pnl) || 0), 0), [processedTrades])
+  const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + (Number(trade.commission) || 0), 0), [processedTrades])
   const uniqueInstruments = useMemo(() => Array.from(new Set(processedTrades.map(trade => trade.instrument))), [processedTrades])
 
   return (
@@ -200,17 +200,17 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
                       <TableRow key={trade.id || index}>
                         <TableCell>{trade.instrument}</TableCell>
                         <TableCell>{trade.side}</TableCell>
-                        <TableCell>{trade.quantity}</TableCell>
-                        <TableCell>{trade.entryPrice}</TableCell>
-                        <TableCell>{trade.closePrice || '-'}</TableCell>
+                        <TableCell>{String(trade.quantity ?? '')}</TableCell>
+                        <TableCell>{String(trade.entryPrice ?? '')}</TableCell>
+                        <TableCell>{trade.closePrice ? String(trade.closePrice) : '-'}</TableCell>
                         <TableCell>{trade.entryDate ? new Date(trade.entryDate).toLocaleString() : '-'}</TableCell>
                         <TableCell>{trade.closeDate ? new Date(trade.closeDate).toLocaleString() : '-'}</TableCell>
-                        <TableCell className={trade.pnl && trade.pnl >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}>
+                        <TableCell className={trade.pnl != null && Number(trade.pnl) >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}>
                           {trade.pnl?.toFixed(2)}
                         </TableCell>
                         <TableCell>
                           {trade.timeInPosition
-                            ? `${Math.floor((trade.timeInPosition || 0) / 60)}m ${Math.floor((trade.timeInPosition || 0) % 60)}s`
+                            ? `${Math.floor((Number(trade.timeInPosition) || 0) / 60)}m ${Math.floor((Number(trade.timeInPosition) || 0) % 60)}s`
                             : '-'}
                         </TableCell>
                         <TableCell>{trade.commission?.toFixed(2) || '-'}</TableCell>

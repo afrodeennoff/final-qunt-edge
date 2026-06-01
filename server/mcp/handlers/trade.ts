@@ -5,13 +5,13 @@
  */
 
 import { prisma } from '@/lib/prisma'
-import type { AccountHealthContext } from './account'
+import type { McpAuthContext } from '../../mcp-auth'
 import { requireUserId, assertNoCrossUserAccess } from '../security'
 
 // Trade handler stubs — extraction in progress per plan Tasks 6-12
 // Full extraction follows the exact getAccountHealthHandler pattern
 
-export async function listTradesHandler(ctx: AccountHealthContext, args: Record<string, unknown>) {
+export async function listTradesHandler(ctx: McpAuthContext, args: Record<string, unknown>) {
   const userId = requireUserId(ctx)
   const limit = Math.min(Math.max(Number(args.limit) || 50, 1), 200)
   const offset = Math.max(Number(args.offset) || 0, 0)
@@ -21,7 +21,7 @@ export async function listTradesHandler(ctx: AccountHealthContext, args: Record<
   return prisma.trade.findMany({ where, orderBy: { entryDate: 'desc' }, take: limit, skip: offset })
 }
 
-export async function getPerformanceSummaryHandler(ctx: AccountHealthContext, args: Record<string, unknown>) {
+export async function getPerformanceSummaryHandler(ctx: McpAuthContext, args: Record<string, unknown>) {
   const userId = requireUserId(ctx)
   const where: Record<string, unknown> = { userId }
   if (args.startDate) where.entryDate = { gte: new Date(args.startDate as string) }
@@ -41,7 +41,7 @@ export async function getPerformanceSummaryHandler(ctx: AccountHealthContext, ar
   }
 }
 
-export async function getRiskMetricsHandler(ctx: AccountHealthContext, args: Record<string, unknown>) {
+export async function getRiskMetricsHandler(ctx: McpAuthContext, args: Record<string, unknown>) {
   const userId = requireUserId(ctx)
   const requestedUserId = typeof args.userId === 'string' ? args.userId : undefined
   assertNoCrossUserAccess(requestedUserId, userId)
@@ -64,7 +64,7 @@ export async function getRiskMetricsHandler(ctx: AccountHealthContext, args: Rec
 // Additional handlers for analyze_trade, update_trade_tags, add_trade_review_note
 // follow the same pattern — to be extracted from mcp-tools.ts
 
-export async function createTradeHandler(ctx: AccountHealthContext, args: Record<string, unknown>) {
+export async function createTradeHandler(ctx: McpAuthContext, args: Record<string, unknown>) {
   const userId = requireUserId(ctx)
 
   // Basic required field validation (inputSchema will also enforce at tool level)
@@ -130,7 +130,7 @@ export async function createTradeHandler(ctx: AccountHealthContext, args: Record
   return trade
 }
 
-export async function updateTradeHandler(ctx: AccountHealthContext, args: Record<string, unknown>) {
+export async function updateTradeHandler(ctx: McpAuthContext, args: Record<string, unknown>) {
   const userId = requireUserId(ctx)
 
   const tradeId = typeof args.tradeId === 'string' && args.tradeId.trim() ? args.tradeId.trim() : null
@@ -221,7 +221,7 @@ export async function updateTradeHandler(ctx: AccountHealthContext, args: Record
  * Accepts imageBase64 (data url or raw base64) or storage path reference.
  * SECURITY: strict ctx.userId only + ownership check.
  */
-export async function uploadTradeImageHandler(ctx: AccountHealthContext, args: Record<string, unknown>) {
+export async function uploadTradeImageHandler(ctx: McpAuthContext, args: Record<string, unknown>) {
   const userId = requireUserId(ctx)
 
   let tradeIds: string[] = []
@@ -266,7 +266,7 @@ export async function uploadTradeImageHandler(ctx: AccountHealthContext, args: R
  * Reuses scoping + ownership pattern from server/trades.ts .
  * Supports Supabase storage delete for paths via service role (best-effort, no crash on fail).
  */
-export async function deleteTradeImageHandler(ctx: AccountHealthContext, args: Record<string, unknown>) {
+export async function deleteTradeImageHandler(ctx: McpAuthContext, args: Record<string, unknown>) {
   const userId = requireUserId(ctx)
 
   let tradeIds: string[] = []

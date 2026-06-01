@@ -1113,7 +1113,7 @@ async function importTrades(ctx: McpAuthContext, args: Record<string, unknown>):
 async function createTrade(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
   try {
     const { createTradeHandler } = await import('@/server/mcp/handlers/trade')
-    const data = await createTradeHandler({ userId: ctx.userId }, args)
+    const data = await createTradeHandler(ctx, args)
     return toolSuccess(data)
   } catch (e: any) {
     return toolError(e.message || 'Failed to create trade')
@@ -1123,7 +1123,7 @@ async function createTrade(ctx: McpAuthContext, args: Record<string, unknown>): 
 async function updateTrade(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
   try {
     const { updateTradeHandler } = await import('@/server/mcp/handlers/trade')
-    const data = await updateTradeHandler({ userId: ctx.userId }, args)
+    const data = await updateTradeHandler(ctx, args)
     return toolSuccess(data)
   } catch (e: any) {
     return toolError(e.message || 'Failed to update trade')
@@ -1133,7 +1133,7 @@ async function updateTrade(ctx: McpAuthContext, args: Record<string, unknown>): 
 async function uploadTradeImage(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
   try {
     const { uploadTradeImageHandler } = await import('@/server/mcp/handlers/trade')
-    const data = await uploadTradeImageHandler({ userId: ctx.userId }, args)
+    const data = await uploadTradeImageHandler(ctx, args)
     return toolSuccess(data)
   } catch (e: any) {
     return toolError(e.message || 'Failed to upload trade image')
@@ -1143,7 +1143,7 @@ async function uploadTradeImage(ctx: McpAuthContext, args: Record<string, unknow
 async function deleteTradeImage(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
   try {
     const { deleteTradeImageHandler } = await import('@/server/mcp/handlers/trade')
-    const data = await deleteTradeImageHandler({ userId: ctx.userId }, args)
+    const data = await deleteTradeImageHandler(ctx, args)
     return toolSuccess(data)
   } catch (e: any) {
     return toolError(e.message || 'Failed to delete trade image')
@@ -1416,7 +1416,7 @@ async function getEquityChart(ctx: McpAuthContext, args: Record<string, unknown>
   }
 
   const trades = await prisma.trade.findMany({
-    where: where as Parameters<typeof prisma.trade.findMany>[0]['where'],
+    where: where as any,
     orderBy: { entryDate: 'asc' },
     select: { pnl: true, entryDate: true },
   })

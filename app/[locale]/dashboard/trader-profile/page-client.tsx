@@ -308,9 +308,8 @@ export default function TraderProfilePageClient() {
         new Date(a.entryDate).getTime() - new Date(b.entryDate).getTime(),
     )
     const pnlValues = sorted.map((trade: { pnl?: number }) => Number(trade.pnl || 0))
-    const netValues = sorted.map(
-      (trade: { pnl?: number; commission?: number }) =>
-        Number(trade.pnl || 0) - Number(trade.commission || 0),
+    const netValues = sorted.map((trade) =>
+      Number(trade.pnl || 0) - Number(trade.commission || 0),
     )
     const wins = pnlValues.filter((v: number) => v > 0)
     const losses = pnlValues.filter((v: number) => v < 0)
@@ -334,7 +333,7 @@ export default function TraderProfilePageClient() {
       maxDD = Math.max(maxDD, peak - running)
     }
     const dayPnl = new Map<string, number>()
-    sorted.forEach((trade: { entryDate: string | Date; pnl?: number }) => {
+    sorted.forEach((trade) => {
       const k = new Date(trade.entryDate).toISOString().slice(0, 10)
       dayPnl.set(k, (dayPnl.get(k) ?? 0) + Number(trade.pnl || 0))
     })
@@ -410,13 +409,13 @@ export default function TraderProfilePageClient() {
   const totalWithdraw = useMemo(
     () =>
       (accounts || []).reduce(
-        (acc: number, acct: { payouts?: { status: string; date: string; amount: number }[] }) =>
+        (acc, acct) =>
           acc +
-          (acct.payouts || [])
+          ((acct as any).payouts || [])
             .filter(
-              (p) => p.status === 'PAID' && isDateWithinRange(new Date(p.date), activeDateRange),
+              (p: any) => p.status === 'PAID' && isDateWithinRange(new Date(p.date), activeDateRange),
             )
-            .reduce((s: number, p: { amount: number }) => s + Number(p.amount || 0), 0),
+            .reduce((s: number, p: any) => s + Number(p.amount || 0), 0),
         0,
       ),
     [accounts, activeDateRange],
@@ -425,11 +424,11 @@ export default function TraderProfilePageClient() {
   const totalCapital = useMemo(
     () =>
       (accounts || []).reduce(
-        (s: number, acct: { startingBalance?: number }) => s + Number(acct.startingBalance || 0),
+        (s: number, acct) => s + Number((acct as any).startingBalance || 0),
         0,
       ) +
       (filteredTrades || []).reduce(
-        (s: number, t: { pnl?: number; commission?: number }) =>
+        (s: number, t) =>
           s + Number(t.pnl || 0) - Number(t.commission || 0),
         0,
       ) -
@@ -444,7 +443,7 @@ export default function TraderProfilePageClient() {
 
   const tradeCalendarDays = useMemo(() => {
     const byDay = new Map<string, Date>()
-    ;(filteredTrades || []).forEach((trade: { entryDate: string | Date }) => {
+    ;(filteredTrades || []).forEach((trade) => {
       const d = new Date(trade.entryDate)
       if (!isNaN(d.getTime())) {
         const k = d.toISOString().slice(0, 10)
@@ -458,7 +457,7 @@ export default function TraderProfilePageClient() {
   const tradePnlByDay = useMemo(() => {
     const m = new Map<string, number>()
     ;(filteredTrades || []).forEach(
-      (trade: { entryDate: string | Date; pnl?: number; commission?: number }) => {
+      (trade) => {
         const k = new Date(trade.entryDate).toISOString().slice(0, 10)
         m.set(k, (m.get(k) ?? 0) + Number(trade.pnl || 0) - Number(trade.commission || 0))
       },

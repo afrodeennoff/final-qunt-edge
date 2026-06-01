@@ -26,7 +26,7 @@ export function computeDrawdown(account: { startingBalance: number; drawdownThre
 async function getAccountHealth(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
   try {
     const { getAccountHealthHandler } = await import('@/server/mcp/handlers/account')
-    const data = await getAccountHealthHandler({ userId: ctx.userId }, args)
+    const data = await getAccountHealthHandler(ctx, args)
     return toolSuccess(data)
   } catch (e: any) {
     return toolError(e.message)
@@ -956,7 +956,7 @@ async function getRiskMetrics(ctx: McpAuthContext, args: Record<string, unknown>
   }
 
   const trades = await prisma.trade.findMany({
-    where: where as Parameters<typeof prisma.trade.findMany>[0]['where'],
+    where: where as any,
     orderBy: { entryDate: 'asc' },
     select: { pnl: true, entryPrice: true, closePrice: true, entryDate: true },
   })
@@ -1110,7 +1110,7 @@ async function listTrades(ctx: McpAuthContext, args: Record<string, unknown>) {
   const dateFilter = buildDateFilter(args)
   if (dateFilter) where.entryDate = dateFilter
   const trades = await prisma.trade.findMany({
-    where: where as Parameters<typeof prisma.trade.findMany>[0]['where'],
+    where: where as any,
     orderBy: { entryDate: 'desc' },
     take: limit,
     skip: offset,
@@ -1130,10 +1130,10 @@ async function getPerformanceSummary(ctx: McpAuthContext, args: Record<string, u
       _count: { id: true },
     }),
     prisma.trade.count({
-      where: { ...where, pnl: { gt: 0 } } as Parameters<typeof prisma.trade.count>[0]['where'],
+      where: { ...where, pnl: { gt: 0 } } as any,
     }),
     prisma.trade.count({
-      where: { ...where, pnl: { lt: 0 } } as Parameters<typeof prisma.trade.count>[0]['where'],
+      where: { ...where, pnl: { lt: 0 } } as any,
     }),
     prisma.trade.aggregate({
       where: { ...where, pnl: { gt: 0 } } as Parameters<typeof prisma.trade.aggregate>[0]['where'],
@@ -1260,7 +1260,7 @@ async function runMonteCarlo(ctx: McpAuthContext, args: Record<string, unknown>)
   }
 
   const trades = await prisma.trade.findMany({
-    where: where as Parameters<typeof prisma.trade.findMany>[0]['where'],
+    where: where as any,
     select: { pnl: true },
   })
 

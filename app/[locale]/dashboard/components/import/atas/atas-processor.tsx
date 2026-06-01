@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { Trade } from "@/prisma/generated/prisma/browser";
+import { Prisma, Trade } from "@/prisma/generated/prisma";
 import { useI18n } from "@/locales/client";
 import { useTradingDomainStore } from "@/store/trading-domain-store";
 import { useUserStore } from "@/store/user-store";
@@ -16,6 +16,7 @@ import { generateTradeHash } from "@/lib/utils";
 import { PlatformProcessorProps } from "../config/platforms";
 import { TradeTableReview } from "../../tables/trade-table-review";
 import { createTradeWithDefaults } from "@/lib/trade-factory";
+import type { ImportTradeDraft } from "@/lib/trade-types";
 
 const formatPnl = (
   pnl: string | undefined
@@ -304,7 +305,7 @@ export default function AtasProcessor({
     // Freeze the duplicate baseline so saving the preview does not make it disappear.
     const tradesForDuplicateCheck =
       duplicateCheckTradesRef.current ?? existingTrades;
-    duplicateCheckTradesRef.current = tradesForDuplicateCheck;
+    duplicateCheckTradesRef.current = tradesForDuplicateCheck as Trade[];
 
     csvData.forEach((row) => {
       const item: Partial<Trade> = {};
@@ -318,27 +319,28 @@ export default function AtasProcessor({
           switch (key) {
             case "quantity":
               quantity = Math.abs(parseFloat(String(cellValue)) || 0);
-              item[key] = quantity;
+              item[key] = new Prisma.Decimal(quantity) as any;
               break;
             case "pnl":
               const { pnl, error } = formatPnl(cellValue);
               if (error) {
                 return;
               }
-              item[key] = pnl;
+              item[key] = new Prisma.Decimal(pnl) as any;
               break;
             case "entryDate":
-            case "closeDate":
-              item[key] = parseAtasDate(cellValue, timezone);
+            case "closeDate": {
+              const dateStr = parseAtasDate(cellValue, timezone);
+              if (dateStr) item[key] = new Date(dateStr) as any;
               break;
+            }
             case "entryPrice":
             case "closePrice":
               if (cellValue) {
-                // Convert to string and remove commas
                 const priceString = String(cellValue).replace(/,/g, "");
-                item[key] = priceString;
+                item[key] = new Prisma.Decimal(priceString) as any;
               } else {
-                item[key] = "0";
+                item[key] = new Prisma.Decimal(0) as any;
               }
               break;
             case "accountNumber":
@@ -408,7 +410,7 @@ export default function AtasProcessor({
         const entryTime = new Date(item.entryDate).getTime();
         const closeTime = new Date(item.closeDate).getTime();
         const timeInPosition = Math.round((closeTime - entryTime) / 1000); // Convert to seconds
-        item.timeInPosition = timeInPosition;
+        item.timeInPosition = new Prisma.Decimal(timeInPosition) as any;
       }
 
       // Handle commissions
@@ -422,8 +424,7 @@ export default function AtasProcessor({
         // User-set commissions will be applied via separate effect
         const commissionKey = `${item.accountNumber}:${item.instrument}`;
         if (existingCommissions[commissionKey]) {
-          item.commission =
-            existingCommissions[commissionKey] * item.quantity!;
+          item.commission = new Prisma.Decimal(existingCommissions[commissionKey]).mul(item.quantity!) as any;
         } else {
           // Track missing commissions by account+instrument combination
           missingCommissionsTemp[commissionKey] = true;
@@ -499,8 +500,8 @@ export default function AtasProcessor({
         
         return {
           ...trade,
-          commission: commissionPerContract * trade.quantity,
-        };
+          commission: new Prisma.Decimal(commissionPerContract).mul(trade.quantity) as any,
+        } as Trade;
       }
       return trade;
     });
@@ -531,13 +532,12 @@ export default function AtasProcessor({
           const commissionKey = `${trade.accountNumber}:${trade.instrument}`;
           if (missingCommissions[commissionKey] !== undefined) {
             const commissionPerContract = missingCommissions[commissionKey];
-            const expectedCommission = commissionPerContract * trade.quantity;
-            // Only update if the commission is different
-            if (trade.commission !== expectedCommission) {
+            const expectedCommission = new Prisma.Decimal(commissionPerContract).mul(trade.quantity);
+            if (!trade.commission?.equals(expectedCommission)) {
               return {
                 ...trade,
                 commission: expectedCommission,
-              };
+              } as Trade;
             }
           }
         }
@@ -565,7 +565,7 @@ export default function AtasProcessor({
       const commissionMap = new Map<string, number>();
       allProcessedTrades.forEach((trade) => {
         if (trade.id && trade.commission) {
-          commissionMap.set(trade.id, trade.commission);
+          commissionMap.set(trade.id, Number(trade.commission));
         }
       });
 
@@ -760,8 +760,8 @@ export default function AtasProcessor({
             <div className="px-2">
               <TradeTableReview
                 tradesParam={filteredTrades.map((trade) =>
-                  createTradeWithDefaults(trade)
-                )}
+                  createTradeWithDefaults(trade as unknown as Partial<ImportTradeDraft>)
+                ) as any}
                 config={{
                   style: {
                     height: "100%",

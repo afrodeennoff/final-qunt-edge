@@ -1,1 +1,1 @@
-export { DailyTickTargetChart } from './client/daily-tick-target.tsx'
+export { default as DailyTickTargetChart } from './client/daily-tick-target'

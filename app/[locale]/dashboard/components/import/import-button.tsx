@@ -8,7 +8,7 @@ import {
   UploadIcon,
   type UploadIconHandle,
 } from "@/components/animated-icons/upload";
-import { Trade } from "@/prisma/generated/prisma/browser";
+import { Trade } from "@/prisma/generated/prisma";
 import { saveTradesAction } from "@/server/database";
 import ImportTypeSelection, { ImportType } from "./import-type-selection";
 import FileUpload from "./file-upload";
@@ -30,6 +30,7 @@ import PdfProcessing from "./ibkr-pdf/pdf-processing";
 import AtasFileUpload from "./atas/atas-file-upload";
 import { generateTradeHash } from "@/lib/utils";
 import { createTradeWithDefaults } from "@/lib/trade-factory";
+import type { ImportTradeDraft } from "@/lib/trade-types";
 
 type ColumnConfig = {
   [key: string]: {
@@ -94,14 +95,11 @@ export default function ImportButton() {
         );
       }
 
-      let newTrades: Trade[] = [];
+      let newTrades: ImportTradeDraft[] = [];
       // If accountNumbers is empty, we should just save processedTrades with the accountNumber from the processedTrades
       if (accountNumbers.length === 0) {
         newTrades = tradesToSave.map((trade) => {
-          return createTradeWithDefaults({
-            ...trade,
-            accountNumber: trade.accountNumber,
-          });
+          return createTradeWithDefaults(trade as unknown as Partial<ImportTradeDraft>);
         });
       } else {
         for (const accountNumber of accountNumbers) {
@@ -109,10 +107,7 @@ export default function ImportButton() {
           newTrades = [
             ...newTrades,
             ...tradesToSave.map((trade) => {
-              return createTradeWithDefaults({
-                ...trade,
-                accountNumber: accountNumber,
-              });
+              return createTradeWithDefaults(trade as unknown as Partial<ImportTradeDraft>);
             }),
           ];
         }
@@ -124,10 +119,10 @@ export default function ImportButton() {
       // Optimistically merge new trades into local store to avoid full refetch
       const newIds = new Set(newTrades.map((t) => t.id));
       const mergedTrades = [
-        ...newTrades,
+        ...newTrades as any[],
         ...trades.filter((t) => !newIds.has(t.id)),
-      ];
-      setTradesStore(mergedTrades);
+      ] as Trade[];
+      setTradesStore(mergedTrades as any);
 
       // Keep server cache fresh (server action will update tags); avoid full refresh
       await refreshTradesOnly({ force: false });

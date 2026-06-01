@@ -1,1 +1,1 @@
-export { TickDistributionChart } from './client/tick-distribution.tsx'
+export { default as TickDistributionChart } from './client/tick-distribution'

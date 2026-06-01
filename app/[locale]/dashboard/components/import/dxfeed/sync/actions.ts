@@ -310,8 +310,8 @@ function buildTradesFromDxFeedReport(
         entryId: `dxfeed_${rt.tradeId}_entry`,
         closeId: `dxfeed_${rt.tradeId}_exit`,
         instrument,
-        entryPrice: rt.entryPrice.toString(),
-        closePrice: rt.exitPrice.toString(),
+        entryPrice: Number(rt.entryPrice),
+        closePrice: Number(rt.exitPrice),
         entryDate: formatTimestamp(entryDate.toISOString()),
         closeDate: formatTimestamp(exitDate.toISOString()),
         pnl,
@@ -322,7 +322,7 @@ function buildTradesFromDxFeedReport(
         tags: ['dxfeed'],
       })
 
-      trades.push(trade)
+      trades.push(trade as unknown as Trade)
 
       logger.debug(`Created trade: ${instrument} ${side} ${quantity} @ ${rt.entryPrice} -> ${rt.exitPrice} = $${pnl.toFixed(2)}`)
     } catch (error) {
@@ -512,7 +512,6 @@ export async function storeDxFeedToken(
         token: tokenJson,
         lastSyncedAt: new Date(),
         updatedAt: new Date(),
-        includedFeeTypes: undefined, // DxFeed has no fee differentiator
       },
       create: {
         userId: user.id,
@@ -520,7 +519,6 @@ export async function storeDxFeedToken(
         accountId,
         token: tokenJson,
         lastSyncedAt: new Date(),
-        includedFeeTypes: undefined, // DxFeed has no fee differentiator
       },
     })
 

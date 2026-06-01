@@ -21,10 +21,8 @@ export async function generateMetadata({
 }
 
 export default async function BlogsPage() {
-  const [t, posts] = await Promise.all([
-    getI18n(),
-    getBlogPosts(true)
-  ])
+  const t = await getI18n()
+  const posts = await getBlogPosts(true)
 
   return (
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">

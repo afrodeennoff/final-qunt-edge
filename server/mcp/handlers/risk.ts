@@ -5,10 +5,10 @@
  */
 
 import { prisma } from '@/lib/prisma'
-import type { AccountHealthContext } from './account'
+import type { McpAuthContext } from '../../mcp-auth'
 import { requireUserId, assertNoCrossUserAccess } from '../security'
 
-export async function getPropComplianceHandler(ctx: AccountHealthContext, args: Record<string, unknown>) {
+export async function getPropComplianceHandler(ctx: McpAuthContext, args: Record<string, unknown>) {
   const userId = requireUserId(ctx)
   const requestedUserId = typeof args.userId === 'string' ? args.userId : undefined
   assertNoCrossUserAccess(requestedUserId, userId)

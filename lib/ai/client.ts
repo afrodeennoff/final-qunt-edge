@@ -60,6 +60,9 @@ export function getAiLanguageModel(feature: AiFeature) {
   const config = validateAiConfig();
 
   if (!config.isValid) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('[AI] OPENROUTER_API_KEY is not configured. AI features are unavailable in production without a valid API key.')
+    }
     if (!hasWarnedMissingApiKey) {
       console.warn("[AI] OPENROUTER_API_KEY is missing or invalid. AI routes will fail.");
       console.warn("[AI] To fix: Add a valid OPENROUTER_API_KEY to your environment variables.");

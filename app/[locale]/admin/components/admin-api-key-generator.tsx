@@ -21,7 +21,7 @@ export function AdminApiKeyGenerator() {
     setIsCreating(true)
     const result = await generateAdminApiKey(name.trim())
     if (result.success) {
-      setCreatedKey(result.result.key)
+      setCreatedKey(result.result.key ?? null)
       setName('')
       toast.success('Admin API key created')
     } else {

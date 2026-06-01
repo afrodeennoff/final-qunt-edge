@@ -7,8 +7,13 @@ const isProductionBuildPhase = process.env.NEXT_PHASE === "phase-production-buil
 export const getWhop = () => {
   if (!whopInstance) {
     const apiKey = process.env.WHOP_API_KEY;
-    if (!apiKey && process.env.NODE_ENV === 'production' && !isProductionBuildPhase) {
-      console.warn("WHOP_API_KEY is missing in production!");
+    if (!apiKey) {
+      if (process.env.NODE_ENV === 'production' && !isProductionBuildPhase) {
+        throw new Error("WHOP_API_KEY is missing. Set WHOP_API_KEY in production environment.")
+      }
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn("WHOP_API_KEY is missing in production!");
+      }
     }
     whopInstance = new Whop({
       apiKey: apiKey || "dummy_key_for_build"
