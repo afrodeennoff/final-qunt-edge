@@ -59,32 +59,43 @@ function useIsActive(item: MobileNavItem): boolean {
     return pathname === item.href
   }
 
-  // For items without exact, match exact pathname
   return pathname === item.href
 }
 
 function TabItem({ item }: { item: MobileNavItem }) {
   const active = useIsActive(item)
   const Icon = item.icon
+  const touchFeedback = React.useRef<HTMLAnchorElement>(null)
+
+  const handleClick = React.useCallback(() => {
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      navigator.vibrate(6)
+    }
+  }, [])
 
   return (
     <Link
+      ref={touchFeedback}
       href={item.href}
+      onClick={handleClick}
       className={cn(
-        'relative group flex flex-1 flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-2xl py-1.5 transition-[opacity,background-color,border-color,transform] duration-200',
+        'relative group flex flex-1 flex-col items-center justify-center gap-0.5 min-h-[52px] min-w-[52px] rounded-2xl py-1.5',
+        'transition-[opacity,background-color,border-color,transform] duration-150',
+        'active:scale-95',
+        'touch-manipulation select-none',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'
       )}
       aria-current={active ? 'page' : undefined}
     >
       <Icon
         className={cn(
-          'size-5 transition-[opacity,background-color,border-color,transform] duration-200',
+          'size-5 transition-[opacity,background-color,border-color,transform] duration-150',
           active ? 'scale-110 text-sidebar-foreground' : 'text-sidebar-foreground/40 group-hover:text-sidebar-foreground/78'
         )}
       />
       <span
         className={cn(
-          'text-[10px] font-medium leading-tight transition-colors duration-200',
+          'text-[10px] font-medium leading-tight transition-colors duration-150',
           active
             ? 'text-sidebar-foreground'
             : 'text-sidebar-foreground/40 group-hover:text-sidebar-foreground/78',
@@ -111,10 +122,17 @@ function MobileBottomNav({ items }: { items?: MobileNavItem[] }) {
 
   return (
     <nav
-      className={cn('fixed inset-x-0 bottom-0 z-40 md:hidden', 'px-3 pb-safe mobile-landscape-compact transition-[opacity,background-color,border-color,transform] duration-200')}
+      className={cn(
+        'fixed inset-x-0 bottom-0 z-40 md:hidden',
+        'px-3 pb-safe mobile-landscape-compact',
+        'animate-in slide-in-from-bottom duration-300 ease-out'
+      )}
       aria-label="Dashboard navigation"
     >
-      <div className="flex h-[4.35rem] items-center justify-around rounded-2xl border-0 bg-card/95 px-2 shadow-[inset_0_1px_0_hsl(var(--primary)/0.04),0_18px_40px_-24px_rgba(0,0,0,0.84)]">
+      <div
+        className="flex h-[4.35rem] items-center justify-around rounded-2xl border-0 bg-card/95 px-2 shadow-[inset_0_1px_0_hsl(var(--primary)/0.04),0_18px_40px_-24px_rgba(0,0,0,0.84)]"
+        style={{ WebkitBackdropFilter: 'blur(24px)', backdropFilter: 'blur(24px)' }}
+      >
         {navItems.map((item) => (
           <TabItem key={item.label} item={item} />
         ))}

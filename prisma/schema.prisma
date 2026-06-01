@@ -413,6 +413,9 @@ model JournalEntry {
   customTags      String[] @default([])
   screenshots     String[] @default([])
 
+  timeframe       String?  // "5m", "15m", "30m", "1H", "4H", "Daily"
+  session         String?  // "London", "NY", "Asia"
+
   pinned          Boolean  @default(false)
   archived        Boolean  @default(false)
 

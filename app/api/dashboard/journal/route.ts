@@ -203,6 +203,8 @@ async function handlePost(request: NextRequest) {
       disciplineScore,
       customTags,
       screenshots,
+      timeframe,
+      session,
     } = body
 
     if (!tradeId || !accountNumber) {
@@ -242,6 +244,8 @@ async function handlePost(request: NextRequest) {
         disciplineScore: disciplineScore ?? null,
         customTags: customTags ?? [],
         screenshots: screenshots ?? [],
+        timeframe: timeframe ?? null,
+        session: session ?? null,
       },
     })
 

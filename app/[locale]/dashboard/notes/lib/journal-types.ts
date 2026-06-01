@@ -14,6 +14,9 @@ export interface JournalEntry {
   customTags: string[]
   screenshots: string[]
 
+  timeframe: string | null
+  session: string | null
+
   pinned: boolean
   archived: boolean
 
@@ -73,6 +76,8 @@ export interface CreateJournalInput {
   disciplineScore?: number
   customTags?: string[]
   screenshots?: string[]
+  timeframe?: string
+  session?: string
 }
 
 export type UpdateJournalInput = Partial<Omit<CreateJournalInput, 'tradeId' | 'accountNumber'>>

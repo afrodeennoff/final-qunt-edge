@@ -218,6 +218,8 @@ export function useJournal(userId: string | null): UseJournalReturn {
       disciplineScore: input.disciplineScore ?? null,
       customTags: input.customTags ?? [],
       screenshots: input.screenshots ?? [],
+      timeframe: input.timeframe ?? null,
+      session: input.session ?? null,
       pinned: false,
       archived: false,
       createdAt: now,

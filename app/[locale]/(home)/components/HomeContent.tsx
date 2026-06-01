@@ -32,9 +32,9 @@ import AIHubVisual from './AIHubVisual'
 import type { HomeLiveHighlights } from '../page'
 import { motion, AnimatePresence, type Variants } from 'motion/react'
 
-const HOME_WIDTH = 'mx-auto w-full max-w-[1100px] px-6'
+const HOME_WIDTH = 'mx-auto w-full max-w-[1100px] px-4 sm:px-6'
 
-const cardMain = 'rounded-xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5 sm:p-6'
+const cardMain = 'rounded-xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-4 sm:p-6'
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },

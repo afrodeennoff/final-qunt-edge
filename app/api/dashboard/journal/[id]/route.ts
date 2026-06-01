@@ -32,6 +32,8 @@ const UPDATE_FIELDS = [
   'disciplineScore',
   'customTags',
   'screenshots',
+  'timeframe',
+  'session',
   'pinned',
   'archived',
 ] as const

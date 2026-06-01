@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useCallback, useRef, type ReactNode } from 'react'
+import { createContext, useContext, useCallback, useRef, useEffect, type ReactNode } from 'react'
 
 type SwipeDirection = 'left' | 'right' | 'up' | 'down'
 
@@ -12,6 +12,7 @@ interface GestureCallbacks {
 interface GestureContextValue {
   registerSwipeArea: (element: HTMLElement, callbacks: GestureCallbacks) => () => void
   vibrate: (pattern?: number | number[]) => void
+  isTouchDevice: boolean
 }
 
 const GestureContext = createContext<GestureContextValue | null>(null)
@@ -19,7 +20,24 @@ const GestureContext = createContext<GestureContextValue | null>(null)
 const SWIPE_THRESHOLD = 50
 const PULL_THRESHOLD = 80
 
+function getPointerCoords(e: PointerEvent | TouchEvent) {
+  if ('touches' in e && e.touches.length > 0) {
+    return { x: e.touches[0].clientX, y: e.touches[0].clientY }
+  }
+  if ('changedTouches' in e && e.changedTouches.length > 0) {
+    return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY }
+  }
+  const pe = e as PointerEvent
+  return { x: pe.clientX, y: pe.clientY }
+}
+
 export function GestureProvider({ children }: { children: ReactNode }) {
+  const [isTouchDevice, setIsTouchDevice] = React.useState(false)
+
+  useEffect(() => {
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0)
+  }, [])
+
   const areasRef = useRef<Map<HTMLElement, GestureCallbacks>>(new Map())
 
   const registerSwipeArea = useCallback((element: HTMLElement, callbacks: GestureCallbacks) => {
@@ -28,15 +46,61 @@ export function GestureProvider({ children }: { children: ReactNode }) {
     let startX = 0
     let startY = 0
     let pulling = false
+    let activePointerId: number | null = null
+
+    const onPointerStart = (e: PointerEvent) => {
+      element.setPointerCapture(e.pointerId)
+      activePointerId = e.pointerId
+      const coords = getPointerCoords(e)
+      startX = coords.x
+      startY = coords.y
+      pulling = false
+    }
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (e.pointerId !== activePointerId) return
+      const coords = getPointerCoords(e)
+      const deltaY = coords.y - startY
+      if (startY < 60 && deltaY > PULL_THRESHOLD && callbacks.onPullToRefresh) {
+        pulling = true
+      }
+    }
+
+    const onPointerEnd = (e: PointerEvent) => {
+      if (e.pointerId !== activePointerId) return
+      activePointerId = null
+
+      if (pulling && callbacks.onPullToRefresh) {
+        callbacks.onPullToRefresh()
+        pulling = false
+        return
+      }
+
+      const deltaX = e.clientX - startX
+      const deltaY = e.clientY - startY
+      const absDeltaX = Math.abs(deltaX)
+      const absDeltaY = Math.abs(deltaY)
+
+      if (Math.max(absDeltaX, absDeltaY) < SWIPE_THRESHOLD) return
+      if (!callbacks.onSwipe) return
+
+      if (absDeltaX > absDeltaY) {
+        callbacks.onSwipe(deltaX > 0 ? 'right' : 'left')
+      } else {
+        callbacks.onSwipe(deltaY > 0 ? 'down' : 'up')
+      }
+    }
 
     const onTouchStart = (e: TouchEvent) => {
-      startX = e.touches[0].clientX
-      startY = e.touches[0].clientY
+      const coords = getPointerCoords(e)
+      startX = coords.x
+      startY = coords.y
       pulling = false
     }
 
     const onTouchMove = (e: TouchEvent) => {
-      const deltaY = e.touches[0].clientY - startY
+      const coords = getPointerCoords(e)
+      const deltaY = coords.y - startY
       if (startY < 60 && deltaY > PULL_THRESHOLD && callbacks.onPullToRefresh) {
         pulling = true
       }
@@ -49,8 +113,9 @@ export function GestureProvider({ children }: { children: ReactNode }) {
         return
       }
 
-      const deltaX = e.changedTouches[0].clientX - startX
-      const deltaY = e.changedTouches[0].clientY - startY
+      const coords = getPointerCoords(e)
+      const deltaX = coords.x - startX
+      const deltaY = coords.y - startY
       const absDeltaX = Math.abs(deltaX)
       const absDeltaY = Math.abs(deltaY)
 
@@ -67,12 +132,20 @@ export function GestureProvider({ children }: { children: ReactNode }) {
     element.addEventListener('touchstart', onTouchStart, { passive: true })
     element.addEventListener('touchmove', onTouchMove, { passive: true })
     element.addEventListener('touchend', onTouchEnd, { passive: true })
+    element.addEventListener('pointerdown', onPointerStart, { passive: true })
+    element.addEventListener('pointermove', onPointerMove, { passive: true })
+    element.addEventListener('pointerup', onPointerEnd, { passive: true })
+    element.addEventListener('pointercancel', onPointerEnd, { passive: true })
 
     return () => {
       areasRef.current.delete(element)
       element.removeEventListener('touchstart', onTouchStart)
       element.removeEventListener('touchmove', onTouchMove)
       element.removeEventListener('touchend', onTouchEnd)
+      element.removeEventListener('pointerdown', onPointerStart)
+      element.removeEventListener('pointermove', onPointerMove)
+      element.removeEventListener('pointerup', onPointerEnd)
+      element.removeEventListener('pointercancel', onPointerEnd)
     }
   }, [])
 
@@ -83,7 +156,7 @@ export function GestureProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <GestureContext.Provider value={{ registerSwipeArea, vibrate }}>
+    <GestureContext.Provider value={{ registerSwipeArea, vibrate, isTouchDevice }}>
       {children}
     </GestureContext.Provider>
   )
