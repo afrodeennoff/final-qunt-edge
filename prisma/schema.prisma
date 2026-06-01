@@ -36,6 +36,7 @@ model User {
   referralRedemption ReferralRedemption? @relation("UserReferralRedemption")
   subscription       Subscription?       @relation("UserSubscription")
   dashboardLayout    DashboardLayout?    @relation("UserDashboardLayout")
+  journalTagDefaults Json?               @default("{}")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

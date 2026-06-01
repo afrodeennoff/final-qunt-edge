@@ -518,3 +518,39 @@ export async function getJournalTradesAction(
 
     return { entries, total, page, pageSize, totalPages: Math.ceil(total / pageSize) }
  }
+
+// ── Journal Tag Defaults ──
+
+export interface JournalTagDefaults {
+  sessions: string[]
+  timeframes: string[]
+  ictConcepts: string[]
+}
+
+const DEFAULT_TAG_DEFAULTS: JournalTagDefaults = {
+  sessions: ['London', 'NY', 'Asia'],
+  timeframes: ['5m', '15m', '30m', '1H', '4H', 'Daily'],
+  ictConcepts: ['OB', 'FVG', 'Liq Sweep', 'Breaker', 'MSS', 'ChoCh'],
+}
+
+export async function getJournalTagDefaults(): Promise<JournalTagDefaults> {
+  const userId = await getDatabaseUserId().catch(() => null)
+  if (!userId) return DEFAULT_TAG_DEFAULTS
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { journalTagDefaults: true } })
+  if (!user?.journalTagDefaults || user.journalTagDefaults === '{}') return DEFAULT_TAG_DEFAULTS
+  try {
+    const parsed = JSON.parse(JSON.stringify(user.journalTagDefaults)) as Partial<JournalTagDefaults>
+    return {
+      sessions: parsed.sessions ?? DEFAULT_TAG_DEFAULTS.sessions,
+      timeframes: parsed.timeframes ?? DEFAULT_TAG_DEFAULTS.timeframes,
+      ictConcepts: parsed.ictConcepts ?? DEFAULT_TAG_DEFAULTS.ictConcepts,
+    }
+  } catch {
+    return DEFAULT_TAG_DEFAULTS
+  }
+}
+
+export async function saveJournalTagDefaults(defaults: JournalTagDefaults): Promise<void> {
+  const userId = await getDatabaseUserId()
+  await prisma.user.update({ where: { id: userId }, data: { journalTagDefaults: defaults as any } })
+}

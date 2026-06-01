@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { useUserStore } from '@/store/user-store'
 import { useJournal } from './lib/use-journal'
+import { getJournalTagDefaults, saveJournalTagDefaults, type JournalTagDefaults } from '@/server/journal'
 import { createSingleTradeAction } from '@/server/trades'
 import { RatingStars } from './components/rating-stars'
 import { ScreenshotGrid } from './components/screenshot-grid'
@@ -23,9 +24,6 @@ import {
 
 // ── Constants ──
 
-const SESSION_DEFAULTS = ['London', 'NY', 'Asia']
-const TIMEFRAME_DEFAULTS = ['5m', '15m', '30m', '1H', '4H', 'Daily']
-const ICT_DEFAULTS = ['OB', 'FVG', 'Liq Sweep', 'Breaker', 'MSS', 'ChoCh']
 const EMOTION_CHIPS = ['Calm', 'Focused', 'Anxious', 'FOMO', 'Revenge', 'Greedy', 'Fearful'] as const
 
 // ── Formatters ──
@@ -231,8 +229,31 @@ export default function JournalClient() {
   const [modalStars, setModalStars] = useState<number | null>(null)
   const [modalPreNotes, setModalPreNotes] = useState('')
   const [modalPostNotes, setModalPostNotes] = useState('')
+  const [modalScreenshots, setModalScreenshots] = useState<string[]>([])
   const [newInstrument, setNewInstrument] = useState('')
   const [newSide, setNewSide] = useState<'LONG' | 'SHORT' | null>(null)
+
+  // Tag defaults loaded from server (persisted per user)
+  const [tagDefaults, setTagDefaults] = useState<JournalTagDefaults>({
+    sessions: ['London', 'NY', 'Asia'],
+    timeframes: ['5m', '15m', '30m', '1H', '4H', 'Daily'],
+    ictConcepts: ['OB', 'FVG', 'Liq Sweep', 'Breaker', 'MSS', 'ChoCh'],
+  })
+
+  useEffect(() => {
+    getJournalTagDefaults().then(defaults => setTagDefaults(defaults))
+  }, [])
+
+  const addAndPersistTag = useCallback(
+    (category: 'sessions' | 'timeframes' | 'ictConcepts', tag: string) => {
+      if (!tagDefaults[category].includes(tag)) {
+        const newDefaults = { ...tagDefaults, [category]: [...tagDefaults[category], tag] }
+        setTagDefaults(newDefaults)
+        saveJournalTagDefaults(newDefaults)
+      }
+    },
+    [tagDefaults],
+  )
 
   const {
     cards, isLoading, expandedId,
@@ -315,9 +336,9 @@ export default function JournalClient() {
       setHasUnsaved(true)
       saveTimerRef.current = setTimeout(() => setSaving(false), 1500)
       if (entryId?.startsWith('temp-')) {
-        const { preTradeNotes, postTradeReview, emotions, confidenceRating, disciplineScore, customTags, screenshots } = selectedCard.journal
+        const { preTradeNotes, postTradeReview, emotions, confidenceRating, disciplineScore, customTags, screenshots, timeframe, session } = selectedCard.journal
         handleCreate(selectedCard.trade.id, selectedCard.trade.accountNumber, {
-          preTradeNotes, postTradeReview, emotions, confidenceRating, disciplineScore, customTags, screenshots,
+          preTradeNotes, postTradeReview, emotions, confidenceRating, disciplineScore, customTags, screenshots, timeframe, session,
           [field]: value,
         })
         return
@@ -355,16 +376,14 @@ export default function JournalClient() {
     // Populate modal form from existing journal data
     const j = card.journal
     const allTags: string[] = j?.customTags ?? []
-    const knownSessionTags = new Set(SESSION_DEFAULTS)
-    const knownTfTags = new Set(TIMEFRAME_DEFAULTS)
-    const knownIctTags = new Set(ICT_DEFAULTS)
-    setModalSession(allTags.filter(t => knownSessionTags.has(t)))
-    setModalTimeframe(allTags.filter(t => knownTfTags.has(t)))
-    setModalIctTags(allTags.filter(t => knownIctTags.has(t)))
+    setModalSession(j?.session ? j.session.split(',').map(s => s.trim()).filter(Boolean) : [])
+    setModalTimeframe(j?.timeframe ? j.timeframe.split(',').map(s => s.trim()).filter(Boolean) : [])
+    setModalIctTags(allTags)
     setModalEmotion(j?.emotions ?? null)
     setModalStars(j?.confidenceRating ?? null)
     setModalPreNotes(j?.preTradeNotes ?? '')
     setModalPostNotes(j?.postTradeReview ?? '')
+    setModalScreenshots(j?.screenshots ?? [])
     setIsNewTrade(false)
     setModalOpen(true)
   }, [toggleExpand, handleCreate])
@@ -378,6 +397,7 @@ export default function JournalClient() {
     setModalStars(null)
     setModalPreNotes('')
     setModalPostNotes('')
+    setModalScreenshots([])
     setNewInstrument('')
     setNewSide(null)
     setIsNewTrade(true)
@@ -417,13 +437,16 @@ export default function JournalClient() {
         journal: null,
       }
       addCard(newCard)
-      const tags = [...modalSession, ...modalTimeframe, ...modalIctTags]
+      const tags = [...modalIctTags]
       await handleCreate(trade.id, trade.accountNumber, {
         preTradeNotes: modalPreNotes || null,
         postTradeReview: modalPostNotes || null,
         emotions: modalEmotion,
         confidenceRating: modalStars,
         customTags: tags,
+        timeframe: modalTimeframe.join(', ') || null,
+        session: modalSession.join(', ') || null,
+        screenshots: modalScreenshots,
       })
       refetch()
       setModalOpen(false)
@@ -435,8 +458,8 @@ export default function JournalClient() {
       return
     }
 
-    // Build custom tags from all tag arrays
-    const tags = [...modalSession, ...modalTimeframe, ...modalIctTags]
+    // Build custom tags from ICT tags only; session/timeframe go to dedicated fields
+    const tags = [...modalIctTags]
 
     // Update all journal fields at once
     const entryId = selectedCard.journal.id
@@ -447,6 +470,9 @@ export default function JournalClient() {
         emotions: modalEmotion,
         confidenceRating: modalStars,
         customTags: tags,
+        timeframe: modalTimeframe.join(', ') || null,
+        session: modalSession.join(', ') || null,
+        screenshots: modalScreenshots,
       })
     } else {
       handleUpdate(entryId, {
@@ -455,6 +481,9 @@ export default function JournalClient() {
         emotions: modalEmotion,
         confidenceRating: modalStars,
         customTags: tags,
+        timeframe: modalTimeframe.join(', ') || null,
+        session: modalSession.join(', ') || null,
+        screenshots: modalScreenshots,
       })
     }
 
@@ -669,7 +698,7 @@ export default function JournalClient() {
 
                     // Separate ICT tags from session/timeframe tags
                     const ictTags = (card.journal?.customTags ?? []).filter(t =>
-                      ICT_DEFAULTS.includes(t as (typeof ICT_DEFAULTS)[number])
+                      tagDefaults.ictConcepts.includes(t)
                     )
 
                      return (
@@ -863,42 +892,78 @@ export default function JournalClient() {
                 {/* SESSION */}
                 <div>
                   <div className="text-[10px] text-white/50 tracking-widest mb-1.5">SESSION</div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {SESSION_DEFAULTS.map(s => {
-                      const active = modalSession.includes(s)
-                      return <button key={s} type="button" onClick={() => setModalSession(active ? modalSession.filter(x=>x!==s) : [...modalSession, s])}
-                        className={cn('px-3 py-1 rounded-full text-xs border transition', active ? 'border-[#00ff9f] bg-[#00ff9f]/10 text-[#00ff9f]' : 'border-white/10 text-white/50 hover:border-white/30')}>
-                        {s}
-                      </button>
-                    })}
+                  <TagInput
+                    tags={modalSession}
+                    onAdd={(tag) => {
+                      if (!modalSession.includes(tag)) {
+                        setModalSession([...modalSession, tag])
+                        addAndPersistTag('sessions', tag)
+                      }
+                    }}
+                    onRemove={(tag) => setModalSession(modalSession.filter(x => x !== tag))}
+                    placeholder={tagDefaults.sessions.length ? `e.g. ${tagDefaults.sessions[0]}…` : 'Add session…'}
+                  />
+                  <div className="flex flex-wrap gap-1 mt-1.5">
+                    {tagDefaults.sessions
+                      .filter(s => !modalSession.includes(s))
+                      .map(s => (
+                        <button key={s} type="button" onClick={() => setModalSession([...modalSession, s])}
+                          className="px-2 py-0.5 rounded text-[10px] border border-white/10 text-white/40 hover:border-white/30 hover:text-white/60 transition">
+                          + {s}
+                        </button>
+                      ))}
                   </div>
                 </div>
 
                 {/* TIMEFRAME */}
                 <div>
                   <div className="text-[10px] text-white/50 tracking-widest mb-1.5">TIMEFRAME</div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {TIMEFRAME_DEFAULTS.map(tf => {
-                      const active = modalTimeframe.includes(tf)
-                      return <button key={tf} type="button" onClick={() => setModalTimeframe(active ? modalTimeframe.filter(x=>x!==tf) : [...modalTimeframe, tf])}
-                        className={cn('px-3 py-1 rounded-full text-xs border transition', active ? 'border-[#00ff9f] bg-[#00ff9f]/10 text-[#00ff9f]' : 'border-white/10 text-white/50 hover:border-white/30')}>
-                        {tf}
-                      </button>
-                    })}
+                  <TagInput
+                    tags={modalTimeframe}
+                    onAdd={(tag) => {
+                      if (!modalTimeframe.includes(tag)) {
+                        setModalTimeframe([...modalTimeframe, tag])
+                        addAndPersistTag('timeframes', tag)
+                      }
+                    }}
+                    onRemove={(tag) => setModalTimeframe(modalTimeframe.filter(x => x !== tag))}
+                    placeholder={tagDefaults.timeframes.length ? `e.g. ${tagDefaults.timeframes[0]}…` : 'Add timeframe…'}
+                  />
+                  <div className="flex flex-wrap gap-1 mt-1.5">
+                    {tagDefaults.timeframes
+                      .filter(tf => !modalTimeframe.includes(tf))
+                      .map(tf => (
+                        <button key={tf} type="button" onClick={() => setModalTimeframe([...modalTimeframe, tf])}
+                          className="px-2 py-0.5 rounded text-[10px] border border-white/10 text-white/40 hover:border-white/30 hover:text-white/60 transition">
+                          + {tf}
+                        </button>
+                      ))}
                   </div>
                 </div>
 
                 {/* ICT CONCEPTS */}
                 <div>
                   <div className="text-[10px] text-white/50 tracking-widest mb-1.5">ICT CONCEPTS</div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {ICT_DEFAULTS.map(c => {
-                      const active = modalIctTags.includes(c)
-                      return <button key={c} type="button" onClick={() => setModalIctTags(active ? modalIctTags.filter(x=>x!==c) : [...modalIctTags, c])}
-                        className={cn('px-3 py-1 rounded-full text-xs border transition', active ? 'border-[#00ff9f] bg-[#00ff9f]/10 text-[#00ff9f]' : 'border-white/10 text-white/50 hover:border-white/30')}>
-                        {c}
-                      </button>
-                    })}
+                  <TagInput
+                    tags={modalIctTags}
+                    onAdd={(tag) => {
+                      if (!modalIctTags.includes(tag)) {
+                        setModalIctTags([...modalIctTags, tag])
+                        addAndPersistTag('ictConcepts', tag)
+                      }
+                    }}
+                    onRemove={(tag) => setModalIctTags(modalIctTags.filter(x => x !== tag))}
+                    placeholder={tagDefaults.ictConcepts.length ? `e.g. ${tagDefaults.ictConcepts[0]}…` : 'Add concept…'}
+                  />
+                  <div className="flex flex-wrap gap-1 mt-1.5">
+                    {tagDefaults.ictConcepts
+                      .filter(c => !modalIctTags.includes(c))
+                      .map(c => (
+                        <button key={c} type="button" onClick={() => setModalIctTags([...modalIctTags, c])}
+                          className="px-2 py-0.5 rounded text-[10px] border border-white/10 text-white/40 hover:border-white/30 hover:text-white/60 transition">
+                          + {c}
+                        </button>
+                      ))}
                   </div>
                 </div>
 
@@ -943,11 +1008,13 @@ export default function JournalClient() {
                 {/* Screenshots */}
                 <div>
                   <div className="text-[10px] text-white/50 tracking-widest mb-1.5">SCREENSHOTS</div>
-                  {!isNewTrade && selectedCard?.journal ? (
-                    <ScreenshotGrid screenshots={selectedCard.journal.screenshots ?? []} onChange={v => update('screenshots', v)} />
-                  ) : (
-                    <div className="h-16 rounded-lg border border-dashed border-white/10 flex items-center justify-center text-white/20 text-xs">Drop screenshots here (coming soon)</div>
-                  )}
+                  <ScreenshotGrid
+                    screenshots={isNewTrade ? modalScreenshots : (selectedCard?.journal?.screenshots ?? [])}
+                    onChange={v => {
+                      setModalScreenshots(v)
+                      if (!isNewTrade && selectedCard?.journal) update('screenshots', v)
+                    }}
+                  />
                 </div>
               </div>
 
