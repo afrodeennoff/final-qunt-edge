@@ -21,6 +21,13 @@ export const ListJournalEntriesInput = z.object({
   offset: z.number().int().min(0).optional(),
 }).strict()
 
+export const CreateJournalEntryInput = z.object({
+  day: z.string(),
+  mood: z.string(),
+  emotionValue: z.number().min(0).max(100).optional(),
+  journalContent: z.string().optional(),
+}).strict()
+
 export const UpdateJournalEntryInput = z.object({
   day: z.string(),
   mood: z.string().optional(),
