@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { getStatisticsAction } from '@/server/statistics'
+import { shouldUseDevMockTrades } from '@/lib/feature-flags'
+import { generateMockTrades } from '@/lib/mock-trades'
+import { computeStatistics, type ComputableTrade } from '@/lib/compute-statistics'
 import { StatsTable, type StatsTableRow } from './stats-table'
 import type { StatisticsResult, SetupStat, WeekdayStat, TickerStat } from '../types'
 import { useUserStore } from '@/store/user-store'
@@ -92,7 +95,20 @@ export default function StatisticsClient() {
   useEffect(() => {
     setLoading(true)
     getStatisticsAction(PERIOD_DAYS[period], selectedAccount || undefined).then(result => {
-      setData(result)
+      if (result.grandTotal === 0 && shouldUseDevMockTrades()) {
+        const mockTrades = generateMockTrades('demo', 120)
+        const computable: ComputableTrade[] = mockTrades.map(t => ({
+          id: t.id,
+          instrument: t.instrument,
+          side: t.side,
+          pnl: t.pnl,
+          entryDate: t.entryDate,
+          journal: null,
+        }))
+        setData(computeStatistics(computable))
+      } else {
+        setData(result)
+      }
       setLoading(false)
     })
   }, [period, selectedAccount])

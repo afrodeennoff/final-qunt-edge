@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { getJournalTradesAction } from '@/server/journal'
+import { shouldUseDevMockTrades } from '@/lib/feature-flags'
+import { generateMockTrades } from '@/lib/mock-trades'
 import type {
   TradeJournalCard,
   JournalEntry,
@@ -111,6 +113,29 @@ export function useJournal(userId: string | null): UseJournalReturn {
         allServerCards = [...allServerCards, ...pageCards]
         hasMore = currentPage < result.totalPages
         currentPage += 1
+      }
+
+      // Mock data fallback — mirrors DataProvider behavior for dev consistency
+      if (allServerCards.length === 0 && shouldUseDevMockTrades() && userId) {
+        const mockTrades = generateMockTrades(userId)
+        allServerCards = mockTrades.map(t => ({
+          trade: {
+            id: t.id,
+            instrument: t.instrument,
+            side: t.side ?? 'Long',
+            entryPrice: t.entryPrice,
+            closePrice: t.closePrice ?? 0,
+            pnl: t.pnl,
+            commission: t.commission ?? 0,
+            quantity: t.quantity,
+            entryDate: typeof t.entryDate === 'string' ? t.entryDate : t.entryDate.toISOString(),
+            closeDate: typeof t.closeDate === 'string' ? t.closeDate : t.closeDate.toISOString(),
+            timeInPosition: t.timeInPosition ?? 0,
+            tags: t.tags ?? [],
+            accountNumber: t.accountNumber,
+          },
+          journal: null,
+        }))
       }
 
       const pending = loadPending(userId)
