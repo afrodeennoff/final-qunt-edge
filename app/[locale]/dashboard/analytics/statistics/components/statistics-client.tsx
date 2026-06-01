@@ -1,15 +1,13 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { getStatisticsAction } from '@/server/statistics'
-import { shouldUseDevMockTrades } from '@/lib/feature-flags'
-import { generateMockTrades } from '@/lib/mock-trades'
+import { useRef, useState, useMemo } from 'react'
 import { computeStatistics, type ComputableTrade } from '@/lib/compute-statistics'
 import { StatsTable, type StatsTableRow } from './stats-table'
 import type { StatisticsResult, SetupStat, WeekdayStat, TickerStat } from '../types'
 import { useUserStore } from '@/store/user-store'
 import { cn } from '@/lib/utils'
 import { ChevronDown } from 'lucide-react'
+import { useDashboardStats } from '@/context/data-provider'
 
 
 type TimePeriod = '7d' | '14d' | '30d' | '90d' | 'all'
@@ -77,8 +75,8 @@ function statToRow(s: TickerStat | SetupStat | WeekdayStat): StatsTableRow {
 
 export default function StatisticsClient() {
   const accounts = useUserStore(s => s.accounts)
-  const [data, setData] = useState<StatisticsResult | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { formattedTrades } = useDashboardStats()
+
   const [period, setPeriod] = useState<TimePeriod>('all')
   const [selectedAccount, setSelectedAccount] = useState<string | null>(null)
   const [accountOpen, setAccountOpen] = useState(false)
@@ -92,28 +90,33 @@ export default function StatisticsClient() {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  useEffect(() => {
-    setLoading(true)
-    getStatisticsAction(PERIOD_DAYS[period], selectedAccount || undefined).then(result => {
-      if (result.grandTotal === 0 && shouldUseDevMockTrades()) {
-        const mockTrades = generateMockTrades('demo', 120)
-        const computable: ComputableTrade[] = mockTrades.map(t => ({
-          id: t.id,
-          instrument: t.instrument,
-          side: t.side,
-          pnl: t.pnl,
-          entryDate: t.entryDate,
-          journal: null,
-        }))
-        setData(computeStatistics(computable))
-      } else {
-        setData(result)
-      }
-      setLoading(false)
-    })
-  }, [period, selectedAccount])
+  const data = useMemo(() => {
+    let trades = formattedTrades
 
-  if (loading) {
+    if (period !== 'all') {
+      const cutoff = new Date(Date.now() - PERIOD_DAYS[period]! * 86400000)
+      trades = trades.filter(t => new Date(t.entryDate) >= cutoff)
+    }
+    if (selectedAccount) {
+      trades = trades.filter(t => t.accountNumber === selectedAccount)
+    }
+
+    const computable: ComputableTrade[] = trades.map(t => ({
+      id: t.id,
+      instrument: t.instrument,
+      side: t.side,
+      pnl: t.pnl,
+      entryDate: t.entryDate,
+      journal: (t as any).journal ?? null,
+    }))
+
+    return computeStatistics(computable)
+  }, [formattedTrades, period, selectedAccount])
+
+  // Use provider's loading state if available, otherwise derive from empty trades
+  const isLoading = formattedTrades.length === 0 && period === 'all' && !selectedAccount  // rough heuristic
+
+  if (isLoading) {
     return (
       <div className="max-w-[1400px] mx-auto px-6 py-6 space-y-5 bg-[#0a0c0a] min-h-screen">
         <div className="h-5 w-24 bg-white/10 rounded" />
@@ -132,8 +135,8 @@ export default function StatisticsClient() {
     )
   }
 
-  if (!data) {
-    return <div className="p-6 text-white/40 text-sm">Failed to load statistics from database.</div>
+  if (!data || data.grandTotal === 0) {
+    return <div className="p-6 text-white/40 text-sm">No trades found for the selected period/account.</div>
   }
 
   const tickerRows: StatsTableRow[] = data.tickerStats.map(statToRow)

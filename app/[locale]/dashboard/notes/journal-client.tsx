@@ -22,6 +22,7 @@ import {
   unifiedMetricPanelClassName,
   unifiedInfoLabelClassName,
 } from '@/components/layout/unified-page-recipes'
+import { useDashboardStats } from '@/context/data-provider'
 
 const TiptapEditor = dynamic(
   () => import('@/components/tiptap-editor').then(m => ({ default: m.TiptapEditor })),
@@ -288,18 +289,48 @@ export default function JournalClient() {
   )
 
   const {
-    cards, isLoading, expandedId,
+    cards: journalCards, isLoading: journalLoading, expandedId,
     toggleExpand,
     createEntry, updateEntry, deleteEntry,
     addCard, refetch, setFilters,
   } = useJournal(userId)
+
+  const isLoading = journalLoading || formattedTrades.length === 0
+
+  const { formattedTrades } = useDashboardStats()
 
   // Sync account filter to journal hook
   useEffect(() => {
     setFilters({ accountNumber: selectedAccount })
   }, [selectedAccount, setFilters])
 
-  const displayCards = cards
+  // Use the exact same trades as /dashboard/trades (from central DataProvider)
+  // Attach any existing journal metadata on top
+  const displayCards = useMemo(() => {
+    const journalMap = new Map(journalCards.map(c => [c.trade.id, c.journal]))
+
+    return formattedTrades.map(trade => {
+      const journal = journalMap.get(trade.id) || null
+      return {
+        trade: {
+          id: trade.id,
+          instrument: trade.instrument,
+          side: trade.side || 'Long',
+          entryPrice: trade.entryPrice,
+          closePrice: trade.closePrice ?? 0,
+          pnl: trade.pnl,
+          commission: trade.commission ?? 0,
+          quantity: trade.quantity,
+          entryDate: typeof trade.entryDate === 'string' ? trade.entryDate : trade.entryDate.toISOString(),
+          closeDate: typeof trade.closeDate === 'string' ? trade.closeDate : trade.closeDate.toISOString(),
+          timeInPosition: trade.timeInPosition ?? 0,
+          tags: trade.tags ?? [],
+          accountNumber: trade.accountNumber,
+        },
+        journal,
+      } as TradeJournalCard
+    })
+  }, [formattedTrades, journalCards])
 
   // ── Weekly groups ──
   const dayGroups = useMemo(() => groupByDay(displayCards), [displayCards])
