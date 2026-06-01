@@ -136,12 +136,12 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  <>
   <div className="absolute inset-0 rounded-xl border-0 border-dashed" />
  <div className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.12),hsl(var(--background)/0.8)_62%)] opacity-100" />
- <div className="absolute inset-0 flex items-center justify-center opacity-100 drag-handle cursor-grab active:cursor-grabbing">
-  <div className="flex flex-col items-center gap-2 rounded-xl bg-card px-4 py-3 text-foreground border-0">
- <GripVertical className="h-6 w-4" />
- <p className="text-sm font-medium">{t('widgets.dragToMove')}</p>
- </div>
- </div>
+              <div className="absolute inset-0 flex items-center justify-center opacity-100 drag-handle cursor-grab active:cursor-grabbing touch-none select-none">
+                  <div className="flex flex-col items-center gap-2 rounded-xl bg-card px-4 sm:px-6 py-3 text-foreground border-0 min-h-[64px]">
+                <GripVertical className="h-6 w-4" />
+                <p className="text-sm font-medium">{t('widgets.dragToMove')}</p>
+                </div>
+                </div>
  <div className="absolute top-2 right-2 flex gap-2 opacity-100 z-10">
  <Popover open={isSizePopoverOpen} onOpenChange={setIsSizePopoverOpen}>
  <PopoverTrigger asChild>
@@ -690,29 +690,41 @@ export default function WidgetCanvas() {
  </ResponsiveGridLayout>
  </div>
  )}
- {/* Mobile widget expand overlay */}
- {expandedWidget && isMobile && (
- <motion.div
- className="fixed inset-0 z-50 bg-background overflow-auto pb-safe pt-safe"
- initial={{ y: '100%' }}
- animate={{ y: 0 }}
- exit={{ y: '100%' }}
- transition={{ type: 'spring', damping: 25, stiffness: 300 }}
- drag="y"
- dragConstraints={{ top: 0, bottom: 0 }}
- dragElastic={0.4}
- onDragEnd={(_, info) => {
- if (info.offset.y > 100) setExpandedWidget(null)
- }}
- >
- <div className="flex justify-center pt-2 pb-2">
- <div className="h-1 w-10 rounded-full bg-muted-foreground/30" />
- </div>
- <div className="p-4">
- <p className="text-sm text-muted-foreground text-center">Widget expanded view</p>
- </div>
- </motion.div>
- )}
+  {/* Mobile widget expand overlay */}
+  {expandedWidget && isMobile && (
+  <motion.div
+  className="fixed inset-0 z-50 bg-background overflow-auto pb-safe pt-safe"
+  initial={{ y: '100%' }}
+  animate={{ y: 0 }}
+  exit={{ y: '100%' }}
+  transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+  drag="y"
+  dragConstraints={{ top: 0, bottom: 0 }}
+  dragElastic={0.4}
+  onDragEnd={(_, info) => {
+  if (info.offset.y > 100) setExpandedWidget(null)
+  }}
+  >
+  <div className="sticky top-0 z-10 flex justify-center pt-2 pb-2 bg-background/80 backdrop-blur-sm">
+  <button
+  onClick={() => setExpandedWidget(null)}
+  className="h-1.5 w-12 rounded-full bg-muted-foreground/30 hover:bg-muted-foreground/50 transition-colors touch-manipulation min-h-[24px]"
+  aria-label="Close expanded widget"
+  />
+  </div>
+  <div className="p-4 h-full">
+  {(() => {
+  const widget = activeWidgets.find(w => w.i === expandedWidget)
+  if (!widget) return null
+  return (
+  <div className="h-full min-h-[300px]">
+  {renderWidget(widget)}
+  </div>
+  )
+  })()}
+  </div>
+  </motion.div>
+  )}
  </div>
  )
 }

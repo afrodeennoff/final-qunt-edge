@@ -25,7 +25,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="border-t-0 py-24">
+    <section className="animate-fade-in-up border-t-0 py-24">
       <div className="mx-auto max-w-5xl px-6">
         <div className="mb-14 text-center">
           <div className="mb-3 inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-[10px] font-mono tracking-[3px] text-primary">
@@ -35,13 +35,13 @@ export function HowItWorks() {
           <p className="mt-3 text-[14px] text-muted-foreground/70">From connected to dangerous in under two minutes.</p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3 md:gap-8">
+        <div className="animate-stagger grid gap-6 md:grid-cols-3 md:gap-8">
           {steps.map((step, i) => {
             const Icon = step.icon
             return (
               <div
                 key={i}
-                className="group relative rounded-2xl border-0 bg-gradient-to-b from-card/40 to-transparent p-8 transition-all duration-300 hover:border-primary/20 hover:shadow-[0_0_30px_-15px] hover:shadow-primary/8"
+                className="animate-fade-in-up group relative rounded-2xl border-0 bg-gradient-to-b from-card/40 to-transparent p-8 transition-all duration-300 hover:border-primary/20 hover:shadow-[0_0_30px_-15px] hover:shadow-primary/8"
               >
                 <div className="flex items-center gap-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/60 text-sm font-mono tracking-[1px] text-white shadow-sm">

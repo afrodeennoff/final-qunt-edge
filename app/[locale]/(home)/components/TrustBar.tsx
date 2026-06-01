@@ -4,11 +4,11 @@ import { TrendingUp } from 'lucide-react'
 
 export function TrustBar() {
   return (
-    <div className="relative border-b-0 py-8">
+    <div className="animate-fade-in-up relative border-b-0 py-8">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center gap-4 text-center">
-          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
+          <div className="animate-stagger flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
               <span className="font-semibold text-foreground text-base">8,241</span>
               funded traders

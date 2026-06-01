@@ -379,8 +379,48 @@ export function FloatingOrbs({
  return null
  }
 
-  // Minimal static — no blur, no motion orbs for clean professional look
-  return null
+  return (
+    <div
+      ref={containerRef}
+      className={cn('pointer-events-none absolute inset-0 overflow-hidden', className)}
+      aria-hidden="true"
+    >
+      {orbs.map((orb, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full bg-gradient-to-b"
+          style={{
+            width: orb.size,
+            height: orb.size,
+            left: orb.x,
+            top: orb.y,
+            background: orb.color,
+          }}
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{
+            opacity: orb.opacity,
+            scale: [1, 1.08, 1],
+            x: [0, 15, -10, 8, 0],
+            y: [0, -12, 8, -5, 0],
+          }}
+          transition={{
+            opacity: { duration: 1.5, delay: i * 0.3 },
+            scale: { duration: orb.duration, repeat: Infinity, ease: 'easeInOut', delay: orb.delay },
+            x: { duration: orb.duration * 0.7, repeat: Infinity, ease: 'easeInOut', delay: orb.delay },
+            y: { duration: orb.duration * 0.85, repeat: Infinity, ease: 'easeInOut', delay: orb.delay },
+          }}
+        >
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              filter: 'blur(60px)',
+              background: 'inherit',
+            }}
+          />
+        </motion.div>
+      ))}
+    </div>
+  )
 }
 
 // ============================================================================

@@ -7,9 +7,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const WidgetCanvas = dynamic(() => import("./components/widget-canvas"), {
   loading: () => (
-    <div className="grid grid-cols-2 gap-4 p-4 lg:grid-cols-4 lg:p-6">
-      {Array.from({ length: 8 }).map((_, i) => (
-        <Skeleton key={i} className="h-32 w-full rounded-xl" />
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 lg:p-6">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <Skeleton key={i} className="h-28 sm:h-32 w-full rounded-xl" />
       ))}
     </div>
   ),
@@ -48,9 +48,9 @@ export default async function DashboardPage(props: {
       {checkoutSuccess && <CheckoutSuccessHandler />}
       <Suspense
         fallback={
-          <div className="grid grid-cols-2 gap-4 p-4 lg:grid-cols-4 lg:p-6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton key={i} className="h-32 w-full rounded-xl" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 lg:p-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-28 sm:h-32 w-full rounded-xl" />
             ))}
           </div>
         }

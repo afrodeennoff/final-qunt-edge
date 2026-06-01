@@ -66,7 +66,7 @@ export default async function SocialProof() {
     <section className="bg-muted/30 px-4 py-8 sm:py-12 lg:py-16 md:px-6 lg:px-8">
       <div className="mx-auto max-w-[1360px]">
         <div className="mb-8 grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-end">
-          <div className="rounded-lg border-0 bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:p-8">
+          <div className="animate-fade-in-up rounded-lg border-0 bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:p-8">
             <Badge
               variant="outline"
               className="rounded-full border-primary/30 bg-primary/10 px-3 py-1 text-xs uppercase tracking-[0.18em] text-primary"
@@ -81,13 +81,13 @@ export default async function SocialProof() {
             </p>
           </div>
 
-          <div className="grid min-w-0 grid-cols-2 gap-4">
+          <div className="animate-stagger grid min-w-0 grid-cols-2 gap-4">
             {stats.map((stat) => {
               const Icon = stat.icon
               return (
                 <article
                   key={String(stat.label)}
-                  className="rounded-lg border-0 bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
+                  className="animate-fade-in-up rounded-lg border-0 bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-md border-0 bg-background/70 text-primary">
                     <Icon className="h-5 w-5" />
@@ -105,7 +105,7 @@ export default async function SocialProof() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
-          <div>
+          <div className="animate-fade-in-up">
             <div className="mb-4 rounded-lg border-0 bg-background/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                 {t('landing.home.social.onDeskFeedbackTitle')}
@@ -115,11 +115,11 @@ export default async function SocialProof() {
               </p>
             </div>
 
-            <div className="grid gap-4">
+            <div className="animate-stagger grid gap-4">
               {testimonials.map((testimonial) => (
                 <article
                   key={String(testimonial.name)}
-                  className="flex h-full flex-col rounded-lg border-0 bg-card/70 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
+                  className="animate-fade-in-up flex h-full flex-col rounded-lg border-0 bg-card/70 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
                 >
                   <div className="mb-4 inline-flex w-fit rounded-full border-0 bg-background/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                     {t('landing.home.social.traderVoice')}
@@ -142,7 +142,7 @@ export default async function SocialProof() {
             </div>
           </div>
 
-          <div>
+          <div className="animate-fade-in-up">
             <div className="mb-4 rounded-lg border-0 bg-background/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                 {t('landing.home.social.trustFoundationTitle')}
@@ -152,13 +152,13 @@ export default async function SocialProof() {
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="animate-stagger grid gap-4 sm:grid-cols-2">
               {pillars.map((pillar) => {
                 const Icon = pillar.icon
                 return (
                   <article
                     key={String(pillar.title)}
-                    className="rounded-lg border-0 bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
+                    className="animate-fade-in-up rounded-lg border-0 bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-md border-0 bg-background/70 text-primary">
                       <Icon className="h-5 w-5" />

@@ -102,11 +102,11 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                 Professional trading journal with AI debriefs, execution audits, and prop firm compliance tools. Review every decision. Build lasting edge.
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href={`/${locale}/authentication`} className="ref-cta-primary">
-                  Get Started <ArrowRight className="h-4 w-4" />
+              <div className="mt-6 sm:mt-8 flex flex-wrap gap-3">
+                <Link href={`/${locale}/authentication`} className="ref-cta-primary min-h-[44px]">
+                  <span>Get Started</span> <ArrowRight className="h-4 w-4 shrink-0" />
                 </Link>
-                <Link href="#features" className="ref-cta-secondary">
+                <Link href="#features" className="ref-cta-secondary min-h-[44px]">
                   Learn More
                 </Link>
               </div>
@@ -478,7 +478,7 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                   <div className="text-[11px] font-semibold tracking-[0.14em] text-[var(--qe-ref-green)]">TOP FIRMS</div>
                   <div className="mt-0.5 text-[13px] text-[var(--qe-ref-text-muted)]">Leading prop firms by total payouts</div>
                 </div>
-                <Link href={`/${locale}/propfirms`} className="text-[12px] text-[var(--qe-ref-green)] hover:underline font-medium">
+                <Link href={`/${locale}/propfirms`} className="text-[12px] text-[var(--qe-ref-green)] hover:underline font-medium min-h-[36px] inline-flex items-center touch-manipulation">
                   View all →
                 </Link>
               </div>
@@ -518,7 +518,7 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                   <div className="text-[11px] font-semibold tracking-[0.14em] text-[var(--qe-ref-green)]">HOT DEALS</div>
                   <div className="mt-0.5 text-[13px] text-[var(--qe-ref-text-muted)]">Active prop firm discounts right now</div>
                 </div>
-                <Link href={`/${locale}/deals`} className="text-[12px] text-[var(--qe-ref-green)] hover:underline font-medium">
+                <Link href={`/${locale}/deals`} className="text-[12px] text-[var(--qe-ref-green)] hover:underline font-medium min-h-[36px] inline-flex items-center touch-manipulation">
                   View all →
                 </Link>
               </div>
@@ -558,7 +558,7 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                   <div className="text-[11px] font-semibold tracking-[0.14em] text-[var(--qe-ref-green)]">TOP TRADERS</div>
                   <div className="mt-0.5 text-[13px] text-[var(--qe-ref-text-muted)]">This month's highest performers</div>
                 </div>
-                <Link href={`/${locale}/leaderboard`} className="text-[12px] text-[var(--qe-ref-green)] hover:underline font-medium">
+                <Link href={`/${locale}/leaderboard`} className="text-[12px] text-[var(--qe-ref-green)] hover:underline font-medium min-h-[36px] inline-flex items-center touch-manipulation">
                   View all →
                 </Link>
               </div>
@@ -624,11 +624,11 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                      desc: 'Custom widgets and layouts tailored to your trading style and weekly improvement goals.',
                    },
                  ].map((item, idx) => (
-                   <button
-                     key={idx}
-                     onClick={() => setOpenAccordion(openAccordion === idx ? null : idx)}
-                     className="flex w-full items-center justify-between rounded-xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] px-5 py-4 text-left transition-colors hover:border-[var(--qe-ref-green)]/30"
-                   >
+                    <button
+                      key={idx}
+                      onClick={() => setOpenAccordion(openAccordion === idx ? null : idx)}
+                      className="flex w-full items-center justify-between rounded-xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] px-4 sm:px-5 py-3.5 sm:py-4 text-left transition-colors hover:border-[var(--qe-ref-green)]/30 active:scale-[0.99] select-none touch-manipulation min-h-[52px]"
+                    >
                      <div className="flex items-center gap-3">
                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)]">
                          {idx === 0 ? <Brain className="h-4 w-4" /> : idx === 1 ? <Zap className="h-4 w-4" /> : <BarChart3 className="h-4 w-4" />}
@@ -656,9 +656,9 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                  ))}
                </div>
 
-               <Link href={`/${locale}/authentication`} className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--qe-ref-green)] px-6 py-2.5 text-[13px] font-semibold text-black transition-opacity hover:opacity-90">
-                 Try Now
-               </Link>
+                <Link href={`/${locale}/authentication`} className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--qe-ref-green)] px-6 py-2.5 min-h-[44px] text-[13px] font-semibold text-black transition-opacity hover:opacity-90 active:scale-[0.97] select-none touch-manipulation">
+                  Try Now
+                </Link>
              </motion.div>
 
             {/* Right: Circular AI Hub diagram */}
@@ -835,9 +835,9 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                  </div>
                </div>
                <div className="text-center">
-                 <Link href={`/${locale}/authentication`} className="inline-flex items-center gap-2 rounded-full bg-[var(--qe-ref-green)] px-5 py-2 text-[12px] font-semibold text-black hover:opacity-90">
-                   See the Review Loop
-                 </Link>
+                  <Link href={`/${locale}/authentication`} className="inline-flex items-center gap-2 rounded-full bg-[var(--qe-ref-green)] px-5 py-2 min-h-[44px] text-[12px] font-semibold text-black hover:opacity-90 active:scale-[0.97] select-none touch-manipulation">
+                    See the Review Loop
+                  </Link>
                </div>
              </motion.div>
 

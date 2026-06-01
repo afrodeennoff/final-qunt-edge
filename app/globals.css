@@ -322,6 +322,44 @@
       padding-bottom: 4px;
     }
   }
+
+  /* ── MOBILE TOUCH ENHANCEMENTS ── */
+
+  /* Suppress tap highlight color on mobile browsers */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Active state press feedback for touch targets */
+  .touch-active:active {
+    transform: scale(0.97);
+    transition: transform 0.1s ease;
+  }
+
+  /* Prevent callout on long-press on mobile */
+  * {
+    -webkit-touch-callout: none;
+  }
+
+  /* Subtle scrollbar for mobile */
+  @media (hover: none) and (pointer: coarse) {
+    ::-webkit-scrollbar {
+      width: 3px;
+      height: 3px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(128, 128, 128, 0.25);
+      border-radius: 99px;
+    }
+
+    /* Better text rendering for mobile DPI */
+    body {
+      -webkit-font-smoothing: subpixel-antialiased;
+    }
+  }
 }
 
 /* Dark mode tokens defined in .dark block below - this ensures single source of truth */
