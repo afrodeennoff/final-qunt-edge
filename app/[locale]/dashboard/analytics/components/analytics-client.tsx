@@ -11,7 +11,6 @@ import { DashboardStatCard } from '@/components/ui/dashboard-stat-card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
 import { unifiedInsetPanelClassName } from '@/components/layout/unified-page-recipes'
-import { MarketChart } from './market-chart'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const AnalysisOverview = dynamic(
@@ -22,11 +21,6 @@ const AnalysisOverview = dynamic(
 const ChatWidget = dynamic(() => import('../../components/chat/chat'), {
   loading: () => <Skeleton className="h-full w-full rounded-xl" />,
 })
-
-const sampleMarketData = Array.from({ length: 100 }, (_, i) => ({
-  time: new Date(Date.now() - (99 - i) * 86400000).toISOString().slice(0, 10),
-  value: 45000 + Math.sin(i * 0.3) * 2000 + Math.random() * 500,
-}))
 
 interface BehaviorInsights {
   summary: { emotionalRiskPercent: number; confidenceScore: number; confidenceBand: string; overtradingDays: number; lossChasingEvents: number; impulsiveTradeCount: number; averageEmotion: number }
@@ -211,7 +205,9 @@ export default function AnalyticsClient() {
             <Card className="bg-card border-0">
               <CardHeader><CardTitle className="text-lg">Market Overview</CardTitle></CardHeader>
               <CardContent>
-                <MarketChart data={sampleMarketData} height={300} className="min-h-[200px] h-[40vh] max-h-[400px]" />
+                <div className="flex h-[200px] items-center justify-center text-xs text-muted-foreground/40">
+                  Connect a data provider to see live market charts.
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

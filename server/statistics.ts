@@ -1,8 +1,13 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/prisma/generated/prisma'
 import { getDatabaseUserId } from './auth'
-import type { StatisticsResult, TickerStat, DailyStat, SetupStat } from '@/app/[locale]/dashboard/analytics/statistics/types'
+import type {
+  StatisticsResult, TickerStat, DailyStat, SetupStat, WeekdayStat,
+} from '@/app/[locale]/dashboard/analytics/statistics/types'
+
+const KNOWN_TIMEFRAMES = new Set(['5m', '15m', '30m', '1H', '4H', 'Daily'])
 
 function computeRR(trades: Array<{ pnl: number }>) {
   let grossWin = 0
@@ -23,16 +28,35 @@ function computeRR(trades: Array<{ pnl: number }>) {
   return { avgRR, totalRR, wins, losses, grossWin, grossLoss }
 }
 
-export async function getStatisticsAction(): Promise<StatisticsResult> {
+function extractDate(d: Date | string): Date {
+  return d instanceof Date ? d : new Date(d)
+}
+
+function formatISO(d: Date | string): string {
+  const dt = extractDate(d)
+  return dt.toISOString()
+}
+
+const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+export async function getStatisticsAction(
+  periodDays?: number,
+): Promise<StatisticsResult> {
   const userId = await getDatabaseUserId()
 
+  const where: Prisma.TradeWhereInput = { userId }
+  if (periodDays && periodDays > 0) {
+    const cutoff = new Date(Date.now() - periodDays * 86400000)
+    where.entryDate = { gte: cutoff }
+  }
+
   const trades = await prisma.trade.findMany({
-    where: { userId },
+    where,
     include: { journal: true },
     orderBy: { entryDate: 'desc' },
   })
 
-  // Ticker Stats
+  // ── Ticker Stats ──
   const tickerMap = new Map<string, Array<{ pnl: number }>>()
   for (const t of trades) {
     const instr = t.instrument || 'Unknown'
@@ -58,10 +82,10 @@ export async function getStatisticsAction(): Promise<StatisticsResult> {
   }
   tickerStats.sort((a, b) => b.totalTrades - a.totalTrades)
 
-  // Daily Stats
+  // ── Daily Stats ──
   const dateMap = new Map<string, Array<{ pnl: number }>>()
   for (const t of trades) {
-    const d = t.entryDate instanceof Date ? t.entryDate : new Date(t.entryDate)
+    const d = extractDate(t.entryDate)
     const key = d.toISOString().slice(0, 10)
     if (!dateMap.has(key)) dateMap.set(key, [])
     dateMap.get(key)!.push({ pnl: Number(t.pnl) })
@@ -81,15 +105,21 @@ export async function getStatisticsAction(): Promise<StatisticsResult> {
   }
   dailyStats.sort((a, b) => b.date.localeCompare(a.date))
 
-  // Setup Stats (from JournalEntry.customTags)
+  // ── Setup Stats (concept / tag performance, excludes known timeframe tags) ──
   const tagMap = new Map<string, Array<{ pnl: number }>>()
+  const timeframeMap = new Map<string, Array<{ pnl: number }>>()
   for (const t of trades) {
     const journal = t.journal
     if (!journal || !journal.customTags || journal.customTags.length === 0) continue
     const pnlNum = Number(t.pnl)
     for (const tag of journal.customTags) {
-      if (!tagMap.has(tag)) tagMap.set(tag, [])
-      tagMap.get(tag)!.push({ pnl: pnlNum })
+      if (KNOWN_TIMEFRAMES.has(tag)) {
+        if (!timeframeMap.has(tag)) timeframeMap.set(tag, [])
+        timeframeMap.get(tag)!.push({ pnl: pnlNum })
+      } else {
+        if (!tagMap.has(tag)) tagMap.set(tag, [])
+        tagMap.get(tag)!.push({ pnl: pnlNum })
+      }
     }
   }
 
@@ -107,14 +137,56 @@ export async function getStatisticsAction(): Promise<StatisticsResult> {
   }
   setupStats.sort((a, b) => b.totalTrades - a.totalTrades)
 
-  // Grand total
+  // ── Timeframe Stats ──
+  const timeframeStats: SetupStat[] = []
+  for (const [tf, tList] of timeframeMap) {
+    const { avgRR, totalRR, wins, losses } = computeRR(tList)
+    const resolved = wins + losses
+    timeframeStats.push({
+      tag: tf,
+      totalTrades: tList.length,
+      winRate: resolved > 0 ? (wins / resolved) * 100 : 0,
+      avgRR,
+      totalRR,
+    })
+  }
+  timeframeStats.sort((a, b) => b.totalTrades - a.totalTrades)
+
+  // ── Weekday Stats ──
+  const weekdayMap = new Map<number, Array<{ pnl: number }>>()
+  for (const t of trades) {
+    const d = extractDate(t.entryDate)
+    const dayIdx = d.getDay()
+    if (!weekdayMap.has(dayIdx)) weekdayMap.set(dayIdx, [])
+    weekdayMap.get(dayIdx)!.push({ pnl: Number(t.pnl) })
+  }
+
+  const weekdayOrder = [1, 2, 3, 4, 5, 6, 0]
+  const weekdayStats: WeekdayStat[] = []
+  for (const idx of weekdayOrder) {
+    const tList = weekdayMap.get(idx)
+    if (!tList || tList.length === 0) continue
+    const { avgRR, totalRR, wins, losses } = computeRR(tList)
+    const resolved = wins + losses
+    weekdayStats.push({
+      day: WEEKDAY_NAMES[idx],
+      totalTrades: tList.length,
+      winRate: resolved > 0 ? (wins / resolved) * 100 : 0,
+      avgRR,
+      totalRR,
+      wins,
+      losses,
+    })
+  }
+
+  // ── Grand total ──
   const grandResult = computeRR(trades.map(t => ({ pnl: Number(t.pnl) })))
   const grandResolved = grandResult.wins + grandResult.losses
 
-  // Daily PnL aggregation for best/worst day
+  // ── Daily PnL aggregation for best/worst day ──
   const dayPnlMap = new Map<string, number>()
   for (const t of trades) {
-    const d = t.entryDate instanceof Date ? t.entryDate : new Date(t.entryDate)
+    const d = extractDate(t.entryDate)
     const key = d.toISOString().slice(0, 10)
     dayPnlMap.set(key, (dayPnlMap.get(key) || 0) + Number(t.pnl))
   }
@@ -124,7 +196,12 @@ export async function getStatisticsAction(): Promise<StatisticsResult> {
     tickerStats,
     dailyStats,
     setupStats,
-    allPnls: trades.map(t => ({ pnl: Number(t.pnl), entryDate: t.entryDate instanceof Date ? t.entryDate.toISOString() : String(t.entryDate) })),
+    weekdayStats,
+    timeframeStats,
+    allPnls: trades.map(t => ({
+      pnl: Number(t.pnl),
+      entryDate: formatISO(t.entryDate),
+    })),
     grandTotal: trades.length,
     grandWinRate: grandResolved > 0 ? (grandResult.wins / grandResolved) * 100 : 0,
     grandPnl: trades.reduce((s, t) => s + Number(t.pnl), 0),

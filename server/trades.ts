@@ -1034,3 +1034,36 @@ export async function addTagsToTradesForDay(date: string, tags: string[]) {
     throw error
   }
 }
+
+export async function createSingleTradeAction(data: {
+  instrument?: string
+  side?: string
+  entryDate?: string
+}): Promise<SerializedTrade> {
+  const rawUserId = await getUserId()
+  const userId = await resolveWritableUserId(rawUserId)
+  const now = new Date()
+  const entryDate = data.entryDate ? new Date(data.entryDate) : now
+
+  const tradeData: Prisma.TradeCreateInput = {
+    userId,
+    accountNumber: 'Manual',
+    instrument: data.instrument || 'Manual',
+    side: data.side || null,
+    quantity: new Prisma.Decimal(0),
+    entryPrice: new Prisma.Decimal(0),
+    closePrice: new Prisma.Decimal(0),
+    pnl: new Prisma.Decimal(0),
+    commission: new Prisma.Decimal(0),
+    entryDate,
+    closeDate: entryDate,
+    timeInPosition: new Prisma.Decimal(0),
+  }
+
+  const trade = await prisma.trade.create({
+    data: tradeData,
+  })
+
+  await invalidateTradeRelatedCaches(userId)
+  return serializeTrade(trade)
+}

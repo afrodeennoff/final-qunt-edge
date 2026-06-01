@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { useUserStore } from '@/store/user-store'
 import { useJournal } from './lib/use-journal'
+import { createSingleTradeAction } from '@/server/trades'
 import { RatingStars } from './components/rating-stars'
 import { ScreenshotGrid } from './components/screenshot-grid'
 import type { JournalEntry, TradeJournalCard } from './lib/journal-types'
@@ -37,19 +38,25 @@ function formatPnl(pnl: number) {
 }
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString(undefined, {
+  const d = new Date(dateStr)
+  if (isNaN(d.getTime())) return dateStr
+  return d.toLocaleDateString(undefined, {
     month: 'short', day: 'numeric',
   })
 }
 
 function formatFullDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString(undefined, {
+  const d = new Date(dateStr)
+  if (isNaN(d.getTime())) return dateStr
+  return d.toLocaleDateString(undefined, {
     weekday: 'long', month: 'short', day: 'numeric',
   })
 }
 
 function formatTime(dateStr: string) {
-  return new Date(dateStr).toLocaleTimeString(undefined, {
+  const d = new Date(dateStr)
+  if (isNaN(d.getTime())) return '--:--'
+  return d.toLocaleTimeString(undefined, {
     hour: '2-digit', minute: '2-digit', hour12: false,
   })
 }
@@ -224,11 +231,14 @@ export default function JournalClient() {
   const [modalStars, setModalStars] = useState<number | null>(null)
   const [modalPreNotes, setModalPreNotes] = useState('')
   const [modalPostNotes, setModalPostNotes] = useState('')
+  const [newInstrument, setNewInstrument] = useState('')
+  const [newSide, setNewSide] = useState<'LONG' | 'SHORT' | null>(null)
 
   const {
     cards, isLoading, expandedId,
     toggleExpand,
     createEntry, updateEntry, deleteEntry,
+    addCard, refetch,
   } = useJournal(userId)
 
   const displayCards = cards
@@ -368,6 +378,8 @@ export default function JournalClient() {
     setModalStars(null)
     setModalPreNotes('')
     setModalPostNotes('')
+    setNewInstrument('')
+    setNewSide(null)
     setIsNewTrade(true)
     setModalOpen(true)
   }, [])
@@ -377,9 +389,48 @@ export default function JournalClient() {
     setDeleteConfirm(false)
   }, [])
 
-  const handleSaveModal = useCallback(() => {
+  const handleSaveModal = useCallback(async () => {
+    if (isNewTrade) {
+      const instrument = newInstrument.trim() || 'Manual'
+      const entryDate = selectedDayKey || new Date().toISOString().slice(0, 10)
+      const trade = await createSingleTradeAction({
+        instrument,
+        side: newSide || undefined,
+        entryDate,
+      })
+      const newCard: TradeJournalCard = {
+        trade: {
+          id: trade.id,
+          instrument: trade.instrument,
+          side: trade.side || '',
+          entryPrice: Number(trade.entryPrice),
+          closePrice: Number(trade.closePrice),
+          pnl: Number(trade.pnl),
+          commission: Number(trade.commission),
+          quantity: Number(trade.quantity),
+          entryDate: trade.entryDate,
+          closeDate: trade.closeDate || trade.entryDate,
+          timeInPosition: Number(trade.timeInPosition),
+          tags: trade.tags || [],
+          accountNumber: trade.accountNumber,
+        },
+        journal: null,
+      }
+      addCard(newCard)
+      const tags = [...modalSession, ...modalTimeframe, ...modalIctTags]
+      await handleCreate(trade.id, trade.accountNumber, {
+        preTradeNotes: modalPreNotes || null,
+        postTradeReview: modalPostNotes || null,
+        emotions: modalEmotion,
+        confidenceRating: modalStars,
+        customTags: tags,
+      })
+      refetch()
+      setModalOpen(false)
+      return
+    }
+
     if (!selectedCard?.journal) {
-      // For new trades, the user should select a trade first
       setModalOpen(false)
       return
     }
@@ -408,7 +459,7 @@ export default function JournalClient() {
     }
 
     setModalOpen(false)
-  }, [selectedCard, modalSession, modalTimeframe, modalIctTags, modalEmotion, modalStars, modalPreNotes, modalPostNotes, handleCreate, handleUpdate])
+  }, [isNewTrade, selectedCard, modalSession, modalTimeframe, modalIctTags, modalEmotion, modalStars, modalPreNotes, modalPostNotes, newInstrument, newSide, selectedDayKey, handleCreate, handleUpdate])
 
   const handleSelectTrade = useCallback((tradeId: string) => {
     if (hasUnsaved && selectedCard?.journal) {
@@ -753,7 +804,7 @@ export default function JournalClient() {
                 <div>
                   <div className="text-lg font-semibold">
                     {isNewTrade
-                      ? `New Trade -- ${selectedDayKey ? formatDate(selectedDayKey) : 'Today'}`
+                      ? `New Trade — ${selectedDayKey ? formatDate(selectedDayKey) : formatDate(new Date().toISOString())}`
                       : selectedCard
                         ? `${selectedCard.trade.instrument} ${formatDate(selectedCard.trade.entryDate)} ${formatTime(selectedCard.trade.entryDate)}`
                         : 'Trade Details'
@@ -796,6 +847,51 @@ export default function JournalClient() {
 
               {/* Modal Body */}
               <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
+                {/* New Trade: instrument & side */}
+                {isNewTrade && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <div className={unifiedInfoLabelClassName}>Instrument</div>
+                      <input
+                        type="text"
+                        value={newInstrument}
+                        onChange={e => setNewInstrument(e.target.value.toUpperCase())}
+                        placeholder="e.g. ES, NQ, CL…"
+                        className="w-full mt-2 rounded-xl px-3 py-2 text-sm outline-none bg-background/50 border border-foreground/[0.06] text-foreground placeholder:text-muted-foreground/30 focus:ring-1 focus:ring-primary/20"
+                      />
+                    </div>
+                    <div>
+                      <div className={unifiedInfoLabelClassName}>Side</div>
+                      <div className="flex gap-2 mt-2">
+                        <button
+                          type="button"
+                          onClick={() => setNewSide('LONG')}
+                          className={cn(
+                            'flex-1 rounded-xl px-3 py-2 text-sm font-medium border transition-all',
+                            newSide === 'LONG'
+                              ? 'border-semantic-success bg-semantic-success/10 text-semantic-success'
+                              : 'border-foreground/[0.06] text-muted-foreground/60 hover:text-foreground',
+                          )}
+                        >
+                          Long
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setNewSide('SHORT')}
+                          className={cn(
+                            'flex-1 rounded-xl px-3 py-2 text-sm font-medium border transition-all',
+                            newSide === 'SHORT'
+                              ? 'border-semantic-error bg-semantic-error/10 text-semantic-error'
+                              : 'border-foreground/[0.06] text-muted-foreground/60 hover:text-foreground',
+                          )}
+                        >
+                          Short
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Quick Stats */}
                 {!isNewTrade && selectedCard && (
                   <div className="grid grid-cols-5 gap-3">

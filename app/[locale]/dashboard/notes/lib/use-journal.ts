@@ -26,6 +26,8 @@ interface UseJournalReturn {
   createEntry: (input: CreateJournalInput) => Promise<JournalEntry>
   updateEntry: (id: string, input: UpdateJournalInput) => Promise<JournalEntry>
   deleteEntry: (id: string) => Promise<void>
+  addCard: (card: TradeJournalCard) => void
+  refetch: () => void
 }
 
 function getPendingKey(userId: string) {
@@ -265,10 +267,19 @@ export function useJournal(userId: string | null): UseJournalReturn {
     } catch {}
   }, [])
 
+  const addCard = useCallback((card: TradeJournalCard) => {
+    setCards(prev => {
+      if (prev.some(c => c.trade.id === card.trade.id)) return prev
+      return [card, ...prev]
+    })
+  }, [])
+
   return {
     cards, stats, filters, page, totalPages,
     isLoading, expandedId,
     setFilters, setPage, toggleExpand,
     createEntry, updateEntry, deleteEntry,
+    addCard,
+    refetch: fetchData,
   }
 }
