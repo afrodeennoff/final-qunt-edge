@@ -68,7 +68,7 @@ async function authenticateWithOAuth(token: string): Promise<McpAuthContext> {
 
 export async function authenticateMcpRequest(authHeader: string | null): Promise<McpAuthContext> {
   if (!authHeader) {
-    throw new Error('Missing Authorization header')
+    throw new Error('Missing Authorization header. Include: Authorization: Bearer <your_api_key>')
   }
 
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader
@@ -78,6 +78,10 @@ export async function authenticateMcpRequest(authHeader: string | null): Promise
   }
 
   return authenticateWithOAuth(token)
+}
+
+export function getApiKeyPrefix(): string {
+  return MCP_KEY_PREFIX_USER
 }
 
 export function requireAdminAccess(ctx: McpAuthContext): void {

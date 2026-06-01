@@ -41,12 +41,7 @@ export async function OPTIONS() {
 }
 
 export async function POST(request: NextRequest) {
-  const useSdk = process.env.MCP_SDK_ENABLED === 'true'
-  if (useSdk) {
-    return Response.json(
-      { error: 'MCP SDK path not fully wired yet. Use MCP_SDK_ENABLED=false for stable legacy.' },
-      { status: 503, headers: CORS_HEADERS }
-    )
-  }
+  // Stable production path — legacy router is the only supported path.
+
   return handleMcpRequest(request, adminConfig)
 }

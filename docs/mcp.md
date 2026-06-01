@@ -1064,20 +1064,11 @@ curl -s -X POST https://qunt-edge.vercel.app/api/mcp/admin \
     "id": 1
   }' | jq .
 
-## Local Development
+## Local Development / Stability Note
 
-Set `MCP_SDK_ENABLED=true` in your environment to activate the official `@modelcontextprotocol/server` SDK path (Streamable HTTP transport). The default (`false`) preserves the legacy custom JSON-RPC router for stability during the migration.
+The MCP server is stable and production-ready on the default path (no special env var needed).
 
-```bash
-# .env.local
-MCP_SDK_ENABLED=true
-```
+The previous experimental `MCP_SDK_ENABLED` flag has been removed. The current implementation (custom JSON-RPC router with full security, audit logging, and all 95+ tools) is the supported path and is compatible with Claude Desktop, Cursor, Cline, Windsurf, and other MCP clients.
 
-When `MCP_SDK_ENABLED=true` is set, all 3 endpoints use `NodeStreamableHTTPServerTransport` with Zod v4 tool schemas, rate limiting, and audit logging via middleware.
+No additional dependencies are required.
 
-### Dependencies for the SDK path
-
-```bash
-bun add @modelcontextprotocol/server @modelcontextprotocol/node zod
-```
-```

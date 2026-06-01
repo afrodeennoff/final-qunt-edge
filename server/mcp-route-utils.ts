@@ -120,13 +120,42 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
     if (method === 'initialize') {
       return jsonRpcResult(reqId, {
         protocolVersion: MCP_PROTOCOL_VERSION,
-        capabilities: { tools: { listChanged: false } },
+        capabilities: {
+          tools: { listChanged: false },
+          // We gracefully support discovery for resources/prompts/roots (return empty)
+          // but do not implement the full resource/prompt subsystems yet.
+        },
         serverInfo: { name: config.serverName, version: config.serverVersion },
+        instructions: "Qunt Edge MCP server. Use tools/list and tools/call for trading data, journal, analytics, imports, teams, and admin operations.",
       })
     }
 
-    if (method === 'notifications/initialized' || method === 'notifications/cancelled') {
+    if (
+      method === 'notifications/initialized' ||
+      method === 'notifications/cancelled' ||
+      method === 'notifications/progress' ||
+      method.startsWith('notifications/')
+    ) {
       return jsonRpcNoContent(202)
+    }
+
+    // Graceful support for common MCP discovery methods that many clients probe.
+    // Returning empty successful results prevents "Method not found" errors in Claude Desktop, Cursor, Cline, etc.
+    if (
+      method === 'resources/list' ||
+      method === 'resources/templates/list' ||
+      method === 'prompts/list' ||
+      method === 'roots/list' ||
+      method === 'logging/list' ||
+      method === 'completion/complete'
+    ) {
+      if (method === 'roots/list') return jsonRpcResult(reqId, { roots: [] })
+      if (method === 'prompts/list') return jsonRpcResult(reqId, { prompts: [] })
+      return jsonRpcResult(reqId, { resources: [] })
+    }
+
+    if (method === 'resources/read' || method === 'prompts/get') {
+      return jsonRpcError(reqId, -32602, `${method} is not supported on this server. This server primarily exposes tools.`, 200)
     }
 
     ctx = method !== 'tools/list' && method !== 'tools/call'
@@ -168,7 +197,7 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
 
       const toolDef = config.tools.find((t) => t.name === toolName)
       if (!toolDef) {
-        return jsonRpcError(reqId, -32601, `Method not found: ${toolName}. Available: ${config.tools.map(t => t.name).join(', ')}`, 404)
+        return jsonRpcError(reqId, -32601, `Unknown tool: "${toolName}". Use tools/list to get the current catalog.`, 200)
       }
 
       let result: { content: Array<{ type: string; text: string }>; isError?: boolean }
@@ -185,7 +214,9 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
       return jsonRpcResult(reqId, result)
     }
 
-    return jsonRpcError(reqId, -32601, `Method not found: ${method}`, 404)
+    // Unknown method — return proper JSON-RPC error with 200 status.
+    // Using 200 + standard error code is much more compatible than 404/500 for many MCP clients.
+    return jsonRpcError(reqId, -32601, `Method not supported: ${method}. Supported: initialize, ping, tools/list, tools/call. Discovery methods (resources/*, prompts/*, roots/*) return empty results.`, 200)
   } catch (error) {
     const duration = Math.round(performance.now() - methodStartTime)
     if (toolName) {
@@ -195,7 +226,11 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
     const auth = isAuthError(error)
     const forbidden = error instanceof Error && error.message.includes('Forbidden')
     const code = auth ? -32001 : forbidden ? -32002 : -32603
-    const message = auth ? 'Authentication failed. Provide a valid Bearer token.' : forbidden ? 'Access denied. Admin role required.' : 'Internal server error'
+    const message = auth
+      ? 'Authentication failed. Use Authorization: Bearer <qunt_usr_... key or Supabase token>. Create keys in Settings → API Keys.'
+      : forbidden
+        ? 'Admin role required. Use a qunt_adm_... key.'
+        : 'Internal server error'
     return jsonRpcError(reqId, code, message, auth ? 401 : forbidden ? 403 : 500)
   }
 }

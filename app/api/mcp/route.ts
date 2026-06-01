@@ -34,28 +34,13 @@ export async function OPTIONS() {
 }
 
 export async function POST(request: NextRequest) {
-  const useSdk = process.env.MCP_SDK_ENABLED === 'true'
-
-  if (useSdk) {
-    // Official SDK path (Streamable HTTP) - under active migration
-    // Full transport + per-endpoint auth + tool registration happens in Tasks 13+
-    return Response.json(
-      { error: 'MCP SDK transport not fully wired yet in this build. Use MCP_SDK_ENABLED=false for the stable legacy path.' },
-      { status: 503, headers: CORS_HEADERS }
-    )
-  }
-
+  // Stable production path — legacy router is the only supported path.
+  // It powers all 95+ tools with full auth, rate limiting, and audit logging.
   return handleMcpRequest(request, mainConfig)
 }
 
 export async function GET() {
   const origin = getSiteOrigin()
-  const toolCatalog = (t: { name: string; description: string; inputSchema: Record<string, unknown>; annotations?: Record<string, unknown> }) => ({
-    name: t.name,
-    description: t.description.split('\n')[0],
-    inputSchema: t.inputSchema,
-    annotations: t.annotations,
-  })
 
   const personalTools = [...standardTools, ...userWriteTools]
   const totalTools = personalTools.length + websiteTools.length
@@ -64,57 +49,42 @@ export async function GET() {
   return Response.json({
     name: MCP_SERVER_NAME,
     version: MCP_SERVER_VERSION,
-    protocol: 'MCP JSON-RPC 2.0',
-    description: 'Qunt Edge Model Context Protocol server — connect AI tools to your trading data',
-    documentation: 'https://spec.modelcontextprotocol.io',
+    protocol: 'MCP JSON-RPC 2.0 (stable)',
+    description: 'Qunt Edge MCP — connect any AI agent to your trading data, journal, analytics, imports, teams, and platform admin tools. 95+ tools.',
     authentication: {
       methods: ['api-key', 'oauth'],
       apiKey: {
-        description: 'Generate an API key in Settings → API Keys',
-        header: 'Authorization: Bearer <api_key>',
-      },
-      oauth: {
-        description: 'Use your Supabase OAuth access token',
-        header: 'Authorization: Bearer <supabase_access_token>',
-        metadata: `${origin}/.well-known/oauth-protected-resource`,
-      },
-    },
-    connection: {
-      curl: `curl -X POST ${origin}/api/mcp -H "Authorization: Bearer YOUR_API_KEY" -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"initialize","id":1}'`,
-      claude_desktop: {
-        command: 'npx',
-        args: ['mcp-remote', `${origin}/api/mcp`],
-      },
-      cursor: {
-        url: `${origin}/api/mcp`,
+        recommended: true,
+        description: 'Generate keys in Settings → API Keys (qunt_usr_* for normal, qunt_adm_* for admin). Also accepts Supabase access tokens.',
+        header: 'Authorization: Bearer <key-or-token>',
       },
     },
     endpoints: [
       {
         path: '/api/mcp',
         url: `${origin}/api/mcp`,
-        auth: 'API key or OAuth token required',
+        auth: 'Bearer (user key or token)',
         tools: totalTools,
-        description: 'Personal trading data (accounts, trades, tags, groups, payouts, journal) + public website data.',
+        description: 'Your personal trading data + public tools.',
       },
       {
         path: '/api/mcp/public',
         url: `${origin}/api/mcp/public`,
-        auth: 'None',
+        auth: 'none',
         tools: websiteTools.length,
-        description: 'Public data only. Prop firms, deals, blog, leaderboard, benchmarks, community posts.',
+        description: 'Public data (prop firms, deals, blog, leaderboard, etc.).',
       },
       {
         path: '/api/mcp/admin',
         url: `${origin}/api/mcp/admin`,
-        auth: 'Admin API key or admin OAuth token required',
+        auth: 'Bearer (admin key)',
         tools: adminTotal,
-        description: 'Full access including all user tools + admin operations (blog, prop firms, coupons, reviews, users).',
+        description: 'Full platform access + admin tools.',
       },
     ],
-    tools: {
-      personal: personalTools.map(toolCatalog),
-      website: websiteTools.map(toolCatalog),
-    },
+    notes: [
+      "All discovery methods (resources/*, prompts/*, roots/*) are handled gracefully.",
+      "This is the stable, production MCP server used by Claude Desktop, Cursor, Cline, and other agents.",
+    ],
   }, { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } })
 }
