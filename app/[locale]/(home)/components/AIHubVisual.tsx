@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { motion, useReducedMotion } from 'motion/react'
+import { cn } from '@/lib/utils'
 
 function useIsMobile() {
   const [mobile, setMobile] = React.useState(false)
@@ -131,27 +132,6 @@ function Node({ label, style, delay, simple }: { label: string; style: React.CSS
       )}
       style={style}
       animate={simple ? undefined : {
-        boxShadow: [
-          '0 0 20px rgba(0,255,159,0.3)',
-          '0 0 42px rgba(0,255,159,0.55)',
-          '0 0 20px rgba(0,255,159,0.3)',
-        ],
-      }}
-      transition={{ duration: 3.1, repeat: Infinity, ease: 'easeInOut', delay }}
-    >
-      {label}
-    </motion.div>
-  )
-}
-
-import { cn } from '@/lib/utils'
-
-function Node({ label, style, delay }: { label: string; style: React.CSSProperties; delay: number }) {
-  return (
-    <motion.div
-      className="absolute z-20 flex h-[66px] w-[66px] items-center justify-center rounded-full border border-[rgba(0,255,159,0.7)] bg-[#0a0c0a] text-[13px] font-semibold tracking-[0.05em] text-[#e4e8e3] shadow-[0_0_28px_rgba(0,255,159,0.4)]"
-      style={style}
-      animate={{
         boxShadow: [
           '0 0 20px rgba(0,255,159,0.3)',
           '0 0 42px rgba(0,255,159,0.55)',
