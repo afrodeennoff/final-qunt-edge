@@ -62,13 +62,14 @@ function clearPending(userId: string) {
 }
 
 function computeStats(cards: TradeJournalCard[]): JournalStats {
-  const totalTrades = cards.length
-  const journaledCount = cards.filter(c => c.journal !== null).length
-  const winners = cards.filter(c => c.trade.pnl > 0).length
+  const safeCards = cards.filter(c => c && c.trade)
+  const totalTrades = safeCards.length
+  const journaledCount = safeCards.filter(c => c.journal !== null).length
+  const winners = safeCards.filter(c => (c.trade.pnl || 0) > 0).length
   const winRate = totalTrades > 0 ? (winners / totalTrades) * 100 : 0
-  const rated = cards.filter(c => c.journal?.confidenceRating != null)
+  const rated = safeCards.filter(c => c.journal?.confidenceRating != null)
   const avgConfidence = rated.length > 0
-    ? rated.reduce((sum, c) => sum + (c.journal!.confidenceRating!), 0) / rated.length
+    ? rated.reduce((sum, c) => sum + (c.journal!.confidenceRating || 0), 0) / rated.length
     : null
   return { totalTrades, journaledCount, winRate, avgConfidence }
 }

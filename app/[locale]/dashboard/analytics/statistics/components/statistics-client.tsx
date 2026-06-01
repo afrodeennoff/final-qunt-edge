@@ -91,30 +91,40 @@ export default function StatisticsClient() {
   }, [])
 
   const data = useMemo(() => {
-    let trades = formattedTrades
+    try {
+      let trades = Array.isArray(formattedTrades) ? formattedTrades : []
 
-    if (period !== 'all') {
-      const cutoff = new Date(Date.now() - PERIOD_DAYS[period]! * 86400000)
-      trades = trades.filter(t => new Date(t.entryDate) >= cutoff)
+      if (period !== 'all') {
+        const cutoff = new Date(Date.now() - (PERIOD_DAYS[period] || 0) * 86400000)
+        trades = trades.filter(t => {
+          const d = t?.entryDate ? new Date(t.entryDate) : null
+          return d && !isNaN(d.getTime()) && d >= cutoff
+        })
+      }
+      if (selectedAccount) {
+        trades = trades.filter(t => t?.accountNumber === selectedAccount)
+      }
+
+      const computable: ComputableTrade[] = trades
+        .filter(t => t && t.id && t.entryDate != null)
+        .map(t => ({
+          id: t.id,
+          instrument: t.instrument || 'Unknown',
+          side: t.side || null,
+          pnl: Number(t.pnl) || 0,
+          entryDate: t.entryDate,
+          journal: (t as any).journal ?? null,
+        }))
+
+      return computeStatistics(computable)
+    } catch (e) {
+      console.error('Statistics computation failed:', e)
+      return { grandTotal: 0, tickerStats: [], weekdayStats: [], setupStats: [], timeframeStats: [], dailyStats: [], allPnls: [], grandPnl: 0, grandWinRate: 0, avgRR: 0, profitFactor: 0, bestDay: 0 }
     }
-    if (selectedAccount) {
-      trades = trades.filter(t => t.accountNumber === selectedAccount)
-    }
-
-    const computable: ComputableTrade[] = trades.map(t => ({
-      id: t.id,
-      instrument: t.instrument,
-      side: t.side,
-      pnl: t.pnl,
-      entryDate: t.entryDate,
-      journal: (t as any).journal ?? null,
-    }))
-
-    return computeStatistics(computable)
   }, [formattedTrades, period, selectedAccount])
 
   // Use provider's loading state if available, otherwise derive from empty trades
-  const isLoading = formattedTrades.length === 0 && period === 'all' && !selectedAccount  // rough heuristic
+  const isLoading = !Array.isArray(formattedTrades) || (formattedTrades.length === 0 && period === 'all' && !selectedAccount)  // rough heuristic
 
   if (isLoading) {
     return (
@@ -135,7 +145,7 @@ export default function StatisticsClient() {
     )
   }
 
-  if (!data || data.grandTotal === 0) {
+  if (!data || (data.grandTotal ?? 0) === 0) {
     return <div className="p-6 text-white/40 text-sm">No trades found for the selected period/account.</div>
   }
 
@@ -216,12 +226,12 @@ export default function StatisticsClient() {
       {/* KPI Bar — exact 6 cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {[
-          { label: 'TOTAL PNL', value: formatPnl(data.grandPnl), positive: data.grandPnl >= 0 },
-          { label: 'WIN RATE', value: `${data.grandWinRate.toFixed(1)}%` },
-          { label: 'AVG R', value: `${data.avgRR >= 1 ? '+' : ''}${data.avgRR.toFixed(2)}R`, positive: data.avgRR >= 1 },
-          { label: 'PROFIT FACTOR', value: data.profitFactor.toFixed(2) },
-          { label: 'TOTAL TRADES', value: data.grandTotal.toString() },
-          { label: 'BEST DAY', value: formatPnl(data.bestDay), positive: true },
+          { label: 'TOTAL PNL', value: formatPnl(data.grandPnl ?? 0), positive: (data.grandPnl ?? 0) >= 0 },
+          { label: 'WIN RATE', value: `${(data.grandWinRate ?? 0).toFixed(1)}%` },
+          { label: 'AVG R', value: `${(data.avgRR ?? 0) >= 1 ? '+' : ''}${(data.avgRR ?? 0).toFixed(2)}R`, positive: (data.avgRR ?? 0) >= 1 },
+          { label: 'PROFIT FACTOR', value: (data.profitFactor ?? 0).toFixed(2) },
+          { label: 'TOTAL TRADES', value: (data.grandTotal ?? 0).toString() },
+          { label: 'BEST DAY', value: formatPnl(data.bestDay ?? 0), positive: true },
         ].map((kpi, i) => (
           <div key={i} className="rounded-2xl bg-[#111311] border border-white/5 p-4">
             <div className="text-[9px] tracking-[1.5px] uppercase text-white/40">{kpi.label}</div>

@@ -295,9 +295,9 @@ export default function JournalClient() {
     addCard, refetch, setFilters,
   } = useJournal(userId)
 
-  const isLoading = journalLoading || formattedTrades.length === 0
-
   const { formattedTrades } = useDashboardStats()
+
+  const isLoading = journalLoading || !Array.isArray(formattedTrades) || formattedTrades.length === 0
 
   // Sync account filter to journal hook
   useEffect(() => {
@@ -309,27 +309,36 @@ export default function JournalClient() {
   const displayCards = useMemo(() => {
     const journalMap = new Map(journalCards.map(c => [c.trade.id, c.journal]))
 
-    return formattedTrades.map(trade => {
-      const journal = journalMap.get(trade.id) || null
-      return {
-        trade: {
-          id: trade.id,
-          instrument: trade.instrument,
-          side: trade.side || 'Long',
-          entryPrice: trade.entryPrice,
-          closePrice: trade.closePrice ?? 0,
-          pnl: trade.pnl,
-          commission: trade.commission ?? 0,
-          quantity: trade.quantity,
-          entryDate: typeof trade.entryDate === 'string' ? trade.entryDate : trade.entryDate.toISOString(),
-          closeDate: typeof trade.closeDate === 'string' ? trade.closeDate : trade.closeDate.toISOString(),
-          timeInPosition: trade.timeInPosition ?? 0,
-          tags: trade.tags ?? [],
-          accountNumber: trade.accountNumber,
-        },
-        journal,
-      } as TradeJournalCard
-    })
+    return formattedTrades
+      .filter(t => t && t.id && t.entryDate) // guard against bad data
+      .map(trade => {
+        const journal = journalMap.get(trade.id) || null
+        const entryDate = trade.entryDate instanceof Date 
+          ? trade.entryDate.toISOString() 
+          : (trade.entryDate || new Date().toISOString())
+        const closeDate = trade.closeDate instanceof Date 
+          ? trade.closeDate.toISOString() 
+          : (trade.closeDate || entryDate)
+
+        return {
+          trade: {
+            id: trade.id,
+            instrument: trade.instrument || 'Unknown',
+            side: trade.side || 'Long',
+            entryPrice: Number(trade.entryPrice) || 0,
+            closePrice: Number(trade.closePrice) || 0,
+            pnl: Number(trade.pnl) || 0,
+            commission: Number(trade.commission) || 0,
+            quantity: Number(trade.quantity) || 0,
+            entryDate,
+            closeDate,
+            timeInPosition: Number(trade.timeInPosition) || 0,
+            tags: Array.isArray(trade.tags) ? trade.tags : [],
+            accountNumber: trade.accountNumber || '',
+          },
+          journal,
+        } as TradeJournalCard
+      })
   }, [formattedTrades, journalCards])
 
   // ── Weekly groups ──
