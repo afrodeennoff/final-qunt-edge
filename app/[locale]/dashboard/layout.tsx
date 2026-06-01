@@ -1,3 +1,4 @@
+import React from 'react'
 import type { Metadata } from 'next'
 import { createClient } from '@/server/auth'
 import { redirect } from 'next/navigation'

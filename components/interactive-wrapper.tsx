@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, useRef } from 'react'
+import React, { type ReactNode, useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react'
 import { cn } from '@/lib/utils'
 
