@@ -57,20 +57,20 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
   const topFirms = [...unifiedFirms]
     .sort((a, b) => (b.catalogueStats?.paidPayoutAmount ?? 0) - (a.catalogueStats?.paidPayoutAmount ?? 0))
-    .slice(0, 3)
+    .slice(0, 5)
     .map((f) => ({
       name: f.name,
       paidPayout: f.catalogueStats?.paidPayoutAmount ?? 0,
       accounts: f.catalogueStats?.accountsCount ?? 0,
     }))
 
-  const topCoupons = activeDeals.slice(0, 3).map((d) => ({
+  const topCoupons = activeDeals.slice(0, 5).map((d) => ({
     firmName: d.firmName,
     code: d.couponCode,
     discount: d.discountPercent ?? 0,
   }))
 
-  const topLeaders = leaders.slice(0, 3).map((l) => ({
+  const topLeaders = leaders.slice(0, 5).map((l) => ({
     username: l.username,
     monthlyPnl: l.monthlyPnl ?? 0,
   }))

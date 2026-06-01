@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import {
   ArrowRight,
@@ -454,141 +454,9 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
          </section>
 
         {/* ═══════════════════════════════════════════════════════════════
-            LIVE FROM THE PLATFORM — Refined
+            LIVE FROM THE PLATFORM — Auto-sliding carousel
            ═══════════════════════════════════════════════════════════════ */}
-        <section className="pb-16 sm:pb-20">
-          <div className={HOME_WIDTH}>
-            <div className="mb-8">
-              <div className={eyebrowStyle}>LIVE FROM THE PLATFORM</div>
-              <h2 className="ref-h-section mt-1">Platform Pulse</h2>
-              <p className="ref-body mt-2 max-w-lg">Real-time data from funded traders, active deals, and the leaderboard.</p>
-            </div>
-
-            <div className="space-y-4">
-            {/* Row 1: Top Firms */}
-            <motion.div
-              className="rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5 sm:p-6"
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <div className="text-[11px] font-semibold tracking-[0.14em] text-[var(--qe-ref-green)]">TOP FIRMS</div>
-                  <div className="mt-0.5 text-[13px] text-[var(--qe-ref-text-muted)]">Leading prop firms by total payouts</div>
-                </div>
-                <Link href={`/${locale}/propfirms`} className="text-[12px] text-[var(--qe-ref-green)] hover:underline font-medium min-h-[36px] inline-flex items-center touch-manipulation">
-                  View all →
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {highlights.topFirms.length > 0 ? (
-                  highlights.topFirms.map((f, i) => (
-                    <div key={i} className="flex items-center gap-3 rounded-xl bg-[var(--qe-ref-surface-2)] px-4 py-3">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold text-[var(--qe-ref-text-muted)] bg-[var(--qe-ref-card)]">
-                        {i + 1}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="text-[13px] font-semibold text-[var(--qe-ref-text)] truncate">{f.name}</div>
-                        <div className="text-[11px] text-[var(--qe-ref-text-muted)]">{f.accounts} accounts</div>
-                      </div>
-                      <div className="text-[13px] font-semibold tabular-nums text-[var(--qe-ref-green)] shrink-0">
-                        ${Math.round(f.paidPayout).toLocaleString()}
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-[var(--qe-ref-text-muted)] text-sm col-span-3 py-6 text-center">Live data loading…</div>
-                )}
-              </div>
-            </motion.div>
-
-            {/* Row 2: Hot Deals */}
-            <motion.div
-              className="rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5 sm:p-6"
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.4, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <div className="text-[11px] font-semibold tracking-[0.14em] text-[var(--qe-ref-green)]">HOT DEALS</div>
-                  <div className="mt-0.5 text-[13px] text-[var(--qe-ref-text-muted)]">Active prop firm discounts right now</div>
-                </div>
-                <Link href={`/${locale}/deals`} className="text-[12px] text-[var(--qe-ref-green)] hover:underline font-medium min-h-[36px] inline-flex items-center touch-manipulation">
-                  View all →
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {highlights.topCoupons.length > 0 ? (
-                  highlights.topCoupons.map((c, i) => (
-                    <div key={i} className="flex items-center gap-3 rounded-xl bg-[var(--qe-ref-surface-2)] px-4 py-3">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)]">
-                        <Percent className="h-4 w-4" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="text-[13px] font-semibold text-[var(--qe-ref-text)] truncate">{c.firmName}</div>
-                        <div className="text-[11px] font-mono text-[var(--qe-ref-text-muted)]">{c.code}</div>
-                      </div>
-                      <div className="text-[13px] font-bold tabular-nums text-[var(--qe-ref-green)] shrink-0">
-                        {c.discount}% OFF
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-[var(--qe-ref-text-muted)] text-sm col-span-3 py-6 text-center">Live promos loading…</div>
-                )}
-              </div>
-            </motion.div>
-
-            {/* Row 3: Top Traders */}
-            <motion.div
-              className="rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] p-5 sm:p-6"
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.4, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <div className="text-[11px] font-semibold tracking-[0.14em] text-[var(--qe-ref-green)]">TOP TRADERS</div>
-                  <div className="mt-0.5 text-[13px] text-[var(--qe-ref-text-muted)]">This month's highest performers</div>
-                </div>
-                <Link href={`/${locale}/leaderboard`} className="text-[12px] text-[var(--qe-ref-green)] hover:underline font-medium min-h-[36px] inline-flex items-center touch-manipulation">
-                  View all →
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {highlights.topLeaders.length > 0 ? (
-                  highlights.topLeaders.map((l, i) => (
-                    <div key={i} className="flex items-center gap-3 rounded-xl bg-[var(--qe-ref-surface-2)] px-4 py-3">
-                      <div className={cn(
-                        "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold",
-                        i === 0 ? "bg-amber-400/15 text-amber-400" : i === 1 ? "bg-gray-400/15 text-gray-400" : i === 2 ? "bg-orange-400/15 text-orange-400" : "bg-[var(--qe-ref-card)] text-[var(--qe-ref-text-muted)]"
-                      )}>
-                        {i + 1}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="text-[13px] font-semibold text-[var(--qe-ref-text)] truncate">{l.username}</div>
-                      </div>
-                      <div className="text-[13px] font-semibold tabular-nums text-[var(--qe-ref-green)] shrink-0">
-                        +${Math.round(l.monthlyPnl).toLocaleString()}
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-[var(--qe-ref-text-muted)] text-sm col-span-3 py-6 text-center">Leaderboard syncing…</div>
-                )}
-              </div>
-            </motion.div>
-            </div>
-          </div>
-        </section>
+        <PlatformPulse highlights={highlights} locale={locale} />
 
         {/* ═══════════════════════════════════════════════════════════════
             SECTION 3: ADVANCED TRADING (Reference: left accordion + right circular diagram)
@@ -1043,3 +911,206 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
   )
 }
 
+/* ── Platform Pulse: auto-sliding carousel ── */
+
+const PULSE_AUTO_SLIDE_MS = 5000
+
+const pulseSlides = [
+  { key: 'firms', label: 'TOP FIRMS', sub: 'Leading prop firms by total payouts', icon: Building2, href: '/propfirms' },
+  { key: 'deals', label: 'HOT DEALS', sub: 'Active prop firm discounts right now', icon: Percent, href: '/deals' },
+  { key: 'traders', label: 'TOP TRADERS', sub: "This month's highest performers", icon: Trophy, href: '/leaderboard' },
+] as const
+
+function PlatformPulse({ highlights, locale }: { highlights: HomeLiveHighlights; locale: string }) {
+  const [activeSlide, setActiveSlide] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const [direction, setDirection] = useState(1)
+  const slideCount = pulseSlides.length
+
+  const advance = useCallback((dir: number) => {
+    setDirection(dir)
+    setActiveSlide((prev) => (prev + dir + slideCount) % slideCount)
+  }, [slideCount])
+
+  useEffect(() => {
+    if (paused) return
+    const timer = setTimeout(() => advance(1), PULSE_AUTO_SLIDE_MS)
+    return () => clearTimeout(timer)
+  }, [activeSlide, paused, advance])
+
+  const current = pulseSlides[activeSlide]
+
+  const slideVariants = {
+    enter: (dir: number) => ({ x: dir > 0 ? 80 : -80, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? -80 : 80, opacity: 0 }),
+  }
+
+  return (
+    <section className="pb-16 sm:pb-20">
+      <div className={HOME_WIDTH}>
+        {/* Header */}
+        <motion.div
+          className="mb-6 flex items-end justify-between gap-4"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div>
+            <div className={eyebrowStyle}>LIVE FROM THE PLATFORM</div>
+            <h2 className="ref-h-section mt-1">Platform Pulse</h2>
+            <p className="ref-body mt-2 max-w-lg">Real-time data from funded traders, active deals, and the leaderboard.</p>
+          </div>
+
+          {/* Nav arrows */}
+          <div className="hidden sm:flex items-center gap-2">
+            <button
+              onClick={() => advance(-1)}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] text-[var(--qe-ref-text-muted)] transition-colors hover:border-[var(--qe-ref-green)]/40 hover:text-[var(--qe-ref-green)]"
+            >
+              <ChevronDown className="h-4 w-4 rotate-90" />
+            </button>
+            <button
+              onClick={() => advance(1)}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] text-[var(--qe-ref-text-muted)] transition-colors hover:border-[var(--qe-ref-green)]/40 hover:text-[var(--qe-ref-green)]"
+            >
+              <ChevronDown className="h-4 w-4 -rotate-90" />
+            </button>
+          </div>
+        </motion.div>
+
+        {/* Carousel container */}
+        <motion.div
+          className="relative overflow-hidden rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)]"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocusCapture={() => setPaused(true)}
+          onBlurCapture={() => setPaused(false)}
+        >
+          {/* Slide header bar */}
+          <div className="flex items-center justify-between border-b border-[var(--qe-ref-card-border)] px-5 sm:px-6 py-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)]">
+                <current.icon className="h-4 w-4" />
+              </div>
+              <div>
+                <div className="text-[11px] font-semibold tracking-[0.14em] text-[var(--qe-ref-green)]">{current.label}</div>
+                <div className="text-[12px] text-[var(--qe-ref-text-muted)]">{current.sub}</div>
+              </div>
+            </div>
+            <Link
+              href={`/${locale}${current.href}`}
+              className="text-[12px] text-[var(--qe-ref-green)] hover:underline font-medium min-h-[36px] inline-flex items-center touch-manipulation"
+            >
+              View all →
+            </Link>
+          </div>
+
+          {/* Slide content */}
+          <div className="relative p-5 sm:p-6" style={{ minHeight: 120 }}>
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={current.key}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {current.key === 'firms' && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {highlights.topFirms.length > 0 ? highlights.topFirms.map((f, i) => (
+                      <div key={i} className="flex items-center gap-3 rounded-xl bg-[var(--qe-ref-surface-2)] px-4 py-3 transition-colors hover:bg-[var(--qe-ref-surface-2)]/80">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold text-[var(--qe-ref-text-muted)] bg-[var(--qe-ref-card)]">
+                          {i + 1}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-[13px] font-semibold text-[var(--qe-ref-text)] truncate">{f.name}</div>
+                          <div className="text-[11px] text-[var(--qe-ref-text-muted)]">{f.accounts} accounts</div>
+                        </div>
+                        <div className="text-[13px] font-semibold tabular-nums text-[var(--qe-ref-green)] shrink-0">
+                          ${Math.round(f.paidPayout).toLocaleString()}
+                        </div>
+                      </div>
+                    )) : (
+                      <div className="text-[var(--qe-ref-text-muted)] text-sm col-span-3 py-6 text-center">Live data loading…</div>
+                    )}
+                  </div>
+                )}
+
+                {current.key === 'deals' && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {highlights.topCoupons.length > 0 ? highlights.topCoupons.map((c, i) => (
+                      <div key={i} className="flex items-center gap-3 rounded-xl bg-[var(--qe-ref-surface-2)] px-4 py-3 transition-colors hover:bg-[var(--qe-ref-surface-2)]/80">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--qe-ref-green)]/10 text-[var(--qe-ref-green)]">
+                          <Percent className="h-4 w-4" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-[13px] font-semibold text-[var(--qe-ref-text)] truncate">{c.firmName}</div>
+                          <div className="text-[11px] font-mono text-[var(--qe-ref-text-muted)]">{c.code}</div>
+                        </div>
+                        <div className="text-[13px] font-bold tabular-nums text-[var(--qe-ref-green)] shrink-0">
+                          {c.discount}% OFF
+                        </div>
+                      </div>
+                    )) : (
+                      <div className="text-[var(--qe-ref-text-muted)] text-sm col-span-3 py-6 text-center">Live promos loading…</div>
+                    )}
+                  </div>
+                )}
+
+                {current.key === 'traders' && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {highlights.topLeaders.length > 0 ? highlights.topLeaders.map((l, i) => (
+                      <div key={i} className="flex items-center gap-3 rounded-xl bg-[var(--qe-ref-surface-2)] px-4 py-3 transition-colors hover:bg-[var(--qe-ref-surface-2)]/80">
+                        <div className={cn(
+                          "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold",
+                          i === 0 ? "bg-amber-400/15 text-amber-400" : i === 1 ? "bg-gray-400/15 text-gray-400" : i === 2 ? "bg-orange-400/15 text-orange-400" : "bg-[var(--qe-ref-card)] text-[var(--qe-ref-text-muted)]"
+                        )}>
+                          {i + 1}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-[13px] font-semibold text-[var(--qe-ref-text)] truncate">{l.username}</div>
+                        </div>
+                        <div className="text-[13px] font-semibold tabular-nums text-[var(--qe-ref-green)] shrink-0">
+                          +${Math.round(l.monthlyPnl).toLocaleString()}
+                        </div>
+                      </div>
+                    )) : (
+                      <div className="text-[var(--qe-ref-text-muted)] text-sm col-span-3 py-6 text-center">Leaderboard syncing…</div>
+                    )}
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Dot indicators */}
+          <div className="flex items-center justify-center gap-2 pb-5">
+            {pulseSlides.map((slide, i) => (
+              <button
+                key={slide.key}
+                onClick={() => { setDirection(i > activeSlide ? 1 : -1); setActiveSlide(i) }}
+                className={cn(
+                  "h-2 rounded-full transition-all duration-300",
+                  i === activeSlide
+                    ? "w-10 bg-[var(--qe-ref-green)]"
+                    : "w-2.5 bg-[var(--qe-ref-card-border)] hover:bg-[var(--qe-ref-text-muted)]/30"
+                )}
+              />
+            ))}
+            <span className="ml-2 text-[10px] font-semibold tabular-nums text-[var(--qe-ref-text-muted)]">
+              {activeSlide + 1} / {slideCount}
+            </span>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
