@@ -202,6 +202,21 @@ export async function getStatisticsAction(
   }
   const dayPnls = Array.from(dayPnlMap.values())
 
+  // ── Featured Excerpts ──
+  const featuredExcerpts = trades
+    .filter(t => t.journal && (t.journal.excerptTitle || t.journal.featuredExcerpt))
+    .map(t => ({
+      id: t.journal!.id,
+      tradeId: t.id,
+      instrument: t.instrument || 'Unknown',
+      side: t.side || '',
+      pnl: Number(t.pnl),
+      entryDate: formatISO(t.entryDate),
+      excerptTitle: t.journal!.excerptTitle,
+      featuredExcerpt: t.journal!.featuredExcerpt,
+    }))
+    .sort((a, b) => b.entryDate.localeCompare(a.entryDate))
+
   return {
     tickerStats,
     dailyStats,
@@ -219,5 +234,6 @@ export async function getStatisticsAction(
     worstDay: dayPnls.length > 0 ? Math.min(...dayPnls) : 0,
     profitFactor: grandResult.totalRR,
     avgRR: grandResult.avgRR,
+    featuredExcerpts,
   }
 }

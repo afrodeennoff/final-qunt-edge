@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo, useCallback, useRef, useEffect, Fragment } from 'react'
+import dynamic from 'next/dynamic'
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts'
@@ -21,6 +22,11 @@ import {
   unifiedMetricPanelClassName,
   unifiedInfoLabelClassName,
 } from '@/components/layout/unified-page-recipes'
+
+const TiptapEditor = dynamic(
+  () => import('@/components/tiptap-editor').then(m => ({ default: m.TiptapEditor })),
+  { ssr: false, loading: () => <div className="h-[200px] w-full animate-pulse rounded-lg bg-white/5" /> }
+)
 
 // ── Constants ──
 
@@ -233,6 +239,12 @@ export default function JournalClient() {
   const [newInstrument, setNewInstrument] = useState('')
   const [newSide, setNewSide] = useState<'LONG' | 'SHORT' | null>(null)
 
+  // Featured excerpt state
+  const [modalExcerptTitle, setModalExcerptTitle] = useState('')
+  const [modalFeaturedExcerpt, setModalFeaturedExcerpt] = useState('')
+  const [excerptEditorOpen, setExcerptEditorOpen] = useState(false)
+  const excerptSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
   // Tag defaults loaded from server (persisted per user)
   const [tagDefaults, setTagDefaults] = useState<JournalTagDefaults>({
     sessions: ['London', 'NY', 'Asia'],
@@ -349,7 +361,10 @@ export default function JournalClient() {
   )
 
   useEffect(() => {
-    return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current) }
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
+      if (excerptSaveTimerRef.current) clearTimeout(excerptSaveTimerRef.current)
+    }
   }, [])
 
   const handleDelete = useCallback(async () => {
@@ -384,6 +399,9 @@ export default function JournalClient() {
     setModalPreNotes(j?.preTradeNotes ?? '')
     setModalPostNotes(j?.postTradeReview ?? '')
     setModalScreenshots(j?.screenshots ?? [])
+    setModalExcerptTitle(j?.excerptTitle ?? '')
+    setModalFeaturedExcerpt(j?.featuredExcerpt ?? '')
+    setExcerptEditorOpen(false)
     setIsNewTrade(false)
     setModalOpen(true)
   }, [toggleExpand, handleCreate])
@@ -398,6 +416,9 @@ export default function JournalClient() {
     setModalPreNotes('')
     setModalPostNotes('')
     setModalScreenshots([])
+    setModalExcerptTitle('')
+    setModalFeaturedExcerpt('')
+    setExcerptEditorOpen(false)
     setNewInstrument('')
     setNewSide(null)
     setIsNewTrade(true)
@@ -447,6 +468,8 @@ export default function JournalClient() {
         timeframe: modalTimeframe.join(', ') || null,
         session: modalSession.join(', ') || null,
         screenshots: modalScreenshots,
+        excerptTitle: modalExcerptTitle || null,
+        featuredExcerpt: modalFeaturedExcerpt || null,
       })
       refetch()
       setModalOpen(false)
@@ -473,6 +496,8 @@ export default function JournalClient() {
         timeframe: modalTimeframe.join(', ') || null,
         session: modalSession.join(', ') || null,
         screenshots: modalScreenshots,
+        excerptTitle: modalExcerptTitle || null,
+        featuredExcerpt: modalFeaturedExcerpt || null,
       })
     } else {
       handleUpdate(entryId, {
@@ -484,11 +509,13 @@ export default function JournalClient() {
         timeframe: modalTimeframe.join(', ') || null,
         session: modalSession.join(', ') || null,
         screenshots: modalScreenshots,
+        excerptTitle: modalExcerptTitle || null,
+        featuredExcerpt: modalFeaturedExcerpt || null,
       })
     }
 
     setModalOpen(false)
-  }, [isNewTrade, selectedCard, modalSession, modalTimeframe, modalIctTags, modalEmotion, modalStars, modalPreNotes, modalPostNotes, newInstrument, newSide, selectedDayKey, handleCreate, handleUpdate])
+  }, [isNewTrade, selectedCard, modalSession, modalTimeframe, modalIctTags, modalEmotion, modalStars, modalPreNotes, modalPostNotes, newInstrument, newSide, selectedDayKey, handleCreate, handleUpdate, modalExcerptTitle, modalFeaturedExcerpt])
 
   const handleSelectTrade = useCallback((tradeId: string) => {
     if (hasUnsaved && selectedCard?.journal) {
@@ -1003,6 +1030,80 @@ export default function JournalClient() {
                       placeholder="What happened? How did you execute?"
                       className="w-full rounded-lg p-3 text-sm bg-black border border-white/10 text-white placeholder:text-white/20 resize-y" />
                   </div>
+                </div>
+
+                {/* FEATURED EXCERPT */}
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="text-[10px] text-white/50 tracking-widest">FEATURED EXCERPT</div>
+                    <button
+                      type="button"
+                      onClick={() => setExcerptEditorOpen(!excerptEditorOpen)}
+                      className="text-[10px] text-white/30 hover:text-[#00ff9f] transition-colors"
+                    >
+                      {excerptEditorOpen ? 'Collapse' : 'Edit'}
+                    </button>
+                  </div>
+
+                  {(excerptEditorOpen || modalExcerptTitle || modalFeaturedExcerpt) && (
+                    <div className="space-y-2">
+                      <input
+                        type="text"
+                        value={modalExcerptTitle}
+                        onChange={e => {
+                          setModalExcerptTitle(e.target.value)
+                          if (!isNewTrade && selectedCard?.journal && !selectedCard.journal.id.startsWith('temp-')) {
+                            update('excerptTitle', e.target.value || null)
+                          }
+                        }}
+                        placeholder="Give this excerpt a title..."
+                        maxLength={200}
+                        className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-[#00ff9f]/50"
+                      />
+                      <div className="text-[9px] text-white/25">This will be displayed on your profile.</div>
+                    </div>
+                  )}
+
+                  {excerptEditorOpen && (
+                    <div className="mt-2 rounded-lg border border-white/10 overflow-hidden bg-black">
+                      <TiptapEditor
+                        content={modalFeaturedExcerpt}
+                        onChange={(html) => {
+                          setModalFeaturedExcerpt(html)
+                          if (excerptSaveTimerRef.current) clearTimeout(excerptSaveTimerRef.current)
+                          excerptSaveTimerRef.current = setTimeout(() => {
+                            if (!isNewTrade && selectedCard?.journal && !selectedCard.journal.id.startsWith('temp-')) {
+                              update('featuredExcerpt', html || null)
+                            }
+                          }, 1500)
+                        }}
+                        placeholder="Write your featured trade reflection..."
+                        height="220px"
+                        width="100%"
+                        className="!bg-black"
+                      />
+                      <div className="flex items-center justify-between px-3 py-2 border-t border-white/5 bg-black/60">
+                        <span className="text-[9px] text-white/25">Rich text formatting supported</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {!excerptEditorOpen && (modalExcerptTitle || modalFeaturedExcerpt) && (
+                    <div
+                      onClick={() => setExcerptEditorOpen(true)}
+                      className="mt-2 rounded-lg border border-white/5 p-3 cursor-pointer hover:border-white/10 transition-colors"
+                    >
+                      <div className="text-xs font-medium text-white/80 truncate">
+                        {modalExcerptTitle || 'Untitled excerpt'}
+                      </div>
+                      {modalFeaturedExcerpt && (
+                        <div
+                          className="text-[11px] text-white/40 mt-1 line-clamp-2"
+                          dangerouslySetInnerHTML={{ __html: modalFeaturedExcerpt }}
+                        />
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Screenshots */}

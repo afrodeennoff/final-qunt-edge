@@ -45,6 +45,17 @@ export type TradePnlEntry = {
   entryDate: string
 }
 
+export type FeaturedExcerptStat = {
+  id: string
+  tradeId: string
+  instrument: string
+  side: string
+  pnl: number
+  entryDate: string
+  excerptTitle: string | null
+  featuredExcerpt: string | null
+}
+
 export type StatisticsResult = {
   tickerStats: TickerStat[]
   dailyStats: DailyStat[]
@@ -59,4 +70,5 @@ export type StatisticsResult = {
   worstDay: number
   profitFactor: number
   avgRR: number
+  featuredExcerpts: FeaturedExcerptStat[]
 }

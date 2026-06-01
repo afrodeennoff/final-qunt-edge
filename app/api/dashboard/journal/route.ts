@@ -119,6 +119,8 @@ async function handleGet(request: NextRequest) {
         { journal: { postTradeReview: { contains: search, mode: 'insensitive' } } },
         { journal: { emotions: { contains: search, mode: 'insensitive' } } },
         { journal: { customTags: { has: search } } },
+        { journal: { excerptTitle: { contains: search, mode: 'insensitive' } } },
+        { journal: { featuredExcerpt: { contains: search, mode: 'insensitive' } } },
       ]
     }
 
@@ -205,6 +207,8 @@ async function handlePost(request: NextRequest) {
       screenshots,
       timeframe,
       session,
+      excerptTitle,
+      featuredExcerpt,
     } = body
 
     if (!tradeId || !accountNumber) {
@@ -246,6 +250,8 @@ async function handlePost(request: NextRequest) {
         screenshots: screenshots ?? [],
         timeframe: timeframe ?? null,
         session: session ?? null,
+        excerptTitle: excerptTitle ?? null,
+        featuredExcerpt: featuredExcerpt ?? null,
       },
     })
 

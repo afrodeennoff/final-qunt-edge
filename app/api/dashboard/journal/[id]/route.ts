@@ -36,6 +36,8 @@ const UPDATE_FIELDS = [
   'session',
   'pinned',
   'archived',
+  'excerptTitle',
+  'featuredExcerpt',
 ] as const
 
 type UpdateField = (typeof UPDATE_FIELDS)[number]

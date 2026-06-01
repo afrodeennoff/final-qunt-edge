@@ -20,6 +20,9 @@ export interface JournalEntry {
   pinned: boolean
   archived: boolean
 
+  excerptTitle: string | null
+  featuredExcerpt: string | null
+
   createdAt: string
   updatedAt: string
 }
@@ -78,6 +81,8 @@ export interface CreateJournalInput {
   screenshots?: string[]
   timeframe?: string
   session?: string
+  excerptTitle?: string
+  featuredExcerpt?: string
 }
 
 export type UpdateJournalInput = Partial<Omit<CreateJournalInput, 'tradeId' | 'accountNumber'>>

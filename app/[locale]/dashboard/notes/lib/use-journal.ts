@@ -224,6 +224,8 @@ export function useJournal(userId: string | null): UseJournalReturn {
       session: input.session ?? null,
       pinned: false,
       archived: false,
+      excerptTitle: input.excerptTitle ?? null,
+      featuredExcerpt: input.featuredExcerpt ?? null,
       createdAt: now,
       updatedAt: now,
     }

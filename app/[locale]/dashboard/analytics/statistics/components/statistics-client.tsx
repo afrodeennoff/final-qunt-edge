@@ -215,6 +215,58 @@ export default function StatisticsClient() {
           </div>
         </div>
       )}
+
+      {/* Journal Excerpts — featured note reference log */}
+      {data?.featuredExcerpts && data.featuredExcerpts.length > 0 && (
+        <div className="rounded-2xl bg-[#111311] border border-white/5 p-5">
+          <div className="text-[10px] tracking-[2px] uppercase text-[#00ff9f]/70 mb-4">JOURNAL EXCERPTS</div>
+          <div className="space-y-2">
+            {data.featuredExcerpts.slice(0, 15).map(ex => (
+              <div
+                key={ex.id}
+                className="flex items-start gap-3 rounded-xl bg-black/40 p-3 hover:bg-black/60 transition-colors group cursor-default"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-white truncate">
+                      {ex.excerptTitle || 'Untitled'}
+                    </span>
+                    <span className="shrink-0 text-[9px] tabular-nums text-white/30">
+                      {new Date(ex.entryDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-[10px] text-white/40">{ex.instrument}</span>
+                    <span className={cn(
+                      'text-[9px] font-semibold',
+                      ex.side === 'LONG' ? 'text-[#00ff9f]' : ex.side === 'SHORT' ? 'text-[#ff4d4d]' : 'text-white/30'
+                    )}>
+                      {ex.side}
+                    </span>
+                    {ex.featuredExcerpt && (
+                      <div
+                        className="text-[10px] text-white/30 line-clamp-1 max-w-[300px]"
+                        dangerouslySetInnerHTML={{ __html: ex.featuredExcerpt }}
+                      />
+                    )}
+                  </div>
+                </div>
+                <div className={cn(
+                  'shrink-0 text-xs font-semibold tabular-nums',
+                  ex.pnl >= 0 ? 'text-[#00ff9f]' : 'text-[#ff4d4d]'
+                )}>
+                  {formatPnl(ex.pnl)}
+                </div>
+              </div>
+            ))}
+          </div>
+          {data.featuredExcerpts.length > 15 && (
+            <div className="mt-2 text-center text-[9px] text-white/25">
+              Showing 15 of {data.featuredExcerpts.length} excerpts
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
