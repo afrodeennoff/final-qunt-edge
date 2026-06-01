@@ -12,7 +12,6 @@ import {
 import { useUserStore } from '@/store/user-store'
 import { useJournal } from './lib/use-journal'
 import { getJournalTagDefaults, saveJournalTagDefaults, type JournalTagDefaults } from '@/server/journal'
-import { createSingleTradeAction } from '@/server/trades'
 import { RatingStars } from './components/rating-stars'
 import { ScreenshotGrid } from './components/screenshot-grid'
 import type { JournalEntry, TradeJournalCard } from './lib/journal-types'
@@ -22,7 +21,7 @@ import {
   unifiedMetricPanelClassName,
   unifiedInfoLabelClassName,
 } from '@/components/layout/unified-page-recipes'
-import { useDashboardStats } from '@/context/data-provider'
+import { useDashboardTrades } from '@/context/data-provider'
 
 const TiptapEditor = dynamic(
   () => import('@/components/tiptap-editor').then(m => ({ default: m.TiptapEditor })),
@@ -288,22 +287,24 @@ export default function JournalClient() {
     addCard, refetch, setFilters,
   } = useJournal(userId)
 
-  const { formattedTrades } = useDashboardStats()
+  const { trades: allTrades } = useDashboardTrades()
 
-  const isLoading = journalLoading || !Array.isArray(formattedTrades) || formattedTrades.length === 0
+  const userStoreLoading = useUserStore(s => s.isLoading)
+  const isLoading = journalLoading || userStoreLoading || !Array.isArray(allTrades)
 
   // Sync account filter to journal hook
   useEffect(() => {
     setFilters({ accountNumber: selectedAccount })
   }, [selectedAccount, setFilters])
 
-  // Use the exact same trades as /dashboard/trades (from central DataProvider)
-  // Attach any existing journal metadata on top
+  // Use ALL trades from DataProvider (unfiltered) — same data as /dashboard/trades
+  // Attach any existing journal metadata on top, and apply account filter
   const displayCards = useMemo(() => {
     const journalMap = new Map(journalCards.map(c => [c.trade.id, c.journal]))
 
-    return formattedTrades
-      .filter(t => t && t.id && t.entryDate) // guard against bad data
+    return allTrades
+      .filter(t => t && t.id && t.entryDate)
+      .filter(t => !selectedAccount || t.accountNumber === selectedAccount)
       .map(trade => {
         const journal = journalMap.get(trade.id) || null
         const entryDate = trade.entryDate instanceof Date 
@@ -332,7 +333,7 @@ export default function JournalClient() {
           journal,
         } as TradeJournalCard
       })
-  }, [formattedTrades, journalCards])
+  }, [allTrades, journalCards, selectedAccount])
 
   // ── Weekly groups ──
   const dayGroups = useMemo(() => groupByDay(displayCards), [displayCards])
@@ -469,7 +470,6 @@ export default function JournalClient() {
     setModalExcerptTitle(j?.excerptTitle ?? '')
     setModalFeaturedExcerpt(j?.featuredExcerpt ?? '')
     setExcerptEditorOpen(true)   // Default expanded as requested
-    setIsNewTrade(false)
     setModalOpen(true)
   }, [toggleExpand, handleCreate])
 
@@ -610,13 +610,6 @@ export default function JournalClient() {
               )}
             </div>
           )}
-          <button
-            type="button"
-            disabled
-            className="inline-flex items-center gap-2 rounded-xl bg-[#00ff9f]/30 px-4 py-2 text-sm font-semibold text-white/50 transition-all cursor-not-allowed"
-          >
-            New Trade
-          </button>
         </div>
       </div>
 
@@ -650,7 +643,7 @@ export default function JournalClient() {
         })}
         {dayGroups.length === 0 && !isLoading && (
           <div className="col-span-7 text-center py-6 text-xs text-white/30 border border-white/5 rounded-xl">
-            No trades yet. Use "New Trade" or import to begin journaling.
+            No trades yet. Import trades to begin journaling.
           </div>
         )}
       </div>
@@ -911,19 +904,15 @@ export default function JournalClient() {
                <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#111311]">
                  <div>
                    <div className="text-[17px] font-semibold tracking-tight">
-                     {isNewTrade
-                       ? `New Trade — ${selectedDayKey ? formatDate(selectedDayKey) : formatDate(new Date().toISOString())}`
-                       : selectedCard
-                         ? `${selectedCard.trade.instrument} ${formatDate(selectedCard.trade.entryDate)} ${formatTime(selectedCard.trade.entryDate)}`
-                         : 'Trade Details'
+                     {selectedCard
+                       ? `${selectedCard.trade.instrument} ${formatDate(selectedCard.trade.entryDate)} ${formatTime(selectedCard.trade.entryDate)}`
+                       : 'Trade Details'
                      }
                    </div>
                    <div className="text-[11px] text-white/50 mt-0.5">
-                     {isNewTrade
-                       ? "Add a new entry to today's log"
-                       : selectedCard
-                         ? `${selectedCard.trade.side || '—'} • ${activeDayTrades.length} trades on this day`
-                         : ''
+                     {selectedCard
+                       ? `${selectedCard.trade.side || '—'} • ${activeDayTrades.length} trades on this day`
+                       : ''
                      }
                    </div>
                  </div>
@@ -935,63 +924,8 @@ export default function JournalClient() {
               {/* Modal Body — redesigned to 100% match reference image */}
               <div className="p-6 space-y-5 max-h-[82vh] overflow-y-auto bg-[#0a0c0a] text-white">
 
-                {/* New Trade instrument + side (only for new) */}
-                {isNewTrade && (
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="text-[10px] text-white/50 tracking-widest mb-1.5">INSTRUMENT</div>
-                      <input
-                        type="text"
-                        value={newInstrument}
-                        onChange={e => setNewInstrument(e.target.value.toUpperCase())}
-                        placeholder="ES, NQ, CL…"
-                        className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-[#00ff9f]/50"
-                      />
-                    </div>
-                    <div>
-                      <div className="text-[10px] text-white/50 tracking-widest mb-1.5">SIDE</div>
-                      <div className="flex gap-2">
-                        <button type="button" onClick={() => setNewSide('LONG')}
-                          className={cn('flex-1 rounded-lg py-2 text-sm font-medium border', newSide==='LONG' ? 'border-[#00ff9f] bg-[#00ff9f]/10 text-[#00ff9f]' : 'border-white/10 text-white/50 hover:text-white')}>
-                          Long
-                        </button>
-                        <button type="button" onClick={() => setNewSide('SHORT')}
-                          className={cn('flex-1 rounded-lg py-2 text-sm font-medium border', newSide==='SHORT' ? 'border-[#ff4d4d] bg-[#ff4d4d]/10 text-[#ff4d4d]' : 'border-white/10 text-white/50 hover:text-white')}>
-                          Short
-                        </button>
-                      </div>
-                    </div>
-                   </div>
-                 )}
-
-                 {/* Real trade numbers for New Trade (so it is not zero/mock) */}
-                 {isNewTrade && (
-                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                     <div>
-                       <div className="text-[10px] text-white/50 tracking-widest mb-1.5">QUANTITY</div>
-                       <input type="number" step="0.01" value={newQuantity} onChange={e => setNewQuantity(e.target.value)}
-                         placeholder="1" className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20" />
-                     </div>
-                     <div>
-                       <div className="text-[10px] text-white/50 tracking-widest mb-1.5">ENTRY PRICE</div>
-                       <input type="number" step="0.01" value={newEntryPrice} onChange={e => setNewEntryPrice(e.target.value)}
-                         placeholder="5842.25" className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20" />
-                     </div>
-                     <div>
-                       <div className="text-[10px] text-white/50 tracking-widest mb-1.5">CLOSE PRICE</div>
-                       <input type="number" step="0.01" value={newClosePrice} onChange={e => setNewClosePrice(e.target.value)}
-                         placeholder="5858.75" className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20" />
-                     </div>
-                     <div>
-                       <div className="text-[10px] text-white/50 tracking-widest mb-1.5">PNL</div>
-                       <input type="number" step="0.01" value={newPnl} onChange={e => setNewPnl(e.target.value)}
-                         placeholder="620" className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20" />
-                     </div>
-                   </div>
-                 )}
-
-                 {/* 5 Stat Cards Row (exact visual from image) — only for existing trades */}
-                {!isNewTrade && selectedCard && (() => {
+                {/* 5 Stat Cards Row (exact visual from image) */}
+                {selectedCard && (() => {
                   const avgWin = activeDayTrades.filter(c => c.trade.pnl > 0).reduce((s,c)=>s+c.trade.pnl,0) / Math.max(1, activeDayTrades.filter(c=>c.trade.pnl>0).length || 1)
                   const r = avgWin > 0 ? selectedCard.trade.pnl / avgWin : 0
                   return (
@@ -1150,7 +1084,7 @@ export default function JournalClient() {
                         value={modalExcerptTitle}
                         onChange={e => {
                           setModalExcerptTitle(e.target.value)
-                          if (!isNewTrade && selectedCard?.journal && !selectedCard.journal.id.startsWith('temp-')) {
+                          if (selectedCard?.journal && !selectedCard.journal.id.startsWith('temp-')) {
                             update('excerptTitle', e.target.value || null)
                           }
                         }}
@@ -1170,7 +1104,7 @@ export default function JournalClient() {
                           setModalFeaturedExcerpt(html)
                           if (excerptSaveTimerRef.current) clearTimeout(excerptSaveTimerRef.current)
                           excerptSaveTimerRef.current = setTimeout(() => {
-                            if (!isNewTrade && selectedCard?.journal && !selectedCard.journal.id.startsWith('temp-')) {
+                            if (selectedCard?.journal && !selectedCard.journal.id.startsWith('temp-')) {
                               update('featuredExcerpt', html || null)
                             }
                           }, 1500)
@@ -1208,10 +1142,10 @@ export default function JournalClient() {
                 <div>
                   <div className="text-[10px] text-white/50 tracking-widest mb-1.5">SCREENSHOTS</div>
                   <ScreenshotGrid
-                    screenshots={isNewTrade ? modalScreenshots : (selectedCard?.journal?.screenshots ?? [])}
+                    screenshots={selectedCard?.journal?.screenshots ?? []}
                     onChange={v => {
                       setModalScreenshots(v)
-                      if (!isNewTrade && selectedCard?.journal) update('screenshots', v)
+                      if (selectedCard?.journal) update('screenshots', v)
                     }}
                   />
                 </div>
@@ -1220,7 +1154,7 @@ export default function JournalClient() {
               {/* Modal Footer */}
                  <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-[#0a0c0a]">
                 <div className="flex items-center gap-2 text-xs">
-                  {selectedCard?.journal && !isNewTrade && (
+                  {selectedCard?.journal && (
                     <Fragment>
                       <button type="button" onClick={handlePinToggle}
                         className={cn('flex items-center gap-1 px-2 py-1 rounded border', selectedCard.journal.pinned ? 'border-[#00ff9f] text-[#00ff9f]' : 'border-white/10 text-white/40 hover:text-white')}>

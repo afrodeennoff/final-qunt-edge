@@ -8,6 +8,7 @@ import { useUserStore } from '@/store/user-store'
 import { cn } from '@/lib/utils'
 import { ChevronDown } from 'lucide-react'
 import { useDashboardStats } from '@/context/data-provider'
+import { getJournalTradesAction } from '@/server/journal'
 
 
 type TimePeriod = '7d' | '14d' | '30d' | '90d' | 'all'
@@ -75,7 +76,52 @@ function statToRow(s: TickerStat | SetupStat | WeekdayStat): StatsTableRow {
 
 export default function StatisticsClient() {
   const accounts = useUserStore(s => s.accounts)
-  const { formattedTrades } = useDashboardStats()
+  const userId = useUserStore(s => s.supabaseUser?.id ?? s.user?.id ?? null)
+  const { formattedTrades, statistics } = useDashboardStats()
+  const providerLoading = useUserStore(s => s.isLoading)
+
+  // Fetch journal entries to merge with trades for tag/excerpt statistics
+  const [journalMap, setJournalMap] = useState<Map<string, { customTags: string[]; excerptTitle: string | null; featuredExcerpt: string | null }>>(new Map())
+
+  useEffect(() => {
+    if (!userId) return
+    let cancelled = false
+    let currentPage = 1
+    const pageSize = 200
+    const allEntries: Array<{ trade: Record<string, unknown>; journal: Record<string, unknown> | null }> = []
+
+    async function fetchAll() {
+      let hasMore = true
+      const uid = userId!
+      while (hasMore) {
+        const result = await getJournalTradesAction(uid, currentPage, pageSize)
+        if (cancelled) return
+        for (const entry of result.entries) {
+          allEntries.push(entry as typeof allEntries[number])
+        }
+        hasMore = currentPage < result.totalPages
+        currentPage++
+      }
+      if (cancelled) return
+      const map = new Map<string, { customTags: string[]; excerptTitle: string | null; featuredExcerpt: string | null }>()
+      for (const entry of allEntries) {
+        const trade = entry.trade as Record<string, unknown>
+        const journal = entry.journal as Record<string, unknown> | null
+        const tradeId = trade?.id as string | undefined
+        if (tradeId && journal) {
+          map.set(tradeId, {
+            customTags: (journal.customTags as string[]) ?? [],
+            excerptTitle: (journal.excerptTitle as string | null) ?? null,
+            featuredExcerpt: (journal.featuredExcerpt as string | null) ?? null,
+          })
+        }
+      }
+      setJournalMap(map)
+    }
+
+    fetchAll().catch(() => {})
+    return () => { cancelled = true }
+  }, [userId])
 
   const [period, setPeriod] = useState<TimePeriod>('all')
   const [selectedAccount, setSelectedAccount] = useState<string | null>(null)
@@ -107,24 +153,27 @@ export default function StatisticsClient() {
 
       const computable: ComputableTrade[] = trades
         .filter(t => t && t.id && t.entryDate != null)
-        .map(t => ({
-          id: t.id,
-          instrument: t.instrument || 'Unknown',
-          side: t.side || null,
-          pnl: Number(t.pnl) || 0,
-          entryDate: t.entryDate,
-          journal: (t as any).journal ?? null,
-        }))
+        .map(t => {
+          const j = journalMap.get(t.id)
+          return {
+            id: t.id,
+            instrument: t.instrument || 'Unknown',
+            side: t.side || null,
+            pnl: Number(t.pnl) || 0,
+            entryDate: t.entryDate,
+            journal: j ? { id: t.id, customTags: j.customTags, excerptTitle: j.excerptTitle, featuredExcerpt: j.featuredExcerpt } : null,
+          }
+        })
 
       return computeStatistics(computable)
     } catch (e) {
       console.error('Statistics computation failed:', e)
       return { grandTotal: 0, tickerStats: [], weekdayStats: [], setupStats: [], timeframeStats: [], dailyStats: [], allPnls: [], grandPnl: 0, grandWinRate: 0, avgRR: 0, profitFactor: 0, bestDay: 0, featuredExcerpts: [] }
     }
-  }, [formattedTrades, period, selectedAccount])
+  }, [formattedTrades, period, selectedAccount, journalMap])
 
-  // Use provider's loading state if available, otherwise derive from empty trades
-  const isLoading = !Array.isArray(formattedTrades) || (formattedTrades.length === 0 && period === 'all' && !selectedAccount)  // rough heuristic
+  // Use provider's loading state
+  const isLoading = providerLoading || !Array.isArray(formattedTrades)
 
   if (isLoading) {
     return (
@@ -298,11 +347,11 @@ export default function StatisticsClient() {
       {data?.featuredExcerpts && data.featuredExcerpts.length > 0 && (
         <div className="rounded-2xl bg-[#111311] border border-white/5 p-5">
           <div className="text-[10px] tracking-[2px] uppercase text-[#00ff9f]/70 mb-4">JOURNAL EXCERPTS</div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {data.featuredExcerpts.slice(0, 15).map(ex => (
               <div
                 key={ex.id}
-                className="flex items-start gap-3 rounded-xl bg-black/40 p-3 hover:bg-black/60 transition-colors group cursor-default"
+                className="flex items-start gap-4 rounded-xl bg-black/40 p-4 hover:bg-black/60 transition-colors group cursor-default"
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
@@ -323,7 +372,7 @@ export default function StatisticsClient() {
                     </span>
                     {ex.featuredExcerpt && (
                       <div
-                        className="text-[10px] text-white/30 line-clamp-1 max-w-[300px]"
+                        className="text-[10px] text-white/40 line-clamp-3 max-w-[600px] mt-1 [&_p]:mb-1 [&_strong]:text-white/60"
                         dangerouslySetInnerHTML={{ __html: ex.featuredExcerpt }}
                       />
                     )}
