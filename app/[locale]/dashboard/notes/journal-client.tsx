@@ -6,7 +6,7 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts'
 import {
-  Plus, X, ArrowUpRight, ArrowDownRight, BookOpen, Clock,
+  X, ArrowUpRight, ArrowDownRight, BookOpen, Clock,
   Check, Loader2, Trash2, Pin, Image as ImageIcon, ChevronDown,
 } from 'lucide-react'
 import { useUserStore } from '@/store/user-store'
@@ -225,7 +225,6 @@ export default function JournalClient() {
   const [hasUnsaved, setHasUnsaved] = useState(false)
   const [pendingTradeId, setPendingTradeId] = useState<string | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
-  const [isNewTrade, setIsNewTrade] = useState(false)
   const PER_PAGE = 20
   const DAYS_PER_PAGE = 7
   const [dayPage, setDayPage] = useState(0)
@@ -253,12 +252,6 @@ export default function JournalClient() {
   const [modalPreNotes, setModalPreNotes] = useState('')
   const [modalPostNotes, setModalPostNotes] = useState('')
   const [modalScreenshots, setModalScreenshots] = useState<string[]>([])
-  const [newInstrument, setNewInstrument] = useState('')
-  const [newSide, setNewSide] = useState<'LONG' | 'SHORT' | null>(null)
-  const [newQuantity, setNewQuantity] = useState('')
-  const [newEntryPrice, setNewEntryPrice] = useState('')
-  const [newClosePrice, setNewClosePrice] = useState('')
-  const [newPnl, setNewPnl] = useState('')
 
   // Featured excerpt state
   const [modalExcerptTitle, setModalExcerptTitle] = useState('')
@@ -475,29 +468,10 @@ export default function JournalClient() {
     setModalScreenshots(j?.screenshots ?? [])
     setModalExcerptTitle(j?.excerptTitle ?? '')
     setModalFeaturedExcerpt(j?.featuredExcerpt ?? '')
-    setExcerptEditorOpen(false)
+    setExcerptEditorOpen(true)   // Default expanded as requested
     setIsNewTrade(false)
     setModalOpen(true)
   }, [toggleExpand, handleCreate])
-
-  const openNewTradeModal = useCallback(() => {
-    // Reset all modal form state
-    setModalSession([])
-    setModalTimeframe([])
-    setModalIctTags([])
-    setModalEmotion(null)
-    setModalStars(null)
-    setModalPreNotes('')
-    setModalPostNotes('')
-    setNewInstrument('')
-    setNewSide(null)
-    setNewQuantity('')
-    setNewEntryPrice('')
-    setNewClosePrice('')
-    setNewPnl('')
-    setIsNewTrade(true)
-    setModalOpen(true)
-  }, [])
 
   const closeModal = useCallback(() => {
     setModalOpen(false)
@@ -505,50 +479,6 @@ export default function JournalClient() {
   }, [])
 
   const handleSaveModal = useCallback(async () => {
-    if (isNewTrade) {
-      const instrument = newInstrument.trim() || 'Manual'
-      const entryDate = selectedDayKey || new Date().toISOString().slice(0, 10)
-      const trade = await createSingleTradeAction({
-        instrument,
-        side: newSide || undefined,
-        entryDate,
-        quantity: newQuantity || undefined,
-        entryPrice: newEntryPrice || undefined,
-        closePrice: newClosePrice || undefined,
-        pnl: newPnl || undefined,
-      })
-      const newCard: TradeJournalCard = {
-        trade: {
-          id: trade.id,
-          instrument: trade.instrument,
-          side: trade.side || '',
-          entryPrice: Number(trade.entryPrice),
-          closePrice: Number(trade.closePrice),
-          pnl: Number(trade.pnl),
-          commission: Number(trade.commission),
-          quantity: Number(trade.quantity),
-          entryDate: trade.entryDate,
-          closeDate: trade.closeDate || trade.entryDate,
-          timeInPosition: Number(trade.timeInPosition),
-          tags: trade.tags || [],
-          accountNumber: trade.accountNumber,
-        },
-        journal: null,
-      }
-      addCard(newCard)
-      const tags = [...modalSession, ...modalTimeframe, ...modalIctTags]
-      await handleCreate(trade.id, trade.accountNumber, {
-        preTradeNotes: modalPreNotes || null,
-        postTradeReview: modalPostNotes || null,
-        emotions: modalEmotion,
-        confidenceRating: modalStars,
-        customTags: tags,
-      })
-      refetch()
-      setModalOpen(false)
-      return
-    }
-
     if (!selectedCard?.journal) {
       setModalOpen(false)
       return
@@ -588,7 +518,7 @@ export default function JournalClient() {
     }
 
     setModalOpen(false)
-  }, [isNewTrade, selectedCard, modalSession, modalTimeframe, modalIctTags, modalEmotion, modalStars, modalPreNotes, modalPostNotes, newInstrument, newSide, selectedDayKey, handleCreate, handleUpdate, modalExcerptTitle, modalFeaturedExcerpt])
+  }, [selectedCard, modalSession, modalTimeframe, modalIctTags, modalEmotion, modalStars, modalPreNotes, modalPostNotes, selectedDayKey, handleCreate, handleUpdate, modalExcerptTitle, modalFeaturedExcerpt])
 
   const handleSelectTrade = useCallback((tradeId: string) => {
     if (hasUnsaved && selectedCard?.journal) {
@@ -682,12 +612,11 @@ export default function JournalClient() {
           )}
           <button
             type="button"
-            onClick={openNewTradeModal}
-          className="inline-flex items-center gap-2 rounded-xl bg-[#00ff9f] px-4 py-2 text-sm font-semibold text-black transition-all hover:bg-[#00ff9f]/90"
-        >
-          <Plus size={14} strokeWidth={3} />
-          New Trade
-        </button>
+            disabled
+            className="inline-flex items-center gap-2 rounded-xl bg-[#00ff9f]/30 px-4 py-2 text-sm font-semibold text-white/50 transition-all cursor-not-allowed"
+          >
+            New Trade
+          </button>
         </div>
       </div>
 
@@ -975,7 +904,7 @@ export default function JournalClient() {
         >
           <div className="flex items-start justify-center min-h-screen pt-12 px-4">
             <div
-              className="w-full max-w-2xl rounded-2xl overflow-hidden bg-card border border-foreground/[0.06] animate-in slide-in-from-bottom-4 duration-250"
+              className="w-full max-w-5xl rounded-2xl overflow-hidden bg-card border border-foreground/[0.06] animate-in slide-in-from-bottom-4 duration-250"
               onClick={e => e.stopPropagation()}
             >
                {/* Modal Header — exact match to reference */}
@@ -1004,7 +933,7 @@ export default function JournalClient() {
                </div>
 
               {/* Modal Body — redesigned to 100% match reference image */}
-              <div className="p-6 space-y-5 max-h-[68vh] overflow-y-auto bg-[#0a0c0a] text-white">
+              <div className="p-6 space-y-5 max-h-[82vh] overflow-y-auto bg-[#0a0c0a] text-white">
 
                 {/* New Trade instrument + side (only for new) */}
                 {isNewTrade && (
@@ -1247,7 +1176,7 @@ export default function JournalClient() {
                           }, 1500)
                         }}
                         placeholder="Write your featured trade reflection..."
-                        height="220px"
+                        height="280px"
                         width="100%"
                         className="!bg-black"
                       />
