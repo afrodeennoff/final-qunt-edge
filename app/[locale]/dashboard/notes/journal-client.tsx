@@ -639,7 +639,7 @@ export default function JournalClient() {
               type="button"
               onClick={() => setSelectedDayKey(isSelected ? null : g.dateKey)}
               className={cn(
-                'rounded-xl p-3 text-left transition-all border',
+                'rounded-xl p-4 text-left transition-all border min-h-[110px]',
                 hasTrades
                   ? 'bg-[#111311] border-white/5 hover:border-white/10'
                   : 'bg-[#111311]/40 border-white/5',
@@ -649,12 +649,12 @@ export default function JournalClient() {
               <div className={cn('text-[10px] font-medium tracking-widest', hasTrades ? 'text-white/60' : 'text-white/30')}>{g.shortDay}</div>
               <div className={cn('text-[10px] mt-0.5', hasTrades ? 'text-white/40' : 'text-white/20')}>{g.label}</div>
               <div className={cn(
-                'text-[15px] font-semibold tabular-nums mt-2 tracking-tight',
+                'text-[17px] font-semibold tabular-nums mt-3 tracking-tight',
                 pnlPositive ? 'text-[#00ff9f]' : g.totalPnl < 0 ? 'text-[#ff4d4d]' : 'text-white/25',
               )}>
                 {g.totalPnl > 0 ? '+' : ''}{g.totalPnl === 0 ? '—' : formatPnl(g.totalPnl)}
               </div>
-              <div className={cn('text-[10px] mt-1', hasTrades ? 'text-white/30' : 'text-white/15')}>
+              <div className={cn('text-[10px] mt-1.5', hasTrades ? 'text-white/30' : 'text-white/15')}>
                 {hasTrades ? `${g.trades.length} trades` : 'No trades'}
               </div>
             </button>
@@ -662,10 +662,10 @@ export default function JournalClient() {
         })}
       </div>
 
-      {/* ── Day Summary + Equity Curve (exact visual match) ── */}
+      {/* ── Day Summary + Equity Curve ── */}
       <div className="grid grid-cols-12 gap-3">
         {/* Left: Day Summary */}
-        <div className="col-span-12 lg:col-span-5 rounded-2xl p-5 bg-[#111311] border border-white/5">
+        <div className="col-span-12 lg:col-span-5 rounded-2xl p-6 bg-[#111311] border border-white/5 min-h-[200px]">
           <div className="flex items-start justify-between">
             <div>
               <div className="text-[11px] text-white/50 tracking-widest">
@@ -709,10 +709,10 @@ export default function JournalClient() {
           </div>
         </div>
 
-        {/* Right: Equity Curve (styled to match reference) */}
-        <div className="col-span-12 lg:col-span-7 rounded-2xl p-5 bg-[#111311] border border-white/5">
+        {/* Right: Equity Curve */}
+        <div className="col-span-12 lg:col-span-7 rounded-2xl p-6 bg-[#111311] border border-white/5 min-h-[200px]">
           <div className="text-[10px] font-medium tracking-[2px] text-[#00ff9f]/80 mb-2">EQUITY CURVE</div>
-          <div className="h-[138px]">
+          <div className="h-[160px]">
             {equityData.length > 1 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={equityData.map((p, i) => ({...p, idx: i+1}))} margin={{ top: 8, right: 12, left: 4, bottom: 0 }}>
