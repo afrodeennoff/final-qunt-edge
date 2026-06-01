@@ -22,9 +22,9 @@ import {
 
 // ── Constants ──
 
-const SESSION_CHIPS = ['London', 'NY', 'Asia'] as const
-const TIMEFRAME_CHIPS = ['5m', '15m', '30m', '1H', '4H', 'Daily'] as const
-const ICT_CHIPS = ['OB', 'FVG', 'Liq Sweep', 'Breaker', 'MSS', 'ChoCh'] as const
+const SESSION_DEFAULTS = ['London', 'NY', 'Asia']
+const TIMEFRAME_DEFAULTS = ['5m', '15m', '30m', '1H', '4H', 'Daily']
+const ICT_DEFAULTS = ['OB', 'FVG', 'Liq Sweep', 'Breaker', 'MSS', 'ChoCh']
 const EMOTION_CHIPS = ['Calm', 'Focused', 'Anxious', 'FOMO', 'Revenge', 'Greedy', 'Fearful'] as const
 
 // ── Formatters ──
@@ -92,6 +92,77 @@ function Chip({
   )
 }
 
+// ── Tag Input Component ──
+
+function TagInput({
+  tags,
+  onAdd,
+  onRemove,
+  placeholder = 'Add tag…',
+}: {
+  tags: string[]
+  onAdd: (tag: string) => void
+  onRemove: (tag: string) => void
+  placeholder?: string
+}) {
+  const [input, setInput] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault()
+      const val = input.trim()
+      if (val && !tags.includes(val)) {
+        onAdd(val)
+      }
+      setInput('')
+    } else if (e.key === 'Backspace' && !input && tags.length > 0) {
+      onRemove(tags[tags.length - 1])
+    }
+  }
+
+  const handleBlur = () => {
+    const val = input.trim()
+    if (val && !tags.includes(val)) {
+      onAdd(val)
+    }
+    setInput('')
+  }
+
+  return (
+    <div
+      className="flex flex-wrap items-center gap-1.5 rounded-lg border border-foreground/[0.06] bg-background/50 px-2.5 py-2 min-h-[38px] cursor-text focus-within:border-primary/40 transition-colors"
+      onClick={() => inputRef.current?.focus()}
+    >
+      {tags.map(tag => (
+        <span
+          key={tag}
+          className="inline-flex items-center gap-1 rounded-md bg-primary/10 border border-primary/20 px-2 py-0.5 text-xs font-medium text-primary select-none"
+        >
+          {tag}
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onRemove(tag) }}
+            className="ml-0.5 rounded-full p-0.5 text-primary/60 hover:text-primary hover:bg-primary/10 transition-colors"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </span>
+      ))}
+      <input
+        ref={inputRef}
+        type="text"
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
+        placeholder={tags.length === 0 ? placeholder : ''}
+        className="min-w-[60px] flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/50 outline-none"
+      />
+    </div>
+  )
+}
+
 // ── Day Grouping ──
 
 interface DayGroup {
@@ -146,8 +217,8 @@ export default function JournalClient() {
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Modal form state
-  const [modalSession, setModalSession] = useState<string | null>(null)
-  const [modalTimeframe, setModalTimeframe] = useState<string | null>(null)
+  const [modalSession, setModalSession] = useState<string[]>([])
+  const [modalTimeframe, setModalTimeframe] = useState<string[]>([])
   const [modalIctTags, setModalIctTags] = useState<string[]>([])
   const [modalEmotion, setModalEmotion] = useState<string | null>(null)
   const [modalStars, setModalStars] = useState<number | null>(null)
@@ -273,9 +344,13 @@ export default function JournalClient() {
     }
     // Populate modal form from existing journal data
     const j = card.journal
-    setModalSession(j?.customTags?.find(t => SESSION_CHIPS.includes(t as any)) ?? null)
-    setModalTimeframe(j?.customTags?.find(t => TIMEFRAME_CHIPS.includes(t as any)) ?? null)
-    setModalIctTags(j?.customTags?.filter(t => ICT_CHIPS.includes(t as any)) ?? [])
+    const allTags: string[] = j?.customTags ?? []
+    const knownSessionTags = new Set(SESSION_DEFAULTS)
+    const knownTfTags = new Set(TIMEFRAME_DEFAULTS)
+    const knownIctTags = new Set(ICT_DEFAULTS)
+    setModalSession(allTags.filter(t => knownSessionTags.has(t)))
+    setModalTimeframe(allTags.filter(t => knownTfTags.has(t)))
+    setModalIctTags(allTags.filter(t => knownIctTags.has(t)))
     setModalEmotion(j?.emotions ?? null)
     setModalStars(j?.confidenceRating ?? null)
     setModalPreNotes(j?.preTradeNotes ?? '')
@@ -286,8 +361,8 @@ export default function JournalClient() {
 
   const openNewTradeModal = useCallback(() => {
     // Reset all modal form state
-    setModalSession(null)
-    setModalTimeframe(null)
+    setModalSession([])
+    setModalTimeframe([])
     setModalIctTags([])
     setModalEmotion(null)
     setModalStars(null)
@@ -309,10 +384,8 @@ export default function JournalClient() {
       return
     }
 
-    // Build custom tags from ICT chips + session + timeframe
-    const tags = [...modalIctTags]
-    if (modalSession) tags.push(modalSession)
-    if (modalTimeframe) tags.push(modalTimeframe)
+    // Build custom tags from all tag arrays
+    const tags = [...modalSession, ...modalTimeframe, ...modalIctTags]
 
     // Update all journal fields at once
     const entryId = selectedCard.journal.id
@@ -565,7 +638,7 @@ export default function JournalClient() {
 
                     // Separate ICT tags from session/timeframe tags
                     const ictTags = (card.journal?.customTags ?? []).filter(t =>
-                      ICT_CHIPS.includes(t as any)
+                      ICT_DEFAULTS.includes(t as any)
                     )
 
                     return (
@@ -768,53 +841,37 @@ export default function JournalClient() {
                   </div>
                 )}
 
-                {/* Session Chips */}
+                {/* Session Tags */}
                 <div>
                   <div className={unifiedInfoLabelClassName}>Session</div>
-                  <div className="flex gap-2 mt-2">
-                    {SESSION_CHIPS.map(session => (
-                      <Chip
-                        key={session}
-                        label={session === 'NY' ? 'New York' : session}
-                        active={modalSession === session}
-                        onClick={() => setModalSession(prev => prev === session ? null : session)}
-                      />
-                    ))}
-                  </div>
+                  <TagInput
+                    tags={modalSession}
+                    onAdd={tag => setModalSession(prev => prev.includes(tag) ? prev : [...prev, tag])}
+                    onRemove={tag => setModalSession(prev => prev.filter(t => t !== tag))}
+                    placeholder="e.g. London, NY, Asia…"
+                  />
                 </div>
 
-                {/* Timeframe Chips */}
+                {/* Timeframe Tags */}
                 <div>
                   <div className={unifiedInfoLabelClassName}>Timeframe</div>
-                  <div className="flex gap-2 mt-2">
-                    {TIMEFRAME_CHIPS.map(tf => (
-                      <Chip
-                        key={tf}
-                        label={tf}
-                        active={modalTimeframe === tf}
-                        onClick={() => setModalTimeframe(prev => prev === tf ? null : tf)}
-                      />
-                    ))}
-                  </div>
+                  <TagInput
+                    tags={modalTimeframe}
+                    onAdd={tag => setModalTimeframe(prev => prev.includes(tag) ? prev : [...prev, tag])}
+                    onRemove={tag => setModalTimeframe(prev => prev.filter(t => t !== tag))}
+                    placeholder="e.g. 5m, 15m, 1H…"
+                  />
                 </div>
 
-                {/* ICT Concept Chips (multi-select) */}
+                {/* ICT Concept Tags */}
                 <div>
                   <div className={unifiedInfoLabelClassName}>ICT Concepts</div>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {ICT_CHIPS.map(concept => (
-                      <Chip
-                        key={concept}
-                        label={concept}
-                        active={modalIctTags.includes(concept)}
-                        onClick={() => setModalIctTags(prev =>
-                          prev.includes(concept)
-                            ? prev.filter(t => t !== concept)
-                            : [...prev, concept]
-                        )}
-                      />
-                    ))}
-                  </div>
+                  <TagInput
+                    tags={modalIctTags}
+                    onAdd={tag => setModalIctTags(prev => prev.includes(tag) ? prev : [...prev, tag])}
+                    onRemove={tag => setModalIctTags(prev => prev.filter(t => t !== tag))}
+                    placeholder="e.g. OB, FVG, Liq Sweep…"
+                  />
                 </div>
 
                 {/* Emotion Chips */}
