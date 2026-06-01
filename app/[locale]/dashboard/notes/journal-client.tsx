@@ -209,7 +209,7 @@ function groupByDay(cards: TradeJournalCard[]): DayGroup[] {
     })
   }
   result.sort((a, b) => b.dateKey.localeCompare(a.dateKey))
-  return result.slice(0, 7)
+  return result
 }
 
 // ── Main Component ──
@@ -224,7 +224,9 @@ export default function JournalClient() {
   const [pendingTradeId, setPendingTradeId] = useState<string | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [isNewTrade, setIsNewTrade] = useState(false)
-  const PER_PAGE = 10
+  const PER_PAGE = 20
+  const DAYS_PER_PAGE = 7
+  const [dayPage, setDayPage] = useState(0)
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Modal form state
@@ -278,6 +280,15 @@ export default function JournalClient() {
 
   // ── Weekly groups ──
   const dayGroups = useMemo(() => groupByDay(displayCards), [displayCards])
+
+  // Paginate day groups into pages of 7
+  const totalDayPages = Math.max(1, Math.ceil(dayGroups.length / DAYS_PER_PAGE))
+  const safeDayPage = Math.min(dayPage, totalDayPages - 1)
+  const pagedDayGroups = useMemo(
+    () => dayGroups.slice(safeDayPage * DAYS_PER_PAGE, (safeDayPage + 1) * DAYS_PER_PAGE),
+    [dayGroups, safeDayPage],
+  )
+
   const activeDayTrades = useMemo(() => {
     if (!selectedDayKey) return displayCards
     const group = dayGroups.find(g => g.dateKey === selectedDayKey)
@@ -379,7 +390,7 @@ export default function JournalClient() {
     update('pinned', !selectedCard.journal.pinned)
   }, [selectedCard, update])
 
-  useEffect(() => { setTradePage(1) }, [selectedDayKey])
+  useEffect(() => { setTradePage(1); setDayPage(0) }, [selectedDayKey])
 
   // ── Modal ──
 
@@ -533,10 +544,45 @@ export default function JournalClient() {
     <div className="flex h-full flex-col overflow-hidden bg-[#0a0c0a] text-white space-y-4 p-4 lg:p-6">
       {/* ── Week Header ── */}
       <div className="flex items-center justify-between">
-        <div className="text-[11px] font-semibold tracking-[2px] uppercase text-[#00ff9f]">
-          {dayGroups.length > 0
-            ? `WEEK OF ${dayGroups[dayGroups.length-1]?.label.toUpperCase()} – ${dayGroups[0]?.label.toUpperCase()}`
-            : 'WEEK OF'}
+        <div className="flex items-center gap-3">
+          {totalDayPages > 1 && (
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setDayPage(p => Math.max(0, p - 1))}
+                disabled={safeDayPage <= 0}
+                className="rounded-lg p-1 text-white/30 hover:text-white/60 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+              >
+                <ArrowUpRight size={14} className="rotate-[-45deg]" />
+              </button>
+              <span className="text-[10px] tabular-nums text-white/30">{safeDayPage + 1} / {totalDayPages}</span>
+              <button
+                type="button"
+                onClick={() => setDayPage(p => Math.min(totalDayPages - 1, p + 1))}
+                disabled={safeDayPage >= totalDayPages - 1}
+                className="rounded-lg p-1 text-white/30 hover:text-white/60 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+              >
+                <ArrowDownRight size={14} className="rotate-[-45deg]" />
+              </button>
+            </div>
+          )}
+          <div className="text-[11px] font-semibold tracking-[2px] uppercase text-[#00ff9f]">
+            {pagedDayGroups.length > 0
+              ? `${pagedDayGroups[pagedDayGroups.length - 1]?.label.toUpperCase()} \u2013 ${pagedDayGroups[0]?.label.toUpperCase()}`
+              : 'TRADING DAYS'}
+          </div>
+          <button
+            type="button"
+            onClick={() => { setSelectedDayKey(null); setDayPage(0) }}
+            className={cn(
+              'rounded-lg px-2 py-0.5 text-[10px] border transition-colors',
+              selectedDayKey === null
+                ? 'border-[#00ff9f]/30 text-[#00ff9f] bg-[#00ff9f]/10'
+                : 'border-white/10 text-white/30 hover:text-white/60'
+            )}
+          >
+            {'All (' + dayGroups.length + ' days, ' + dayGroups.reduce((s, g) => s + g.trades.length, 0) + ' trades)'}
+          </button>
         </div>
         <button
           type="button"
@@ -548,9 +594,9 @@ export default function JournalClient() {
         </button>
       </div>
 
-      {/* ── Weekly Performance Strip (exact match to reference) ── */}
+      {/* ── Day Performance Strip (paginated, shows 7 days per page) ── */}
       <div className="grid grid-cols-7 gap-2">
-        {dayGroups.map(g => {
+        {pagedDayGroups.map(g => {
           const isSelected = selectedDayKey === g.dateKey
           const pnlPositive = g.totalPnl > 0
           return (
@@ -578,7 +624,7 @@ export default function JournalClient() {
         })}
         {dayGroups.length === 0 && !isLoading && (
           <div className="col-span-7 text-center py-6 text-xs text-white/30 border border-white/5 rounded-xl">
-            No trades yet. Use “New Trade” or import to begin journaling.
+            No trades yet. Use "New Trade" or import to begin journaling.
           </div>
         )}
       </div>
