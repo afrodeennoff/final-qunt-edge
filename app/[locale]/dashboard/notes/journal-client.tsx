@@ -543,7 +543,7 @@ export default function JournalClient() {
 
   // ── Render ──
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-[#0a0c0a] text-white space-y-4 p-4 lg:p-6">
+    <div className="flex h-full flex-col overflow-hidden bg-background text-foreground space-y-4 p-4 lg:p-6">
       {/* ── Week Header ── */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -568,7 +568,7 @@ export default function JournalClient() {
               </button>
             </div>
           )}
-          <div className="text-[11px] font-semibold tracking-[2px] uppercase text-[#00ff9f]">
+          <div className="text-[11px] font-semibold tracking-[2px] uppercase text-primary">
             {pagedDayGroups.length > 0
               ? `${pagedDayGroups[pagedDayGroups.length - 1]?.label.toUpperCase()} \u2013 ${pagedDayGroups[0]?.label.toUpperCase()}`
               : 'TRADING DAYS'}
@@ -579,8 +579,8 @@ export default function JournalClient() {
             className={cn(
               'rounded-lg px-2 py-0.5 text-[10px] border transition-colors',
               selectedDayKey === null
-                ? 'border-[#00ff9f]/30 text-[#00ff9f] bg-[#00ff9f]/10'
-                : 'border-white/10 text-white/30 hover:text-white/60'
+                ? 'border-primary/30 text-primary bg-primary/10'
+                : 'border-border text-muted-foreground hover:text-foreground'
             )}
           >
             {'All (' + dayGroups.filter(g => g.trades.length > 0).length + ' trading days, ' + dayGroups.reduce((s, g) => s + g.trades.length, 0) + ' trades)'}
@@ -592,17 +592,17 @@ export default function JournalClient() {
               <button
                 type="button"
                 onClick={() => setAccountOpen(!accountOpen)}
-                className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-[#111311] px-2.5 py-1 text-[11px] text-white/60 hover:text-white hover:border-white/20 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
               >
                 <span>{selectedAccount ? 'Acct ' + selectedAccount : 'All Accounts'}</span>
                 <ChevronDown size={12} className={cn('transition-transform', accountOpen && 'rotate-180')} />
               </button>
               {accountOpen && (
-                <div className="absolute top-full mt-1 right-0 z-20 min-w-[180px] rounded-xl border border-white/10 bg-[#111311] py-1 shadow-xl">
+                <div className="absolute top-full mt-1 right-0 z-20 min-w-[180px] rounded-xl border border-border bg-card py-1 shadow-xl">
                   <button
                     type="button"
                     onClick={() => { setSelectedAccount(null); setAccountOpen(false) }}
-                    className={cn('w-full text-left px-3 py-1.5 text-[11px] hover:bg-white/5 transition-colors', !selectedAccount ? 'text-[#00ff9f]' : 'text-white/60')}
+                    className={cn('w-full text-left px-3 py-1.5 text-[11px] hover:bg-muted/50 transition-colors', !selectedAccount ? 'text-primary' : 'text-muted-foreground')}
                   >
                     All Accounts
                   </button>
@@ -611,7 +611,7 @@ export default function JournalClient() {
                       key={a.number}
                       type="button"
                       onClick={() => { setSelectedAccount(a.number === selectedAccount ? null : a.number); setAccountOpen(false) }}
-                      className={cn('w-full text-left px-3 py-1.5 text-[11px] hover:bg-white/5 transition-colors', a.number === selectedAccount ? 'text-[#00ff9f]' : 'text-white/60')}
+                      className={cn('w-full text-left px-3 py-1.5 text-[11px] hover:bg-muted/50 transition-colors', a.number === selectedAccount ? 'text-primary' : 'text-muted-foreground')}
                     >
                       {a.number}{a.propfirm ? ' \u2013 ' + a.propfirm : ''}
                     </button>
@@ -637,16 +637,16 @@ export default function JournalClient() {
               className={cn(
                 'rounded-xl p-4 text-left transition-all border min-h-[110px]',
                 hasTrades
-                  ? 'bg-[#111311] border-white/5 hover:border-white/10'
-                  : 'bg-[#111311]/40 border-white/5',
-                isSelected && 'border-[#00ff9f] ring-1 ring-[#00ff9f]/30',
+                  ? 'bg-card border-border hover:border-primary/30'
+                  : 'bg-card/50 border-border',
+                isSelected && 'border-primary ring-1 ring-primary/30',
               )}
             >
               <div className={cn('text-[10px] font-medium tracking-widest', hasTrades ? 'text-white/60' : 'text-white/30')}>{g.shortDay}</div>
               <div className={cn('text-[10px] mt-0.5', hasTrades ? 'text-white/40' : 'text-white/20')}>{g.label}</div>
               <div className={cn(
                 'text-[17px] font-semibold tabular-nums mt-3 tracking-tight',
-                pnlPositive ? 'text-[#00ff9f]' : g.totalPnl < 0 ? 'text-[#ff4d4d]' : 'text-white/25',
+                pnlPositive ? 'text-primary' : g.totalPnl < 0 ? 'text-destructive' : 'text-muted-foreground/40',
               )}>
                 {g.totalPnl > 0 ? '+' : ''}{g.totalPnl === 0 ? '—' : formatPnl(g.totalPnl)}
               </div>
@@ -661,7 +661,7 @@ export default function JournalClient() {
       {/* ── Day Summary + Equity Curve ── */}
       <div className="grid grid-cols-12 gap-3">
         {/* Left: Day Summary */}
-        <div className="col-span-12 lg:col-span-5 rounded-2xl p-6 bg-[#111311] border border-white/5 min-h-[200px]">
+        <div className="col-span-12 lg:col-span-5 rounded-2xl p-6 bg-card border border-border min-h-[200px]">
           <div className="flex items-start justify-between">
             <div>
               <div className="text-[11px] text-white/50 tracking-widest">
@@ -669,7 +669,7 @@ export default function JournalClient() {
               </div>
               <div className={cn(
                 'text-[42px] font-semibold tabular-nums tracking-[-1.5px] mt-1 leading-none',
-                daySummary.totalPnl > 0 ? 'text-[#00ff9f]' : daySummary.totalPnl < 0 ? 'text-[#ff4d4d]' : 'text-white/60'
+                daySummary.totalPnl > 0 ? 'text-primary' : daySummary.totalPnl < 0 ? 'text-destructive' : 'text-muted-foreground/60'
               )}>
                 {formatPnl(daySummary.totalPnl)}
               </div>
@@ -678,7 +678,7 @@ export default function JournalClient() {
               <div className="text-[10px] text-white/40 tracking-[1px]">NET R</div>
               <div className={cn(
                 'text-2xl font-semibold tabular-nums mt-0.5',
-                daySummary.netR >= 0 ? 'text-[#00ff9f]' : 'text-[#ff4d4d]'
+                daySummary.netR >= 0 ? 'text-primary' : 'text-destructive'
               )}>
                 {daySummary.netR >= 0 ? '+' : ''}{daySummary.netR.toFixed(1)}R
               </div>
@@ -686,33 +686,33 @@ export default function JournalClient() {
           </div>
 
           <div className="grid grid-cols-4 gap-3 mt-5">
-            <div className="rounded-lg bg-black/40 p-2.5">
+            <div className="rounded-lg bg-muted/40 p-2.5">
               <div className="text-[9px] text-white/40 tracking-widest">TRADES</div>
               <div className="text-xl font-semibold tabular-nums mt-1 text-white">{daySummary.trades}</div>
             </div>
-            <div className="rounded-lg bg-black/40 p-2.5">
+            <div className="rounded-lg bg-muted/40 p-2.5">
               <div className="text-[9px] text-white/40 tracking-widest">WIN RATE</div>
               <div className="text-xl font-semibold tabular-nums mt-1 text-white">{daySummary.winRate}%</div>
             </div>
-            <div className="rounded-lg bg-black/40 p-2.5">
+            <div className="rounded-lg bg-muted/40 p-2.5">
               <div className="text-[9px] text-white/40 tracking-widest">BEST</div>
-              <div className="text-xl font-semibold tabular-nums mt-1 text-[#00ff9f]">{formatPnl(daySummary.best)}</div>
+              <div className="text-xl font-semibold tabular-nums mt-1 text-primary">{formatPnl(daySummary.best)}</div>
             </div>
-            <div className="rounded-lg bg-black/40 p-2.5">
+            <div className="rounded-lg bg-muted/40 p-2.5">
               <div className="text-[9px] text-white/40 tracking-widest">WORST</div>
-              <div className="text-xl font-semibold tabular-nums mt-1 text-[#ff4d4d]">{formatPnl(daySummary.worst)}</div>
+              <div className="text-xl font-semibold tabular-nums mt-1 text-destructive">{formatPnl(daySummary.worst)}</div>
             </div>
           </div>
         </div>
 
         {/* Right: Equity Curve */}
-        <div className="col-span-12 lg:col-span-7 rounded-2xl p-6 bg-[#111311] border border-white/5 min-h-[200px]">
-          <div className="text-[10px] font-medium tracking-[2px] text-[#00ff9f]/80 mb-2">EQUITY CURVE</div>
+        <div className="col-span-12 lg:col-span-7 rounded-2xl p-6 bg-card border border-border min-h-[200px]">
+          <div className="text-[10px] font-medium tracking-[2px] text-primary/70 mb-2">EQUITY CURVE</div>
           <div className="h-[160px]">
             {equityData.length > 1 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={equityData.map((p, i) => ({...p, idx: i+1}))} margin={{ top: 8, right: 12, left: 4, bottom: 0 }}>
-                  <CartesianGrid stroke="#1f2421" strokeDasharray="2 2" />
+                  <CartesianGrid stroke="var(--border)" strokeDasharray="2 2" />
                   <XAxis
                     dataKey="idx"
                     tick={{ fill: '#4a524d', fontSize: 10 }}
@@ -734,10 +734,10 @@ export default function JournalClient() {
                   <Line
                     type="monotone"
                     dataKey="value"
-                    stroke="#00ff9f"
+                    stroke="var(--primary)"
                     strokeWidth={2.5}
-                    dot={{ fill: '#00ff9f', r: 3, stroke: '#0a0c0a', strokeWidth: 1 }}
-                    activeDot={{ r: 5, fill: '#00ff9f' }}
+                    dot={{ fill: 'var(--primary)', r: 3, stroke: 'var(--background)', strokeWidth: 1 }}
+                    activeDot={{ r: 5, fill: 'var(--primary)' }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -751,14 +751,14 @@ export default function JournalClient() {
       {/* ── Trade Log (styled to match reference) ── */}
       <div className="flex-1 min-h-0">
         <div className="flex items-center justify-between mb-2 px-1">
-          <div className="text-[10px] font-medium tracking-[2px] text-[#00ff9f]">TRADE LOG</div>
+          <div className="text-[10px] font-medium tracking-[2px] text-primary">TRADE LOG</div>
           <div className="text-[10px] text-white/30">Click any row to journal</div>
         </div>
-        <div className="rounded-2xl overflow-hidden bg-[#111311] border border-white/5 flex flex-col" style={{ maxHeight: 'calc(100vh - 460px)' }}>
+        <div className="rounded-2xl overflow-hidden bg-card border border-border flex flex-col" style={{ maxHeight: 'calc(100vh - 460px)' }}>
           <div className="overflow-x-auto flex-1 overflow-y-auto">
             <table className="w-full text-sm">
-              <thead className="sticky top-0 z-10 bg-[#0d0f0d]">
-                <tr className="text-[10px] uppercase tracking-[1px] text-white/40 border-b border-white/5">
+              <thead className="sticky top-0 z-10 bg-card/80">
+                <tr className="text-[10px] uppercase tracking-[1px] text-muted-foreground border-b border-border">
                   <th className="text-left pl-4 pr-3 py-2.5 font-medium">TIME</th>
                   <th className="text-left px-3 py-2.5 font-medium">SYMBOL</th>
                   <th className="text-left px-3 py-2.5 font-medium">SIDE</th>
@@ -807,14 +807,14 @@ export default function JournalClient() {
                        <tr
                          key={card.trade.id}
                          onClick={() => handleSelectTrade(card.trade.id)}
-                         className="border-b border-white/5 cursor-pointer hover:bg-white/5 transition-colors"
+                         className="border-b border-border cursor-pointer hover:bg-muted/30 transition-colors"
                        >
                          <td className="pl-4 pr-3 py-2.5 tabular-nums text-white/50 text-xs">{formatTime(card.trade.entryDate)}</td>
                          <td className="px-3 py-2.5 font-semibold text-white tracking-tight">{card.trade.instrument}</td>
                          <td className="px-3 py-2.5">
                            <span className={cn(
                              'text-xs font-semibold tracking-wider',
-                             card.trade.side?.toUpperCase() === 'LONG' ? 'text-[#00ff9f]' : 'text-[#ff4d4d]',
+                             card.trade.side?.toUpperCase() === 'LONG' ? 'text-primary' : 'text-destructive',
                            )}>
                              {card.trade.side || '—'}
                            </span>
@@ -840,7 +840,7 @@ export default function JournalClient() {
                          <td className="pl-3 pr-4 py-2.5">
                            <div className="flex gap-1 flex-wrap">
                              {ictTags.slice(0, 3).map(tag => (
-                               <span key={tag} className="rounded bg-[#00ff9f]/10 px-1.5 py-px text-[9px] font-medium text-[#00ff9f] border border-[#00ff9f]/30">
+                               <span key={tag} className="rounded bg-primary/10 px-1.5 py-px text-[9px] font-medium text-primary border border-primary/30">
                                  {tag}
                                </span>
                              ))}
@@ -911,7 +911,7 @@ export default function JournalClient() {
               onClick={e => e.stopPropagation()}
             >
                {/* Modal Header — fixed at top */}
-               <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#111311] shrink-0">
+               <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card shrink-0">
                  <div>
                    <div className="text-[17px] font-semibold tracking-tight">
                      {selectedCard
@@ -932,7 +932,7 @@ export default function JournalClient() {
                </div>
 
               {/* Modal Body — scrollable */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-5 bg-[#0a0c0a] text-white">
+              <div className="flex-1 overflow-y-auto p-6 space-y-5 bg-background text-foreground">
 
                 {/* 5 Stat Cards Row (exact visual from image) */}
                 {selectedCard && (() => {
@@ -947,9 +947,9 @@ export default function JournalClient() {
                         {label:'R-MULTIPLE', val: `${r>=0?'+':''}${r.toFixed(1)}R`},
                         {label:'DURATION', val: formatDuration(selectedCard.trade.timeInPosition)},
                       ].map((s,i) => (
-                        <div key={i} className="rounded-lg bg-black p-2.5 text-center border border-white/5">
+                        <div key={i} className="rounded-lg bg-muted/40 p-2.5 text-center border border-border">
                           <div className="text-[9px] text-white/40 tracking-[1px]">{s.label}</div>
-                          <div className={cn('text-sm font-semibold tabular-nums mt-1', s.green ? 'text-[#00ff9f]' : s.red ? 'text-[#ff4d4d]' : 'text-white')}>
+                          <div className={cn('text-sm font-semibold tabular-nums mt-1', s.green ? 'text-primary' : s.red ? 'text-destructive' : 'text-foreground')}>
                             {s.val}
                           </div>
                         </div>
@@ -977,7 +977,7 @@ export default function JournalClient() {
                       .filter(s => !modalSession.includes(s))
                       .map(s => (
                         <button key={s} type="button" onClick={() => setModalSession([...modalSession, s])}
-                          className="px-2 py-0.5 rounded text-[10px] border border-white/10 text-white/40 hover:border-white/30 hover:text-white/60 transition">
+                          className="px-2 py-0.5 rounded text-[10px] border border-border text-muted-foreground hover:border-primary/40 hover:text-foreground transition">
                           + {s}
                         </button>
                       ))}
@@ -1003,7 +1003,7 @@ export default function JournalClient() {
                       .filter(tf => !modalTimeframe.includes(tf))
                       .map(tf => (
                         <button key={tf} type="button" onClick={() => setModalTimeframe([...modalTimeframe, tf])}
-                          className="px-2 py-0.5 rounded text-[10px] border border-white/10 text-white/40 hover:border-white/30 hover:text-white/60 transition">
+                          className="px-2 py-0.5 rounded text-[10px] border border-border text-muted-foreground hover:border-primary/40 hover:text-foreground transition">
                           + {tf}
                         </button>
                       ))}
@@ -1029,7 +1029,7 @@ export default function JournalClient() {
                       .filter(c => !modalIctTags.includes(c))
                       .map(c => (
                         <button key={c} type="button" onClick={() => setModalIctTags([...modalIctTags, c])}
-                          className="px-2 py-0.5 rounded text-[10px] border border-white/10 text-white/40 hover:border-white/30 hover:text-white/60 transition">
+                          className="px-2 py-0.5 rounded text-[10px] border border-border text-muted-foreground hover:border-primary/40 hover:text-foreground transition">
                           + {c}
                         </button>
                       ))}
@@ -1043,7 +1043,7 @@ export default function JournalClient() {
                     {EMOTION_CHIPS.map(em => {
                       const active = modalEmotion === em
                       return <button key={em} type="button" onClick={() => setModalEmotion(active ? null : em)}
-                        className={cn('px-3 py-1 rounded-full text-xs border transition', active ? 'border-[#00ff9f] bg-[#00ff9f]/10 text-[#00ff9f]' : 'border-white/10 text-white/50 hover:border-white/30')}>
+                        className={cn('px-3 py-1 rounded-full text-xs border transition', active ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:border-primary/30')}>
                         {em}
                       </button>
                     })}
@@ -1064,18 +1064,18 @@ export default function JournalClient() {
                     <div className="text-[10px] text-white/50 tracking-widest mb-1.5">PRE-TRADE NOTES</div>
                     <textarea rows={3} value={modalPreNotes} onChange={e=>setModalPreNotes(e.target.value)}
                       placeholder="What was the plan?"
-                      className="w-full rounded-lg p-3 text-sm bg-black border border-white/10 text-white placeholder:text-white/20 resize-y" />
+                      className="w-full rounded-lg p-3 text-sm bg-background border border-border text-foreground placeholder:text-muted-foreground resize-y" />
                   </div>
                   <div>
                     <div className="text-[10px] text-white/50 tracking-widest mb-1.5">POST-TRADE REVIEW</div>
                     <textarea rows={3} value={modalPostNotes} onChange={e=>setModalPostNotes(e.target.value)}
                       placeholder="What happened? How did you execute?"
-                      className="w-full rounded-lg p-3 text-sm bg-black border border-white/10 text-white placeholder:text-white/20 resize-y" />
+                      className="w-full rounded-lg p-3 text-sm bg-background border border-border text-foreground placeholder:text-muted-foreground resize-y" />
                   </div>
                 </div>
 
                 {/* FEATURED EXCERPT — always visible, expand/collapse */}
-                <div className="rounded-xl bg-black/40 border border-white/5 p-4 space-y-3">
+                <div className="rounded-xl bg-muted/30 border border-border p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="text-[10px] text-white/50 tracking-widest">FEATURED EXCERPT</div>
                     <button
@@ -1084,8 +1084,8 @@ export default function JournalClient() {
                       className={cn(
                         'text-[10px] px-2 py-0.5 rounded border transition-colors',
                         excerptEditorOpen
-                          ? 'border-white/10 text-white/40 hover:text-white'
-                          : 'border-[#00ff9f]/30 text-[#00ff9f] hover:bg-[#00ff9f]/10'
+                          ? 'border-border text-muted-foreground hover:text-foreground'
+                          : 'border-primary/30 text-primary hover:bg-primary/10'
                       )}
                     >
                       {excerptEditorOpen ? 'Collapse' : 'Expand'}
@@ -1102,12 +1102,12 @@ export default function JournalClient() {
                     }}
                     placeholder="Give this excerpt a title..."
                     maxLength={200}
-                    className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-[#00ff9f]/50"
+                    className="w-full rounded-lg px-3 py-2 text-sm bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50"
                   />
 
                   {/* Rich text editor — expanded */}
                   {excerptEditorOpen && (
-                    <div className="rounded-lg border border-white/10 overflow-hidden bg-black">
+                    <div className="rounded-lg border border-border overflow-hidden bg-card">
                       <TiptapEditor
                         content={modalFeaturedExcerpt}
                         onChange={(html) => {
@@ -1123,9 +1123,9 @@ export default function JournalClient() {
                         placeholder="Write your featured trade reflection..."
                         height="220px"
                         width="100%"
-                        className="!bg-black"
+                        className="!bg-muted"
                       />
-                      <div className="flex items-center justify-between px-3 py-2 border-t border-white/5 bg-black/60">
+                      <div className="flex items-center justify-between px-3 py-2 border-t border-border bg-muted/40">
                         <span className="text-[9px] text-white/25">Rich text formatting supported</span>
                       </div>
                     </div>
@@ -1135,7 +1135,7 @@ export default function JournalClient() {
                   {!excerptEditorOpen && (modalExcerptTitle || modalFeaturedExcerpt) && (
                     <div
                       onClick={() => setExcerptEditorOpen(true)}
-                      className="rounded-lg border border-white/5 p-3 cursor-pointer hover:border-white/10 transition-colors"
+                      className="rounded-lg border border-border p-3 cursor-pointer hover:border-primary/30 transition-colors"
                     >
                       <div className="text-xs font-medium text-white/80 truncate">
                         {modalExcerptTitle || 'Untitled excerpt'}
@@ -1172,21 +1172,21 @@ export default function JournalClient() {
               </div>
 
               {/* Modal Footer — fixed at bottom */}
-                 <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-[#111311] shrink-0">
+                 <div className="flex items-center justify-between px-6 py-4 border-t border-border bg-card shrink-0">
                 <div className="flex items-center gap-2 text-xs">
                   {selectedCard?.journal && (
                     <Fragment>
                       <button type="button" onClick={handlePinToggle}
-                        className={cn('flex items-center gap-1 px-2 py-1 rounded border', selectedCard.journal.pinned ? 'border-[#00ff9f] text-[#00ff9f]' : 'border-white/10 text-white/40 hover:text-white')}>
+                        className={cn('flex items-center gap-1 px-2 py-1 rounded border', selectedCard.journal.pinned ? 'border-primary text-primary' : 'border-border text-muted-foreground hover:text-foreground')}>
                         <Pin size={11}/> {selectedCard.journal.pinned ? 'Pinned' : 'Pin'}
                       </button>
                       {deleteConfirm ? (
-                        <span className="flex items-center gap-2 text-[#ff4d4d]">
+                        <span className="flex items-center gap-2 text-destructive">
                           <button onClick={handleDelete} className="hover:underline">Confirm delete</button>
                           <button onClick={() => setDeleteConfirm(false)} className="text-white/40">cancel</button>
                         </span>
                       ) : (
-                        <button onClick={() => setDeleteConfirm(true)} className="text-white/30 hover:text-[#ff4d4d] flex items-center gap-1">
+                        <button onClick={() => setDeleteConfirm(true)} className="text-muted-foreground hover:text-destructive flex items-center gap-1">
                           <Trash2 size={11}/> Delete
                         </button>
                       )}
@@ -1196,11 +1196,11 @@ export default function JournalClient() {
 
                 <div className="flex items-center gap-3">
                   <button type="button" onClick={closeModal}
-                    className="px-5 py-1.5 text-sm text-white/50 hover:text-white border border-white/10 rounded-xl">
+                    className="px-5 py-1.5 text-sm text-muted-foreground hover:text-foreground border border-border rounded-xl">
                     Cancel
                   </button>
                   <button type="button" onClick={handleSaveModal}
-                    className="px-6 py-1.5 text-sm font-semibold bg-[#00ff9f] text-black rounded-xl hover:bg-[#00ff9f]/90 active:scale-[0.985] transition">
+                    className="px-6 py-1.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 active:scale-[0.985] transition">
                     Save Journal Entry
                   </button>
                 </div>
@@ -1212,7 +1212,7 @@ export default function JournalClient() {
 
       {/* ── Unsaved changes confirmation ── */}
       {pendingTradeId && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background/60 backdrop-blur-sm">
           <div className="w-[380px] rounded-2xl border border-foreground/[0.06] bg-card p-6 shadow-2xl">
             <h3 className="text-sm font-semibold">Unsaved changes</h3>
             <p className="mt-2 text-xs text-muted-foreground/60">

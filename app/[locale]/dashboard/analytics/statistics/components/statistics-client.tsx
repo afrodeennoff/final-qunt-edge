@@ -178,25 +178,25 @@ export default function StatisticsClient() {
 
   if (isLoading) {
     return (
-      <div className="w-full px-4 lg:px-6 py-6 space-y-5 bg-[#0a0c0a] min-h-screen">
-        <div className="h-5 w-24 bg-white/10 rounded" />
+      <div className="w-full px-4 lg:px-6 py-6 space-y-5 bg-background min-h-screen">
+        <div className="h-5 w-24 bg-muted rounded" />
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="rounded-2xl bg-[#111311] border border-white/5 p-4 h-20 animate-pulse" />
+            <div key={i} className="rounded-2xl bg-card border border-border p-4 h-20 animate-pulse" />
           ))}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="rounded-2xl bg-[#111311] border border-white/5 p-4 h-64 animate-pulse" />
+            <div key={i} className="rounded-2xl bg-card border border-border p-4 h-64 animate-pulse" />
           ))}
         </div>
-        <div className="rounded-2xl bg-[#111311] border border-white/5 p-5 h-32 animate-pulse" />
+        <div className="rounded-2xl bg-card border border-border p-5 h-32 animate-pulse" />
       </div>
     )
   }
 
   if (!data || (data.grandTotal ?? 0) === 0) {
-    return <div className="p-6 text-white/40 text-sm">No trades found for the selected period/account.</div>
+    return <div className="p-6 text-muted-foreground text-sm">No trades found for the selected period/account.</div>
   }
 
   const tickerRows: StatsTableRow[] = data.tickerStats.map(statToRow)
@@ -208,28 +208,28 @@ export default function StatisticsClient() {
   const risk = computeRiskMetrics(pnlValues, data.profitFactor)
 
   return (
-    <div className="w-full px-4 lg:px-6 py-6 space-y-5 bg-[#0a0c0a] min-h-screen text-white">
+    <div className="w-full px-4 lg:px-6 py-6 space-y-5 bg-background min-h-screen text-foreground">
 
       {/* Header + Time Filters — exact match */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="text-[11px] font-semibold tracking-[2px] uppercase text-[#00ff9f]">STATISTICS</div>
+          <div className="text-[11px] font-semibold tracking-[2px] uppercase text-primary">STATISTICS</div>
           {accounts.length > 1 && (
             <div ref={accountDropRef} className="relative">
               <button
                 type="button"
                 onClick={() => setAccountOpen(!accountOpen)}
-                className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-[#111311] px-2.5 py-1 text-[11px] text-white/60 hover:text-white hover:border-white/20 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
               >
                 <span>{selectedAccount ? 'Acct ' + selectedAccount : 'All Accounts'}</span>
                 <ChevronDown size={12} className={cn('transition-transform', accountOpen && 'rotate-180')} />
               </button>
               {accountOpen && (
-                <div className="absolute top-full mt-1 left-0 z-20 min-w-[180px] rounded-xl border border-white/10 bg-[#111311] py-1 shadow-xl">
+                <div className="absolute top-full mt-1 left-0 z-20 min-w-[180px] rounded-xl border border-border bg-card py-1 shadow-xl">
                   <button
                     type="button"
                     onClick={() => { setSelectedAccount(null); setAccountOpen(false) }}
-                    className={cn('w-full text-left px-3 py-1.5 text-[11px] hover:bg-white/5 transition-colors', !selectedAccount ? 'text-[#00ff9f]' : 'text-white/60')}
+                    className={cn('w-full text-left px-3 py-1.5 text-[11px] hover:bg-muted/50 transition-colors', !selectedAccount ? 'text-primary' : 'text-muted-foreground')}
                   >
                     All Accounts
                   </button>
@@ -238,7 +238,7 @@ export default function StatisticsClient() {
                       key={a.number}
                       type="button"
                       onClick={() => { setSelectedAccount(a.number === selectedAccount ? null : a.number); setAccountOpen(false) }}
-                      className={cn('w-full text-left px-3 py-1.5 text-[11px] hover:bg-white/5 transition-colors', a.number === selectedAccount ? 'text-[#00ff9f]' : 'text-white/60')}
+                      className={cn('w-full text-left px-3 py-1.5 text-[11px] hover:bg-muted/50 transition-colors', a.number === selectedAccount ? 'text-primary' : 'text-muted-foreground')}
                     >
                       {a.number}{a.propfirm ? ' \u2013 ' + a.propfirm : ''}
                     </button>
@@ -248,7 +248,7 @@ export default function StatisticsClient() {
             </div>
           )}
         </div>
-        <div className="flex gap-1 p-1 rounded-2xl bg-[#111311] border border-white/5">
+        <div className="flex gap-1 p-1 rounded-2xl bg-card border border-border">
           {([
             { key: '7d' as const, label: '7D' },
             { key: '14d' as const, label: '14D' },
@@ -263,8 +263,8 @@ export default function StatisticsClient() {
               className={cn(
                 'px-5 py-1 rounded-xl text-xs font-semibold transition-all',
                 period === key
-                  ? 'bg-[#00ff9f] text-black'
-                  : 'text-white/40 hover:text-white',
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground',
               )}
             >
               {label}
@@ -283,9 +283,9 @@ export default function StatisticsClient() {
           { label: 'TOTAL TRADES', value: (data.grandTotal ?? 0).toString() },
           { label: 'BEST DAY', value: formatPnl(data.bestDay ?? 0), positive: true },
         ].map((kpi, i) => (
-          <div key={i} className="rounded-2xl bg-[#111311] border border-white/5 p-4">
-            <div className="text-[9px] tracking-[1.5px] uppercase text-white/40">{kpi.label}</div>
-            <div className={cn('text-2xl font-semibold tabular-nums mt-1 tracking-[-0.5px]', kpi.positive ? 'text-[#00ff9f]' : 'text-[#ff4d4d]')}>
+          <div key={i} className="rounded-2xl bg-card border border-border p-4">
+            <div className="text-[9px] tracking-[1.5px] uppercase text-muted-foreground">{kpi.label}</div>
+            <div className={cn('text-2xl font-semibold tabular-nums mt-1 tracking-[-0.5px]', kpi.positive ? 'text-primary' : 'text-destructive')}>
               {kpi.value}
             </div>
           </div>
@@ -322,8 +322,8 @@ export default function StatisticsClient() {
 
       {/* Risk & Performance Metrics — exact bottom section */}
       {risk && (
-        <div className="rounded-2xl bg-[#111311] border border-white/5 p-5">
-          <div className="text-[10px] tracking-[2px] uppercase text-[#00ff9f]/70 mb-4">RISK & PERFORMANCE METRICS</div>
+        <div className="rounded-2xl bg-card border border-border p-5">
+          <div className="text-[10px] tracking-[2px] uppercase text-primary/70 mb-4">RISK & PERFORMANCE METRICS</div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             {[
               { label: 'SHARPE RATIO', value: risk.sharpe },
@@ -333,9 +333,9 @@ export default function StatisticsClient() {
               { label: 'PROFIT FACTOR', value: risk.profitFactor },
               { label: 'WIN / LOSS RATIO', value: risk.winLossRatio },
             ].map((m, i) => (
-              <div key={i} className="rounded-xl bg-black/40 p-3">
-                <div className="text-[9px] tracking-widest text-white/40">{m.label}</div>
-                <div className={cn('text-2xl font-semibold tabular-nums mt-1', m.negative ? 'text-[#ff4d4d]' : 'text-white')}>
+              <div key={i} className="rounded-xl bg-muted/40 p-3">
+                <div className="text-[9px] tracking-widest text-muted-foreground">{m.label}</div>
+                <div className={cn('text-2xl font-semibold tabular-nums mt-1', m.negative ? 'text-destructive' : 'text-foreground')}>
                   {m.value}
                 </div>
               </div>
@@ -346,35 +346,35 @@ export default function StatisticsClient() {
 
       {/* Journal Excerpts — clickable headline cards */}
       {data?.featuredExcerpts && data.featuredExcerpts.length > 0 && (
-        <div className="rounded-2xl bg-[#111311] border border-white/5 p-5">
-          <div className="text-[10px] tracking-[2px] uppercase text-[#00ff9f]/70 mb-4">JOURNAL EXCERPTS</div>
+        <div className="rounded-2xl bg-card border border-border p-5">
+          <div className="text-[10px] tracking-[2px] uppercase text-primary/70 mb-4">JOURNAL EXCERPTS</div>
           <div className="space-y-2">
             {data.featuredExcerpts.slice(0, 15).map(ex => (
               <button
                 key={ex.id}
                 type="button"
                 onClick={() => setSelectedExcerpt(ex)}
-                className="w-full flex items-center gap-4 rounded-xl bg-black/40 p-4 hover:bg-black/60 transition-colors text-left group"
+                className="w-full flex items-center gap-4 rounded-xl bg-muted/40 p-4 hover:bg-muted/60 transition-colors text-left group"
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-white truncate group-hover:text-[#00ff9f] transition-colors">
+                    <span className="text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors">
                       {ex.excerptTitle || 'Untitled'}
                     </span>
-                    <span className="shrink-0 text-[9px] tabular-nums text-white/30">
+                    <span className="shrink-0 text-[9px] tabular-nums text-muted-foreground/60">
                       {new Date(ex.entryDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[10px] text-white/40">{ex.instrument}</span>
+                    <span className="text-[10px] text-muted-foreground">{ex.instrument}</span>
                     <span className={cn(
                       'text-[9px] font-semibold',
-                      ex.side === 'LONG' ? 'text-[#00ff9f]' : ex.side === 'SHORT' ? 'text-[#ff4d4d]' : 'text-white/30'
+                      ex.side === 'LONG' ? 'text-primary' : ex.side === 'SHORT' ? 'text-destructive' : 'text-muted-foreground/50'
                     )}>
                       {ex.side}
                     </span>
                     {ex.featuredExcerpt && (
-                      <span className="text-[9px] text-white/20 truncate max-w-[300px]">
+                      <span className="text-[9px] text-muted-foreground/50 truncate max-w-[300px]">
                         {ex.featuredExcerpt.replace(/<[^>]+>/g, '').slice(0, 60)}…
                       </span>
                     )}
@@ -382,7 +382,7 @@ export default function StatisticsClient() {
                 </div>
                 <div className={cn(
                   'shrink-0 text-xs font-semibold tabular-nums',
-                  ex.pnl >= 0 ? 'text-[#00ff9f]' : 'text-[#ff4d4d]'
+                  ex.pnl >= 0 ? 'text-primary' : 'text-destructive'
                 )}>
                   {formatPnl(ex.pnl)}
                 </div>
@@ -390,7 +390,7 @@ export default function StatisticsClient() {
             ))}
           </div>
           {data.featuredExcerpts.length > 15 && (
-            <div className="mt-2 text-center text-[9px] text-white/25">
+            <div className="mt-2 text-center text-[9px] text-muted-foreground/50">
               Showing 15 of {data.featuredExcerpts.length} excerpts
             </div>
           )}
@@ -405,24 +405,24 @@ export default function StatisticsClient() {
         >
           <div className="flex items-center justify-center min-h-screen p-4">
             <div
-              className="w-full max-w-3xl max-h-[85vh] flex flex-col rounded-2xl overflow-hidden bg-card border border-foreground/[0.06] animate-in slide-in-from-bottom-4 duration-250"
+              className="w-full max-w-3xl max-h-[85vh] flex flex-col rounded-2xl overflow-hidden bg-card border border-border animate-in slide-in-from-bottom-4 duration-250"
               onClick={e => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#111311] shrink-0">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card shrink-0">
                 <div>
                   <div className="text-[17px] font-semibold tracking-tight text-white">
                     {selectedExcerpt.excerptTitle || 'Untitled Excerpt'}
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[11px] text-white/50">
+                    <span className="text-[11px] text-muted-foreground">
                       {new Date(selectedExcerpt.entryDate).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}
                     </span>
-                    <span className="text-white/20">·</span>
-                    <span className="text-[11px] text-white/50">{selectedExcerpt.instrument}</span>
+                    <span className="text-muted-foreground/40">·</span>
+                    <span className="text-[11px] text-muted-foreground">{selectedExcerpt.instrument}</span>
                     <span className={cn(
                       'text-[10px] font-semibold',
-                      selectedExcerpt.side === 'LONG' ? 'text-[#00ff9f]' : selectedExcerpt.side === 'SHORT' ? 'text-[#ff4d4d]' : 'text-white/30'
+                      selectedExcerpt.side === 'LONG' ? 'text-primary' : selectedExcerpt.side === 'SHORT' ? 'text-destructive' : 'text-muted-foreground/50'
                     )}>
                       {selectedExcerpt.side}
                     </span>
@@ -431,25 +431,25 @@ export default function StatisticsClient() {
                 <div className="flex items-center gap-3">
                   <div className={cn(
                     'text-sm font-semibold tabular-nums',
-                    selectedExcerpt.pnl >= 0 ? 'text-[#00ff9f]' : 'text-[#ff4d4d]'
+                    selectedExcerpt.pnl >= 0 ? 'text-primary' : 'text-destructive'
                   )}>
                     {formatPnl(selectedExcerpt.pnl)}
                   </div>
-                  <button type="button" onClick={() => setSelectedExcerpt(null)} className="text-white/40 hover:text-white p-1">
+                  <button type="button" onClick={() => setSelectedExcerpt(null)} className="text-muted-foreground hover:text-foreground p-1">
                     <X size={18} />
                   </button>
                 </div>
               </div>
 
               {/* Body */}
-              <div className="flex-1 overflow-y-auto p-6 bg-[#0a0c0a]">
+              <div className="flex-1 overflow-y-auto p-6 bg-background">
                 {selectedExcerpt.featuredExcerpt ? (
                   <div
-                    className="prose prose-invert prose-sm max-w-none [&_p]:mb-3 [&_p]:text-white/70 [&_p]:leading-relaxed [&_strong]:text-white [&_em]:text-white/60 [&_h1]:text-lg [&_h1]:font-semibold [&_h1]:text-white [&_h2]:text-base [&_h2]:font-semibold [&_h2]:text-white [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-white [&_ul]:text-white/60 [&_ol]:text-white/60 [&_blockquote]:border-l-2 [&_blockquote]:border-[#00ff9f]/30 [&_blockquote]:pl-4 [&_blockquote]:text-white/50"
+                    className="prose prose-invert prose-sm max-w-none [&_p]:mb-3 [&_p]:text-foreground/80 [&_p]:leading-relaxed [&_strong]:text-foreground [&_em]:text-muted-foreground [&_h1]:text-lg [&_h1]:font-semibold [&_h1]:text-foreground [&_h2]:text-base [&_h2]:font-semibold [&_h2]:text-foreground [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-foreground [&_ul]:text-muted-foreground [&_ol]:text-muted-foreground [&_blockquote]:border-l-2 [&_blockquote]:border-primary/30 [&_blockquote]:pl-4 [&_blockquote]:text-muted-foreground"
                     dangerouslySetInnerHTML={{ __html: selectedExcerpt.featuredExcerpt }}
                   />
                 ) : (
-                  <div className="text-white/30 text-sm">No excerpt content.</div>
+                  <div className="text-muted-foreground text-sm">No excerpt content.</div>
                 )}
               </div>
             </div>
