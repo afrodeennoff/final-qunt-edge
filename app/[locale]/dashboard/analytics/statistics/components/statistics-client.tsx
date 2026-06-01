@@ -6,7 +6,7 @@ import { StatsTable, type StatsTableRow } from './stats-table'
 import type { StatisticsResult, SetupStat, WeekdayStat, TickerStat } from '../types'
 import { useUserStore } from '@/store/user-store'
 import { cn } from '@/lib/utils'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, X } from 'lucide-react'
 import { useDashboardStats } from '@/context/data-provider'
 import { getJournalTradesAction } from '@/server/journal'
 
@@ -127,6 +127,7 @@ export default function StatisticsClient() {
   const [selectedAccount, setSelectedAccount] = useState<string | null>(null)
   const [accountOpen, setAccountOpen] = useState(false)
   const accountDropRef = useRef<HTMLDivElement>(null)
+  const [selectedExcerpt, setSelectedExcerpt] = useState<typeof data.featuredExcerpts[number] | null>(null)
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -177,7 +178,7 @@ export default function StatisticsClient() {
 
   if (isLoading) {
     return (
-      <div className="max-w-[1400px] mx-auto px-6 py-6 space-y-5 bg-[#0a0c0a] min-h-screen">
+      <div className="w-full px-4 lg:px-6 py-6 space-y-5 bg-[#0a0c0a] min-h-screen">
         <div className="h-5 w-24 bg-white/10 rounded" />
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -207,7 +208,7 @@ export default function StatisticsClient() {
   const risk = computeRiskMetrics(pnlValues, data.profitFactor)
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-6 space-y-5 bg-[#0a0c0a] min-h-screen text-white">
+    <div className="w-full px-4 lg:px-6 py-6 space-y-5 bg-[#0a0c0a] min-h-screen text-white">
 
       {/* Header + Time Filters — exact match */}
       <div className="flex items-center justify-between">
@@ -343,26 +344,28 @@ export default function StatisticsClient() {
         </div>
       )}
 
-      {/* Journal Excerpts — featured note reference log */}
+      {/* Journal Excerpts — clickable headline cards */}
       {data?.featuredExcerpts && data.featuredExcerpts.length > 0 && (
         <div className="rounded-2xl bg-[#111311] border border-white/5 p-5">
           <div className="text-[10px] tracking-[2px] uppercase text-[#00ff9f]/70 mb-4">JOURNAL EXCERPTS</div>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {data.featuredExcerpts.slice(0, 15).map(ex => (
-              <div
+              <button
                 key={ex.id}
-                className="flex items-start gap-4 rounded-xl bg-black/40 p-4 hover:bg-black/60 transition-colors group cursor-default"
+                type="button"
+                onClick={() => setSelectedExcerpt(ex)}
+                className="w-full flex items-center gap-4 rounded-xl bg-black/40 p-4 hover:bg-black/60 transition-colors text-left group"
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-white truncate">
+                    <span className="text-xs font-semibold text-white truncate group-hover:text-[#00ff9f] transition-colors">
                       {ex.excerptTitle || 'Untitled'}
                     </span>
                     <span className="shrink-0 text-[9px] tabular-nums text-white/30">
                       {new Date(ex.entryDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 mt-0.5">
+                  <div className="flex items-center gap-2 mt-1">
                     <span className="text-[10px] text-white/40">{ex.instrument}</span>
                     <span className={cn(
                       'text-[9px] font-semibold',
@@ -371,10 +374,9 @@ export default function StatisticsClient() {
                       {ex.side}
                     </span>
                     {ex.featuredExcerpt && (
-                      <div
-                        className="text-[10px] text-white/40 line-clamp-3 max-w-[600px] mt-1 [&_p]:mb-1 [&_strong]:text-white/60"
-                        dangerouslySetInnerHTML={{ __html: ex.featuredExcerpt }}
-                      />
+                      <span className="text-[9px] text-white/20 truncate max-w-[300px]">
+                        {ex.featuredExcerpt.replace(/<[^>]+>/g, '').slice(0, 60)}…
+                      </span>
                     )}
                   </div>
                 </div>
@@ -384,7 +386,7 @@ export default function StatisticsClient() {
                 )}>
                   {formatPnl(ex.pnl)}
                 </div>
-              </div>
+              </button>
             ))}
           </div>
           {data.featuredExcerpts.length > 15 && (
@@ -392,6 +394,66 @@ export default function StatisticsClient() {
               Showing 15 of {data.featuredExcerpts.length} excerpts
             </div>
           )}
+        </div>
+      )}
+
+      {/* Excerpt Detail Modal */}
+      {selectedExcerpt && (
+        <div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+          onClick={() => setSelectedExcerpt(null)}
+        >
+          <div className="flex items-center justify-center min-h-screen p-4">
+            <div
+              className="w-full max-w-3xl max-h-[85vh] flex flex-col rounded-2xl overflow-hidden bg-card border border-foreground/[0.06] animate-in slide-in-from-bottom-4 duration-250"
+              onClick={e => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#111311] shrink-0">
+                <div>
+                  <div className="text-[17px] font-semibold tracking-tight text-white">
+                    {selectedExcerpt.excerptTitle || 'Untitled Excerpt'}
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-[11px] text-white/50">
+                      {new Date(selectedExcerpt.entryDate).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}
+                    </span>
+                    <span className="text-white/20">·</span>
+                    <span className="text-[11px] text-white/50">{selectedExcerpt.instrument}</span>
+                    <span className={cn(
+                      'text-[10px] font-semibold',
+                      selectedExcerpt.side === 'LONG' ? 'text-[#00ff9f]' : selectedExcerpt.side === 'SHORT' ? 'text-[#ff4d4d]' : 'text-white/30'
+                    )}>
+                      {selectedExcerpt.side}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className={cn(
+                    'text-sm font-semibold tabular-nums',
+                    selectedExcerpt.pnl >= 0 ? 'text-[#00ff9f]' : 'text-[#ff4d4d]'
+                  )}>
+                    {formatPnl(selectedExcerpt.pnl)}
+                  </div>
+                  <button type="button" onClick={() => setSelectedExcerpt(null)} className="text-white/40 hover:text-white p-1">
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Body */}
+              <div className="flex-1 overflow-y-auto p-6 bg-[#0a0c0a]">
+                {selectedExcerpt.featuredExcerpt ? (
+                  <div
+                    className="prose prose-invert prose-sm max-w-none [&_p]:mb-3 [&_p]:text-white/70 [&_p]:leading-relaxed [&_strong]:text-white [&_em]:text-white/60 [&_h1]:text-lg [&_h1]:font-semibold [&_h1]:text-white [&_h2]:text-base [&_h2]:font-semibold [&_h2]:text-white [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-white [&_ul]:text-white/60 [&_ol]:text-white/60 [&_blockquote]:border-l-2 [&_blockquote]:border-[#00ff9f]/30 [&_blockquote]:pl-4 [&_blockquote]:text-white/50"
+                    dangerouslySetInnerHTML={{ __html: selectedExcerpt.featuredExcerpt }}
+                  />
+                ) : (
+                  <div className="text-white/30 text-sm">No excerpt content.</div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
