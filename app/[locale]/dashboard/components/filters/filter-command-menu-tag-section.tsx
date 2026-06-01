@@ -1,4 +1,5 @@
 "use client"
+import React from 'react'
 
 import { useState, useEffect, useRef } from "react"
 import { Plus, ChevronRight, Trash2 } from "lucide-react"

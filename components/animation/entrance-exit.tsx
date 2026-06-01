@@ -1,4 +1,5 @@
 "use client"
+import React from 'react'
 
 import { useRef, useEffect, useState } from "react"
 import { motion, useReducedMotion, useInView, AnimatePresence } from "motion/react"

@@ -1,3 +1,4 @@
+import React from 'react'
 // components/audio-splitter.tsx"use client"
 
 import { useRef, useState } from 'react'

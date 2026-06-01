@@ -1,4 +1,5 @@
 "use client"
+import React from 'react'
 
 import { DataProvider } from "@/context/data-provider";
 import { DataStateProvider } from "@/context/providers/data-state-provider";

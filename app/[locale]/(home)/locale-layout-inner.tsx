@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 
 import { useReducedMotion } from 'motion/react'
 import ErrorBoundary from '@/components/ui/error-boundary'

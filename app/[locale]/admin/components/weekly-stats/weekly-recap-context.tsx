@@ -1,4 +1,5 @@
 "use client"
+import React from 'react'
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
 import { loadInitialContent, WeeklyRecapContent } from "@/app/[locale]/admin/actions/weekly-recap"

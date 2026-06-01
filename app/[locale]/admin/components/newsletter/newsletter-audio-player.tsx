@@ -1,4 +1,5 @@
 "use client"
+import React from 'react'
 
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { Play, Pause, Volume2, VolumeX, Download } from 'lucide-react'
