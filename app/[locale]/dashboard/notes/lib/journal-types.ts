@@ -60,6 +60,7 @@ export interface JournalFilters {
   dateTo: string | null
   search: string
   sort: JournalSortField
+  accountNumber: string | null
 }
 
 export interface JournalStats {

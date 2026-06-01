@@ -418,6 +418,7 @@ export interface JournalTradesFilters {
   dateTo?: string
   tags?: string[]
   sort?: string
+  accountNumber?: string
 }
 
 export interface JournalTradesResult {
@@ -450,8 +451,10 @@ export async function getJournalTradesAction(
   const dateTo = filters?.dateTo || undefined
   const tags = filters?.tags?.filter(Boolean) || undefined
   const sort = filters?.sort || 'date-desc'
+  const accountNumber = filters?.accountNumber || undefined
 
   const where: Prisma.TradeWhereInput = { userId }
+  if (accountNumber) where.accountNumber = accountNumber
 
   // Build journal filter incrementally so status + tags are AND-ed correctly.
   const journalFilter: Record<string, unknown> = {}

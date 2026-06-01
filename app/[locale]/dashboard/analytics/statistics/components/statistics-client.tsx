@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getStatisticsAction } from '@/server/statistics'
 import { StatsTable, type StatsTableRow } from './stats-table'
 import type { StatisticsResult, SetupStat, WeekdayStat, TickerStat } from '../types'
+import { useUserStore } from '@/store/user-store'
 import { cn } from '@/lib/utils'
+import { ChevronDown } from 'lucide-react'
 
 
 type TimePeriod = '7d' | '14d' | '30d' | '90d' | 'all'
@@ -71,17 +73,29 @@ function statToRow(s: TickerStat | SetupStat | WeekdayStat): StatsTableRow {
 }
 
 export default function StatisticsClient() {
+  const accounts = useUserStore(s => s.accounts)
   const [data, setData] = useState<StatisticsResult | null>(null)
   const [loading, setLoading] = useState(true)
   const [period, setPeriod] = useState<TimePeriod>('all')
+  const [selectedAccount, setSelectedAccount] = useState<string | null>(null)
+  const [accountOpen, setAccountOpen] = useState(false)
+  const accountDropRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (accountDropRef.current && !accountDropRef.current.contains(e.target as Node)) setAccountOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
 
   useEffect(() => {
     setLoading(true)
-    getStatisticsAction(PERIOD_DAYS[period]).then(result => {
+    getStatisticsAction(PERIOD_DAYS[period], selectedAccount || undefined).then(result => {
       setData(result)
       setLoading(false)
     })
-  }, [period])
+  }, [period, selectedAccount])
 
   if (loading) {
     return (
@@ -119,7 +133,42 @@ export default function StatisticsClient() {
 
       {/* Header + Time Filters — exact match */}
       <div className="flex items-center justify-between">
-        <div className="text-[11px] font-semibold tracking-[2px] uppercase text-[#00ff9f]">STATISTICS</div>
+        <div className="flex items-center gap-3">
+          <div className="text-[11px] font-semibold tracking-[2px] uppercase text-[#00ff9f]">STATISTICS</div>
+          {accounts.length > 1 && (
+            <div ref={accountDropRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setAccountOpen(!accountOpen)}
+                className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-[#111311] px-2.5 py-1 text-[11px] text-white/60 hover:text-white hover:border-white/20 transition-colors"
+              >
+                <span>{selectedAccount ? 'Acct ' + selectedAccount : 'All Accounts'}</span>
+                <ChevronDown size={12} className={cn('transition-transform', accountOpen && 'rotate-180')} />
+              </button>
+              {accountOpen && (
+                <div className="absolute top-full mt-1 left-0 z-20 min-w-[180px] rounded-xl border border-white/10 bg-[#111311] py-1 shadow-xl">
+                  <button
+                    type="button"
+                    onClick={() => { setSelectedAccount(null); setAccountOpen(false) }}
+                    className={cn('w-full text-left px-3 py-1.5 text-[11px] hover:bg-white/5 transition-colors', !selectedAccount ? 'text-[#00ff9f]' : 'text-white/60')}
+                  >
+                    All Accounts
+                  </button>
+                  {accounts.map(a => (
+                    <button
+                      key={a.number}
+                      type="button"
+                      onClick={() => { setSelectedAccount(a.number === selectedAccount ? null : a.number); setAccountOpen(false) }}
+                      className={cn('w-full text-left px-3 py-1.5 text-[11px] hover:bg-white/5 transition-colors', a.number === selectedAccount ? 'text-[#00ff9f]' : 'text-white/60')}
+                    >
+                      {a.number}{a.propfirm ? ' \u2013 ' + a.propfirm : ''}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
         <div className="flex gap-1 p-1 rounded-2xl bg-[#111311] border border-white/5">
           {([
             { key: '7d' as const, label: '7D' },

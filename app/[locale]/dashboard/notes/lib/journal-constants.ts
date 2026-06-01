@@ -10,6 +10,7 @@ export const DEFAULT_FILTERS: JournalFilters = {
   dateTo: null,
   search: '',
   sort: 'date-desc' as JournalSortField,
+  accountNumber: null,
 }
 
 export const JOURNAL_PAGE_SIZE = 500

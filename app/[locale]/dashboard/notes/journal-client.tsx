@@ -7,7 +7,7 @@ import {
 } from 'recharts'
 import {
   Plus, X, ArrowUpRight, ArrowDownRight, BookOpen, Clock,
-  Check, Loader2, Trash2, Pin, Image as ImageIcon,
+  Check, Loader2, Trash2, Pin, Image as ImageIcon, ChevronDown,
 } from 'lucide-react'
 import { useUserStore } from '@/store/user-store'
 import { useJournal } from './lib/use-journal'
@@ -216,6 +216,7 @@ function groupByDay(cards: TradeJournalCard[]): DayGroup[] {
 
 export default function JournalClient() {
   const userId = useUserStore(s => s.supabaseUser?.id ?? s.user?.id ?? null)
+  const accounts = useUserStore(s => s.accounts)
   const [selectedDayKey, setSelectedDayKey] = useState<string | null>(null)
   const [tradePage, setTradePage] = useState(1)
   const [deleteConfirm, setDeleteConfirm] = useState(false)
@@ -229,6 +230,19 @@ export default function JournalClient() {
   const [dayPage, setDayPage] = useState(0)
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  // Account filter state
+  const [selectedAccount, setSelectedAccount] = useState<string | null>(null)
+  const [accountOpen, setAccountOpen] = useState(false)
+  const accountDropRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (accountDropRef.current && !accountDropRef.current.contains(e.target as Node)) setAccountOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
   // Modal form state
   const [modalSession, setModalSession] = useState<string[]>([])
   const [modalTimeframe, setModalTimeframe] = useState<string[]>([])
@@ -240,6 +254,10 @@ export default function JournalClient() {
   const [modalScreenshots, setModalScreenshots] = useState<string[]>([])
   const [newInstrument, setNewInstrument] = useState('')
   const [newSide, setNewSide] = useState<'LONG' | 'SHORT' | null>(null)
+  const [newQuantity, setNewQuantity] = useState('')
+  const [newEntryPrice, setNewEntryPrice] = useState('')
+  const [newClosePrice, setNewClosePrice] = useState('')
+  const [newPnl, setNewPnl] = useState('')
 
   // Featured excerpt state
   const [modalExcerptTitle, setModalExcerptTitle] = useState('')
@@ -273,8 +291,13 @@ export default function JournalClient() {
     cards, isLoading, expandedId,
     toggleExpand,
     createEntry, updateEntry, deleteEntry,
-    addCard, refetch,
+    addCard, refetch, setFilters,
   } = useJournal(userId)
+
+  // Sync account filter to journal hook
+  useEffect(() => {
+    setFilters({ accountNumber: selectedAccount })
+  }, [selectedAccount, setFilters])
 
   const displayCards = cards
 
@@ -426,12 +449,12 @@ export default function JournalClient() {
     setModalStars(null)
     setModalPreNotes('')
     setModalPostNotes('')
-    setModalScreenshots([])
-    setModalExcerptTitle('')
-    setModalFeaturedExcerpt('')
-    setExcerptEditorOpen(false)
     setNewInstrument('')
     setNewSide(null)
+    setNewQuantity('')
+    setNewEntryPrice('')
+    setNewClosePrice('')
+    setNewPnl('')
     setIsNewTrade(true)
     setModalOpen(true)
   }, [])
@@ -449,6 +472,10 @@ export default function JournalClient() {
         instrument,
         side: newSide || undefined,
         entryDate,
+        quantity: newQuantity || undefined,
+        entryPrice: newEntryPrice || undefined,
+        closePrice: newClosePrice || undefined,
+        pnl: newPnl || undefined,
       })
       const newCard: TradeJournalCard = {
         trade: {
@@ -469,18 +496,13 @@ export default function JournalClient() {
         journal: null,
       }
       addCard(newCard)
-      const tags = [...modalIctTags]
+      const tags = [...modalSession, ...modalTimeframe, ...modalIctTags]
       await handleCreate(trade.id, trade.accountNumber, {
         preTradeNotes: modalPreNotes || null,
         postTradeReview: modalPostNotes || null,
         emotions: modalEmotion,
         confidenceRating: modalStars,
         customTags: tags,
-        timeframe: modalTimeframe.join(', ') || null,
-        session: modalSession.join(', ') || null,
-        screenshots: modalScreenshots,
-        excerptTitle: modalExcerptTitle || null,
-        featuredExcerpt: modalFeaturedExcerpt || null,
       })
       refetch()
       setModalOpen(false)
@@ -584,14 +606,49 @@ export default function JournalClient() {
             {'All (' + dayGroups.length + ' days, ' + dayGroups.reduce((s, g) => s + g.trades.length, 0) + ' trades)'}
           </button>
         </div>
-        <button
-          type="button"
-          onClick={openNewTradeModal}
+        <div className="flex items-center gap-2">
+          {accounts.length > 1 && (
+            <div ref={accountDropRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setAccountOpen(!accountOpen)}
+                className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-[#111311] px-2.5 py-1 text-[11px] text-white/60 hover:text-white hover:border-white/20 transition-colors"
+              >
+                <span>{selectedAccount ? 'Acct ' + selectedAccount : 'All Accounts'}</span>
+                <ChevronDown size={12} className={cn('transition-transform', accountOpen && 'rotate-180')} />
+              </button>
+              {accountOpen && (
+                <div className="absolute top-full mt-1 right-0 z-20 min-w-[180px] rounded-xl border border-white/10 bg-[#111311] py-1 shadow-xl">
+                  <button
+                    type="button"
+                    onClick={() => { setSelectedAccount(null); setAccountOpen(false) }}
+                    className={cn('w-full text-left px-3 py-1.5 text-[11px] hover:bg-white/5 transition-colors', !selectedAccount ? 'text-[#00ff9f]' : 'text-white/60')}
+                  >
+                    All Accounts
+                  </button>
+                  {accounts.map(a => (
+                    <button
+                      key={a.number}
+                      type="button"
+                      onClick={() => { setSelectedAccount(a.number === selectedAccount ? null : a.number); setAccountOpen(false) }}
+                      className={cn('w-full text-left px-3 py-1.5 text-[11px] hover:bg-white/5 transition-colors', a.number === selectedAccount ? 'text-[#00ff9f]' : 'text-white/60')}
+                    >
+                      {a.number}{a.propfirm ? ' \u2013 ' + a.propfirm : ''}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={openNewTradeModal}
           className="inline-flex items-center gap-2 rounded-xl bg-[#00ff9f] px-4 py-2 text-sm font-semibold text-black transition-all hover:bg-[#00ff9f]/90"
         >
           <Plus size={14} strokeWidth={3} />
           New Trade
         </button>
+        </div>
       </div>
 
       {/* ── Day Performance Strip (paginated, shows 7 days per page) ── */}
@@ -935,10 +992,36 @@ export default function JournalClient() {
                         </button>
                       </div>
                     </div>
-                  </div>
-                )}
+                   </div>
+                 )}
 
-                {/* 5 Stat Cards Row (exact visual from image) — only for existing trades */}
+                 {/* Real trade numbers for New Trade (so it is not zero/mock) */}
+                 {isNewTrade && (
+                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                     <div>
+                       <div className="text-[10px] text-white/50 tracking-widest mb-1.5">QUANTITY</div>
+                       <input type="number" step="0.01" value={newQuantity} onChange={e => setNewQuantity(e.target.value)}
+                         placeholder="1" className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20" />
+                     </div>
+                     <div>
+                       <div className="text-[10px] text-white/50 tracking-widest mb-1.5">ENTRY PRICE</div>
+                       <input type="number" step="0.01" value={newEntryPrice} onChange={e => setNewEntryPrice(e.target.value)}
+                         placeholder="5842.25" className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20" />
+                     </div>
+                     <div>
+                       <div className="text-[10px] text-white/50 tracking-widest mb-1.5">CLOSE PRICE</div>
+                       <input type="number" step="0.01" value={newClosePrice} onChange={e => setNewClosePrice(e.target.value)}
+                         placeholder="5858.75" className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20" />
+                     </div>
+                     <div>
+                       <div className="text-[10px] text-white/50 tracking-widest mb-1.5">PNL</div>
+                       <input type="number" step="0.01" value={newPnl} onChange={e => setNewPnl(e.target.value)}
+                         placeholder="620" className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20" />
+                     </div>
+                   </div>
+                 )}
+
+                 {/* 5 Stat Cards Row (exact visual from image) — only for existing trades */}
                 {!isNewTrade && selectedCard && (() => {
                   const avgWin = activeDayTrades.filter(c => c.trade.pnl > 0).reduce((s,c)=>s+c.trade.pnl,0) / Math.max(1, activeDayTrades.filter(c=>c.trade.pnl>0).length || 1)
                   const r = avgWin > 0 ? selectedCard.trade.pnl / avgWin : 0

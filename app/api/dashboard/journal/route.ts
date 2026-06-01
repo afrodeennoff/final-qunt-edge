@@ -63,11 +63,13 @@ async function handleGet(request: NextRequest) {
     const dateTo = searchParams.get('dateTo') || undefined
     const tagsRaw = searchParams.get('tags') || undefined
     const tags = tagsRaw ? tagsRaw.split(',').map((t) => t.trim()).filter(Boolean) : undefined
+    const accountNumber = searchParams.get('accountNumber') || undefined
 
     // Build where clause
     const where: Prisma.TradeWhereInput = {
       userId: dbUser.id,
     }
+    if (accountNumber) where.accountNumber = accountNumber
 
     // Build journal filter incrementally so status + tags are AND-ed correctly.
     const journalFilter: Record<string, unknown> = {}

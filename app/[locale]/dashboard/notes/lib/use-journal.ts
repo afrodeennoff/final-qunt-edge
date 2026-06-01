@@ -104,6 +104,7 @@ export function useJournal(userId: string | null): UseJournalReturn {
           dateTo: filters.dateTo || undefined,
           tags: filters.tags.length > 0 ? filters.tags : undefined,
           sort: filters.sort,
+          accountNumber: filters.accountNumber || undefined,
         })
 
         const pageCards = result.entries as unknown as TradeJournalCard[]

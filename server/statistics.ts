@@ -41,6 +41,7 @@ const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', '
 
 export async function getStatisticsAction(
   periodDays?: number,
+  accountNumber?: string,
 ): Promise<StatisticsResult> {
   const userId = await getDatabaseUserId()
 
@@ -49,6 +50,7 @@ export async function getStatisticsAction(
     const cutoff = new Date(Date.now() - periodDays * 86400000)
     where.entryDate = { gte: cutoff }
   }
+  if (accountNumber) where.accountNumber = accountNumber
 
   const trades = await prisma.trade.findMany({
     where,
