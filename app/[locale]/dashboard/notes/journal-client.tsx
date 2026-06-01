@@ -909,9 +909,9 @@ export default function JournalClient() {
           className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
           onClick={closeModal}
         >
-          <div className="flex items-center justify-center min-h-screen p-4">
+          <div className="flex items-center justify-center h-screen p-4">
             <div
-              className="w-full max-w-5xl max-h-[92vh] flex flex-col rounded-2xl overflow-hidden bg-card border border-foreground/[0.06] animate-in slide-in-from-bottom-4 duration-250"
+              className="w-full max-w-5xl max-h-full flex flex-col rounded-2xl overflow-hidden bg-card border border-foreground/[0.06] animate-in slide-in-from-bottom-4 duration-250"
               onClick={e => e.stopPropagation()}
             >
                {/* Modal Header — fixed at top */}
