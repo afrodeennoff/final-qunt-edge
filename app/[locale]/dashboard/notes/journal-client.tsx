@@ -195,10 +195,22 @@ function groupByDay(cards: TradeJournalCard[]): DayGroup[] {
   }
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
   const fullDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+  // Determine the full date range: earliest trade → today
+  const today = new Date().toISOString().slice(0, 10)
+  let earliest = today
+  for (const key of map.keys()) {
+    if (key < earliest) earliest = key
+  }
+
+  // Build continuous range filling empty days
   const result: DayGroup[] = []
-  for (const [dateKey, trades] of map) {
-    const d = new Date(dateKey + 'T12:00:00')
-    const dayIdx = d.getDay()
+  const current = new Date(earliest + 'T12:00:00')
+  const end = new Date(today + 'T12:00:00')
+  while (current <= end) {
+    const dateKey = current.toISOString().slice(0, 10)
+    const trades = map.get(dateKey) ?? []
+    const dayIdx = current.getDay()
     result.push({
       dateKey,
       label: formatDate(dateKey),
@@ -207,7 +219,9 @@ function groupByDay(cards: TradeJournalCard[]): DayGroup[] {
       trades,
       totalPnl: trades.reduce((s, t) => s + (t.trade.pnl || 0), 0),
     })
+    current.setDate(current.getDate() + 1)
   }
+
   result.sort((a, b) => b.dateKey.localeCompare(a.dateKey))
   return result
 }
@@ -573,7 +587,7 @@ export default function JournalClient() {
                 : 'border-white/10 text-white/30 hover:text-white/60'
             )}
           >
-            {'All (' + dayGroups.length + ' days, ' + dayGroups.reduce((s, g) => s + g.trades.length, 0) + ' trades)'}
+            {'All (' + dayGroups.filter(g => g.trades.length > 0).length + ' trading days, ' + dayGroups.reduce((s, g) => s + g.trades.length, 0) + ' trades)'}
           </button>
         </div>
         <div className="flex items-center gap-2">
@@ -613,11 +627,12 @@ export default function JournalClient() {
         </div>
       </div>
 
-      {/* ── Day Performance Strip (paginated, shows 7 days per page) ── */}
+      {/* ── Day Performance Strip (paginated, shows 7 days per page, continuous calendar) ── */}
       <div className="grid grid-cols-7 gap-2">
         {pagedDayGroups.map(g => {
           const isSelected = selectedDayKey === g.dateKey
           const pnlPositive = g.totalPnl > 0
+          const hasTrades = g.trades.length > 0
           return (
             <button
               key={g.dateKey}
@@ -625,27 +640,26 @@ export default function JournalClient() {
               onClick={() => setSelectedDayKey(isSelected ? null : g.dateKey)}
               className={cn(
                 'rounded-xl p-3 text-left transition-all border',
-                'bg-[#111311] border-white/5 hover:border-white/10',
+                hasTrades
+                  ? 'bg-[#111311] border-white/5 hover:border-white/10'
+                  : 'bg-[#111311]/40 border-white/5',
                 isSelected && 'border-[#00ff9f] ring-1 ring-[#00ff9f]/30',
               )}
             >
-              <div className="text-[10px] font-medium tracking-widest text-white/60">{g.shortDay}</div>
-              <div className="text-[10px] text-white/40 mt-0.5">{g.label}</div>
+              <div className={cn('text-[10px] font-medium tracking-widest', hasTrades ? 'text-white/60' : 'text-white/30')}>{g.shortDay}</div>
+              <div className={cn('text-[10px] mt-0.5', hasTrades ? 'text-white/40' : 'text-white/20')}>{g.label}</div>
               <div className={cn(
                 'text-[15px] font-semibold tabular-nums mt-2 tracking-tight',
-                pnlPositive ? 'text-[#00ff9f]' : g.totalPnl < 0 ? 'text-[#ff4d4d]' : 'text-white/40',
+                pnlPositive ? 'text-[#00ff9f]' : g.totalPnl < 0 ? 'text-[#ff4d4d]' : 'text-white/25',
               )}>
                 {g.totalPnl > 0 ? '+' : ''}{g.totalPnl === 0 ? '—' : formatPnl(g.totalPnl)}
               </div>
-              <div className="text-[10px] text-white/30 mt-1">{g.trades.length} trades</div>
+              <div className={cn('text-[10px] mt-1', hasTrades ? 'text-white/30' : 'text-white/15')}>
+                {hasTrades ? `${g.trades.length} trades` : 'No trades'}
+              </div>
             </button>
           )
         })}
-        {dayGroups.length === 0 && !isLoading && (
-          <div className="col-span-7 text-center py-6 text-xs text-white/30 border border-white/5 rounded-xl">
-            No trades yet. Import trades to begin journaling.
-          </div>
-        )}
       </div>
 
       {/* ── Day Summary + Equity Curve (exact visual match) ── */}
