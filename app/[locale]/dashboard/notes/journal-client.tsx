@@ -430,9 +430,9 @@ export default function JournalClient() {
       setHasUnsaved(true)
       saveTimerRef.current = setTimeout(() => setSaving(false), 1500)
       if (entryId?.startsWith('temp-')) {
-        const { preTradeNotes, postTradeReview, emotions, confidenceRating, disciplineScore, customTags, screenshots, timeframe, session } = selectedCard.journal
+        const { preTradeNotes, postTradeReview, emotions, confidenceRating, disciplineScore, customTags, screenshots, timeframe, session, excerptTitle, featuredExcerpt } = selectedCard.journal
         handleCreate(selectedCard.trade.id, selectedCard.trade.accountNumber, {
-          preTradeNotes, postTradeReview, emotions, confidenceRating, disciplineScore, customTags, screenshots, timeframe, session,
+          preTradeNotes, postTradeReview, emotions, confidenceRating, disciplineScore, customTags, screenshots, timeframe, session, excerptTitle, featuredExcerpt,
           [field]: value,
         })
         return
@@ -909,13 +909,13 @@ export default function JournalClient() {
           className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
           onClick={closeModal}
         >
-          <div className="flex items-start justify-center min-h-screen pt-12 px-4">
+          <div className="flex items-center justify-center min-h-screen p-4">
             <div
-              className="w-full max-w-5xl rounded-2xl overflow-hidden bg-card border border-foreground/[0.06] animate-in slide-in-from-bottom-4 duration-250"
+              className="w-full max-w-5xl max-h-[92vh] flex flex-col rounded-2xl overflow-hidden bg-card border border-foreground/[0.06] animate-in slide-in-from-bottom-4 duration-250"
               onClick={e => e.stopPropagation()}
             >
-               {/* Modal Header — exact match to reference */}
-               <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#111311]">
+               {/* Modal Header — fixed at top */}
+               <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#111311] shrink-0">
                  <div>
                    <div className="text-[17px] font-semibold tracking-tight">
                      {selectedCard
@@ -935,8 +935,8 @@ export default function JournalClient() {
                  </button>
                </div>
 
-              {/* Modal Body — redesigned to 100% match reference image */}
-              <div className="p-6 space-y-5 max-h-[82vh] overflow-y-auto bg-[#0a0c0a] text-white">
+              {/* Modal Body — scrollable */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-5 bg-[#0a0c0a] text-white">
 
                 {/* 5 Stat Cards Row (exact visual from image) */}
                 {selectedCard && (() => {
@@ -1078,44 +1078,45 @@ export default function JournalClient() {
                   </div>
                 </div>
 
-                {/* FEATURED EXCERPT */}
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
+                {/* FEATURED EXCERPT — always visible, expand/collapse */}
+                <div className="rounded-xl bg-black/40 border border-white/5 p-4 space-y-3">
+                  <div className="flex items-center justify-between">
                     <div className="text-[10px] text-white/50 tracking-widest">FEATURED EXCERPT</div>
                     <button
                       type="button"
                       onClick={() => setExcerptEditorOpen(!excerptEditorOpen)}
-                      className="text-[10px] text-white/30 hover:text-[#00ff9f] transition-colors"
+                      className={cn(
+                        'text-[10px] px-2 py-0.5 rounded border transition-colors',
+                        excerptEditorOpen
+                          ? 'border-white/10 text-white/40 hover:text-white'
+                          : 'border-[#00ff9f]/30 text-[#00ff9f] hover:bg-[#00ff9f]/10'
+                      )}
                     >
-                      {excerptEditorOpen ? 'Collapse' : 'Edit'}
+                      {excerptEditorOpen ? 'Collapse' : 'Expand'}
                     </button>
                   </div>
 
-                  {(excerptEditorOpen || modalExcerptTitle || modalFeaturedExcerpt) && (
-                    <div className="space-y-2">
-                      <input
-                        type="text"
-                        value={modalExcerptTitle}
-                        onChange={e => {
-                          setModalExcerptTitle(e.target.value)
-                          if (selectedCard?.journal && !selectedCard.journal.id.startsWith('temp-')) {
-                            update('excerptTitle', e.target.value || null)
-                          }
-                        }}
-                        placeholder="Give this excerpt a title..."
-                        maxLength={200}
-                        className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-[#00ff9f]/50"
-                      />
-                      <div className="text-[9px] text-white/25">This will be displayed on your profile.</div>
-                    </div>
-                  )}
+                  {/* Title input — always visible */}
+                  <input
+                    type="text"
+                    value={modalExcerptTitle}
+                    onChange={e => {
+                      setModalExcerptTitle(e.target.value)
+                      setHasUnsaved(true)
+                    }}
+                    placeholder="Give this excerpt a title..."
+                    maxLength={200}
+                    className="w-full rounded-lg px-3 py-2 text-sm bg-black border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-[#00ff9f]/50"
+                  />
 
+                  {/* Rich text editor — expanded */}
                   {excerptEditorOpen && (
-                    <div className="mt-2 rounded-lg border border-white/10 overflow-hidden bg-black">
+                    <div className="rounded-lg border border-white/10 overflow-hidden bg-black">
                       <TiptapEditor
                         content={modalFeaturedExcerpt}
                         onChange={(html) => {
                           setModalFeaturedExcerpt(html)
+                          setHasUnsaved(true)
                           if (excerptSaveTimerRef.current) clearTimeout(excerptSaveTimerRef.current)
                           excerptSaveTimerRef.current = setTimeout(() => {
                             if (selectedCard?.journal && !selectedCard.journal.id.startsWith('temp-')) {
@@ -1124,7 +1125,7 @@ export default function JournalClient() {
                           }, 1500)
                         }}
                         placeholder="Write your featured trade reflection..."
-                        height="280px"
+                        height="220px"
                         width="100%"
                         className="!bg-black"
                       />
@@ -1134,22 +1135,31 @@ export default function JournalClient() {
                     </div>
                   )}
 
+                  {/* Collapsed preview */}
                   {!excerptEditorOpen && (modalExcerptTitle || modalFeaturedExcerpt) && (
                     <div
                       onClick={() => setExcerptEditorOpen(true)}
-                      className="mt-2 rounded-lg border border-white/5 p-3 cursor-pointer hover:border-white/10 transition-colors"
+                      className="rounded-lg border border-white/5 p-3 cursor-pointer hover:border-white/10 transition-colors"
                     >
                       <div className="text-xs font-medium text-white/80 truncate">
                         {modalExcerptTitle || 'Untitled excerpt'}
                       </div>
                       {modalFeaturedExcerpt && (
                         <div
-                          className="text-[11px] text-white/40 mt-1 line-clamp-2"
+                          className="text-[11px] text-white/40 mt-2 line-clamp-3 [&_p]:mb-1 [&_strong]:text-white/60 max-w-[600px]"
                           dangerouslySetInnerHTML={{ __html: modalFeaturedExcerpt }}
                         />
                       )}
                     </div>
                   )}
+
+                  {!excerptEditorOpen && !modalExcerptTitle && !modalFeaturedExcerpt && (
+                    <div className="text-[11px] text-white/20 text-center py-2">
+                      Click "Expand" to write a featured trade reflection
+                    </div>
+                  )}
+
+                  <div className="text-[9px] text-white/25">Excerpts appear in your Statistics page journal log.</div>
                 </div>
 
                 {/* Screenshots */}
@@ -1165,8 +1175,8 @@ export default function JournalClient() {
                 </div>
               </div>
 
-              {/* Modal Footer */}
-                 <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-[#0a0c0a]">
+              {/* Modal Footer — fixed at bottom */}
+                 <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-[#111311] shrink-0">
                 <div className="flex items-center gap-2 text-xs">
                   {selectedCard?.journal && (
                     <Fragment>
