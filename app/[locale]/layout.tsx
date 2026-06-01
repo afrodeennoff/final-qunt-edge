@@ -1,4 +1,4 @@
-import { Suspense } from "react"
+import React, { Suspense } from "react"
 import { I18nProviderClient } from "@/locales/client"
 import { setStaticParamsLocale } from "next-international/server"
 import ConsentBannerLazy from "@/components/lazy/consent-banner-lazy"

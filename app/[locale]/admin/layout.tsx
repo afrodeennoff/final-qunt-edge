@@ -1,3 +1,4 @@
+import React from 'react'
 import { createClient } from "@/server/auth"
 import { redirect } from "next/navigation"
 import { AdminClientLayout } from "./admin-client-layout"

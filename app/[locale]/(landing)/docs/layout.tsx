@@ -1,3 +1,4 @@
+import React from 'react'
 import { setStaticParamsLocale } from 'next-international/server'
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
 import { DocsSidebar } from './components/docs-sidebar'

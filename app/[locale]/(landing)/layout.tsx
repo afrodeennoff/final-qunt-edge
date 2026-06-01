@@ -1,3 +1,4 @@
+import React from 'react'
 import MarketingLayoutShell from "./components/marketing-layout-shell";
 import { PublicRootProviders } from "@/components/providers/root-providers";
 

@@ -1,3 +1,4 @@
+import React from 'react'
 import { setStaticParamsLocale } from 'next-international/server'
 import { Metadata } from 'next'
 import { getI18n, getStaticParams } from '@/locales/server'

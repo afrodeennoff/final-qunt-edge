@@ -1,3 +1,4 @@
+import React from 'react'
 import MarketingLayoutShell from '../../(landing)/components/marketing-layout-shell'
 import { PublicRootProviders } from '@/components/providers/root-providers'
 import { WORKSPACE_SHELL_WIDTH } from '@/lib/constants/layout'

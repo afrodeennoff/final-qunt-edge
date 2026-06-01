@@ -1,4 +1,4 @@
-import type { CSSProperties, HTMLAttributes } from "react";
+import React, { type CSSProperties, HTMLAttributes } from "react";
 
 // ============================================================================
 // Shared Types
