@@ -1,6 +1,7 @@
 'use client'
 
 import { Plug, BarChart3, Brain, ArrowRight } from 'lucide-react'
+import { InteractiveWrapper } from '@/components/interactive-wrapper'
 
 const steps = [
   {
@@ -39,8 +40,8 @@ export function HowItWorks() {
           {steps.map((step, i) => {
             const Icon = step.icon
             return (
+              <InteractiveWrapper key={i} hover="cursor">
               <div
-                key={i}
                 className="animate-fade-in-up group relative rounded-2xl border-0 bg-gradient-to-b from-card/40 to-transparent p-8 transition-all duration-300 hover:border-primary/20 hover:shadow-[0_0_30px_-15px] hover:shadow-primary/8"
               >
                 <div className="flex items-center gap-4">
@@ -60,6 +61,7 @@ export function HowItWorks() {
                   </div>
                 )}
               </div>
+              </InteractiveWrapper>
             )
           })}
         </div>

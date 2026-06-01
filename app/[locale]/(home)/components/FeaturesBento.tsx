@@ -9,6 +9,7 @@ import {
 } from '@/components/layout/unified-page-recipes'
 import { MarketingSection } from '@/components/layout/marketing-sections'
 import { MotionSection, MotionStagger, MotionStaggerItem } from '@/components/animation/enhanced-motion'
+import { InteractiveWrapper } from '@/components/interactive-wrapper'
 import { getTypedI18n } from '@/locales/server'
 
 const featureIcons = [Download, BarChart3, Users, Shield, FileText, Brain]
@@ -53,6 +54,7 @@ export default async function FeaturesBento() {
             const Icon = feature.icon
             return (
               <MotionStaggerItem key={String(feature.title)} className={feature.colSpan}>
+                <InteractiveWrapper hover="cursor">
                 <article
                   className={cn(
                     feature.highlighted ? unifiedSectionPanelClassName : unifiedInsetPanelClassName,
@@ -75,6 +77,7 @@ export default async function FeaturesBento() {
                     <p className="text-sm leading-[1.65] text-muted-foreground">{feature.description}</p>
                   </div>
                 </article>
+                </InteractiveWrapper>
               </MotionStaggerItem>
             )
           })}

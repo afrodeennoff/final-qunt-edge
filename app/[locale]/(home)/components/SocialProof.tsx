@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { getTypedI18n } from '@/locales/server'
+import { InteractiveWrapper } from '@/components/interactive-wrapper'
 
 const statIcons = [Trophy, Globe, Clock, MessageSquare]
 const trustIcons = [Lock, Server, ShieldCheck, LifeBuoy]
@@ -85,8 +86,8 @@ export default async function SocialProof() {
             {stats.map((stat) => {
               const Icon = stat.icon
               return (
+                <InteractiveWrapper key={String(stat.label)} hover="cursor">
                 <article
-                  key={String(stat.label)}
                   className="animate-fade-in-up rounded-lg border-0 bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-md border-0 bg-background/70 text-primary">
@@ -99,6 +100,7 @@ export default async function SocialProof() {
                   </div>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{stat.label}</p>
                 </article>
+                </InteractiveWrapper>
               )
             })}
           </div>
@@ -117,8 +119,8 @@ export default async function SocialProof() {
 
             <div className="animate-stagger grid gap-4">
               {testimonials.map((testimonial) => (
+                <InteractiveWrapper key={String(testimonial.name)} hover="cursor">
                 <article
-                  key={String(testimonial.name)}
                   className="animate-fade-in-up flex h-full flex-col rounded-lg border-0 bg-card/70 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
                 >
                   <div className="mb-4 inline-flex w-fit rounded-full border-0 bg-background/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
@@ -138,6 +140,7 @@ export default async function SocialProof() {
                     </div>
                   </div>
                 </article>
+                </InteractiveWrapper>
               ))}
             </div>
           </div>
@@ -156,8 +159,8 @@ export default async function SocialProof() {
               {pillars.map((pillar) => {
                 const Icon = pillar.icon
                 return (
+                  <InteractiveWrapper key={String(pillar.title)} hover="cursor">
                   <article
-                    key={String(pillar.title)}
                     className="animate-fade-in-up rounded-lg border-0 bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-md border-0 bg-background/70 text-primary">
@@ -170,6 +173,7 @@ export default async function SocialProof() {
                       {pillar.description}
                     </p>
                   </article>
+                  </InteractiveWrapper>
                 )
               })}
             </div>

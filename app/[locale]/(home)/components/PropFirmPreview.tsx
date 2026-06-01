@@ -3,6 +3,7 @@ import { getActiveDeals } from '@/server/deals'
 import { TrendingUp, Users, DollarSign, Tag, Clock } from 'lucide-react'
 import Link from 'next/link'
 import { connection } from 'next/server'
+import { InteractiveWrapper } from '@/components/interactive-wrapper'
 
 function fmt(n: number) {
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`
@@ -64,8 +65,8 @@ export async function PropFirmPreview() {
           {topFirms.map((firm) => {
             const deal = dealMap.get(firm.propfirmName)
             return (
+              <InteractiveWrapper key={firm.propfirmName} hover="cursor">
               <div
-                key={firm.propfirmName}
                 className="group relative flex flex-col overflow-hidden rounded-2xl bg-card border-0 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15"
               >
                 <div className="absolute top-0 right-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-primary/[0.03] blur-2xl transition-all duration-500 group-hover:bg-primary/[0.06] group-hover:scale-150" />
@@ -115,6 +116,7 @@ export async function PropFirmPreview() {
                   </div>
                 )}
               </div>
+              </InteractiveWrapper>
             )
           })}
         </div>

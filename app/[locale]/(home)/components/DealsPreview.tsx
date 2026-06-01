@@ -2,6 +2,7 @@ import { getActiveDeals } from '@/server/deals'
 import { TrendingUp, Tag, Clock } from 'lucide-react'
 import Link from 'next/link'
 import { connection } from 'next/server'
+import { InteractiveWrapper } from '@/components/interactive-wrapper'
 
 function daysLeft(expiry: string): number {
   const diff = new Date(expiry).getTime() - Date.now()
@@ -42,8 +43,8 @@ export async function DealsPreview() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {topDeals.map((deal) => (
+            <InteractiveWrapper key={deal.id} hover="cursor">
             <div
-              key={deal.id}
               className="group relative overflow-hidden rounded-2xl bg-card border-0 p-6 transition-all duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15"
             >
               <div className="absolute top-0 right-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-primary/[0.03] blur-2xl transition-all duration-500 group-hover:bg-primary/[0.06] group-hover:scale-150" />
@@ -66,6 +67,7 @@ export async function DealsPreview() {
                 </div>
               </div>
             </div>
+            </InteractiveWrapper>
           ))}
         </div>
 

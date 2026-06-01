@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Card } from '@/components/ui/card'
+import { InteractiveWrapper } from '@/components/interactive-wrapper'
 import type { UnifiedFirm } from '@/server/deals'
 
 interface FirmCardsGridProps {
@@ -24,8 +25,8 @@ export default function FirmCardsGrid({ firms, locale }: FirmCardsGridProps) {
   return (
     <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {firms.slice(0, 6).map((firm) => (
+        <InteractiveWrapper key={firm.id} hover="cursor">
         <Card
-          key={firm.id}
           hover
           className="group p-4"
         >
@@ -78,6 +79,7 @@ export default function FirmCardsGrid({ firms, locale }: FirmCardsGridProps) {
             <ArrowRight className="h-3 w-3" />
           </Link>
         </Card>
+        </InteractiveWrapper>
       ))}
     </div>
   )
