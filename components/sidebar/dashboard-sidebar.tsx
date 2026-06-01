@@ -73,8 +73,8 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
         // ── Review ──
         {
             href: `/${locale}/dashboard/analytics`,
-            icon: <Sparkles className={NAV_ICON_SIZE} />,
-            label: "Copilot",
+            icon: <BarChart3 className={NAV_ICON_SIZE} />,
+            label: "Analytics",
             group: "Review"
         },
         {

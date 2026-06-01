@@ -30,8 +30,7 @@ export function StatsTable({ title, rows, emptyMessage = 'No data yet' }: StatsT
     )
   }
 
-  const headerCellClass = 'text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50'
-  const dataCellClass = 'px-5 py-2 text-xs tabular-nums'
+  const dataCellClass = 'px-5 py-2.5 text-sm tabular-nums'
 
   return (
     <div className="rounded-2xl overflow-hidden bg-card/30 border border-foreground/[0.06]">
@@ -40,12 +39,12 @@ export function StatsTable({ title, rows, emptyMessage = 'No data yet' }: StatsT
       </div>
       <table className="w-full">
         <thead>
-          <tr>
-            <th className={cn(headerCellClass, 'text-left px-5 py-2')}>Name</th>
-            <th className={cn(headerCellClass, 'text-right px-5 py-2')}>Trades</th>
-            <th className={cn(headerCellClass, 'text-right px-5 py-2')}>Win %</th>
-            <th className={cn(headerCellClass, 'text-right px-5 py-2')}>PnL</th>
-            <th className={cn(headerCellClass, 'text-right px-5 py-2')}>Avg R</th>
+          <tr className="text-[10px] uppercase tracking-wider text-muted-foreground/50">
+            <th className="text-left px-5 py-2.5 font-medium">Symbol</th>
+            <th className="text-right px-5 py-2.5 font-medium">Trades</th>
+            <th className="text-right px-5 py-2.5 font-medium">Win %</th>
+            <th className="text-right px-5 py-2.5 font-medium">PnL</th>
+            <th className="text-right px-5 py-2.5 font-medium">Avg R</th>
           </tr>
         </thead>
         <tbody>
