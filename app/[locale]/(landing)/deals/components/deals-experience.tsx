@@ -485,14 +485,7 @@ function DealsBoard({
           className="py-6 sm:py-8"
         >
           <div className="space-y-6 lg:space-y-8">
-            {spotlightDeals.length > 0 ? (
-              <BiggestDealsCarousel
-                locale={locale}
-                deals={spotlightDeals}
-                copiedCode={copiedCode}
-                onCopyCode={onCopyCode}
-              />
-            ) : null}
+            {/* Spotlight carousel removed for cleaner propfirmperk-style all-deals focus */}
 
             <section className="grid gap-4 lg:grid-cols-3">
               <InsightCard
@@ -518,32 +511,21 @@ function DealsBoard({
               />
             </section>
 
-            <DealsFilterPanel
-              localePrefix={localePrefix}
-              search={search}
-              selectedFirm={selectedFirm}
-              selectedMarket={selectedMarket}
-              selectedDiscount={selectedDiscount}
-              sortKey={sortKey}
-              onSearchChange={onSearchChange}
-              onFirmChange={onFirmChange}
-              onMarketChange={onMarketChange}
-              onDiscountChange={onDiscountChange}
-              onSortChange={onSortChange}
-              onResetFilters={resetFilters}
-              hasActiveFilters={hasActiveFilters}
-              firmOptions={firmOptions}
-              spotlights={spotlights}
-              lastUpdated={lastUpdated}
-              topFirms={topFirms}
-            />
+            {/* PropFirmPerk-style All Deals header */}
+            <div className="mb-4 flex items-end justify-between gap-4 border-b border-[var(--qe-ref-card-border)] pb-4">
+              <div>
+                <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[var(--qe-ref-green)]">ALL PROP FIRM DEALS</div>
+                <h2 className="text-2xl font-semibold tracking-tight mt-1">Compare challenge fees &amp; verified discounts</h2>
+                <p className="text-sm text-muted-foreground mt-1">See your true cost after promo. Click any firm for full rules.</p>
+              </div>
+              <div className="text-xs text-muted-foreground hidden sm:block">
+                {filteredDeals.length} active offers
+              </div>
+            </div>
 
-            <DealsContentSections
+            <AllDealsGrid
               locale={locale}
-              featuredDeals={featuredDeals}
-              expiringDeals={expiringDeals}
-              browseDeals={browseDeals}
-              filteredDeals={filteredDeals}
+              deals={filteredDeals}
               copiedCode={copiedCode}
               onCopyCode={onCopyCode}
               hadFetchError={hadFetchError}
@@ -1606,5 +1588,174 @@ function SelectLike<T extends string>({
         </option>
       ))}
     </select>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NEW: PropFirmPerk-style clean All Deals grid + cards
+   Clean, data-dense, focused on True Cost after discount.
+═══════════════════════════════════════════════════════════════ */
+
+function AllDealsGrid({
+  locale,
+  deals,
+  copiedCode,
+  onCopyCode,
+  hadFetchError,
+}: {
+  locale: string
+  deals: DealItem[]
+  copiedCode: string | null
+  onCopyCode: (code: string) => void
+  hadFetchError: boolean
+}) {
+  if (hadFetchError) {
+    return (
+      <div className="rounded-2xl border border-[var(--qe-ref-card-border)] bg-card p-10 text-center">
+        <p className="text-muted-foreground">Live deals temporarily unavailable. Please refresh in a moment.</p>
+      </div>
+    )
+  }
+
+  if (deals.length === 0) {
+    return (
+      <div className="rounded-2xl border border-[var(--qe-ref-card-border)] bg-card p-10 text-center">
+        <p className="text-muted-foreground">No deals match your current filters.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      {deals.map((deal) => (
+        <DealRowCard
+          key={deal.id}
+          deal={deal}
+          locale={locale}
+          copiedCode={copiedCode}
+          onCopyCode={onCopyCode}
+        />
+      ))}
+    </div>
+  )
+}
+
+function DealRowCard({
+  deal,
+  locale,
+  copiedCode,
+  onCopyCode,
+}: {
+  deal: DealItem
+  locale: string
+  copiedCode: string | null
+  onCopyCode: (code: string) => void
+}) {
+  const trueCost = Math.round(deal.challengeFee * (1 - deal.discountPercent / 100))
+  const savings = deal.challengeFee - trueCost
+  const firmHref = getFirmHref(locale, deal.firmSlug)
+  const buyHref = deal.claimUrl || firmHref
+  const isExternal = Boolean(deal.claimUrl)
+  const daysLeft = getDaysLeft(deal.expiryDate)
+
+  return (
+    <div className="group rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] overflow-hidden flex flex-col transition-all hover:border-[var(--qe-ref-green)]/30 hover:shadow-lg">
+      {/* Top bar: Firm + Discount */}
+      <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-[var(--qe-ref-card-border)]">
+        <div className="flex items-center gap-3 min-w-0">
+          {deal.logoUrl ? (
+            <img
+              src={deal.logoUrl}
+              alt={deal.firmName}
+              className="h-9 w-9 rounded-lg object-cover border border-[var(--qe-ref-card-border)]"
+            />
+          ) : (
+            <div className="h-9 w-9 rounded-lg bg-[var(--qe-ref-surface-2)] flex items-center justify-center text-[10px] font-bold text-muted-foreground">
+              {deal.firmName.slice(0, 2).toUpperCase()}
+            </div>
+          )}
+          <div className="min-w-0">
+            <Link href={firmHref} className="font-semibold text-[15px] tracking-tight hover:underline truncate block">
+              {deal.firmName}
+            </Link>
+            <div className="text-[11px] text-muted-foreground truncate">
+              {deal.platform} • {deal.payoutModel}
+            </div>
+          </div>
+        </div>
+
+        <div className="text-right shrink-0">
+          <div className="inline-flex items-center rounded-full bg-[var(--qe-ref-green)]/10 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-[var(--qe-ref-green)]">
+            {deal.discountPercent}% OFF
+          </div>
+        </div>
+      </div>
+
+      {/* Specs row - compact like propfirmperk */}
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1 px-4 py-3 text-xs">
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Drawdown</span>
+          <span className="font-medium tabular-nums">{deal.drawdownType}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Coupon</span>
+          <span className="font-mono font-medium">{deal.couponCode}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Original</span>
+          <span className="line-through text-muted-foreground/70 tabular-nums">${deal.challengeFee}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Expires</span>
+          <span className="font-medium">
+            {daysLeft === null ? 'No expiry' : daysLeft === 0 ? 'Today' : `${daysLeft}d`}
+          </span>
+        </div>
+      </div>
+
+      {/* True Cost highlight - the star of the card */}
+      <div className="mx-4 mb-3 rounded-xl bg-[var(--qe-ref-surface-2)] px-4 py-3 flex items-end justify-between">
+        <div>
+          <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Your true cost</div>
+          <div className="text-3xl font-semibold tabular-nums tracking-tighter text-[var(--qe-ref-green)] mt-0.5">
+            ${trueCost}
+          </div>
+        </div>
+        {savings > 0 && (
+          <div className="text-right">
+            <div className="text-[10px] text-muted-foreground">You save</div>
+            <div className="text-lg font-semibold tabular-nums text-[var(--qe-ref-green)]">+${savings}</div>
+          </div>
+        )}
+      </div>
+
+      {/* Actions */}
+      <div className="mt-auto border-t border-[var(--qe-ref-card-border)] px-4 py-3 flex gap-2 bg-[var(--qe-ref-card)]">
+        <button
+          onClick={() => onCopyCode(deal.couponCode)}
+          className="flex-1 rounded-xl border border-[var(--qe-ref-card-border)] py-2 text-sm font-medium hover:bg-[var(--qe-ref-surface-2)] transition"
+        >
+          {copiedCode === deal.couponCode ? 'Copied ✓' : 'Copy code'}
+        </button>
+
+        {isExternal ? (
+          <a
+            href={buyHref}
+            target="_blank"
+            rel="noreferrer"
+            className="flex-1 rounded-xl bg-[var(--qe-ref-green)] py-2 text-center text-sm font-semibold text-black hover:opacity-90 transition"
+          >
+            Buy Now →
+          </a>
+        ) : (
+          <Link
+            href={buyHref}
+            className="flex-1 rounded-xl bg-[var(--qe-ref-green)] py-2 text-center text-sm font-semibold text-black hover:opacity-90 transition"
+          >
+            Buy Now →
+          </Link>
+        )}
+      </div>
+    </div>
   )
 }
