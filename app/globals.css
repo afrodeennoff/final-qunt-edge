@@ -645,7 +645,7 @@
   --semantic-info-border: 150 100% 50% / 0.25;
 
   /* ── BORDER & RING — Neon Green only for focus/ring ── */
-  --border: hsl(150, 12%, 16%);
+  --border: transparent;
   --border-subtle: hsl(150, 8%, 13%);
   --input: hsl(150, 10%, 12%);
   --ring: hsl(150, 100%, 50%);
@@ -658,142 +658,8 @@
   --sidebar-primary-foreground: #000000;
   --sidebar-accent: hsl(150, 60%, 10%);
   --sidebar-accent-foreground: hsl(150, 100%, 50%);
-  --sidebar-border: hsl(150, 20%, 12%);
-  --sidebar-ring: hsl(150, 100%, 50%);
+  --sidebar-border: transparent;
 
-  /* ── COMPATIBILITY BRIDGE — neutral dark grays for legacy code */
-  --legacy-50: 0 0% 6%;
-  --legacy-100: 0 0% 10%;
-  --legacy-200: 0 0% 16%;
-  --legacy-300: 0 0% 24%;
-  --legacy-400: 0 0% 36%;
-  --legacy-500: 0 0% 50%;
-  --legacy-600: 0 0% 62%;
-  --legacy-700: 0 0% 74%;
-  --legacy-800: 0 0% 84%;
-  --legacy-900: 0 0% 92%;
-  --legacy-950: 0 0% 96%;
-  --legacy-white: 0 0% 100%;
-  --legacy-black: 0 0% 0%;
-  --font-ui-native: -apple-system, BlinkMacSystemFont, 'Inter', 'DM Sans', 'Geist', system-ui, sans-serif;
-  --font-display: var(--font-sans);
-
-  /* V2 / legacy accent kept minimal for compat (Cobalt only for non-trading focus) */
-  --v2-accent-rgb: 101 117 128; /* neutral gray for legacy */
-
-  /* Clean minimal surfaces for trading terminal (no heavy gradients/glows) */
-  --surface-sidebar: #111111;
-  --surface-toolbar: #1A1A1A;
-  --surface-content: #0A0A0A;
-  --surface-panel: #1A1A1A;
-  --surface-elevated: #1F1F1F;
-  --surface-sheet: #1F1F1F;
-  --surface-hover: #222222;
-
-  /* Frost scale removed — use --border / --card for clean terminal surfaces */
-  --frost-1: rgba(0,0,0,0.02);
-  --frost-2: rgba(0,0,0,0.04);
-
-  /* Minimal shadow system — subtle depth only, no glows */
-  --shadow-toolbar: 0 1px 0 rgba(0,0,0,0.2);
-  --shadow-panel: 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px -4px rgba(0,0,0,0.4);
-  --shadow-widget: 0 1px 0 rgba(255,255,255,0.02), 0 2px 8px -2px rgba(0,0,0,0.3);
-  --shadow-modal: 0 8px 32px -8px rgba(0,0,0,0.6);
-  --shadow-dropdown: 0 4px 16px -4px rgba(0,0,0,0.5);
-
-  /* Fast professional motion (no spring luxury) */
-  --duration-instant: 60ms;
-  --duration-fast: 100ms;
-  --duration-normal: 150ms;
-  --duration-slow: 220ms;
-  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Typography for data-dense terminal */
-  --type-ui-size: 13px;
-  --type-ui-weight: 500;
-  --type-ui-tracking: -0.01em;
-  --type-label-size: 11px;
-  --type-label-weight: 600;
-  --type-label-tracking: 0.02em;
-  --type-metric-size: 24px;
-  --type-metric-weight: 600;
-  --type-metric-tracking: -0.02em;
-
-  /* ═══════════════════════════════════════════════════════════
-      MARKETING / LANDING TOKENS — Dark Green-Black + Neon Green
-   ═══════════════════════════════════════════════════════════ */
-  --mkt-bg-base:        #0a0c0a;
-  --mkt-bg-surface:     #0a0c0a;
-  --mkt-bg-elevated:    #0a0c0a;
-  --mkt-bg-overlay:     #0a0c0a;
-
-  --mkt-text-primary:   #EAEAEA;
-  --mkt-text-secondary: #888888;
-  --mkt-text-tertiary:  #666666;
-
-  --mkt-accent:           hsl(150, 100%, 50%);
-  --mkt-accent-hover:     hsl(150, 100%, 45%);
-  --mkt-accent-active:    hsl(150, 100%, 38%);
-  --mkt-accent-subtle:    hsla(150, 100%, 50%, 0.08);
-  --mkt-accent-border:    hsla(150, 100%, 50%, 0.25);
-
-  --mkt-border-subtle:    hsl(150, 20%, 15%);
-  --mkt-border-default:   hsl(150, 20%, 15%);
-  --mkt-border-strong:    hsl(150, 20%, 20%);
-  --mkt-border-accent:    hsl(150, 100%, 50%);
-
-  /* Clean no-glow marketing surfaces */
-  --mkt-gradient-hero: none;
-  --mkt-gradient-purple: none;
-  --mkt-gradient-purple-subtle: none;
-  --mkt-gradient-glow: none;
-
-  --mkt-shadow-glow: none;
-  --mkt-shadow-glow-sm: none;
-}
-
-
-.dark {
-  /* Public default — Dark Green-Black + Neon Green (overridden by dashboardTheme on dashboard/teams) */
-  --background: #0a0c0a;
-  --foreground: #EAEAEA;
-  --card: #0a0c0a;
-  --card-foreground: #EAEAEA;
-  --popover: #0a0c0a;
-  --popover-foreground: #EAEAEA;
-  --sidebar: #0a0c0a;
-  --sidebar-background: #0a0c0a;
-  --muted: #0D0D0D;
-  --muted-foreground: #888888;
-  --subtle-foreground: #666666;
-
-  /* Brand: Neon Green (default) */
-  --primary: hsl(150, 100%, 50%);
-  --primary-foreground: #000000;
-  --accent: hsl(150, 60%, 12%);
-  --accent-foreground: hsl(150, 100%, 50%);
-
-  /* Strong semantic trading colors */
-  --success: #0ECB81;
-  --success-foreground: #FFFFFF;
-  --warning: hsl(38, 92%, 50%);
-  --warning-foreground: #000000;
-  --destructive: #F6465D;
-  --destructive-foreground: #FFFFFF;
-
-  /* Clean minimal borders */
-  --border: hsl(150, 12%, 16%);
-  --border-subtle: hsl(150, 8%, 13%);
-  --input: hsl(150, 10%, 12%);
-  --ring: hsl(150, 100%, 50%);
-
-  --sidebar-foreground: #EAEAEA;
-  --sidebar-primary: hsl(150, 100%, 50%);
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: hsl(150, 60%, 10%);
-  --sidebar-accent-foreground: hsl(150, 100%, 50%);
-  --sidebar-border: hsl(150, 10%, 12%);
   --sidebar-ring: hsl(150, 100%, 50%);
 
   /* Trading P&L semantics (strong, no tint bg unless needed) */
@@ -985,8 +851,8 @@
   --warning-foreground: #FFFFFF;
   --destructive: #C0392B;
   --destructive-foreground: #FFFFFF;
-  --border: rgba(0,0,0,0.13);
-  --input: rgba(0,0,0,0.15);
+  --border: transparent;
+  --input: transparent;
   --ring: #007AFF;
   --chart-1: #007AFF;
   --chart-2: #1A7F37;
@@ -1003,7 +869,7 @@
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: rgba(0,0,0,0.05);
   --sidebar-accent-foreground: #007AFF;
-  --sidebar-border: rgba(0,0,0,0.08);
+  --sidebar-border: transparent;
   --sidebar-ring: #007AFF;
   --font-sans: var(--font-dm-sans), 'DM Sans', sans-serif;
   --font-serif: Georgia, serif;
@@ -3943,8 +3809,8 @@ img[loading='lazy'] {
   }
 
   .qe-no-white-borders {
-    --qe-enforced-border: hsl(150, 12%, 20%);
-    --qe-enforced-border-strong: hsl(150, 15%, 28%);
+    --qe-enforced-border: transparent;
+    --qe-enforced-border-strong: transparent;
   }
 
   .qe-no-white-borders
@@ -4022,7 +3888,7 @@ img[loading='lazy'] {
   --sidebar: #0a0c0a !important;
   --sidebar-background: #0a0c0a !important;
   --muted: hsl(150, 22%, 9%) !important;
-  --border: hsl(150, 20%, 16%) !important;
+  --border: transparent !important;
   --input: hsl(150, 20%, 12%) !important;
   /* Dark green-black surface fallback */
   background: #0a0c0a !important;
@@ -4060,7 +3926,7 @@ img[loading='lazy'] {
   --qe-ref-surface: #0a0c0a;
   --qe-ref-surface-2: #0f1210;
   --qe-ref-card: #111411;
-  --qe-ref-card-border: hsl(150, 20%, 16%);
+  --qe-ref-card-border: transparent;
   --qe-ref-text: #f0f4f0;
   --qe-ref-text-muted: #8a908a;
 }
@@ -4073,7 +3939,7 @@ img[loading='lazy'] {
   --qe-ref-surface: #f8f9f7;
   --qe-ref-surface-2: #f0f2ef;
   --qe-ref-card: #ffffff;
-  --qe-ref-card-border: rgba(0,0,0,0.08);
+  --qe-ref-card-border: transparent;
   --qe-ref-text: #0f120f;
   --qe-ref-text-muted: #5a615c;
 }
