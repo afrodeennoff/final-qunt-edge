@@ -148,13 +148,13 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  <Button 
  variant="outline"
  size="icon"
-  className="h-8 w-8 rounded-full border-transparent bg-card text-foreground hover:bg-accent/10 hover:border-transparent"
+  className="h-8 w-8 rounded-full border-0 bg-card text-foreground hover:bg-accent/10"
  aria-label="Change widget size"
  >
  <Maximize2 className="h-4 w-4" />
  </Button>
  </PopoverTrigger>
-  <PopoverContent className="w-56 border-transparent bg-card p-2 text-foreground">
+  <PopoverContent className="w-56 border-0 bg-card p-2 text-foreground">
  <div className="flex flex-col gap-1">
  {isMobile ? (
  <>

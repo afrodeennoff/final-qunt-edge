@@ -282,7 +282,7 @@ function CouponEditCard({
     <Card
       variant="elevated"
       hover
-      className="overflow-hidden border-transparent bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+      className="overflow-hidden border-0 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
       <CardHeader size="sm" className="space-y-3 border-b border-transparent">
         <div className="flex flex-wrap items-start justify-between gap-3">
@@ -491,7 +491,7 @@ function CouponSuggestionCard({
     <Card
       variant="elevated"
       hover
-      className="overflow-hidden border-transparent bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+      className="overflow-hidden border-0 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
       <CardHeader size="sm" className="space-y-3 border-b border-transparent">
         <div className="flex flex-wrap items-start justify-between gap-3">
@@ -979,7 +979,7 @@ export default async function AdminCouponsPage({
         badge={<Badge variant="secondary">{activeCount} active</Badge>}
       >
         {coupons.length === 0 ? (
-          <Card variant="elevated" className="border-transparent bg-background/80">
+          <Card variant="elevated" className="border-0 bg-background/80">
             <CardContent size="sm" className="py-8 text-center text-sm text-muted-foreground">
               No coupons yet. Create the first one above.
             </CardContent>

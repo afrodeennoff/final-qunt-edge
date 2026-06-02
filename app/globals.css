@@ -3814,7 +3814,6 @@ img[loading='lazy'] {
 
   .qe-no-white-borders
     :where(
-      [class*='border-transparent'],
       [class*='divide-transparent'],
       [class*='ring-transparent'],
       [class*='border-v2-border'],

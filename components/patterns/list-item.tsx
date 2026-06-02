@@ -25,7 +25,7 @@ export function ListItem({
     <div
       className={cn(
         'flex items-center gap-3 p-3 rounded-xl transition-colors',
-        isActive ? 'bg-primary/8 border border-primary/20' : 'bg-muted/50',
+        isActive ? 'bg-primary/8 ring-1 ring-primary/20' : 'bg-muted/50',
         className
       )}
       data-slot="list-item"

@@ -63,7 +63,7 @@ export default function PropfirmCatalogueWidget() {
  href={`/${locale}/firm/${getFirmSlugFromName(stat.propfirmName)}`}
  className="block"
  >
- <div className="relative rounded-xl border-0 bg-card/60 shadow-sm overflow-hidden transition-[opacity,background-color,border-color] duration-300 hover:border-transparent hover:shadow-sm flex items-center justify-between p-3 cursor-pointer">
+  <div className="relative rounded-xl border-0 bg-card/60 shadow-sm overflow-hidden transition-[opacity,background-color,border-color] duration-300 hover:shadow-sm flex items-center justify-between p-3 cursor-pointer">
  <div className="flex flex-col gap-1 min-w-0">
  <span className="text-[11px] font-black uppercase tracking-[0.12em] text-muted-foreground truncate">{stat.propfirmName}</span>
  <div className="flex items-center gap-3">

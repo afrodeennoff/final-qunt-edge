@@ -413,7 +413,7 @@ export const PromptInput = ({
       />
       <form
         className={cn(
-          'w-full divide-y divide-transparent overflow-hidden rounded-2xl border border-primary/12 bg-card shadow-[inset_0_1px_0_hsl(var(--primary)/0.05),0_16px_34px_-26px_rgba(0,0,0,0.76)]',
+          'w-full divide-y divide-transparent overflow-hidden rounded-2xl border-0 bg-card shadow-[inset_0_1px_0_hsl(var(--primary)/0.05),0_16px_34px_-26px_rgba(0,0,0,0.76)]',
           className,
         )}
         onSubmit={handleSubmit}

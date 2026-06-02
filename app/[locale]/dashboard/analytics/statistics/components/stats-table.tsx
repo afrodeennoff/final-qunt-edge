@@ -26,8 +26,8 @@ export function StatsTable({
 }: StatsTableProps & { firstColLabel?: string }) {
   if (rows.length === 0) {
     return (
-      <div className="rounded-2xl overflow-hidden bg-card border border-transparent">
-        <div className="px-5 py-3 text-[10px] font-semibold tracking-[2px] uppercase text-primary/70 border-b border-transparent">
+      <div className="rounded-2xl overflow-hidden bg-card">
+        <div className="px-5 py-3 text-[10px] font-semibold tracking-[2px] uppercase text-primary/70">
           {title}
         </div>
         <div className="px-5 py-6 text-center">
@@ -38,14 +38,14 @@ export function StatsTable({
   }
 
   return (
-    <div className="rounded-2xl overflow-hidden bg-card border border-transparent">
-      <div className="px-4 sm:px-5 py-3 text-[10px] font-semibold tracking-[2px] uppercase text-primary/70 border-b border-transparent">
+    <div className="rounded-2xl overflow-hidden bg-card">
+      <div className="px-4 sm:px-5 py-3 text-[10px] font-semibold tracking-[2px] uppercase text-primary/70">
         {title}
       </div>
       <div className="overflow-x-auto">
       <table className="w-full text-sm min-w-[420px]">
         <thead>
-          <tr className="text-[10px] uppercase tracking-[1px] text-muted-foreground border-b border-transparent">
+          <tr className="text-[10px] uppercase tracking-[1px] text-muted-foreground">
             <th className="text-left pl-3 sm:pl-5 pr-2 sm:pr-3 py-2 font-medium">{firstColLabel}</th>
             <th className="text-right px-2 sm:px-3 py-2 font-medium">TRADES</th>
             <th className="text-right px-2 sm:px-3 py-2 font-medium">WIN %</th>
@@ -58,7 +58,7 @@ export function StatsTable({
             const pnlPos = row.pnl >= 0
             const rrPos = row.avgRR >= 0
             return (
-              <tr key={row.name} className="border-b border-transparent last:border-0 hover:bg-muted/30">
+              <tr key={row.name} className="last:border-0 hover:bg-muted/30">
                 <td className="pl-3 sm:pl-5 pr-2 sm:pr-3 py-2 font-medium text-foreground">{row.name}</td>
                 <td className="px-2 sm:px-3 py-2 text-right tabular-nums text-muted-foreground">{row.totalTrades}</td>
                 <td className={cn('px-2 sm:px-3 py-2 text-right tabular-nums', row.winRate >= 50 ? 'text-primary' : 'text-destructive')}>

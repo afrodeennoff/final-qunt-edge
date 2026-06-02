@@ -33,7 +33,7 @@ export function DonutChartCard({
 
   return (
     <div
-      className={cn('rounded-2xl p-6 bg-card shadow-card border border-transparent', className)}
+      className={cn('rounded-2xl p-6 bg-card shadow-card border-0', className)}
       data-slot="donut-chart-card"
     >
       <h3 className="text-[18px] font-black text-foreground mb-6">

@@ -1611,7 +1611,7 @@ function AllDealsGrid({
 }) {
   if (hadFetchError) {
     return (
-      <div className="rounded-2xl border border-[var(--qe-ref-card-border)] bg-card p-10 text-center">
+      <div className="rounded-2xl border-0 bg-card p-10 text-center">
         <p className="text-muted-foreground">Live deals temporarily unavailable. Please refresh in a moment.</p>
       </div>
     )
@@ -1619,7 +1619,7 @@ function AllDealsGrid({
 
   if (deals.length === 0) {
     return (
-      <div className="rounded-2xl border border-[var(--qe-ref-card-border)] bg-card p-10 text-center">
+      <div className="rounded-2xl border-0 bg-card p-10 text-center">
         <p className="text-muted-foreground">No deals match your current filters.</p>
       </div>
     )

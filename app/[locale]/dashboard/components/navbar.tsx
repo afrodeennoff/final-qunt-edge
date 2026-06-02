@@ -51,7 +51,7 @@ export default function Navbar() {
         initial={false}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="pointer-events-auto flex items-center h-14 w-full px-3 gap-0 bg-card border-b border-transparent"
+        className="pointer-events-auto flex items-center h-14 w-full px-3 gap-0 bg-card border-b-0"
       >
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Left Side: Sidebar Toggle & Brand */}

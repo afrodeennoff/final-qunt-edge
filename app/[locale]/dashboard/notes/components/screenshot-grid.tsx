@@ -53,8 +53,8 @@ export function ScreenshotGrid({ screenshots, onChange }: ScreenshotGridProps) {
         type="button"
         onClick={handleAdd}
         className={cn(
-          'flex h-16 w-24 items-center justify-center rounded-md border border-border',
-          'text-muted-foreground/50 hover:border-primary/30 hover:text-primary/60',
+          'flex h-16 w-24 items-center justify-center rounded-md border-0 bg-muted/30',
+          'text-muted-foreground/50 hover:bg-primary/10 hover:text-primary/60',
         )}
       >
         <ImagePlus size={18} />

@@ -263,7 +263,7 @@ const getDisplayModeButtonClass = (mode: 'currency' | 'percent', currentMode: 'c
  mode === currentMode ?"bg-secondary/35 text-foreground shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]" :"text-muted-foreground hover:text-foreground"
 )
 
-const getBlurCardClass = (isActive: boolean) => cn("group border rounded-xl p-4 flex flex-col items-center justify-center text-center transition-[opacity,background-color,border-color] duration-700 cursor-pointer relative overflow-hidden",
+const getBlurCardClass = (isActive: boolean) => cn("group border-0 rounded-xl p-4 flex flex-col items-center justify-center text-center transition-[opacity,background-color,border-color] duration-700 cursor-pointer relative overflow-hidden",
  isActive
  ?"bg-background/0.11 border-transparent blur-xl scale-[0.98] select-none"
  :"bg-background/0.08 border-transparent hover:bg-accent/70 hover:border-transparent"

@@ -27,7 +27,7 @@ export function HeroCard({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-2xl p-8 bg-card shadow-card border border-transparent',
+        'relative overflow-hidden rounded-2xl p-8 bg-card shadow-card border-0',
         className
       )}
       data-slot="hero-card"

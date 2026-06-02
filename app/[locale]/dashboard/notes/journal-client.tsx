@@ -87,10 +87,10 @@ function Chip({
       type="button"
       onClick={onClick}
       className={cn(
-        'px-3.5 py-1.5 rounded-lg text-xs font-medium border transition-all duration-150 select-none',
+        'px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 select-none',
         active
-          ? 'border-primary bg-primary/10 text-primary'
-          : 'border-transparent text-muted-foreground hover:border-primary/30',
+          ? 'bg-primary/10 text-primary ring-1 ring-primary/30'
+          : 'text-muted-foreground hover:bg-muted/20',
       )}
     >
       {label}
@@ -137,7 +137,7 @@ function TagInput({
 
   return (
     <div
-      className="flex flex-wrap items-center gap-1.5 rounded-lg border border-transparent bg-background/50 px-2.5 py-2 min-h-[38px] cursor-text focus-within:border-primary/40 transition-colors"
+      className="flex flex-wrap items-center gap-1.5 rounded-lg border-0 bg-background/50 px-2.5 py-2 min-h-[38px] cursor-text focus-within:ring-1 focus-within:ring-primary/30 transition-colors"
       onClick={() => inputRef.current?.focus()}
     >
       {tags.map(tag => (
@@ -588,10 +588,10 @@ export default function JournalClient() {
             type="button"
             onClick={() => { setSelectedDayKey(null); setDayPage(0) }}
             className={cn(
-              'rounded-lg px-2 py-0.5 text-[10px] border transition-colors',
+              'rounded-lg px-2 py-0.5 text-[10px] transition-colors',
               selectedDayKey === null
-                ? 'border-primary/30 text-primary bg-primary/10'
-                : 'border-transparent text-muted-foreground hover:text-foreground'
+                ? 'text-primary bg-primary/10 ring-1 ring-primary/30'
+                : 'text-muted-foreground hover:bg-muted/20'
             )}
           >
             {'All (' + dayGroups.length + ' dates, ' + dayGroups.filter(g => g.trades.length > 0).length + ' with trades, ' + dayGroups.reduce((s, g) => s + g.trades.length, 0) + ' trades)'}
@@ -603,13 +603,13 @@ export default function JournalClient() {
               <button
                 type="button"
                 onClick={() => setAccountOpen(!accountOpen)}
-                className="flex items-center gap-1.5 rounded-lg border border-transparent bg-card px-2.5 py-1 text-[11px] text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg bg-card px-2.5 py-1 text-[11px] text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors"
               >
                 <span>{selectedAccount ? 'Acct ' + selectedAccount : 'All Accounts'}</span>
                 <ChevronDown size={12} className={cn('transition-transform', accountOpen && 'rotate-180')} />
               </button>
               {accountOpen && (
-                <div className="absolute top-full mt-1 right-0 z-20 min-w-[180px] rounded-xl border border-transparent bg-card py-1 shadow-xl">
+                <div className="absolute top-full mt-1 right-0 z-20 min-w-[180px] rounded-xl bg-card py-1 shadow-xl">
                   <button
                     type="button"
                     onClick={() => { setSelectedAccount(null); setAccountOpen(false) }}
@@ -646,11 +646,11 @@ export default function JournalClient() {
               type="button"
               onClick={() => setSelectedDayKey(isSelected ? null : g.dateKey)}
               className={cn(
-                'rounded-xl p-2 sm:p-4 text-left transition-all border min-h-[80px] sm:min-h-[110px]',
+                'rounded-xl p-2 sm:p-4 text-left transition-all min-h-[80px] sm:min-h-[110px]',
                 hasTrades
-                  ? 'bg-card border-transparent hover:border-primary/30'
-                  : 'bg-card/50 border-transparent',
-                isSelected && 'border-primary ring-1 ring-primary/30',
+                  ? 'bg-card hover:bg-card/80'
+                  : 'bg-card/50',
+                isSelected && 'ring-1 ring-primary/40 bg-primary/5',
               )}
             >
               <div className={cn('text-[10px] font-medium tracking-widest', hasTrades ? 'text-white/60' : 'text-white/30')}>{g.shortDay}</div>
@@ -769,7 +769,7 @@ export default function JournalClient() {
           <div className="overflow-x-auto flex-1 overflow-y-auto">
             <table className="w-full text-sm">
               <thead className="sticky top-0 z-10 bg-card/80">
-                <tr className="text-[10px] uppercase tracking-[1px] text-muted-foreground border-b border-transparent">
+                <tr className="text-[10px] uppercase tracking-[1px] text-muted-foreground">
                   <th className="text-left pl-4 pr-3 py-2.5 font-medium">TIME</th>
                   <th className="text-left px-3 py-2.5 font-medium">SYMBOL</th>
                   <th className="text-left px-3 py-2.5 font-medium">SIDE</th>
@@ -784,7 +784,7 @@ export default function JournalClient() {
               <tbody>
                 {isLoading ? (
                   Array.from({ length: 6 }).map((_, i) => (
-                    <tr key={i} className="border-b border-transparent">
+                    <tr key={i}>
                       {Array.from({ length: 9 }).map((_, j) => (
                         <td key={j} className="px-5 py-3.5"><div className="h-3 bg-muted/20 rounded animate-pulse" /></td>
                       ))}
@@ -815,11 +815,11 @@ export default function JournalClient() {
                     )
 
                      return (
-                       <tr
-                         key={card.trade.id}
-                         onClick={() => handleSelectTrade(card.trade.id)}
-                         className="border-b border-transparent cursor-pointer hover:bg-muted/30 transition-colors"
-                       >
+                        <tr
+                          key={card.trade.id}
+                          onClick={() => handleSelectTrade(card.trade.id)}
+                          className="cursor-pointer hover:bg-muted/30 transition-colors"
+                        >
                          <td className="pl-4 pr-3 py-2.5 tabular-nums text-white/50 text-xs">{formatTime(card.trade.entryDate)}</td>
                          <td className="px-3 py-2.5 font-semibold text-white tracking-tight">{card.trade.instrument}</td>
                          <td className="px-3 py-2.5">
@@ -867,7 +867,7 @@ export default function JournalClient() {
 
           {/* Pagination */}
           {totalTradePages > 1 && (
-            <div className="shrink-0 border-t border-transparent px-5 py-2 flex items-center justify-between text-[10px] text-muted-foreground/35 tabular-nums">
+            <div className="shrink-0 px-5 py-2 flex items-center justify-between text-[10px] text-muted-foreground/35 tabular-nums">
               <span>Page {safeTradePage} of {totalTradePages}</span>
               <div className="flex items-center gap-1">
                 <button
@@ -921,7 +921,7 @@ export default function JournalClient() {
             onClick={e => e.stopPropagation()}
           >
                {/* Modal Header — fixed at top */}
-               <div className="flex items-center justify-between px-6 py-4 border-b border-transparent bg-card shrink-0">
+                <div className="flex items-center justify-between px-6 py-4 bg-card shrink-0">
                  <div>
                    <div className="text-[17px] font-semibold tracking-tight">
                      {selectedCard
@@ -987,7 +987,7 @@ export default function JournalClient() {
                       .filter(s => !modalSession.includes(s))
                       .map(s => (
                         <button key={s} type="button" onClick={() => setModalSession([...modalSession, s])}
-                          className="px-2 py-0.5 rounded text-[10px] border border-transparent text-muted-foreground hover:border-primary/40 hover:text-foreground transition">
+                           className="px-2 py-0.5 rounded text-[10px] text-muted-foreground hover:bg-primary/10 hover:text-foreground transition">
                           + {s}
                         </button>
                       ))}
@@ -1013,7 +1013,7 @@ export default function JournalClient() {
                       .filter(tf => !modalTimeframe.includes(tf))
                       .map(tf => (
                         <button key={tf} type="button" onClick={() => setModalTimeframe([...modalTimeframe, tf])}
-                          className="px-2 py-0.5 rounded text-[10px] border border-transparent text-muted-foreground hover:border-primary/40 hover:text-foreground transition">
+                           className="px-2 py-0.5 rounded text-[10px] text-muted-foreground hover:bg-primary/10 hover:text-foreground transition">
                           + {tf}
                         </button>
                       ))}
@@ -1039,7 +1039,7 @@ export default function JournalClient() {
                       .filter(c => !modalIctTags.includes(c))
                       .map(c => (
                         <button key={c} type="button" onClick={() => setModalIctTags([...modalIctTags, c])}
-                          className="px-2 py-0.5 rounded text-[10px] border border-transparent text-muted-foreground hover:border-primary/40 hover:text-foreground transition">
+                           className="px-2 py-0.5 rounded text-[10px] text-muted-foreground hover:bg-primary/10 hover:text-foreground transition">
                           + {c}
                         </button>
                       ))}
@@ -1053,7 +1053,7 @@ export default function JournalClient() {
                     {EMOTION_CHIPS.map(em => {
                       const active = modalEmotion === em
                       return <button key={em} type="button" onClick={() => setModalEmotion(active ? null : em)}
-                        className={cn('px-3 py-1 rounded-full text-xs border transition', active ? 'border-primary bg-primary/10 text-primary' : 'border-transparent text-muted-foreground hover:border-primary/30')}>
+                        className={cn('px-3 py-1 rounded-full text-xs transition', active ? 'bg-primary/10 text-primary ring-1 ring-primary/30' : 'text-muted-foreground hover:bg-muted/30')}>
                         {em}
                       </button>
                     })}
@@ -1082,13 +1082,13 @@ export default function JournalClient() {
                     <div className="text-[10px] text-white/50 tracking-widest mb-1.5">PRE-TRADE NOTES</div>
                     <textarea rows={3} value={modalPreNotes} onChange={e=>setModalPreNotes(e.target.value)}
                       placeholder="What was the plan?"
-                      className="w-full rounded-lg p-3 text-sm bg-background border border-transparent text-foreground placeholder:text-muted-foreground resize-y" />
+                      className="w-full rounded-lg p-3 text-sm bg-background border-0 text-foreground placeholder:text-muted-foreground resize-y focus:ring-1 focus:ring-primary/30" />
                   </div>
                   <div>
                     <div className="text-[10px] text-white/50 tracking-widest mb-1.5">POST-TRADE REVIEW</div>
                     <textarea rows={3} value={modalPostNotes} onChange={e=>setModalPostNotes(e.target.value)}
                       placeholder="What happened? How did you execute?"
-                      className="w-full rounded-lg p-3 text-sm bg-background border border-transparent text-foreground placeholder:text-muted-foreground resize-y" />
+                      className="w-full rounded-lg p-3 text-sm bg-background border-0 text-foreground placeholder:text-muted-foreground resize-y focus:ring-1 focus:ring-primary/30" />
                   </div>
                 </div>
 
@@ -1100,10 +1100,10 @@ export default function JournalClient() {
                       type="button"
                       onClick={() => setExcerptEditorOpen(!excerptEditorOpen)}
                       className={cn(
-                        'text-[10px] px-2 py-0.5 rounded border transition-colors',
+                        'text-[10px] px-2 py-0.5 rounded transition-colors',
                         excerptEditorOpen
-                          ? 'border-transparent text-muted-foreground hover:text-foreground'
-                          : 'border-primary/30 text-primary hover:bg-primary/10'
+                          ? 'text-muted-foreground hover:text-foreground hover:bg-muted/20'
+                          : 'text-primary hover:bg-primary/10'
                       )}
                     >
                       {excerptEditorOpen ? 'Collapse' : 'Expand'}
@@ -1120,7 +1120,7 @@ export default function JournalClient() {
                     }}
                     placeholder="Give this excerpt a title..."
                     maxLength={200}
-                    className="w-full rounded-lg px-3 py-2 text-sm bg-background border border-transparent text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50"
+                    className="w-full rounded-lg px-3 py-2 text-sm bg-background border-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/30"
                   />
 
                   {/* Rich text editor — expanded */}
@@ -1143,7 +1143,7 @@ export default function JournalClient() {
                         width="100%"
                         className="!bg-muted"
                       />
-                      <div className="flex items-center justify-between px-3 py-2 border-t border-transparent bg-muted/40">
+                      <div className="flex items-center justify-between px-3 py-2 bg-muted/40">
                         <span className="text-[9px] text-white/25">Rich text formatting supported</span>
                       </div>
                     </div>
@@ -1153,7 +1153,7 @@ export default function JournalClient() {
                   {!excerptEditorOpen && (modalExcerptTitle || modalFeaturedExcerpt) && (
                     <div
                       onClick={() => setExcerptEditorOpen(true)}
-                      className="rounded-lg border border-transparent p-3 cursor-pointer hover:border-primary/30 transition-colors"
+                      className="rounded-lg p-3 cursor-pointer hover:bg-muted/40 transition-colors"
                     >
                       <div className="text-xs font-medium text-white/80 truncate">
                         {modalExcerptTitle || 'Untitled excerpt'}
@@ -1190,12 +1190,12 @@ export default function JournalClient() {
               </div>
 
               {/* Modal Footer — fixed at bottom */}
-                 <div className="flex items-center justify-between px-6 py-4 border-t border-transparent bg-card shrink-0">
+                  <div className="flex items-center justify-between px-6 py-4 bg-card shrink-0">
                 <div className="flex items-center gap-2 text-xs">
                   {selectedCard?.journal && (
                     <Fragment>
                       <button type="button" onClick={handlePinToggle}
-                        className={cn('flex items-center gap-1 px-2 py-1 rounded border', selectedCard.journal.pinned ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground')}>
+                        className={cn('flex items-center gap-1 px-2 py-1 rounded', selectedCard.journal.pinned ? 'text-primary' : 'text-muted-foreground hover:text-foreground')}>
                         <Pin size={11}/> {selectedCard.journal.pinned ? 'Pinned' : 'Pin'}
                       </button>
                       {deleteConfirm ? (
@@ -1220,7 +1220,7 @@ export default function JournalClient() {
                     </span>
                   )}
                   <button type="button" onClick={closeModal}
-                    className="px-5 py-1.5 text-sm text-muted-foreground hover:text-foreground border border-transparent rounded-xl">
+                    className="px-5 py-1.5 text-sm text-muted-foreground hover:text-foreground rounded-xl">
                     Cancel
                   </button>
                   <button type="button" onClick={handleSaveModal}

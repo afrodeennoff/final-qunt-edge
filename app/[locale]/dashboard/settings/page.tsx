@@ -120,7 +120,7 @@ function TeamSettingsCard({
   const hasTeams = userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0
 
   return (
-    <Card className="border-transparent bg-card shadow-sm">
+    <Card className="border-0 bg-card shadow-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Building2 className="h-5 w-5" />
@@ -412,7 +412,7 @@ function ApiKeySection() {
                  Use any of your API keys below as a Bearer token.
                </p>
                <p className="mt-1 text-[11px] text-muted-foreground/70">
-                 Streamable HTTP compatible (works with Grok Remote MCP via xAI API, Claude Custom Connectors, Cursor, Cline, etc.).
+                  Streamable HTTP compatible (works with Grok Remote MCP via xAI API, Claude Custom Connectors, Cursor, Jan AI, Cline, etc.).
                  For stdio-only clients: run <code className="font-mono">MCP_KEY=your_key bun run mcp:stdio</code> (forwards to this hosted instance, exposes all 95+ tools).
                </p>
              </div>
@@ -524,26 +524,45 @@ function ApiKeySection() {
               </Button>
             </div>
 
-            {/* Cursor */}
+            {/* Jan AI */}
             <div className="rounded-xl border-0 bg-muted/20 p-4">
-              <div className="font-medium text-sm mb-2 flex items-center gap-2">Cursor</div>
+              <div className="font-medium text-sm mb-2 flex items-center gap-2">Jan AI</div>
               <ol className="text-xs text-muted-foreground space-y-1.5 list-decimal list-inside">
-                <li>Go to Settings → Features → MCP Servers</li>
-                <li>Add Custom Server</li>
-                <li>Use the endpoint + Bearer token</li>
+                <li>Settings → Features → MCP Servers (or Extensions → MCP Servers)</li>
+                <li>Add Remote Server / + Add MCP Server</li>
+                <li>Transport: HTTP</li>
+                <li>URL: the endpoint above</li>
+                <li>Headers: name = <code>Authorization</code>, value = <code>Bearer YOUR_KEY</code> (include the word Bearer + space)</li>
               </ol>
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-3 w-full"
-                onClick={() => {
-                  const text = `MCP Server URL: ${origin}/api/mcp\nAuthorization: Bearer YOUR_API_KEY`;
-                  navigator.clipboard.writeText(text);
-                  toast.success("Cursor config copied");
-                }}
-              >
-                Copy Cursor Details
-              </Button>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const text = `MCP Server URL: ${origin}/api/mcp\n\nHeader name: Authorization\nHeader value: Bearer YOUR_API_KEY\n\n(Do NOT put 'Bearer' as the header name — it must be 'Authorization')`;
+                    navigator.clipboard.writeText(text);
+                    toast.success("Jan AI config copied");
+                  }}
+                >
+                  Copy Jan AI Details
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const curl = `curl -X POST ${origin}/api/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{"jsonrpc":"2.0","method":"tools/list","id":1}'`;
+                    navigator.clipboard.writeText(curl);
+                    toast.success("Test curl copied — replace YOUR_API_KEY");
+                  }}
+                >
+                  Copy Test Curl
+                </Button>
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-2">Can't connect? Run the curl in terminal first. If curl works but Jan doesn't: fix header in Jan, toggle server, or restart Jan. Use a fresh key from above.</p>
             </div>
 
             {/* Other Tools */}
@@ -653,7 +672,7 @@ function ApiKeySection() {
             ) : (
               <>
                 <Input
-                  placeholder="e.g. Claude Desktop, Trading Bot, Cursor"
+                  placeholder="e.g. Claude Desktop, Jan AI, Trading Bot, Cursor"
                   value={newKeyName}
                   onChange={(e) => setNewKeyName(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleCreate()}

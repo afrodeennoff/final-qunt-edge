@@ -35,9 +35,9 @@ export function RankedList({
             key={index}
             className={cn(
               'flex items-center gap-3 p-3 rounded-xl',
-              item.isHighlighted
-                ? 'bg-primary/8 border border-primary/20'
-                : 'bg-muted/50'
+                item.isHighlighted
+                  ? 'bg-primary/8 ring-1 ring-primary/20'
+                  : 'bg-muted/50'
             )}
           >
             <div

@@ -182,15 +182,15 @@ export default function StatisticsClient() {
         <div className="h-5 w-24 bg-muted rounded" />
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="rounded-2xl bg-card border border-transparent p-4 h-20 animate-pulse" />
+            <div key={i} className="rounded-2xl bg-card p-4 h-20 animate-pulse" />
           ))}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="rounded-2xl bg-card border border-transparent p-4 h-64 animate-pulse" />
+            <div key={i} className="rounded-2xl bg-card p-4 h-64 animate-pulse" />
           ))}
         </div>
-        <div className="rounded-2xl bg-card border border-transparent p-5 h-32 animate-pulse" />
+        <div className="rounded-2xl bg-card p-5 h-32 animate-pulse" />
       </div>
     )
   }
@@ -219,13 +219,13 @@ export default function StatisticsClient() {
               <button
                 type="button"
                 onClick={() => setAccountOpen(!accountOpen)}
-                className="flex items-center gap-1.5 rounded-lg border border-transparent bg-card px-2.5 py-1 text-[11px] text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg bg-card px-2.5 py-1 text-[11px] text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors"
               >
                 <span>{selectedAccount ? 'Acct ' + selectedAccount : 'All Accounts'}</span>
                 <ChevronDown size={12} className={cn('transition-transform', accountOpen && 'rotate-180')} />
               </button>
               {accountOpen && (
-                <div className="absolute top-full mt-1 left-0 z-20 min-w-[180px] rounded-xl border border-transparent bg-card py-1 shadow-xl">
+                <div className="absolute top-full mt-1 left-0 z-20 min-w-[180px] rounded-xl bg-card py-1 shadow-xl">
                   <button
                     type="button"
                     onClick={() => { setSelectedAccount(null); setAccountOpen(false) }}
@@ -248,7 +248,7 @@ export default function StatisticsClient() {
             </div>
           )}
         </div>
-        <div className="flex gap-1 p-1 rounded-2xl bg-card border border-transparent">
+        <div className="flex gap-1 p-1 rounded-2xl bg-card">
           {([
             { key: '7d' as const, label: '7D' },
             { key: '14d' as const, label: '14D' },
@@ -283,7 +283,7 @@ export default function StatisticsClient() {
           { label: 'TOTAL TRADES', value: (data.grandTotal ?? 0).toString() },
           { label: 'BEST DAY', value: formatPnl(data.bestDay ?? 0), positive: true },
         ].map((kpi, i) => (
-          <div key={i} className="rounded-2xl bg-card border border-transparent p-4">
+          <div key={i} className="rounded-2xl bg-card p-4">
             <div className="text-[9px] tracking-[1.5px] uppercase text-muted-foreground">{kpi.label}</div>
             <div className={cn('text-2xl font-semibold tabular-nums mt-1 tracking-[-0.5px]', kpi.positive ? 'text-primary' : 'text-destructive')}>
               {kpi.value}
@@ -322,7 +322,7 @@ export default function StatisticsClient() {
 
       {/* Risk & Performance Metrics — exact bottom section */}
       {risk && (
-        <div className="rounded-2xl bg-card border border-transparent p-5">
+        <div className="rounded-2xl bg-card p-5">
           <div className="text-[10px] tracking-[2px] uppercase text-primary/70 mb-4">RISK & PERFORMANCE METRICS</div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             {[
@@ -346,7 +346,7 @@ export default function StatisticsClient() {
 
       {/* Journal Excerpts — clickable headline cards */}
       {data?.featuredExcerpts && data.featuredExcerpts.length > 0 && (
-        <div className="rounded-2xl bg-card border border-transparent p-5">
+        <div className="rounded-2xl bg-card p-5">
           <div className="text-[10px] tracking-[2px] uppercase text-primary/70 mb-4">JOURNAL EXCERPTS</div>
           <div className="space-y-2">
             {data.featuredExcerpts.slice(0, 15).map(ex => (
@@ -405,11 +405,11 @@ export default function StatisticsClient() {
         >
           <div className="flex items-center justify-center min-h-screen p-4">
             <div
-              className="w-full max-w-3xl max-h-[85vh] flex flex-col rounded-2xl overflow-hidden bg-card border border-transparent animate-in slide-in-from-bottom-4 duration-250"
+              className="w-full max-w-3xl max-h-[85vh] flex flex-col rounded-2xl overflow-hidden bg-card animate-in slide-in-from-bottom-4 duration-250"
               onClick={e => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-transparent bg-card shrink-0">
+              <div className="flex items-center justify-between px-6 py-4 bg-card shrink-0">
                 <div>
                   <div className="text-[17px] font-semibold tracking-tight text-white">
                     {selectedExcerpt.excerptTitle || 'Untitled Excerpt'}

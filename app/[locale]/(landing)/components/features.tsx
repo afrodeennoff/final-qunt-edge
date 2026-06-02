@@ -25,7 +25,7 @@ type FeatureCard = {
 function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; index: number; isVisible: boolean }) {
 	return (
 		<div
-			className={cn("group relative overflow-hidden rounded-xl border transition-colors","border-transparent bg-card","hover:bg-muted","opacity-0 translate-y-8",
+			className={cn("group relative overflow-hidden rounded-xl transition-colors bg-card hover:bg-muted opacity-0 translate-y-8",
 			isVisible &&"opacity-100 translate-y-0",
 			index < 2 ? 'lg:col-span-3' :
 			index === 2 ? 'lg:col-span-4' : 'lg:col-span-2',

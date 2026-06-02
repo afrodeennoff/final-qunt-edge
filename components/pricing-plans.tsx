@@ -118,7 +118,7 @@ function getPlanCardClassName(popular: boolean): string {
   return cn(
     'relative flex w-full flex-col overflow-hidden transition-[opacity,background-color,border-color,transform] duration-300 hover:-translate-y-1',
     !popular && 'rounded-2xl border-0 bg-card shadow-sm',
-    popular && 'relative rounded-2xl border border-primary/35 bg-card shadow-sm shadow-primary/10',
+    popular && 'relative rounded-2xl border-0 bg-card shadow-sm shadow-primary/10 ring-1 ring-primary/30',
   )
 }
 

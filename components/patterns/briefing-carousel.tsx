@@ -29,7 +29,7 @@ export function BriefingCarousel({
         {items.map((item, index) => (
           <div
             key={index}
-            className="w-[280px] flex-shrink-0 rounded-2xl p-6 bg-card shadow-card snap-start border border-transparent"
+            className="w-[280px] flex-shrink-0 rounded-2xl p-6 bg-card shadow-card snap-start border-0"
           >
             <div
               className={cn(

@@ -25,8 +25,8 @@ function FAQAccordion({
   return (
     <Card
       className={cn(
-        'overflow-hidden rounded-lg border bg-card/80 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-colors',
-        isOpen ? 'border-primary/30' : 'border-transparent.04',
+        'overflow-hidden rounded-lg border-0 bg-card/80 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-colors',
+        isOpen ? 'ring-1 ring-primary/30' : '',
       )}
     >
       <button

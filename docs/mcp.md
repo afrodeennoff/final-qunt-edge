@@ -800,6 +800,48 @@ In Cursor settings → MCP Servers → Add:
 - **Auth type:** `Bearer`
 - **API Key:** Your `qunt_usr_...` key
 
+### Jan AI
+
+Jan AI (v0.6.9+) has first-class remote MCP support. Tool approval prompts appear inline (v0.8.0+).
+
+1. Go to **Settings → Features → MCP Servers** (or Extensions → MCP Servers in some builds).
+2. Click **Add Remote Server** (or the + Add MCP Server button).
+3. Fill in:
+   - **Server Name:** `Qunt Edge` (any label you like)
+   - **Transport Type:** `HTTP` (Streamable HTTP compatible)
+   - **URL:** `https://qunt-edge.vercel.app/api/mcp`
+   - **Headers** (add one custom header row):
+     - Header name: `Authorization`
+     - Value: `Bearer qunt_usr_YOUR_KEY_HERE`  (include the literal word `Bearer ` + space + your full key)
+   - **Timeout:** leave blank (uses default)
+4. Save. Enable/toggle the server. Jan will prompt for approval the first time any tool runs.
+5. (Optional) Add the public endpoint the same way:
+   - URL: `https://qunt-edge.vercel.app/api/mcp/public`
+   - No headers / no auth required (read-only public data: prop firms, deals, blog, leaderboard, etc.)
+
+**Common pitfall:** Do not put `Bearer` in the header *name* field — the name must be exactly `Authorization` and the value must start with `Bearer `.
+
+**If you can't connect from Jan AI:**
+
+- Re-check the Headers row: name must be `Authorization`, value must be `Bearer ` + your full `qunt_usr_...` key.
+- Generate a **fresh key** in Qunt Edge Settings → API Keys (old/test keys may be revoked or mistyped).
+- Test the server directly from your terminal (this bypasses Jan — if this works, the problem is Jan's header entry):
+
+  ```bash
+  curl -X POST https://qunt-edge.vercel.app/api/mcp \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json, text/event-stream" \
+    -H "Authorization: Bearer qunt_usr_YOUR_FULL_KEY_HERE" \
+    -d '{"jsonrpc":"2.0","method":"tools/list","id":1}'
+  ```
+
+  - Success: returns `"result":{"tools":[...` → server + key are good. Fix/re-add in Jan, toggle off/on, or restart Jan.
+  - Auth error (-32001): key is bad/expired — use a new one from the app.
+  - Network/timeout: check internet, VPN, or Jan AI version (needs 0.6.9+ for remote MCP).
+
+- After saving in Jan, disable the server then re-enable it. Some versions need a full Jan restart to pick up header changes.
+- Try the public endpoint (no key) first to rule out network: same URL but `/api/mcp/public` + no headers.
+
 ### Cline / CLI AI Agents
 
 Set the environment variable or pass it in configuration:
