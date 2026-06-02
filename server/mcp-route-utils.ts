@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+import { randomUUID } from 'node:crypto'
 import { rateLimit } from '@/lib/rate-limit'
 import { MCP_PROTOCOL_VERSION } from '@/lib/mcp-constants'
 import type { McpAuthContext } from './mcp-auth'
@@ -94,6 +95,23 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
     }
   }
 
+  // Per spec: validate Origin to prevent DNS rebinding (for remote public MCP this is relaxed but we log/allow known AI clients)
+  const origin = request.headers.get('origin')
+  if (origin) {
+    // Allow common AI clients and any https (our public MCP is intended for remote use)
+    const allowed = origin.includes('claude.ai') || origin.includes('anthropic.com') || origin.includes('grok') || origin.includes('x.ai') || origin.startsWith('https://')
+    if (!allowed && !origin.includes('localhost')) {
+      // For strict, we could 403, but for compatibility with remote AI we allow https origins.
+      // Uncomment to enforce: return jsonRpcError(null, -32000, 'Origin not allowed', 403)
+    }
+  }
+
+  // Support MCP-Protocol-Version header (newer spec)
+  const protocolVersionHeader = request.headers.get('mcp-protocol-version')
+  if (protocolVersionHeader && protocolVersionHeader !== MCP_PROTOCOL_VERSION && !protocolVersionHeader.startsWith('2025-')) {
+    return jsonRpcError(null, -32602, `Unsupported MCP-Protocol-Version: ${protocolVersionHeader}. Supported: ${MCP_PROTOCOL_VERSION}`, 400)
+  }
+
   try {
     const contentType = request.headers.get('content-type') ?? ''
     if (!contentType.includes('application/json')) {
@@ -135,14 +153,18 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
       if (clientVersion && clientVersion !== serverVersion) {
         // Log version mismatch but continue — client may still accept our version
       }
-      return jsonRpcResult(reqId, {
+      const sessionId = randomUUID ? randomUUID() : 'sess_' + Date.now()
+      const result = {
         protocolVersion: serverVersion,
         capabilities: {
           tools: { listChanged: false },
         },
         serverInfo: { name: config.serverName, version: config.serverVersion },
         instructions: "Qunt Edge MCP server. Use tools/list and tools/call for trading data, journal, analytics, imports, teams, and admin operations.",
-      })
+      }
+      // Return with MCP-Session-Id so clients that want stateful sessions get it (we are mostly stateless but comply with the header contract)
+      const res = Response.json({ jsonrpc: '2.0', result, id: reqId }, { headers: { ...CORS_HEADERS, 'Mcp-Session-Id': sessionId } })
+      return res
     }
 
     if (

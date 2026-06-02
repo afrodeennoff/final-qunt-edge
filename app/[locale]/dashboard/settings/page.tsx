@@ -409,11 +409,15 @@ function ApiKeySection() {
                 </Button>
               </div>
               <p className="mt-2 text-[12px] text-muted-foreground">
-                Use any of your API keys below as a Bearer token.
-              </p>
-            </div>
-          </div>
-        )}
+                 Use any of your API keys below as a Bearer token.
+               </p>
+               <p className="mt-1 text-[11px] text-muted-foreground/70">
+                 Streamable HTTP compatible (works with Grok Remote MCP via xAI API, Claude Custom Connectors, Cursor, Cline, etc.).
+                 For stdio-only clients: run <code className="font-mono">MCP_KEY=your_key bun run mcp:stdio</code> (forwards to this hosted instance, exposes all 95+ tools).
+               </p>
+             </div>
+           </div>
+         )}
 
         {/* Your API Keys */}
         <div>

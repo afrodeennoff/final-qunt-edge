@@ -1,6 +1,6 @@
 # Qunt Edge MCP — Model Context Protocol Integration
 
-> **Current Status (2026-05-29):** Using the stable custom MCP implementation (legacy JSON-RPC over HTTP). The official SDK migration is paused. All endpoints, key format (`qunt_usr_*` / `qunt_adm_*`), and tools are fully functional.
+> **Current Status:** The primary endpoints use a Streamable HTTP compatible implementation (enhanced custom handler + official SDK transport available at /api/mcp/v2). All 95+ tools are exposed on the main endpoint. Supports remote HTTP (Grok via xAI Responses API, Claude Custom Connectors, etc.) and stdio (via `bun run mcp:stdio` forwarder that gives full tool catalog over stdio to your hosted instance). Key format and URLs unchanged.
 
 ## Overview
 
@@ -816,6 +816,29 @@ Set the environment variable or pass it in configuration:
   }
 }
 ```
+
+### Grok (xAI) Remote MCP
+
+Grok supports remote MCP only via the xAI API (not the web chat UI). Use the Responses API or SDK and include the MCP server in the tools array:
+
+```json
+{
+  "type": "mcp",
+  "server_url": "https://qunt-edge.vercel.app/api/mcp",
+  "server_label": "qunt",
+  "authorization": "Bearer qunt_usr_YOUR_KEY"
+}
+```
+
+See xAI docs "Remote MCP Tools". The endpoint is Streamable HTTP compatible and will expose all your tools.
+
+### Stdio (for clients that only support local stdio)
+
+```bash
+MCP_KEY=qunt_usr_YOUR_KEY MCP_URL=https://qunt-edge.vercel.app/api/mcp bun run mcp:stdio
+```
+
+This launches a local stdio MCP server that dynamically forwards every tool (all 95+) to your hosted instance. Point your stdio-only client (some Grok CLIs, local inspectors, etc.) at it. No code changes needed on the hosted side.
 
 ## Security Model
 

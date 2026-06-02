@@ -406,6 +406,15 @@ async function handlePrivateApiAuth(request: NextRequest): Promise<NextResponse 
   if (isCustomTokenApiRoute(pathname)) {
     // Custom token routes use their own auth (Bearer token or session).
     // Enforce baseline: at least one credential must be present.
+    // Special case for MCP: the MCP endpoints implement their own authentication
+    // model (qunt_usr_* / qunt_adm_* keys). We let them through unconditionally here
+    // so that unauthenticated initialize/ping/discovery succeed (per MCP spec and
+    // for remote clients like Grok), and the MCP handler returns proper JSON-RPC
+    // auth errors only for methods that require it. This prevents proxy-level 401
+    // from breaking protocol handshakes or public discovery on /api/mcp/public.
+    if (pathname.startsWith('/api/mcp')) {
+      return null
+    }
     const authHeader = request.headers.get('authorization')
     const hasCookie = hasSupabaseAuthCookie(request)
     if (!authHeader && !hasCookie) {
