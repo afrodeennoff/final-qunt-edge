@@ -17,6 +17,7 @@ export interface ApiKeyResult {
   role: 'user' | 'admin'
   createdAt: Date
   lastUsedAt: Date | null
+  revokedAt?: Date | null
 }
 
 function generateApiKey(role: 'user' | 'admin'): { key: string; keyPrefix: string; keyHash: string } {
@@ -94,6 +95,18 @@ async function generateApiKeyForUser(
   }
 }
 
+/**
+ * Used by both UI server actions and /api/mcp/keys HTTP routes.
+ * The raw key is returned only from this create call and is never stored.
+ */
+export async function generateApiKeyForAuthUser(
+  authUserId: string,
+  name: string,
+  role: 'user' | 'admin' = 'user',
+): Promise<{ success: true; result: ApiKeyResult } | { success: false; error: string }> {
+  return generateApiKeyForUser(name, role, { id: authUserId })
+}
+
 export async function generateUserApiKey(name: string): Promise<{ success: true; result: ApiKeyResult } | { success: false; error: string }> {
   try {
     const supabase = await createClient()
@@ -131,15 +144,35 @@ export async function listUserApiKeys(): Promise<{ success: true; keys: ApiKeyRe
     const { data: { user } } = await supabase.auth.getUser()
     if (!user?.id) return { success: false, error: 'Unauthorized' }
 
+    return listApiKeysForAuthUser(user.id)
+  } catch (error) {
+    if (isMissingTableError(error)) {
+      await ensureMcpTables()
+      return { success: true, keys: [] }
+    }
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to list API keys' }
+  }
+}
+
+export async function listApiKeysForAuthUser(authUserId: string): Promise<{ success: true; keys: ApiKeyResult[] } | { success: false; error: string }> {
+  try {
     const keys = await prisma.apiKey.findMany({
-      where: { userId: user.id },
+      where: { userId: authUserId, revokedAt: null },
       orderBy: { createdAt: 'desc' },
-      select: { id: true, keyPrefix: true, name: true, role: true, createdAt: true, lastUsedAt: true },
+      select: { id: true, keyPrefix: true, name: true, role: true, createdAt: true, lastUsedAt: true, revokedAt: true },
     })
 
     return {
       success: true,
-      keys: keys.map((k) => ({ id: k.id, keyPrefix: k.keyPrefix, name: k.name, role: k.role as 'user' | 'admin', createdAt: k.createdAt, lastUsedAt: k.lastUsedAt })),
+      keys: keys.map((k) => ({
+        id: k.id,
+        keyPrefix: k.keyPrefix,
+        name: k.name,
+        role: k.role as 'user' | 'admin',
+        createdAt: k.createdAt,
+        lastUsedAt: k.lastUsedAt,
+        revokedAt: k.revokedAt,
+      })),
     }
   } catch (error) {
     if (isMissingTableError(error)) {
@@ -156,12 +189,27 @@ export async function revokeApiKey(keyId: string): Promise<{ success: true } | {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user?.id) return { success: false, error: 'Unauthorized' }
 
-    const existing = await prisma.apiKey.findUnique({ where: { id: keyId } })
-    if (!existing || existing.userId !== user.id) {
+    return revokeApiKeyForAuthUser(user.id, keyId)
+  } catch (error) {
+    if (isMissingTableError(error)) {
+      await ensureMcpTables()
+      return { success: false, error: 'API key not found' }
+    }
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to revoke API key' }
+  }
+}
+
+export async function revokeApiKeyForAuthUser(authUserId: string, keyId: string): Promise<{ success: true } | { success: false; error: string }> {
+  try {
+    const result = await prisma.apiKey.updateMany({
+      where: { id: keyId, userId: authUserId, revokedAt: null },
+      data: { revokedAt: new Date() },
+    })
+
+    if (result.count === 0) {
       return { success: false, error: 'API key not found' }
     }
 
-    await prisma.apiKey.delete({ where: { id: keyId } })
     return { success: true }
   } catch (error) {
     if (isMissingTableError(error)) {
@@ -178,6 +226,7 @@ export async function validateApiKey(rawKey: string): Promise<{ userId: string; 
 
     const record = await prisma.apiKey.findUnique({ where: { key: keyHash } })
     if (!record) return null
+    if (record.revokedAt) return null
     if (record.expiresAt && record.expiresAt < new Date()) return null
 
     const shouldUpdate = !record.lastUsedAt || (Date.now() - record.lastUsedAt.getTime() > 5 * 60 * 1000)

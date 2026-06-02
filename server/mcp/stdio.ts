@@ -43,7 +43,7 @@ async function callRemote(method: string, params?: Record<string, unknown>) {
       'Content-Type': 'application/json',
       'Accept': 'application/json, text/event-stream',
       'Authorization': `Bearer ${REMOTE_KEY}`,
-      'MCP-Protocol-Version': '2025-03-26',
+      'MCP-Protocol-Version': '2025-06-18',
     },
     body: JSON.stringify({
       jsonrpc: '2.0',
@@ -74,7 +74,7 @@ async function main() {
   // Bootstrap: get the full tool catalog from the remote (this gives us ALL functions with zero drift)
   console.error('[qunt-mcp-stdio] Connecting to', REMOTE_URL)
   const initResult = await callRemote('initialize', {
-    protocolVersion: '2025-03-26',
+    protocolVersion: '2025-06-18',
     capabilities: {},
     clientInfo: { name: 'qunt-edge-stdio-forwarder', version: '1.0.0' },
   }).catch((e) => {

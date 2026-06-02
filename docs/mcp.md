@@ -1,6 +1,6 @@
 # Qunt Edge MCP — Model Context Protocol Integration
 
-> **Current Status:** The primary endpoints use a Streamable HTTP compatible implementation (enhanced custom handler + official SDK transport available at /api/mcp/v2). All 95+ tools are exposed on the main endpoint. Supports remote HTTP (Grok via xAI Responses API, Claude Custom Connectors, etc.) and stdio (via `bun run mcp:stdio` forwarder that gives full tool catalog over stdio to your hosted instance). Key format and URLs unchanged.
+> **Current Status:** The primary endpoints use the stable Streamable HTTP compatible custom handler on `/api/mcp`, `/api/mcp/public`, and `/api/mcp/admin`. All 95+ tools are exposed on the main endpoint. Supports remote HTTP (Grok via xAI Responses API, Claude Custom Connectors, etc.) and stdio (via `bun run mcp:stdio` forwarder that gives full tool catalog over stdio to your hosted instance). `/api/mcp/v2` is experimental and is not the production path.
 
 ## Overview
 
@@ -40,6 +40,8 @@ curl -X POST https://qunt-edge.vercel.app/api/mcp/keys \
 #   }
 # }
 ```
+
+The raw API key is shown only once during creation. Listing keys returns active key metadata only. Revoking a key disables it immediately but keeps the database row for audit history.
 
 ### 2. Test Your Connection
 
@@ -986,11 +988,11 @@ curl -X POST https://qunt-edge.vercel.app/api/mcp/keys \
   -H "Content-Type: application/json" \
   -d '{"name": "my-key"}'
 
-# List your keys
+# List your active keys
 curl https://qunt-edge.vercel.app/api/mcp/keys \
   -H "Authorization: Bearer YOUR_SESSION_TOKEN"
 
-# Revoke a key
+# Revoke a key (soft revoke: row remains for audit, key stops working)
 curl -X DELETE https://qunt-edge.vercel.app/api/mcp/keys/KEY_ID \
   -H "Authorization: Bearer YOUR_SESSION_TOKEN"
 ```
@@ -1136,4 +1138,3 @@ The MCP server is stable and production-ready on the default path (no special en
 The previous experimental `MCP_SDK_ENABLED` flag has been removed. The current implementation (custom JSON-RPC router with full security, audit logging, and all 95+ tools) is the supported path and is compatible with Claude Desktop, Cursor, Cline, Windsurf, and other MCP clients.
 
 No additional dependencies are required.
-

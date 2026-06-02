@@ -12,12 +12,15 @@ CREATE TABLE IF NOT EXISTS "ApiKey" (
     "role" TEXT NOT NULL DEFAULT 'user',
     "lastUsedAt" TIMESTAMP(3),
     "expiresAt" TIMESTAMP(3),
+    "revokedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "ApiKey_pkey" PRIMARY KEY ("id")
 );
+ALTER TABLE "ApiKey" ADD COLUMN IF NOT EXISTS "revokedAt" TIMESTAMP(3);
 CREATE UNIQUE INDEX IF NOT EXISTS "ApiKey_key_key" ON "ApiKey"("key");
 CREATE INDEX IF NOT EXISTS "ApiKey_userId_idx" ON "ApiKey"("userId");
+CREATE INDEX IF NOT EXISTS "ApiKey_userId_revokedAt_idx" ON "ApiKey"("userId", "revokedAt");
 CREATE INDEX IF NOT EXISTS "ApiKey_keyPrefix_idx" ON "ApiKey"("keyPrefix");
 `
 

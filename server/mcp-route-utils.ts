@@ -9,9 +9,9 @@ import { ensureMcpTables } from './mcp-auto-migrate'
 
 export const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Authorization, Content-Type, Accept, Mcp-Session-Id',
-  'Access-Control-Expose-Headers': 'Mcp-Session-Id',
+  'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Authorization, Content-Type, Accept, Mcp-Session-Id, MCP-Protocol-Version',
+  'Access-Control-Expose-Headers': 'Mcp-Session-Id, WWW-Authenticate',
   'Access-Control-Max-Age': '86400',
 }
 
@@ -27,8 +27,8 @@ export interface McpRouteConfig {
 
 const DEFAULT_LIMITER = rateLimit({ limit: 60, window: 60_000, identifier: 'mcp' })
 
-function jsonRpcError(id: unknown, code: number, message: string, status: number) {
-  return Response.json({ jsonrpc: '2.0', error: { code, message }, id }, { status, headers: CORS_HEADERS })
+function jsonRpcError(id: unknown, code: number, message: string, status: number, headers?: HeadersInit) {
+  return Response.json({ jsonrpc: '2.0', error: { code, message }, id }, { status, headers: { ...CORS_HEADERS, ...(headers ?? {}) } })
 }
 
 function jsonRpcResult(id: unknown, result: unknown) {
@@ -39,6 +39,13 @@ function jsonRpcNoContent(status: number) {
   return new Response(null, { status, headers: CORS_HEADERS })
 }
 
+function getAuthChallengeHeaders(request: NextRequest, error = 'invalid_token'): HeadersInit {
+  const resourceMetadataUrl = new URL('/.well-known/oauth-protected-resource/api/mcp', request.url)
+  return {
+    'WWW-Authenticate': `Bearer resource_metadata="${resourceMetadataUrl.toString()}", error="${error}"`,
+  }
+}
+
 function isAuthError(error: unknown): boolean {
   if (!(error instanceof Error)) return false
   const msg = error.message
@@ -47,6 +54,11 @@ function isAuthError(error: unknown): boolean {
     msg.includes('Invalid or expired') ||
     msg.includes('User account not found') ||
     msg.includes('Forbidden')
+}
+
+function authHeaderError(error: unknown): string {
+  if (!(error instanceof Error)) return 'invalid_token'
+  return error.message.includes('Missing Authorization') ? 'invalid_request' : 'invalid_token'
 }
 
 async function logMcpCall(ctx: McpAuthContext | null, tool: string, args: Record<string, unknown>, success: boolean, durationMs: number, errorCode?: string) {
@@ -84,7 +96,6 @@ async function logMcpCall(ctx: McpAuthContext | null, tool: string, args: Record
 
 export async function handleMcpRequest(request: NextRequest, config: McpRouteConfig): Promise<Response> {
   let reqId: unknown = null
-  const startTime = performance.now()
   let ctx: McpAuthContext | null = null
   let toolName: string | undefined
   const methodStartTime = performance.now()
@@ -254,7 +265,7 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
 
       const toolDef = config.tools.find((t) => t.name === toolName)
       if (!toolDef) {
-        return jsonRpcError(reqId, -32601, `Unknown tool: "${toolName}". Use tools/list to get the current catalog.`, 200)
+      return jsonRpcError(reqId, -32601, `Unknown tool: "${toolName}". Use tools/list to get the current catalog.`, 200)
       }
 
       let result: { content: Array<{ type: string; text: string }>; isError?: boolean }
@@ -280,14 +291,15 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
       await logMcpCall(ctx, toolName, {}, false, duration, 'HANDLER_ERROR')
     }
 
-    const auth = isAuthError(error)
     const forbidden = error instanceof Error && error.message.includes('Forbidden')
-    const code = auth ? -32001 : forbidden ? -32002 : -32603
-    const message = auth
-      ? 'Authentication failed. Use Authorization: Bearer <qunt_usr_... key or Supabase token>. Create keys in Settings → API Keys.'
-      : forbidden
-        ? 'Admin role required. Use a qunt_adm_... key.'
+    const auth = isAuthError(error)
+    const code = forbidden ? -32002 : auth ? -32001 : -32603
+    const message = forbidden
+      ? 'Admin role required. Use a qunt_adm_... key.'
+      : auth
+        ? 'Authentication failed. Use Authorization: Bearer <qunt_usr_... key or Supabase token>. Create keys in Settings → API Keys.'
         : 'Internal server error'
-    return jsonRpcError(reqId, code, message, auth ? 401 : forbidden ? 403 : 500)
+    const headers = auth && !forbidden ? getAuthChallengeHeaders(request, authHeaderError(error)) : undefined
+    return jsonRpcError(reqId, code, message, forbidden ? 403 : auth ? 401 : 500, headers)
   }
 }

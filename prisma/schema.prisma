@@ -139,10 +139,12 @@ model ApiKey {
   role        String    @default("user")
   lastUsedAt  DateTime?
   expiresAt   DateTime?
+  revokedAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
   @@index([userId])
+  @@index([userId, revokedAt])
   @@index([keyPrefix])
   @@schema("public")
 }
