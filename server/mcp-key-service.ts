@@ -172,7 +172,7 @@ export async function revokeApiKey(keyId: string): Promise<{ success: true } | {
   }
 }
 
-export async function validateApiKey(rawKey: string): Promise<{ userId: string; role: 'user' | 'admin' } | null> {
+export async function validateApiKey(rawKey: string): Promise<{ userId: string; role: 'user' | 'admin'; apiKeyId: string } | null> {
   try {
     const keyHash = createHash('sha256').update(rawKey).digest('hex')
 
@@ -185,7 +185,7 @@ export async function validateApiKey(rawKey: string): Promise<{ userId: string; 
       await prisma.apiKey.update({ where: { id: record.id }, data: { lastUsedAt: new Date() } })
     }
 
-    return { userId: record.userId, role: record.role as 'user' | 'admin' }
+    return { userId: record.userId, role: record.role as 'user' | 'admin', apiKeyId: record.id }
   } catch (error) {
     if (isMissingTableError(error)) {
       await ensureMcpTables()

@@ -10,6 +10,7 @@ export interface McpAuthContext {
   authUserId: string   // Supabase auth user ID (UUID)
   role: 'user' | 'admin'
   authMethod: 'apikey' | 'oauth'
+  apiKeyId?: string    // present when authMethod === 'apikey'
 }
 
 function isApiKeyToken(token: string): boolean {
@@ -38,7 +39,7 @@ async function authenticateWithApiKey(token: string): Promise<McpAuthContext> {
     throw new Error('User account not found')
   }
 
-  return { userId: dbUserId, authUserId: result.userId, role: result.role as 'user' | 'admin', authMethod: 'apikey' }
+  return { userId: dbUserId, authUserId: result.userId, role: result.role as 'user' | 'admin', authMethod: 'apikey', apiKeyId: result.apiKeyId }
 }
 
 async function authenticateWithOAuth(token: string): Promise<McpAuthContext> {

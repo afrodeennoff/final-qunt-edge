@@ -93,16 +93,16 @@ export function BlogManagementClient({
       ) : (
         <Card variant="flat" hover>
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full text-sm min-w-[480px]">
               <thead>
-                 <tr className="border-b-0 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm text-left text-sm">
-                  <th   className="type-label p-4 font-medium text-muted-foreground">Title</th>
-                  <th   className="type-label p-4 font-medium text-muted-foreground">Slug</th>
-                  <th   className="type-label p-4 font-medium text-muted-foreground">Category</th>
-                  <th   className="type-label p-4 font-medium text-muted-foreground">Author</th>
-                  <th   className="type-label p-4 font-medium text-muted-foreground">Status</th>
-                  <th   className="type-label p-4 font-medium text-muted-foreground">Date</th>
-                  <th className="p-4 font-medium text-muted-foreground text-right">Actions</th>
+                 <tr className="border-b-0 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm text-left text-xs sm:text-sm">
+                  <th   className="p-2.5 sm:p-4 font-medium text-muted-foreground">Title</th>
+                  <th   className="p-2.5 sm:p-4 font-medium text-muted-foreground">Slug</th>
+                  <th   className="p-2.5 sm:p-4 font-medium text-muted-foreground">Category</th>
+                  <th   className="p-2.5 sm:p-4 font-medium text-muted-foreground">Author</th>
+                  <th   className="p-2.5 sm:p-4 font-medium text-muted-foreground">Status</th>
+                  <th   className="p-2.5 sm:p-4 font-medium text-muted-foreground">Date</th>
+                  <th className="p-2.5 sm:p-4 font-medium text-muted-foreground text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>

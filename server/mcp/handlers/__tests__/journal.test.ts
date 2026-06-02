@@ -21,7 +21,7 @@ vi.mock('@/lib/prisma', () => ({
 
 import { prisma } from '@/lib/prisma'
 
-const mockCtx = { userId: 'user-mcp-journal-123', authUserId: 'auth-123', role: 'user' as const, authMethod: 'apikey' as const }
+const mockCtx = { userId: 'user-mcp-journal-123', authUserId: 'auth-123', role: 'user' as const, authMethod: 'apikey' as const, apiKeyId: 'key-jnl-123' }
 
 describe('journal handlers (TDD - Top 15 #10#11)', () => {
   beforeEach(() => {

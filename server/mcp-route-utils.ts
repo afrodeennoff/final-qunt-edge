@@ -51,22 +51,24 @@ function isAuthError(error: unknown): boolean {
 
 async function logMcpCall(ctx: McpAuthContext | null, tool: string, args: Record<string, unknown>, success: boolean, durationMs: number, errorCode?: string) {
   try {
-    await prisma.mcpAuditLog.create({
-      data: {
-        userId: ctx?.userId,
-        tool,
-        argsKeys: Object.keys(args).length > 0 ? JSON.stringify(Object.keys(args)) : null,
-        success,
-        durationMs,
-        errorCode,
-      },
-    })
+      await prisma.mcpAuditLog.create({
+        data: {
+          userId: ctx?.userId,
+          apiKeyId: ctx?.apiKeyId,
+          tool,
+          argsKeys: Object.keys(args).length > 0 ? JSON.stringify(Object.keys(args)) : null,
+          success,
+          durationMs,
+          errorCode,
+        },
+      })
   } catch {
     await ensureMcpTables()
     try {
       await prisma.mcpAuditLog.create({
         data: {
           userId: ctx?.userId,
+          apiKeyId: ctx?.apiKeyId,
           tool,
           argsKeys: Object.keys(args).length > 0 ? JSON.stringify(Object.keys(args)) : null,
           success,

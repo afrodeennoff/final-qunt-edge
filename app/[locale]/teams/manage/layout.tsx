@@ -12,7 +12,6 @@ import { BackgroundGlow } from '@/components/ui/background-glow'
 import {
   HEADER_HEIGHT,
   HEADER_Z_INDEX,
-  HEADER_BORDER,
   HEADER_BG,
   CONTENT_PADDING,
   CONTENT_PADDING_Y,
@@ -89,7 +88,7 @@ export default async function TeamManageLayout({
 
           <div className="relative z-0 flex h-full flex-col">
             <header
-              className={`sticky top-0 ${HEADER_HEIGHT} ${HEADER_Z_INDEX} ${HEADER_BORDER} ${HEADER_BG}`}
+              className={`sticky top-0 ${HEADER_HEIGHT} ${HEADER_Z_INDEX} ${HEADER_BG}`}
             >
               <div className="flex h-full w-full items-center justify-between px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center gap-3">

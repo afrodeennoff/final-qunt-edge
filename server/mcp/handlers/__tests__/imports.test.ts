@@ -42,7 +42,7 @@ import { prisma } from '@/lib/prisma'
 import { saveTradesForUserAction } from '@/server/database'
 import { getTradovateToken, getTradovateTrades } from '@/server/imports/tradovate-actions'
 
-const mockCtx = { userId: 'user-mcp-123', authUserId: 'auth-123', role: 'user' as const, authMethod: 'apikey' as const }
+const mockCtx = { userId: 'user-mcp-123', authUserId: 'auth-123', role: 'user' as const, authMethod: 'apikey' as const, apiKeyId: 'key-imp-123' }
 
 describe('IBKR MCP handlers (TDD)', () => {
   beforeEach(() => {

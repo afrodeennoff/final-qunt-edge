@@ -18,14 +18,38 @@ export async function listTradesHandler(ctx: McpAuthContext, args: Record<string
   const where: Record<string, unknown> = { userId }
   if (args.startDate) where.entryDate = { gte: new Date(args.startDate as string) }
   if (args.endDate) where.entryDate = { ...((where.entryDate as object) || {}), lte: new Date(args.endDate as string) }
+  // Support account filter by id (uuid) or number; always verify ownership to prevent any cross-user
+  const acctId = typeof args.accountId === 'string' && args.accountId ? args.accountId : undefined
+  const acctNum = typeof args.accountNumber === 'string' && args.accountNumber ? args.accountNumber : undefined
+  if (acctId || acctNum) {
+    const acc = await prisma.account.findFirst({
+      where: { ...(acctId ? { id: acctId } : {}), ...(acctNum ? { number: acctNum } : {}), userId },
+      select: { number: true },
+    })
+    if (!acc) throw new Error('Account not found')
+    where.accountNumber = acc.number
+  }
   return prisma.trade.findMany({ where, orderBy: { entryDate: 'desc' }, take: limit, skip: offset })
 }
 
 export async function getPerformanceSummaryHandler(ctx: McpAuthContext, args: Record<string, unknown>) {
   const userId = requireUserId(ctx)
+  const requestedUserId = typeof args.userId === 'string' ? args.userId : undefined
+  assertNoCrossUserAccess(requestedUserId, userId)
   const where: Record<string, unknown> = { userId }
   if (args.startDate) where.entryDate = { gte: new Date(args.startDate as string) }
   if (args.endDate) where.entryDate = { ...((where.entryDate as object) || {}), lte: new Date(args.endDate as string) }
+  // Account filter with ownership verification
+  const acctId = typeof args.accountId === 'string' && args.accountId ? args.accountId : undefined
+  const acctNum = typeof args.accountNumber === 'string' && args.accountNumber ? args.accountNumber : undefined
+  if (acctId || acctNum) {
+    const acc = await prisma.account.findFirst({
+      where: { ...(acctId ? { id: acctId } : {}), ...(acctNum ? { number: acctNum } : {}), userId },
+      select: { number: true },
+    })
+    if (!acc) throw new Error('Account not found')
+    where.accountNumber = acc.number
+  }
   const [aggregate, winCount, lossCount] = await Promise.all([
     prisma.trade.aggregate({ where, _sum: { pnl: true, commission: true }, _count: { id: true } }),
     prisma.trade.count({ where: { ...where, pnl: { gt: 0 } } }),
@@ -46,7 +70,17 @@ export async function getRiskMetricsHandler(ctx: McpAuthContext, args: Record<st
   const requestedUserId = typeof args.userId === 'string' ? args.userId : undefined
   assertNoCrossUserAccess(requestedUserId, userId)
   const where: Record<string, unknown> = { userId }
-  if (args.accountId) where.accountId = args.accountId
+  // Support account filter; verify ownership (no cross-user even on filter)
+  const acctId = typeof args.accountId === 'string' && args.accountId ? args.accountId : undefined
+  const acctNum = typeof args.accountNumber === 'string' && args.accountNumber ? args.accountNumber : undefined
+  if (acctId || acctNum) {
+    const acc = await prisma.account.findFirst({
+      where: { ...(acctId ? { id: acctId } : {}), ...(acctNum ? { number: acctNum } : {}), userId },
+      select: { number: true },
+    })
+    if (!acc) throw new Error('Account not found')
+    where.accountNumber = acc.number
+  }
   const trades = await prisma.trade.findMany({ where, select: { pnl: true, entryPrice: true, closePrice: true } })
   const pnls = trades.map(t => Number(t.pnl))
   const wins = pnls.filter(p => p > 0)

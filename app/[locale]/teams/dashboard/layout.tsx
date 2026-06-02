@@ -81,9 +81,9 @@ export default async function DashboardLayout({
         <SidebarLayoutShell
           sidebar={<TeamsSidebar />}
           header={
-            <header className="sticky top-0 z-50 w-full shrink-0 px-3 pb-2 pt-3 transition-[opacity,background-color,border-color] duration-200 sm:px-4 sm:pb-2 sm:pt-4">
+            <header className="sticky top-0 z-50 w-full shrink-0 px-3 pb-2 pt-3 transition-[opacity,background-color] duration-200 sm:px-4 sm:pb-2 sm:pt-4">
               <div className={cn('relative mx-auto', WORKSPACE_SHELL_WIDTH)}>
-                <div className="bg-card border-0 relative flex min-h-[5rem] items-center justify-between gap-3 overflow-hidden rounded-2xl px-3 py-3 transition-all duration-300 sm:gap-4 sm:px-4">
+                <div className="bg-card relative flex min-h-[5rem] items-center justify-between gap-3 overflow-hidden rounded-2xl px-3 py-3 transition-all duration-300 sm:gap-4 sm:px-4">
                   <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/8 to-transparent" />
                   <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2 pr-3 sm:gap-3 sm:pr-4">
                     <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border-0 bg-background/60 text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:border-primary/25 hover:bg-primary/5 hover:text-foreground md:h-9 md:w-9" />

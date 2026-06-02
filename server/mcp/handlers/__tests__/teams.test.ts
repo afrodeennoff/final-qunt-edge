@@ -21,7 +21,7 @@ vi.mock('@/server/teams', () => ({
 
 import { createTeam, inviteMember, acceptInvitation, removeMember } from '@/server/teams'
 
-const mockCtx = { userId: 'user-ctx-123', authUserId: 'auth-123', role: 'user' as const, authMethod: 'apikey' as const }
+const mockCtx = { userId: 'user-ctx-123', authUserId: 'auth-123', role: 'user' as const, authMethod: 'apikey' as const, apiKeyId: 'key-tms-123' }
 
 describe('teams MCP handlers - strict security & isolation', () => {
   beforeEach(() => {

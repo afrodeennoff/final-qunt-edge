@@ -40,7 +40,7 @@ vi.mock('../../security', () => ({
 import { prisma } from '@/lib/prisma'
 import { generateText } from 'ai'
 
-const mockCtx = { userId: 'user123', authUserId: 'auth123', role: 'user' as const, authMethod: 'apikey' as const }
+const mockCtx = { userId: 'user123', authUserId: 'auth123', role: 'user' as const, authMethod: 'apikey' as const, apiKeyId: 'key-ai-123' }
 const mockTrade = {
   id: 'trade1',
   userId: 'user123',

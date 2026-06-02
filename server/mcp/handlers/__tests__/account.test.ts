@@ -34,7 +34,7 @@ describe('getAccountHealthHandler', () => {
 
   it('throws error when no accounts found', async () => {
     vi.mocked(prisma.account.findMany).mockResolvedValue([])
-    await expect(getAccountHealthHandler({ userId: 'u1' }, {}))
+    await expect(getAccountHealthHandler({ userId: 'u1' } as any, {}))
       .rejects.toThrow('No accounts found')
   })
 
@@ -43,7 +43,7 @@ describe('getAccountHealthHandler', () => {
     vi.mocked(prisma.trade.findMany).mockResolvedValue([])
     vi.mocked(prisma.payout.findMany).mockResolvedValue([])
 
-    const result = await getAccountHealthHandler({ userId: 'u1' }, {})
+    const result = await getAccountHealthHandler({ userId: 'u1' } as any, {})
     expect(result[0].status).toBe('HEALTHY')
     expect(result[0].drawdownUsedPct).toBe('0.0')
     expect(result[0].currentBalance).toBe(100000)

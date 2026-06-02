@@ -80,9 +80,9 @@ export function UnifiedPageHeader({
   return (
     <header
       className={cn(
-        'relative overflow-hidden rounded-xl bg-card px-4 py-4 sm:py-6 sm:px-6 border-0',
+        'relative overflow-hidden rounded-xl bg-card px-4 py-4 sm:py-6 sm:px-6',
         'animate-fade-up-smooth transition-[opacity,transform] duration-300',
-        variant === 'gradient' && 'border-primary/20',
+        variant === 'gradient' && 'bg-primary/5',
         variant === 'elevated' && 'shadow-[0_0_35px_-18px] shadow-primary/15',
         className,
       )}
@@ -127,13 +127,13 @@ export function UnifiedSurface({ children, className, variant = 'default', hover
   return (
     <section
       className={cn(
-        'group relative overflow-hidden rounded-xl bg-card border-0',
+        'group relative overflow-hidden rounded-xl bg-card',
         densityPadding,
-        'transition-[border-color,box-shadow] duration-300',
-        hover && 'hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15',
+        'transition-[box-shadow] duration-300',
+        hover && 'hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15',
         glowOnHover && 'hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15',
         variant === 'elevated' && 'shadow-[0_0_35px_-18px] shadow-primary/10',
-        variant === 'subtle' && 'bg-gradient-to-br from-muted/50 to-muted/20 border-0',
+        variant === 'subtle' && 'bg-gradient-to-br from-muted/50 to-muted/20',
         className,
       )}
     >

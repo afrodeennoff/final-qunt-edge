@@ -63,7 +63,7 @@ interface DashboardSubscription {
 }
 
 function valueFormatter(number: number) {
-	return `${Intl.NumberFormat('us').format(number).toString()}`
+	return `${Intl.NumberFormat('en-US').format(number).toString()}`
 }
 
 export function AdminDashboard() {

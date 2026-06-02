@@ -57,11 +57,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onClick={isInteractive ? onClick : undefined}
         className={cn(
           'group relative overflow-hidden text-foreground',
-          'rounded-xl bg-card border-0',
-          variant === 'outlined' && 'bg-transparent border-0',
-          variant === 'flat' && 'border-0 bg-transparent',
-          variant === 'default' && 'bg-card border-0',
-          variant === 'elevated' && 'bg-card border-0 shadow-sm',
+          'rounded-xl bg-card',
+          variant === 'outlined' && 'bg-transparent',
+          variant === 'flat' && 'bg-transparent',
+          variant === 'default' && 'bg-card',
+          variant === 'elevated' && 'bg-card shadow-sm',
           accent && accentClassMap[accent],
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',

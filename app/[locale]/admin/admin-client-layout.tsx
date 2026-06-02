@@ -68,7 +68,7 @@ export function AdminClientLayout({
         <header
           className={`${HEADER_Z_INDEX} sticky top-0 px-3 pb-2 pt-3 sm:px-4 sm:pb-3 sm:pt-4 lg:px-6`}
         >
-          <div className="mx-auto flex w-full max-w-[1800px] items-center">
+          <div className="mx-auto flex w-full max-w-[1600px] sm:max-w-[1400px] items-center">
             <div className={cn(unifiedSectionPanelClassName, 'relative flex min-h-[4.5rem] w-full flex-col gap-4 overflow-hidden rounded-2xl px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between')}>
               <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/20 to-transparent" />
               <div className="flex min-w-0 items-center gap-3">

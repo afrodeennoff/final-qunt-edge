@@ -2,6 +2,7 @@ import type { McpAuthContext } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
 import { maskEmail } from '@/lib/redact-pii'
 import { toolError, toolSuccess, clampInt, buildDateFilter, requireParam, type McpToolResult, type ToolDefinition } from './mcp-helpers'
+import { assertNoCrossUserAccess } from './mcp/security'
 
 export function computeDrawdown(account: { startingBalance: number; drawdownThreshold: number; buffer: number }, currentBalance: number): {
   drawdownUsed: number
@@ -947,6 +948,8 @@ export async function handleMcpToolCall(toolName: string, args: Record<string, u
 }
 
 async function getRiskMetrics(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
+  const requestedUserId = typeof args.userId === 'string' ? args.userId : undefined
+  assertNoCrossUserAccess(requestedUserId, ctx.userId)
   const dateFilter = buildDateFilter(args)
   const where: Record<string, unknown> = { userId: ctx.userId }
   if (dateFilter) where.entryDate = dateFilter
@@ -1104,6 +1107,8 @@ async function getAccountDetails(ctx: McpAuthContext, accountId: string) {
 }
 
 async function listTrades(ctx: McpAuthContext, args: Record<string, unknown>) {
+  const requestedUserId = typeof args.userId === 'string' ? args.userId : undefined
+  assertNoCrossUserAccess(requestedUserId, ctx.userId)
   const limit = clampInt(args.limit, 1, 200, 50)
   const offset = clampInt(args.offset, 0, 1_000_000, 0)
   const where: Record<string, unknown> = { userId: ctx.userId }
@@ -1119,6 +1124,8 @@ async function listTrades(ctx: McpAuthContext, args: Record<string, unknown>) {
 }
 
 async function getPerformanceSummary(ctx: McpAuthContext, args: Record<string, unknown>) {
+  const requestedUserId = typeof args.userId === 'string' ? args.userId : undefined
+  assertNoCrossUserAccess(requestedUserId, ctx.userId)
   const where: Record<string, unknown> = { userId: ctx.userId }
   const dateFilter = buildDateFilter(args)
   if (dateFilter) where.entryDate = dateFilter

@@ -5,8 +5,6 @@ export const HEADER_HEIGHT = 'h-[4.5rem]'
 
 export const HEADER_Z_INDEX = 'z-50'
 
-export const HEADER_BORDER = 'border-b border-transparent'
-
 export const HEADER_BG = 'bg-card'
 
 // Content padding constants
@@ -14,7 +12,7 @@ export const CONTENT_PADDING = 'px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12'
 
 export const CONTENT_PADDING_Y = 'py-6 sm:py-8 lg:py-8'
 
-export const WORKSPACE_SHELL_WIDTH = 'max-w-[2400px]'
+export const WORKSPACE_SHELL_WIDTH = 'max-w-[1600px] sm:max-w-[1400px]'
 
 export const MARKETING_SHELL_WIDTH = 'max-w-[1360px]'
 

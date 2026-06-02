@@ -8,7 +8,7 @@ vi.mock('@/server/layouts', () => ({
 
 import * as layouts from '@/server/layouts'
 
-const mockCtx = { userId: 'user-mcp-layout-123', authUserId: 'auth-123', role: 'user' as const, authMethod: 'apikey' as const }
+const mockCtx = { userId: 'user-mcp-layout-123', authUserId: 'auth-123', role: 'user' as const, authMethod: 'apikey' as const, apiKeyId: 'key-lay-123' }
 
 describe('layout handlers (TDD - Top 15 #12)', () => {
   beforeEach(() => {
