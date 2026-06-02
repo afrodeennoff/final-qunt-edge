@@ -95,7 +95,7 @@ function Chip({
         'px-3.5 py-1.5 rounded-lg text-xs font-medium border transition-all duration-150 select-none',
         active
           ? 'border-primary bg-primary/10 text-primary'
-          : 'border-foreground/[0.06] text-muted-foreground hover:border-primary/30',
+          : 'border-border text-muted-foreground hover:border-primary/30',
       )}
     >
       {label}
@@ -142,7 +142,7 @@ function TagInput({
 
   return (
     <div
-      className="flex flex-wrap items-center gap-1.5 rounded-lg border border-foreground/[0.06] bg-background/50 px-2.5 py-2 min-h-[38px] cursor-text focus-within:border-primary/40 transition-colors"
+      className="flex flex-wrap items-center gap-1.5 rounded-lg border border-border bg-background/50 px-2.5 py-2 min-h-[38px] cursor-text focus-within:border-primary/40 transition-colors"
       onClick={() => inputRef.current?.focus()}
     >
       {tags.map(tag => (
@@ -773,7 +773,7 @@ export default function JournalClient() {
               <tbody>
                 {isLoading ? (
                   Array.from({ length: 6 }).map((_, i) => (
-                    <tr key={i} className="border-b border-foreground/[0.03]">
+                    <tr key={i} className="border-b border-border">
                       {Array.from({ length: 9 }).map((_, j) => (
                         <td key={j} className="px-5 py-3.5"><div className="h-3 bg-muted/20 rounded animate-pulse" /></td>
                       ))}
@@ -856,7 +856,7 @@ export default function JournalClient() {
 
           {/* Pagination */}
           {totalTradePages > 1 && (
-            <div className="shrink-0 border-t border-foreground/[0.04] px-5 py-2 flex items-center justify-between text-[10px] text-muted-foreground/35 tabular-nums">
+            <div className="shrink-0 border-t border-border px-5 py-2 flex items-center justify-between text-[10px] text-muted-foreground/35 tabular-nums">
               <span>Page {safeTradePage} of {totalTradePages}</span>
               <div className="flex items-center gap-1">
                 <button
@@ -907,7 +907,7 @@ export default function JournalClient() {
         >
           <div className="flex items-center justify-center h-screen p-4">
             <div
-              className="w-full max-w-5xl max-h-full flex flex-col rounded-2xl overflow-hidden bg-card border border-foreground/[0.06] animate-in slide-in-from-bottom-4 duration-250"
+              className="w-full max-w-5xl max-h-full flex flex-col rounded-2xl overflow-hidden bg-card border border-border animate-in slide-in-from-bottom-4 duration-250"
               onClick={e => e.stopPropagation()}
             >
                {/* Modal Header — fixed at top */}
@@ -1213,7 +1213,7 @@ export default function JournalClient() {
       {/* ── Unsaved changes confirmation ── */}
       {pendingTradeId && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background/60 backdrop-blur-sm">
-          <div className="w-[380px] rounded-2xl border border-foreground/[0.06] bg-card p-6 shadow-2xl">
+          <div className="w-[380px] rounded-2xl border border-border bg-card p-6 shadow-2xl">
             <h3 className="text-sm font-semibold">Unsaved changes</h3>
             <p className="mt-2 text-xs text-muted-foreground/60">
               You have unsaved journal content. Switching trades will discard these changes.

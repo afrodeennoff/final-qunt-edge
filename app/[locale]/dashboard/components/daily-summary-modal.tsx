@@ -295,7 +295,7 @@ const getDownloadLabel = (isExporting: boolean): string => (isExporting ?"Saving
 
 const getThemeButtonClass = (theme: Theme, isActive: boolean): string => cn("w-2 h-2 rounded-full ml-1",
  theme.primary.replace('text-', 'bg-'),
- isActive ?"ring-2 ring-foreground ring-offset-2 ring-offset-background" :"opacity-30 hover:opacity-100"
+ isActive ?"ring-2 ring-primary ring-offset-2 ring-offset-background" :"opacity-30 hover:opacity-100"
 )
 
 const syncHandleWithUser = (user: { email?: string } | undefined, setHandle: Dispatch<SetStateAction<string>>) => {
@@ -328,7 +328,7 @@ const EditableTarget = ({ customTarget, isEditing, onStartEditing, onFinishEditi
  <input
  autoFocus
  type="number"
- className="w-24 border-b-0 bg-transparent text-sm font-bold text-foreground placeholder:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
+ className="w-24 border-b-0 bg-transparent text-sm font-bold text-foreground placeholder:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
  defaultValue={customTarget}
  onBlur={(e) => {
  const val = parseFloat(e.target.value)

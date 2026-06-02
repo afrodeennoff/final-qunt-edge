@@ -497,8 +497,9 @@ export const DataProvider: React.FC<{
       let page = 1
       let hasMore = true
       const pageSize = 500
+      const MAX_TRADES = 15000
 
-      while (hasMore) {
+      while (hasMore && allTrades.length < MAX_TRADES) {
         const response = await withTimeout(
           getTradesAction(userId, page, pageSize, true, false),
           15000,
@@ -567,7 +568,7 @@ export const DataProvider: React.FC<{
         )
       }
 
-      setAccounts(normalizeAccountsForClient(accountsWithMetrics))
+      setAccounts(accountsWithMetrics)
     },
     [setAccounts, withTimeout],
   )
@@ -848,7 +849,7 @@ export const DataProvider: React.FC<{
               // Calculate metrics in background after cache write
               calculateAccountMetricsAction(normalizedAccounts)
                 .then((accountsWithMetrics) => {
-                  setAccounts(normalizeAccountsForClient(accountsWithMetrics))
+                  setAccounts(accountsWithMetrics)
                 })
                 .catch((e) => {
                   logger.warn(
@@ -1086,7 +1087,7 @@ export const DataProvider: React.FC<{
           20000,
           'calculateAccountMetricsAction(refresh)',
         )
-        setAccounts(normalizeAccountsForClient(accountsWithMetrics))
+        setAccounts(accountsWithMetrics)
 
         setUser(data.userData)
         setSubscription(data.subscription as PrismaSubscription | null)
@@ -1444,7 +1445,7 @@ export const DataProvider: React.FC<{
     const profitFactor =
       grossLosses === 0
         ? grossProfits > 0
-          ? Number.POSITIVE_INFINITY
+          ? 999
           : 1
         : grossProfits / grossLosses
 

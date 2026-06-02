@@ -283,7 +283,7 @@ function createMindsetPreview() {
             <div key={index} className="flex flex-col items-center gap-1">
               <div className={cn(
                 "h-6 w-6 rounded-full border-2 flex items-center justify-center",
-                index === 2 ? "bg-foreground border-foreground" : "border-muted-foreground/20"
+                index === 2 ? "bg-primary border-primary" : "border-muted-foreground/20"
               )}>
                 <div className="h-1 w-1 rounded-full bg-primary/[0.03]" />
               </div>

@@ -56,7 +56,7 @@ export async function getDashboardBootstrap(): Promise<DashboardBootstrapPayload
 
   const normalizedTrades = normalizeTradesForClient(tradesResult.trades)
   const normalizedAccounts = normalizeAccountsForClient(accounts)
-  const scoreMetrics = deriveScoreMetricsFromTrades(tradesResult.trades)
+  const scoreMetrics = deriveScoreMetricsFromTrades(normalizedTrades)
   const statistics = calculateStatistics(normalizedTrades, normalizedAccounts)
 
   return {
@@ -65,7 +65,7 @@ export async function getDashboardBootstrap(): Promise<DashboardBootstrapPayload
     dashboardLayout: layout,
     timezone: 'UTC',
     isAdmin: false,
-    accounts,
+    accounts: normalizedAccounts,
     groups: normalizedGroups,
     tags,
     moods: moodHistory,
