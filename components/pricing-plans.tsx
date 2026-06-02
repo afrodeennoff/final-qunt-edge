@@ -386,7 +386,7 @@ function PlusPlanCard({
         </CardHeader>
         <CardContent>
           <div className="mb-4 space-y-3 rounded-xl border-0 bg-background/0.04 p-4">
-            <span className="block text-center text-[10px] font-black uppercase tracking-[0.12em] text-foreground/35">
+            <span className="block text-center text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
               {t('pricing.billingPeriod')}
             </span>
 

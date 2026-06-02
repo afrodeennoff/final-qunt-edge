@@ -78,7 +78,7 @@ export function getScoreColor(score: number): string {
     if (score >= 80) return "text-foreground"
     if (score >= 60) return "text-foreground/80"
     if (score >= 40) return "text-foreground/60"
-    return "text-foreground/40"
+    return "text-muted-foreground"
 }
 
 export function getScoreLabel(score: number): string {
