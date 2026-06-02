@@ -164,9 +164,9 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  }
  
  source.start()
- } catch (error) {
-
- }
+  } catch (error) {
+    console.error('Failed to play audio segment:', error)
+  }
  }
 
  const stopAudio = () => {

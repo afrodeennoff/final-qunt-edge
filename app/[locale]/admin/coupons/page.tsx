@@ -34,7 +34,7 @@ import {
   Tags,
   Trash2,
 } from 'lucide-react'
-import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { propFirms } from '@/lib/prop-firms-config'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import { AdminPageHeader, AdminSection, AdminStatCard } from '../components/admin-surface'
 import {

@@ -257,6 +257,7 @@ export default function JournalClient() {
   const [modalIctTags, setModalIctTags] = useState<string[]>([])
   const [modalEmotion, setModalEmotion] = useState<string | null>(null)
   const [modalStars, setModalStars] = useState<number | null>(null)
+  const [modalDiscipline, setModalDiscipline] = useState<number | null>(null)
   const [modalPreNotes, setModalPreNotes] = useState('')
   const [modalPostNotes, setModalPostNotes] = useState('')
   const [modalScreenshots, setModalScreenshots] = useState<string[]>([])
@@ -473,6 +474,7 @@ export default function JournalClient() {
     setModalIctTags(allTags)
     setModalEmotion(j?.emotions ?? null)
     setModalStars(j?.confidenceRating ?? null)
+    setModalDiscipline(j?.disciplineScore ?? null)
     setModalPreNotes(j?.preTradeNotes ?? '')
     setModalPostNotes(j?.postTradeReview ?? '')
     setModalScreenshots(j?.screenshots ?? [])
@@ -504,6 +506,7 @@ export default function JournalClient() {
         postTradeReview: modalPostNotes || null,
         emotions: modalEmotion,
         confidenceRating: modalStars,
+        disciplineScore: modalDiscipline,
         customTags: tags,
         timeframe: modalTimeframe.join(', ') || null,
         session: modalSession.join(', ') || null,
@@ -517,6 +520,7 @@ export default function JournalClient() {
         postTradeReview: modalPostNotes || null,
         emotions: modalEmotion,
         confidenceRating: modalStars,
+        disciplineScore: modalDiscipline,
         customTags: tags,
         timeframe: modalTimeframe.join(', ') || null,
         session: modalSession.join(', ') || null,
@@ -527,7 +531,7 @@ export default function JournalClient() {
     }
 
     setModalOpen(false)
-  }, [selectedCard, modalSession, modalTimeframe, modalIctTags, modalEmotion, modalStars, modalPreNotes, modalPostNotes, selectedDayKey, handleCreate, handleUpdate, modalExcerptTitle, modalFeaturedExcerpt])
+  }, [selectedCard, modalSession, modalTimeframe, modalIctTags, modalEmotion, modalStars, modalDiscipline, modalPreNotes, modalPostNotes, selectedDayKey, handleCreate, handleUpdate, modalExcerptTitle, modalFeaturedExcerpt])
 
   const handleSelectTrade = useCallback((tradeId: string) => {
     const card = displayCards.find(c => c.trade.id === tradeId)
@@ -1053,6 +1057,14 @@ export default function JournalClient() {
                   </div>
                 </div>
 
+                {/* DISCIPLINE SCORE — separate from execution rating */}
+                <div>
+                  <div className="text-[10px] text-white/50 tracking-widest mb-1.5">DISCIPLINE SCORE</div>
+                  <div className="flex gap-1 mt-1">
+                    <RatingStars value={modalDiscipline} onChange={v => setModalDiscipline(v)} size="md" />
+                  </div>
+                </div>
+
                 {/* Notes — side by side */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
@@ -1190,12 +1202,19 @@ export default function JournalClient() {
                 </div>
 
                 <div className="flex items-center gap-3">
+                  {saving && (
+                    <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                      Saving...
+                    </span>
+                  )}
                   <button type="button" onClick={closeModal}
                     className="px-5 py-1.5 text-sm text-muted-foreground hover:text-foreground border border-border rounded-xl">
                     Cancel
                   </button>
                   <button type="button" onClick={handleSaveModal}
-                    className="px-6 py-1.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 active:scale-[0.985] transition">
+                    disabled={saving}
+                    className="px-6 py-1.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 active:scale-[0.985] transition disabled:opacity-60 disabled:cursor-not-allowed">
                     Save Journal Entry
                   </button>
                 </div>

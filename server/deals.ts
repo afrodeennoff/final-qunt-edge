@@ -20,9 +20,9 @@ import {
 } from '@/lib/prisma-guard'
 
 export type MarketType = 'Futures' | 'Forex' | 'Crypto'
-export type TradingPlatform = 'Tradovate' | 'Rithmic' | 'MetaTrader 5' | 'cTrader' | 'DXtrade'
-export type PayoutModel = 'Bi-weekly' | 'Weekly' | 'On-demand' | 'Monthly'
-export type DrawdownType = 'Trailing' | 'Static' | 'End-of-day'
+export type TradingPlatform = 'Tradovate' | 'Rithmic' | 'MetaTrader 5' | 'cTrader' | 'DXtrade' | 'Rithmic, Tradovate' | 'Tradovate, Rithmic' | 'MetaTrader 4, MetaTrader 5, cTrader' | 'MetaTrader 5, cTrader, DXtrade'
+export type PayoutModel = 'Bi-weekly' | 'Weekly' | 'On-demand' | 'Monthly' | '5 Trading Days' | 'On-demand (as fast as 3 days for Express Funded)' | 'Daily (on-demand after eligibility)' | 'On-demand (same-day possible)' | 'On-demand (Select Daily or Flex policies)' | 'On-demand (Elite Daily)' | 'On-demand (daily for Flex, after buffer for Pro)' | 'On-demand, Weekly, Bi-weekly, Monthly (plan-based)' | 'Bi-weekly (after 14 days minimum for funded)' | 'Bi-weekly (24-hour processing guarantee)' | 'Bi-weekly (or on-demand after eligibility)'
+export type DrawdownType = 'Trailing' | 'Static' | 'End-of-day' | 'Trailing (Intraday or End-of-Day options)' | 'End-of-day (trailing in Test)' | 'Static (tick-by-tick trailing in some programs)' | 'End-of-day (Intraday options in some)'
 
 export interface DealItem {
   id: string

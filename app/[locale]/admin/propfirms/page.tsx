@@ -9,7 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { AlertTriangle, CheckCircle2, PencilLine } from 'lucide-react'
-import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { propFirms } from '@/lib/prop-firms-config'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import { AdminPageHeader, AdminSection, AdminStatCard } from '../components/admin-surface'
 import { ConfirmDeleteButton } from '../components/confirm-delete-button'
@@ -99,7 +99,7 @@ export default async function PropFirmsListPage({
         orderBy: { name: 'asc' },
       })
     } catch (error) {
-
+      console.error('Failed to fetch prop firms:', error)
     }
   }
 
