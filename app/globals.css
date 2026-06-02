@@ -645,7 +645,7 @@
   --semantic-info-border: 150 100% 50% / 0.25;
 
   /* ── BORDER & RING — Neon Green only for focus/ring ── */
-  --border: transparent;
+  --border: hsl(150, 12%, 16%);
   --border-subtle: hsl(150, 8%, 13%);
   --input: hsl(150, 10%, 12%);
   --ring: hsl(150, 100%, 50%);
@@ -658,8 +658,7 @@
   --sidebar-primary-foreground: #000000;
   --sidebar-accent: hsl(150, 60%, 10%);
   --sidebar-accent-foreground: hsl(150, 100%, 50%);
-  --sidebar-border: transparent;
-
+  --sidebar-border: hsl(150, 20%, 12%);
   --sidebar-ring: hsl(150, 100%, 50%);
 
   /* Trading P&L semantics (strong, no tint bg unless needed) */
@@ -851,8 +850,8 @@
   --warning-foreground: #FFFFFF;
   --destructive: #C0392B;
   --destructive-foreground: #FFFFFF;
-  --border: transparent;
-  --input: transparent;
+  --border: rgba(0,0,0,0.13);
+  --input: rgba(0,0,0,0.15);
   --ring: #007AFF;
   --chart-1: #007AFF;
   --chart-2: #1A7F37;
@@ -869,7 +868,7 @@
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: rgba(0,0,0,0.05);
   --sidebar-accent-foreground: #007AFF;
-  --sidebar-border: transparent;
+  --sidebar-border: rgba(0,0,0,0.08);
   --sidebar-ring: #007AFF;
   --font-sans: var(--font-dm-sans), 'DM Sans', sans-serif;
   --font-serif: Georgia, serif;
@@ -3809,8 +3808,8 @@ img[loading='lazy'] {
   }
 
   .qe-no-white-borders {
-    --qe-enforced-border: transparent;
-    --qe-enforced-border-strong: transparent;
+    --qe-enforced-border: hsl(150, 12%, 20%);
+    --qe-enforced-border-strong: hsl(150, 15%, 28%);
   }
 
   .qe-no-white-borders
@@ -3888,7 +3887,7 @@ img[loading='lazy'] {
   --sidebar: #0a0c0a !important;
   --sidebar-background: #0a0c0a !important;
   --muted: hsl(150, 22%, 9%) !important;
-  --border: transparent !important;
+  --border: hsl(150, 20%, 16%) !important;
   --input: hsl(150, 20%, 12%) !important;
   /* Dark green-black surface fallback */
   background: #0a0c0a !important;
@@ -3926,8 +3925,7 @@ img[loading='lazy'] {
   --qe-ref-surface: #0a0c0a;
   --qe-ref-surface-2: #0f1210;
   --qe-ref-card: #111411;
-  --qe-ref-card-border: transparent;
-  --qe-ref-text: #f0f4f0;
+  --qe-ref-card-border: hsl(150, 20%, 16%);
   --qe-ref-text-muted: #8a908a;
 }
 
@@ -3939,7 +3937,7 @@ img[loading='lazy'] {
   --qe-ref-surface: #f8f9f7;
   --qe-ref-surface-2: #f0f2ef;
   --qe-ref-card: #ffffff;
-  --qe-ref-card-border: transparent;
+  --qe-ref-card-border: rgba(0,0,0,0.08);
   --qe-ref-text: #0f120f;
   --qe-ref-text-muted: #5a615c;
 }
