@@ -39,17 +39,18 @@ export function StatsTable({
 
   return (
     <div className="rounded-2xl overflow-hidden bg-card border border-border">
-      <div className="px-5 py-3 text-[10px] font-semibold tracking-[2px] uppercase text-primary/70 border-b border-border">
+      <div className="px-4 sm:px-5 py-3 text-[10px] font-semibold tracking-[2px] uppercase text-primary/70 border-b border-border">
         {title}
       </div>
-      <table className="w-full text-sm">
+      <div className="overflow-x-auto">
+      <table className="w-full text-sm min-w-[420px]">
         <thead>
           <tr className="text-[10px] uppercase tracking-[1px] text-muted-foreground border-b border-border">
-            <th className="text-left pl-5 pr-3 py-2 font-medium">{firstColLabel}</th>
-            <th className="text-right px-3 py-2 font-medium">TRADES</th>
-            <th className="text-right px-3 py-2 font-medium">WIN %</th>
-            <th className="text-right px-3 py-2 font-medium">PNL</th>
-            <th className="text-right pl-3 pr-5 py-2 font-medium">AVG R</th>
+            <th className="text-left pl-3 sm:pl-5 pr-2 sm:pr-3 py-2 font-medium">{firstColLabel}</th>
+            <th className="text-right px-2 sm:px-3 py-2 font-medium">TRADES</th>
+            <th className="text-right px-2 sm:px-3 py-2 font-medium">WIN %</th>
+            <th className="text-right px-2 sm:px-3 py-2 font-medium">PNL</th>
+            <th className="text-right pl-2 sm:pl-3 pr-3 sm:pr-5 py-2 font-medium">AVG R</th>
           </tr>
         </thead>
         <tbody>
@@ -58,15 +59,15 @@ export function StatsTable({
             const rrPos = row.avgRR >= 0
             return (
               <tr key={row.name} className="border-b border-border last:border-0 hover:bg-muted/30">
-                <td className="pl-5 pr-3 py-2 font-medium text-foreground">{row.name}</td>
-                <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">{row.totalTrades}</td>
-                <td className={cn('px-3 py-2 text-right tabular-nums', row.winRate >= 50 ? 'text-primary' : 'text-destructive')}>
+                <td className="pl-3 sm:pl-5 pr-2 sm:pr-3 py-2 font-medium text-foreground">{row.name}</td>
+                <td className="px-2 sm:px-3 py-2 text-right tabular-nums text-muted-foreground">{row.totalTrades}</td>
+                <td className={cn('px-2 sm:px-3 py-2 text-right tabular-nums', row.winRate >= 50 ? 'text-primary' : 'text-destructive')}>
                   {row.winRate.toFixed(1)}%
                 </td>
-                <td className={cn('px-3 py-2 text-right tabular-nums font-medium', pnlPos ? 'text-primary' : 'text-destructive')}>
+                <td className={cn('px-2 sm:px-3 py-2 text-right tabular-nums font-medium', pnlPos ? 'text-primary' : 'text-destructive')}>
                   {row.pnl > 0 ? '+' : row.pnl < 0 ? '-' : ''}${Math.abs(row.pnl).toLocaleString('en-US', { minimumFractionDigits: 0 })}
                 </td>
-                <td className={cn('pl-3 pr-5 py-2 text-right tabular-nums', rrPos ? 'text-primary' : 'text-destructive')}>
+                <td className={cn('pl-2 sm:pl-3 pr-3 sm:pr-5 py-2 text-right tabular-nums', rrPos ? 'text-primary' : 'text-destructive')}>
                   {rrPos ? '+' : ''}{row.avgRR.toFixed(1)}R
                 </td>
               </tr>
@@ -74,6 +75,7 @@ export function StatsTable({
           })}
         </tbody>
       </table>
+      </div>
     </div>
   )
 }

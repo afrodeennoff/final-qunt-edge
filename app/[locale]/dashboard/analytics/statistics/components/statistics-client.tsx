@@ -210,8 +210,8 @@ export default function StatisticsClient() {
   return (
     <div className="w-full px-4 lg:px-6 py-6 space-y-5 bg-background min-h-screen text-foreground">
 
-      {/* Header + Time Filters — exact match */}
-      <div className="flex items-center justify-between">
+      {/* Header + Time Filters */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-3">
           <div className="text-[11px] font-semibold tracking-[2px] uppercase text-primary">STATISTICS</div>
           {accounts.length > 1 && (

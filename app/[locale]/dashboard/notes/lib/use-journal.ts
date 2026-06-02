@@ -96,7 +96,7 @@ export function useJournal(userId: string | null): UseJournalReturn {
       let hasMore = true
 
       while (hasMore) {
-        const result = await getJournalTradesAction(userId, currentPage, JOURNAL_PAGE_SIZE, {
+        const result = await getJournalTradesAction(undefined, currentPage, JOURNAL_PAGE_SIZE, {
           status: filters.status !== 'all' ? filters.status : undefined,
           search: filters.search || undefined,
           instrument: filters.instrument || undefined,
@@ -245,19 +245,17 @@ export function useJournal(userId: string | null): UseJournalReturn {
   }, [userId, scheduleSync])
 
   const updateEntry = useCallback(async (id: string, input: UpdateJournalInput): Promise<JournalEntry> => {
-    setCards(prev => prev.map(card =>
-      card.journal?.id === id
-        ? {
-            ...card,
-            journal: { ...card.journal, ...input, updatedAt: new Date().toISOString() } as JournalEntry,
-          }
-        : card
-    ))
+    let updatedEntry: JournalEntry | null = null
+    setCards(prev => prev.map(card => {
+      if (card.journal?.id !== id) return card
+      updatedEntry = { ...card.journal, ...input, updatedAt: new Date().toISOString() } as JournalEntry
+      return { ...card, journal: updatedEntry }
+    }))
 
     syncQueueRef.current.set(id, { type: 'update', data: { id, ...input } })
     scheduleSync()
 
-    return {} as JournalEntry
+    return (updatedEntry ?? {} as JournalEntry)
   }, [scheduleSync])
 
   const deleteEntry = useCallback(async (id: string): Promise<void> => {

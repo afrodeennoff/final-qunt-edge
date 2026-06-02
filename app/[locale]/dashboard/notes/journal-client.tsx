@@ -7,7 +7,7 @@ import {
 } from 'recharts'
 import {
   X, ChevronLeft, ChevronRight, BookOpen, Clock,
-  Check, Loader2, Trash2, Pin, Image as ImageIcon, ChevronDown,
+  Trash2, Pin, ChevronDown,
 } from 'lucide-react'
 import { useUserStore } from '@/store/user-store'
 import { useJournal } from './lib/use-journal'
@@ -16,11 +16,6 @@ import { RatingStars } from './components/rating-stars'
 import { ScreenshotGrid } from './components/screenshot-grid'
 import type { JournalEntry, TradeJournalCard } from './lib/journal-types'
 import { cn } from '@/lib/utils'
-import {
-  unifiedSectionEyebrowClassName,
-  unifiedMetricPanelClassName,
-  unifiedInfoLabelClassName,
-} from '@/components/layout/unified-page-recipes'
 import { useDashboardTrades } from '@/context/data-provider'
 
 const TiptapEditor = dynamic(
@@ -624,7 +619,7 @@ export default function JournalClient() {
       </div>
 
       {/* ── Day Performance Strip (paginated, shows 7 days per page, continuous calendar) ── */}
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-4 sm:grid-cols-7 gap-1.5 sm:gap-2">
         {pagedDayGroups.map(g => {
           const isSelected = selectedDayKey === g.dateKey
           const pnlPositive = g.totalPnl > 0
@@ -635,7 +630,7 @@ export default function JournalClient() {
               type="button"
               onClick={() => setSelectedDayKey(isSelected ? null : g.dateKey)}
               className={cn(
-                'rounded-xl p-4 text-left transition-all border min-h-[110px]',
+                'rounded-xl p-2 sm:p-4 text-left transition-all border min-h-[80px] sm:min-h-[110px]',
                 hasTrades
                   ? 'bg-card border-border hover:border-primary/30'
                   : 'bg-card/50 border-border',
@@ -645,7 +640,7 @@ export default function JournalClient() {
               <div className={cn('text-[10px] font-medium tracking-widest', hasTrades ? 'text-white/60' : 'text-white/30')}>{g.shortDay}</div>
               <div className={cn('text-[10px] mt-0.5', hasTrades ? 'text-white/40' : 'text-white/20')}>{g.label}</div>
               <div className={cn(
-                'text-[17px] font-semibold tabular-nums mt-3 tracking-tight',
+                'text-[13px] sm:text-[17px] font-semibold tabular-nums mt-1.5 sm:mt-3 tracking-tight',
                 pnlPositive ? 'text-primary' : g.totalPnl < 0 ? 'text-destructive' : 'text-muted-foreground/40',
               )}>
                 {g.totalPnl > 0 ? '+' : ''}{g.totalPnl === 0 ? '—' : formatPnl(g.totalPnl)}
@@ -659,16 +654,16 @@ export default function JournalClient() {
       </div>
 
       {/* ── Day Summary + Equity Curve ── */}
-      <div className="grid grid-cols-12 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
         {/* Left: Day Summary */}
-        <div className="col-span-12 lg:col-span-5 rounded-2xl p-6 bg-card border border-border min-h-[200px]">
+        <div className="lg:col-span-5 rounded-2xl p-4 sm:p-6 bg-card border border-border min-h-[160px] sm:min-h-[200px]">
           <div className="flex items-start justify-between">
             <div>
               <div className="text-[11px] text-white/50 tracking-widest">
                 {selectedDayKey ? formatFullDate(selectedDayKey) : 'ALL TRADES'}
               </div>
               <div className={cn(
-                'text-[42px] font-semibold tabular-nums tracking-[-1.5px] mt-1 leading-none',
+                'text-[28px] sm:text-[42px] font-semibold tabular-nums tracking-[-1px] sm:tracking-[-1.5px] mt-1 leading-none',
                 daySummary.totalPnl > 0 ? 'text-primary' : daySummary.totalPnl < 0 ? 'text-destructive' : 'text-muted-foreground/60'
               )}>
                 {formatPnl(daySummary.totalPnl)}
@@ -685,7 +680,7 @@ export default function JournalClient() {
             </div>
           </div>
 
-          <div className="grid grid-cols-4 gap-3 mt-5">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mt-5">
             <div className="rounded-lg bg-muted/40 p-2.5">
               <div className="text-[9px] text-white/40 tracking-widest">TRADES</div>
               <div className="text-xl font-semibold tabular-nums mt-1 text-white">{daySummary.trades}</div>
@@ -706,7 +701,7 @@ export default function JournalClient() {
         </div>
 
         {/* Right: Equity Curve */}
-        <div className="col-span-12 lg:col-span-7 rounded-2xl p-6 bg-card border border-border min-h-[200px]">
+        <div className="lg:col-span-7 rounded-2xl p-4 sm:p-6 bg-card border border-border min-h-[160px] sm:min-h-[200px]">
           <div className="text-[10px] font-medium tracking-[2px] text-primary/70 mb-2">EQUITY CURVE</div>
           <div className="h-[160px]">
             {equityData.length > 1 ? (
@@ -939,7 +934,7 @@ export default function JournalClient() {
                   const avgWin = activeDayTrades.filter(c => c.trade.pnl > 0).reduce((s,c)=>s+c.trade.pnl,0) / Math.max(1, activeDayTrades.filter(c=>c.trade.pnl>0).length || 1)
                   const r = avgWin > 0 ? selectedCard.trade.pnl / avgWin : 0
                   return (
-                    <div className="grid grid-cols-5 gap-2">
+                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                       {[
                         {label:'ENTRY', val: Number(selectedCard.trade.entryPrice).toLocaleString('en-US',{minimumFractionDigits:2})},
                         {label:'EXIT', val: Number(selectedCard.trade.closePrice).toLocaleString('en-US',{minimumFractionDigits:2})},
@@ -1059,7 +1054,7 @@ export default function JournalClient() {
                 </div>
 
                 {/* Notes — side by side */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <div className="text-[10px] text-white/50 tracking-widest mb-1.5">PRE-TRADE NOTES</div>
                     <textarea rows={3} value={modalPreNotes} onChange={e=>setModalPreNotes(e.target.value)}
