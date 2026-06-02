@@ -26,7 +26,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           description: "group-[.toast]:text-muted-foreground/80 group-[.toast]:text-xs group-[.toast]:mt-0.5",
           actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground group-[.toast]:rounded-lg group-[.toast]:text-xs group-[.toast]:px-3 group-[.toast]:font-medium",
           cancelButton: "group-[.toast]:bg-muted/30 group-[.toast]:text-muted-foreground group-[.toast]:rounded-lg group-[.toast]:text-xs",
-          closeButton: "group-[.toast]:text-muted-foreground/40 group-[.toast]:hover:text-foreground/70 group-[.toast]:transition-colors",
+          closeButton: "group-[.toast]:text-muted-foreground group-[.toast]:hover:text-foreground group-[.toast]:transition-colors",
           success: "group-[.toaster]:border-primary/25",
           error: "group-[.toaster]:border-destructive/30",
           warning: "group-[.toaster]:border-amber-500/25",

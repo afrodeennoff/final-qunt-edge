@@ -39,7 +39,7 @@ export default function TradingScoreWidget({ size }: { size?: string }) {
  <span className="text-base text-muted-foreground ml-1">/ 100</span>
  </div>
  </div>
- <div className={cn("inline-flex items-center gap-1 rounded-full bg-background/30 px-2 py-0.5 text-[11px] font-semibold text-foreground/70 border-0"
+ <div className={cn("inline-flex items-center gap-1 rounded-full bg-background/30 px-2 py-0.5 text-[11px] font-semibold text-foreground/95 border-0"
  )}>
  {normalizedLabel}
  </div>

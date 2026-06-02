@@ -129,7 +129,7 @@ export function AccountsBarChart({
               "h-7 px-2 border-transparent text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showPayoutBars
                 ? "border-primary/60 bg-primary/20 text-foreground"
-                : "text-foreground/80 hover:bg-muted/40 hover:text-foreground"
+                : "text-foreground/95 hover:bg-muted/40 hover:text-foreground"
             )}
           >
             Payouts
@@ -143,7 +143,7 @@ export function AccountsBarChart({
               "h-7 px-2 border-transparent text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showAccountValue
                 ? "border-primary/60 bg-primary/20 text-foreground"
-                : "text-foreground/80 hover:bg-muted/40 hover:text-foreground"
+                : "text-foreground/95 hover:bg-muted/40 hover:text-foreground"
             )}
           >
             Value
@@ -157,7 +157,7 @@ export function AccountsBarChart({
               "h-7 px-2 border-transparent text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showRegistered
                 ? "border-primary/60 bg-primary/20 text-foreground"
-                : "text-foreground/80 hover:bg-muted/40 hover:text-foreground"
+                : "text-foreground/95 hover:bg-muted/40 hover:text-foreground"
             )}
           >
             Reg
@@ -171,7 +171,7 @@ export function AccountsBarChart({
               "h-7 px-2 border-transparent text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showSized
                 ? "border-primary/60 bg-primary/20 text-foreground"
-                : "text-foreground/80 hover:bg-muted/40 hover:text-foreground"
+                : "text-foreground/95 hover:bg-muted/40 hover:text-foreground"
             )}
           >
             Sized
@@ -185,7 +185,7 @@ export function AccountsBarChart({
               "h-7 px-2 border-transparent text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showZeroFirms
                 ? "border-primary/60 bg-primary/20 text-foreground"
-                : "text-foreground/80 hover:bg-muted/40 hover:text-foreground"
+                : "text-foreground/95 hover:bg-muted/40 hover:text-foreground"
             )}
           >
             {showZeroFirms ? "Zeros: On" : "Zeros: Off"}
