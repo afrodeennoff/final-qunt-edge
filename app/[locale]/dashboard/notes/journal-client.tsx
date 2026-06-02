@@ -191,16 +191,28 @@ function groupByDay(cards: TradeJournalCard[]): DayGroup[] {
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
   const fullDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-  // Determine the full date range: earliest trade → today
+  // Determine the full date range: go back 90 days before earliest trade (or last 90 days if no trades) → today
+  // This ensures ALL dates are shown in the calendar strip, even days with zero trades (show date header but empty content).
   const today = new Date().toISOString().slice(0, 10)
   let earliest = today
   for (const key of map.keys()) {
     if (key < earliest) earliest = key
   }
 
-  // Build continuous range filling empty days
+  let rangeStart = earliest
+  const earliestDate = new Date(earliest + 'T12:00:00')
+  earliestDate.setDate(earliestDate.getDate() - 90)
+  const computedStart = earliestDate.toISOString().slice(0, 10)
+  if (computedStart < rangeStart) rangeStart = computedStart
+  if (map.size === 0) {
+    const d = new Date(today + 'T12:00:00')
+    d.setDate(d.getDate() - 90)
+    rangeStart = d.toISOString().slice(0, 10)
+  }
+
+  // Build continuous range filling empty days (all dates in range, trades or empty)
   const result: DayGroup[] = []
-  const current = new Date(earliest + 'T12:00:00')
+  const current = new Date(rangeStart + 'T12:00:00')
   const end = new Date(today + 'T12:00:00')
   while (current <= end) {
     const dateKey = current.toISOString().slice(0, 10)
@@ -582,7 +594,7 @@ export default function JournalClient() {
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             )}
           >
-            {'All (' + dayGroups.filter(g => g.trades.length > 0).length + ' trading days, ' + dayGroups.reduce((s, g) => s + g.trades.length, 0) + ' trades)'}
+            {'All (' + dayGroups.length + ' dates, ' + dayGroups.filter(g => g.trades.length > 0).length + ' with trades, ' + dayGroups.reduce((s, g) => s + g.trades.length, 0) + ' trades)'}
           </button>
         </div>
         <div className="flex items-center gap-2">
@@ -660,7 +672,7 @@ export default function JournalClient() {
       {/* ── Day Summary + Equity Curve ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
         {/* Left: Day Summary */}
-        <div className="lg:col-span-5 rounded-2xl p-4 sm:p-6 bg-card border border-transparent min-h-[160px] sm:min-h-[200px]">
+        <div className="lg:col-span-5 rounded-2xl p-4 sm:p-6 bg-card min-h-[160px] sm:min-h-[200px]">
           <div className="flex items-start justify-between">
             <div>
               <div className="text-[11px] text-white/50 tracking-widest">
@@ -705,7 +717,7 @@ export default function JournalClient() {
         </div>
 
         {/* Right: Equity Curve */}
-        <div className="lg:col-span-7 rounded-2xl p-4 sm:p-6 bg-card border border-transparent min-h-[160px] sm:min-h-[200px]">
+        <div className="lg:col-span-7 rounded-2xl p-4 sm:p-6 bg-card min-h-[160px] sm:min-h-[200px]">
           <div className="text-[10px] font-medium tracking-[2px] text-primary/70 mb-2">EQUITY CURVE</div>
           <div className="h-[160px]">
             {equityData.length > 1 ? (
@@ -753,7 +765,7 @@ export default function JournalClient() {
           <div className="text-[10px] font-medium tracking-[2px] text-primary">TRADE LOG</div>
           <div className="text-[10px] text-white/30">Click any row to journal</div>
         </div>
-        <div className="rounded-2xl overflow-hidden bg-card border border-transparent flex flex-col" style={{ maxHeight: 'calc(100vh - 460px)' }}>
+        <div className="rounded-2xl overflow-hidden bg-card flex flex-col" style={{ maxHeight: 'calc(100vh - 460px)' }}>
           <div className="overflow-x-auto flex-1 overflow-y-auto">
             <table className="w-full text-sm">
               <thead className="sticky top-0 z-10 bg-card/80">
@@ -905,7 +917,7 @@ export default function JournalClient() {
           onClick={closeModal}
         >
           <div
-            className="w-full max-w-5xl max-h-[85vh] flex flex-col rounded-2xl bg-card border border-transparent shadow-xl animate-in slide-in-from-bottom-4 duration-250 my-auto"
+            className="w-full max-w-5xl max-h-[85vh] flex flex-col rounded-2xl bg-card shadow-xl animate-in slide-in-from-bottom-4 duration-250 my-auto"
             onClick={e => e.stopPropagation()}
           >
                {/* Modal Header — fixed at top */}
@@ -945,7 +957,7 @@ export default function JournalClient() {
                         {label:'R-MULTIPLE', val: `${r>=0?'+':''}${r.toFixed(1)}R`},
                         {label:'DURATION', val: formatDuration(selectedCard.trade.timeInPosition)},
                       ].map((s,i) => (
-                        <div key={i} className="rounded-lg bg-muted/40 p-2.5 text-center border border-transparent">
+                        <div key={i} className="rounded-lg bg-muted/40 p-2.5 text-center">
                           <div className="text-[9px] text-white/40 tracking-[1px]">{s.label}</div>
                           <div className={cn('text-sm font-semibold tabular-nums mt-1', s.green ? 'text-primary' : s.red ? 'text-destructive' : 'text-foreground')}>
                             {s.val}
@@ -1081,7 +1093,7 @@ export default function JournalClient() {
                 </div>
 
                 {/* FEATURED EXCERPT — always visible, expand/collapse */}
-                <div className="rounded-xl bg-muted/30 border border-transparent p-4 space-y-3">
+                <div className="rounded-xl bg-muted/30 p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="text-[10px] text-white/50 tracking-widest">FEATURED EXCERPT</div>
                     <button
@@ -1113,7 +1125,7 @@ export default function JournalClient() {
 
                   {/* Rich text editor — expanded */}
                   {excerptEditorOpen && (
-                    <div className="rounded-lg border border-transparent overflow-hidden bg-card">
+                    <div className="rounded-lg overflow-hidden bg-card">
                       <TiptapEditor
                         content={modalFeaturedExcerpt}
                         onChange={(html) => {
@@ -1225,7 +1237,7 @@ export default function JournalClient() {
       {/* ── Unsaved changes confirmation ── */}
       {pendingTradeId && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background/60 backdrop-blur-sm">
-          <div className="w-[380px] rounded-2xl border border-transparent bg-card p-6 shadow-2xl">
+          <div className="w-[380px] rounded-2xl bg-card p-6 shadow-2xl">
             <h3 className="text-sm font-semibold">Unsaved changes</h3>
             <p className="mt-2 text-xs text-muted-foreground/60">
               You have unsaved journal content. Switching trades will discard these changes.
