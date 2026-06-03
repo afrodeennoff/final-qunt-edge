@@ -203,7 +203,7 @@ function Sidebar({
           'group-data-[collapsible=offcanvas]:w-0',
           'group-data-[side=right]:rotate-180',
           variant === 'floating' || variant === 'inset'
-            ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]'
+            ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+2px)]'
             : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
         )}
       />
@@ -228,7 +228,7 @@ function Sidebar({
           'data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]',
           'data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
           variant === 'floating' || variant === 'inset'
-            ? 'p-3 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(5))+2px)]'
+            ? 'p-3 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+2px)]'
             : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
           className,
         )}
