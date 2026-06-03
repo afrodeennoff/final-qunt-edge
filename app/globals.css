@@ -3925,7 +3925,8 @@ img[loading='lazy'] {
   --qe-ref-surface-2: #0f1210;
   --qe-ref-card: #111411;
   --qe-ref-card-border: hsl(150, 20%, 16%);
-  --qe-ref-text-muted: #8a908a;
+  --qe-ref-text: #e8ebe8;
+  --qe-ref-text-muted: #b8bdb8;
 }
 
 /* Light mode overrides for the reference aesthetic (kept for completeness, primary is dark reference match) */

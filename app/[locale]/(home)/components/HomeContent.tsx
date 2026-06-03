@@ -657,16 +657,16 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                   <svg viewBox="0 0 200 140" className="w-full h-full">
                     {/* Security flow diagram */}
                     <rect x="70" y="10" width="60" height="36" rx="8" fill="rgba(0,255,159,0.08)" stroke="rgba(0,255,159,0.25)" strokeWidth="1" />
-                    <text x="100" y="33" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="9" fontWeight="600">Secure Data</text>
+                    <text x="100" y="33" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="11" fontWeight="600">Secure Data</text>
 
                     <rect x="20" y="65" width="56" height="30" rx="6" fill="rgba(0,255,159,0.06)" stroke="rgba(0,255,159,0.2)" strokeWidth="1" />
-                    <text x="48" y="84" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="8">Encrypted</text>
+                    <text x="48" y="84" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="10">Encrypted</text>
 
                     <rect x="124" y="65" width="56" height="30" rx="6" fill="rgba(0,255,159,0.06)" stroke="rgba(0,255,159,0.2)" strokeWidth="1" />
-                    <text x="152" y="84" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="8">Access Control</text>
+                    <text x="152" y="84" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="10">Access Control</text>
 
                     <rect x="50" y="105" width="100" height="28" rx="6" fill="rgba(0,255,159,0.1)" stroke="rgba(0,255,159,0.3)" strokeWidth="1" />
-                    <text x="100" y="123" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="9" fontWeight="600">Zero-Knowledge Vault</text>
+                    <text x="100" y="123" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="11" fontWeight="600">Zero-Knowledge Vault</text>
 
                     <line x1="100" y1="46" x2="48" y2="65" stroke="rgba(0,255,159,0.3)" strokeWidth="1" />
                     <line x1="100" y1="46" x2="152" y2="65" stroke="rgba(0,255,159,0.3)" strokeWidth="1" />
@@ -685,18 +685,18 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                    <svg viewBox="0 0 200 140" className="w-full h-full">
                      {/* Performance chart diagram */}
                      <rect x="30" y="20" width="60" height="50" rx="8" fill="rgba(0,255,159,0.08)" stroke="rgba(0,255,159,0.25)" strokeWidth="1" />
-                     <text x="60" y="40" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="8">Backtested</text>
+                     <text x="60" y="40" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="10">Backtested</text>
                      <text x="60" y="52" textAnchor="middle" fill="var(--qe-ref-green)" fontSize="10" fontWeight="700">98.2%</text>
 
                      <rect x="110" y="20" width="60" height="50" rx="8" fill="rgba(0,255,159,0.08)" stroke="rgba(0,255,159,0.25)" strokeWidth="1" />
-                     <text x="140" y="40" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="8">High</text>
+                     <text x="140" y="40" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="10">High</text>
                      <text x="140" y="52" textAnchor="middle" fill="var(--qe-ref-green)" fontSize="10" fontWeight="700">Win Rate</text>
 
                      <rect x="30" y="85" width="60" height="40" rx="6" fill="rgba(0,255,159,0.06)" stroke="rgba(0,255,159,0.2)" strokeWidth="1" />
-                     <text x="60" y="109" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="8">Low Draw</text>
+                     <text x="60" y="109" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="10">Low Draw</text>
 
                      <rect x="110" y="85" width="60" height="40" rx="6" fill="rgba(0,255,159,0.06)" stroke="rgba(0,255,159,0.2)" strokeWidth="1" />
-                     <text x="140" y="109" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="8">Fast Exec</text>
+                     <text x="140" y="109" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="10">Fast Exec</text>
 
                      <path d="M60 70 L60 85 M140 70 L140 85 M60 125 L100 135 M140 125 L100 135" stroke="rgba(0,255,159,0.3)" strokeWidth="1" markerEnd="url(#arrowhead)" />
                    </svg>
@@ -717,19 +717,19 @@ export default function HomeContent({ liveHighlights }: { liveHighlights?: HomeL
                   <svg viewBox="0 0 200 140" className="w-full h-full">
                     {/* Transparency flow diagram */}
                     <circle cx="50" cy="35" r="18" fill="rgba(0,255,159,0.08)" stroke="rgba(0,255,159,0.25)" strokeWidth="1" />
-                    <text x="50" y="39" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="8">Open API</text>
+                    <text x="50" y="39" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="10">Open API</text>
 
                     <circle cx="150" cy="35" r="18" fill="rgba(0,255,159,0.08)" stroke="rgba(0,255,159,0.25)" strokeWidth="1" />
-                    <text x="150" y="39" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="8">Audit Logs</text>
+                    <text x="150" y="39" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="10">Audit Logs</text>
 
                     <rect x="25" y="75" width="50" height="34" rx="6" fill="rgba(0,255,159,0.06)" stroke="rgba(0,255,159,0.2)" strokeWidth="1" />
-                    <text x="50" y="95" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="8">Real-Time</text>
+                    <text x="50" y="95" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="10">Real-Time</text>
 
                     <rect x="125" y="75" width="50" height="34" rx="6" fill="rgba(0,255,159,0.06)" stroke="rgba(0,255,159,0.2)" strokeWidth="1" />
-                    <text x="150" y="95" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="8">Reports</text>
+                    <text x="150" y="95" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="10">Reports</text>
 
                     <rect x="60" y="115" width="80" height="22" rx="4" fill="rgba(0,255,159,0.1)" stroke="rgba(0,255,159,0.3)" strokeWidth="1" />
-                    <text x="100" y="130" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="8" fontWeight="600">Full Visibility</text>
+                    <text x="100" y="130" textAnchor="middle" fill="var(--qe-ref-text)" fontSize="10" fontWeight="600">Full Visibility</text>
 
                     <line x1="50" y1="53" x2="40" y2="75" stroke="rgba(0,255,159,0.25)" strokeWidth="1" />
                     <line x1="150" y1="53" x2="160" y2="75" stroke="rgba(0,255,159,0.25)" strokeWidth="1" />
