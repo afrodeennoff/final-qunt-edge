@@ -3,6 +3,7 @@
 import { generateText, Output } from "ai"
 import { z } from 'zod';
 import { assertAdminAccess } from "@/server/authz"
+import { getAiLanguageModel } from "@/lib/ai/client"
 
 const newsletterSchema = z.object({
   subject: z.string().describe("A catchy title, maximum 4 words"),
@@ -21,7 +22,7 @@ export async function generateNewsletterContent({ description }: GenerateNewslet
   await assertAdminAccess()
   try {
     const { output } = await generateText({
-      model: 'openai/gpt-5-mini',
+      model: getAiLanguageModel("editor"),
       output: Output.object({ schema: newsletterSchema }),
       prompt: `Hello, you will write the technical newsletter for Qunt Edge about our latest update: ${description}.
 

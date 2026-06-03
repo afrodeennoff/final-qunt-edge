@@ -1,5 +1,5 @@
 import { streamText, stepCountIs } from "ai";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v3";
 import { getCurrentDayData } from "./tools/get-current-day-data";
 import { ActionSchema } from "./schema";
@@ -11,7 +11,8 @@ import { rateLimit } from "@/lib/rate-limit";
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { apiError } from "@/lib/api-response";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
-import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
+import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout"
+import { detectPromptInjection } from "@/lib/ai/prompt-safety";
 
 export const maxDuration = 90;
 const editorRateLimit = rateLimit({ limit: 15, window: 60_000, identifier: "ai-editor" });
@@ -112,6 +113,15 @@ export async function POST(req: NextRequest) {
 
     const validatedAction = ActionSchema.parse(action);
     const systemPrompt = getSystemPrompt(validatedAction, locale, date);
+
+    // Apply prompt safety check
+    const injectionCheck = detectPromptInjection(prompt || "");
+    if (injectionCheck.isInjection) {
+      return NextResponse.json(
+        { error: { code: "PROMPT_INJECTION", message: "Potential prompt injection detected." } },
+        { status: 400 }
+      );
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const tools: Record<string, any> = {};

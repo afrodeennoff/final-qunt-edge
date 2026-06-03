@@ -605,7 +605,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
   </div>
   </div>
   {/* Always show full month: explicit 6 rows so all dates of the month are visible in any widget size */}
-  <div className="grid min-h-[200px] flex-1 grid-cols-8 grid-rows-6 gap-1 sm:min-h-[240px] lg:min-h-[300px]">
+  <div className="grid flex-1 grid-cols-8 grid-rows-6 gap-1 min-h-0">
  {calendarDays.map((date, index) => {
  const dateString = format(date, 'yyyy-MM-dd')
  const dayData = calendarData[dateString]

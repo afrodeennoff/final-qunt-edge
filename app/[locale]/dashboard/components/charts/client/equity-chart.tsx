@@ -1041,7 +1041,8 @@ export default React.memo(function EquityChart({ size ="medium" }: EquityChartPr
  {showIndividual &&
  !isSharedView &&
  !isTeamView &&
- size !=="small" && (
+ size !=="small" &&
+ size !== "small-long" && (
  <AccountsLegend
  accountNumbers={availableAccountNumbers}
  accountColorMap={accountColorMap}

@@ -4,6 +4,7 @@ import { YoutubeTranscript } from 'youtube-transcript'
 import { generateText, Output } from "ai"
 import { z } from 'zod/v3'
 import { cacheLife, cacheTag } from 'next/cache'
+import { getAiLanguageModel } from "@/lib/ai/client"
 
 const QUNT_EDGE_CONTEXT = `Qunt Edge is a web platform for futures day traders, with an intuitive and customizable interface. Built from personal experience as a futures day trader using scalping strategies, it offers features like multi-account management, prop firm challenge tracking, and customizable dashboards. Our goal is to provide traders with deep analytics on their trading habits to optimize strategies and improve decision-making.`
 
@@ -14,7 +15,7 @@ const summarySchema = z.object({
 export async function generateTranscriptSummary(transcript: string): Promise<string | null> {
   try {
     const { output } = await generateText({
-      model: 'openai/gpt-5-mini',
+      model: getAiLanguageModel("editor"),
       output: Output.object({ schema: summarySchema }),
       prompt: `You are an expert in web development and trading who helps summarize Qunt Edge updates.
 ${QUNT_EDGE_CONTEXT}

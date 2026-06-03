@@ -66,7 +66,7 @@ export const defaultLayouts: DashboardLayoutWithWidgets = {
       x: 6,
       y: 1,
       w: 6,
-      h: 8,
+      h: 10,
     },
 
     // --- ROW 3: Detailed Stats & Trends ---

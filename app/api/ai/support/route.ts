@@ -19,7 +19,8 @@ import {
   logAiError,
   sanitizeAiError,
 } from "@/lib/ai/error-utils";
-import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
+import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout"
+import { sanitizeUserMessages, enforcePromptSafety } from "@/lib/ai/prompt-safety";
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 const supportRateLimit = rateLimit({ limit: 12, window: 60_000, identifier: "ai-support" });
@@ -80,6 +81,16 @@ export async function POST(req: NextRequest) {
     });
 
     const modelMessages = await convertToModelMessages(messages);
+
+    // Apply prompt safety
+    const sanitized = sanitizeUserMessages(
+      messages.map(m => ({ role: m.role, text: m.parts?.filter((p): p is { type: "text"; text: string } => p?.type === "text").map(p => p.text).join("\n") ?? "" }))
+    );
+    const safety = enforcePromptSafety(sanitized);
+    if (!safety.safe) {
+      return NextResponse.json(safety.response!.body, { status: safety.response!.status });
+    }
+
     const result = streamText({
       model: webSearch && webSearchModel ? getAiLanguageModelById(webSearchModel) : getAiLanguageModelById(selectedModel),
       abortSignal: createAiTimeoutSignal(policy.timeoutMs),
