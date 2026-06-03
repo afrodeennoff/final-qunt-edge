@@ -473,45 +473,45 @@
   --macos-toolbar-height: 52px;
   --macos-sidebar-width: 260px;
 
-  /* ── TEXT HIERARCHY — macOS light ── */
-  --text-strong: #1D1D1F;        /* Headings — maximum contrast */
-  --text-primary: #1D1D1F;
-  --text-secondary: #6E6E73;
-  --text-tertiary: #AEAEB2;
-  --text-disabled: #C7C7CC;
-  --text-inverse: #FFFFFF;
+  /* ── TEXT HIERARCHY — macOS dark ── */
+  --text-strong: #F5F5F7;
+  --text-primary: #EAEAEA;
+  --text-secondary: #98989D;
+  --text-tertiary: #6E6E73;
+  --text-disabled: #48484A;
+  --text-inverse: #1D1D1F;
 
   /* ── SURFACE TOKENS ── */
-  --surface-card: #FFFFFF;
-  --surface-popover: #FFFFFF;
-  --surface-hover: #F5F5F7;
-  --brand-tint: rgba(0,102,204,0.08);
+  --surface-card: #1a1d1a;
+  --surface-popover: #1e211e;
+  --surface-hover: #1e211e;
+  --brand-tint: rgba(0,255,136,0.06);
 
-  /* ── PREMIUM SURFACE HIERARCHY — macOS light ── */
-  --surface-base: #F2F2F7; /* Page bg */
-  --surface-muted: #FFFFFF; /* Cards & panels */
-  --surface-elevated: #F5F5F7; /* Raised cards, hover */
-  --surface-overlay: #FFFFFF; /* Modals, popovers */
+  /* ── PREMIUM SURFACE HIERARCHY — macOS dark ── */
+  --surface-base: #0a0c0a;
+  --surface-muted: #1a1d1a;
+  --surface-elevated: #1e211e;
+  --surface-overlay: #1e211e;
 
   /* ── PREMIUM TEXT CONTRAST (WCAG AAA) ── */
-  --text-heading: #1D1D1F; /* Headings: highest contrast */
-  --text-body: #1D1D1F; /* Body: strong readability */
-  --text-caption: #6E6E73; /* Captions: sufficient */
+  --text-heading: #F5F5F7;
+  --text-body: #EAEAEA;
+  --text-caption: #98989D;
 
   /* ── IMPACT SYSTEM (Trading Semantic) ── */
-  --impact-profit: #1A7F37;
-  --impact-loss: #C0392B;
+  --impact-profit: #0ECB81;
+  --impact-loss: #F6465D;
   --impact-neutral: #6E6E73;
-  --impact-info: #007AFF;
-  --impact-alert: #D35400;
+  --impact-info: hsl(150, 100%, 50%);
+  --impact-alert: #FF9500;
 
-  /* ── TRADING SEMANTIC TOKENS (Light) ── */
-  --profit: #00C851;
-  --profit-bg: rgba(0,200,81,0.10);
-  --loss: #FF3B30;
-  --loss-bg: rgba(255,59,48,0.10);
-  --info: #007AFF;
-  --info-bg: rgba(0,122,255,0.10);
+  /* ── TRADING SEMANTIC TOKENS (Dark) ── */
+  --profit: #0ECB81;
+  --profit-bg: rgba(14,203,129,0.08);
+  --loss: #F6465D;
+  --loss-bg: rgba(246,70,93,0.08);
+  --info: hsl(150, 100%, 50%);
+  --info-bg: hsla(150,100%,50%,0.08);
 
   /* ── 8PT SPACING GRID ── */
   --space-0: 0px;
@@ -660,14 +660,6 @@
   --sidebar-accent-foreground: hsl(150, 100%, 50%);
   --sidebar-border: hsl(150, 20%, 12%);
   --sidebar-ring: hsl(150, 100%, 50%);
-
-  /* Trading P&L semantics (strong, no tint bg unless needed) */
-  --profit: #0ECB81;
-  --profit-bg: rgba(14, 203, 129, 0.08);
-  --loss: #F6465D;
-  --loss-bg: rgba(246, 70, 93, 0.08);
-  --info: hsl(150, 100%, 50%);
-  --info-bg: hsla(150, 100%, 50%, 0.08);
 
   /* Legacy compat (minimal) */
   --legacy-50: 0 0% 6%;
@@ -1053,6 +1045,46 @@
   --semantic-info-fg: 0 0% 100%;
   --semantic-info-bg: 225 75% 55% / 0.08;
   --semantic-info-border: 225 75% 55% / 0.20;
+
+  /* ── TEXT HIERARCHY — macOS light ── */
+  --text-strong: #1D1D1F;
+  --text-primary: #1D1D1F;
+  --text-secondary: #6E6E73;
+  --text-tertiary: #AEAEB2;
+  --text-disabled: #C7C7CC;
+  --text-inverse: #FFFFFF;
+
+  /* ── SURFACE TOKENS ── */
+  --surface-card: #FFFFFF;
+  --surface-popover: #FFFFFF;
+  --surface-hover: #F5F5F7;
+  --brand-tint: rgba(0,102,204,0.08);
+
+  /* ── PREMIUM SURFACE HIERARCHY — macOS light ── */
+  --surface-base: #F2F2F7;
+  --surface-muted: #FFFFFF;
+  --surface-elevated: #F5F5F7;
+  --surface-overlay: #FFFFFF;
+
+  /* ── PREMIUM TEXT CONTRAST (WCAG AAA) ── */
+  --text-heading: #1D1D1F;
+  --text-body: #1D1D1F;
+  --text-caption: #6E6E73;
+
+  /* ── IMPACT SYSTEM (Trading Semantic) ── */
+  --impact-profit: #1A7F37;
+  --impact-loss: #C0392B;
+  --impact-neutral: #6E6E73;
+  --impact-info: #007AFF;
+  --impact-alert: #D35400;
+
+  /* ── TRADING SEMANTIC TOKENS (Light) ── */
+  --profit: #00C851;
+  --profit-bg: rgba(0,200,81,0.10);
+  --loss: #FF3B30;
+  --loss-bg: rgba(255,59,48,0.10);
+  --info: #007AFF;
+  --info-bg: rgba(0,122,255,0.10);
 }
 
 @theme inline {
@@ -1376,7 +1408,6 @@
   [data-widget-shell='true'],
   [data-widget-shell='v2'] {
     position: relative;
-    overflow: hidden;
     border-radius: 0.85rem;
     border: 1px solid transparent;
     background: var(--card);
@@ -1413,7 +1444,6 @@
   [data-chart-surface='modern'],
   [data-chart-surface='v2'] {
     position: relative;
-    overflow: hidden;
     border-color: transparent;
     background: var(--card);
     box-shadow:

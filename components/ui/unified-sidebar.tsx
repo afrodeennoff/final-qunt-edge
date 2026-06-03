@@ -188,7 +188,7 @@ export function UnifiedSidebar({
         onNavigate={handleNavigate}
       />
       {/* Swipe zone for opening sidebar on mobile */}
-      {isMobileScreen && !isMobile && (
+      {isMobileScreen && (
         <div
           className="fixed left-0 top-0 bottom-0 w-5 z-30"
           onTouchStart={(e) => {

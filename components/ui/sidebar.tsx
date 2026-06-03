@@ -96,10 +96,14 @@ function SidebarProvider({
         event.preventDefault()
         toggleSidebar()
       }
+      if (event.key === 'Escape' && !isMobile && open) {
+        event.preventDefault()
+        setOpen(false)
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [toggleSidebar])
+  }, [toggleSidebar, isMobile, open, setOpen])
   const state = open ? 'expanded' : 'collapsed'
   const contextValue = React.useMemo<SidebarContextProps>(
     () => ({ state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar }),
@@ -143,7 +147,7 @@ function Sidebar({
   variant?: 'sidebar' | 'floating' | 'inset'
   collapsible?: 'offcanvas' | 'icon' | 'none'
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const { isMobile, state, open, setOpen, openMobile, setOpenMobile } = useSidebar()
 
   if (collapsible === 'none') {
     return (
@@ -168,7 +172,7 @@ function Sidebar({
           data-slot="sidebar"
           data-mobile="true"
           dir={dir}
-          className="w-(--sidebar-width) bg-transparent p-0 text-sidebar-foreground [&>button]:hidden"
+          className="w-(--sidebar-width) bg-transparent p-0 text-sidebar-foreground"
           style={{ '--sidebar-width': SIDEBAR_WIDTH_MOBILE } as React.CSSProperties}
           side={side}
         >
@@ -203,6 +207,15 @@ function Sidebar({
             : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
         )}
       />
+      {/* Backdrop overlay for offcanvas mode — click to close */}
+      {state === 'expanded' && collapsible === 'offcanvas' && (
+        <div
+          className="fixed inset-0 z-[5] hidden md:block"
+          onClick={() => setOpen(false)}
+          onKeyDown={() => {}}
+          role="presentation"
+        />
+      )}
       <div
         data-slot="sidebar-container"
         data-side={side}

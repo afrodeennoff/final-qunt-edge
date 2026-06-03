@@ -119,10 +119,10 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  }
 
  return (
- <div
- ref={widgetRef}
-    className="relative h-full min-h-0 w-full group isolate overflow-hidden"
- >
+    <div
+      ref={widgetRef}
+         className="relative h-full min-h-0 w-full group isolate"
+    >
  <div
  data-widget-shell="true"
  className={cn("h-full min-h-0 w-full",
@@ -664,13 +664,13 @@ export default function WidgetCanvas() {
  currentType={widget.type}
  >
  <ErrorBoundary fallback={<WidgetErrorFallback widgetId={widget.i} />}>
- <div
- className={cn("relative h-full w-full overflow-hidden rounded-xl transition-[opacity,background-color,border-color] duration-300 group/widget",
- isCustomizing
- ?"border-0 bg-card shadow-md"
- :"border border-transparent bg-transparent"
- )}
- >
+          <div
+            className={cn("relative h-full w-full rounded-xl transition-[opacity,background-color,border-color] duration-300 group/widget",
+            isCustomizing
+            ?"border-0 bg-card shadow-md"
+            :"border border-transparent bg-transparent"
+            )}
+          >
  {showDataDebug && !isCustomizing && (
  <DebugDataBadge />
  )}
