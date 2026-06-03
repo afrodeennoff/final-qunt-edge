@@ -38,6 +38,7 @@ import { useCurrentLocale, useI18n } from "@/locales/client";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase";
 import { IMMUTABLE_CACHE_CONTROL } from "@/lib/supabase-storage";
+import { compressImage } from "@/lib/journal-attachments";
 import { useCompletion } from "@ai-sdk/react";
 import { FinancialEvent } from "@/prisma/generated/prisma";
 import { z } from "zod";
@@ -199,8 +200,11 @@ export function TiptapEditor({
           throw new Error("Unsupported file type");
         }
 
+        // Compress image client-side (max 1200px, JPEG 80%) before upload
+        const processed = await compressImage(file);
+
         // Compute SHA-256 hash of the file for deduplication
-        const buffer = await file.arrayBuffer();
+        const buffer = await processed.arrayBuffer();
         const digest = await crypto.subtle.digest("SHA-256", buffer);
         const hashArray = Array.from(new Uint8Array(digest));
         const hashHex = hashArray
@@ -213,12 +217,8 @@ export function TiptapEditor({
           return cached;
         }
 
-        // Derive extension from MIME type or fallback to filename/unknown
-        const mimeExt = file.type.split("/")[1] || "";
-        const nameExt = file.name.includes(".")
-          ? file.name.split(".").pop() || ""
-          : "";
-        const ext = (mimeExt || nameExt || "bin").toLowerCase();
+        // Derive extension from the compressed file (always JPEG after compression)
+        const ext = "jpg";
 
         const {
           data: { user: storageUser },
@@ -235,7 +235,7 @@ export function TiptapEditor({
 
         const { error } = await supabase.storage
           .from("trade-images")
-          .upload(filePath, file, {
+          .upload(filePath, processed, {
             cacheControl: IMMUTABLE_CACHE_CONTROL,
             upsert: false, // don't overwrite; hash path should be unique
           });

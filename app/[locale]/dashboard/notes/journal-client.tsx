@@ -1115,8 +1115,15 @@ export default function JournalClient() {
                     type="text"
                     value={modalExcerptTitle}
                     onChange={e => {
-                      setModalExcerptTitle(e.target.value)
+                      const v = e.target.value
+                      setModalExcerptTitle(v)
                       setHasUnsaved(true)
+                      if (excerptSaveTimerRef.current) clearTimeout(excerptSaveTimerRef.current)
+                      excerptSaveTimerRef.current = setTimeout(() => {
+                        if (selectedCard?.journal && !selectedCard.journal.id.startsWith('temp-')) {
+                          update('excerptTitle', v || null)
+                        }
+                      }, 1500)
                     }}
                     placeholder="Give this excerpt a title..."
                     maxLength={200}
@@ -1185,6 +1192,7 @@ export default function JournalClient() {
                       setModalScreenshots(v)
                       if (selectedCard?.journal) update('screenshots', v)
                     }}
+                    userId={userId}
                   />
                 </div>
               </div>
