@@ -591,7 +591,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  </div>
  </div>
  </CardHeader>
-  <CardContent className="flex min-h-0 flex-1 flex-col overflow-hidden p-2 sm:p-3">
+  <CardContent className="flex min-h-0 flex-1 flex-col overflow-y-auto p-2 sm:p-3">
   {viewMode === 'daily' ? (
   <>
   <div className="mb-2 grid grid-cols-8 gap-1">
@@ -605,7 +605,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
   </div>
   </div>
   {/* Always show full month: explicit 6 rows so all dates of the month are visible in any widget size */}
-  <div className="grid min-h-[280px] flex-1 grid-cols-8 grid-rows-6 gap-1 sm:min-h-[320px] lg:min-h-[380px]">
+  <div className="grid min-h-[200px] flex-1 grid-cols-8 grid-rows-6 gap-1 sm:min-h-[240px] lg:min-h-[300px]">
  {calendarDays.map((date, index) => {
  const dateString = format(date, 'yyyy-MM-dd')
  const dayData = calendarData[dateString]
