@@ -227,9 +227,11 @@ function Sidebar({
           'data-[side=left]:left-0 data-[side=right]:right-0',
           'data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]',
           'data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
-          variant === 'floating' || variant === 'inset'
+          variant === 'floating'
             ? 'p-3 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+2px)]'
-            : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
+            : variant === 'inset'
+              ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+2px)]'
+              : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
           className,
         )}
         {...props}
@@ -240,7 +242,6 @@ function Sidebar({
           className={cn(
             'flex h-full w-full flex-col bg-sidebar',
             'group-data-[variant=floating]:rounded-2xl',
-            'group-data-[variant=inset]:rounded-2xl',
           )}
         >
           {children}
@@ -304,7 +305,6 @@ function SidebarInset({ className, ...props }: React.ComponentProps<'main'>) {
       data-slot="sidebar-inset"
       className={cn(
         'relative flex w-full flex-1 flex-col bg-transparent',
-        'md:peer-data-[variant=inset]:m-3 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-[1.35rem] md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-3',
         className,
       )}
       {...props}
