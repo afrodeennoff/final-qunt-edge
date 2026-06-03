@@ -13,7 +13,6 @@ import {
   SidebarHeader,
   SidebarGroup,
   SidebarMenu,
-  SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar'
 
@@ -294,7 +293,6 @@ function SidebarContentRender({
           isMobile={isMobile}
         />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   )
 }
