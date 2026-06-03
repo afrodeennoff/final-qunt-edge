@@ -76,8 +76,9 @@ export async function POST(request: NextRequest) {
       type: audioFile.type,
     })
 
+    const baseURL = process.env.AI_TRANSCRIBE_BASE_URL || 'https://api.z.ai/api/paas/v4';
     const openai = new OpenAI({
-      baseURL: 'https://api.z.ai/api/paas/v4',
+      baseURL,
       apiKey: process.env.OPENAI_API_KEY,
     })
 

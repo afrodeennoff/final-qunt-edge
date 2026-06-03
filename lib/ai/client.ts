@@ -52,6 +52,18 @@ function normalizeModelForOpenRouter(model: string): string {
   if (trimmed.startsWith("glm-")) {
     return `zai/${trimmed}`;
   }
+  if (trimmed.startsWith("gemini-") || trimmed.startsWith("gemma-")) {
+    return `google/${trimmed}`;
+  }
+  if (trimmed.startsWith("claude-")) {
+    return `anthropic/${trimmed}`;
+  }
+  if (trimmed.startsWith("llama-") || trimmed.startsWith("llama3") || trimmed.startsWith("llama-3")) {
+    return `meta-llama/${trimmed}`;
+  }
+  if (trimmed.startsWith("mistral-") || trimmed.startsWith("mixtral-")) {
+    return `mistralai/${trimmed}`;
+  }
   return trimmed;
 }
 
