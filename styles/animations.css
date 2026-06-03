@@ -80,6 +80,18 @@
   50% { opacity: 0.7; }
 }
 
+/* Subtle breathe effect for live indicators */
+@keyframes breathe {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* Smooth border glow */
+@keyframes borderGlow {
+  0%, 100% { border-color: color-mix(in srgb, var(--primary) 10%, transparent); }
+  50% { border-color: color-mix(in srgb, var(--primary) 35%, transparent); }
+}
+
 /* ── ENTRANCE ANIMATIONS ── */
 .animate-fade-in {
   animation: fadeIn 0.2s ease-out forwards;
@@ -105,7 +117,7 @@
   animation: scaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Stagger entrance — apply to each child with incremental delay (5 stages max) */
+/* Stagger entrance — apply to each child with incremental delay (10 stages) */
 .animate-stagger > * {
   opacity: 0;
   animation: fadeInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -116,21 +128,42 @@
 .animate-stagger > *:nth-child(3) { animation-delay: 100ms; }
 .animate-stagger > *:nth-child(4) { animation-delay: 150ms; }
 .animate-stagger > *:nth-child(5) { animation-delay: 200ms; }
+.animate-stagger > *:nth-child(6) { animation-delay: 250ms; }
+.animate-stagger > *:nth-child(7) { animation-delay: 300ms; }
+.animate-stagger > *:nth-child(8) { animation-delay: 350ms; }
+.animate-stagger > *:nth-child(9) { animation-delay: 400ms; }
+.animate-stagger > *:nth-child(10) { animation-delay: 450ms; }
 
 /* ── MICRO-INTERACTIONS ── */
 
-/* Card hover lift — subtle upward motion */
+/* Card hover lift — subtle upward motion with shadow change */
 .hover-lift {
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
 
 .hover-lift:hover {
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .hover-lift:active {
   transform: translateY(0);
+}
+
+/* Card lift glow — like hover-lift but with a primary-tinted shadow */
+.hover-lift-glow {
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, box-shadow;
+}
+
+.hover-lift-glow:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px color-mix(in srgb, var(--primary) 15%, transparent);
 }
 
 /* Button press scale — tactile feedback */
@@ -141,6 +174,16 @@
 
 .press-scale:active:not(:disabled) {
   transform: scale(0.96);
+}
+
+/* Press scale — gentler, for cards and larger surfaces */
+.press-scale-soft {
+  transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.press-scale-soft:active:not(:disabled) {
+  transform: scale(0.985);
 }
 
 /* ── SKELETON / LOADING ── */
@@ -170,10 +213,17 @@
   pointer-events: none;
 }
 
+/* ── LIVE INDICATOR ── */
+.animate-breathe {
+  animation: breathe 2s ease-in-out infinite;
+}
+
 /* ── REDUCED MOTION ── */
 @media (prefers-reduced-motion: reduce) {
   .hover-lift,
+  .hover-lift-glow,
   .press-scale,
+  .press-scale-soft,
   .animate-fade-in,
   .animate-fade-in-up,
   .animate-fade-in-down,
@@ -183,10 +233,12 @@
   .animate-stagger > *,
   .shimmer-sweep::after,
   .skeleton-pulse,
+  .animate-breathe,
   [style*="pulse-ring"] {
     animation: none !important;
     transition: none !important;
     transform: none !important;
+    box-shadow: none !important;
   }
 
   .animate-stagger > *,

@@ -99,7 +99,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
  icon={<Info className={cn("text-muted-foreground", size === 'small' ?"h-3.5 w-3.5" :"h-4 w-4")} />}
  info={t('mindset.description')}
  className="flex flex-col h-full w-full"
- contentClassName="flex-1 overflow-hidden p-0 flex flex-row relative"
+  contentClassName="flex-1 p-0 flex flex-row relative"
  >
  {/* Timeline with animation */}
  <div

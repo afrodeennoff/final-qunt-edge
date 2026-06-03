@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { AlertCircle, Info, Inbox } from "lucide-react"
+import { motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -53,9 +54,15 @@ export function WidgetShell({
   if (state ==="loading") {
   return (
    <div className="space-y-3 p-4">
-  <Skeleton className="h-3 w-2/5 rounded-full" style={{ animationDelay: '0ms' }} />
-  <Skeleton className="h-24 rounded-lg" style={{ animationDelay: '100ms' }} />
-  <Skeleton className="h-3 w-3/5 rounded-full" style={{ animationDelay: '200ms' }} />
+    <div className="flex items-center gap-2">
+      <Skeleton className="h-3 w-1/3 rounded-full" />
+      <Skeleton className="h-3 w-1/5 rounded-full" />
+    </div>
+    <Skeleton className="h-24 rounded-lg" />
+    <div className="flex gap-2">
+      <Skeleton className="h-3 w-1/4 rounded-full" />
+      <Skeleton className="h-3 w-1/6 rounded-full" />
+    </div>
   </div>
   )
   }
@@ -90,20 +97,20 @@ export function WidgetShell({
     <Card
       variant="default"
       className={cn(
-        "group relative flex h-full flex-col overflow-hidden rounded-xl transition-[border-color,background-color,box-shadow,transform]",
-        variant === "hoverable" && "hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15",
+        "group relative flex h-full flex-col overflow-hidden rounded-xl transition-[border-color,background-color,box-shadow,transform] duration-200 ease-out",
+        variant === "hoverable" && "hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15 hover:-translate-y-0.5",
         className
       )}
     >
   {(title || actions || icon || description) && (
-    <CardHeader className="border-b-0 bg-card/50 px-4 py-2">
-  <div className="flex items-start justify-between gap-[var(--space-3)]">
-  <div className="min-w-0 gap-[var(--space-2)]">
+    <CardHeader className="border-b-0 bg-card/50 px-4 py-2.5">
+  <div className="flex items-start justify-between gap-3">
+  <div className="min-w-0 space-y-1">
   {(title || icon) && (
-  <div className="flex items-center gap-[var(--space-2)]">
-  {icon ? <span className="size-[15px] text-muted-foreground/50">{icon}</span> : null}
+  <div className="flex items-center gap-2">
+  {icon ? <span className="size-[15px] text-muted-foreground/50 shrink-0">{icon}</span> : null}
   {title ? (
-  <CardTitle className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground/70">{title}</CardTitle>
+  <CardTitle className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/70">{title}</CardTitle>
   ) : null}
   {info ? (
   <TooltipProvider>
@@ -111,7 +118,7 @@ export function WidgetShell({
   <TooltipTrigger asChild>
   <button
   type="button"
-  className="text-muted-foreground/50 transition-colors hover:text-foreground"
+  className="text-muted-foreground/40 transition-colors hover:text-foreground"
   aria-label="Widget info"
   >
   <Info className="h-3.5 w-3.5" />

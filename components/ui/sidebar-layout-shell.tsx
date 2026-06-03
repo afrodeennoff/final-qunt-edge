@@ -39,7 +39,6 @@ export function SidebarLayoutShell({
             className="flex-1 overflow-y-auto overscroll-y-contain"
             style={{
               WebkitOverflowScrolling: 'touch',
-              contain: 'content',
             }}
           >
             <div className="min-h-full w-full">

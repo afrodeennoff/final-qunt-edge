@@ -383,7 +383,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
  </div>
  }
  className="h-full flex flex-col"
- contentClassName={cn("flex-1 min-h-0 overflow-hidden pt-0",
+  contentClassName={cn("flex-1 min-h-0 pt-0",
  size === 'small' ?"px-1" :"px-2 sm:px-4"
  )}
  >

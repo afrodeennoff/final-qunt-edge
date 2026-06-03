@@ -123,8 +123,8 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
  </div>
  }
  errorMessage="Failed to load insights. Please try again."
- className="h-full flex flex-col overflow-hidden relative group"
- contentClassName="flex-1 overflow-hidden p-0"
+  className="h-full flex flex-col relative group"
+  contentClassName="flex-1 p-0"
  >
  {/* Background Decoration */}
  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -z-10 pointer-events-none" />

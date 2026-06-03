@@ -3,24 +3,19 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-// Hover lift effect
-export interface HoverLiftProps extends React.HTMLAttributes<HTMLDivElement> {
-  liftAmount?: string
-}
+export interface HoverLiftProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const HoverLift = React.forwardRef<HTMLDivElement, HoverLiftProps>(
   ({
     children,
     className,
-    liftAmount = "-translate-y-1",
     ...props
   }, ref) => {
     return (
       <div
         ref={ref}
         className={cn(
-          "transition-[opacity,background-color,border-color] duration-200 ease-out hover:shadow-sm",
-          `hover:${liftAmount}`,
+          "hover-lift",
           className
         )}
         {...props}
@@ -32,7 +27,7 @@ export const HoverLift = React.forwardRef<HTMLDivElement, HoverLiftProps>(
 )
 HoverLift.displayName = "HoverLift"
 
-// Press feedback
+// Press feedback using CSS utility class
 export interface PressFeedbackProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export const PressFeedback = React.forwardRef<HTMLButtonElement, PressFeedbackProps>(
@@ -44,7 +39,7 @@ export const PressFeedback = React.forwardRef<HTMLButtonElement, PressFeedbackPr
     return (
       <button
         ref={ref}
-        className={cn("transition-transform duration-100 active:scale-[0.97]",
+        className={cn("press-scale",
           className
         )}
         {...props}
@@ -56,7 +51,6 @@ export const PressFeedback = React.forwardRef<HTMLButtonElement, PressFeedbackPr
 )
 PressFeedback.displayName = "PressFeedback"
 
-// Shimmer loading effect (simple loading bar, not glow-based)
 export interface ShimmerProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const Shimmer = React.forwardRef<HTMLDivElement, ShimmerProps>(
@@ -78,7 +72,6 @@ export const Shimmer = React.forwardRef<HTMLDivElement, ShimmerProps>(
 )
 Shimmer.displayName = "Shimmer"
 
-// Stagger container for lists
 export interface StaggerContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   delay?: number
 }
@@ -93,7 +86,7 @@ export const StaggerContainer = React.forwardRef<HTMLDivElement, StaggerContaine
     return (
       <div
         ref={ref}
-        className={cn("stagger-reveal", className)}
+        className={cn("animate-stagger", className)}
         style={{ "--stagger-delay": `${delay}ms` } as React.CSSProperties}
         {...props}
       >

@@ -58,17 +58,19 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         className={cn(
           'group relative overflow-hidden text-foreground',
           'rounded-xl bg-card',
-          variant === 'outlined' && 'bg-transparent',
+          variant === 'outlined' && 'bg-transparent border border-primary/8',
           variant === 'flat' && 'bg-transparent',
           variant === 'default' && 'bg-card',
           variant === 'elevated' && 'bg-card shadow-sm',
+          variant === 'elevated' && 'shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)]',
           accent && accentClassMap[accent],
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',
           size === 'lg' && 'type-body-lg',
-          hover && 'hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15 hover:-translate-y-0.5 transition-[box-shadow,transform] duration-300',
+          hover &&
+            'transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)]',
           isInteractive &&
-            'cursor-pointer transition-[transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.99]',
+            'cursor-pointer transition-[transform,box-shadow] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.99]',
           isLoading && 'pointer-events-none opacity-80',
           className,
         )}
@@ -85,7 +87,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
             <div
               className={cn(
                 'h-1 w-1 rounded-full',
-                status === 'live' && 'bg-success',
+                status === 'live' && 'bg-success animate-breathe',
                 status === 'synced' && 'bg-primary',
                 status === 'idle' && 'bg-muted-foreground/50',
                 (status === 'destructive' || status === 'error') && 'bg-destructive',
@@ -141,7 +143,7 @@ const CardStatusDot = React.forwardRef<HTMLSpanElement, CardStatusDotProps>(
         ref={ref}
         className={cn(
           'h-1.5 w-1.5 rounded-full',
-          tone === 'live' && 'bg-success animate-pulse',
+          tone === 'live' && 'bg-success animate-breathe',
           tone === 'synced' && 'bg-primary',
           tone === 'idle' && 'bg-muted-foreground/50',
           (tone === 'destructive' || tone === 'error') && 'bg-destructive',

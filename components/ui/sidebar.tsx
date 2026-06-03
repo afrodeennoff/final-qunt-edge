@@ -207,15 +207,18 @@ function Sidebar({
             : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
         )}
       />
-      {/* Backdrop overlay for offcanvas mode — click to close */}
-      {state === 'expanded' && collapsible === 'offcanvas' && (
-        <div
-          className="fixed inset-0 z-[5] hidden md:block"
-          onClick={() => setOpen(false)}
-          onKeyDown={() => {}}
-          role="presentation"
-        />
-      )}
+      {/* Backdrop overlay for offcanvas mode — click to close with fade */}
+      <div
+        className={cn(
+          'fixed inset-0 z-[5] hidden md:block',
+          'transition-opacity duration-150 ease-out',
+          state === 'expanded' && collapsible === 'offcanvas'
+            ? 'pointer-events-auto opacity-100 bg-black/20 backdrop-blur-[1px]'
+            : 'pointer-events-none opacity-0',
+        )}
+        onClick={() => setOpen(false)}
+        role="presentation"
+      />
       <div
         data-slot="sidebar-container"
         data-side={side}

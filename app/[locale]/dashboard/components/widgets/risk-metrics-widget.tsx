@@ -49,7 +49,7 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  emptyMessage={translate("widgets.emptyState") ??"No trades yet."}
  contentClassName="p-0"
  >
- <div className="flex-1 p-0 overflow-hidden">
+  <div className="flex-1 p-0">
  <div className="grid h-full grid-cols-2">
  {/* Return Risk Ratios */}
  <div className={cn("flex flex-col border-r border-b-0",

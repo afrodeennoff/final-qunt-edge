@@ -3,20 +3,33 @@ import React from 'react'
 
 import { useRef, useEffect, useState } from "react"
 import { motion, useReducedMotion, useInView, AnimatePresence } from "motion/react"
-import { cn } from "@/lib/utils"
-import { SPRING_SUBTLE, SPRING_SNAPPY } from "./enhanced-motion"
+import {
+  SPRING_SUBTLE,
+  SPRING_SNAPPY,
+  SPRING_GENTLE,
+  MOTION_EASE,
+} from "./enhanced-motion"
 
-export type VariantType = 'fade' | 'slide' | 'scale' | 'bounce'
+export type VariantType = 'fade' | 'slide' | 'scale' | 'bounce' | 'blur'
 export type SlideDirection = 'up' | 'down' | 'left' | 'right'
 
 export const SPRING_PRESETS = {
   gentle: SPRING_SUBTLE,
   snappy: SPRING_SNAPPY,
   subtle: SPRING_SUBTLE,
-  // bouncy removed — trading UIs stay calm
+  responsive: SPRING_GENTLE,
 } as const
 
-const MOTION_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
+const getSlideVariants = (direction: SlideDirection) => {
+  const distance = 6
+  const variants: Record<SlideDirection, { x: number; y: number }> = {
+    up: { x: 0, y: distance },
+    down: { x: 0, y: -distance },
+    left: { x: distance, y: 0 },
+    right: { x: -distance, y: 0 },
+  }
+  return variants[direction]
+}
 
 interface AnimateInProps {
  children: React.ReactNode
@@ -30,27 +43,16 @@ interface AnimateInProps {
  staggerDelay?: number
 }
 
-const getSlideVariants = (direction: SlideDirection) => {
-  const distance = 6 // minimal for trading terminal calm
-  const variants: Record<SlideDirection, { x: number; y: number }> = {
-    up: { x: 0, y: distance },
-    down: { x: 0, y: -distance },
-    left: { x: distance, y: 0 },
-    right: { x: -distance, y: 0 },
-  }
-  return variants[direction]
-}
-
 export function AnimateIn({
- children,
- variant ="fade",
- direction ="up",
- delay = 0,
- duration = 0.5,
- className,
- triggerOnScroll = false,
- staggerChildren = false,
- staggerDelay = 0.08,
+  children,
+  variant ="fade",
+  direction ="up",
+  delay = 0,
+  duration = 0.5,
+  className,
+  triggerOnScroll = false,
+  staggerChildren = false,
+  staggerDelay = 0.08,
 }: AnimateInProps) {
  const prefersReducedMotion = useReducedMotion()
  const ref = useRef<HTMLDivElement>(null)
@@ -75,13 +77,19 @@ export function AnimateIn({
       hidden: { opacity: 0, scale: 0.985 },
       visible: { opacity: 1, scale: 1 },
     },
+    blur: {
+      hidden: { opacity: 0, y: 3, scale: 0.995, filter: 'blur(2px)' },
+      visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
+    },
   }
 
  const transition = prefersReducedMotion
  ? {}
  : variant ==="bounce"
   ? SPRING_PRESETS.snappy
-  : { duration, delay, ease: MOTION_EASE }
+  : variant === 'blur'
+    ? { duration: 0.3, delay, ease: MOTION_EASE.snappy }
+    : { duration, delay, ease: MOTION_EASE.snappy }
 
  const staggerConfig = staggerChildren
  ? {
@@ -146,13 +154,19 @@ export function AnimateInItem({
       hidden: { opacity: 0, scale: 0.985 },
       visible: { opacity: 1, scale: 1 },
     },
+    blur: {
+      hidden: { opacity: 0, y: 3, scale: 0.995, filter: 'blur(2px)' },
+      visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
+    },
   }
 
  const transition = prefersReducedMotion
  ? {}
  : variant ==="bounce"
   ? SPRING_PRESETS.snappy
-  : { duration, ease: MOTION_EASE }
+  : variant === 'blur'
+    ? { duration: 0.3, ease: MOTION_EASE.snappy }
+    : { duration, ease: MOTION_EASE.snappy }
 
  if (prefersReducedMotion) {
  return <div className={className}>{children}</div>
@@ -218,7 +232,7 @@ export function AnimateOut({
  animate="visible"
  exit="hidden"
  variants={variants[variant]}
- transition={{ duration, ease: MOTION_EASE }}
+ transition={{ duration, ease: MOTION_EASE.snappy }}
  >
  {children}
  </motion.div>
@@ -242,15 +256,18 @@ export function LazyIn({
 }: LazyInProps) {
  const prefersReducedMotion = useReducedMotion()
  const [isVisible, setIsVisible] = useState(false)
+ const timerRef = useRef<ReturnType<typeof setTimeout>>(null)
 
  useEffect(() => {
  if (prefersReducedMotion) {
- setIsVisible(true)
+  queueMicrotask(() => setIsVisible(true))
  return
  }
 
- const timer = setTimeout(() => setIsVisible(true), delay * 1000)
- return () => clearTimeout(timer)
+ timerRef.current = setTimeout(() => setIsVisible(true), delay * 1000)
+ return () => {
+  if (timerRef.current) clearTimeout(timerRef.current)
+ }
  }, [delay, prefersReducedMotion])
 
  if (prefersReducedMotion || isVisible) {
@@ -262,7 +279,7 @@ export function LazyIn({
  className={className}
  initial={{ opacity: 0, scale: 0.98 }}
  animate={{ opacity: 1, scale: 1 }}
- transition={{ duration, ease: MOTION_EASE }}
+ transition={{ duration, ease: MOTION_EASE.snappy }}
  >
  {children}
  </motion.div>

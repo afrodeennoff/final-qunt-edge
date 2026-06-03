@@ -4,12 +4,16 @@ import React, { useRef, useEffect, useState, useMemo } from "react"
 import { motion, useReducedMotion, useInView, useSpring, Variants } from "motion/react"
 import { cn } from "@/lib/utils"
 
-// Binance Trading Terminal — minimal, fast, professional motion
+// ============================================================================
+// Spring presets — calm, professional, data-focused
+// ============================================================================
 export const SPRING_SUBTLE = { type: 'spring' as const, stiffness: 320, damping: 32, mass: 0.8 }
 export const SPRING_SNAPPY = { type: 'spring' as const, stiffness: 400, damping: 38, mass: 0.7 }
+export const SPRING_GENTLE = { type: 'spring' as const, stiffness: 240, damping: 28, mass: 1 }
+export const SPRING_RESPONSIVE = { type: 'spring' as const, stiffness: 500, damping: 42, mass: 0.6 }
 
 // ============================================================================
-// Binance motion tokens (fast, data-focused, calm)
+// Motion duration & easing tokens
 // ============================================================================
 
 export const MOTION_DURATION = {
@@ -17,12 +21,16 @@ export const MOTION_DURATION = {
   fast: 100,
   normal: 160,
   slow: 220,
+  deliberate: 300,
 } as const
 
 export const MOTION_EASE = {
   snappy: [0.16, 1, 0.3, 1] as const,
   subtle: [0.22, 1, 0.36, 1] as const,
+  smooth: [0.25, 0.1, 0.25, 1] as const,
   default: [0.25, 0.46, 0.45, 0.94] as const,
+  decelerate: [0, 0, 0.2, 1] as const,
+  accelerate: [0.4, 0, 1, 1] as const,
 } as const
 
 export const STAGED_REVEAL_CLASS_NAMES = [
@@ -37,7 +45,7 @@ export function getStagedRevealClassName(stage = 0) {
 }
 
 // ============================================================================
-// Minimal Binance entrance variants (tiny offset, fast, calm)
+// Variant presets
 // ============================================================================
 
 const BINANCE_ENTRANCE: Variants = {
@@ -65,6 +73,32 @@ export const scaleIn: Variants = {
     opacity: 1,
     scale: 1,
     transition: SPRING_SUBTLE,
+  },
+}
+
+export const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.2, ease: MOTION_EASE.snappy },
+  },
+}
+
+export const fadeIn: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.15, ease: MOTION_EASE.snappy },
+  },
+}
+
+export const slideInRight: Variants = {
+  hidden: { opacity: 0, x: 12 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.2, ease: MOTION_EASE.snappy },
   },
 }
 
@@ -120,8 +154,8 @@ export function MotionSection({
 interface MotionStaggerProps {
  children: React.ReactNode
  className?: string
- delay?: number // Base delay between items (0.05 - 0.15)
- staggerSpeed?: number // Multiplier for stagger delay
+ delay?: number
+ staggerSpeed?: number
 }
 
 export function MotionStagger({
@@ -222,7 +256,6 @@ export function MotionOrchestrated({
  return <div className={className}>{children}</div>
  }
 
- // CSS entrance instead of FM initial — content always visible
  return (
  <motion.div
  ref={ref}
@@ -346,7 +379,7 @@ export function AnimatedCounter({
 
 interface OrbConfig {
  size: number
- x: string // CSS position
+ x: string
  y: string
  duration: number
  delay: number
@@ -365,7 +398,6 @@ const DEFAULT_ORBS: OrbConfig[] = [
 interface FloatingOrbsProps {
  className?: string
  orbs?: OrbConfig[]
- blobCount?: number
 }
 
 export function FloatingOrbs({
@@ -427,10 +459,6 @@ export function FloatingOrbs({
 // Utility hook for reduced motion
 // ============================================================================
 
-/**
- * Hook to check if user prefers reduced motion
- * Returns true if prefers-reduced-motion is set
- */
 export function usePrefersReducedMotion() {
- return useReducedMotion()
+  return useReducedMotion()
 }
