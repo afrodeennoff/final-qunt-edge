@@ -97,7 +97,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           </div>
         ) : null}
 
-        <div className="relative z-10 rounded-[inherit]">{children}</div>
+        <div className="relative z-10 h-full rounded-[inherit]">{children}</div>
       </div>
     )
   },
