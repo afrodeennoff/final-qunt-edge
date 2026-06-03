@@ -103,11 +103,11 @@ export default React.memo(function WeekdayPNLChart({
  const getColor = (value: number) => {
  const range = Math.max(1, maxPnL - minPnL);
  const ratio = Math.abs((value - minPnL) / range);
- const baseColorVar = value >= 0 ?"--chart-1" :"--chart-4";
+ const baseColorVar = value >= 0 ?"var(--chart-1)" :"var(--chart-4)";
  const intensity = darkMode
- ? Math.max(0.72, 0.72 + ratio * 0.22)
- : Math.max(0.62, 0.62 + ratio * 0.22);
- return `hsl(var(${baseColorVar}) / ${Math.min(intensity, 1)})`;
+ ? Math.max(72, 72 + ratio * 22)
+ : Math.max(62, 62 + ratio * 22);
+ return `color-mix(in srgb, ${baseColorVar} ${Math.round(Math.min(intensity, 100))}%, transparent)`;
  };
 
  const handleClick = React.useCallback(() => {

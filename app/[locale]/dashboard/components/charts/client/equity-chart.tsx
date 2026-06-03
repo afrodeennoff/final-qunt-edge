@@ -458,7 +458,7 @@ const AccountsLegend = React.memo(
  .sort((a, b) => b.latestEquity - a.latestEquity);
 
  return (
- <div className="border-t pt-2 mt-2 h-[88px] flex flex-col">
+ <div className="border-t pt-2 mt-2 min-h-[48px] max-h-[88px] flex flex-col overflow-y-auto">
  <div className="flex items-center justify-between mb-2 shrink-0">
  <div className="flex items-center gap-2">
  <span className="text-xs font-medium text-muted-foreground">
