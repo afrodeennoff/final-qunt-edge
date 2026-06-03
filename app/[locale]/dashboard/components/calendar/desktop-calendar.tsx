@@ -536,23 +536,23 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  )}>
  {formatCurrency(viewMode === 'daily' ? monthlyTotal : yearTotal)}
  </div>
- <div className="flex flex-wrap items-center gap-1.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
- <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5">
- {periodStats.activeDays}d
- </span>
- <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5">
- {periodStats.totalTrades}t
- </span>
- <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5 text-semantic-success">
- {periodStats.winningDays}w
- </span>
- <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5 text-semantic-error">
- {periodStats.losingDays}l
- </span>
- <span className="hidden sm:inline-flex rounded-md border-05 bg-background/0.14 px-1.5 py-0.5">
- {periodStats.activeDays > 0 ? formatCurrency((viewMode === 'daily' ? monthlyTotal : yearTotal) / periodStats.activeDays, { maximumFractionDigits: 0 }) : "$0"}/d
- </span>
- </div>
+  <div className="flex flex-wrap items-center gap-1 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+  <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5 leading-none">
+  {periodStats.activeDays}d
+  </span>
+  <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5 leading-none">
+  {periodStats.totalTrades}t
+  </span>
+  <span className="rounded-md border-semantic-success-border/30 bg-semantic-success/12 px-1.5 py-0.5 leading-none text-semantic-success">
+  {periodStats.winningDays}w
+  </span>
+  <span className="rounded-md border-semantic-error-border/30 bg-semantic-error/12 px-1.5 py-0.5 leading-none text-semantic-error">
+  {periodStats.losingDays}l
+  </span>
+  <span className="hidden sm:inline-flex rounded-md border-05 bg-background/0.14 px-1.5 py-0.5 leading-none">
+  {periodStats.activeDays > 0 ? formatCurrency((viewMode === 'daily' ? monthlyTotal : yearTotal) / periodStats.activeDays, { maximumFractionDigits: 0 }) : "$0"}/d
+  </span>
+  </div>
  </div>
  <div className="flex flex-col items-end gap-2">
  <div className="flex items-center gap-1.5">
@@ -679,14 +679,14 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  </div>
  {dayData && (
  <>
- <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-background/0.14">
- <div
- className={cn("h-full rounded-full",
- dayPnl >= 0 ?"bg-semantic-success/90" :"bg-semantic-error/90"
- )}
- style={{ width: `${Math.max(10, Math.round(pnlIntensity * 100))}%` }}
- />
- </div>
+    <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-background/0.14">
+   <div
+   className={cn("h-full rounded-full transition-all duration-500 ease-out",
+   dayPnl >= 0 ?"bg-semantic-success/90" :"bg-semantic-error/90"
+   )}
+   style={{ width: `${Math.max(10, Math.round(pnlIntensity * 100))}%` }}
+   />
+   </div>
  <div className={cn("hidden lg:block truncate text-center text-[8px] text-muted-foreground",
  !isCurrentMonth &&"opacity-50"
  )}>
@@ -701,28 +701,50 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  )}
  </div>
  </button>
- {isLastDayOfWeek && (() => {
- const weeklyTotal = calculateWeeklyTotal(index, calendarDays, calendarData)
- return (
-  <button
-  type="button"
-  className={cn("flex h-full min-h-0 cursor-pointer items-center justify-center rounded-lg border-0 bg-background/0.13 px-1 transition-[opacity,background-color,border-color]","hover:bg-secondary/50 hover:border-primary/40",
-  index === 6 &&"rounded-tr-xl",
-  index === 41 &&"rounded-br-xl"
+  {isLastDayOfWeek && (() => {
+  const weeklyTotal = calculateWeeklyTotal(index, calendarDays, calendarData)
+  const weeklyIntensity = monthMaxMagnitude > 0 ? Math.min(Math.abs(weeklyTotal) / (monthMaxMagnitude * 3), 1) : 0
+  return (
+   <button
+   type="button"
+   className={cn("group relative flex h-full min-h-0 cursor-pointer flex-col items-center justify-center rounded-lg border px-1 transition-[opacity,background-color,border-color,transform] duration-200 hover:-translate-y-[1px] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]",
+   !weeklyTotal &&"bg-background/0.13 border-transparent",
+   weeklyTotal > 0 &&"border-semantic-success-border/15 bg-semantic-success/10",
+   weeklyTotal < 0 &&"border-semantic-error-border/15 bg-semantic-error/10",
+   !weeklyTotal &&"bg-background/0.13 border-transparent",
+   index === 6 &&"rounded-tr-xl",
+   index === 41 &&"rounded-br-xl"
+   )}
+   onClick={() => setSelectedWeekDate(date)}
+   aria-label={`Open weekly summary for ${format(date, 'yyyy-MM-dd')}`}
+   >
+  <div
+  className={cn("pointer-events-none absolute inset-0 rounded-lg transition-opacity",
+  weeklyTotal > 0 &&"bg-semantic-success/30",
+  weeklyTotal < 0 &&"bg-semantic-error/30"
   )}
-  onClick={() => setSelectedWeekDate(date)}
-  aria-label={`Open weekly summary for ${format(date, 'yyyy-MM-dd')}`}
-  >
-  <div className={cn("truncate px-1 text-[9px] font-bold sm:text-[10px]",
-  weeklyTotal >= 0
-  ?"text-semantic-success"
-  :"text-semantic-error"
-  )}>
-  {formatCurrency(weeklyTotal)}
-  </div>
-  </button>
- )
- })()}
+  style={{ opacity: weeklyIntensity * 0.6 }}
+  />
+   <div className={cn("truncate px-1 text-[9px] font-bold sm:text-[10px] relative z-[1]",
+   weeklyTotal >= 0
+   ?"text-semantic-success"
+   :"text-semantic-error"
+   )}>
+   {formatCurrency(weeklyTotal)}
+   </div>
+  {weeklyTotal !== 0 && (
+   <div className="mt-1 h-1 w-3/4 overflow-hidden rounded-full bg-background/0.14 relative z-[1]">
+   <div
+   className={cn("h-full rounded-full transition-all duration-500 ease-out",
+   weeklyTotal > 0 ?"bg-semantic-success/70" :"bg-semantic-error/70"
+   )}
+   style={{ width: `${Math.max(8, Math.round(weeklyIntensity * 100))}%` }}
+   />
+   </div>
+  )}
+   </button>
+  )
+  })()}
  </React.Fragment>
  )
  })}

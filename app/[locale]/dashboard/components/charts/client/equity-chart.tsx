@@ -308,7 +308,7 @@ const OptimizedTooltip = React.memo(
  });
 
  return (
- <div className="bg-card/96 p-3 border-0 rounded-xl shadow-sm min-w-[140px]">
+  <div className="bg-card/90 backdrop-blur-xl p-3 border-0 rounded-xl shadow-lg min-w-[140px]">
  <div className="grid gap-2">
  <div className="flex justify-between items-center border-b-0 pb-1">
  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
@@ -458,7 +458,7 @@ const AccountsLegend = React.memo(
  .sort((a, b) => b.latestEquity - a.latestEquity);
 
  return (
- <div className="border-t pt-2 mt-2 min-h-[48px] max-h-[88px] flex flex-col overflow-y-auto">
+  <div className="border-t pt-2 mt-2 min-h-[48px] max-h-[88px] flex flex-col overflow-y-auto scrollbar-hide">
  <div className="flex items-center justify-between mb-2 shrink-0">
  <div className="flex items-center gap-2">
  <span className="text-xs font-medium text-muted-foreground">
@@ -868,8 +868,8 @@ export default React.memo(function EquityChart({ size ="medium" }: EquityChartPr
  strokeWidth={2.5}
  dot={renderDot}
  isAnimationActive={false}
- activeDot={{ r: 3, style: { fill:"var(--foreground)" } }}
- stroke="var(--foreground)"
+  activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--background)", style: { fill:"var(--foreground)" } }}
+  stroke="var(--foreground)"
  connectNulls={false}
  />
  );
@@ -889,9 +889,9 @@ export default React.memo(function EquityChart({ size ="medium" }: EquityChartPr
  strokeWidth={1.5}
  dot={renderDot}
  isAnimationActive={false}
- activeDot={{ r: 3, style: { fill: color } }}
- stroke={color}
- connectNulls={false}
+  activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--background)", style: { fill: color } }}
+  stroke={color}
+  connectNulls={false}
  />
  );
  });

@@ -175,11 +175,11 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  </Button>
  </div>
  </div>
- <div className="mt-2 flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
- <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5">Days {monthStats.activeDays}</span>
- <span className="rounded-md border border-semantic-success-border/40 bg-semantic-success-bg/10 px-1.5 py-0.5 text-semantic-success">W {monthStats.wins}</span>
- <span className="rounded-md border border-semantic-error-border/40 bg-semantic-error-bg/10 px-1.5 py-0.5 text-semantic-error">L {monthStats.losses}</span>
- </div>
+  <div className="mt-2 flex items-center gap-1 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+  <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5 leading-none">Days {monthStats.activeDays}</span>
+  <span className="rounded-md border-semantic-success-border/30 bg-semantic-success/12 px-1.5 py-0.5 leading-none text-semantic-success">W {monthStats.wins}</span>
+  <span className="rounded-md border-semantic-error-border/30 bg-semantic-error/12 px-1.5 py-0.5 leading-none text-semantic-error">L {monthStats.losses}</span>
+  </div>
  </div>
  <div className="flex-1 min-h-0 p-2">
  <div className="mb-2 grid grid-cols-7 gap-1">
@@ -252,13 +252,13 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  >
  {formatCurrency(dayPnl)}
  </div>
- <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-muted/40">
- <div
- className={cn("h-full rounded-full",
- dayPnl >= 0 ?"bg-semantic-success/80" :"bg-semantic-error/80"
- )}
- style={{ width: `${Math.max(8, Math.round(intensity * 100))}%` }}
- />
+  <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-muted/40">
+   <div
+   className={cn("h-full rounded-full transition-all duration-500 ease-out",
+   dayPnl >= 0 ?"bg-semantic-success/80" :"bg-semantic-error/80"
+   )}
+   style={{ width: `${Math.max(8, Math.round(intensity * 100))}%` }}
+   />
  </div>
  </>
  ) : (
