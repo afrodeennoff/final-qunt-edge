@@ -333,6 +333,8 @@ export default {
   'import.table.showingFirst': 'Affichage des {count} premiers trades sur {total}',
   'import.type.search': "Rechercher des types d'import...",
   'import.type.noResults': "Aucun type d'import trouvé.",
+  'import.type.selectPrompt': 'Sélectionnez un type d\'importation',
+  'import.type.selectPromptDescription': 'Choisissez une plateforme ou une méthode dans la liste pour commencer l\'importation de vos transactions.',
   'import.type.category.directSync': 'Synchronisation Directe',
   'import.type.category.intelligentImport': 'Import Intelligent',
   'import.type.category.platformCsv': 'Import CSV Plateforme',

@@ -300,6 +300,8 @@ export default {
   'import.table.showingFirst': 'Showing first {count} of {total} trades',
   'import.type.search': 'Search import types...',
   'import.type.noResults': 'No import types found.',
+  'import.type.selectPrompt': 'Select an import type',
+  'import.type.selectPromptDescription': 'Choose a platform or method from the list to start importing your trades.',
   'import.type.category.directSync': 'Direct Account Sync',
   'import.type.category.intelligentImport': 'Intelligent Import',
   'import.type.category.platformCsv': 'Platform CSV Import',
