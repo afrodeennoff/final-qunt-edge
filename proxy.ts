@@ -205,6 +205,7 @@ const PUBLIC_DOCUMENT_PATH_PREFIXES = [
   '/newsletter',
   '/disclaimers',
   '/maintenance',
+  '/oauth',
 ]
 const PRIVATE_DOCUMENT_PATH_PREFIXES = [
   '/dashboard',

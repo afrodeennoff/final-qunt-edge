@@ -69,6 +69,12 @@ export async function GET(request: NextRequest) {
         description: 'Generate keys in Settings → API Keys (qunt_usr_* for normal, qunt_adm_* for admin). Also accepts Supabase access tokens.',
         header: 'Authorization: Bearer <key-or-token>',
       },
+      oauth: {
+        protectedResourceMetadata: `${origin}/.well-known/oauth-protected-resource/api/mcp`,
+        authorizationServer: 'Supabase Auth (enable OAuth 2.1 Server in dashboard)',
+        consentPath: '/oauth/consent',
+        scopes: ['openid', 'email', 'profile', 'mcp:tools', 'mcp:read'],
+      },
     },
     endpoints: [
       {

@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { randomUUID } from 'node:crypto'
 import { rateLimit } from '@/lib/rate-limit'
 import { MCP_PROTOCOL_VERSION } from '@/lib/mcp-constants'
+import { MCP_OAUTH_SCOPE_CHALLENGE } from '@/lib/mcp/oauth-metadata'
 import type { McpAuthContext } from './mcp-auth'
 import type { ToolDefinition } from './mcp-helpers'
 import { prisma } from '@/lib/prisma'
@@ -42,7 +43,7 @@ function jsonRpcNoContent(status: number) {
 function getAuthChallengeHeaders(request: NextRequest, error = 'invalid_token'): HeadersInit {
   const resourceMetadataUrl = new URL('/.well-known/oauth-protected-resource/api/mcp', request.url)
   return {
-    'WWW-Authenticate': `Bearer resource_metadata="${resourceMetadataUrl.toString()}", error="${error}"`,
+    'WWW-Authenticate': `Bearer resource_metadata="${resourceMetadataUrl.toString()}", scope="${MCP_OAUTH_SCOPE_CHALLENGE}", error="${error}"`,
   }
 }
 

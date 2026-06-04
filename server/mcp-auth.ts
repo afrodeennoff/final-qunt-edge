@@ -69,7 +69,9 @@ async function authenticateWithOAuth(token: string): Promise<McpAuthContext> {
 
 export async function authenticateMcpRequest(authHeader: string | null): Promise<McpAuthContext> {
   if (!authHeader) {
-    throw new Error('Missing Authorization header. Include: Authorization: Bearer <your_api_key>')
+    throw new Error(
+      'Missing Authorization header. Use Bearer qunt_usr_... API key, or complete MCP OAuth login (Supabase access token).',
+    )
   }
 
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader
