@@ -231,11 +231,22 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
     }
 
     if (method === 'tools/list' || method === 'tools/call') {
-      if (config.authChallenge === 'api-key' && method === 'tools/list') {
-        try {
-          ctx = await config.authenticate(request)
-        } catch {
+      const hasCredential = Boolean(extractMcpCredential(request))
+      if (config.authChallenge === 'api-key') {
+        if (method === 'tools/list' && !hasCredential) {
           ctx = null
+        } else if (method === 'tools/call' && !hasCredential) {
+          ctx = null
+        } else {
+          try {
+            ctx = await config.authenticate(request)
+          } catch (authErr) {
+            if (method === 'tools/list') {
+              ctx = null
+            } else {
+              throw authErr
+            }
+          }
         }
       } else {
         ctx = await config.authenticate(request)
