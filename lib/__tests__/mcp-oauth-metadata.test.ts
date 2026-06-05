@@ -4,6 +4,7 @@ import {
   getMcpResourceUri,
   getMcpProtectedResourceMetadata,
   getSupabaseAuthIssuer,
+  normalizeAuthorizationServerMetadataForMcpClients,
   MCP_OAUTH_CONSENT_PATH,
 } from '@/lib/mcp/oauth-metadata'
 
@@ -43,5 +44,17 @@ describe('mcp oauth metadata', () => {
 
   it('defaults consent path', () => {
     expect(MCP_OAUTH_CONSENT_PATH).toBe('/oauth/consent')
+  })
+
+  it('rewrites proxied AS issuer to app origin for Cursor', () => {
+    const normalized = normalizeAuthorizationServerMetadataForMcpClients({
+      issuer: 'https://abcdef.supabase.co/auth/v1',
+      authorization_endpoint: 'https://abcdef.supabase.co/auth/v1/oauth/authorize',
+    })
+    expect(normalized.issuer).toBe('https://app.example.com')
+    expect(normalized.authorization_endpoint).toBe(
+      'https://abcdef.supabase.co/auth/v1/oauth/authorize',
+    )
+    expect(normalized.service_documentation).toBe('https://app.example.com/docs/mcp')
   })
 })

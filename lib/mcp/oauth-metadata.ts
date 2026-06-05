@@ -62,6 +62,22 @@ export function getSupabaseAuthorizationServerMetadataUrl(): string | null {
   return `${projectOrigin}/.well-known/oauth-authorization-server/auth/v1`
 }
 
+/**
+ * Rewrite upstream Supabase AS metadata for MCP clients (Cursor).
+ * `authorization_servers` in protected-resource metadata uses the app origin;
+ * the proxied `issuer` must match so clients accept `authorization_endpoint`.
+ */
+export function normalizeAuthorizationServerMetadataForMcpClients(
+  upstream: Record<string, unknown>,
+): Record<string, unknown> {
+  const issuer = getMcpAuthorizationServerIssuer()
+  return {
+    ...upstream,
+    issuer,
+    service_documentation: `${issuer}/docs/mcp`,
+  }
+}
+
 export function getOAuthConsentUrl(authorizationId: string): string {
   return getSiteUrl(`${MCP_OAUTH_CONSENT_PATH}?authorization_id=${encodeURIComponent(authorizationId)}`)
 }
