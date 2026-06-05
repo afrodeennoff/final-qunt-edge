@@ -3,12 +3,14 @@ import { handleMcpRequest, CORS_HEADERS } from '@/server/mcp-route-utils'
 import { createPersonalMcpRouteConfig } from '@/server/mcp-personal-config'
 import { adminTools } from '@/server/mcp-admin-tools'
 import { adminWriteTools } from '@/server/mcp-admin-write-tools'
-import { standardTools, userWriteTools } from '@/server/mcp-tools'
+import { standardTools } from '@/server/mcp-tools'
+import { userWriteTools } from '@/server/mcp-user-write-tools'
 import { websiteTools } from '@/server/mcp-website-tools'
 import { MCP_SERVER_NAME, MCP_SERVER_VERSION } from '@/lib/mcp-constants'
 import { getSiteOrigin } from '@/lib/site-url'
 
-const mainConfig = createPersonalMcpRouteConfig('oauth')
+/** API-key first: avoids broken OAuth auto-flow in Cursor/OpenCode/Grok. OAuth: use /api/mcp/oauth */
+const mainConfig = createPersonalMcpRouteConfig('api-key')
 
 export async function OPTIONS() {
   return new Response(null, { status: 204, headers: CORS_HEADERS })

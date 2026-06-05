@@ -1,5 +1,5 @@
 import type { NextRequest } from 'next/server'
-import { authenticateMcpRequest } from '@/server/mcp-auth'
+import { authenticateMcpRequest, extractMcpCredential } from '@/server/mcp-auth'
 import { handleMcpToolCall, standardTools } from '@/server/mcp-tools'
 import { handleUserWriteToolCall, userWriteTools } from '@/server/mcp-user-write-tools'
 import { handleWebsiteMcpToolCall, websiteTools } from '@/server/mcp-website-tools'
@@ -13,7 +13,7 @@ export function createPersonalMcpRouteConfig(authChallenge: McpAuthChallengeMode
     tools: PERSONAL_MCP_TOOLS,
     authChallenge,
     authenticate: async (request: NextRequest) => {
-      return authenticateMcpRequest(request.headers.get('authorization'))
+      return authenticateMcpRequest(extractMcpCredential(request))
     },
     handleToolCall: async (toolName, args, ctx) => {
       if (websiteTools.some((t) => t.name === toolName)) {

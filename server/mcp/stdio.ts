@@ -28,7 +28,7 @@
 import { McpServer } from '@modelcontextprotocol/server'
 import { StdioServerTransport } from '@modelcontextprotocol/server'
 
-const REMOTE_URL = process.env.MCP_URL || 'https://qunt-edge.vercel.app/api/mcp'
+const REMOTE_URL = process.env.MCP_URL || 'https://qunt-edge.vercel.app/api/mcp/key'
 const REMOTE_KEY = process.env.MCP_KEY
 
 if (!REMOTE_KEY) {

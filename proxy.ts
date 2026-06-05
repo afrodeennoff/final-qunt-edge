@@ -301,6 +301,11 @@ function isCustomTokenApiRoute(pathname: string): boolean {
   return CUSTOM_TOKEN_API_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix))
 }
 
+/** Remote MCP clients (Cursor, OpenCode, Grok, etc.) use varied Origin headers. */
+function isMcpApiPath(pathname: string): boolean {
+  return pathname.startsWith('/api/mcp')
+}
+
 function classifyRoute(pathname: string): RouteClass {
   const normalizedPathname = normalizePathWithoutLocale(pathname)
   const isStaticAsset =
@@ -514,21 +519,32 @@ export async function proxy(req: NextRequest) {
 
   // ── CORS handling for API routes ─────────────────────────────────────────
   if (isApiRoute) {
+    const mcpApi = isMcpApiPath(pathname)
+
     // Preflight
     if (req.method === 'OPTIONS') {
       const headers = new Headers()
-      if (origin && isAllowedOrigin(origin)) {
+      if (mcpApi) {
+        headers.set('Access-Control-Allow-Origin', '*')
+      } else if (origin && isAllowedOrigin(origin)) {
         headers.set('Access-Control-Allow-Origin', origin)
       }
       headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
-      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
+      headers.set(
+        'Access-Control-Allow-Headers',
+        mcpApi
+          ? 'Content-Type, Authorization, X-Requested-With, X-API-Key, X-Qunt-Api-Key, Accept, Mcp-Session-Id, MCP-Protocol-Version'
+          : 'Content-Type, Authorization, X-Requested-With',
+      )
       headers.set('Access-Control-Max-Age', '86400')
-      headers.set('Access-Control-Allow-Credentials', 'true')
+      if (!mcpApi) {
+        headers.set('Access-Control-Allow-Credentials', 'true')
+      }
       return new NextResponse(null, { status: 204, headers })
     }
 
-    // Reject cross-origin requests from disallowed origins
-    if (origin && !isAllowedOrigin(origin)) {
+    // Reject cross-origin requests from disallowed origins (MCP exempt — remote AI clients)
+    if (!mcpApi && origin && !isAllowedOrigin(origin)) {
       return NextResponse.json(
         { error: 'Origin not allowed', code: 'CORS_REJECTED' },
         { status: 403 },
@@ -564,7 +580,9 @@ export async function proxy(req: NextRequest) {
       applyPrivateNoStoreHeaders(apiResponse)
     }
     // Attach CORS header for allowed cross-origin API requests
-    if (origin && isAllowedOrigin(origin)) {
+    if (mcpApi) {
+      apiResponse.headers.set('Access-Control-Allow-Origin', '*')
+    } else if (origin && isAllowedOrigin(origin)) {
       apiResponse.headers.set('Access-Control-Allow-Origin', origin)
       apiResponse.headers.set('Access-Control-Allow-Credentials', 'true')
     }

@@ -1,3 +1,4 @@
+import type { NextRequest } from 'next/server'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 import { validateApiKey } from './mcp-key-service'
 import { prisma } from '@/lib/prisma'
@@ -89,14 +90,27 @@ async function authenticateWithOAuth(token: string): Promise<McpAuthContext> {
   return { userId: dbUserId, authUserId: user.id, role, authMethod: 'oauth' }
 }
 
-export async function authenticateMcpRequest(authHeader: string | null): Promise<McpAuthContext> {
-  if (!authHeader) {
+/** Read API key / bearer token from headers (Cursor, OpenCode, Grok, etc.). */
+export function extractMcpCredential(request: NextRequest): string | null {
+  const authorization = request.headers.get('authorization')?.trim()
+  if (authorization) {
+    return authorization.startsWith('Bearer ') ? authorization.slice(7).trim() : authorization
+  }
+  const xApiKey = request.headers.get('x-api-key')?.trim()
+  if (xApiKey) return xApiKey
+  const xQunt = request.headers.get('x-qunt-api-key')?.trim()
+  if (xQunt) return xQunt
+  return null
+}
+
+export async function authenticateMcpRequest(credential: string | null): Promise<McpAuthContext> {
+  if (!credential) {
     throw new Error(
-      'Missing Authorization header. Use Bearer qunt_usr_... API key, or complete MCP OAuth login (Supabase access token).',
+      'Missing Authorization header. Use Authorization: Bearer qunt_usr_... (or X-API-Key / X-Qunt-Api-Key). Create keys at Settings → API Keys.',
     )
   }
 
-  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader
+  const token = credential
 
   if (isApiKeyToken(token)) {
     return authenticateWithApiKey(token)

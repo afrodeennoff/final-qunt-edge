@@ -1,9 +1,9 @@
 import { NextRequest } from 'next/server'
 import { randomUUID } from 'node:crypto'
 import { rateLimit } from '@/lib/rate-limit'
-import { MCP_PROTOCOL_VERSION } from '@/lib/mcp-constants'
+import { MCP_KEY_PREFIX_ADMIN, MCP_KEY_PREFIX_USER, MCP_PROTOCOL_VERSION } from '@/lib/mcp-constants'
 import { MCP_OAUTH_SCOPE_CHALLENGE } from '@/lib/mcp/oauth-metadata'
-import type { McpAuthContext } from './mcp-auth'
+import { extractMcpCredential, type McpAuthContext } from './mcp-auth'
 
 export type McpAuthChallengeMode = 'oauth' | 'api-key'
 import type { ToolDefinition } from './mcp-helpers'
@@ -13,7 +13,8 @@ import { ensureMcpTables } from './mcp-auto-migrate'
 export const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Authorization, Content-Type, Accept, Mcp-Session-Id, MCP-Protocol-Version',
+  'Access-Control-Allow-Headers':
+    'Authorization, Content-Type, Accept, Mcp-Session-Id, MCP-Protocol-Version, X-API-Key, X-Qunt-Api-Key, X-Requested-With',
   'Access-Control-Expose-Headers': 'Mcp-Session-Id, WWW-Authenticate',
   'Access-Control-Max-Age': '86400',
 }
@@ -49,9 +50,16 @@ function getAuthChallengeHeaders(
   error = 'invalid_token',
   mode: McpAuthChallengeMode = 'oauth',
 ): HeadersInit {
-  if (mode === 'api-key') {
+  const credential = extractMcpCredential(request)
+  const apiKeyAttempt =
+    mode === 'api-key' ||
+    Boolean(
+      credential?.startsWith(MCP_KEY_PREFIX_USER) || credential?.startsWith(MCP_KEY_PREFIX_ADMIN),
+    )
+
+  if (apiKeyAttempt) {
     return {
-      'WWW-Authenticate': `Bearer error="${error}", error_description="Use Authorization: Bearer qunt_usr_* from Settings → API Keys"`,
+      'WWW-Authenticate': `Bearer error="${error}", error_description="Use Authorization: Bearer qunt_usr_* from Settings → API Keys (URL: /api/mcp/key or /api/mcp)"`,
     }
   }
   const resourceMetadataUrl = new URL('/.well-known/oauth-protected-resource/api/mcp', request.url)
@@ -222,9 +230,19 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
       return jsonRpcError(reqId, -32602, `${method} is not supported on this server. This server primarily exposes tools.`, 200)
     }
 
-    ctx = method !== 'tools/list' && method !== 'tools/call'
-      ? null
-      : await config.authenticate(request)
+    if (method === 'tools/list' || method === 'tools/call') {
+      if (config.authChallenge === 'api-key' && method === 'tools/list') {
+        try {
+          ctx = await config.authenticate(request)
+        } catch {
+          ctx = null
+        }
+      } else {
+        ctx = await config.authenticate(request)
+      }
+    } else {
+      ctx = null
+    }
 
     // Rate limit with API key subject when authenticated
     if (method === 'tools/list' || method === 'tools/call') {
@@ -283,6 +301,16 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
       }
 
       let result: { content: Array<{ type: string; text: string }>; isError?: boolean }
+      if (!ctx) {
+        return jsonRpcError(
+          reqId,
+          -32001,
+          'Authentication required for tools/call. Use Authorization: Bearer qunt_usr_* from Settings → API Keys.',
+          401,
+          getAuthChallengeHeaders(request, 'invalid_request', config.authChallenge ?? 'oauth'),
+        )
+      }
+
       try {
         result = await config.handleToolCall(toolName, toolArgs, ctx)
       } catch (toolError_) {
