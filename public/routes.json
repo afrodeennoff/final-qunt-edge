@@ -75,5 +75,6 @@
   "/[locale]/terms",
   "/[locale]/trader/[slug]",
   "/[locale]/updates",
-  "/[locale]/updates/[slug]"
+  "/[locale]/updates/[slug]",
+  "/oauth/consent"
 ]
