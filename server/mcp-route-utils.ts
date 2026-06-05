@@ -231,26 +231,7 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
     }
 
     if (method === 'tools/list' || method === 'tools/call') {
-      const hasCredential = Boolean(extractMcpCredential(request))
-      if (config.authChallenge === 'api-key') {
-        if (method === 'tools/list' && !hasCredential) {
-          ctx = null
-        } else if (method === 'tools/call' && !hasCredential) {
-          ctx = null
-        } else {
-          try {
-            ctx = await config.authenticate(request)
-          } catch (authErr) {
-            if (method === 'tools/list') {
-              ctx = null
-            } else {
-              throw authErr
-            }
-          }
-        }
-      } else {
-        ctx = await config.authenticate(request)
-      }
+      ctx = await config.authenticate(request)
     } else {
       ctx = null
     }
@@ -266,6 +247,15 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
     }
 
     if (method === 'tools/list') {
+      if (!ctx) {
+        return jsonRpcError(
+          reqId,
+          -32001,
+          'Authentication required for tools/list. Use Authorization: Bearer qunt_usr_* or complete OAuth login.',
+          401,
+          getAuthChallengeHeaders(request, 'invalid_request', config.authChallenge ?? 'oauth'),
+        )
+      }
       const cursor = typeof params?.cursor === 'string' ? params.cursor : undefined
       const PAGE_SIZE = 50
       const allTools = config.tools

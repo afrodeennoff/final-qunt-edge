@@ -9,8 +9,8 @@ import { websiteTools } from '@/server/mcp-website-tools'
 import { MCP_SERVER_NAME, MCP_SERVER_VERSION } from '@/lib/mcp-constants'
 import { getSiteOrigin } from '@/lib/site-url'
 
-/** API-key first: avoids broken OAuth auto-flow in Cursor/OpenCode/Grok. OAuth: use /api/mcp/oauth */
-const mainConfig = createPersonalMcpRouteConfig('api-key')
+/** Default: OAuth discovery + browser consent at /oauth/consent. API key only: use /api/mcp/key */
+const mainConfig = createPersonalMcpRouteConfig('oauth')
 
 export async function OPTIONS() {
   return new Response(null, { status: 204, headers: CORS_HEADERS })

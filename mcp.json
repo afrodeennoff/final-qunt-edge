@@ -2,11 +2,16 @@
   "mcpServers": {
     "qunt-edge": {
       "type": "mcp",
-      "url": "https://qunt-edge.vercel.app/api/mcp",
+      "url": "https://qunt-edge.vercel.app/api/mcp/key",
       "headers": {
         "Authorization": "Bearer ${env:QUNT_MCP_API_KEY}"
       },
-      "description": "Qunt Edge — API key in Authorization header (works in Cursor, OpenCode, Grok). Set QUNT_MCP_API_KEY. Create key at Settings → API Keys."
+      "description": "REQUIRES API key — set QUNT_MCP_API_KEY (qunt_usr_*). Will NOT connect without it."
+    },
+    "qunt-edge-login": {
+      "type": "mcp",
+      "url": "https://qunt-edge.vercel.app/api/mcp",
+      "description": "OAuth browser login at /oauth/consent — no API key in config"
     },
     "qunt-edge-oauth": {
       "type": "mcp",
