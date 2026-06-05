@@ -5,6 +5,7 @@ import { geolocation } from '@vercel/functions'
 import { User } from '@supabase/supabase-js'
 import { buildAppCsp, buildEmbedCsp, createNonce } from '@/lib/security/csp'
 import { assertSecurityEnvConsistency } from '@/lib/env'
+import { shouldSkipLocalePrefix } from '@/lib/locale-path'
 import { timingSafeEqual } from 'node:crypto'
 
 try {
@@ -569,6 +570,14 @@ export async function proxy(req: NextRequest) {
     return apiResponse
   }
 
+  // OAuth consent lives at /oauth/* (not under [locale]). Skip i18n redirect to /en/oauth/...
+  if (pathname === '/oauth' || pathname.startsWith('/oauth/')) {
+    const oauthResponse = NextResponse.next()
+    applySecurityHeaders(oauthResponse)
+    applyPublicRevalidateHeaders(oauthResponse)
+    return oauthResponse
+  }
+
   // Apply i18n middleware first
   // This handles basic redirects for / to /en, etc.
   const response = I18nMiddleware(req)
@@ -757,7 +766,11 @@ export async function proxy(req: NextRequest) {
       }
 
       // Ensure redirect path has locale if missing and starts with /
-      if (redirectPath.startsWith('/') && !LOCALES.some((l) => redirectPath.startsWith(`/${l}`))) {
+      if (
+        redirectPath.startsWith('/') &&
+        !LOCALES.some((l) => redirectPath.startsWith(`/${l}`)) &&
+        !shouldSkipLocalePrefix(redirectPath.split('?')[0] ?? redirectPath)
+      ) {
         redirectPath = `/${locale}${redirectPath}`
       }
 

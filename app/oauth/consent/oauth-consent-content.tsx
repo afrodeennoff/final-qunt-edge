@@ -62,13 +62,8 @@ export async function OAuthConsentContent({ searchParams }: OAuthConsentContentP
     )
   }
 
-  const detailsRecord = authDetails as Record<string, unknown>
-  if (
-    typeof detailsRecord.redirect_url === 'string' &&
-    detailsRecord.redirect_url.length > 0 &&
-    !('authorization_id' in detailsRecord)
-  ) {
-    redirect(detailsRecord.redirect_url)
+  if (authDetails.redirect_url) {
+    redirect(authDetails.redirect_url)
   }
 
   const scopes = (authDetails.scope || '')
@@ -82,7 +77,7 @@ export async function OAuthConsentContent({ searchParams }: OAuthConsentContentP
         authorizationId={authorizationId}
         clientName={authDetails.client?.name || 'Unknown application'}
         clientUri={authDetails.client?.uri}
-        redirectUri={authDetails.client?.uri}
+        redirectUri={authDetails.redirect_uri ?? authDetails.client?.uri}
         scopes={scopes}
         userEmail={authDetails.user?.email || user.email || ''}
       />

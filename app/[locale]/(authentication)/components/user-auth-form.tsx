@@ -1,5 +1,6 @@
 "use client"
 
+import { shouldSkipLocalePrefix } from '@/lib/locale-path'
 import { signInWithDiscord, signInWithEmail, verifyOtp, signInWithGoogle, signInWithPasswordAction } from "@/server/auth"
 
 import * as React from "react"
@@ -58,6 +59,7 @@ function normalizeNextPath(next: string | null): string | null {
 function withLocalePrefix(path: string, locale: string): string {
  const normalized = normalizeNextPath(path) || `/${path}`
  if (normalized.startsWith('/api/')) return normalized
+ if (shouldSkipLocalePrefix(normalized)) return normalized
  // Already locale-prefixed? Keep it.
  if (/^\/[a-z]{2}(?:-[a-z]{2})?(?:\/|$)/i.test(normalized)) return normalized
  return `/${locale}${normalized}`

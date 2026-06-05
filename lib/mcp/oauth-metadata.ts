@@ -1,7 +1,8 @@
 import { getSiteOrigin, getSiteUrl } from '@/lib/site-url'
 
-export const MCP_OAUTH_SCOPES = ['openid', 'email', 'profile', 'mcp:tools', 'mcp:read'] as const
-export const MCP_OAUTH_SCOPE_CHALLENGE = 'openid email profile mcp:tools'
+/** Scopes Supabase OAuth 2.1 supports (openid, profile, email, phone). */
+export const MCP_OAUTH_SCOPES = ['openid', 'email', 'profile'] as const
+export const MCP_OAUTH_SCOPE_CHALLENGE = 'openid email profile'
 
 export const MCP_OAUTH_CONSENT_PATH =
   (process.env.MCP_OAUTH_CONSENT_PATH || '/oauth/consent').replace(/\/+$/, '') || '/oauth/consent'

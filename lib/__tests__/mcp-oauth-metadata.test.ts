@@ -32,7 +32,7 @@ describe('mcp oauth metadata', () => {
     const meta = getMcpProtectedResourceMetadata()
     expect(meta.resource).toBe('https://app.example.com/api/mcp')
     expect(meta.authorization_servers).toEqual(['https://abcdef.supabase.co/auth/v1'])
-    expect(meta.scopes_supported).toContain('mcp:tools')
+    expect(meta.scopes_supported).toEqual(['openid', 'email', 'profile'])
   })
 
   it('defaults consent path', () => {
