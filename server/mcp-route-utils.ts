@@ -4,6 +4,8 @@ import { rateLimit } from '@/lib/rate-limit'
 import { MCP_PROTOCOL_VERSION } from '@/lib/mcp-constants'
 import { MCP_OAUTH_SCOPE_CHALLENGE } from '@/lib/mcp/oauth-metadata'
 import type { McpAuthContext } from './mcp-auth'
+
+export type McpAuthChallengeMode = 'oauth' | 'api-key'
 import type { ToolDefinition } from './mcp-helpers'
 import { prisma } from '@/lib/prisma'
 import { ensureMcpTables } from './mcp-auto-migrate'
@@ -22,6 +24,8 @@ export interface McpRouteConfig {
   handleToolCall: (toolName: string, args: Record<string, unknown>, ctx: McpAuthContext | null) => Promise<{ content: Array<{ type: string; text: string }>; isError?: boolean }>
   serverName: string
   serverVersion: string
+  /** api-key: no OAuth discovery on 401 (Cursor header auth workaround). oauth: default. */
+  authChallenge?: McpAuthChallengeMode
   rateLimitWindow?: number
   rateLimitMax?: number
 }
@@ -40,7 +44,16 @@ function jsonRpcNoContent(status: number) {
   return new Response(null, { status, headers: CORS_HEADERS })
 }
 
-function getAuthChallengeHeaders(request: NextRequest, error = 'invalid_token'): HeadersInit {
+function getAuthChallengeHeaders(
+  request: NextRequest,
+  error = 'invalid_token',
+  mode: McpAuthChallengeMode = 'oauth',
+): HeadersInit {
+  if (mode === 'api-key') {
+    return {
+      'WWW-Authenticate': `Bearer error="${error}", error_description="Use Authorization: Bearer qunt_usr_* from Settings → API Keys"`,
+    }
+  }
   const resourceMetadataUrl = new URL('/.well-known/oauth-protected-resource/api/mcp', request.url)
   return {
     'WWW-Authenticate': `Bearer resource_metadata="${resourceMetadataUrl.toString()}", scope="${MCP_OAUTH_SCOPE_CHALLENGE}", error="${error}"`,
@@ -300,7 +313,10 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
       : auth
         ? 'Authentication failed. Use Authorization: Bearer <qunt_usr_... key or Supabase token>. Create keys in Settings → API Keys.'
         : 'Internal server error'
-    const headers = auth && !forbidden ? getAuthChallengeHeaders(request, authHeaderError(error)) : undefined
+    const headers =
+      auth && !forbidden
+        ? getAuthChallengeHeaders(request, authHeaderError(error), config.authChallenge ?? 'oauth')
+        : undefined
     return jsonRpcError(reqId, code, message, forbidden ? 403 : auth ? 401 : 500, headers)
   }
 }

@@ -1,8 +1,15 @@
 {
   "mcpServers": {
     "qunt-edge": {
+      "url": "https://qunt-edge.vercel.app/api/mcp/key",
+      "description": "Qunt Edge MCP (API key). Cursor: set headers.Authorization Bearer qunt_usr_* from Settings → API Keys",
+      "headers": {
+        "Authorization": "Bearer ${env:QUNT_MCP_API_KEY}"
+      }
+    },
+    "qunt-edge-oauth": {
       "url": "https://qunt-edge.vercel.app/api/mcp",
-      "description": "Qunt Edge MCP — OAuth via Supabase (browser login at /oauth/consent) or API key qunt_usr_* from Settings → API Keys"
+      "description": "Qunt Edge MCP via Supabase OAuth (browser /oauth/consent)"
     },
     "qunt-edge-public": {
       "url": "https://qunt-edge.vercel.app/api/mcp/public",

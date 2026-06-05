@@ -1,33 +1,14 @@
 import { NextRequest } from 'next/server'
-import { handleMcpRequest, CORS_HEADERS, type McpRouteConfig } from '@/server/mcp-route-utils'
-import { authenticateMcpRequest } from '@/server/mcp-auth'
-import { handleMcpToolCall, standardTools } from '@/server/mcp-tools'
-import { handleUserWriteToolCall, userWriteTools } from '@/server/mcp-user-write-tools'
-import { handleAdminMcpToolCall, adminTools } from '@/server/mcp-admin-tools'
-import { handleAdminWriteToolCall, adminWriteTools } from '@/server/mcp-admin-write-tools'
-import { handleWebsiteMcpToolCall, websiteTools } from '@/server/mcp-website-tools'
+import { handleMcpRequest, CORS_HEADERS } from '@/server/mcp-route-utils'
+import { createPersonalMcpRouteConfig } from '@/server/mcp-personal-config'
+import { adminTools } from '@/server/mcp-admin-tools'
+import { adminWriteTools } from '@/server/mcp-admin-write-tools'
+import { standardTools, userWriteTools } from '@/server/mcp-tools'
+import { websiteTools } from '@/server/mcp-website-tools'
 import { MCP_SERVER_NAME, MCP_SERVER_VERSION } from '@/lib/mcp-constants'
 import { getSiteOrigin } from '@/lib/site-url'
 
-const USER_TOOLS = [...standardTools, ...userWriteTools, ...websiteTools]
-
-const mainConfig: McpRouteConfig = {
-  tools: USER_TOOLS,
-  authenticate: async (request) => {
-    return authenticateMcpRequest(request.headers.get('authorization'))
-  },
-  handleToolCall: async (toolName, args, ctx) => {
-    if (websiteTools.some((t) => t.name === toolName)) {
-      return handleWebsiteMcpToolCall(toolName, args, ctx!)
-    }
-    if (userWriteTools.some((t) => t.name === toolName)) {
-      return handleUserWriteToolCall(toolName, args, ctx!)
-    }
-    return handleMcpToolCall(toolName, args, ctx!)
-  },
-  serverName: MCP_SERVER_NAME,
-  serverVersion: MCP_SERVER_VERSION,
-}
+const mainConfig = createPersonalMcpRouteConfig('oauth')
 
 export async function OPTIONS() {
   return new Response(null, { status: 204, headers: CORS_HEADERS })
@@ -80,9 +61,16 @@ export async function GET(request: NextRequest) {
       {
         path: '/api/mcp',
         url: `${origin}/api/mcp`,
-        auth: 'Bearer (user key or token)',
+        auth: 'Bearer (user key or Supabase OAuth token)',
         tools: totalTools,
-        description: 'Your personal trading data + public tools.',
+        description: 'Personal data + OAuth discovery (may not work in Cursor yet).',
+      },
+      {
+        path: '/api/mcp/key',
+        url: `${origin}/api/mcp/key`,
+        auth: 'Bearer qunt_usr_* API key (recommended for Cursor)',
+        tools: totalTools,
+        description: 'Same tools as /api/mcp; use with Authorization header (Cursor-compatible).',
       },
       {
         path: '/api/mcp/public',
