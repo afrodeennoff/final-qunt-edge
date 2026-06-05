@@ -1,5 +1,6 @@
 import { describe, expect, it, beforeEach, afterEach } from 'vitest'
 import {
+  getMcpAuthorizationServerIssuer,
   getMcpResourceUri,
   getMcpProtectedResourceMetadata,
   getSupabaseAuthIssuer,
@@ -28,11 +29,16 @@ describe('mcp oauth metadata', () => {
     expect(getSupabaseAuthIssuer()).toBe('https://abcdef.supabase.co/auth/v1')
   })
 
-  it('includes authorization_servers in protected resource metadata', () => {
+  it('advertises app origin as authorization server (not Supabase /auth/v1 path)', () => {
+    expect(getMcpAuthorizationServerIssuer()).toBe('https://app.example.com')
     const meta = getMcpProtectedResourceMetadata()
     expect(meta.resource).toBe('https://app.example.com/api/mcp')
-    expect(meta.authorization_servers).toEqual(['https://abcdef.supabase.co/auth/v1'])
+    expect(meta.authorization_servers).toEqual(['https://app.example.com'])
     expect(meta.scopes_supported).toEqual(['openid', 'email', 'profile'])
+  })
+
+  it('keeps Supabase auth issuer helper for upstream proxy', () => {
+    expect(getSupabaseAuthIssuer()).toBe('https://abcdef.supabase.co/auth/v1')
   })
 
   it('defaults consent path', () => {

@@ -1,4 +1,5 @@
 import { getSupabaseAuthorizationServerMetadataUrl } from '@/lib/mcp/oauth-metadata'
+import { getSiteOrigin } from '@/lib/site-url'
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -43,8 +44,15 @@ export async function GET() {
         { status: 502, headers: CORS_HEADERS },
       )
     }
-    const metadata = await res.json()
-    return Response.json(metadata, { headers: CORS_HEADERS })
+    const metadata = (await res.json()) as Record<string, unknown>
+    // Help MCP clients (Cursor) that probe the app origin: keep Supabase endpoints but
+    // document where consent UI lives.
+    const origin = getSiteOrigin().replace(/\/$/, '')
+    const enriched = {
+      ...metadata,
+      service_documentation: `${origin}/docs/mcp`,
+    }
+    return Response.json(enriched, { headers: CORS_HEADERS })
   } catch (error) {
     return Response.json(
       {

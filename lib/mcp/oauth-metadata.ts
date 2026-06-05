@@ -30,10 +30,21 @@ export function getMcpResourceUri(): string {
   return `${getSiteOrigin().replace(/\/$/, '')}/api/mcp`
 }
 
+/**
+ * Issuer advertised to MCP clients for OAuth discovery.
+ * Must be the app origin — NOT Supabase `/auth/v1`. Cursor builds
+ * `/.well-known/oauth-authorization-server` from this value; Supabase metadata
+ * lives at `/.well-known/oauth-authorization-server/auth/v1` on the project host,
+ * which we proxy from the app origin route.
+ */
+export function getMcpAuthorizationServerIssuer(): string {
+  return getSiteOrigin().replace(/\/$/, '')
+}
+
 export function getMcpProtectedResourceMetadata(resource?: string) {
   const resourceUri = resource || getMcpResourceUri()
-  const issuer = getSupabaseAuthIssuer()
   const origin = getSiteOrigin()
+  const authServer = getMcpAuthorizationServerIssuer()
 
   return {
     resource: resourceUri,
@@ -41,11 +52,7 @@ export function getMcpProtectedResourceMetadata(resource?: string) {
     bearer_methods_supported: ['header'] as const,
     scopes_supported: [...MCP_OAUTH_SCOPES],
     documentation_uri: `${origin}/docs/mcp`,
-    ...(issuer
-      ? {
-          authorization_servers: [issuer],
-        }
-      : {}),
+    authorization_servers: [authServer],
   }
 }
 
