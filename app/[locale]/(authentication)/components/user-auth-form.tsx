@@ -44,7 +44,10 @@ const otpFormSchema = z.object({
  otp: z.string().length(6,"Verification code must be 6 digits"),
 })
 
-type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
+type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement> & {
+  /** When set (e.g. MCP OAuth consent), overrides ?next= from the URL. */
+  forcedNextUrl?: string | null
+}
 
 type AuthMethod = 'email' | 'discord' | 'google' | null
 
@@ -85,7 +88,7 @@ function getQueryErrorMessage(errorCode: string | null, authErrorCode: string | 
  return null
 }
 
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+export function UserAuthForm({ className, forcedNextUrl, ...props }: UserAuthFormProps) {
  const [isLoading, setIsLoading] = React.useState<boolean>(false)
  const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false)
  const [countdown, setCountdown] = React.useState<number>(0)
@@ -97,7 +100,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  const [promoCode, setPromoCode] = React.useState<string | null>(null)
  const [authMethod, setAuthMethod] = React.useState<AuthMethod>(null)
  const [showOtpInput, setShowOtpInput] = React.useState<boolean>(false)
- const [nextUrl, setNextUrl] = React.useState<string | null>(null)
+ const [nextUrl, setNextUrl] = React.useState<string | null>(forcedNextUrl ?? null)
  const router = useRouter()
  const locale = useCurrentLocale()
  const { lastAuthPreference, setLastAuthPreference } = useAuthPreferenceStore()
@@ -116,7 +119,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  try {
  const urlParams = new URLSearchParams(window.location.search)
  const subscription = urlParams.get('subscription')
- const next = normalizeNextPath(urlParams.get('next'))
+ const next = forcedNextUrl ?? normalizeNextPath(urlParams.get('next'))
  const errorCode = urlParams.get('error')
  const authErrorCode = urlParams.get('auth_error')
  const referral = urlParams.get('referral')
@@ -154,7 +157,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  } catch (error) {
 
  }
- }, [t])
+ }, [t, forcedNextUrl])
 
  React.useEffect(() => {
  router.prefetch(redirectDestination)

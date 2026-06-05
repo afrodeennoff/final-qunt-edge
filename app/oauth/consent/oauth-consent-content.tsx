@@ -1,16 +1,12 @@
-import { redirect } from 'next/navigation'
 import { connection } from 'next/server'
 import { createClient, ensureUserInDatabase, getWebsiteURL } from '@/server/auth'
 import { MCP_OAUTH_CONSENT_PATH } from '@/lib/mcp/oauth-metadata'
 import { OAuthConsentForm } from './oauth-consent-form'
+import { OAuthConsentSignIn } from './oauth-consent-sign-in'
+import { OAuthConsentRedirect } from './oauth-consent-redirect'
 
 type OAuthConsentContentProps = {
   searchParams: Promise<{ authorization_id?: string }>
-}
-
-function buildLoginRedirect(authorizationId: string, locale = 'en') {
-  const next = `${MCP_OAUTH_CONSENT_PATH}?authorization_id=${encodeURIComponent(authorizationId)}`
-  return `/${locale}/authentication?next=${encodeURIComponent(next)}`
 }
 
 export async function OAuthConsentContent({ searchParams }: OAuthConsentContentProps) {
@@ -34,7 +30,7 @@ export async function OAuthConsentContent({ searchParams }: OAuthConsentContentP
   } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect(buildLoginRedirect(authorizationId))
+    return <OAuthConsentSignIn authorizationId={authorizationId} />
   }
 
   try {
@@ -76,7 +72,7 @@ export async function OAuthConsentContent({ searchParams }: OAuthConsentContentP
   }
 
   if (authDetails.redirect_url) {
-    redirect(authDetails.redirect_url)
+    return <OAuthConsentRedirect redirectUrl={authDetails.redirect_url} />
   }
 
   const scopes = (authDetails.scope || '')

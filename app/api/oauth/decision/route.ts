@@ -80,5 +80,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'No redirect URL from authorization server' }, { status: 500 })
   }
 
+  // Custom URL schemes (cursor://) are more reliable via HTML navigation than a 303 from POST.
+  if (/^[a-z][a-z0-9+.-]*:/i.test(redirectUrl) && !redirectUrl.startsWith('http')) {
+    const jsUrl = JSON.stringify(redirectUrl)
+    const html = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><title>Authorization complete</title></head><body><p>Returning to your MCP client…</p><script>window.location.replace(${jsUrl});</script></body></html>`
+    return new NextResponse(html, {
+      status: 200,
+      headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
+    })
+  }
+
   return NextResponse.redirect(redirectUrl, 303)
 }
