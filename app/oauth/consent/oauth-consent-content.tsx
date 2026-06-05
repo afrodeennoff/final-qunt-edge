@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { connection } from 'next/server'
-import { createClient, getWebsiteURL } from '@/server/auth'
+import { createClient, ensureUserInDatabase, getWebsiteURL } from '@/server/auth'
 import { MCP_OAUTH_CONSENT_PATH } from '@/lib/mcp/oauth-metadata'
 import { OAuthConsentForm } from './oauth-consent-form'
 
@@ -35,6 +35,19 @@ export async function OAuthConsentContent({ searchParams }: OAuthConsentContentP
 
   if (!user) {
     redirect(buildLoginRedirect(authorizationId))
+  }
+
+  try {
+    await ensureUserInDatabase(user, 'en', { skipDefaultLayout: true })
+  } catch {
+    return (
+      <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center px-6 py-12">
+        <h1 className="text-xl font-semibold">Account setup required</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          We could not finish setting up your Qunt Edge account. Try signing in at the dashboard first, then reconnect MCP.
+        </p>
+      </main>
+    )
   }
 
   const { data: authDetails, error } = await supabase.auth.oauth.getAuthorizationDetails(authorizationId)

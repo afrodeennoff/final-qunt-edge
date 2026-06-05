@@ -231,6 +231,7 @@ const PUBLIC_API_PATH_PREFIXES = [
   '/api/tradovate/auth',
   '/api/rithmic/callback',
   '/api/mcp/public',
+  '/api/oauth/',
   '/.well-known/',
 ]
 const PRIVATE_API_PATH_PREFIXES = ['/api/']

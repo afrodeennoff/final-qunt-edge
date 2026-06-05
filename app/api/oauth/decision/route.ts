@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { ensureUserInDatabase } from '@/server/auth'
 
 function createOAuthDecisionClient() {
   const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '').trim()
@@ -54,6 +55,15 @@ export async function POST(request: Request) {
 
   if (!user) {
     return NextResponse.json({ error: 'Not signed in' }, { status: 401 })
+  }
+
+  try {
+    await ensureUserInDatabase(user, 'en', { skipDefaultLayout: true })
+  } catch {
+    return NextResponse.json(
+      { error: 'Account setup failed. Sign in on the website first, then approve MCP access again.' },
+      { status: 503 },
+    )
   }
 
   const result =

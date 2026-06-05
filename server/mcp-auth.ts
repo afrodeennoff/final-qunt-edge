@@ -1,7 +1,10 @@
+import type { User as SupabaseUser } from '@supabase/supabase-js'
 import { validateApiKey } from './mcp-key-service'
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@supabase/supabase-js'
 import { MCP_KEY_PREFIX_USER, MCP_KEY_PREFIX_ADMIN } from '@/lib/mcp-constants'
+import { ensureUserInDatabase } from './auth-user'
+import { logger } from '@/lib/logger'
 
 const VALID_ROLES = new Set(['user', 'admin'])
 
@@ -23,6 +26,23 @@ async function resolveDatabaseUserId(authUserId: string): Promise<string | null>
     select: { id: true },
   })
   return user?.id ?? null
+}
+
+async function resolveOrProvisionDatabaseUserId(supabaseUser: SupabaseUser): Promise<string | null> {
+  const existing = await resolveDatabaseUserId(supabaseUser.id)
+  if (existing) return existing
+
+  try {
+    await ensureUserInDatabase(supabaseUser, undefined, { skipDefaultLayout: true })
+  } catch (error) {
+    logger.error('[MCP OAuth] Failed to provision database user', {
+      authUserId: supabaseUser.id,
+      error: error instanceof Error ? error.message : String(error),
+    })
+    return null
+  }
+
+  return resolveDatabaseUserId(supabaseUser.id)
 }
 
 async function authenticateWithApiKey(token: string): Promise<McpAuthContext> {
@@ -57,9 +77,11 @@ async function authenticateWithOAuth(token: string): Promise<McpAuthContext> {
     throw new Error('Invalid or expired OAuth token')
   }
 
-  const dbUserId = await resolveDatabaseUserId(user.id)
+  const dbUserId = await resolveOrProvisionDatabaseUserId(user)
   if (!dbUserId) {
-    throw new Error('User account not found')
+    throw new Error(
+      'User account not found. Sign in at qunt-edge.vercel.app and complete account setup, then reconnect MCP OAuth.',
+    )
   }
 
   const role = user.app_metadata?.role === 'admin' ? 'admin' as const : 'user' as const

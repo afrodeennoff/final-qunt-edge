@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
         protectedResourceMetadata: `${origin}/.well-known/oauth-protected-resource/api/mcp`,
         authorizationServer: 'Supabase Auth (enable OAuth 2.1 Server in dashboard)',
         consentPath: '/oauth/consent',
-        scopes: ['openid', 'email', 'profile', 'mcp:tools', 'mcp:read'],
+        scopes: ['openid', 'email', 'profile'],
       },
     },
     endpoints: [
