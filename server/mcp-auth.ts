@@ -104,13 +104,12 @@ export function extractMcpCredential(request: NextRequest): string | null {
 }
 
 export async function authenticateMcpRequest(credential: string | null): Promise<McpAuthContext> {
-  if (!credential) {
+  const token = credential?.trim()
+  if (!token) {
     throw new Error(
-      'Missing Authorization header. Use Authorization: Bearer qunt_usr_... (or X-API-Key / X-Qunt-Api-Key). Create keys at Settings → API Keys.',
+      'Missing Authorization: Use Bearer qunt_usr_... (or X-API-Key / X-Qunt-Api-Key). Create keys at Settings → API Keys.',
     )
   }
-
-  const token = credential
 
   if (isApiKeyToken(token)) {
     return authenticateWithApiKey(token)

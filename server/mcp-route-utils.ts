@@ -73,7 +73,9 @@ function isAuthError(error: unknown): boolean {
   const msg = error.message
   return msg.includes('Unauthorized') ||
     msg.includes('Missing Authorization') ||
+    msg.includes('Authentication required') ||
     msg.includes('Invalid or expired') ||
+    msg.includes('Invalid API key') ||
     msg.includes('User account not found') ||
     msg.includes('Forbidden')
 }
@@ -331,7 +333,11 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
   } catch (error) {
     const duration = Math.round(performance.now() - methodStartTime)
     if (toolName) {
-      await logMcpCall(ctx, toolName, {}, false, duration, 'HANDLER_ERROR')
+      try {
+        await logMcpCall(ctx, toolName, {}, false, duration, 'HANDLER_ERROR')
+      } catch {
+        // audit failures must not mask auth errors
+      }
     }
 
     const forbidden = error instanceof Error && error.message.includes('Forbidden')
@@ -340,8 +346,12 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
     const message = forbidden
       ? 'Admin role required. Use a qunt_adm_... key.'
       : auth
-        ? 'Authentication failed. Use Authorization: Bearer <qunt_usr_... key or Supabase token>. Create keys in Settings → API Keys.'
-        : 'Internal server error'
+        ? error instanceof Error
+          ? error.message
+          : 'Authentication required. Use Authorization: Bearer qunt_usr_* from Settings → API Keys.'
+        : error instanceof Error
+          ? error.message
+          : 'Internal server error'
     const headers =
       auth && !forbidden
         ? getAuthChallengeHeaders(request, authHeaderError(error), config.authChallenge ?? 'oauth')
