@@ -59,7 +59,7 @@ function getAuthChallengeHeaders(
 
   if (apiKeyAttempt) {
     return {
-      'WWW-Authenticate': `Bearer error="${error}", error_description="Use Authorization: Bearer qunt_usr_* from Settings → API Keys (URL: /api/mcp/key or /api/mcp)"`,
+      'WWW-Authenticate': `Bearer error="${error}", error_description="API key required"`,
     }
   }
   const resourceMetadataUrl = new URL('/.well-known/oauth-protected-resource/api/mcp', request.url)
@@ -255,7 +255,9 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
           -32001,
           'Authentication required for tools/list. Use Authorization: Bearer qunt_usr_* or complete OAuth login.',
           401,
-          getAuthChallengeHeaders(request, 'invalid_request', config.authChallenge ?? 'oauth'),
+          config.authChallenge === 'oauth'
+            ? getAuthChallengeHeaders(request, 'invalid_request', 'oauth')
+            : undefined,
         )
       }
       const cursor = typeof params?.cursor === 'string' ? params.cursor : undefined
@@ -310,7 +312,9 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
           -32001,
           'Authentication required for tools/call. Use Authorization: Bearer qunt_usr_* from Settings → API Keys.',
           401,
-          getAuthChallengeHeaders(request, 'invalid_request', config.authChallenge ?? 'oauth'),
+          config.authChallenge === 'oauth'
+            ? getAuthChallengeHeaders(request, 'invalid_request', 'oauth')
+            : undefined,
         )
       }
 
@@ -353,8 +357,8 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
           ? error.message
           : 'Internal server error'
     const headers =
-      auth && !forbidden
-        ? getAuthChallengeHeaders(request, authHeaderError(error), config.authChallenge ?? 'oauth')
+      auth && !forbidden && config.authChallenge === 'oauth'
+        ? getAuthChallengeHeaders(request, authHeaderError(error), 'oauth')
         : undefined
     return jsonRpcError(reqId, code, message, forbidden ? 403 : auth ? 401 : 500, headers)
   }
