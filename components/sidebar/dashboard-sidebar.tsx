@@ -161,8 +161,9 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
     const timezones = [...SUPPORTED_TIMEZONES]
 
     return (
-        <UnifiedSidebar
-            items={navItems}
+        <div className="max-md:hidden">
+            <UnifiedSidebar
+                items={navItems}
             user={{
                 avatar_url: user?.user_metadata?.avatar_url,
                 email: user?.email,
@@ -177,5 +178,6 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             }}
             onLogout={handleLogout}
         />
+            </div>
     )
 }

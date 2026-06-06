@@ -20,7 +20,7 @@ const SelectTrigger = React.forwardRef<
     ref={ref}
     data-slot="select-trigger"
     className={cn(
-      'type-body-sm flex h-10 w-full items-center justify-between rounded-[0.95rem] border-0 bg-card/70 px-3.5 py-2 text-left text-foreground shadow-[inset_0_1px_0_hsl(var(--foreground)/0.025)] transition-[background-color,border-color,box-shadow] duration-150 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+      'type-body-sm flex h-10 max-md:min-h-[44px] w-full items-center justify-between rounded-[0.95rem] border-0 bg-card/70 px-3.5 py-2 text-left text-foreground shadow-[inset_0_1px_0_hsl(var(--foreground)/0.025)] transition-[background-color,border-color,box-shadow] duration-150 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 max-md:touch-manipulation',
       'focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2',
       error &&
         'border-destructive/60 focus-visible:border-destructive/70 focus-visible:ring-destructive/20',
@@ -119,7 +119,7 @@ const SelectItem = React.forwardRef<
     ref={ref}
     data-slot="select-item"
     className={cn(
-      'type-body-sm relative flex w-full cursor-default select-none items-center rounded-lg py-2 pl-6 pr-2 text-foreground outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-card/70 focus:text-foreground hover:bg-card/70 hover:text-foreground data-[state=checked]:bg-foreground/10 data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
+      'type-body-sm relative flex w-full cursor-default select-none items-center rounded-lg py-2 max-md:min-h-[44px] pl-6 pr-2 text-foreground outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-card/70 focus:text-foreground hover:bg-card/70 hover:text-foreground data-[state=checked]:bg-foreground/10 data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
       className,
     )}
     {...props}

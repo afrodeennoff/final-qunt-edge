@@ -143,6 +143,11 @@ const config = {
         '22.5': '5.625rem',
         '23.5': '5.875rem',
         '24.5': '6.125rem',
+        // Safe area spacing (used via utility classes in CSS, added here for token completeness)
+        'safe-bottom': 'env(safe-area-inset-bottom, 0px)',
+        'safe-top': 'env(safe-area-inset-top, 0px)',
+        'safe-left': 'env(safe-area-inset-left, 0px)',
+        'safe-right': 'env(safe-area-inset-right, 0px)',
       },
       maxWidth: {
         xs: '20rem',

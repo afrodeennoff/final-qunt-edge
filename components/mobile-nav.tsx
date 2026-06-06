@@ -150,7 +150,7 @@ export function UnifiedMobileNav({
                             href={link.href.startsWith('/') ? link.href : `/${locale}${link.href}`}
                             onClick={() => setOpen(false)}
                             className={cn(
-                              'flex min-h-[44px] items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-[background-color,border-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2',
+                              'flex min-h-[44px] items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-200 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2',
                               active
                                 ? 'border border-primary/18 bg-primary/10 text-sidebar-foreground shadow-[0_0_0_0.5px_hsl(var(--primary)/0.16),0_18px_28px_-24px_rgba(0,0,0,0.84)]'
                                 : 'border border-transparent text-sidebar-foreground/60 hover:border-transparent hover:bg-background/72 hover:text-sidebar-foreground'

@@ -81,7 +81,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      'type-body-sm relative flex cursor-default select-none items-center gap-2.5 rounded-lg px-2 py-1.5 text-foreground/95 outline-none transition-[background-color,border-color,color] duration-120 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'type-body-sm relative flex cursor-default select-none items-center gap-2.5 rounded-lg px-2 py-1.5 max-md:min-h-[44px] text-foreground/95 outline-none transition-[background-color,border-color,color] duration-120 active:scale-[0.98] data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       inset && 'pl-8',
       className,
     )}
@@ -97,7 +97,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      'type-body-sm relative flex cursor-default select-none items-center rounded-lg py-2 pl-8 pr-2.5 text-foreground/95 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-primary/4 focus:text-foreground hover:bg-primary/4 hover:text-foreground data-[state=checked]:bg-[var(--primary)] data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
+      'type-body-sm relative flex cursor-default select-none items-center rounded-lg py-2 max-md:min-h-[44px] pl-8 pr-2.5 text-foreground/95 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-primary/4 focus:text-foreground hover:bg-primary/4 hover:text-foreground data-[state=checked]:bg-[var(--primary)] data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
       className,
     )}
     checked={checked}
@@ -120,7 +120,7 @@ const DropdownMenuRadioItem = React.forwardRef<
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      'type-body-sm relative flex cursor-default select-none items-center rounded-lg py-2 pl-8 pr-2.5 text-foreground/95 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-primary/4 focus:text-foreground hover:bg-primary/4 hover:text-foreground data-[state=checked]:bg-[var(--primary)] data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
+      'type-body-sm relative flex cursor-default select-none items-center rounded-lg py-2 max-md:min-h-[44px] pl-8 pr-2.5 text-foreground/95 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-primary/4 focus:text-foreground hover:bg-primary/4 hover:text-foreground data-[state=checked]:bg-[var(--primary)] data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
       className,
     )}
     {...props}
