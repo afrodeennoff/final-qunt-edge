@@ -58,7 +58,7 @@
     overflow-x: clip;
   }
 
-  a, button, [role="button"], summary {
+  a, button, [role="button"], summary, input, textarea, select, [role="tab"], [role="switch"], [role="menuitem"], [role="option"], [role="radio"], [role="checkbox"] {
     touch-action: manipulation;
   }
 
@@ -172,30 +172,6 @@
     color: #1D1D1F;
   }
 
-  ::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: rgba(0,0,0,0.18);
-    border-radius: 10px;
-    border: 2px solid transparent;
-    background-clip: content-box;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0,0,0,0.28);
-  }
-
-  ::-webkit-scrollbar-corner {
-    background: transparent;
-  }
-
   /* macOS-style scrollbar */
   * {
     scrollbar-width: thin;
@@ -292,19 +268,6 @@
     min-height: 44px;
   }
 
-  /* Safe area padding for notched devices */
-  .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  .pt-safe {
-    padding-top: env(safe-area-inset-top, 0px);
-  }
-  .pl-safe {
-    padding-left: env(safe-area-inset-left, 0px);
-  }
-  .pr-safe {
-    padding-right: env(safe-area-inset-right, 0px);
-  }
 
   /* Focus visible ring for keyboard navigation */
   :focus-visible {
@@ -345,8 +308,8 @@
     transition: transform 0.1s ease;
   }
 
-  /* Prevent callout on long-press on mobile */
-  * {
+  /* Prevent callout on long-press on mobile — only interactive elements */
+  a, button, [role="button"], img, video, [role="tab"], [role="menuitem"] {
     -webkit-touch-callout: none;
   }
 
@@ -367,6 +330,15 @@
     /* Better text rendering for mobile DPI */
     body {
       -webkit-font-smoothing: subpixel-antialiased;
+    }
+
+    /* Suppress hover states on touch devices to prevent stuck hover */
+    a:hover, button:hover, [role="button"]:hover, [role="tab"]:hover {
+      background-color: inherit !important;
+      color: inherit !important;
+      border-color: inherit !important;
+      box-shadow: inherit !important;
+      transform: none !important;
     }
   }
 }
@@ -1861,8 +1833,7 @@
       box-shadow: 0 18px 36px -30px hsl(var(--brand-ink) / 0.58);
     }
 
-    [data-dashboard-header='true'] {
-    }
+
   }
 }
 

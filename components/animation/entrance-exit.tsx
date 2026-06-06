@@ -78,64 +78,64 @@ export function AnimateIn({
       visible: { opacity: 1, scale: 1 },
     },
     blur: {
-      hidden: { opacity: 0, y: 3, scale: 0.995, filter: 'blur(2px)' },
-      visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
+      hidden: { opacity: 0, y: 3, scale: 0.995 },
+      visible: { opacity: 1, y: 0, scale: 1 },
     },
   }
 
- const transition = prefersReducedMotion
- ? {}
- : variant ==="bounce"
-  ? SPRING_PRESETS.snappy
-  : variant === 'blur'
-    ? { duration: 0.3, delay, ease: MOTION_EASE.snappy }
-    : { duration, delay, ease: MOTION_EASE.snappy }
+  const transition = prefersReducedMotion
+  ? {}
+  : variant ==="bounce"
+   ? SPRING_PRESETS.snappy
+   : variant === 'blur'
+     ? { duration: 0.3, delay, ease: MOTION_EASE.snappy }
+     : { duration, delay, ease: MOTION_EASE.snappy }
 
- const staggerConfig = staggerChildren
- ? {
- visible: {
- transition: {
- staggerChildren: staggerDelay,
- delayChildren: delay,
- },
- },
- }
- : {}
+  const staggerConfig = staggerChildren
+  ? {
+  visible: {
+  transition: {
+  staggerChildren: staggerDelay,
+  delayChildren: delay,
+  },
+  },
+  }
+  : {}
 
- if (prefersReducedMotion) {
- return <div className={className}>{children}</div>
- }
+  if (prefersReducedMotion) {
+  return <div className={className}>{children}</div>
+  }
 
- return (
- <motion.div
- ref={ref}
- className={className}
- initial="hidden"
- animate={shouldAnimate ?"visible" :"hidden"}
- variants={{ ...variants[variant], ...staggerConfig }}
- transition={transition}
- >
- {children}
- </motion.div>
- )
+  return (
+  <motion.div
+  ref={ref}
+  className={className}
+  initial="hidden"
+  animate={shouldAnimate ?"visible" :"hidden"}
+  variants={{ ...variants[variant], ...staggerConfig }}
+  transition={transition}
+  >
+  {children}
+  </motion.div>
+  )
 }
 
 interface AnimateInItemProps {
- children: React.ReactNode
- variant?: VariantType
- direction?: SlideDirection
- duration?: number
- className?: string
+  children: React.ReactNode
+  variant?: VariantType
+  direction?: SlideDirection
+  duration?: number
+  className?: string
 }
 
 export function AnimateInItem({
- children,
- variant ="fade",
- direction ="up",
- duration = 0.4,
- className,
+  children,
+  variant ="fade",
+  direction ="up",
+  duration = 0.4,
+  className,
 }: AnimateInItemProps) {
- const prefersReducedMotion = useReducedMotion()
+  const prefersReducedMotion = useReducedMotion()
 
   const variants = {
     fade: {
@@ -155,8 +155,8 @@ export function AnimateInItem({
       visible: { opacity: 1, scale: 1 },
     },
     blur: {
-      hidden: { opacity: 0, y: 3, scale: 0.995, filter: 'blur(2px)' },
-      visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
+      hidden: { opacity: 0, y: 3, scale: 0.995 },
+      visible: { opacity: 1, y: 0, scale: 1 },
     },
   }
 

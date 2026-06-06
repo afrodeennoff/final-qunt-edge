@@ -70,7 +70,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           hover &&
             'transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)]',
           isInteractive &&
-            'cursor-pointer transition-[transform,box-shadow] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.99]',
+            'cursor-pointer select-none transition-[transform,box-shadow] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.99]',
           isLoading && 'pointer-events-none opacity-80',
           className,
         )}

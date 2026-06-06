@@ -51,11 +51,18 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
   const config: NextConfig = {
     poweredByHeader: false,
     reactStrictMode: true,
+    compiler: {
+      removeConsole: process.env.NODE_ENV === 'production',
+    },
     serverExternalPackages: ['pdf2json', 'canvas', 'sharp', 'openai'],
     cacheComponents: !cacheComponentsDisabled,
     // Bundle optimization - tree shake heavy libraries
     experimental: {
       ...(cpus ? { cpus } : {}),
+      staleTimes: {
+        dynamic: 30,
+        static: 180,
+      },
       // Optimize package imports for better tree shaking
       // Each package below gets optimized module resolution + dead code elimination
       optimizePackageImports: [

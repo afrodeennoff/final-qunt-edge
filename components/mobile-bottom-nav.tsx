@@ -130,8 +130,8 @@ function MobileBottomNav({ items }: { items?: MobileNavItem[] }) {
       aria-label="Dashboard navigation"
     >
       <div
-        className="relative flex h-[4.35rem] items-center justify-around rounded-2xl border border-sidebar-border/30 bg-background/80 px-2 shadow-[inset_0_1px_0_hsl(var(--primary)/0.04),0_18px_40px_-24px_rgba(0,0,0,0.84)]"
-        style={{ WebkitBackdropFilter: 'blur(24px)', backdropFilter: 'blur(24px)' }}
+        className="relative flex h-[4.35rem] items-center justify-around rounded-2xl border border-sidebar-border/30 bg-background/95 px-2 shadow-[inset_0_1px_0_hsl(var(--primary)/0.04),0_18px_40px_-24px_rgba(0,0,0,0.84)]"
+        style={{ WebkitBackdropFilter: 'blur(12px)', backdropFilter: 'blur(12px)' }}
       >
         {navItems.map((item) => (
           <TabItem key={item.label} item={item} />
