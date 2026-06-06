@@ -22,8 +22,8 @@ export default function LocaleLayoutInner({
             <MarketingLayoutShell
               contentClassName="w-full flex-1"
               showRollingBanner={false}
-              topSpacingClassName=""
-              contentSpacingClassName="pb-safe"
+              topSpacingClassName="pt-16 md:pt-20"
+              contentSpacingClassName="pb-safe pt-8 md:pt-10"
               shellVariant="black"
               fullWidth
               className="public-page"
