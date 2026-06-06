@@ -27,6 +27,8 @@ export interface McpRouteConfig {
   serverVersion: string
   /** api-key: no OAuth discovery on 401 (Cursor header auth workaround). oauth: default. */
   authChallenge?: McpAuthChallengeMode
+  /** When false, tools/list and tools/call work without credentials (e.g. /api/mcp/public). */
+  requireAuth?: boolean
   rateLimitWindow?: number
   rateLimitMax?: number
 }
@@ -232,8 +234,13 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
       return jsonRpcError(reqId, -32602, `${method} is not supported on this server. This server primarily exposes tools.`, 200)
     }
 
+    const requireAuth = config.requireAuth !== false
     if (method === 'tools/list' || method === 'tools/call') {
-      ctx = await config.authenticate(request)
+      if (requireAuth) {
+        ctx = await config.authenticate(request)
+      } else {
+        ctx = await config.authenticate(request).catch(() => null)
+      }
     } else {
       ctx = null
     }
@@ -249,7 +256,7 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
     }
 
     if (method === 'tools/list') {
-      if (!ctx) {
+      if (requireAuth && !ctx) {
         return jsonRpcError(
           reqId,
           -32001,
@@ -306,7 +313,7 @@ export async function handleMcpRequest(request: NextRequest, config: McpRouteCon
       }
 
       let result: { content: Array<{ type: string; text: string }>; isError?: boolean }
-      if (!ctx) {
+      if (requireAuth && !ctx) {
         return jsonRpcError(
           reqId,
           -32001,

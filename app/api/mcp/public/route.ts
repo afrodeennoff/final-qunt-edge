@@ -5,6 +5,7 @@ import { MCP_SERVER_NAME, MCP_SERVER_VERSION } from '@/lib/mcp-constants'
 
 const publicConfig: McpRouteConfig = {
   tools: websiteTools,
+  requireAuth: false,
   authenticate: async () => null,
   handleToolCall: async (toolName, args) => {
     return handleWebsiteMcpToolCall(toolName, args)

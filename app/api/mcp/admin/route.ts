@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { handleMcpRequest, CORS_HEADERS, type McpRouteConfig } from '@/server/mcp-route-utils'
-import { authenticateMcpRequest, requireAdminAccess } from '@/server/mcp-auth'
+import { authenticateMcpRequest, extractMcpCredential, requireAdminAccess } from '@/server/mcp-auth'
 import { handleMcpToolCall, standardTools } from '@/server/mcp-tools'
 import { handleAdminMcpToolCall, adminTools } from '@/server/mcp-admin-tools'
 import { handleAdminWriteToolCall, adminWriteTools } from '@/server/mcp-admin-write-tools'
@@ -13,7 +13,7 @@ const ALL_TOOLS = [...standardTools, ...userWriteTools, ...websiteTools, ...admi
 const adminConfig: McpRouteConfig = {
   tools: ALL_TOOLS,
   authenticate: async (request) => {
-    const ctx = await authenticateMcpRequest(request.headers.get('authorization'))
+    const ctx = await authenticateMcpRequest(extractMcpCredential(request))
     requireAdminAccess(ctx)
     return ctx
   },
