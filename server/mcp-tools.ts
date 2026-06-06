@@ -1119,6 +1119,13 @@ async function listTrades(ctx: McpAuthContext, args: Record<string, unknown>) {
     orderBy: { entryDate: 'desc' },
     take: limit,
     skip: offset,
+    select: {
+      id: true, accountNumber: true, userId: true, instrument: true, side: true,
+      quantity: true, entryPrice: true, closePrice: true, pnl: true, commission: true,
+      entryId: true, closeId: true, entryDate: true, closeDate: true,
+      timeInPosition: true, comment: true, tags: true, groupId: true,
+      createdAt: true,
+    },
   })
   return toolSuccess(trades)
 }

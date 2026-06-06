@@ -1,10 +1,28 @@
 import { NextRequest } from 'next/server'
+import { z } from 'zod/v3'
 import { Prisma } from '@/prisma/generated/prisma'
 import { prisma } from '@/lib/prisma'
 import { apiError } from '@/lib/api-response'
 import { createRouteClient } from '@/lib/supabase/route-client'
 import { apiSuccess, withRateLimited } from '@/lib/api/with-api-route'
 import { JOURNAL_PAGE_SIZE } from '@/app/[locale]/dashboard/notes/lib/journal-constants'
+
+const JournalSchema = z.object({
+  tradeId: z.string().min(1),
+  accountNumber: z.string().optional(),
+  content: z.string().optional(),
+  preTradeNotes: z.string().optional(),
+  postTradeReview: z.string().optional(),
+  emotions: z.string().optional(),
+  confidenceRating: z.number().min(0).max(10).optional(),
+  disciplineScore: z.number().min(0).max(10).optional(),
+  customTags: z.array(z.string()).optional(),
+  screenshots: z.array(z.string()).optional(),
+  timeframe: z.string().optional(),
+  session: z.string().optional(),
+  excerptTitle: z.string().optional(),
+  featuredExcerpt: z.string().optional(),
+})
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -196,7 +214,7 @@ async function handlePost(request: NextRequest) {
       return apiError('UNAUTHORIZED', 'User not found', 401, { requestId })
     }
 
-    const body = await request.json()
+    const body = JournalSchema.parse(await request.json())
     const {
       tradeId,
       accountNumber,
@@ -213,10 +231,10 @@ async function handlePost(request: NextRequest) {
       featuredExcerpt,
     } = body
 
-    if (!tradeId || !accountNumber) {
+    if (!accountNumber) {
       return apiError(
         'VALIDATION_FAILED',
-        'tradeId and accountNumber are required',
+        'accountNumber is required',
         400,
         { requestId },
       )

@@ -72,7 +72,7 @@ export async function POST(request: Request) {
       : await supabase.auth.oauth.denyAuthorization(authorizationId.trim())
 
   if (result.error) {
-    return NextResponse.json({ error: result.error.message }, { status: 400 })
+    return NextResponse.json({ error: 'Authorization request failed' }, { status: 400 })
   }
 
   const redirectUrl = result.data?.redirect_url

@@ -27,12 +27,33 @@ export async function getAccountHealthHandler(ctx: McpAuthContext, args: Record<
   }
 
   const now = new Date()
-  const results = await Promise.all(accounts.map(async (acc) => {
-    const trades = await prisma.trade.findMany({
-      where: { accountNumber: acc.number, userId },
-      select: { pnl: true, entryDate: true, closeDate: true },
-      orderBy: { entryDate: 'desc' },
-    })
+  const accountNumbers = accounts.map(a => a.number)
+  const allTrades = await prisma.trade.findMany({
+    where: { accountNumber: { in: accountNumbers }, userId },
+    select: { pnl: true, entryDate: true, closeDate: true, accountNumber: true },
+    orderBy: { entryDate: 'desc' },
+  })
+  const tradesByAccount = new Map<string, typeof allTrades>()
+  for (const t of allTrades) {
+    const list = tradesByAccount.get(t.accountNumber)
+    if (list) list.push(t)
+    else tradesByAccount.set(t.accountNumber, [t])
+  }
+
+  const accountIds = accounts.map(a => a.id)
+  const allPayouts = await prisma.payout.findMany({
+    where: { accountId: { in: accountIds } },
+    select: { amount: true, status: true, accountId: true },
+  })
+  const payoutsByAccount = new Map<string, typeof allPayouts>()
+  for (const p of allPayouts) {
+    const list = payoutsByAccount.get(p.accountId)
+    if (list) list.push(p)
+    else payoutsByAccount.set(p.accountId, [p])
+  }
+
+  const results = accounts.map((acc) => {
+    const trades = tradesByAccount.get(acc.number) || []
 
     const totalPnL = trades.reduce((sum, t) => sum + Number(t.pnl), 0)
     const currentBalance = Number(acc.startingBalance) + totalPnL
@@ -58,11 +79,7 @@ export async function getAccountHealthHandler(ctx: McpAuthContext, args: Record<
     const payoutEligible = !acc.evaluation ||
       (profitTargetPct >= 100 && uniqueTradeDays >= minDays)
 
-    const payouts = await prisma.payout.findMany({
-      where: { accountId: acc.id },
-      select: { amount: true, status: true },
-    })
-
+    const payouts = payoutsByAccount.get(acc.id) || []
     const totalPayoutsReceived = payouts
       .filter((p) => p.status === 'PAID')
       .reduce((sum, p) => sum + Number(p.amount), 0)
@@ -98,7 +115,7 @@ export async function getAccountHealthHandler(ctx: McpAuthContext, args: Record<
       dailyLossLimit: Number(acc.dailyLoss) || 0,
       lastUpdated: now.toISOString(),
     }
-  }))
+  })
 
   return results
 }

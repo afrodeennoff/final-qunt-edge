@@ -573,22 +573,7 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
       where: { id: teamId },
       include: {
         members: {
-          include: {
-            user: {
-              include: {
-                accounts: {
-                  include: {
-                    trades: {
-                      orderBy: {
-                        createdAt: 'desc'
-                      },
-                      take: 5
-                    }
-                  }
-                }
-              }
-            }
-          }
+          select: { userId: true }
         },
         analytics: {
           where: { period: 'monthly' },
@@ -599,40 +584,74 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
 
     if (!team) throw new Error('Team not found')
 
+    const memberUserIds = team.members.map(m => m.userId)
+
     // Find if user is a member
-    const isMember = team.members.some(m => m.userId === userId)
+    const isMember = memberUserIds.includes(userId)
     if (!isMember) throw new Error('Unauthorized')
+
+    const users = await prisma.user.findMany({
+      where: { id: { in: memberUserIds } },
+      select: { id: true, email: true },
+    })
+    const userMap = new Map(users.map(u => [u.id, u]))
+
+    const accounts = await prisma.account.findMany({
+      where: { userId: { in: memberUserIds } },
+      select: { id: true, userId: true, number: true, startingBalance: true, balanceRequired: true },
+    })
+    const accountsByUser = new Map<string, typeof accounts>()
+    for (const a of accounts) {
+      const list = accountsByUser.get(a.userId)
+      if (list) list.push(a)
+      else accountsByUser.set(a.userId, [a])
+    }
+
+    const accountNumbers = accounts.map(a => a.number)
+
+    const trades = await prisma.trade.findMany({
+      where: { accountNumber: { in: accountNumbers } },
+      select: { id: true, accountNumber: true, createdAt: true, instrument: true, pnl: true },
+      orderBy: { createdAt: 'desc' },
+    })
+    const tradesByAccount = new Map<string, typeof trades>()
+    for (const t of trades) {
+      const list = tradesByAccount.get(t.accountNumber)
+      if (list) { if (list.length < 5) list.push(t) }
+      else tradesByAccount.set(t.accountNumber, [t])
+    }
 
     let totalBalance = 0
     let activeTraders = 0
-    let recentActivity: Array<{ id: string; type: string; description: string; amount: number; date: Date; userEmail: string }> = []
-
     const now = new Date()
     const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    let recentActivity: Array<{ id: string; type: string; description: string; amount: number; date: Date; userEmail: string }> = []
 
-    team.members.forEach(member => {
+    for (const memberUserId of memberUserIds) {
+      const user = userMap.get(memberUserId)
+      if (!user) continue
+      const memberAccounts = accountsByUser.get(memberUserId) || []
       let memberHasRecentActivity = false
-      member.user.accounts.forEach(account => {
-        totalBalance += Number(account.startingBalance) + Number(account.balanceRequired || 0) // Basic balance calc
 
-        // Check for recent activity
-        const hasRecentTrades = account.trades.some(t => t.createdAt > lastWeek)
+      for (const account of memberAccounts) {
+        totalBalance += Number(account.startingBalance) + Number(account.balanceRequired || 0)
+        const accountTrades = tradesByAccount.get(account.number) || []
+        const hasRecentTrades = accountTrades.some(t => t.createdAt > lastWeek)
         if (hasRecentTrades) memberHasRecentActivity = true
 
-        // Collect recent activity
-        account.trades.forEach(trade => {
+        for (const trade of accountTrades) {
           recentActivity.push({
             id: trade.id,
             type: 'TRADE_CLOSED',
-            description: `${member.user.email} closed ${trade.instrument} with PnL ${trade.pnl}`,
+            description: `${user.email} closed ${trade.instrument} with PnL ${trade.pnl}`,
             amount: Number(trade.pnl),
             date: trade.createdAt,
-            userEmail: member.user.email
+            userEmail: user.email,
           })
-        })
-      })
+        }
+      }
       if (memberHasRecentActivity) activeTraders++
-    })
+    }
 
     // Sort and limit activity
     recentActivity = recentActivity.sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 10)

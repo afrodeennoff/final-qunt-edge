@@ -1386,14 +1386,8 @@ async function savePayout(ctx: McpAuthContext, args: Record<string, unknown>): P
 async function deletePayout(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
   const payoutId = requireParam(args, 'payoutId')
 
-  const payout = await prisma.payout.findUnique({ where: { id: payoutId } })
+  const payout = await prisma.payout.findFirst({ where: { id: payoutId, account: { userId: ctx.userId } } })
   if (!payout) return toolError('Payout not found')
-
-  // Verify ownership through account
-  const account = await prisma.account.findFirst({
-    where: { id: payout.accountId, userId: ctx.userId },
-  })
-  if (!account) return toolError('Payout not found')
 
   await prisma.payout.delete({ where: { id: payoutId } })
 

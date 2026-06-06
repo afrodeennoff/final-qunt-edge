@@ -98,9 +98,9 @@ export async function POST(request: Request) {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    console.error('Error processing request:', error);
-    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Failed to process request' }), {
+  } catch {
+    console.error('Error processing request');
+    return new Response(JSON.stringify({ error: 'Failed to process request' }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });

@@ -396,6 +396,8 @@ model Trade {
   @@index([userId, pnl]) // Composite for PnL filtering
   @@index([userId]) // Single-field index for userId-only lookups
   @@index([accountNumber, userId]) // Composite FK index for Account relation (critical for joins and enforcement)
+  @@index([userId, entryDate, pnl], map: "Trade_userId_entryDate_pnl_idx")
+  @@index([userId, entryDate(sort: Desc)], map: "Trade_userId_entryDate_desc_idx")
   @@schema("public")
 }
 
@@ -433,6 +435,7 @@ model JournalEntry {
   @@index([userId])
   @@index([tradeId])
   @@index([accountNumber, userId]) // FK enforcement for Account relation cascade deletes
+  @@index([userId, createdAt])
   @@schema("public")
 }
 
@@ -470,6 +473,7 @@ model Payout {
   @@index([status])
   @@index([accountId, status]) // Composite for payout processing queries
   @@index([date]) // For date-based payout queries
+  @@index([accountId, status, date])
   @@schema("public")
 }
 

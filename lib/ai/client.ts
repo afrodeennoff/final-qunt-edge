@@ -68,7 +68,7 @@ function normalizeModelForOpenRouter(model: string): string {
 }
 
 // Enhanced AI language model with caching (only for non-streaming generations)
-export function getAiLanguageModel(feature: AiFeature) {
+export function getAiLanguageModel(feature: AiFeature, userId?: string) {
   const config = validateAiConfig();
 
   if (!config.isValid) {
@@ -99,17 +99,17 @@ export function getAiLanguageModel(feature: AiFeature) {
            // Generate cache key based on feature and options
            const featureStr = String(feature);
            
-           // Try to get from cache first
-           const cached = await cacheAiResponse(featureStr, options);
-           if (cached !== null) {
-             return cached;
-           }
-           
-           // Not in cache, call the original method
-           const result = await Reflect.get(target, p, receiver)(options);
-           
-           // Cache the result (with a default TTL of 5 minutes)
-           await setAiResponseCache(featureStr, options, result);
+            // Try to get from cache first
+            const cached = await cacheAiResponse(featureStr, options, userId);
+            if (cached !== null) {
+              return cached;
+            }
+            
+            // Not in cache, call the original method
+            const result = await Reflect.get(target, p, receiver)(options);
+            
+            // Cache the result (with a default TTL of 5 minutes)
+            await setAiResponseCache(featureStr, options, result, userId);
            
            return result;
          };

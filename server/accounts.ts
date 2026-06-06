@@ -290,14 +290,11 @@ export async function setupAccountAction(account: Account): Promise<Account> {
   // Security: Validate groupId ownership before connecting
   if (groupId) {
     const group = await prisma.group.findUnique({
-      where: { id: groupId },
-      select: { userId: true }
+      where: { id: groupId, userId },
+      select: { id: true }
     })
     if (!group) {
       throw new Error('Group not found')
-    }
-    if (group.userId !== userId) {
-      throw new Error('Unauthorized: cannot connect to another user\'s group')
     }
   }
 

@@ -110,10 +110,10 @@ export async function POST(req: NextRequest) {
       message: `${createdOrders.length} orders stored successfully` 
     }, { status: 200 });
     
-  } catch (error) {
+  } catch {
+    console.error('Failed to store orders');
     return NextResponse.json({ 
-      error: 'Failed to store orders', 
-      details: error instanceof Error ? error.message : 'Unknown error' 
+      error: 'Failed to store orders'
     }, { status: 500 });
   }
 }

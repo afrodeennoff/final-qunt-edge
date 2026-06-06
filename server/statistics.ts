@@ -46,10 +46,9 @@ export async function getStatisticsAction(
   const userId = await getDatabaseUserId()
 
   const where: Prisma.TradeWhereInput = { userId }
-  if (periodDays && periodDays > 0) {
-    const cutoff = new Date(Date.now() - periodDays * 86400000)
-    where.entryDate = { gte: cutoff }
-  }
+  const effectivePeriod = periodDays && periodDays > 0 ? periodDays : 365
+  const cutoff = new Date(Date.now() - effectivePeriod * 86400000)
+  where.entryDate = { gte: cutoff }
   if (accountNumber) where.accountNumber = accountNumber
 
   const trades = await prisma.trade.findMany({

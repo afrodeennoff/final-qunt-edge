@@ -7,6 +7,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { getCanonicalUrl, getLocaleAlternates } from '@/lib/seo'
+import { sanitizeHtml } from '@/lib/sanitize'
 
 interface Props {
   params: Promise<{
@@ -111,7 +112,7 @@ export default async function BlogDetailPage(props: Props) {
 
         <div className="prose max-w-none">
           {post.content ? (
-            <div dangerouslySetInnerHTML={{ __html: post.content }} />
+            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }} />
           ) : (
             <p className="text-muted-foreground">No content available.</p>
           )}

@@ -42,9 +42,10 @@ const cacheStats = {
   errors: 0,
 }
 
-function buildAiCacheKey(feature: string, options: unknown): string {
-  const optionsStr = stableStringify(options)
-  const hash = hashString(optionsStr)
+function buildAiCacheKey(feature: string, options: unknown, userId?: string): string {
+  const parts = [feature, stableStringify(options)]
+  if (userId) parts.push(userId)
+  const hash = hashString(parts.join('|'))
   return buildCacheKey(AI_CACHE_DOMAIN, feature, hash)
 }
 
@@ -75,9 +76,10 @@ export function resetAiCacheStats() {
  */
 export async function cacheAiResponse<T>(
   feature: string,
-  options: unknown
+  options: unknown,
+  userId?: string
 ): Promise<T | null> {
-  const key = buildAiCacheKey(feature, options)
+  const key = buildAiCacheKey(feature, options, userId)
   const policy = CachePolicies.aiDerived(AI_CACHE_TTL)
 
   try {
@@ -117,9 +119,10 @@ export async function cacheAiResponse<T>(
 export async function setAiResponseCache<T>(
   feature: string,
   options: unknown,
-  result: T
+  result: T,
+  userId?: string
 ): Promise<void> {
-  const key = buildAiCacheKey(feature, options)
+  const key = buildAiCacheKey(feature, options, userId)
   const policy = CachePolicies.aiDerived(AI_CACHE_TTL)
 
   try {

@@ -147,6 +147,7 @@ export async function invalidateTradeRelatedCaches(userId: string): Promise<void
   await Promise.all([
     invalidateNamespace('ai-trades'),
     invalidateNamespace('behavior-insights'),
+    invalidateNamespace('query-optimizer'),
   ])
 }
 
@@ -359,10 +360,11 @@ async function saveTradesForResolvedUser(
     // Invalidate caches AFTER successful transaction commit
     if (result.count > 0) {
       invalidateTradeDataCaches(userId)
-      // Also invalidate Redis namespaces for AI/behavior caches
+      // Also invalidate Redis namespaces for AI/behavior/query caches
       await Promise.all([
         invalidateNamespace('ai-trades'),
         invalidateNamespace('behavior-insights'),
+        invalidateNamespace('query-optimizer'),
       ])
     }
 
@@ -839,7 +841,7 @@ export async function addTagToTrade(tradeId: string, tag: string) {
     }
     if (trade.tags.includes(tag.trim())) {
       return await prisma.trade.findUnique({
-        where: { id: tradeId },
+        where: { id: tradeId, userId },
         select: {
           id: true, userId: true, accountNumber: true, instrument: true,
           side: true, quantity: true, entryPrice: true, closePrice: true,

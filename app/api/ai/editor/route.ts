@@ -102,6 +102,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Enforce payload size limit (5MB)
+  const contentLength = parseInt(req.headers.get('content-length') || '0', 10)
+  if (contentLength > 5 * 1024 * 1024) {
+    return NextResponse.json({ error: 'Payload too large' }, { status: 413 })
+  }
+
   // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, 'editor', editorRateLimit)
   if (!guard.ok) return guard.response
