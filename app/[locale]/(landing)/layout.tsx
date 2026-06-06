@@ -42,8 +42,8 @@ export default async function RootLayout(
       <MarketingLayoutShell
         contentClassName="w-full flex-1"
         showRollingBanner={false}
-        topSpacingClassName=""
-        contentSpacingClassName="pb-safe"
+        topSpacingClassName="pt-8 md:pt-16"
+        contentSpacingClassName="pb-safe pt-4 md:pt-6"
         shellVariant="black"
         fullWidth
         className="public-page"

@@ -43,9 +43,9 @@ export default function AuthenticationLayout({
        <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
          <div className="h-[500px] w-[500px] rounded-full bg-primary/[0.03] blur-2xl animate-[pulse_8s_ease-in-out_infinite]" />
        </div>
-       <div className="relative z-10">
-         <RootProviders>{children}</RootProviders>
-       </div>
+        <div className="relative z-10 pt-8 md:pt-16">
+          <RootProviders>{children}</RootProviders>
+        </div>
      </div>
    );
 
