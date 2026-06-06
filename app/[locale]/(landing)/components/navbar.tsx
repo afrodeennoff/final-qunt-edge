@@ -43,13 +43,13 @@ export default function Navbar() {
       <div className="mx-auto w-full max-w-[1400px]">
         <div
           className={cn(
-            'relative flex min-h-[3.5rem] items-center justify-between overflow-hidden rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] px-3 py-1.5 sm:min-h-[4rem] sm:px-4 sm:py-2',
+            'relative flex min-h-[3.5rem] items-center justify-between overflow-visible rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] px-3 py-1.5 sm:min-h-[4rem] sm:px-4 sm:py-2 flex-wrap',
           )}
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--qe-ref-green)]/20 to-transparent" />
           <Link
             href={`/${locale}`}
-            className="flex items-center gap-2 rounded-lg px-2 py-2 min-h-[44px] min-w-[44px] transition-colors hover:bg-[var(--qe-ref-surface-2)]"
+            className="flex shrink-0 items-center gap-2 rounded-lg px-2 py-2 min-h-[44px] min-w-[44px] transition-colors hover:bg-[var(--qe-ref-surface-2)]"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)] text-[var(--qe-ref-green)]">
               <Logo className="h-4 w-4 fill-current" />
@@ -59,7 +59,7 @@ export default function Navbar() {
             </span>
           </Link>
 
-          <nav className="mx-auto hidden items-center gap-0.5 lg:flex">
+          <nav className="mx-auto hidden items-center gap-0.5 lg:flex min-w-0">
             {links.map((link) => (
               <Link
                 key={link.href}
@@ -76,7 +76,7 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-3">
             <Link
               href={`/${locale}/authentication`}
               className="hidden md:inline-flex items-center rounded-full border border-[var(--qe-ref-card-border)] bg-transparent px-4 py-2 text-sm font-medium text-[var(--qe-ref-text-muted)] transition hover:border-[var(--qe-ref-green)]/40 hover:text-[var(--qe-ref-text)] min-h-[44px]"

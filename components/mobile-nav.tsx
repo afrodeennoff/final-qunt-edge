@@ -109,7 +109,7 @@ export function UnifiedMobileNav({
           type="button"
           variant="ghost"
           className={cn(
-            'h-11 w-11 rounded-xl border-0 bg-background/40 p-0 text-sidebar-foreground/72 shadow-sm transition-[background-color,border-color,color] duration-200 hover:border-transparent hover:bg-background/50 hover:text-sidebar-foreground lg:hidden',
+            'h-11 w-11 rounded-xl border-0 bg-background/40 p-0 text-sidebar-foreground/72 shadow-sm transition-[background-color,border-color,color] duration-200 hover:border-transparent hover:bg-background/50 hover:text-sidebar-foreground md:hidden',
             triggerClassName
           )}
           aria-label="Open navigation menu"

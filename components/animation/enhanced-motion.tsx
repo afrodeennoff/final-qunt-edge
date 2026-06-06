@@ -53,7 +53,7 @@ const BINANCE_ENTRANCE: Variants = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.16, ease: MOTION_EASE.snappy }
+    transition: { type: 'spring', stiffness: 400, damping: 38, mass: 0.7 }
   }
 }
 
@@ -63,7 +63,7 @@ export const blurIn: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.14, ease: MOTION_EASE.snappy },
+    transition: { type: 'spring', stiffness: 400, damping: 38, mass: 0.7 },
   },
 }
 
@@ -81,7 +81,7 @@ export const fadeInUp: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.2, ease: MOTION_EASE.snappy },
+    transition: { type: 'spring', stiffness: 320, damping: 32, mass: 0.8 },
   },
 }
 
@@ -98,7 +98,7 @@ export const slideInRight: Variants = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.2, ease: MOTION_EASE.snappy },
+    transition: { type: 'spring', stiffness: 320, damping: 32, mass: 0.8 },
   },
 }
 

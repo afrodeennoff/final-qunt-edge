@@ -211,7 +211,7 @@ export function HoverLift({
  y: -liftDistance,
  boxShadow: `0 ${liftDistance + 12}px ${liftDistance + 20}px -${liftDistance + 8}px rgba(0, 0, 0, ${shadowIntensity})`,
  }}
- transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+ transition={{ type: 'spring', stiffness: 300, damping: 30 }}
  >
  {children}
  </motion.div>
@@ -243,9 +243,9 @@ export function GlowOnHover({
  whileHover={{
  boxShadow: `0 0 ${glowSize}px -4px ${glowColor}`,
  }}
- transition={{ duration: 0.3 }}
- >
- {children}
- </motion.div>
+  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+  >
+  {children}
+  </motion.div>
  )
 }
