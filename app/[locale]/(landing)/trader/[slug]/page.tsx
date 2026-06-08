@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { cache } from 'react'
-import { motion } from 'motion/react'
 import { startOfDay } from 'date-fns'
 import {
   ArrowLeft,
@@ -273,12 +272,7 @@ export default async function TraderProfilePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }}
       />
-      <motion.div
-        className="mx-auto max-w-[1200px]"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 200, damping: 25 }}
-      >
+      <div className="mx-auto max-w-[1200px] animate-fade-up-smooth">
         {/* Hero Header - Premium modern look */}
         <div className="mb-8 overflow-hidden rounded-3xl border border-white/10 bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
           <div className="flex flex-col gap-6 p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
@@ -469,7 +463,7 @@ export default async function TraderProfilePage({
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }
