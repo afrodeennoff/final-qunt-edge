@@ -82,9 +82,9 @@ function buildPublicStats(snapshot: TraderSnapshot) {
       tone: snapshot.winRate >= 50 ? 'text-semantic-success' : 'text-foreground',
     },
     {
-      label: 'Avg PnL',
+      label: 'Avg / Trade',
       value: formatSigned(snapshot.avgPnl),
-      helper: 'Per visible trade',
+      helper: 'Per closed trade',
       icon: BarChart3,
       tone: getSignedTone(snapshot.avgPnl),
     },
@@ -348,9 +348,32 @@ export default async function TraderProfilePage({
           })}
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-12">
-          {/* Recent Trades - Enhanced */}
-          <div className="lg:col-span-7">
+        {/* Redesigned Rhythm — Full width calendar */}
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-white/10 bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
+            <div className="flex items-center justify-between border-b border-white/5 px-6 py-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/20 backdrop-blur-sm dark:bg-zinc-800/20">
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <div>
+                  <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground/60">Rhythm</div>
+                  <div className="text-base font-semibold tracking-tight text-foreground">Trading Calendar</div>
+                </div>
+              </div>
+              <div className="text-xs text-muted-foreground/50">Last 84 days</div>
+            </div>
+            <div className="p-6">
+              <div className="overflow-x-auto">
+                <div className="min-w-[340px]">
+                  <CalendarGrid dayPnl={snapshot.dayPnl} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Activity — Below rhythm, full width */}
+          <div>
             <div className="mb-3 flex items-center justify-between">
               <div>
                 <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Activity</div>
@@ -361,14 +384,14 @@ export default async function TraderProfilePage({
 
             <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
               {snapshot.recentTrades.length > 0 ? (
-                <div className="divide-y divide-transparent">
+                <div className="divide-y divide-white/5">
                   {snapshot.recentTrades.map((trade, idx) => {
                     const isPositive = trade.pnl > 0
                     const isNegative = trade.pnl < 0
                     return (
                       <div
                         key={idx}
-                        className="group flex items-center justify-between px-5 py-4 transition-all duration-200 hover:bg-muted/40 active:scale-[0.98]"
+                        className="group flex items-center justify-between px-5 py-4 transition-all duration-200 hover:bg-white/5 active:scale-[0.98]"
                       >
                         <div className="flex items-center gap-4">
                           <div className="font-mono text-sm font-medium text-foreground/80">{trade.symbol}</div>
@@ -393,73 +416,6 @@ export default async function TraderProfilePage({
                   No public closed trades available yet.
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* Performance + Calendar */}
-          <div className="space-y-6 lg:col-span-5">
-            {/* Win Rate Card with Ring */}
-            <div className="rounded-2xl border border-white/10 bg-white/30 p-6 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Consistency</div>
-                  <div className="mt-1 text-2xl font-semibold tracking-tight">Win Rate</div>
-                </div>
-                <div className="relative h-14 w-14">
-                  <svg className="h-14 w-14 -rotate-90" viewBox="0 0 36 36">
-                    <path
-                      className="stroke-transparent/40"
-                      strokeWidth="3.5"
-                      fill="none"
-                      d="M18 2.5 a 15.5 15.5 0 0 1 0 31 a 15.5 15.5 0 0 1 0 -31"
-                    />
-                    <path
-                      className="stroke-primary"
-                      strokeWidth="3.5"
-                      strokeLinecap="round"
-                      fill="none"
-                      strokeDasharray={`${Math.min(100, Math.max(8, snapshot.winRate))}, 100`}
-                      d="M18 2.5 a 15.5 15.5 0 0 1 0 31 a 15.5 15.5 0 0 1 0 -31"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center text-xl font-semibold tracking-tighter text-primary">
-                    {formatValue(snapshot.winRate)}%
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4 text-sm text-muted-foreground">Based on {snapshot.totalTrades} public trades</div>
-            </div>
-
-            {/* Quick Insights */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-2xl border border-white/10 bg-white/30 p-5 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
-                <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Avg per trade</div>
-                <div className={cn("mt-2 text-3xl font-semibold tracking-tighter", snapshot.avgPnl >= 0 ? "text-emerald-400" : "text-rose-400")}>
-                  {formatSigned(snapshot.avgPnl)}
-                </div>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/30 p-5 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
-                <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Profile status</div>
-                <div className="mt-2 text-3xl font-semibold tracking-tighter text-foreground">Live &amp; Public</div>
-                <div className="mt-1 text-xs text-muted-foreground">Updated in real-time</div>
-              </div>
-            </div>
-
-            {/* Calendar */}
-            <div className="rounded-2xl border border-white/10 bg-white/30 p-6 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
-              <div className="mb-4 flex items-center justify-between">
-                <div>
-                  <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Rhythm</div>
-                  <div className="text-xl font-semibold tracking-tight">Last 84 days</div>
-                </div>
-                <Calendar className="h-5 w-5 text-muted-foreground" />
-              </div>
-              <div className="overflow-x-auto">
-                <div className="min-w-[340px]">
-                  <CalendarGrid dayPnl={snapshot.dayPnl} />
-                </div>
-              </div>
-              <p className="mt-3 text-[12px] text-muted-foreground/70">Daily net PnL from closed public trades</p>
             </div>
           </div>
         </div>
