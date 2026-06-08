@@ -8,6 +8,7 @@ import {
   Lock,
   Sparkles,
   Zap,
+  Building2,
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -169,7 +170,7 @@ export default function TraderProfileClient({
     )
   }
 
-  const { username, allTrades, dayPnl, metrics } = snapshot
+  const { username, allTrades, dayPnl, accountCount, propFirms, metrics } = snapshot
   const profileInitials = username.slice(0, 2).toUpperCase()
 
   return (
@@ -196,6 +197,19 @@ export default function TraderProfileClient({
                 <h1 className="truncate text-3xl font-bold tracking-tight sm:text-4xl">
                   {username}
                 </h1>
+                {propFirms.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <Building2 className="h-3 w-3 text-muted-foreground/50" />
+                    {propFirms.map((firm) => (
+                      <span
+                        key={firm}
+                        className="inline-flex items-center rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground/80 dark:bg-zinc-800/30"
+                      >
+                        {firm}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <p className="text-sm text-muted-foreground">
                   Verified performance from Qunt Edge. Real closed trades, real execution rhythm,
                   real results.
@@ -251,15 +265,8 @@ export default function TraderProfileClient({
             value={metrics.winningStreak > 0 ? `${metrics.winningStreak} wins` : 'Reset'}
           />
           <StatTile
-            label="Avg / Trade"
-            value={formatCurrency(metrics.avgReturn)}
-            tone={
-              metrics.avgReturn > 0
-                ? 'positive'
-                : metrics.avgReturn < 0
-                  ? 'negative'
-                  : 'default'
-            }
+            label="Active Accounts"
+            value={String(accountCount)}
           />
         </div>
 
@@ -297,6 +304,19 @@ export default function TraderProfileClient({
           </div>
 
           <div className="rounded-2xl bg-white/30 p-5 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30 sm:p-6">
+            <div className="mb-4">
+              <StatTile
+                label="Avg / Trade"
+                value={formatCurrency(metrics.avgReturn)}
+                tone={
+                  metrics.avgReturn > 0
+                    ? 'positive'
+                    : metrics.avgReturn < 0
+                      ? 'negative'
+                      : 'default'
+                }
+              />
+            </div>
             <RadarChartCard
               radarData={radarData}
               isBenchmarkLoading={false}

@@ -34,6 +34,8 @@ export type PublicTraderSnapshot = {
   recentTrades: PublicTrade[]
   allTrades: PublicTrade[]
   dayPnl: Record<string, number>
+  accountCount: number
+  propFirms: string[]
   metrics: PublicTraderMetrics
 }
 
@@ -110,6 +112,14 @@ export async function getPublicTraderSnapshot(slug: string): Promise<PublicTrade
 
   if (!user?.showOnLeaderboard) return null
 
+  const accountRows = await prisma.account.findMany({
+    where: { userId: user.id },
+    select: { propfirm: true },
+  })
+
+  const accountCount = accountRows.length
+  const propFirms = [...new Set(accountRows.map((a) => a.propfirm).filter(Boolean))]
+
   const trades = await prisma.trade.findMany({
     where: { userId: user.id },
     select: { id: true, instrument: true, pnl: true, closeDate: true },
@@ -152,6 +162,8 @@ export async function getPublicTraderSnapshot(slug: string): Promise<PublicTrade
     recentTrades: mapped.slice(0, 10),
     allTrades: mapped.slice(0, 50),
     dayPnl,
+    accountCount,
+    propFirms,
     metrics,
   }
 }
