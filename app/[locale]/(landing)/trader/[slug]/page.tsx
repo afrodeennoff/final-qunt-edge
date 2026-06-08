@@ -257,29 +257,29 @@ export default async function TraderProfilePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }}
       />
-      <div className="mx-auto max-w-[1200px] animate-fade-up-smooth px-4 pt-24 pb-12 sm:px-6 sm:pb-16 lg:px-8">
+      <div className="mx-auto max-w-[1200px] animate-fade-up-smooth px-4 pt-28 pb-16 sm:px-6 sm:pb-20 lg:px-8">
         {/* Hero Header */}
-        <div className="mb-8 overflow-hidden rounded-2xl bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
+        <div className="mb-10 overflow-hidden rounded-3xl bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
           <div className="flex flex-col gap-6 p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
               <div className="relative shrink-0">
-                <Avatar className="h-28 w-28 rounded-3xl shadow-2xl sm:h-32 sm:w-32 ring-2 ring-primary/20">
+                <Avatar className="h-28 w-28 rounded-3xl shadow-2xl sm:h-32 sm:w-32">
                   <AvatarFallback className="bg-primary/10 text-4xl font-bold text-primary">
                     {snapshot.username.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 shadow-lg ring-2 ring-background">
-                  <div className="h-3 w-3 rounded-full bg-white" />
+                <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 shadow-lg">
+                  <div className="h-2.5 w-2.5 rounded-full bg-white" />
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary ring-1 ring-inset ring-primary/20">
-                    <Zap className="h-3.5 w-3.5" /> Public Trader
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+                    <Zap className="h-3 w-3" /> Public Trader
                   </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-4 py-1 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground ring-1 ring-inset ring-white/10">
-                    <Lock className="h-3.5 w-3.5" /> Live Profile
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/80 dark:bg-zinc-800/30">
+                    <Lock className="h-3 w-3" /> Live Profile
                   </span>
                 </div>
 
@@ -310,22 +310,22 @@ export default async function TraderProfilePage({
         </div>
 
         {/* Anchored Summary — Stats row */}
-        <div className="mb-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="mb-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {publicStats.map((stat, idx) => {
             const Icon = stat.icon
             return (
               <div
                 key={idx}
-                className="group rounded-2xl bg-white/30 p-5 shadow-lg backdrop-blur-xl transition-all duration-200 hover:bg-white/40 dark:bg-zinc-900/30 dark:hover:bg-zinc-900/40"
+                className="group rounded-2xl bg-white/30 px-5 py-4 shadow-lg backdrop-blur-xl transition-all duration-200 hover:bg-white/40 dark:bg-zinc-900/30 dark:hover:bg-zinc-900/40"
               >
-                <div className="flex items-center gap-4">
-                  <div className="rounded-xl bg-white/20 p-2.5 backdrop-blur-sm dark:bg-zinc-800/20">
-                    <Icon className="h-5 w-5 text-muted-foreground" />
+                <div className="flex items-center gap-3.5">
+                  <div className="rounded-xl bg-white/20 p-2 backdrop-blur-sm dark:bg-zinc-800/20">
+                    <Icon className="h-4 w-4 text-muted-foreground" />
                   </div>
                   <div>
-                    <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground/70">{stat.label}</div>
-                    <div className={cn("mt-0.5 text-2xl font-semibold tracking-tighter", stat.tone)}>{stat.value}</div>
-                    <div className="text-[11px] text-muted-foreground/50">{stat.helper}</div>
+                    <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground/60">{stat.label}</div>
+                    <div className={cn("mt-px text-2xl font-semibold tracking-tighter", stat.tone)}>{stat.value}</div>
+                    <div className="text-[10px] text-muted-foreground/40">{stat.helper}</div>
                   </div>
                 </div>
               </div>
@@ -336,7 +336,7 @@ export default async function TraderProfilePage({
         {/* Rhythm + Activity stack */}
         <div className="space-y-6">
           <div className="rounded-2xl bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
-            <div className="flex items-center justify-between border-b border-white/5 px-6 py-4">
+            <div className="flex items-center justify-between px-6 py-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm dark:bg-zinc-800/20">
                   <Calendar className="h-4 w-4 text-muted-foreground" />

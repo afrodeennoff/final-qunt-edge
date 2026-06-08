@@ -38,7 +38,7 @@ export function TradeActivityFeed({ trades }: { trades: Trade[] }) {
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/20 text-muted-foreground/60 backdrop-blur-sm transition hover:bg-white/30 hover:text-foreground disabled:pointer-events-none disabled:opacity-30 dark:bg-zinc-800/20"
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-muted-foreground/60 backdrop-blur-sm transition hover:bg-white/30 hover:text-foreground disabled:pointer-events-none disabled:opacity-30 dark:bg-zinc-800/20"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -48,7 +48,7 @@ export function TradeActivityFeed({ trades }: { trades: Trade[] }) {
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page >= totalPages}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/20 text-muted-foreground/60 backdrop-blur-sm transition hover:bg-white/30 hover:text-foreground disabled:pointer-events-none disabled:opacity-30 dark:bg-zinc-800/20"
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-muted-foreground/60 backdrop-blur-sm transition hover:bg-white/30 hover:text-foreground disabled:pointer-events-none disabled:opacity-30 dark:bg-zinc-800/20"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
@@ -59,7 +59,7 @@ export function TradeActivityFeed({ trades }: { trades: Trade[] }) {
 
       <div className="overflow-hidden rounded-2xl bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
         {visible.length > 0 ? (
-          <div className="divide-y divide-white/5">
+          <div className="space-y-px">
             {visible.map((trade, idx) => {
               const isPositive = trade.pnl > 0
               const isNegative = trade.pnl < 0
@@ -70,12 +70,12 @@ export function TradeActivityFeed({ trades }: { trades: Trade[] }) {
                 >
                   <div className="flex items-center gap-4">
                     <div className={cn(
-                      "flex h-7 w-7 items-center justify-center rounded-lg border text-[10px] font-bold uppercase tracking-wider",
+                      "flex h-7 w-7 items-center justify-center rounded-lg text-[10px] font-bold uppercase tracking-wider",
                       isPositive
-                        ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
+                        ? "bg-emerald-500/10 text-emerald-400"
                         : isNegative
-                          ? "border-rose-500/20 bg-rose-500/10 text-rose-400"
-                          : "border-white/10 bg-white/10 text-muted-foreground/40"
+                          ? "bg-rose-500/10 text-rose-400"
+                          : "bg-white/10 text-muted-foreground/40"
                     )}>
                       {trade.symbol.slice(0, 2)}
                     </div>
