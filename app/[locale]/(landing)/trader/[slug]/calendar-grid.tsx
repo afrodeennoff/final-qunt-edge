@@ -27,12 +27,12 @@ export function CalendarGrid({ dayPnl }: { dayPnl: Map<string, number> }) {
               key={key}
               title={`${format(day, 'MMM d, yyyy')}: ${value > 0 ? '+' : ''}${value.toFixed(0)} USD`}
               className={cn(
-                'group relative flex flex-col items-center justify-center rounded-md border px-0.5 py-1 sm:py-1.5 transition-all duration-150 hover:scale-[1.08] hover:shadow-sm',
+                'group relative flex flex-col items-center justify-center rounded-md border px-0.5 py-1 sm:py-1.5 transition-all duration-200 hover:scale-[1.08] hover:shadow-md backdrop-blur-sm',
                 value > 0
                   ? 'border-semantic-success/25 bg-semantic-success/8 hover:bg-semantic-success/15'
                   : value < 0
                     ? 'border-semantic-error/25 bg-semantic-error/8 hover:bg-semantic-error/15'
-                    : 'border-transparent bg-muted/10 hover:bg-muted/30',
+                    : 'border-transparent bg-white/5 hover:bg-white/10 dark:bg-zinc-800/10 dark:hover:bg-zinc-800/30',
               )}
               style={{ opacity: value !== 0 ? intensity : 0.6 }}
             >

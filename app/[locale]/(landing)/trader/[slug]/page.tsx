@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { cache } from 'react'
+import { motion } from 'motion/react'
 import { startOfDay } from 'date-fns'
 import {
   ArrowLeft,
@@ -267,14 +268,19 @@ export default async function TraderProfilePage({
   const positiveDays = dayValues.filter((v) => v > 0).length
 
   return (
-    <div className="min-h-[calc(100dvh-72px)] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 bg-gradient-to-b from-background to-muted/5">
+    <div className="min-h-dvh px-4 pt-24 pb-12 sm:px-6 sm:pb-16 lg:px-8 bg-gradient-to-b from-background to-muted/5">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }}
       />
-      <div className="mx-auto max-w-[1200px]">
+      <motion.div
+        className="mx-auto max-w-[1200px]"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 200, damping: 25 }}
+      >
         {/* Hero Header - Premium modern look */}
-        <div className="mb-8 overflow-hidden rounded-3xl border-0 bg-card/80 shadow-xl backdrop-blur">
+        <div className="mb-8 overflow-hidden rounded-3xl border border-white/10 bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
           <div className="flex flex-col gap-6 p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
               <div className="relative">
@@ -310,13 +316,13 @@ export default async function TraderProfilePage({
             <div className="flex flex-wrap gap-3 lg:justify-end">
               <Link
                 href={`/${locale}/leaderboard`}
-                className="inline-flex items-center gap-2 rounded-2xl border-0 bg-background/60 px-5 py-2.5 text-sm font-medium backdrop-blur transition hover:bg-muted/60"
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/30 px-5 py-2.5 text-sm font-medium backdrop-blur transition-all duration-200 hover:bg-white/40 active:scale-[0.97] dark:bg-zinc-800/30 dark:hover:bg-zinc-800/50"
               >
                 <ArrowLeft className="h-4 w-4" /> Leaderboard
               </Link>
               <Link
                 href={`/${locale}/dashboard/trader-profile`}
-                className="inline-flex items-center gap-2 rounded-2xl bg-foreground px-6 py-2.5 text-sm font-semibold text-background transition hover:bg-foreground/90"
+                className="inline-flex items-center gap-2 rounded-2xl bg-foreground px-6 py-2.5 text-sm font-semibold text-background transition-all duration-200 hover:bg-foreground/90 active:scale-[0.97]"
               >
                 <Globe className="h-4 w-4" /> Manage Profile
               </Link>
@@ -332,7 +338,7 @@ export default async function TraderProfilePage({
                   key={idx}
                   className="group flex items-center gap-4 border-t-0 p-6 transition hover:bg-muted/30 sm:border-l sm:first:border-l-0 lg:border-t-0"
                 >
-                  <div className="rounded-2xl border-00 bg-background/60 p-3 transition group-hover:border-primary/30">
+                  <div className="rounded-2xl border border-white/10 bg-white/20 p-3 backdrop-blur-sm transition dark:bg-zinc-800/20 group-hover:border-primary/30">
                     <Icon className="h-6 w-6 text-muted-foreground" />
                   </div>
                   <div>
@@ -359,7 +365,7 @@ export default async function TraderProfilePage({
               <div className="text-sm text-muted-foreground">{snapshot.recentTrades.length} trades</div>
             </div>
 
-            <div className="overflow-hidden rounded-3xl border-0 bg-card/90 shadow-sm">
+            <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
               {snapshot.recentTrades.length > 0 ? (
                 <div className="divide-y divide-transparent">
                   {snapshot.recentTrades.map((trade, idx) => {
@@ -399,7 +405,7 @@ export default async function TraderProfilePage({
           {/* Performance + Calendar */}
           <div className="space-y-6 lg:col-span-5">
             {/* Win Rate Card with Ring */}
-            <div className="rounded-3xl border-0 bg-card/90 p-6 shadow-sm">
+            <div className="rounded-3xl border border-white/10 bg-white/30 p-6 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
               <div className="flex items-start justify-between">
                 <div>
                   <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Consistency</div>
@@ -432,13 +438,13 @@ export default async function TraderProfilePage({
 
             {/* Quick Insights */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-3xl border-0 bg-card/90 p-5">
+              <div className="rounded-3xl border border-white/10 bg-white/30 p-5 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
                 <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Avg per trade</div>
                 <div className={cn("mt-2 text-3xl font-semibold tracking-tighter", snapshot.avgPnl >= 0 ? "text-emerald-400" : "text-rose-400")}>
                   {formatSigned(snapshot.avgPnl)}
                 </div>
               </div>
-              <div className="rounded-3xl border-0 bg-card/90 p-5">
+              <div className="rounded-3xl border border-white/10 bg-white/30 p-5 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
                 <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Profile status</div>
                 <div className="mt-2 text-3xl font-semibold tracking-tighter text-foreground">Live &amp; Public</div>
                 <div className="mt-1 text-xs text-muted-foreground">Updated in real-time</div>
@@ -446,7 +452,7 @@ export default async function TraderProfilePage({
             </div>
 
             {/* Calendar */}
-            <div className="rounded-3xl border-0 bg-card/90 p-6 shadow-sm">
+            <div className="rounded-3xl border border-white/10 bg-white/30 p-6 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
               <div className="mb-4 flex items-center justify-between">
                 <div>
                   <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Rhythm</div>
@@ -463,7 +469,7 @@ export default async function TraderProfilePage({
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }
