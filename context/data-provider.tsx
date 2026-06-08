@@ -81,6 +81,7 @@ import { defaultLayouts } from '@/lib/default-layouts'
 import { MOBILE_BREAKPOINT } from '@/lib/config/breakpoints'
 import { shouldUseDevMockTrades } from '@/lib/feature-flags'
 import { removeAccountFromGroups } from '@/context/data-provider-utils'
+import { toast } from 'sonner'
 
 import { generateMockTrades } from '@/lib/mock-trades'
 import { isValid, startOfDay, endOfDay } from 'date-fns'
@@ -1183,6 +1184,7 @@ export const DataProvider: React.FC<{
         // Only clear error on full success
         setRefreshError(null)
         logger.info('Successfully refreshed trades and user data')
+        toast.success('Dashboard data updated')
       } catch (error) {
         logger.error({ error }, 'Error refreshing all data')
         setRefreshError(error instanceof Error ? error.message : 'Failed to refresh dashboard data')

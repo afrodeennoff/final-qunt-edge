@@ -3,7 +3,7 @@ import {
   streamText,
   UIMessage,
 } from "ai";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { askForEmailForm } from "./tools/ask-for-email-form";
 import { z } from "zod/v3";
 import { rateLimit } from "@/lib/rate-limit";

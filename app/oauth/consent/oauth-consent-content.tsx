@@ -86,7 +86,7 @@ export async function OAuthConsentContent({ searchParams }: OAuthConsentContentP
         authorizationId={authorizationId}
         clientName={authDetails.client?.name || 'Unknown application'}
         clientUri={authDetails.client?.uri}
-        redirectUri={authDetails.redirect_uri ?? authDetails.client?.uri}
+        redirectUri={authDetails.redirect_url ?? authDetails.client?.uri}
         scopes={scopes}
         userEmail={authDetails.user?.email || user.email || ''}
       />

@@ -99,12 +99,12 @@ function computePublicMetrics(allTrades: { pnl: number; closeDate: Date }[]): Pu
 }
 
 export async function getPublicTraderSnapshot(slug: string): Promise<PublicTraderSnapshot | null> {
-  let user: { id: string; email: string | null; username: string | null; avatarUrl: string | null; showOnLeaderboard: boolean } | null = null
+  let user: { id: string; email: string | null; username: string | null; avatarUrl: string | null; showOnLeaderboard: boolean; hideLatestTrade: boolean } | null = null
 
   try {
     user = await prisma.user.findUnique({
       where: { id: slug },
-      select: { id: true, email: true, username: true, avatarUrl: true, showOnLeaderboard: true },
+      select: { id: true, email: true, username: true, avatarUrl: true, showOnLeaderboard: true, hideLatestTrade: true },
     })
   } catch (error) {
     if (isPrismaSchemaMismatchError(error)) return null
@@ -134,6 +134,11 @@ export async function getPublicTraderSnapshot(slug: string): Promise<PublicTrade
     pnl: Number(t.pnl ?? 0),
     closeDate: t.closeDate,
   }))
+
+  const latestHidden = user.hideLatestTrade && mapped.length > 0
+  if (latestHidden) {
+    mapped.shift()
+  }
 
   const dayPnlMap = new Map<string, number>()
   for (const trade of mapped) {
