@@ -12,6 +12,7 @@ function loadFinancialEvents(locale: string | undefined): Promise<FinancialEvent
   return prisma.financialEvent.findMany({
     where,
     orderBy: { date: 'desc' },
+    take: 500,
     select: {
       id: true,
       title: true,

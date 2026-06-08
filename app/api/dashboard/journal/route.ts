@@ -240,43 +240,51 @@ async function handlePost(request: NextRequest) {
       )
     }
 
-    // Check for existing entry
-    const existing = await prisma.journalEntry.findUnique({
-      where: { tradeId },
-    })
-    if (existing) {
-      return apiError('CONFLICT', 'Journal entry already exists for this trade', 409, { requestId })
-    }
+    const entry = await prisma.$transaction(async (tx) => {
+      const existing = await tx.journalEntry.findUnique({
+        where: { tradeId },
+      })
+      if (existing) throw new Error('CONFLICT')
 
-    // Verify trade belongs to user
-    const trade = await prisma.trade.findFirst({
-      where: { id: tradeId, userId: dbUser.id },
-    })
-    if (!trade) {
-      return apiError('NOT_FOUND', 'Trade not found', 404, { requestId })
-    }
+      const trade = await tx.trade.findFirst({
+        where: { id: tradeId, userId: dbUser.id },
+      })
+      if (!trade) throw new Error('NOT_FOUND')
 
-    const entry = await prisma.journalEntry.create({
-      data: {
-        userId: dbUser.id,
-        tradeId,
-        accountNumber,
-        preTradeNotes: preTradeNotes ?? null,
-        postTradeReview: postTradeReview ?? null,
-        emotions: emotions ?? null,
-        confidenceRating: confidenceRating ?? null,
-        disciplineScore: disciplineScore ?? null,
-        customTags: customTags ?? [],
-        screenshots: screenshots ?? [],
-        timeframe: timeframe ?? null,
-        session: session ?? null,
-        excerptTitle: excerptTitle ?? null,
-        featuredExcerpt: featuredExcerpt ?? null,
-      },
+      return tx.journalEntry.create({
+        data: {
+          userId: dbUser.id,
+          tradeId,
+          accountNumber,
+          preTradeNotes: preTradeNotes ?? null,
+          postTradeReview: postTradeReview ?? null,
+          emotions: emotions ?? null,
+          confidenceRating: confidenceRating ?? null,
+          disciplineScore: disciplineScore ?? null,
+          customTags: customTags ?? [],
+          screenshots: screenshots ?? [],
+          timeframe: timeframe ?? null,
+          session: session ?? null,
+          excerptTitle: excerptTitle ?? null,
+          featuredExcerpt: featuredExcerpt ?? null,
+        },
+      })
+    }).catch((err) => {
+      if (err instanceof Error && err.message === 'CONFLICT') {
+        throw { code: 'CONFLICT', status: 409, message: 'Journal entry already exists for this trade' }
+      }
+      if (err instanceof Error && err.message === 'NOT_FOUND') {
+        throw { code: 'NOT_FOUND', status: 404, message: 'Trade not found' }
+      }
+      throw err
     })
 
     return apiSuccess(serializeWithDecimals(entry), 201)
   } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error) {
+      const apiErr = error as { code: string; status: number; message: string }
+      return apiError(apiErr.code as any, apiErr.message, apiErr.status, { requestId })
+    }
     return apiError('INTERNAL_ERROR', 'Failed to create journal entry', 500, { requestId })
   }
 }

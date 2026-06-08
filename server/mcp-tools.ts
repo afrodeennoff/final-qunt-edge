@@ -1425,6 +1425,7 @@ async function getBehavioralPatterns(ctx: McpAuthContext, args: Record<string, u
   const moods = await prisma.mood.findMany({
     where: { userId: ctx.userId, day: { gte: since } },
     orderBy: { day: 'asc' },
+    take: 365,
   })
 
   if (!moods.length) {

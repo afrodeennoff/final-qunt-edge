@@ -546,6 +546,7 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
       getPropfirmCatalogueData('allTime'),
       prisma.propFirm.findMany({
         where: { isActive: true },
+        take: 50,
         select: {
           id: true,
           slug: true,

@@ -228,6 +228,7 @@ async function _getMoodHistory(userId: string, fromDate?: Date, toDate?: Date): 
     orderBy: {
       day: 'desc',
     },
+    take: 730,
   })
 
   return moods.map((mood) => ({

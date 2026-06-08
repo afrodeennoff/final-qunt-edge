@@ -712,6 +712,7 @@ export async function calculateAccountBalanceAction(
       pnl: true,
       commission: true,
     },
+    take: 100_000,
   });
 
   // Group trades by account number
@@ -795,6 +796,7 @@ export async function calculateAccountMetricsAction(
       closeDate: true,
       tags: true,
     },
+    take: 100_000,
   });
 
   // Normalize trades for metrics calculation

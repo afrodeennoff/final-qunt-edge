@@ -223,8 +223,24 @@ export async function aiAnalysisAccountsHandler(ctx: McpAuthContext, args: Recor
   await guardMcpAiRequest(ctx, 'analysis')
 
   try {
-    const accounts = await prisma.account.findMany({ where: { userId }, include: { trades: { select: { pnl: true } } } })
-    const data = accounts.map(a => ({ number: a.number, pnl: a.trades.reduce((s,t)=>s+Number(t.pnl||0),0) }))
+    const accounts = await prisma.account.findMany({
+      where: { userId },
+      select: { number: true },
+    })
+
+    if (!accounts.length) return { type: 'accounts', text: 'No accounts found', accounts: [] }
+
+    const accountNumbers = accounts.map(a => a.number)
+    const tradesByAccount = await prisma.trade.groupBy({
+      by: ['accountNumber'],
+      where: { accountNumber: { in: accountNumbers }, userId },
+      _sum: { pnl: true },
+    })
+
+    const data = accounts.map(a => ({
+      number: a.number,
+      pnl: Number(tradesByAccount.find(t => t.accountNumber === a.number)?._sum?.pnl || 0),
+    }))
     const policy = getAiPolicy('analysis')
     const result = await generateText({ model: getAiLanguageModel('analysis'), prompt: `Analyze these accounts performance: ${JSON.stringify(data)}`, temperature: policy.temperature })
     void logAiRequest({ userId, route: 'mcp://ai_analysis_accounts', feature: 'analysis', model: policy.model, provider: policy.provider, usage: extractUsage(result.usage), latencyMs: Date.now()-startedAt, success: true, sampleRate: policy.logSampleRate })

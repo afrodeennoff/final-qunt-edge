@@ -198,7 +198,7 @@ async function loadGlobalTickDetails() {
 async function loadGlobalFinancialEvents(locale: string) {
   return withPrismaSchemaMismatchFallback(
     `user-data-global-financial-events-${locale}`,
-    () => prisma.financialEvent.findMany({ where: { lang: locale } }),
+    () => prisma.financialEvent.findMany({ where: { lang: locale }, take: 500 }),
     []
   )
 }
@@ -302,7 +302,8 @@ async function loadSupplementalUserData(userId: string): Promise<{
     withPrismaSchemaMismatchFallback(
       `user-data-supplemental-moods-${userId}`,
       () => prisma.mood.findMany({
-        where: { userId: userId }
+        where: { userId: userId },
+        take: 730,
       }),
       []
     )

@@ -401,6 +401,7 @@ model Trade {
   @@index([accountNumber, userId]) // Composite FK index for Account relation (critical for joins and enforcement)
   @@index([userId, entryDate, pnl], map: "Trade_userId_entryDate_pnl_idx")
   @@index([userId, entryDate(sort: Desc)], map: "Trade_userId_entryDate_desc_idx")
+  @@index([tags], type: Gin, map: "Trade_tags_gin_idx")
   @@schema("public")
 }
 

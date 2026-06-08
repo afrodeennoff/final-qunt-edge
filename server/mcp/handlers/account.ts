@@ -20,6 +20,7 @@ export async function getAccountHealthHandler(ctx: McpAuthContext, args: Record<
 
   const accounts = await prisma.account.findMany({
     where: { userId, ...(accountFilter || {}) },
+    take: 200,
   })
 
   if (!accounts.length) {
@@ -32,6 +33,7 @@ export async function getAccountHealthHandler(ctx: McpAuthContext, args: Record<
     where: { accountNumber: { in: accountNumbers }, userId },
     select: { pnl: true, entryDate: true, closeDate: true, accountNumber: true },
     orderBy: { entryDate: 'desc' },
+    take: 10_000,
   })
   const tradesByAccount = new Map<string, typeof allTrades>()
   for (const t of allTrades) {
@@ -44,6 +46,7 @@ export async function getAccountHealthHandler(ctx: McpAuthContext, args: Record<
   const allPayouts = await prisma.payout.findMany({
     where: { accountId: { in: accountIds } },
     select: { amount: true, status: true, accountId: true },
+    take: 200,
   })
   const payoutsByAccount = new Map<string, typeof allPayouts>()
   for (const p of allPayouts) {

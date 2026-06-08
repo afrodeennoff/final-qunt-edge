@@ -141,7 +141,7 @@ async function handleGet(request: NextRequest) {
     // Apply pagination
     const paginatedDeals = filteredDeals.slice(offset, offset + limit)
     
-    return NextResponse.json({
+    const dealsRes = NextResponse.json({
       deals: paginatedDeals,
       pagination: {
         total: filteredDeals.length,
@@ -150,6 +150,8 @@ async function handleGet(request: NextRequest) {
         hasMore: offset + limit < filteredDeals.length
       }
     })
+    dealsRes.headers.set('Cache-Control', 'public, max-age=300, s-maxage=600')
+    return dealsRes
   } catch (error) {
     if (isPrerenderInterruption(error)) {
       return NextResponse.json({

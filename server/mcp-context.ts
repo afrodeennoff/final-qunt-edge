@@ -67,13 +67,24 @@ export async function buildAccountHealthSnapshot(ctx: McpAuthContext, accountId?
 
   const accounts = await prisma.account.findMany({
     where: where as any,
+    take: 200,
   })
 
-  const results = await Promise.all(accounts.map(async (acc) => {
-    const trades = await prisma.trade.findMany({
-      where: { accountNumber: acc.number, userId: ctx.userId },
-      select: { pnl: true, entryDate: true, closeDate: true },
-    })
+  const accountNumbers = accounts.map((a) => a.number)
+  const allTrades = await prisma.trade.findMany({
+    where: { accountNumber: { in: accountNumbers }, userId: ctx.userId },
+    select: { pnl: true, entryDate: true, closeDate: true, accountNumber: true },
+    take: 10_000,
+  })
+  const tradesByAccount = new Map<string, typeof allTrades>()
+  for (const t of allTrades) {
+    const list = tradesByAccount.get(t.accountNumber)
+    if (list) list.push(t)
+    else tradesByAccount.set(t.accountNumber, [t])
+  }
+
+  const results = accounts.map((acc) => {
+    const trades = tradesByAccount.get(acc.number) || []
 
     const totalPnL = trades.reduce((sum, t) => sum + Number(t.pnl), 0)
     const currentBalance = Number(acc.startingBalance) + totalPnL
@@ -118,7 +129,7 @@ export async function buildAccountHealthSnapshot(ctx: McpAuthContext, accountId?
       isEvaluation: acc.evaluation,
       payoutEligible,
     }
-  }))
+  })
 
   return results
 }

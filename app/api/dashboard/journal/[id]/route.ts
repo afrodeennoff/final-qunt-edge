@@ -71,14 +71,6 @@ async function handlePut(
 
     const { id } = await ctx.params
 
-    // Verify ownership
-    const existing = await prisma.journalEntry.findFirst({
-      where: { id, userId: dbUser.id },
-    })
-    if (!existing) {
-      return apiError('NOT_FOUND', 'Journal entry not found', 404, { requestId })
-    }
-
     const body = await request.json()
 
     // Build update data with whitelisted fields only
@@ -89,10 +81,20 @@ async function handlePut(
       }
     }
 
-    const updated = await prisma.journalEntry.update({
-      where: { id },
+    const result = await prisma.journalEntry.updateMany({
+      where: { id, userId: dbUser.id },
       data,
     })
+    if (result.count === 0) {
+      return apiError('NOT_FOUND', 'Journal entry not found', 404, { requestId })
+    }
+
+    const updated = await prisma.journalEntry.findUnique({
+      where: { id },
+    })
+    if (!updated) {
+      return apiError('NOT_FOUND', 'Journal entry not found', 404, { requestId })
+    }
 
     return apiSuccess(serializeWithDecimals(updated))
   } catch (error) {
@@ -129,17 +131,12 @@ async function handleDelete(
 
     const { id } = await ctx.params
 
-    // Verify ownership
-    const existing = await prisma.journalEntry.findFirst({
+    const result = await prisma.journalEntry.deleteMany({
       where: { id, userId: dbUser.id },
     })
-    if (!existing) {
+    if (result.count === 0) {
       return apiError('NOT_FOUND', 'Journal entry not found', 404, { requestId })
     }
-
-    await prisma.journalEntry.delete({
-      where: { id },
-    })
 
     return apiSuccess({ deleted: true })
   } catch (error) {

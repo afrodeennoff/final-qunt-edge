@@ -125,7 +125,7 @@ async function handleGet(request: NextRequest) {
     // Apply pagination
     const paginatedFirms = filteredFirms.slice(offset, offset + limit)
     
-    return NextResponse.json({
+    const unifiedRes = NextResponse.json({
       firms: paginatedFirms,
       pagination: {
         total: filteredFirms.length,
@@ -134,6 +134,8 @@ async function handleGet(request: NextRequest) {
         hasMore: offset + limit < filteredFirms.length
       }
     })
+    unifiedRes.headers.set('Cache-Control', 'public, max-age=300, s-maxage=600')
+    return unifiedRes
   } catch (error) {
     if (isPrerenderInterruption(error)) {
       return NextResponse.json({
