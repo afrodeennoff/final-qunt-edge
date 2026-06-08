@@ -131,6 +131,7 @@ function toCompatUser(record: CoreUserCompatRecord, authUserId: string): User {
     dashboardTheme: DEFAULT_DASHBOARD_THEME,
     showOnLeaderboard: false,
     hideLatestTrade: false,
+    usernameChangedAt: null,
     etpToken: null,
     etpTokenHash: null,
     etpTokenExpiresAt: null,

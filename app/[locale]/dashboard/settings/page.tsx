@@ -50,7 +50,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { leaveTeam, getUserTeams, updateUsernameAction, updateUserProfile } from './actions'
+import { leaveTeam, getUserTeams, updateUsernameAction, updateUserProfile, getUsernameCooldown } from './actions'
 import { toast } from 'sonner'
 import {
   AlertDialog,
@@ -716,6 +716,7 @@ export default function SettingsPage() {
   const [userTeams, setUserTeams] = useState<UserTeamsState>({ ownedTeams: [], joinedTeams: [] })
   const [username, setUsername] = useState(() => storedUsername ?? '')
   const [isUpdatingUsername, setIsUpdatingUsername] = useState(false)
+  const [usernameCooldown, setUsernameCooldown] = useState<{ canChange: boolean; remainingDays: number } | null>(null)
   const fullName = user?.user_metadata?.full_name || ''
   const parsedFirstName = fullName.includes(' ') ? fullName.split(' ').slice(0, -1).join(' ') : fullName
   const parsedLastName = fullName.includes(' ') ? fullName.split(' ').slice(-1)[0] : ''
@@ -726,6 +727,10 @@ export default function SettingsPage() {
   useEffect(() => {
     setUsername(storedUsername ?? '')
   }, [storedUsername])
+
+  useEffect(() => {
+    getUsernameCooldown().then(setUsernameCooldown).catch(() => {})
+  }, [])
 
   useEffect(() => {
     const fn = user?.user_metadata?.full_name || ''
@@ -782,6 +787,10 @@ export default function SettingsPage() {
   }
 
   const handleUpdateUsername = async () => {
+    if (usernameCooldown && !usernameCooldown.canChange) {
+      toast.error(`Username can be changed again in ${usernameCooldown.remainingDays} days`)
+      return
+    }
     setIsUpdatingUsername(true)
     try {
       const result = await updateUsernameAction(username)
@@ -900,7 +909,7 @@ export default function SettingsPage() {
                   />
                   <Button
                     onClick={handleUpdateUsername}
-                    disabled={isUpdatingUsername || !username.trim()}
+                    disabled={isUpdatingUsername || !username.trim() || (usernameCooldown !== null && !usernameCooldown.canChange)}
                     size="sm"
                   >
                     {isUpdatingUsername ? 'Updating...' : 'Update'}
@@ -909,6 +918,11 @@ export default function SettingsPage() {
                 <p className="text-xs text-muted-foreground mt-1">
                   Unique username for your profile (3-30 characters, letters, numbers, underscores)
                 </p>
+                {usernameCooldown && !usernameCooldown.canChange && (
+                  <p className="text-xs text-amber-500 mt-1">
+                    You can change your username again in {usernameCooldown.remainingDays} day{usernameCooldown.remainingDays === 1 ? '' : 's'}
+                  </p>
+                )}
               </div>
               <Button onClick={handleUpdateProfile} disabled={isUpdatingProfile}>{isUpdatingProfile ? 'Updating...' : 'Update Profile'}</Button>
             </div>

@@ -1149,6 +1149,34 @@ export async function joinTeamByInvitation(invitationToken: string) {
   }
 }
 
+const USERNAME_COOLDOWN_DAYS = 30
+
+export async function getUsernameCooldown(): Promise<{ canChange: boolean; remainingDays: number }> {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user?.id) return { canChange: false, remainingDays: 0 }
+
+    const dbUser = await prisma.user.findUnique({
+      where: { auth_user_id: user.id },
+      select: { usernameChangedAt: true },
+    })
+
+    if (!dbUser?.usernameChangedAt) return { canChange: true, remainingDays: 0 }
+
+    const daysSinceChange = Math.floor(
+      (Date.now() - dbUser.usernameChangedAt.getTime()) / (1000 * 60 * 60 * 24),
+    )
+    const remainingDays = USERNAME_COOLDOWN_DAYS - daysSinceChange
+
+    if (remainingDays <= 0) return { canChange: true, remainingDays: 0 }
+
+    return { canChange: false, remainingDays }
+  } catch {
+    return { canChange: false, remainingDays: 0 }
+  }
+}
+
 export async function updateUsernameAction(username: string) {
   try {
     const parsed = usernameSchema.parse(username)
@@ -1161,12 +1189,34 @@ export async function updateUsernameAction(username: string) {
       throw new Error('Unauthorized')
     }
 
+    const cooldown = await getUsernameCooldown()
+    if (!cooldown.canChange) {
+      throw new Error(
+        `You can change your username again in ${cooldown.remainingDays} day${cooldown.remainingDays === 1 ? '' : 's'}`,
+      )
+    }
+
+    const existing = await prisma.user.findFirst({
+      where: {
+        OR: [{ username: normalized }, { usernameHash: normalized }],
+        NOT: { auth_user_id: user.id },
+      },
+      select: { id: true },
+    })
+
+    if (existing) {
+      throw new Error('Username is already taken')
+    }
+
+    const now = new Date().toISOString()
+
     const { error } = await supabase
       .from('User')
       .update({
         username: normalized,
         usernameHash: normalized,
-        updatedAt: new Date().toISOString()
+        usernameChangedAt: now,
+        updatedAt: now,
       })
       .eq('id', user.id)
 
