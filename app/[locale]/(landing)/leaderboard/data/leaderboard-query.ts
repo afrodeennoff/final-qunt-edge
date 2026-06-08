@@ -148,12 +148,12 @@ export async function getLeaderboardData(
     return []
   }
 
-  const startOfMonth = new Date()
-  startOfMonth.setDate(1)
-  startOfMonth.setHours(0, 0, 0, 0)
+  const ninetyDaysAgo = new Date()
+  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
+  ninetyDaysAgo.setHours(0, 0, 0, 0)
 
   const userIds = eligibleUsers.map((user) => user.id)
-  const dateFilter = { closeDate: { gte: startOfMonth } }
+  const dateFilter = { closeDate: { gte: ninetyDaysAgo } }
 
   let aggregateRows: Array<{
     userId: string

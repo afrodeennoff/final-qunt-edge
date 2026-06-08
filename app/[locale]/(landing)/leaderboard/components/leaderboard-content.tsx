@@ -182,7 +182,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
                 Methodology
               </p>
               <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
-                Rankings are based on public opt-in accounts and the current month&apos;s trade
+                Rankings are based on public opt-in accounts and the last 90 days&apos; trade
                 data. Sort changes recalculate only the ordering, not the underlying dataset.
               </p>
             </div>
