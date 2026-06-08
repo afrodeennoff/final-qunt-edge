@@ -107,12 +107,24 @@ async function hasLeaderboardVisibilityColumn(): Promise<boolean> {
 
 async function getPublicTraderUser(slug: string): Promise<PublicTraderUser | null> {
   try {
-    return await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: slug },
       select: { id: true, email: true, username: true, showOnLeaderboard: true, hideLatestTrade: true },
     })
+    return user
   } catch (error) {
-    if (isPrismaSchemaMismatchError(error)) return null
+    if (isPrismaSchemaMismatchError(error)) {
+      try {
+        const user = await prisma.user.findUnique({
+          where: { id: slug },
+          select: { id: true, email: true, username: true, showOnLeaderboard: true },
+        })
+        return user ? { ...user, hideLatestTrade: false } : null
+      } catch (innerError) {
+        if (isPrismaSchemaMismatchError(innerError)) return null
+        throw innerError
+      }
+    }
     throw error
   }
 }
