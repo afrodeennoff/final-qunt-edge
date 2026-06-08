@@ -346,7 +346,6 @@ export default async function TraderProfilePage({
                   <div className="text-base font-semibold tracking-tight text-foreground">Trading Calendar</div>
                 </div>
               </div>
-              <div className="text-xs text-muted-foreground/50">Last 84 days</div>
             </div>
             <div className="p-6">
               <div className="overflow-x-auto">
