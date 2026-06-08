@@ -114,6 +114,7 @@ type CoreUserCompatRecord = {
   isFirstConnection?: boolean | null
   isBeta?: boolean | null
   language?: string | null
+  avatarUrl?: string | null
   createdAt: Date
   updatedAt: Date
 }
@@ -131,6 +132,7 @@ function toCompatUser(record: CoreUserCompatRecord, authUserId: string): User {
     dashboardTheme: DEFAULT_DASHBOARD_THEME,
     showOnLeaderboard: false,
     hideLatestTrade: false,
+    avatarUrl: record.avatarUrl ?? null,
     usernameChangedAt: null,
     etpToken: null,
     etpTokenHash: null,
@@ -157,6 +159,7 @@ async function findCoreUserByIdCompat(userId: string, authUserId: string): Promi
         isFirstConnection: true,
         isBeta: true,
         language: true,
+        avatarUrl: true,
         createdAt: true,
         updatedAt: true
       }
@@ -174,6 +177,7 @@ async function findCoreUserByIdCompat(userId: string, authUserId: string): Promi
         id: true,
         email: true,
         username: true,
+        avatarUrl: true,
         createdAt: true,
         updatedAt: true
       }
@@ -224,6 +228,7 @@ async function loadCoreUserData(authUserId: string | null, userId: string): Prom
           isFirstConnection: true,
           isBeta: true,
           language: true,
+          avatarUrl: true,
           createdAt: true,
           updatedAt: true
         }

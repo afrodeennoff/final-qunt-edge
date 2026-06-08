@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useI18n } from '@/locales/client'
 import type { ApiKeyResult } from '@/server/mcp-key-service'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -50,7 +50,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { leaveTeam, getUserTeams, updateUsernameAction, updateUserProfile, getUsernameCooldown } from './actions'
+import { leaveTeam, getUserTeams, updateUsernameAction, updateUserProfile, getUsernameCooldown, updateAvatarAction } from './actions'
 import { toast } from 'sonner'
 import {
   AlertDialog,
@@ -715,6 +715,9 @@ export default function SettingsPage() {
 
   const [userTeams, setUserTeams] = useState<UserTeamsState>({ ownedTeams: [], joinedTeams: [] })
   const [username, setUsername] = useState(() => storedUsername ?? '')
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(user?.user_metadata?.avatar_url ?? null)
+  const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [isUpdatingUsername, setIsUpdatingUsername] = useState(false)
   const [usernameCooldown, setUsernameCooldown] = useState<{ canChange: boolean; remainingDays: number } | null>(null)
   const fullName = user?.user_metadata?.full_name || ''
@@ -783,6 +786,28 @@ export default function SettingsPage() {
       await refreshTeams()
     } else {
       toast.error(result.error || t('dashboard.teams.error'))
+    }
+  }
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setIsUpdatingAvatar(true)
+    try {
+      const formData = new FormData()
+      formData.append('avatar', file)
+      const result = await updateAvatarAction(formData)
+      if (result.success && result.avatarUrl) {
+        setAvatarUrl(result.avatarUrl)
+        toast.success('Avatar updated')
+      } else {
+        toast.error(result.error || 'Failed to update avatar')
+      }
+    } catch {
+      toast.error('Failed to update avatar')
+    } finally {
+      setIsUpdatingAvatar(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
     }
   }
 
@@ -866,10 +891,32 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16">
-                <AvatarImage src={user?.user_metadata.avatar_url} />
-                <AvatarFallback className="text-lg">{user?.email![0].toUpperCase()}</AvatarFallback>
-              </Avatar>
+              <div className="relative shrink-0">
+                <Avatar className="h-16 w-16">
+                  <AvatarImage src={avatarUrl ?? undefined} />
+                  <AvatarFallback className="text-lg">{user?.email![0].toUpperCase()}</AvatarFallback>
+                </Avatar>
+                {isUpdatingAvatar && (
+                  <div className="absolute inset-0 flex items-center justify-center rounded-full bg-background/60">
+                    <span className="text-xs font-medium">...</span>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
+                  aria-label="Change avatar"
+                >
+                  +
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  className="hidden"
+                  onChange={handleAvatarUpload}
+                />
+              </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <h3 className="font-semibold">{user?.email}</h3>

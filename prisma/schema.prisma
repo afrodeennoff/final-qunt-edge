@@ -18,6 +18,7 @@ model User {
   username           String?             @unique
   usernameHash       String?             @unique
   usernameChangedAt  DateTime?
+  avatarUrl          String?
   email              String              @unique
   auth_user_id       String              @unique
   isFirstConnection  Boolean             @default(true)

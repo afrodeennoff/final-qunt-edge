@@ -10,7 +10,7 @@ import {
   Zap,
   Building2,
 } from 'lucide-react'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { CalendarGrid } from './calendar-grid'
@@ -99,13 +99,11 @@ function MeterRow({
 }
 
 function computeRadarData(metrics: PublicTraderMetrics) {
-  const { totalTrades, riskReward, drawdown, winRate, avgReturn } = metrics
+  const { totalTrades, riskReward, winRate } = metrics
   return [
     { metric: 'TOTAL TRADES', trader: Math.min(100, (totalTrades / 3)) },
     { metric: 'RISK REWARD', trader: Math.min(100, (riskReward / 3) * 100) },
-    { metric: 'AVG. DRAWDOWN', trader: Math.max(0, 100 - drawdown / 100) },
     { metric: 'WIN RATE', trader: Math.min(100, (winRate / 60) * 100) },
-    { metric: 'AVG RETURN', trader: Math.min(100, Math.max(0, (avgReturn / 500) * 100 + 50)) },
   ]
 }
 
@@ -170,7 +168,7 @@ export default function TraderProfileClient({
     )
   }
 
-  const { username, allTrades, dayPnl, accountCount, propFirms, metrics } = snapshot
+  const { username, avatarUrl, allTrades, dayPnl, accountCount, propFirms, metrics } = snapshot
   const profileInitials = username.slice(0, 2).toUpperCase()
 
   return (
@@ -181,6 +179,7 @@ export default function TraderProfileClient({
           <div className="flex flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex min-w-0 items-start gap-4">
               <Avatar className="h-20 w-20 shrink-0 rounded-2xl sm:h-24 sm:w-24">
+                <AvatarImage src={avatarUrl ?? undefined} alt={username} />
                 <AvatarFallback className="bg-primary/10 text-lg font-semibold text-primary">
                   {profileInitials}
                 </AvatarFallback>
@@ -304,19 +303,6 @@ export default function TraderProfileClient({
           </div>
 
           <div className="rounded-2xl bg-white/30 p-5 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30 sm:p-6">
-            <div className="mb-4">
-              <StatTile
-                label="Avg / Trade"
-                value={formatCurrency(metrics.avgReturn)}
-                tone={
-                  metrics.avgReturn > 0
-                    ? 'positive'
-                    : metrics.avgReturn < 0
-                      ? 'negative'
-                      : 'default'
-                }
-              />
-            </div>
             <RadarChartCard
               radarData={radarData}
               isBenchmarkLoading={false}

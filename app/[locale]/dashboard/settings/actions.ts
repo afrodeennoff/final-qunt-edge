@@ -1229,3 +1229,67 @@ export async function updateUsernameAction(username: string) {
     return { success: false, error: error instanceof Error ? error.message : 'Failed to update username' }
   }
 }
+
+const AVATAR_MAX_SIZE = 2 * 1024 * 1024
+
+export async function updateAvatarAction(formData: FormData): Promise<{ success: boolean; avatarUrl?: string; error?: string }> {
+  try {
+    const supabase = await createClient()
+    const { data: { user: authUser } } = await supabase.auth.getUser()
+    if (!authUser?.id) throw new Error('Unauthorized')
+
+    const file = formData.get('avatar') as File | null
+    if (!file) throw new Error('No file provided')
+
+    if (file.size > AVATAR_MAX_SIZE) throw new Error('File must be under 2MB')
+
+    const ext = file.name.split('.').pop()?.toLowerCase() || 'png'
+    if (!['png', 'jpg', 'jpeg', 'webp'].includes(ext)) throw new Error('Unsupported format (png, jpg, webp only)')
+
+    const buffer = Buffer.from(await file.arrayBuffer())
+    const fileName = `avatars/${authUser.id}.${ext}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(fileName, buffer, { upsert: true, contentType: file.type })
+
+    if (uploadError) throw uploadError
+
+    const { data: publicUrlData } = supabase.storage.from('avatars').getPublicUrl(fileName)
+    const publicUrl = publicUrlData.publicUrl
+
+    await prisma.user.update({
+      where: { auth_user_id: authUser.id },
+      data: { avatarUrl: publicUrl },
+    })
+
+    const { error: metadataError } = await supabase.auth.updateUser({
+      data: { avatar_url: publicUrl },
+    })
+
+    if (metadataError) throw metadataError
+
+    revalidatePath('/dashboard/settings')
+    return { success: true, avatarUrl: publicUrl }
+  } catch (error) {
+    console.error('Error updating avatar:', error)
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to update avatar' }
+  }
+}
+
+export async function getAvatarUrlAction(): Promise<string | null> {
+  try {
+    const supabase = await createClient()
+    const { data: { user: authUser } } = await supabase.auth.getUser()
+    if (!authUser?.id) return null
+
+    const dbUser = await prisma.user.findUnique({
+      where: { auth_user_id: authUser.id },
+      select: { avatarUrl: true },
+    })
+
+    return dbUser?.avatarUrl ?? null
+  } catch {
+    return null
+  }
+}
