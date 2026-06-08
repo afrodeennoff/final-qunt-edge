@@ -185,7 +185,7 @@ export async function aiAnalysisGlobalHandler(ctx: McpAuthContext, args: Record<
     const locale = String(args.locale || 'en')
     const policy = getAiPolicy('analysis')
 
-    const trades = await prisma.trade.findMany({ where: { userId }, select: { pnl: true, entryDate: true, instrument: true } })
+    const trades = await prisma.trade.findMany({ where: { userId }, select: { pnl: true, entryDate: true, instrument: true }, take: 10_000 })
     const totalPnl = trades.reduce((s, t) => s + Number(t.pnl || 0), 0)
     const winRate = trades.length ? (trades.filter(t => Number(t.pnl) > 0).length / trades.length * 100).toFixed(1) : '0'
 
@@ -241,7 +241,7 @@ export async function aiAnalysisInstrumentHandler(ctx: McpAuthContext, args: Rec
 
   try {
     const instrument = String(args.instrument || 'ES')
-    const trades = await prisma.trade.findMany({ where: { userId, instrument }, select: { pnl: true, side: true } })
+    const trades = await prisma.trade.findMany({ where: { userId, instrument }, select: { pnl: true, side: true }, take: 10_000 })
     const policy = getAiPolicy('analysis')
     const result = await generateText({ model: getAiLanguageModel('analysis'), prompt: `Analyze performance for instrument ${instrument}. Trades: ${trades.length}. PnL data: ${JSON.stringify(trades.map(t=>Number(t.pnl)))}`, temperature: policy.temperature })
     void logAiRequest({ userId, route: 'mcp://ai_analysis_instrument', feature: 'analysis', model: policy.model, provider: policy.provider, usage: extractUsage(result.usage), latencyMs: Date.now()-startedAt, success: true, sampleRate: policy.logSampleRate })
@@ -257,7 +257,7 @@ export async function aiAnalysisTimeOfDayHandler(ctx: McpAuthContext, args: Reco
   await guardMcpAiRequest(ctx, 'analysis')
 
   try {
-    const trades = await prisma.trade.findMany({ where: { userId }, select: { entryDate: true, pnl: true } })
+    const trades = await prisma.trade.findMany({ where: { userId }, select: { entryDate: true, pnl: true }, take: 10_000 })
     const policy = getAiPolicy('analysis')
     const result = await generateText({ model: getAiLanguageModel('analysis'), prompt: `Analyze time-of-day patterns from these trade entry times and PnL: ${JSON.stringify(trades.slice(0,20))}`, temperature: policy.temperature })
     void logAiRequest({ userId, route: 'mcp://ai_analysis_time_of_day', feature: 'analysis', model: policy.model, provider: policy.provider, usage: extractUsage(result.usage), latencyMs: Date.now()-startedAt, success: true, sampleRate: policy.logSampleRate })

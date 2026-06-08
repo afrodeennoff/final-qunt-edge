@@ -81,7 +81,7 @@ export async function getRiskMetricsHandler(ctx: McpAuthContext, args: Record<st
     if (!acc) throw new Error('Account not found')
     where.accountNumber = acc.number
   }
-  const trades = await prisma.trade.findMany({ where, select: { pnl: true, entryPrice: true, closePrice: true } })
+  const trades = await prisma.trade.findMany({ where, select: { pnl: true, entryPrice: true, closePrice: true }, take: 10_000 })
   const pnls = trades.map(t => Number(t.pnl))
   const wins = pnls.filter(p => p > 0)
   const losses = pnls.filter(p => p < 0)

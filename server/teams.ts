@@ -511,7 +511,8 @@ export async function updateTeamAnalytics(
     
     const rrTrades = await prisma.trade.findMany({
       where: { userId: { in: userIds }, pnl: { not: 0 }, entryDate: { gte: periodStart } },
-      select: { pnl: true }
+      select: { pnl: true },
+      take: 10_000,
     });
     const wins = rrTrades.filter(t => Number(t.pnl) > 0);
     const losses = rrTrades.filter(t => Number(t.pnl) < 0);
@@ -613,6 +614,7 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
       where: { accountNumber: { in: accountNumbers } },
       select: { id: true, accountNumber: true, createdAt: true, instrument: true, pnl: true },
       orderBy: { createdAt: 'desc' },
+      take: 10_000,
     })
     const tradesByAccount = new Map<string, typeof trades>()
     for (const t of trades) {

@@ -187,7 +187,8 @@ export async function syncTradeTagsToTagTableAction() {
     // Get all unique tags from trades
     const trades = await prisma.trade.findMany({
       where: { userId },
-      select: { tags: true }
+      select: { tags: true },
+      take: 10_000,
     })
 
     // Extract unique tags from trades

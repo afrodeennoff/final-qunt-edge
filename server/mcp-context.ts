@@ -179,6 +179,7 @@ export async function buildRiskContext(ctx: McpAuthContext): Promise<RiskContext
   const trades = await prisma.trade.findMany({
     where: { userId: ctx.userId },
     orderBy: { entryDate: 'asc' },
+    take: 10_000,
     select: { pnl: true, entryPrice: true, closePrice: true, entryDate: true },
   })
 

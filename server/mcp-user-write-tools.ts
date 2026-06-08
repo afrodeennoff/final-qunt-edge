@@ -1412,6 +1412,7 @@ async function getEquityChart(ctx: McpAuthContext, args: Record<string, unknown>
   const trades = await prisma.trade.findMany({
     where: where as any,
     orderBy: { entryDate: 'asc' },
+    take: 10_000,
     select: { pnl: true, entryDate: true },
   })
 

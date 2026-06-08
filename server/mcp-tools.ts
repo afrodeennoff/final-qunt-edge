@@ -961,6 +961,7 @@ async function getRiskMetrics(ctx: McpAuthContext, args: Record<string, unknown>
   const trades = await prisma.trade.findMany({
     where: where as any,
     orderBy: { entryDate: 'asc' },
+    take: 10_000,
     select: { pnl: true, entryPrice: true, closePrice: true, entryDate: true },
   })
 
@@ -1276,6 +1277,7 @@ async function runMonteCarlo(ctx: McpAuthContext, args: Record<string, unknown>)
   const trades = await prisma.trade.findMany({
     where: where as any,
     select: { pnl: true },
+    take: 10_000,
   })
 
   if (trades.length < 5) {
@@ -1373,6 +1375,7 @@ async function suggestPositionSize(ctx: McpAuthContext, args: Record<string, unk
       where: { accountNumber: account.number, userId: ctx.userId },
       select: { pnl: true, entryDate: true },
       orderBy: { entryDate: 'asc' },
+      take: 10_000,
     })
 
     const totalPnL = trades.reduce((sum, t) => sum + Number(t.pnl), 0)
@@ -1443,6 +1446,7 @@ async function getBehavioralPatterns(ctx: McpAuthContext, args: Record<string, u
       entryDate: { gte: since, lte: moodEnd },
     },
     select: { pnl: true, entryDate: true },
+    take: 10_000,
   })
 
   const moodByDate = new Map<string, { mood: string; emotionValue: number }>()
@@ -1502,6 +1506,7 @@ async function getPropCompliance(ctx: McpAuthContext, args: Record<string, unkno
     where: { accountNumber: account.number, userId: ctx.userId },
     select: { pnl: true, entryDate: true },
     orderBy: { entryDate: 'asc' },
+    take: 10_000,
   })
 
   const totalPnL = trades.reduce((s, t) => s + Number(t.pnl), 0)
@@ -1687,6 +1692,7 @@ async function getChallengeProgress(ctx: McpAuthContext, args: Record<string, un
     where: { accountNumber: account.number, userId: ctx.userId },
     select: { pnl: true, entryDate: true },
     orderBy: { entryDate: 'asc' },
+    take: 10_000,
   })
 
   const totalPnL = trades.reduce((s, t) => s + Number(t.pnl), 0)
