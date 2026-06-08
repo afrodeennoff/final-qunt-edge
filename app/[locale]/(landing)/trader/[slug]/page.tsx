@@ -18,15 +18,8 @@ import { buildBreadcrumbSchema, buildPublicMetadata, getCanonicalUrl } from '@/l
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { isPrismaColumnAvailable, isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 import { CalendarGrid } from './calendar-grid'
-import {
-  unifiedChipClassName,
-  unifiedGhostActionClassName,
-  unifiedHeroPanelClassName,
-  unifiedInsetPanelClassName,
-  unifiedMetricPanelClassName,
-  unifiedSectionPanelClassName,
-  unifiedStatePanelClassName,
-} from '@/components/layout/unified-page-recipes'
+import { TradeActivityFeed } from './trade-activity-feed'
+import { unifiedChipClassName, unifiedGhostActionClassName, unifiedStatePanelClassName } from '@/components/layout/unified-page-recipes'
 import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
 
 type TraderSnapshot = {
@@ -37,10 +30,11 @@ type TraderSnapshot = {
   winRate: number
   avgPnl: number
   recentTrades: Array<{ id: string; symbol: string; pnl: number; closeTime: Date }>
+  allTrades: Array<{ id: string; symbol: string; pnl: number; closeTime: Date }>
   dayPnl: Map<string, number>
 }
 
-type PublicTraderUser = { id: string; email: string | null; username: string | null; showOnLeaderboard: boolean }
+type PublicTraderUser = { id: string; email: string | null; username: string | null; showOnLeaderboard: boolean; hideLatestTrade: boolean }
 type PublicTrade = { id: string; instrument: string | null; pnl: unknown; closeDate: Date }
 
 const USER_TABLE_CANDIDATES = ['User', 'user'] as const
@@ -115,7 +109,7 @@ async function getPublicTraderUser(slug: string): Promise<PublicTraderUser | nul
   try {
     return await prisma.user.findUnique({
       where: { id: slug },
-      select: { id: true, email: true, username: true, showOnLeaderboard: true },
+      select: { id: true, email: true, username: true, showOnLeaderboard: true, hideLatestTrade: true },
     })
   } catch (error) {
     if (isPrismaSchemaMismatchError(error)) return null
@@ -124,12 +118,15 @@ async function getPublicTraderUser(slug: string): Promise<PublicTraderUser | nul
 }
 
 function buildTraderSnapshot(publicUser: PublicTraderUser, trades: PublicTrade[]): TraderSnapshot {
-  const recentTrades = trades.slice(0, 10).map((trade) => ({
+  const tradeIndexStart = publicUser.hideLatestTrade ? 1 : 0
+  const mapped = trades.map((trade) => ({
     id: trade.id,
     symbol: trade.instrument || 'Unknown',
     pnl: Number(trade.pnl ?? 0),
     closeTime: trade.closeDate,
   }))
+  const recentTrades = mapped.slice(tradeIndexStart, tradeIndexStart + 10)
+  const allTrades = mapped.slice(tradeIndexStart, tradeIndexStart + 50)
 
   const totalTrades = trades.length
   const totalPnl = trades.reduce((sum, trade) => sum + Number(trade.pnl ?? 0), 0)
@@ -151,6 +148,7 @@ function buildTraderSnapshot(publicUser: PublicTraderUser, trades: PublicTrade[]
     winRate,
     avgPnl,
     recentTrades,
+    allTrades,
     dayPnl,
   }
 }
@@ -212,28 +210,6 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
   )
 }
 
-function WinRateRing({ value }: { value: number }) {
-  const pct = Math.min(100, Math.max(0, Math.round(value)))
-  const size = 64
-  const strokeWidth = 4.5
-  const radius = (size - strokeWidth) / 2
-  const circumference = radius * 2 * Math.PI
-  const offset = circumference - (pct / 100) * circumference
-  const good = pct >= 50
-  return (
-    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="currentColor" strokeWidth={strokeWidth} className="text-transparent/30" />
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" className={good ? 'text-semantic-success' : 'text-primary'} />
-      </svg>
-      <div className="absolute text-center">
-        <div className={cn('text-[17px] font-semibold tabular-nums tracking-[-0.02em]', good ? 'text-semantic-success' : 'text-foreground')}>{pct}</div>
-        <div className="text-[8px] font-medium -mt-1 tracking-[0.5px] text-muted-foreground/60">WIN</div>
-      </div>
-    </div>
-  )
-}
-
 export default async function TraderProfilePage({
   params,
 }: {
@@ -262,28 +238,25 @@ export default async function TraderProfilePage({
   }
 
   const publicStats = buildPublicStats(snapshot)
-  const dayValues = Array.from(snapshot.dayPnl.values())
-  const bestDay = dayValues.length > 0 ? Math.max(...dayValues) : 0
-  const positiveDays = dayValues.filter((v) => v > 0).length
 
   return (
-    <div className="min-h-dvh px-4 pt-24 pb-12 sm:px-6 sm:pb-16 lg:px-8 bg-gradient-to-b from-background to-muted/5">
+    <div className="min-h-dvh bg-gradient-to-b from-background to-muted/5">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }}
       />
-      <div className="mx-auto max-w-[1200px] animate-fade-up-smooth">
-        {/* Hero Header - Premium modern look */}
-        <div className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
+      <div className="mx-auto max-w-[1200px] animate-fade-up-smooth px-4 pt-24 pb-12 sm:px-6 sm:pb-16 lg:px-8">
+        {/* Hero Header */}
+        <div className="mb-8 overflow-hidden rounded-2xl bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
           <div className="flex flex-col gap-6 p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-              <div className="relative">
-                <Avatar className="h-28 w-28 rounded-3xl border-4 border-primary/20 shadow-2xl sm:h-32 sm:w-32">
+              <div className="relative shrink-0">
+                <Avatar className="h-28 w-28 rounded-3xl shadow-2xl sm:h-32 sm:w-32 ring-2 ring-primary/20">
                   <AvatarFallback className="bg-primary/10 text-4xl font-bold text-primary">
                     {snapshot.username.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-emerald-500">
+                <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 shadow-lg ring-2 ring-background">
                   <div className="h-3 w-3 rounded-full bg-white" />
                 </div>
               </div>
@@ -293,7 +266,7 @@ export default async function TraderProfilePage({
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary ring-1 ring-inset ring-primary/20">
                     <Zap className="h-3.5 w-3.5" /> Public Trader
                   </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-4 py-1 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground ring-1 ring-inset ring-transparent/40">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-4 py-1 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground ring-1 ring-inset ring-white/10">
                     <Lock className="h-3.5 w-3.5" /> Live Profile
                   </span>
                 </div>
@@ -310,7 +283,7 @@ export default async function TraderProfilePage({
             <div className="flex flex-wrap gap-3 lg:justify-end">
               <Link
                 href={`/${locale}/leaderboard`}
-                className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/30 px-5 py-2.5 text-sm font-medium backdrop-blur transition-all duration-200 hover:bg-white/40 active:scale-[0.97] dark:bg-zinc-800/30 dark:hover:bg-zinc-800/50"
+                className="inline-flex items-center gap-2 rounded-2xl bg-white/30 px-5 py-2.5 text-sm font-medium backdrop-blur transition-all duration-200 hover:bg-white/40 active:scale-[0.97] dark:bg-zinc-800/30 dark:hover:bg-zinc-800/50"
               >
                 <ArrowLeft className="h-4 w-4" /> Leaderboard
               </Link>
@@ -324,17 +297,17 @@ export default async function TraderProfilePage({
           </div>
         </div>
 
-        {/* Anchored Summary — Stats reordered below grid */}
+        {/* Anchored Summary — Stats row */}
         <div className="mb-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {publicStats.map((stat, idx) => {
             const Icon = stat.icon
             return (
               <div
                 key={idx}
-                className="group rounded-2xl border border-white/10 bg-white/30 p-5 shadow-lg backdrop-blur-xl transition-all duration-200 hover:bg-white/40 dark:bg-zinc-900/30 dark:hover:bg-zinc-900/40"
+                className="group rounded-2xl bg-white/30 p-5 shadow-lg backdrop-blur-xl transition-all duration-200 hover:bg-white/40 dark:bg-zinc-900/30 dark:hover:bg-zinc-900/40"
               >
                 <div className="flex items-center gap-4">
-                  <div className="rounded-xl border border-white/10 bg-white/20 p-2.5 backdrop-blur-sm dark:bg-zinc-800/20">
+                  <div className="rounded-xl bg-white/20 p-2.5 backdrop-blur-sm dark:bg-zinc-800/20">
                     <Icon className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div>
@@ -348,12 +321,12 @@ export default async function TraderProfilePage({
           })}
         </div>
 
-        {/* Redesigned Rhythm — Full width calendar */}
+        {/* Rhythm + Activity stack */}
         <div className="space-y-6">
-          <div className="rounded-2xl border border-white/10 bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
+          <div className="rounded-2xl bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
             <div className="flex items-center justify-between border-b border-white/5 px-6 py-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/20 backdrop-blur-sm dark:bg-zinc-800/20">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm dark:bg-zinc-800/20">
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div>
@@ -373,51 +346,7 @@ export default async function TraderProfilePage({
           </div>
 
           {/* Activity — Below rhythm, full width */}
-          <div>
-            <div className="mb-3 flex items-center justify-between">
-              <div>
-                <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Activity</div>
-                <div className="text-2xl font-semibold tracking-tight">Recent Execution</div>
-              </div>
-              <div className="text-sm text-muted-foreground">{snapshot.recentTrades.length} trades</div>
-            </div>
-
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
-              {snapshot.recentTrades.length > 0 ? (
-                <div className="divide-y divide-white/5">
-                  {snapshot.recentTrades.map((trade, idx) => {
-                    const isPositive = trade.pnl > 0
-                    const isNegative = trade.pnl < 0
-                    return (
-                      <div
-                        key={idx}
-                        className="group flex items-center justify-between px-5 py-4 transition-all duration-200 hover:bg-white/5 active:scale-[0.98]"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="font-mono text-sm font-medium text-foreground/80">{trade.symbol}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {trade.closeTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                          </div>
-                        </div>
-                        <div className={cn(
-                          "font-mono text-lg font-semibold tabular-nums transition",
-                          isPositive && "text-emerald-400",
-                          isNegative && "text-rose-400",
-                          !isPositive && !isNegative && "text-foreground/60"
-                        )}>
-                          {formatSigned(trade.pnl)}
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              ) : (
-                <div className="p-8 text-center text-sm text-muted-foreground">
-                  No public closed trades available yet.
-                </div>
-              )}
-            </div>
-          </div>
+          <TradeActivityFeed trades={snapshot.allTrades} />
         </div>
       </div>
     </div>

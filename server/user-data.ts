@@ -130,6 +130,7 @@ function toCompatUser(record: CoreUserCompatRecord, authUserId: string): User {
     language: record.language ?? 'en',
     dashboardTheme: DEFAULT_DASHBOARD_THEME,
     showOnLeaderboard: false,
+    hideLatestTrade: false,
     etpToken: null,
     etpTokenHash: null,
     etpTokenExpiresAt: null,

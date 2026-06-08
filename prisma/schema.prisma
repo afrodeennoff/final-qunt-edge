@@ -24,6 +24,7 @@ model User {
   language           String              @default("en")
   dashboardTheme     String              @default("blue") // dashboard theme preference: blue, violet, emerald, amber, rose
   showOnLeaderboard  Boolean             @default(false)
+  hideLatestTrade    Boolean             @default(false)
   etpToken           String?
   etpTokenHash       String?             @unique
   etpTokenExpiresAt  DateTime?

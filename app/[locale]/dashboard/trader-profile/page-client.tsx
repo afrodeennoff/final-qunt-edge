@@ -35,7 +35,7 @@ import {
 } from '@/context/data-provider'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
-import { getLeaderboardVisibility, toggleLeaderboardVisibility } from '@/server/user-profile'
+import { getHideLatestTrade, getLeaderboardVisibility, toggleHideLatestTrade, toggleLeaderboardVisibility } from '@/server/user-profile'
 import { useUserStore } from '@/store/user-store'
 import { TraderProfileShareButton } from './components/trader-profile-share-button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -189,18 +189,24 @@ export default function TraderProfilePageClient() {
   const [selectedCalendarDay, setSelectedCalendarDay] = useState<Date | undefined>(undefined)
   const [tradeFeedPage, setTradeFeedPage] = useState(1)
   const [showOnLeaderboard, setShowOnLeaderboard] = useState(false)
+  const [hideLatestTrade, setHideLatestTrade] = useState(false)
   const [isTogglingVisibility, setIsTogglingVisibility] = useState(false)
+  const [isTogglingLatestTrade, setIsTogglingLatestTrade] = useState(false)
 
   const isOwnProfile = Boolean(supabaseUser)
 
   useEffect(() => {
     if (!isOwnProfile) return
     let alive = true
-    getLeaderboardVisibility()
-      .then((r) => {
-        if (alive) setShowOnLeaderboard(r.showOnLeaderboard)
-      })
-      .catch(() => {})
+    Promise.all([
+      getLeaderboardVisibility(),
+      getHideLatestTrade(),
+    ]).then(([vis, hide]) => {
+      if (alive) {
+        setShowOnLeaderboard(vis.showOnLeaderboard)
+        setHideLatestTrade(hide.hideLatestTrade)
+      }
+    }).catch(() => {})
     return () => {
       alive = false
     }
@@ -215,6 +221,18 @@ export default function TraderProfilePageClient() {
     } catch {
     } finally {
       setIsTogglingVisibility(false)
+    }
+  }
+
+  const handleToggleHideLatestTrade = async () => {
+    if (isTogglingLatestTrade) return
+    setIsTogglingLatestTrade(true)
+    try {
+      const r = await toggleHideLatestTrade()
+      if (r.success) setHideLatestTrade(r.hideLatestTrade)
+    } catch {
+    } finally {
+      setIsTogglingLatestTrade(false)
     }
   }
 
@@ -562,6 +580,23 @@ export default function TraderProfilePageClient() {
                     checked={showOnLeaderboard}
                     onCheckedChange={() => handleToggleLeaderboard()}
                     disabled={isTogglingVisibility}
+                  />
+                )}
+              </div>
+              <div className="mt-3 flex items-center justify-between gap-3 border-t border-white/5 pt-3">
+                <div className="space-y-0.5">
+                  <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                    Hide latest trade
+                  </p>
+                  <p className="text-[11px] text-muted-foreground/60">
+                    Conceal most recent trade on profile
+                  </p>
+                </div>
+                {isOwnProfile && (
+                  <Switch
+                    checked={hideLatestTrade}
+                    onCheckedChange={() => handleToggleHideLatestTrade()}
+                    disabled={isTogglingLatestTrade}
                   />
                 )}
               </div>
