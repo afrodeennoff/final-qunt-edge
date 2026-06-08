@@ -627,7 +627,7 @@ async function loadTradesPage(
         where,
         orderBy: { entryDate: 'desc' },
         select: { pnl: true },
-        take: 5_000,
+        take: 500,
       }),
     ])
 

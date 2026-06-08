@@ -202,14 +202,21 @@ export async function batchUpdateTradesOptimized(
     throw new Error('Forbidden: Cannot modify another user\'s trades')
   }
 
-  return prisma.$transaction(
-    updates.map(update =>
-      prisma.trade.updateMany({
-        where: { id: update.id, userId },
-        data: update.data,
-      })
+  const BATCH_SIZE = 20
+  const results: Array<{ count: number }> = []
+  for (let i = 0; i < updates.length; i += BATCH_SIZE) {
+    const batch = updates.slice(i, i + BATCH_SIZE)
+    const batchResults = await prisma.$transaction(
+      batch.map(update =>
+        prisma.trade.updateMany({
+          where: { id: update.id, userId },
+          data: update.data,
+        })
+      )
     )
-  )
+    results.push(...batchResults)
+  }
+  return results
 }
 
 export async function getRecentTradesWithPagination(

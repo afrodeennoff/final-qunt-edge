@@ -14,7 +14,7 @@ import { calculateStatistics } from '@/lib/utils'
 import type { DashboardBootstrapPayload } from '@/lib/types/bootstrap'
 import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
 
-const PAGE_SIZE = 500
+const PAGE_SIZE = 100
 
 /*** Get the dashboard bootstrap payload for SSR */
 export async function getDashboardBootstrap(): Promise<DashboardBootstrapPayload> {

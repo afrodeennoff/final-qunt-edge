@@ -8,25 +8,7 @@ import type {
 } from '@/app/[locale]/dashboard/analytics/statistics/types'
 
 const KNOWN_TIMEFRAMES = new Set(['5m', '15m', '30m', '1H', '4H', 'Daily'])
-
-function computeRR(trades: Array<{ pnl: number }>) {
-  let grossWin = 0
-  let grossLoss = 0
-  let wins = 0
-  let losses = 0
-
-  for (const t of trades) {
-    if (t.pnl > 0) { grossWin += t.pnl; wins++ }
-    else if (t.pnl < 0) { grossLoss += Math.abs(t.pnl); losses++ }
-  }
-
-  const avgWin = wins > 0 ? grossWin / wins : 0
-  const avgLoss = losses > 0 ? grossLoss / losses : 0
-  const avgRR = avgLoss > 0 ? avgWin / avgLoss : 0
-  const totalRR = grossLoss > 0 ? grossWin / grossLoss : 0
-
-  return { avgRR, totalRR, wins, losses, grossWin, grossLoss }
-}
+const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 function extractDate(d: Date | string): Date {
   return d instanceof Date ? d : new Date(d)
@@ -37,7 +19,13 @@ function formatISO(d: Date | string): string {
   return dt.toISOString()
 }
 
-const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+function computeRRFromAgg(grossWin: number, grossLoss: number, wins: number, losses: number) {
+  const avgWin = wins > 0 ? grossWin / wins : 0
+  const avgLoss = losses > 0 ? grossLoss / losses : 0
+  const avgRR = avgLoss > 0 ? avgWin / avgLoss : 0
+  const totalRR = grossLoss > 0 ? grossWin / grossLoss : 0
+  return { avgRR, totalRR, wins, losses, grossWin, grossLoss }
+}
 
 export async function getStatisticsAction(
   periodDays?: number,
@@ -45,166 +33,212 @@ export async function getStatisticsAction(
 ): Promise<StatisticsResult> {
   const userId = await getDatabaseUserId()
 
-  const where: Prisma.TradeWhereInput = { userId }
   const effectivePeriod = periodDays && periodDays > 0 ? periodDays : 365
   const cutoff = new Date(Date.now() - effectivePeriod * 86400000)
-  where.entryDate = { gte: cutoff }
-  if (accountNumber) where.accountNumber = accountNumber
 
-  const trades = await prisma.trade.findMany({
-    where,
-    include: { journal: { select: { id: true, customTags: true, excerptTitle: true, featuredExcerpt: true } } },
-    orderBy: { entryDate: 'desc' },
+  const baseWhere: Prisma.TradeWhereInput = { userId, entryDate: { gte: cutoff } }
+  if (accountNumber) baseWhere.accountNumber = accountNumber
+
+  // 1. Grand total aggregate (single DB query)
+  const grandAgg = await prisma.trade.aggregate({
+    where: baseWhere,
+    _sum: { pnl: true },
+    _count: true,
+  })
+  const grandTotal = grandAgg._count
+  const grandPnl = Number(grandAgg._sum.pnl ?? 0)
+
+  // 2. Ticker stats via groupBy (SQL GROUP BY)
+  const tickerGroup = await prisma.trade.groupBy({
+    by: ['instrument'],
+    where: baseWhere,
+    _sum: { pnl: true },
+    _count: { id: true },
   })
 
-  // ── Ticker Stats ──
-  const tickerMap = new Map<string, Array<{ pnl: number }>>()
-  for (const t of trades) {
-    const instr = t.instrument || 'Unknown'
-    if (!tickerMap.has(instr)) tickerMap.set(instr, [])
-    tickerMap.get(instr)!.push({ pnl: Number(t.pnl) })
-  }
+  // 3. Per-ticker PnL breakdown via raw SQL for win/loss split
+  const tickerRawRows = await prisma.$queryRaw<Array<{
+    instrument: string; gross_win: string; gross_loss: string; win_count: bigint; loss_count: bigint
+  }>>`
+    SELECT
+      instrument,
+      SUM(CASE WHEN pnl > 0 THEN pnl ELSE 0 END) as gross_win,
+      SUM(CASE WHEN pnl < 0 THEN ABS(pnl) ELSE 0 END) as gross_loss,
+      COUNT(*) FILTER (WHERE pnl > 0) as win_count,
+      COUNT(*) FILTER (WHERE pnl < 0) as loss_count
+    FROM "Trade"
+    WHERE user_id = ${userId}
+      AND entry_date >= ${cutoff}
+      ${accountNumber ? Prisma.sql`AND account_number = ${accountNumber}` : Prisma.empty}
+    GROUP BY instrument
+    ORDER BY COUNT(*) DESC
+  `
 
-  const tickerStats: TickerStat[] = []
-  for (const [ticker, tList] of tickerMap) {
-    const { avgRR, totalRR, wins, losses, grossWin, grossLoss } = computeRR(tList)
+  const tickerMap = new Map(tickerRawRows.map(r => [r.instrument, r]))
+  const tickerStats: TickerStat[] = tickerGroup.map(g => {
+    const raw = tickerMap.get(g.instrument)
+    const wins = Number(raw?.win_count ?? 0)
+    const losses = Number(raw?.loss_count ?? 0)
+    const grossWin = Number(raw?.gross_win ?? 0)
+    const grossLoss = Number(raw?.gross_loss ?? 0)
     const resolved = wins + losses
-    const pnl = tList.reduce((s, t) => s + t.pnl, 0)
-    tickerStats.push({
-      ticker,
-      totalTrades: tList.length,
+    const { avgRR, totalRR } = computeRRFromAgg(grossWin, grossLoss, wins, losses)
+    return {
+      ticker: g.instrument || 'Unknown',
+      totalTrades: g._count.id,
       winRate: resolved > 0 ? (wins / resolved) * 100 : 0,
       avgRR,
       totalRR,
-      pnl,
+      pnl: Number(g._sum.pnl ?? 0),
       wins,
       losses,
       grossWin,
       grossLoss,
-    })
-  }
-  tickerStats.sort((a, b) => b.totalTrades - a.totalTrades)
-
-  // ── Daily Stats ──
-  const dateMap = new Map<string, Array<{ pnl: number }>>()
-  for (const t of trades) {
-    const d = extractDate(t.entryDate)
-    const key = d.toISOString().slice(0, 10)
-    if (!dateMap.has(key)) dateMap.set(key, [])
-    dateMap.get(key)!.push({ pnl: Number(t.pnl) })
-  }
-
-  const dailyStats: DailyStat[] = []
-  for (const [date, tList] of dateMap) {
-    const { avgRR, totalRR, wins, losses } = computeRR(tList)
-    const resolved = wins + losses
-    const pnl = tList.reduce((s, t) => s + t.pnl, 0)
-    dailyStats.push({
-      date,
-      totalTrades: tList.length,
-      winRate: resolved > 0 ? (wins / resolved) * 100 : 0,
-      avgRR,
-      totalRR,
-      pnl,
-    })
-  }
-  dailyStats.sort((a, b) => b.date.localeCompare(a.date))
-
-  // ── Setup Stats (concept / tag performance, excludes known timeframe tags) ──
-  const tagMap = new Map<string, Array<{ pnl: number }>>()
-  const timeframeMap = new Map<string, Array<{ pnl: number }>>()
-  for (const t of trades) {
-    const journal = t.journal
-    if (!journal || !journal.customTags || journal.customTags.length === 0) continue
-    const pnlNum = Number(t.pnl)
-    for (const tag of journal.customTags) {
-      if (KNOWN_TIMEFRAMES.has(tag)) {
-        if (!timeframeMap.has(tag)) timeframeMap.set(tag, [])
-        timeframeMap.get(tag)!.push({ pnl: pnlNum })
-      } else {
-        if (!tagMap.has(tag)) tagMap.set(tag, [])
-        tagMap.get(tag)!.push({ pnl: pnlNum })
-      }
     }
-  }
+  })
 
-  const setupStats: SetupStat[] = []
-  for (const [tag, tList] of tagMap) {
-    const { avgRR, totalRR, wins, losses } = computeRR(tList)
+  // 4. Daily PnL aggregation via raw SQL GROUP BY
+  const dailyRows = await prisma.$queryRaw<Array<{
+    date: Date; gross_pnl: string; trade_count: bigint; gross_win: string; gross_loss: string; win_count: bigint; loss_count: bigint
+  }>>`
+    SELECT
+      DATE(entry_date) as date,
+      SUM(pnl) as gross_pnl,
+      COUNT(*) as trade_count,
+      SUM(CASE WHEN pnl > 0 THEN pnl ELSE 0 END) as gross_win,
+      SUM(CASE WHEN pnl < 0 THEN ABS(pnl) ELSE 0 END) as gross_loss,
+      COUNT(*) FILTER (WHERE pnl > 0) as win_count,
+      COUNT(*) FILTER (WHERE pnl < 0) as loss_count
+    FROM "Trade"
+    WHERE user_id = ${userId}
+      AND entry_date >= ${cutoff}
+      ${accountNumber ? Prisma.sql`AND account_number = ${accountNumber}` : Prisma.empty}
+    GROUP BY DATE(entry_date)
+    ORDER BY date DESC
+  `
+
+  const dailyStats: DailyStat[] = dailyRows.map(r => {
+    const wins = Number(r.win_count)
+    const losses = Number(r.loss_count)
+    const grossWin = Number(r.gross_win)
+    const grossLoss = Number(r.gross_loss)
     const resolved = wins + losses
-    const pnl = tList.reduce((s, t) => s + t.pnl, 0)
-    setupStats.push({
-      tag,
-      totalTrades: tList.length,
+    const { avgRR, totalRR } = computeRRFromAgg(grossWin, grossLoss, wins, losses)
+    return {
+      date: formatISO(r.date),
+      totalTrades: Number(r.trade_count),
       winRate: resolved > 0 ? (wins / resolved) * 100 : 0,
       avgRR,
       totalRR,
-      pnl,
-    })
-  }
-  setupStats.sort((a, b) => b.totalTrades - a.totalTrades)
+      pnl: Number(r.gross_pnl),
+    }
+  })
 
-  // ── Timeframe Stats ──
-  const timeframeStats: SetupStat[] = []
-  for (const [tf, tList] of timeframeMap) {
-    const { avgRR, totalRR, wins, losses } = computeRR(tList)
-    const resolved = wins + losses
-    const pnl = tList.reduce((s, t) => s + t.pnl, 0)
-    timeframeStats.push({
-      tag: tf,
-      totalTrades: tList.length,
-      winRate: resolved > 0 ? (wins / resolved) * 100 : 0,
-      avgRR,
-      totalRR,
-      pnl,
-    })
-  }
-  timeframeStats.sort((a, b) => b.totalTrades - a.totalTrades)
-
-  // ── Weekday Stats ──
-  const weekdayMap = new Map<number, Array<{ pnl: number }>>()
-  for (const t of trades) {
-    const d = extractDate(t.entryDate)
+  // 5. Weekday stats derived from daily aggregation
+  const weekdayMap = new Map<number, { grossWin: number; grossLoss: number; wins: number; losses: number; count: number; pnl: number }>()
+  for (const r of dailyRows) {
+    const d = extractDate(r.date)
     const dayIdx = d.getDay()
-    if (!weekdayMap.has(dayIdx)) weekdayMap.set(dayIdx, [])
-    weekdayMap.get(dayIdx)!.push({ pnl: Number(t.pnl) })
+    const entry = weekdayMap.get(dayIdx) || { grossWin: 0, grossLoss: 0, wins: 0, losses: 0, count: 0, pnl: 0 }
+    entry.grossWin += Number(r.gross_win)
+    entry.grossLoss += Number(r.gross_loss)
+    entry.wins += Number(r.win_count)
+    entry.losses += Number(r.loss_count)
+    entry.count += Number(r.trade_count)
+    entry.pnl += Number(r.gross_pnl)
+    weekdayMap.set(dayIdx, entry)
   }
 
   const weekdayOrder = [1, 2, 3, 4, 5, 6, 0]
   const weekdayStats: WeekdayStat[] = []
   for (const idx of weekdayOrder) {
-    const tList = weekdayMap.get(idx)
-    if (!tList || tList.length === 0) continue
-    const { avgRR, totalRR, wins, losses } = computeRR(tList)
-    const resolved = wins + losses
-    const pnl = tList.reduce((s, t) => s + t.pnl, 0)
+    const entry = weekdayMap.get(idx)
+    if (!entry || entry.count === 0) continue
+    const resolved = entry.wins + entry.losses
+    const { avgRR, totalRR } = computeRRFromAgg(entry.grossWin, entry.grossLoss, entry.wins, entry.losses)
     weekdayStats.push({
       day: WEEKDAY_NAMES[idx],
-      totalTrades: tList.length,
-      winRate: resolved > 0 ? (wins / resolved) * 100 : 0,
+      totalTrades: entry.count,
+      winRate: resolved > 0 ? (entry.wins / resolved) * 100 : 0,
       avgRR,
       totalRR,
-      pnl,
-      wins,
-      losses,
+      pnl: entry.pnl,
+      wins: entry.wins,
+      losses: entry.losses,
     })
   }
 
-  // ── Grand total ──
-  const grandResult = computeRR(trades.map(t => ({ pnl: Number(t.pnl) })))
-  const grandResolved = grandResult.wins + grandResult.losses
+  // 6. Journal-linked stats (setups / timeframes)
+  const tradesWithJournal = await prisma.trade.findMany({
+    where: baseWhere,
+    select: {
+      pnl: true,
+      entryDate: true,
+      instrument: true,
+      side: true,
+      id: true,
+      journal: {
+        select: { id: true, customTags: true, excerptTitle: true, featuredExcerpt: true },
+      },
+    },
+    orderBy: { entryDate: 'desc' },
+    take: 10_000,
+  })
 
-  // ── Daily PnL aggregation for best/worst day ──
-  const dayPnlMap = new Map<string, number>()
-  for (const t of trades) {
-    const d = extractDate(t.entryDate)
-    const key = d.toISOString().slice(0, 10)
-    dayPnlMap.set(key, (dayPnlMap.get(key) || 0) + Number(t.pnl))
+  const tagMap = new Map<string, { grossWin: number; grossLoss: number; wins: number; losses: number; count: number; pnl: number }>()
+  const timeframeMap = new Map<string, { grossWin: number; grossLoss: number; wins: number; losses: number; count: number; pnl: number }>()
+  for (const t of tradesWithJournal) {
+    const journal = t.journal
+    if (!journal || !journal.customTags || journal.customTags.length === 0) continue
+    const pnlNum = Number(t.pnl)
+    for (const tag of journal.customTags) {
+      const map = KNOWN_TIMEFRAMES.has(tag) ? timeframeMap : tagMap
+      let entry = map.get(tag)
+      if (!entry) {
+        entry = { grossWin: 0, grossLoss: 0, wins: 0, losses: 0, count: 0, pnl: 0 }
+        map.set(tag, entry)
+      }
+      entry.count++
+      entry.pnl += pnlNum
+      if (pnlNum > 0) { entry.wins++; entry.grossWin += pnlNum }
+      else if (pnlNum < 0) { entry.losses++; entry.grossLoss += Math.abs(pnlNum) }
+    }
   }
-  const dayPnls = Array.from(dayPnlMap.values())
 
-  // ── Featured Excerpts ──
-  const featuredExcerpts = trades
+  const setupStats: SetupStat[] = []
+  for (const [tag, entry] of tagMap) {
+    if (entry.count === 0) continue
+    const resolved = entry.wins + entry.losses
+    const { avgRR, totalRR } = computeRRFromAgg(entry.grossWin, entry.grossLoss, entry.wins, entry.losses)
+    setupStats.push({
+      tag,
+      totalTrades: entry.count,
+      winRate: resolved > 0 ? (entry.wins / resolved) * 100 : 0,
+      avgRR,
+      totalRR,
+      pnl: entry.pnl,
+    })
+  }
+  setupStats.sort((a, b) => b.totalTrades - a.totalTrades)
+
+  const timeframeStats: SetupStat[] = []
+  for (const [tf, entry] of timeframeMap) {
+    if (entry.count === 0) continue
+    const resolved = entry.wins + entry.losses
+    const { avgRR, totalRR } = computeRRFromAgg(entry.grossWin, entry.grossLoss, entry.wins, entry.losses)
+    timeframeStats.push({
+      tag: tf,
+      totalTrades: entry.count,
+      winRate: resolved > 0 ? (entry.wins / resolved) * 100 : 0,
+      avgRR,
+      totalRR,
+      pnl: entry.pnl,
+    })
+  }
+  timeframeStats.sort((a, b) => b.totalTrades - a.totalTrades)
+
+  // 7. Featured excerpts
+  const featuredExcerpts = tradesWithJournal
     .filter(t => t.journal && (t.journal.excerptTitle || t.journal.featuredExcerpt))
     .map(t => ({
       id: t.journal!.id,
@@ -218,23 +252,39 @@ export async function getStatisticsAction(
     }))
     .sort((a, b) => b.entryDate.localeCompare(a.entryDate))
 
+  // 8. Grand total stats
+  const grandTotalGrossWin = dailyRows.reduce((s, r) => s + Number(r.gross_win), 0)
+  const grandTotalGrossLoss = dailyRows.reduce((s, r) => s + Number(r.gross_loss), 0)
+  const grandTotalWins = dailyRows.reduce((s, r) => s + Number(r.win_count), 0)
+  const grandTotalLosses = dailyRows.reduce((s, r) => s + Number(r.loss_count), 0)
+  const grandResolved = grandTotalWins + grandTotalLosses
+  const { avgRR: grandAvgRR, totalRR: grandTotalRR } = computeRRFromAgg(
+    grandTotalGrossWin, grandTotalGrossLoss, grandTotalWins, grandTotalLosses
+  )
+
+  // 9. Best/worst day
+  const dayPnls = dailyRows.map(r => Number(r.gross_pnl))
+
+  // 10. All PnLs for chart (limit to reduce payload)
+  const allPnls = tradesWithJournal.map(t => ({
+    pnl: Number(t.pnl),
+    entryDate: formatISO(t.entryDate),
+  }))
+
   return {
     tickerStats,
     dailyStats,
     setupStats,
     weekdayStats,
     timeframeStats,
-    allPnls: trades.map(t => ({
-      pnl: Number(t.pnl),
-      entryDate: formatISO(t.entryDate),
-    })),
-    grandTotal: trades.length,
-    grandWinRate: grandResolved > 0 ? (grandResult.wins / grandResolved) * 100 : 0,
-    grandPnl: trades.reduce((s, t) => s + Number(t.pnl), 0),
+    allPnls,
+    grandTotal,
+    grandWinRate: grandResolved > 0 ? (grandTotalWins / grandResolved) * 100 : 0,
+    grandPnl,
     bestDay: dayPnls.length > 0 ? Math.max(...dayPnls) : 0,
     worstDay: dayPnls.length > 0 ? Math.min(...dayPnls) : 0,
-    profitFactor: grandResult.totalRR,
-    avgRR: grandResult.avgRR,
+    profitFactor: grandTotalRR,
+    avgRR: grandAvgRR,
     featuredExcerpts,
   }
 }
