@@ -87,7 +87,6 @@ export async function POST(req: NextRequest) {
   const startedAt = Date.now();
 
   // Check if AI is properly configured
-  const baseURL = process.env.AI_BASE_URL || "https://openrouter.ai/api/v1";
   const aiApiKey = process.env.OPENROUTER_API_KEY;
 
   if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {

@@ -54,6 +54,8 @@ const envSchema = z.object({
   UPSTASH_REDIS_REST_URL: optionalUrl(),
   UPSTASH_REDIS_REST_TOKEN: optionalMinString(1),
   OPENROUTER_API_KEY: optionalMinString(1),
+  AI_TRANSCRIBE_BASE_URL: optionalUrl(),
+  AI_SUPPORT_WEBSEARCH_MODEL: optionalModelId(),
 });
 
 type AppEnv = z.infer<typeof envSchema>;
