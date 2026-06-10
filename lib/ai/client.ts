@@ -10,7 +10,7 @@ function getProviderBaseUrl(): string | undefined {
 }
 
 function getProviderApiKey(): string | undefined {
-  return getEnv().AI_PROVIDER_API_KEY || getEnv().OPENROUTER_API_KEY;
+  return getEnv().AI_PROVIDER_API_KEY || getEnv().OPENROUTER_API_KEY || getEnv().OPENAI_API_KEY;
 }
 
 function getDefaultModel(): string | undefined {
@@ -129,7 +129,7 @@ export function getAiLanguageModel(feature: AiFeature, userId?: string) {
     hasWarnedMissingModel = true;
   }
 
-  const rawModel = getAiClient()(model);
+  const rawModel = getAiClient().chat(model);
 
    return new Proxy(rawModel, {
      get(target, p: PropertyKey, receiver: object) {
@@ -187,7 +187,7 @@ export function checkAiConfig():
 export { getAiCacheStats, resetAiCacheStats };
 
 export function getAiLanguageModelById(modelId: string) {
-  return getAiClient()(modelId);
+  return getAiClient().chat(modelId);
 }
 
 export function getAiBaseURL(): string | undefined {

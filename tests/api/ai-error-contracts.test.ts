@@ -22,6 +22,12 @@ vi.mock("@ai-sdk/openai", () => ({
   createOpenAI: vi.fn(() => vi.fn()),
 }))
 
+vi.mock("@/lib/ai/client", () => ({
+  checkAiConfig: vi.fn(() => ({ ok: true })),
+  getAiLanguageModel: vi.fn(() => "gpt-4o-mini"),
+  getAiLanguageModelById: vi.fn(() => "gpt-4o-mini"),
+}))
+
 interface ErrorContractBody {
   error: {
     code: string

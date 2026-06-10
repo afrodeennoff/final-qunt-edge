@@ -25,6 +25,7 @@ vi.mock("@/lib/ai/route-guard", () => ({
 vi.mock("@/lib/ai/client", () => ({
   getAiLanguageModel: vi.fn(() => "model"),
   getAiLanguageModelById: vi.fn(() => "model"),
+  checkAiConfig: vi.fn(() => ({ ok: true })),
   createCompletionWithRouter: (...args: unknown[]) => createCompletionWithRouterMock(...args),
 }));
 

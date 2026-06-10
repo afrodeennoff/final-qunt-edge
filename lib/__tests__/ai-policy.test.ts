@@ -33,9 +33,9 @@ describe("AI policy", () => {
     }
   });
 
-  it("uses default model when no env override is provided", async () => {
+  it("uses empty string when no env override is provided", async () => {
     const { getAiPolicy } = await import("@/lib/ai/policy");
-    expect(getAiPolicy("chat").model).toBe("glm-4.7-flash");
+    expect(getAiPolicy("chat").model).toBe("");
   });
 
   it("uses AI_MODEL_DEFAULT over legacy AI_MODEL", async () => {
