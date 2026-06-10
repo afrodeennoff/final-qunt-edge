@@ -9,19 +9,19 @@ import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
 
 // Analysis Tools - Accounts
 import { generateAnalysisComponent } from "../analysis/accounts/generate-analysis-component";
-import { getAccountPerformance } from "../analysis/accounts/get-account-performance";
+import { createGetAccountPerformanceTool } from "../analysis/accounts/get-account-performance";
 
 // Analysis Tools - Shared
-import { getTimeOfDayPerformance } from "../chat/tools/get-time-of-day-performance";
-import { getInstrumentPerformance } from "../chat/tools/get-instrument-performance";
-import { getCurrentWeekSummary } from "../chat/tools/get-current-week-summary";
-import { getPreviousWeekSummary } from "../chat/tools/get-previous-week-summary";
-import { getTradesSummary } from "../chat/tools/get-trades-summary";
-import { getMostTradedInstruments } from "../chat/tools/get-most-traded-instruments";
+import { createGetTimeOfDayPerformanceTool } from "../chat/tools/get-time-of-day-performance";
+import { createGetInstrumentPerformanceTool } from "../chat/tools/get-instrument-performance";
+import { createGetCurrentWeekSummaryTool } from "../chat/tools/get-current-week-summary";
+import { createGetPreviousWeekSummaryTool } from "../chat/tools/get-previous-week-summary";
+import { createGetTradesSummaryTool } from "../chat/tools/get-trades-summary";
+import { createGetMostTradedInstrumentsTool } from "../chat/tools/get-most-traded-instruments";
 
 // Analysis Tools - Global (moved from inline route)
-import { getOverallPerformanceMetrics } from "../chat/tools/get-overall-performance-metrics";
-import { getPerformanceTrends } from "../chat/tools/get-performance-trends";
+import { createGetOverallPerformanceMetricsTool } from "../chat/tools/get-overall-performance-metrics";
+import { createGetPerformanceTrendsTool } from "../chat/tools/get-performance-trends";
 import { getGlobalAnalysisPrompt } from "@/lib/ai/prompts/analysis";
 import { getAccountAnalysisPrompt } from "@/lib/ai/prompts/analysis";
 import { getInstrumentAnalysisPrompt } from "@/lib/ai/prompts/analysis";
@@ -53,7 +53,7 @@ export async function handleAccountsAnalysis(
   let toolCallsCount = 0;
 
   const result = streamText({
-    model: getAiLanguageModel("analysis"),
+    model: getAiLanguageModel("analysis", userId),
     system: getAccountAnalysisPrompt(
       data.locale,
       data.username,
@@ -61,7 +61,7 @@ export async function handleAccountsAnalysis(
       data.currentTime,
     ),
     tools: {
-      getAccountPerformance,
+      getAccountPerformance: createGetAccountPerformanceTool(userId),
       generateAnalysisComponent,
     },
     messages: modelMessages,
@@ -117,15 +117,15 @@ export async function handleInstrumentAnalysis(
   let toolCallsCount = 0;
 
   const result = streamText({
-    model: getAiLanguageModel("analysis"),
+    model: getAiLanguageModel("analysis", userId),
     system: getInstrumentAnalysisPrompt(data.locale),
     tools: {
       generateAnalysisComponent,
-      getInstrumentPerformance,
-      getMostTradedInstruments,
-      getTradesSummary,
-      getCurrentWeekSummary,
-      getPreviousWeekSummary,
+      getInstrumentPerformance: createGetInstrumentPerformanceTool(userId),
+      getMostTradedInstruments: createGetMostTradedInstrumentsTool(userId),
+      getTradesSummary: createGetTradesSummaryTool(userId),
+      getCurrentWeekSummary: createGetCurrentWeekSummaryTool(userId),
+      getPreviousWeekSummary: createGetPreviousWeekSummaryTool(userId),
     },
     messages: [
       {
@@ -185,15 +185,15 @@ export async function handleTimeOfDayAnalysis(
   let toolCallsCount = 0;
 
   const result = streamText({
-    model: getAiLanguageModel("analysis"),
+    model: getAiLanguageModel("analysis", userId),
     system: getTimeOfDayAnalysisPrompt(data.locale, data.timezone),
     tools: {
       generateAnalysisComponent,
-      getTimeOfDayPerformance,
-      getTradesSummary,
-      getCurrentWeekSummary,
-      getPreviousWeekSummary,
-      getMostTradedInstruments,
+      getTimeOfDayPerformance: createGetTimeOfDayPerformanceTool(userId),
+      getTradesSummary: createGetTradesSummaryTool(userId),
+      getCurrentWeekSummary: createGetCurrentWeekSummaryTool(userId),
+      getPreviousWeekSummary: createGetPreviousWeekSummaryTool(userId),
+      getMostTradedInstruments: createGetMostTradedInstrumentsTool(userId),
     },
     messages: [
       {
@@ -254,16 +254,16 @@ export async function handleGlobalAnalysis(
   let toolCallsCount = 0;
 
   const result = streamText({
-    model: getAiLanguageModel("analysis"),
+    model: getAiLanguageModel("analysis", userId),
     system: getGlobalAnalysisPrompt(data.locale),
     tools: {
       generateAnalysisComponent,
-      getOverallPerformanceMetrics,
-      getPerformanceTrends,
-      getTradesSummary,
-      getCurrentWeekSummary,
-      getPreviousWeekSummary,
-      getMostTradedInstruments,
+      getOverallPerformanceMetrics: createGetOverallPerformanceMetricsTool(userId),
+      getPerformanceTrends: createGetPerformanceTrendsTool(userId),
+      getTradesSummary: createGetTradesSummaryTool(userId),
+      getCurrentWeekSummary: createGetCurrentWeekSummaryTool(userId),
+      getPreviousWeekSummary: createGetPreviousWeekSummaryTool(userId),
+      getMostTradedInstruments: createGetMostTradedInstrumentsTool(userId),
     },
     messages: modelMessages,
     temperature: policy.temperature,

@@ -1,5 +1,4 @@
 import { getAiTrades } from "@/lib/ai/trade-access";
-import { getUserId } from "@/server/auth";
 import { tool } from "ai";
 import { z } from 'zod/v3';
 
@@ -23,8 +22,8 @@ export function createGetTradesDetailsTool(userId?: string) {
         if (parsedEnd && Number.isNaN(parsedEnd.getTime())) {
             throw new Error("Invalid endDate format");
         }
-        const resolvedUserId = userId || (await getUserId().catch(() => undefined));
-        if (!resolvedUserId) throw new Error('No user context for trades details');
+        if (!userId) return { error: 'AI tool executed without explicit user context — cross-user data access prevented' };
+        const resolvedUserId = userId;
         const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId: resolvedUserId, profile: 'detail' });
         let trades = allTrades || [];
         if (accountNumber) {

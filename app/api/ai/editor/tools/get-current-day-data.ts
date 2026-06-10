@@ -1,7 +1,6 @@
 import { groupBy } from "@/lib/utils";
 import { normalizeTrades, type AnalyticsTrade } from "@/lib/ai/trade-normalization";
 import { getAiTrades } from "@/lib/ai/trade-access";
-import { getUserId } from "@/server/auth";
 import { tool } from "ai";
 import { z } from 'zod/v3';
 import { isToday } from "date-fns";
@@ -44,7 +43,8 @@ export function createGetCurrentDayDataTool(userId?: string) {
     description: 'Get trades database for the current day.',
     inputSchema: z.object({}),
     execute: async () => {
-        const resolvedUserId = userId || (await getUserId().catch(() => undefined));
+        if (!userId) return { error: 'AI editor tool executed without explicit user context — cross-user data access prevented' };
+        const resolvedUserId = userId;
         const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'detail' });
         const allTrades = tradesResult.trades || [];
         const filteredTrades = normalizeTrades(allTrades).filter(trade => {

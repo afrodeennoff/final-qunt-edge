@@ -1,5 +1,4 @@
 import { getTradesAction, type SerializedTrade } from "@/server/database";
-import { getUserId } from "@/server/auth";
 import { getRedisJson, setRedisJson } from "@/lib/redis-client";
 
 const DEFAULT_PAGE_SIZE = 500;
@@ -30,18 +29,9 @@ export async function getAllTradesForAi(
   const maxPages = Math.max(1, Math.floor(options.maxPages ?? MAX_PAGES));
   const forceRefresh = options.forceRefresh ?? false;
 
-  let userId = options.userId;
+  const userId = options.userId;
   if (!userId) {
-    try {
-      userId = await getUserId();
-    } catch (e) {
-      // Explicit userId is required for AI tool executes (detached from request auth context).
-      // Routes using streamText tools MUST pass userId via options or bound tools.
-      throw new Error('MISSING_USER_ID_FOR_AI_TRADES: explicit userId required (or call from authenticated request scope)');
-    }
-  }
-  if (!userId) {
-    throw new Error('MISSING_USER_ID_FOR_AI_TRADES');
+    throw new Error('MISSING_USER_ID_FOR_AI_TRADES: AI data tools require explicit userId. Routes must pass the authenticated userId from guardAiRequest (or MCP context) when creating tools or calling these functions.');
   }
   const cacheKey = `user:${userId}:ps:${pageSize}:mp:${maxPages}`;
 
@@ -57,12 +47,16 @@ export async function getAllTradesForAi(
   let truncated = false;
 
   while (page <= maxPages) {
+    // Pass explicit userId as trustedUserId bypass.
+    // This prevents getTradesAction from calling getDatabaseUserId() (which requires cookies()/request context)
+    // inside AI tool execute callbacks.
     const paginated = await getTradesAction(
       userId,
       page,
       pageSize,
       forceRefresh && page === 1,
       false,
+      userId, // trustedUserId
     );
     allTrades.push(...paginated.trades);
 

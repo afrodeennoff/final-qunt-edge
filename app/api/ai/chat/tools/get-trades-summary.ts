@@ -1,7 +1,6 @@
 import { groupBy } from "@/lib/utils";
 import { SerializedTrade } from "@/server/database";
 import { getAiTrades } from "@/lib/ai/trade-access";
-import { getUserId } from "@/server/auth";
 import Decimal from "decimal.js";
 import { tool } from "ai";
 import { z } from 'zod/v3';
@@ -47,8 +46,8 @@ export function createGetTradesSummaryTool(userId?: string) {
       endDate: z.string().describe('Date string in format 2025-01-14T14:33:01.000Z')
     }),
     execute: async ({ startDate, endDate }: { startDate: string, endDate: string }) => {
-      const resolvedUserId = userId || (await getUserId().catch(() => undefined));
-      if (!resolvedUserId) throw new Error('No user context for trades summary');
+      if (!userId) return { error: 'AI tool executed without explicit user context — cross-user data access prevented' };
+      const resolvedUserId = userId;
       const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
       const start = new Date(startDate);
       const end = new Date(endDate);

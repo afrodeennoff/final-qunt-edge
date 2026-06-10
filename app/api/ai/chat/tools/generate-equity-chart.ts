@@ -1,5 +1,4 @@
 import { getAiTrades } from "@/lib/ai/trade-access";
-import { getUserId } from "@/server/auth";
 import { tool } from "ai";
 import { z } from 'zod/v3';
 import { parseISO, eachDayOfInterval } from 'date-fns';
@@ -38,7 +37,8 @@ export function createGenerateEquityChartTool(userId?: string) {
       maxAccounts = 8 
     }) => {
 
-      const resolvedUserId = userId || (await getUserId().catch(() => undefined));
+      if (!userId) return { error: 'AI tool executed without explicit user context — cross-user data access prevented' };
+      const resolvedUserId = userId;
       const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
     const allTrades = tradesResult.trades || [];
     let trades = allTrades;

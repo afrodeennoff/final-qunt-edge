@@ -531,19 +531,29 @@ export async function getTradesAction(
   page: number = 1,
   pageSize: number = 50,
   forceRefresh: boolean = false,
-  includeStats: boolean = true
+  includeStats: boolean = true,
+  /** Trusted path for internal AI / MCP callers that already performed auth */
+  trustedUserId?: string
 ): Promise<PaginatedTrades & { statistics?: PrecomputedStats }> {
-  const authenticatedUserId = await getDatabaseUserId()
-  if (!authenticatedUserId) throw new Error('User not found')
+  let currentUserId: string
 
-  let currentUserId = authenticatedUserId
+  if (trustedUserId) {
+    // Bypass request-scoped auth (getDatabaseUserId / cookies) for AI tool executes
+    // The caller (route guard or MCP ctx) already verified the user.
+    currentUserId = await resolveWritableUserId(trustedUserId)
+  } else {
+    const authenticatedUserId = await getDatabaseUserId()
+    if (!authenticatedUserId) throw new Error('User not found')
 
-  if (userId) {
-    const resolvedUserId = await resolveWritableUserId(userId)
-    if (resolvedUserId !== authenticatedUserId) {
-      throw new Error('Forbidden')
+    currentUserId = authenticatedUserId
+
+    if (userId) {
+      const resolvedUserId = await resolveWritableUserId(userId)
+      if (resolvedUserId !== authenticatedUserId) {
+        throw new Error('Forbidden')
+      }
+      currentUserId = resolvedUserId
     }
-    currentUserId = resolvedUserId
   }
 
   const tag = `trades-${currentUserId}`

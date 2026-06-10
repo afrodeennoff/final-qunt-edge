@@ -11,6 +11,11 @@ import { createGetWeekSummaryForDateTool } from "./tools/get-week-summary-for-da
 import { createGetPreviousConversationTool } from "./tools/get-previous-conversation";
 import { createGenerateEquityChartTool } from "./tools/generate-equity-chart";
 import { createGetJournalEntriesTool } from "./tools/get-journal-entries";
+import { createGetMostTradedInstrumentsTool } from "./tools/get-most-traded-instruments";
+import { createGetOverallPerformanceMetricsTool } from "./tools/get-overall-performance-metrics";
+import { createGetPerformanceTrendsTool } from "./tools/get-performance-trends";
+import { createGetTimeOfDayPerformanceTool } from "./tools/get-time-of-day-performance";
+import { createGetInstrumentPerformanceTool } from "./tools/get-instrument-performance";
 import { startOfWeek, endOfWeek, subWeeks } from "date-fns";
 import { buildSystemPrompt } from "./prompts";
 import { getAiLanguageModel, checkAiConfig } from "@/lib/ai/client";
@@ -63,6 +68,11 @@ function createAvailableChatTools(userId: string) {
     getFinancialNews,
     generateEquityChart: createGenerateEquityChartTool(userId),
     getJournalEntries: createGetJournalEntriesTool(userId),
+    getMostTradedInstruments: createGetMostTradedInstrumentsTool(userId),
+    getOverallPerformanceMetrics: createGetOverallPerformanceMetricsTool(userId),
+    getPerformanceTrends: createGetPerformanceTrendsTool(userId),
+    getTimeOfDayPerformance: createGetTimeOfDayPerformanceTool(userId),
+    getInstrumentPerformance: createGetInstrumentPerformanceTool(userId),
   } satisfies ToolSet;
 }
 

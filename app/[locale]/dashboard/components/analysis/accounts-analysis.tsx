@@ -118,9 +118,17 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  const { messages, sendMessage, status, stop, error } = useChat({
  transport: new DefaultChatTransport({
  api:"/api/ai/analysis/accounts",
+ body: () => ({
+ username:
+ supabaseUser?.user_metadata?.full_name ||
+ supabaseUser?.email?.split("@")[0] ||"User",
+ locale: currentLocale,
+ timezone: timezone,
+ currentTime: new Date().toISOString(),
+ }),
  }),
  onError: (error) => {
-
+ console.error('Accounts analysis chat error:', error);
  },
  });
 
@@ -217,21 +225,9 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  ) : (
  <Button 
  onClick={() =>
- sendMessage(
- {
+ sendMessage({
  text: `Analyze my account trading performance and provide detailed insights in ${currentLocale} language. Use the generateAnalysisComponent tool to create structured analysis components.`,
- },
- {
- body: {
- username:
- supabaseUser?.user_metadata?.full_name ||
- supabaseUser?.email?.split("@")[0] ||"User",
- locale: currentLocale,
- timezone: timezone,
- currentTime: new Date().toISOString(),
- },
- },
- )
+ })
  }
  size="sm"
  variant="outline"

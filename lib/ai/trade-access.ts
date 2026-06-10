@@ -1,6 +1,5 @@
 import { getAllTradesForAi, type AiTradesFetchResult } from './get-all-trades'
 import type { SerializedTrade } from '@/server/trades'
-import { getUserId } from '@/server/auth'
 import { createLogger } from '@/lib/logger'
 
 const log = createLogger('ai-trade-access')
@@ -199,30 +198,12 @@ export async function getAiTrades(params: RowGetAiTradesParams): Promise<RowAiTr
 export async function getAiTrades(params: GetAiTradesParams): Promise<ProfiledAiTradesResult> {
   const { profile, forceRefresh = false } = params
 
-  // Prefer explicit userId (required for AI tool executes, MCP, and detached contexts).
-  // Only fall back to session getUserId() when no explicit id was supplied.
-  let effectiveUserId = params.userId
-  if (!effectiveUserId) {
-    try {
-      effectiveUserId = await getUserId()
-    } catch (error) {
-      log.warn('getUserId() failed and no explicit userId provided for getAiTrades', {
-        error: error instanceof Error ? error.message : error,
-        profile,
-      })
-      throw new Error('MISSING_USER_CONTEXT: AI tools must be created with authenticated userId or called from request scope')
-    }
-  }
-
-  // If both were present and they disagree, that's a programming error.
-  // (We no longer do a getUserId() when explicit is given, to support tool callbacks.)
-  if (params.userId && effectiveUserId && params.userId !== effectiveUserId) {
-    // In practice we trust the passed one from the authenticated guard.
-    effectiveUserId = params.userId
-  }
+  // AI data access *requires* explicit userId from the authenticated guard/MCP context.
+  // No more fallbacks to getUserId() here — that breaks inside tool executes.
+  const effectiveUserId = params.userId
 
   if (!effectiveUserId) {
-    throw new Error('MISSING_USER_CONTEXT')
+    throw new Error('MISSING_USER_CONTEXT: getAiTrades requires explicit userId. All AI tool creators and route handlers must pass the userId obtained from guardAiRequest (or MCP ctx).')
   }
 
   const cacheKey = `${effectiveUserId}:${profile}:${forceRefresh}`

@@ -1,5 +1,4 @@
 import { getAiTrades } from "@/lib/ai/trade-access";
-import { getUserId } from "@/server/auth";
 import { normalizeTrades, type AnalyticsTrade, tradeNetPnl } from "@/lib/ai/trade-normalization";
 import { tool } from "ai";
 import { z } from 'zod/v3';
@@ -257,7 +256,8 @@ function analyzeInstruments(trades: AnalyticsTrade[]): InstrumentAnalysis {
   };
 }
 
-export const getInstrumentPerformance = tool({
+export function createGetInstrumentPerformanceTool(userId?: string) {
+  return tool({
   description: 'Get detailed performance analysis for each trading instrument including profitability, risk metrics, and trading patterns',
   inputSchema: z.object({
     startDate: z.string().optional().describe('Optional start date to filter trades (format: 2025-01-14T14:33:01.000Z)'),
@@ -267,8 +267,9 @@ export const getInstrumentPerformance = tool({
   execute: async ({ startDate, endDate, minTrades = 1 }: { startDate?: string, endDate?: string, minTrades?: number }) => {
     const safeMinTrades = Math.min(1000, Math.max(1, Math.floor(minTrades)));
 
-    const userId = await getUserId();
-    const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId, profile: 'analysis' });
+    if (!userId) return { error: 'AI tool executed without explicit user context — cross-user data access prevented' };
+    const resolvedUserId = userId;
+    const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
     let trades = normalizeTrades(allTrades || []);
 
     // Filter trades by date range if provided
@@ -292,4 +293,7 @@ export const getInstrumentPerformance = tool({
       dataQualityWarning,
     };
   }
-}); 
+  });
+}
+
+export const getInstrumentPerformance = createGetInstrumentPerformanceTool();

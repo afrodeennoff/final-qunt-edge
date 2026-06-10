@@ -1,6 +1,5 @@
 import { getAiTrades } from "@/lib/ai/trade-access";
-import { getUserId } from "@/server/auth";
-import { getGroupsAction } from "@/server/groups";
+import { getGroupsActionForUser } from "@/server/groups";
 import { normalizeTrades, type AnalyticsTrade, tradeNetPnl } from "@/lib/ai/trade-normalization";
 import { tool } from "ai";
 import { format, startOfWeek } from "date-fns";
@@ -235,45 +234,50 @@ function analyzeAccounts(trades: AnalyticsTrade[]): AccountAnalysis {
   };
 }
 
-export const getAccountPerformance = tool({
-  description: 'Get account performance data and total portfolio value for AI analysis',
-  inputSchema: z.object({
-    startDate: z.string().optional().describe('Optional start date to filter trades (format: 2025-01-14T14:33:01.000Z)'),
-    endDate: z.string().optional().describe('Optional end date to filter trades (format: 2025-01-14T14:33:01.000Z)'),
-    minTrades: z.number().optional().describe('Minimum number of trades required to include an account in analysis')
-  }),
-  execute: async ({ startDate, endDate, minTrades = 1 }: { startDate?: string, endDate?: string, minTrades?: number }) => {
-    const safeMinTrades = Math.min(1000, Math.max(1, Math.floor(minTrades)));
+export function createGetAccountPerformanceTool(userId?: string) {
+  return tool({
+    description: 'Get account performance data and total portfolio value for AI analysis',
+    inputSchema: z.object({
+      startDate: z.string().optional().describe('Optional start date to filter trades (format: 2025-01-14T14:33:01.000Z)'),
+      endDate: z.string().optional().describe('Optional end date to filter trades (format: 2025-01-14T14:33:01.000Z)'),
+      minTrades: z.number().optional().describe('Minimum number of trades required to include an account in analysis')
+    }),
+    execute: async ({ startDate, endDate, minTrades = 1 }: { startDate?: string, endDate?: string, minTrades?: number }) => {
+      const safeMinTrades = Math.min(1000, Math.max(1, Math.floor(minTrades)));
 
-    const resolvedUserId = (await getUserId().catch(() => (undefined as any)));
-    const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
-    let trades = normalizeTrades(allTrades || []);
+      if (!userId) return { error: 'No authenticated user context for account performance tool' };
+      const resolvedUserId = userId;
+      const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
+      let trades = normalizeTrades(allTrades || []);
 
-    // Filter trades by date range if provided
-    if (startDate || endDate) {
-      trades = trades.filter(trade => {
-        const tradeDate = new Date(trade.entryDate);
-        const start = startDate ? new Date(startDate) : new Date('1970-01-01');
-        const end = endDate ? new Date(endDate) : new Date('2100-01-01');
-        return tradeDate >= start && tradeDate <= end;
-      });
+      // Filter trades by date range if provided
+      if (startDate || endDate) {
+        trades = trades.filter(trade => {
+          const tradeDate = new Date(trade.entryDate);
+          const start = startDate ? new Date(startDate) : new Date('1970-01-01');
+          const end = endDate ? new Date(endDate) : new Date('2100-01-01');
+          return tradeDate >= start && tradeDate <= end;
+        });
+      }
+
+      const userGroups = await getGroupsActionForUser(resolvedUserId);
+      const hiddenGroup = userGroups.find(g => g.name === "Hidden Accounts")
+      const hiddenAccountNumbers = hiddenGroup ? new Set(hiddenGroup.accounts.map(a => a.number)) : new Set()
+      // Filter out hidden accounts
+      trades = trades.filter(trade => !hiddenAccountNumbers.has(trade.accountNumber));
+      
+      const analysis = analyzeAccounts(trades);
+      
+      // Filter out accounts with fewer than minTrades
+      analysis.accounts = analysis.accounts.filter(account => account.totalTrades >= safeMinTrades);
+      
+      return {
+        ...analysis,
+        truncated,
+        dataQualityWarning,
+      };
     }
+  });
+}
 
-    const userGroups = await getGroupsAction();
-    const hiddenGroup = userGroups.find(g => g.name === "Hidden Accounts")
-    const hiddenAccountNumbers = hiddenGroup ? new Set(hiddenGroup.accounts.map(a => a.number)) : new Set()
-    // Filter out hidden accounts
-    trades = trades.filter(trade => !hiddenAccountNumbers.has(trade.accountNumber));
-    
-    const analysis = analyzeAccounts(trades);
-    
-    // Filter out accounts with fewer than minTrades
-    analysis.accounts = analysis.accounts.filter(account => account.totalTrades >= safeMinTrades);
-    
-    return {
-      ...analysis,
-      truncated,
-      dataQualityWarning,
-    };
-  }
-}); 
+export const getAccountPerformance = createGetAccountPerformanceTool(); 

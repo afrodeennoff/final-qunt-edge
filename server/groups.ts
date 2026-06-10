@@ -41,6 +41,16 @@ export async function getGroupsAction(): Promise<GroupWithAccounts[]> {
   }
 }
 
+/** AI-safe version: fetch groups for explicit userId without request auth context. */
+export async function getGroupsActionForUser(userId: string): Promise<GroupWithAccounts[]> {
+  try {
+    return _getGroupsCached(userId)
+  } catch (error) {
+    console.error('Error fetching groups for user:', error)
+    throw error
+  }
+}
+
 export async function renameGroupAction(groupId: string, name: string): Promise<GroupWithAccounts> {
   const userId = await getDatabaseUserId()
   try {

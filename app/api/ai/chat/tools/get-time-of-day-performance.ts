@@ -250,7 +250,8 @@ function analyzeTimeOfDay(trades: AnalyticsTrade[], timezone: string = 'UTC'): T
   };
 }
 
-export const getTimeOfDayPerformance = tool({
+export function createGetTimeOfDayPerformanceTool(userId?: string) {
+  return tool({
   description: 'Get detailed time-based performance analysis including hourly, daily, and session-based trading patterns',
   inputSchema: z.object({
     startDate: z.string().optional().describe('Optional start date to filter trades (format: 2025-01-14T14:33:01.000Z)'),
@@ -259,8 +260,9 @@ export const getTimeOfDayPerformance = tool({
   }),
   execute: async ({ startDate, endDate, timezone = 'UTC' }: { startDate?: string, endDate?: string, timezone?: string }) => {
 
-    const userId = await getUserId();
-    const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId, profile: 'analysis' });
+    if (!userId) return { error: 'AI tool executed without explicit user context — cross-user data access prevented' };
+    const resolvedUserId = userId;
+    const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
     let trades = normalizeTrades(allTrades || []);
 
     // Filter trades by date range if provided
@@ -280,4 +282,7 @@ export const getTimeOfDayPerformance = tool({
       dataQualityWarning,
     };
   }
-}); 
+  });
+}
+
+export const getTimeOfDayPerformance = createGetTimeOfDayPerformanceTool();

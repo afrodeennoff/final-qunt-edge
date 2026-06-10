@@ -1,7 +1,6 @@
 import { groupBy } from "@/lib/utils";
 import { normalizeTrades, type AnalyticsTrade } from "@/lib/ai/trade-normalization";
 import { getAiTrades } from "@/lib/ai/trade-access";
-import { getUserId } from "@/server/auth";
 import { tool } from "ai";
 import { z } from 'zod/v3';
 import { startOfWeek, endOfWeek, format } from "date-fns";
@@ -48,7 +47,8 @@ export function createGetCurrentWeekSummaryTool(userId?: string) {
         const currentWeekStart = startOfWeek(now, { weekStartsOn: 1 });
         const currentWeekEnd = endOfWeek(now, { weekStartsOn: 1 });
 
-        const resolvedUserId = userId || (await getUserId().catch(() => undefined));
+        if (!userId) return { error: 'AI tool executed without explicit user context — cross-user data access prevented' };
+        const resolvedUserId = userId;
         const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
         const allTrades = tradesResult.trades;
         const filteredTrades = normalizeTrades(allTrades).filter(trade => {

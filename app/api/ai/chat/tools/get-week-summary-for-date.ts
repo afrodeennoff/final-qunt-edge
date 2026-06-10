@@ -54,7 +54,8 @@ export function createGetWeekSummaryForDateTool(userId?: string) {
             const weekStart = startOfWeek(inputDate, { weekStartsOn: 1 });
             const weekEnd = endOfWeek(inputDate, { weekStartsOn: 1 });
 
-            const resolvedUserId = userId || (await getUserId().catch(() => undefined));
+            if (!userId) return { error: 'AI tool executed without explicit user context — cross-user data access prevented' };
+            const resolvedUserId = userId;
             const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
             const allTrades = tradesResult.trades;
             const filteredTrades = normalizeTrades(allTrades).filter(trade => {

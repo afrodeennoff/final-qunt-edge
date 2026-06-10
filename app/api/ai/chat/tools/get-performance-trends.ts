@@ -177,34 +177,38 @@ function analyzeTrends(trades: SerializedTrade[]): TrendAnalysis {
   };
 }
 
-export const getPerformanceTrends = tool({
-  description: 'Get performance trends and patterns over time including monthly, weekly, and daily breakdowns',
-  inputSchema: z.object({
-    startDate: z.string().optional().describe('Optional start date to filter trades (format: 2025-01-14T14:33:01.000Z)'),
-    endDate: z.string().optional().describe('Optional end date to filter trades (format: 2025-01-14T14:33:01.000Z)')
-  }),
-  execute: async ({ startDate, endDate }: { startDate?: string, endDate?: string }) => {
+export function createGetPerformanceTrendsTool(userId?: string) {
+  return tool({
+    description: 'Get performance trends and patterns over time including monthly, weekly, and daily breakdowns',
+    inputSchema: z.object({
+      startDate: z.string().optional().describe('Optional start date to filter trades (format: 2025-01-14T14:33:01.000Z)'),
+      endDate: z.string().optional().describe('Optional end date to filter trades (format: 2025-01-14T14:33:01.000Z)')
+    }),
+    execute: async ({ startDate, endDate }: { startDate?: string, endDate?: string }) => {
+      if (!userId) return { error: 'AI tool executed without explicit user context — cross-user data access prevented' };
+      const resolvedUserId = userId;
+      const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
+      const allTrades = tradesResult.trades || [];
+      let trades = allTrades;
 
-    const resolvedUserId = (await (await import('@/server/auth')).getUserId().catch(() => undefined));
-    const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
-    const allTrades = tradesResult.trades || [];
-    let trades = allTrades;
+      // Filter trades by date range if provided
+      if (startDate || endDate) {
+        trades = trades.filter((trade: SerializedTrade) => {
+          const tradeDate = new Date(trade.entryDate);
+          const start = startDate ? new Date(startDate) : new Date('1970-01-01');
+          const end = endDate ? new Date(endDate) : new Date('2100-01-01');
+          return tradeDate >= start && tradeDate <= end;
+        });
+      }
 
-    // Filter trades by date range if provided
-    if (startDate || endDate) {
-      trades = trades.filter((trade: SerializedTrade) => {
-        const tradeDate = new Date(trade.entryDate);
-        const start = startDate ? new Date(startDate) : new Date('1970-01-01');
-        const end = endDate ? new Date(endDate) : new Date('2100-01-01');
-        return tradeDate >= start && tradeDate <= end;
-      });
+      const trends = analyzeTrends(trades);
+      return {
+        ...trends,
+        truncated: tradesResult.truncated,
+        dataQualityWarning: tradesResult.dataQualityWarning,
+      };
     }
+  });
+}
 
-    const trends = analyzeTrends(trades);
-    return {
-      ...trends,
-      truncated: tradesResult.truncated,
-      dataQualityWarning: tradesResult.dataQualityWarning,
-    };
-  }
-});
+export const getPerformanceTrends = createGetPerformanceTrendsTool();

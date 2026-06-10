@@ -17,9 +17,8 @@ export function createGetJournalEntriesTool(userId?: string) {
     execute: async ({ fromDate, toDate }: { fromDate: string, toDate?: string }) => {
       const from = new Date(fromDate);
       const to = toDate ? new Date(toDate) : undefined;
-      const journalEntries = userId
-        ? await getMoodHistoryForUser(userId, from, to)
-        : await getMoodHistory(from, to);
+      if (!userId) return { error: 'AI journal tool executed without explicit user context — data access denied' };
+    const journalEntries = await getMoodHistoryForUser(userId, from, to);
       return journalEntries.map(entry => ({
         day: entry.day,
         mood: entry.mood,
