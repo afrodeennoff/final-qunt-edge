@@ -1,20 +1,20 @@
 import { NextRequest } from "next/server";
 import { z } from "zod/v3";
 import { rateLimit } from "@/lib/rate-limit";
+import { checkAiConfig } from "@/lib/ai/client";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, logAiRequest } from "@/lib/ai/telemetry";
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { apiError } from "@/lib/api-response";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
 import { isTimeoutError } from "@/lib/ai/timeout";
-import { 
-  unifiedSchema, 
-  handleAccountsAnalysis, 
-  handleInstrumentAnalysis, 
+import {
+  unifiedSchema,
+  handleAccountsAnalysis,
+  handleInstrumentAnalysis,
   handleTimeOfDayAnalysis,
   handleGlobalAnalysis
 } from "./handlers";
-import { getEnv } from "@/lib/env";
 
 export const maxDuration = 300;
 
@@ -30,15 +30,13 @@ export async function POST(req: NextRequest) {
   const policy = getAiPolicy("analysis");
   const startedAt = Date.now();
 
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
+
   // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, "analysis", unifiedAnalysisRateLimit);
   if (!guard.ok) return guard.response;
   const { userId } = guard;
-
-  const aiApiKey = getEnv().AI_PROVIDER_API_KEY || getEnv().OPENROUTER_API_KEY
-  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
-    return apiError("SERVICE_UNAVAILABLE", "AI service is not configured. Please contact support.", 503);
-  }
 
   try {
     const body = await req.json();

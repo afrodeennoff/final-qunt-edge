@@ -47,6 +47,7 @@ const envSchema = z.object({
   AI_MODEL_FORMAT_TRADES: optionalModelId(),
   AI_MODEL_ANALYSIS: optionalModelId(),
   AI_MODEL_SEARCH: optionalModelId(),
+  NEXT_PUBLIC_APP_URL: optionalUrl(),
   AI_TIMEOUT_MS: optionalString(),
   AI_MAX_STEPS: optionalString(),
   AI_LOG_SAMPLE_RATE: optionalString(),
@@ -59,6 +60,7 @@ const envSchema = z.object({
   UPSTASH_REDIS_REST_TOKEN: optionalMinString(1),
   OPENROUTER_API_KEY: optionalMinString(1),
   AI_TRANSCRIBE_BASE_URL: optionalUrl(),
+  AI_TRANSCRIBE_MODEL: optionalModelId(),
   AI_SUPPORT_WEBSEARCH_MODEL: optionalModelId(),
 });
 

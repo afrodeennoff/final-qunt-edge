@@ -2,7 +2,7 @@ import { generateObject } from "ai";
 import { NextRequest } from "next/server";
 import { z } from "zod/v3";
 import { mappingSchema } from "./schema";
-import { getAiLanguageModel } from "@/lib/ai/client";
+import { getAiLanguageModel, checkAiConfig } from "@/lib/ai/client";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import { apiError } from "@/lib/api-response";
@@ -10,7 +10,6 @@ import { rateLimit } from "@/lib/rate-limit";
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
 import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
-import { getEnv } from "@/lib/env";
 
 export const maxDuration = 30;
 const mappingsRateLimit = rateLimit({ limit: 20, window: 60_000, identifier: "ai-mappings" });
@@ -271,14 +270,12 @@ export async function POST(req: NextRequest) {
   const policy = getAiPolicy("mappings");
   const startedAt = Date.now();
 
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
+
   const guard = await guardAiRequest(req, 'mappings', mappingsRateLimit);
   if (!guard.ok) return guard.response;
   const { userId } = guard;
-
-  const aiApiKey = getEnv().AI_PROVIDER_API_KEY || getEnv().OPENROUTER_API_KEY
-  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
-    return apiError("SERVICE_UNAVAILABLE", "AI service is not configured. Please contact support.", 503);
-  }
 
   try {
 

@@ -2,7 +2,7 @@ import { streamText, stepCountIs } from "ai";
 import { NextRequest } from "next/server";
 import { z } from 'zod/v3';
 import { rateLimit } from "@/lib/rate-limit";
-import { getAiLanguageModel } from "@/lib/ai/client";
+import { getAiLanguageModel, checkAiConfig } from "@/lib/ai/client";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import { guardAiRequest } from "@/lib/ai/route-guard";
@@ -18,7 +18,6 @@ import { getCurrentWeekSummary } from "../../chat/tools/get-current-week-summary
 import { getPreviousWeekSummary } from "../../chat/tools/get-previous-week-summary";
 import { getTradesSummary } from "../../chat/tools/get-trades-summary";
 import { getMostTradedInstruments } from "../../chat/tools/get-most-traded-instruments";
-import { getEnv } from "@/lib/env";
 
 export const maxDuration = 30;
 const globalAnalysisRateLimit = rateLimit({ limit: 10, window: 60_000, identifier: "ai-analysis-global" });
@@ -84,20 +83,8 @@ export async function POST(req: NextRequest) {
   const startedAt = Date.now();
   let toolCallsCount = 0;
 
-  // Check if AI is properly configured
-  const aiApiKey = getEnv().AI_PROVIDER_API_KEY || getEnv().OPENROUTER_API_KEY;
-
-  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
-    return apiError(
-      "SERVICE_UNAVAILABLE",
-      "AI service is not configured. Please contact support.",
-      503,
-      {
-        type: "ai_not_configured",
-        message: "AI_PROVIDER_API_KEY is not set"
-      }
-    );
-  }
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
 
   // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, 'analysis', globalAnalysisRateLimit)

@@ -5,6 +5,7 @@ import { guardAiRequest } from '@/lib/ai/route-guard'
 import { apiError } from '@/lib/api-response'
 import { categorizeAiError, logAiRequest } from '@/lib/ai/telemetry'
 import { estimateTokenCountFromText, getAiErrorCode, logAiError } from '@/lib/ai/error-utils'
+import { getTranscribeModelId, checkAiConfig } from '@/lib/ai/client'
 import { getEnv } from '@/lib/env'
 
 export const maxDuration = 60
@@ -26,16 +27,19 @@ const ALLOWED_AUDIO_TYPES = new Set([
 export async function POST(request: NextRequest) {
   const startedAt = Date.now()
 
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
+
+  if (!getEnv().OPENAI_API_KEY) {
+    return apiError('SERVICE_UNAVAILABLE', 'Transcription service is not configured (OPENAI_API_KEY missing)', 503)
+  }
+
   // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(request, 'transcribe', transcribeRateLimit)
   if (!guard.ok) return guard.response
   const { userId } = guard
 
   try {
-    if (!getEnv().OPENAI_API_KEY) {
-      return apiError('SERVICE_UNAVAILABLE', 'Transcription service is not configured', 503)
-    }
-
     const lengthHeader = request.headers.get('content-length')
     const contentLength = lengthHeader ? Number(lengthHeader) : 0
     if (Number.isFinite(contentLength) && contentLength > MAX_AUDIO_BYTES) {
@@ -87,7 +91,7 @@ export async function POST(request: NextRequest) {
     // Transcribe using OpenAI Whisper
     const transcription = await openai.audio.transcriptions.create({
       file: audioForWhisper,
-      model: 'whisper-1',
+      model: getTranscribeModelId(),
       response_format: 'text',
     })
 
@@ -96,7 +100,7 @@ export async function POST(request: NextRequest) {
       userId,
       route: '/api/ai/transcribe',
       feature: 'transcribe',
-      model: 'whisper-1',
+      model: getTranscribeModelId(),
       provider: 'openai-compatible',
       usage: { totalTokens: estimateTokenCountFromText(transcriptionText) },
       latencyMs: Date.now() - startedAt,
@@ -115,7 +119,7 @@ export async function POST(request: NextRequest) {
       userId,
       route: '/api/ai/transcribe',
       feature: 'transcribe',
-      model: 'whisper-1',
+      model: getTranscribeModelId(),
       provider: 'openai-compatible',
       latencyMs: Date.now() - startedAt,
       success: false,

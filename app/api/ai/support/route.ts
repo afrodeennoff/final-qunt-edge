@@ -10,7 +10,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { apiError } from "@/lib/api-response";
 import { guardAiRequest } from "@/lib/ai/route-guard";
-import { getAiLanguageModelById } from "@/lib/ai/client";
+import { getAiLanguageModelById, checkAiConfig } from "@/lib/ai/client";
 import { isSupportModelId } from "@/lib/ai/support-models";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import {
@@ -38,15 +38,13 @@ export async function POST(req: NextRequest) {
   const startedAt = Date.now();
   let selectedModel = policy.model;
 
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
+
   // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, 'support', supportRateLimit)
   if (!guard.ok) return guard.response
   const { userId } = guard
-
-  const aiApiKey = getEnv().AI_PROVIDER_API_KEY || getEnv().OPENROUTER_API_KEY
-  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
-    return apiError("SERVICE_UNAVAILABLE", "AI service is not configured. Please contact support.", 503);
-  }
 
   try {
     const lengthHeader = req.headers.get("content-length");

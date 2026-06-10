@@ -4,12 +4,11 @@ import { tradeSchema } from "./schema";
 import { z } from 'zod/v3';
 import { apiError } from "@/lib/api-response";
 import { rateLimit } from "@/lib/rate-limit";
-import { getAiLanguageModel } from "@/lib/ai/client";
+import { getAiLanguageModel, checkAiConfig } from "@/lib/ai/client";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, logAiRequest } from "@/lib/ai/telemetry";
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
-import { getEnv } from "@/lib/env";
 
 export const maxDuration = 30;
 const MAX_FORMAT_BODY_BYTES = 512 * 1024;
@@ -24,14 +23,12 @@ export async function POST(req: NextRequest) {
   const policy = getAiPolicy("format-trades");
   const startedAt = Date.now();
 
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
+
   const guard = await guardAiRequest(req, 'format-trades', formatTradesRateLimit);
   if (!guard.ok) return guard.response;
   const { userId } = guard;
-
-  const aiApiKey = getEnv().AI_PROVIDER_API_KEY || getEnv().OPENROUTER_API_KEY
-  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
-    return apiError("SERVICE_UNAVAILABLE", "AI service is not configured. Please contact support.", 503);
-  }
 
   try {
     const lengthHeader = req.headers.get("content-length");

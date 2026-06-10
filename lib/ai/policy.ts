@@ -19,7 +19,6 @@ export interface AiFeaturePolicy {
   logSampleRate: number;
 }
 
-export const DEFAULT_MODEL = "glm-4.7-flash";
 const DEFAULT_TIMEOUT_MS = 60_000;
 const DEFAULT_MAX_STEPS = 10;
 const DEFAULT_LOG_SAMPLE_RATE = 0.25;
@@ -40,7 +39,7 @@ function normalizeSampleRate(value: number): number {
 
 function getBasePolicy() {
   const env = getEnv();
-  const model = env.AI_DEFAULT_MODEL || env.AI_MODEL_DEFAULT || env.AI_MODEL || DEFAULT_MODEL;
+  const model = env.AI_DEFAULT_MODEL || env.AI_MODEL_DEFAULT || env.AI_MODEL;
   const timeoutMs = Math.max(5000, parseNumber(env.AI_TIMEOUT_MS, DEFAULT_TIMEOUT_MS));
   const maxSteps = Math.max(1, Math.floor(parseNumber(env.AI_MAX_STEPS, DEFAULT_MAX_STEPS)));
   const logSampleRate = normalizeSampleRate(
@@ -82,7 +81,7 @@ export function getAiPolicy(feature: AiFeature): AiFeaturePolicy {
   return {
     feature,
     provider: DEFAULT_PROVIDER,
-    model: featureModelOverride[feature] || base.model,
+    model: featureModelOverride[feature] || base.model || "",
     timeoutMs: base.timeoutMs,
     maxSteps: base.maxSteps,
     temperature: defaultsByFeature[feature].temperature,

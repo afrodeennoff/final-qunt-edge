@@ -1,6 +1,6 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import type { AiFeature } from "./policy";
-import { getAiPolicy, DEFAULT_MODEL } from "./policy";
+import { getAiPolicy } from "./policy";
 import { cacheAiResponse, setAiResponseCache, getAiCacheStats, resetAiCacheStats } from "./cache";
 import type { LanguageModelV3, LanguageModelV3CallOptions } from "@ai-sdk/provider";
 import { getEnv } from "@/lib/env";
@@ -13,11 +13,11 @@ function getProviderApiKey(): string | undefined {
   return getEnv().AI_PROVIDER_API_KEY || getEnv().OPENROUTER_API_KEY;
 }
 
-function getDefaultModel(): string {
-  return getEnv().AI_DEFAULT_MODEL || getEnv().AI_MODEL_DEFAULT || getEnv().AI_MODEL || DEFAULT_MODEL;
+function getDefaultModel(): string | undefined {
+  return getEnv().AI_DEFAULT_MODEL || getEnv().AI_MODEL_DEFAULT || getEnv().AI_MODEL || undefined;
 }
 
-function getAnalyticsModel(): string {
+function getAnalyticsModel(): string | undefined {
   return getEnv().AI_ANALYTICS_MODEL || getEnv().AI_MODEL_ANALYSIS || getDefaultModel();
 }
 
@@ -26,11 +26,13 @@ const aiApiKey = getProviderApiKey();
 
 let hasWarnedMissingApiKey = false;
 let hasWarnedMissingBaseUrl = false;
+let hasWarnedMissingModel = false;
 
 export function validateAiConfig() {
   const errors: string[] = [];
   const effectiveApiKey = getProviderApiKey();
   const effectiveBaseUrl = getProviderBaseUrl();
+  const effectiveModel = getDefaultModel();
 
   if (!effectiveApiKey || effectiveApiKey.trim() === "" || effectiveApiKey.includes("your_")) {
     errors.push(
@@ -42,6 +44,10 @@ export function validateAiConfig() {
     errors.push("AI_PROVIDER_BASE_URL is not configured. The provider's default URL will be used.");
   }
 
+  if (!effectiveModel || effectiveModel.trim() === "") {
+    errors.push("AI_DEFAULT_MODEL is not configured.");
+  }
+
   if (errors.length > 0 && !hasWarnedMissingApiKey) {
     console.warn("[AI] Configuration issues detected:");
     errors.forEach(err => console.warn(`  - ${err}`));
@@ -50,7 +56,7 @@ export function validateAiConfig() {
   }
 
   return {
-    isValid: !!effectiveApiKey && effectiveApiKey.trim() !== "" && !effectiveApiKey.includes("your_"),
+    isValid: !!effectiveApiKey && effectiveApiKey.trim() !== "" && !effectiveApiKey.includes("your_") && !!effectiveModel && effectiveModel.trim() !== "",
     errors,
   };
 }
@@ -60,60 +66,36 @@ export function assertAiConfigured(): void {
   if (!isValid) {
     if (process.env.NODE_ENV === "production") {
       throw new Error(
-        "[AI] AI_PROVIDER_API_KEY is not configured. AI features are unavailable in production without a valid API key.",
+        "[AI] AI_PROVIDER_API_KEY and/or AI_DEFAULT_MODEL are not configured. AI features are unavailable in production.",
       );
     }
     if (!hasWarnedMissingApiKey) {
-      console.warn("[AI] AI_PROVIDER_API_KEY is missing or invalid. AI routes will fail.");
-      console.warn("[AI] To fix: Add a valid AI_PROVIDER_API_KEY to your environment variables.");
+      console.warn("[AI] AI_PROVIDER_API_KEY and/or AI_DEFAULT_MODEL are missing or invalid. AI routes will fail.");
+      console.warn("[AI] To fix: Add valid AI_PROVIDER_API_KEY and AI_DEFAULT_MODEL to your environment variables.");
       hasWarnedMissingApiKey = true;
     }
   }
 }
 
+const appUrl = getEnv().NEXT_PUBLIC_APP_URL;
 const aiClient = createOpenAI({
   baseURL: baseURL || undefined,
-  apiKey: aiApiKey || "dummy-key-for-validation",
+  apiKey: aiApiKey || undefined,
   headers: {
-    "HTTP-Referer": getEnv().NEXT_PUBLIC_APP_URL || "https://quntedge.com",
+    ...(appUrl ? { "HTTP-Referer": appUrl } : {}),
     "X-Title": "Qunt Edge",
   },
 });
 
-export const primaryModel = aiClient(getDefaultModel());
-export const analyticsModel = aiClient(getAnalyticsModel());
+export const primaryModel = getDefaultModel() ? aiClient(getDefaultModel()!) : undefined;
+export const analyticsModel = getAnalyticsModel() ? aiClient(getAnalyticsModel()!) : undefined;
 
-export function getDefaultModelId(): string {
+export function getDefaultModelId(): string | undefined {
   return getDefaultModel();
 }
 
-export function getAnalyticsModelId(): string {
+export function getAnalyticsModelId(): string | undefined {
   return getAnalyticsModel();
-}
-
-function normalizeModelForOpenRouter(model: string): string {
-  const trimmed = model.trim();
-  if (!trimmed) return normalizeModelForOpenRouter(DEFAULT_MODEL);
-  if (trimmed.includes("/")) return trimmed;
-  if (trimmed.startsWith("gpt-") || trimmed.startsWith("o1") || trimmed.startsWith("o3")) {
-    return `openai/${trimmed}`;
-  }
-  if (trimmed.startsWith("glm-")) {
-    return `zai/${trimmed}`;
-  }
-  if (trimmed.startsWith("gemini-") || trimmed.startsWith("gemma-")) {
-    return `google/${trimmed}`;
-  }
-  if (trimmed.startsWith("claude-")) {
-    return `anthropic/${trimmed}`;
-  }
-  if (trimmed.startsWith("llama-") || trimmed.startsWith("llama3") || trimmed.startsWith("llama-3")) {
-    return `meta-llama/${trimmed}`;
-  }
-  if (trimmed.startsWith("mistral-") || trimmed.startsWith("mixtral-")) {
-    return `mistralai/${trimmed}`;
-  }
-  return trimmed;
 }
 
 export function getAiLanguageModel(feature: AiFeature, userId?: string) {
@@ -125,7 +107,13 @@ export function getAiLanguageModel(feature: AiFeature, userId?: string) {
   }
 
   const { model } = getAiPolicy(feature);
-  const rawModel = aiClient(normalizeModelForOpenRouter(model));
+
+  if (!model && !hasWarnedMissingModel) {
+    console.warn(`[AI] No model configured for feature "${feature}". Check AI_DEFAULT_MODEL in your environment.`);
+    hasWarnedMissingModel = true;
+  }
+
+  const rawModel = aiClient(model);
 
    return new Proxy(rawModel, {
      get(target, p: PropertyKey, receiver: object) {
@@ -151,12 +139,41 @@ export function getAiLanguageModel(feature: AiFeature, userId?: string) {
     }) as LanguageModelV3;
 }
 
+export function getTranscribeModelId(): string {
+  return getEnv().AI_TRANSCRIBE_MODEL || "whisper-1";
+}
+
+export function checkAiConfig():
+  | { ok: true }
+  | { ok: false; response: Response } {
+  const { isValid } = validateAiConfig();
+  if (!isValid) {
+    return {
+      ok: false,
+      response: new Response(
+        JSON.stringify({
+          error: {
+            type: "ai_not_configured",
+            code: "SERVICE_UNAVAILABLE",
+            message: "AI service is not configured. Please contact support.",
+          },
+        }),
+        {
+          status: 503,
+          headers: { "Content-Type": "application/json" },
+        },
+      ),
+    };
+  }
+  return { ok: true };
+}
+
 export { getAiCacheStats, resetAiCacheStats };
 
 export function getAiLanguageModelById(modelId: string) {
-  return aiClient(normalizeModelForOpenRouter(modelId));
+  return aiClient(modelId);
 }
 
-export function getAiBaseURL(): string {
-  return getProviderBaseUrl() || "https://openrouter.ai/api/v1";
+export function getAiBaseURL(): string | undefined {
+  return getProviderBaseUrl();
 }

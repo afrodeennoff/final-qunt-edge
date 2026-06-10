@@ -1,7 +1,7 @@
 import { streamText, stepCountIs } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v3";
-import { getAiLanguageModel } from "@/lib/ai/client";
+import { getAiLanguageModel, checkAiConfig } from "@/lib/ai/client";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import { rateLimit } from "@/lib/rate-limit";
@@ -10,7 +10,6 @@ import { apiError } from "@/lib/api-response";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
 import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout"
 import { detectPromptInjection } from "@/lib/ai/prompt-safety";
-import { getEnv } from "@/lib/env";
 
 export const maxDuration = 60;
 const summarizeRateLimit = rateLimit({ limit: 10, window: 60_000, identifier: "ai-summarize" });
@@ -24,20 +23,8 @@ export async function POST(req: NextRequest) {
   const policy = getAiPolicy("editor");
   const startedAt = Date.now();
 
-  // Check if AI is properly configured
-  const aiApiKey = getEnv().AI_PROVIDER_API_KEY || getEnv().OPENROUTER_API_KEY;
-
-  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
-    return apiError(
-      "SERVICE_UNAVAILABLE",
-      "AI service is not configured. Please contact support.",
-      503,
-      {
-        type: "ai_not_configured",
-        message: "AI_PROVIDER_API_KEY is not set"
-      }
-    );
-  }
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
 
   // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, 'editor', summarizeRateLimit);
