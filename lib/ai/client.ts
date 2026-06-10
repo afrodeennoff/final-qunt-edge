@@ -33,10 +33,17 @@ function getAiClient(): ReturnType<typeof createOpenAI> {
     const apiKey = getProviderApiKey();
     const appUrl = getEnv().NEXT_PUBLIC_APP_URL;
 
+    if (!apiKey) {
+      throw new Error("[AI] AI_PROVIDER_API_KEY is not configured. Cannot create AI client.");
+    }
+
+    const authHeader = `Bearer ${apiKey}`;
+
     aiClient = createOpenAI({
       baseURL: baseURL || undefined,
-      apiKey: apiKey || undefined,
+      apiKey: apiKey,
       headers: {
+        "Authorization": authHeader,
         ...(appUrl ? { "HTTP-Referer": appUrl } : {}),
         "X-Title": "Qunt Edge",
       },
