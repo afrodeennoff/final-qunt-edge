@@ -9,6 +9,7 @@ import { apiError } from "@/lib/api-response";
 import { rateLimit } from "@/lib/rate-limit";
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
+import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
 
 export const maxDuration = 30;
 const mappingsRateLimit = rateLimit({ limit: 20, window: 60_000, identifier: "ai-mappings" });
@@ -250,12 +251,13 @@ function buildPrompt(fieldColumns: string[], firstRows: Array<Record<string, str
   );
 }
 
-async function requestMapping(prompt: string, temperature: number): Promise<{ object: MappingOnly; usage: MappingGeneratorResult["usage"] }> {
+async function requestMapping(prompt: string, temperature: number, abortSignal?: AbortSignal): Promise<{ object: MappingOnly; usage: MappingGeneratorResult["usage"] }> {
   const result = await generateObject({
     model: getAiLanguageModel("mappings"),
     schema: MappingOnlySchema,
     temperature,
     prompt,
+    abortSignal,
   });
 
   return {
@@ -272,6 +274,11 @@ export async function POST(req: NextRequest) {
   if (!guard.ok) return guard.response;
   const { userId } = guard;
 
+  const aiApiKey = process.env.OPENROUTER_API_KEY
+  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
+    return apiError("SERVICE_UNAVAILABLE", "AI service is not configured. Please contact support.", 503);
+  }
+
   try {
 
     const body = await req.json();
@@ -279,7 +286,8 @@ export async function POST(req: NextRequest) {
     const { fieldColumns, firstRows } = mappingsRequestSchema.parse(parsedBody);
 
     const firstPrompt = buildPrompt(fieldColumns, firstRows);
-    const firstPass = await requestMapping(firstPrompt, policy.temperature);
+    const timeoutSignal = createAiTimeoutSignal(policy.timeoutMs);
+    const firstPass = await requestMapping(firstPrompt, policy.temperature, timeoutSignal);
     let mapping = firstPass.object;
 
     let quality = validateMapping(mapping, fieldColumns, firstRows);
@@ -292,7 +300,7 @@ export async function POST(req: NextRequest) {
         `Repair these issues from your previous mapping attempt: ${quality.warnings.join(" | ")}`,
       );
 
-      const repaired = await requestMapping(repairPrompt, policy.temperature);
+      const repaired = await requestMapping(repairPrompt, policy.temperature, timeoutSignal);
       mapping = repaired.object;
       quality = validateMapping(mapping, fieldColumns, firstRows);
       usage = repaired.usage ?? usage;
@@ -342,6 +350,16 @@ export async function POST(req: NextRequest) {
       return apiError("VALIDATION_FAILED", "Invalid mappings request payload", 400, {
         issues: error.errors,
       });
+    }
+
+    if (isTimeoutError(error)) {
+      return apiError(
+        "TIMEOUT",
+        `AI request timed out after ${Math.round(policy.timeoutMs / 1000)}s`,
+        504,
+        { timeoutMs: policy.timeoutMs },
+        { "Retry-After": String(Math.ceil(policy.timeoutMs / 1000)) },
+      );
     }
 
     logAiError("Error in mappings route", error, { userId });

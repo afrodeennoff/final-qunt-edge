@@ -18,7 +18,7 @@ vi.mock("@/lib/supabase/route-client", () => ({
   })),
 }))
 
-vi.mock("@/server/imports/rithmic-sync-actions", () => ({
+vi.mock("@/app/[locale]/dashboard/components/import/rithmic/sync/actions", () => ({
   getRithmicSynchronizations: vi.fn(),
   setRithmicSynchronization: setRithmicSynchronizationMock,
   removeRithmicSynchronization: removeRithmicSynchronizationMock,

@@ -19,7 +19,7 @@ export interface AiFeaturePolicy {
   logSampleRate: number;
 }
 
-const DEFAULT_MODEL = "glm-4.7-flash";
+export const DEFAULT_MODEL = "glm-4.7-flash";
 const DEFAULT_TIMEOUT_MS = 60_000;
 const DEFAULT_MAX_STEPS = 10;
 const DEFAULT_LOG_SAMPLE_RATE = 0.25;

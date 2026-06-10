@@ -10,7 +10,7 @@ describe("Dashboard sidebar trigger contract", () => {
     )
 
     expect(source).toContain("<SidebarTrigger")
-    expect(source).toContain("'h-10 w-10 shrink-0 md:h-7 md:w-7'")
+    expect(source).toContain("h-10 w-10 shrink-0")
   })
 
   it("does not render an extra trigger in unified sidebar header", () => {

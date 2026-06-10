@@ -20,6 +20,10 @@ vi.mock('@/lib/prisma', () => ({
   },
 }))
 
+vi.mock('@/server/auth', () => ({
+  getDatabaseUserId: vi.fn(async () => 'db-user-1'),
+}))
+
 vi.mock('@/lib/query-optimizer', () => ({
   executeOptimizedQuery: vi.fn(async (_name: string, queryFn: () => unknown) => queryFn()),
 }))

@@ -8,6 +8,7 @@ import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
+import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
 
 export const maxDuration = 30;
 const dateSearchRateLimit = rateLimit({ limit: 30, window: 60_000, identifier: "ai-search-date" });
@@ -33,6 +34,11 @@ export async function POST(req: NextRequest) {
   if (!guard.ok) return guard.response
   const { userId } = guard
 
+  const aiApiKey = process.env.OPENROUTER_API_KEY
+  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
+    return apiError("SERVICE_UNAVAILABLE", "AI service is not configured. Please contact support.", 503);
+  }
+
   try {
 
     const body = await req.json();
@@ -56,6 +62,7 @@ export async function POST(req: NextRequest) {
     const { output, usage } = await generateText({
       model: getAiLanguageModel("search"),
       output: Output.object({ schema: dateRangeSchema }),
+      abortSignal: createAiTimeoutSignal(policy.timeoutMs),
       prompt: `You are an expert at parsing natural language date queries into date ranges or weekday filters.
 
 CONTEXT:
@@ -147,6 +154,16 @@ Return the appropriate filter type (date range OR weekday).`,
       return apiError("VALIDATION_FAILED", "Invalid date-search payload", 400, {
         issues: error.errors,
       });
+    }
+
+    if (isTimeoutError(error)) {
+      return apiError(
+        "TIMEOUT",
+        `AI request timed out after ${Math.round(policy.timeoutMs / 1000)}s`,
+        504,
+        { timeoutMs: policy.timeoutMs },
+        { "Retry-After": String(Math.ceil(policy.timeoutMs / 1000)) },
+      );
     }
 
     void logAiRequest({

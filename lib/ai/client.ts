@@ -1,6 +1,6 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import type { AiFeature } from "./policy";
-import { getAiPolicy } from "./policy";
+import { getAiPolicy, DEFAULT_MODEL } from "./policy";
 import { cacheAiResponse, setAiResponseCache, getAiCacheStats, resetAiCacheStats } from "./cache";
 import type { LanguageModelV3, LanguageModelV3CallOptions } from "@ai-sdk/provider";
 
@@ -45,7 +45,8 @@ const aiClient = createOpenAI({
 
 function normalizeModelForOpenRouter(model: string): string {
   const trimmed = model.trim();
-  if (!trimmed || trimmed.includes("/")) return trimmed;
+  if (!trimmed) return normalizeModelForOpenRouter(DEFAULT_MODEL);
+  if (trimmed.includes("/")) return trimmed;
   if (trimmed.startsWith("gpt-") || trimmed.startsWith("o1") || trimmed.startsWith("o3")) {
     return `openai/${trimmed}`;
   }

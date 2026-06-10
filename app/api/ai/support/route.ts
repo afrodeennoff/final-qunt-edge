@@ -42,6 +42,11 @@ export async function POST(req: NextRequest) {
   if (!guard.ok) return guard.response
   const { userId } = guard
 
+  const aiApiKey = process.env.OPENROUTER_API_KEY
+  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
+    return apiError("SERVICE_UNAVAILABLE", "AI service is not configured. Please contact support.", 503);
+  }
+
   try {
     const lengthHeader = req.headers.get("content-length");
     const contentLength = lengthHeader ? Number(lengthHeader) : 0;
@@ -62,9 +67,6 @@ export async function POST(req: NextRequest) {
     selectedModel = model && isSupportModelId(model) ? model : policy.model;
     const webSearchModel = process.env.AI_SUPPORT_WEBSEARCH_MODEL;
     const webSearchFallback = webSearch && !webSearchModel;
-    if (!process.env.OPENROUTER_API_KEY) {
-      return apiError("SERVICE_UNAVAILABLE", "Support AI service is not configured", 503);
-    }
 
     // Remove first message if it's assistant message
     if (messages.length > 0 && messages[0].role === "assistant") {

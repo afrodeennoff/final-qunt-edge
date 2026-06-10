@@ -77,6 +77,16 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    if (isTimeoutError(error)) {
+      return apiError(
+        "TIMEOUT",
+        `AI request timed out after ${Math.round(policy.timeoutMs / 1000)}s`,
+        504,
+        { timeoutMs: policy.timeoutMs },
+        { "Retry-After": String(Math.ceil(policy.timeoutMs / 1000)) },
+      );
+    }
+
     void logAiRequest({
       userId,
       route: "/api/ai/analysis/time-of-day",

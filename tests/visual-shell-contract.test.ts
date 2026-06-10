@@ -5,7 +5,7 @@ import { join } from "node:path"
 describe("Visual shell contract", () => {
   it("keeps the prop-firms catalogue hero free of visible perimeter frames", () => {
     const source = readFileSync(
-      join(process.cwd(), "app/[locale]/(landing)/propfirms/components/catalogue-experience.tsx"),
+      join(process.cwd(), "app/[locale]/(landing)/propfirms/components/client/catalogue-experience.tsx"),
       "utf8"
     )
 

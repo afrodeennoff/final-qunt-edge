@@ -6,6 +6,7 @@ import { categorizeAiError, logAiRequest } from "@/lib/ai/telemetry";
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { apiError } from "@/lib/api-response";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
+import { isTimeoutError } from "@/lib/ai/timeout";
 import { 
   unifiedSchema, 
   handleAccountsAnalysis, 
@@ -33,6 +34,11 @@ export async function POST(req: NextRequest) {
   if (!guard.ok) return guard.response;
   const { userId } = guard;
 
+  const aiApiKey = process.env.OPENROUTER_API_KEY
+  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
+    return apiError("SERVICE_UNAVAILABLE", "AI service is not configured. Please contact support.", 503);
+  }
+
   try {
     const body = await req.json();
     const validatedData = unifiedSchema.parse(body);
@@ -59,6 +65,16 @@ export async function POST(req: NextRequest) {
       return apiError("VALIDATION_FAILED", "Invalid analysis request payload", 400, {
         issues: error.errors,
       });
+    }
+
+    if (isTimeoutError(error)) {
+      return apiError(
+        "TIMEOUT",
+        `AI request timed out after ${Math.round(policy.timeoutMs / 1000)}s`,
+        504,
+        { timeoutMs: policy.timeoutMs },
+        { "Retry-After": String(Math.ceil(policy.timeoutMs / 1000)) },
+      );
     }
 
     void logAiRequest({

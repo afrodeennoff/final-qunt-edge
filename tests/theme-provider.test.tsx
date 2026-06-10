@@ -58,8 +58,8 @@ describe('ThemeProvider', () => {
     const theme = container.querySelector('[data-testid="theme"]')
     const effectiveTheme = container.querySelector('[data-testid="effectiveTheme"]')
 
-    expect(theme?.textContent).toBe('cmlh0x713000104jrgmds6vcd')
-    expect(effectiveTheme?.textContent).toBe('cmlh0x713000104jrgmds6vcd')
+    expect(theme?.textContent).toBe('cmpa7000000004l78abcdefg')
+    expect(effectiveTheme?.textContent).toBe('cmpa7000000004l78abcdefg')
   })
 
   it('uses initialTheme when provided', async () => {
@@ -93,6 +93,6 @@ describe('ThemeProvider', () => {
     })
 
     const theme = container.querySelector('[data-testid="theme"]')
-    expect(theme?.textContent).toBe('cmlh0x713000104jrgmds6vcd')
+    expect(theme?.textContent).toBe('cmpa7000000004l78abcdefg')
   })
 })

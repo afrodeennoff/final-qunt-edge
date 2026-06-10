@@ -8,6 +8,7 @@ export function isTimeoutError(error: unknown): boolean {
   if (!error || typeof error !== "object") return false;
   const e = error as { name?: string; code?: string; type?: string; message?: string };
   return (
+    e.name === AI_TIMEOUT_ERROR_NAME ||
     e.name === "TimeoutError" ||
     e.name === "AbortError" ||
     e.code === "ETIMEDOUT" ||

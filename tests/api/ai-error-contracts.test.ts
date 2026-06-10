@@ -39,6 +39,7 @@ describe("AI route error contract consistency", () => {
 
   beforeEach(() => {
     process.env.OPENAI_API_KEY = "test-key"
+    process.env.OPENROUTER_API_KEY = "test-key"
   })
 
   afterEach(() => {

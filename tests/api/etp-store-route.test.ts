@@ -1,14 +1,18 @@
 import { NextRequest } from 'next/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { upsert, deleteMany, verifySecureToken } = vi.hoisted(() => ({
+const { upsert, deleteMany, verifySecureToken, userFindFirst } = vi.hoisted(() => ({
   upsert: vi.fn(),
   deleteMany: vi.fn(),
   verifySecureToken: vi.fn(),
+  userFindFirst: vi.fn().mockResolvedValue({ id: 'user_1' }),
 }))
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
+    user: {
+      findFirst: userFindFirst,
+    },
     order: {
       upsert,
       findMany: vi.fn(),

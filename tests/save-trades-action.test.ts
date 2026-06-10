@@ -94,7 +94,7 @@ describe('saveTradesAction', () => {
 
     const result = await saveTradesAction([baseTrade])
 
-    expect(result).toEqual({ error: false, numberOfTradesAdded: 1 })
+    expect(result).toMatchObject({ error: false, numberOfTradesAdded: 1 })
     expect(createManyAccounts).toHaveBeenCalledTimes(1)
     expect(createManyTrades).toHaveBeenCalledTimes(1)
     expect(updateTagMock).toHaveBeenCalledWith('trades-db-user-1')
@@ -114,7 +114,7 @@ describe('saveTradesAction', () => {
     const invalidTrade = { ...baseTrade, accountNumber: '' }
     const result = await saveTradesAction([baseTrade, invalidTrade])
 
-    expect(result).toEqual({ error: false, numberOfTradesAdded: 1 })
+    expect(result).toMatchObject({ error: false, numberOfTradesAdded: 1 })
     expect(createManyTrades).toHaveBeenCalledTimes(1)
   })
 

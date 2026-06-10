@@ -2,8 +2,6 @@ import { streamText, stepCountIs, convertToModelMessages, type ToolSet } from "a
 import { NextRequest } from "next/server";
 import { z } from "zod/v3";
 import { getFinancialNews } from "./tools/get-financial-news";
-import { getJournalEntries } from "./tools/get-journal-entries";
-import { getMostTradedInstruments } from "./tools/get-most-traded-instruments";
 import { getLastTradesData } from "./tools/get-last-trade-data";
 import { getTradesDetails } from "./tools/get-trades-details";
 import { getTradesSummary } from "./tools/get-trades-summary";
@@ -51,9 +49,7 @@ type ParsedChatRequest = z.infer<typeof chatRequestSchema>;
 type ParsedChatMessage = ParsedChatRequest["messages"][number];
 
 const availableChatTools = {
-  getJournalEntries,
   getPreviousConversation,
-  getMostTradedInstruments,
   getLastTradesData,
   getTradesDetails,
   getTradesSummary,
@@ -111,7 +107,6 @@ function getToolingPolicy(intent: ChatIntent) {
     return {
       requiresTool: true,
       allowedToolNames: [
-        "getMostTradedInstruments",
         "getLastTradesData",
         "getTradesDetails",
         "getTradesSummary",

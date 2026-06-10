@@ -7,7 +7,7 @@
  * @module lib/ai/cache
  */
 
-import { getOrLoad, set, invalidate, invalidateNamespace, CachePolicies, buildCacheKey } from '@/lib/cache/cache-service'
+import { getOrLoad, set, invalidateNamespace, CachePolicies, buildCacheKey } from '@/lib/cache/cache-service'
 import { createLogger } from '@/lib/logger'
 
 const log = createLogger('ai-cache')
@@ -86,7 +86,6 @@ export async function cacheAiResponse<T>(
     const cached = await getOrLoad<T>(
       key,
       async () => {
-        cacheStats.misses++
         // Return a sentinel so getOrLoad doesn't cache the miss
         // We use a separate flow for read-then-write
         return null as unknown as T

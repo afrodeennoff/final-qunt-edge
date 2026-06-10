@@ -1,6 +1,6 @@
 import { canAccessAiFeature, type AiGuardFeature } from './entitlements'
 import { assertWithinAiBudget } from './usage-budget'
-import { apiError } from '../api-response'
+import { apiError } from '@/lib/api-response'
 import { createRouteClient } from '../supabase/route-client'
 import { isAdmin } from '@/server/authz'
 

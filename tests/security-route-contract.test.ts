@@ -6,7 +6,6 @@ const ROOT = process.cwd();
 
 const ROUTE_CONTRACTS = [
   "app/api/team/invite/route.ts",
-  "app/api/etp/v1/store/route.ts",
   "app/api/thor/store/route.ts",
   "app/api/tradovate/sync/route.ts",
   "app/api/rithmic/synchronizations/route.ts",

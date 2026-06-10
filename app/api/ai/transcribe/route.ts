@@ -6,6 +6,7 @@ import { apiError } from '@/lib/api-response'
 import { categorizeAiError, logAiRequest } from '@/lib/ai/telemetry'
 import { estimateTokenCountFromText, getAiErrorCode, logAiError } from '@/lib/ai/error-utils'
 
+export const maxDuration = 60
 const transcribeRateLimit = rateLimit({ limit: 10, window: 60_000, identifier: 'ai-transcribe' })
 const MAX_AUDIO_BYTES = 25 * 1024 * 1024
 const ALLOWED_AUDIO_TYPES = new Set([

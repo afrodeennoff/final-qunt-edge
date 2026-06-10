@@ -18,7 +18,7 @@ vi.mock('@/lib/supabase/route-client', () => ({
   })),
 }))
 
-vi.mock('@/server/imports/tradovate-actions', () => ({
+vi.mock('@/app/[locale]/dashboard/components/import/tradovate/sync/actions', () => ({
   getTradovateToken: getTradovateTokenMock,
   getTradovateTrades: getTradovateTradesMock,
 }))

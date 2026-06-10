@@ -1,6 +1,9 @@
 import { getAllTradesForAi, type AiTradesFetchResult } from './get-all-trades'
 import type { SerializedTrade } from '@/server/trades'
 import { getUserId } from '@/server/auth'
+import { createLogger } from '@/lib/logger'
+
+const log = createLogger('ai-trade-access')
 
 /**
  * Access profile levels for AI trade analysis.
@@ -199,8 +202,7 @@ export async function getAiTrades(params: GetAiTradesParams): Promise<ProfiledAi
   try {
     sessionUserId = await getUserId()
   } catch (error) {
-    // Some utility/test contexts call getAiTrades outside request scope.
-    // In that case, explicit caller userId is required.
+    log.warn('getUserId() failed, falling back to explicit userId', { error: error instanceof Error ? error.message : error })
     if (!params.userId) {
       throw error
     }

@@ -8,6 +8,7 @@ import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetr
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { apiError } from "@/lib/api-response";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
+import { createAiTimeoutSignal } from "@/lib/ai/timeout";
 
 // Analysis Tools
 import { generateAnalysisComponent } from "../accounts/generate-analysis-component";
@@ -127,6 +128,7 @@ export async function POST(req: NextRequest) {
         }
       ],
       temperature: policy.temperature,
+      abortSignal: createAiTimeoutSignal(policy.timeoutMs),
       stopWhen: stepCountIs(policy.maxSteps),
       onStepFinish: (step) => {
         toolCallsCount += step.toolCalls?.length ?? 0;
