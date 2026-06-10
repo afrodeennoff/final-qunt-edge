@@ -107,6 +107,9 @@ export async function POST(req: NextRequest) {
     const validatedAction = ActionSchema.parse(action);
     const systemPrompt = getSystemPrompt(validatedAction, locale, date);
 
+    const editorLog = (await import('@/lib/logger')).createLogger('ai-editor')
+    editorLog.info('AI editor request', { userId, action: validatedAction, hasDate: !!date });
+
     // Apply prompt safety check
     const injectionCheck = detectPromptInjection(prompt || "");
     if (injectionCheck.isInjection) {
@@ -173,7 +176,14 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return result.toUIMessageStreamResponse();
+    // Use plain text stream for useCompletion hook in the Tiptap editor (used for journal excerpts etc.)
+    // The textStream gives the final generated text after any tool calls for data-aware actions.
+    // This fixes the AI assist (improve/explain/suggest/trades summary) not working when editing featuredExcerpts.
+    return new Response(result.textStream, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+      },
+    });
   } catch (error) {
     if (isTimeoutError(error)) {
       void logAiRequest({
