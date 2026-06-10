@@ -206,6 +206,8 @@ export async function getAiTrades(params: GetAiTradesParams): Promise<ProfiledAi
     throw new Error('MISSING_USER_CONTEXT: getAiTrades requires explicit userId. All AI tool creators and route handlers must pass the userId obtained from guardAiRequest (or MCP ctx).')
   }
 
+  log.info('getAiTrades called for AI', { userId: effectiveUserId, profile, forceRefresh });
+
   const cacheKey = `${effectiveUserId}:${profile}:${forceRefresh}`
 
   // Check memoization cache first
@@ -249,6 +251,13 @@ export async function getAiTrades(params: GetAiTradesParams): Promise<ProfiledAi
 
   // Memoize result
   cache.set(cacheKey, result)
+
+  log.info('getAiTrades completed', { 
+    userId: effectiveUserId, 
+    profile, 
+    trades: fetchResult.trades.length, 
+    truncated: fetchResult.truncated 
+  });
 
   return result
 }

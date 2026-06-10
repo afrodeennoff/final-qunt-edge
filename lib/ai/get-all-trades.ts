@@ -1,5 +1,8 @@
 import { getTradesAction, type SerializedTrade } from "@/server/database";
 import { getRedisJson, setRedisJson } from "@/lib/redis-client";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger('ai-data');
 
 const DEFAULT_PAGE_SIZE = 500;
 const MAX_PAGES = 200;
@@ -33,6 +36,9 @@ export async function getAllTradesForAi(
   if (!userId) {
     throw new Error('MISSING_USER_ID_FOR_AI_TRADES: AI data tools require explicit userId. Routes must pass the authenticated userId from guardAiRequest (or MCP context) when creating tools or calling these functions.');
   }
+
+  log.info('AI data fetch starting', { userId, pageSize, maxPages, forceRefresh });
+
   const cacheKey = `user:${userId}:ps:${pageSize}:mp:${maxPages}`;
 
   if (!forceRefresh) {
@@ -82,5 +88,14 @@ export async function getAllTradesForAi(
   };
 
   await setRedisJson("ai-trades", cacheKey, result, 90);
+
+  log.info('AI data fetch completed', { 
+    userId, 
+    tradesFetched: allTrades.length, 
+    pages: page, 
+    truncated, 
+    fromCache: !forceRefresh && !! (await getRedisJson("ai-trades", cacheKey)) // rough
+  });
+
   return result;
 }

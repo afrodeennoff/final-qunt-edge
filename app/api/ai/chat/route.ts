@@ -286,6 +286,9 @@ export async function POST(req: NextRequest) {
     const intent = classifyIntent(latestText);
     const toolPolicy = getToolingPolicy(intent);
 
+    const chatLog = (await import('@/lib/logger')).createLogger('ai-chat')
+    chatLog.info('AI chat request with bound tools', { userId, intent, requiresTool: toolPolicy.requiresTool });
+
     const convertedMessages = await convertToModelMessages(
       messages as Parameters<typeof convertToModelMessages>[0],
     );

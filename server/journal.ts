@@ -297,6 +297,8 @@ export async function getMoodHistory(fromDate?: Date, toDate?: Date): Promise<Mo
  */
 export async function getMoodHistoryForUser(userId: string, fromDate?: Date, toDate?: Date): Promise<Mood[]> {
   try {
+    const logger = (await import('@/lib/logger')).createLogger('ai-journal')
+    logger.info('AI journal history fetch', { userId, fromDate, toDate })
     return _getMoodHistoryCached(userId, fromDate, toDate)
   } catch (error) {
     console.error('Error getting mood history for user:', error)
