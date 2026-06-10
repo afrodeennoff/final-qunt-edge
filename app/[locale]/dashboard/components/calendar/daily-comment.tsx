@@ -140,6 +140,7 @@ export function DailyComment({ selectedDate }: DailyCommentProps) {
  width="100%"
  collaboration={false}
  placeholder={t("mindset.journaling.placeholder")}
+ date={selectedDate}
  />
  )}
  </div>

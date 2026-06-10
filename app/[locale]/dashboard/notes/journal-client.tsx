@@ -1149,6 +1149,7 @@ export default function JournalClient() {
                         height="220px"
                         width="100%"
                         className="!bg-muted"
+                        date={selectedCard?.trade?.entryDate ? new Date(selectedCard.trade.entryDate) : undefined}
                       />
                       <div className="flex items-center justify-between px-3 py-2 bg-muted/40">
                         <span className="text-[9px] text-white/25">Rich text formatting supported</span>
