@@ -21,12 +21,29 @@ function getAnalyticsModel(): string | undefined {
   return getEnv().AI_ANALYTICS_MODEL || getEnv().AI_MODEL_ANALYSIS || getDefaultModel();
 }
 
-const baseURL = getProviderBaseUrl();
-const aiApiKey = getProviderApiKey();
-
 let hasWarnedMissingApiKey = false;
 let hasWarnedMissingBaseUrl = false;
 let hasWarnedMissingModel = false;
+
+let aiClient: ReturnType<typeof createOpenAI> | null = null;
+
+function getAiClient(): ReturnType<typeof createOpenAI> {
+  if (!aiClient) {
+    const baseURL = getProviderBaseUrl();
+    const apiKey = getProviderApiKey();
+    const appUrl = getEnv().NEXT_PUBLIC_APP_URL;
+
+    aiClient = createOpenAI({
+      baseURL: baseURL || undefined,
+      apiKey: apiKey || undefined,
+      headers: {
+        ...(appUrl ? { "HTTP-Referer": appUrl } : {}),
+        "X-Title": "Qunt Edge",
+      },
+    });
+  }
+  return aiClient;
+}
 
 export function validateAiConfig() {
   const errors: string[] = [];
@@ -62,7 +79,7 @@ export function validateAiConfig() {
 }
 
 export function assertAiConfigured(): void {
-  const { isValid, errors } = validateAiConfig();
+  const { isValid } = validateAiConfig();
   if (!isValid) {
     if (process.env.NODE_ENV === "production") {
       throw new Error(
@@ -76,19 +93,6 @@ export function assertAiConfigured(): void {
     }
   }
 }
-
-const appUrl = getEnv().NEXT_PUBLIC_APP_URL;
-const aiClient = createOpenAI({
-  baseURL: baseURL || undefined,
-  apiKey: aiApiKey || undefined,
-  headers: {
-    ...(appUrl ? { "HTTP-Referer": appUrl } : {}),
-    "X-Title": "Qunt Edge",
-  },
-});
-
-export const primaryModel = getDefaultModel() ? aiClient(getDefaultModel()!) : undefined;
-export const analyticsModel = getAnalyticsModel() ? aiClient(getAnalyticsModel()!) : undefined;
 
 export function getDefaultModelId(): string | undefined {
   return getDefaultModel();
@@ -113,7 +117,7 @@ export function getAiLanguageModel(feature: AiFeature, userId?: string) {
     hasWarnedMissingModel = true;
   }
 
-  const rawModel = aiClient(model);
+  const rawModel = getAiClient()(model);
 
    return new Proxy(rawModel, {
      get(target, p: PropertyKey, receiver: object) {
@@ -171,7 +175,7 @@ export function checkAiConfig():
 export { getAiCacheStats, resetAiCacheStats };
 
 export function getAiLanguageModelById(modelId: string) {
-  return aiClient(modelId);
+  return getAiClient()(modelId);
 }
 
 export function getAiBaseURL(): string | undefined {
