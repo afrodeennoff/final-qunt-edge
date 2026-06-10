@@ -31,7 +31,8 @@ async function guardMcpAiRequest(ctx: McpAuthContext, feature: 'chat' | 'analysi
     return { userId, authUserId }
   }
 
-  const entitlement = await canAccessAiFeature(authUserId, feature === 'analyze-trade' ? 'analysis' : feature as any)
+  const mappedFeature = feature === 'analyze-trade' ? 'analysis' : feature
+  const entitlement = await canAccessAiFeature(authUserId, mappedFeature)
   if (!entitlement.allowed) {
     throw new Error(entitlement.reason || 'AI feature not available for current plan')
   }
@@ -42,11 +43,11 @@ async function guardMcpAiRequest(ctx: McpAuthContext, feature: 'chat' | 'analysi
       throw new Error(`Monthly AI budget exceeded. Limit: ${budget.limit}, used: ${budget.used}`)
     }
   } catch (e) {
-    if (process.env.NODE_ENV === 'production') throw e
+    throw e
   }
 
   const limiter = feature === 'chat' ? mcpChatRateLimit : feature === 'analyze-trade' ? mcpAnalyzeTradeRateLimit : mcpAnalysisRateLimit
-  const rate = await limiter({} as any, { subject: userId })
+  const rate = await limiter({ headers: { get: () => null } }, { subject: userId })
   if (!rate.success) {
     throw new Error('Rate limited for AI requests. Try again later.')
   }
@@ -246,6 +247,19 @@ export async function aiAnalysisAccountsHandler(ctx: McpAuthContext, args: Recor
     void logAiRequest({ userId, route: 'mcp://ai_analysis_accounts', feature: 'analysis', model: policy.model, provider: policy.provider, usage: extractUsage(result.usage), latencyMs: Date.now()-startedAt, success: true, sampleRate: policy.logSampleRate })
     return { type: 'accounts', text: result.text, accounts: data }
   } catch (error) {
+    logAiError('MCP ai_analysis_accounts error', error, { userId })
+    void logAiRequest({
+      userId,
+      route: 'mcp://ai_analysis_accounts',
+      feature: 'analysis',
+      model: 'unknown',
+      provider: 'unknown',
+      latencyMs: Date.now() - startedAt,
+      success: false,
+      errorCategory: categorizeAiError(error),
+      errorCode: getAiErrorCode(error),
+      sampleRate: 1,
+    })
     throw new Error('Failed accounts analysis')
   }
 }
@@ -263,6 +277,19 @@ export async function aiAnalysisInstrumentHandler(ctx: McpAuthContext, args: Rec
     void logAiRequest({ userId, route: 'mcp://ai_analysis_instrument', feature: 'analysis', model: policy.model, provider: policy.provider, usage: extractUsage(result.usage), latencyMs: Date.now()-startedAt, success: true, sampleRate: policy.logSampleRate })
     return { type: 'instrument', instrument, text: result.text, tradeCount: trades.length }
   } catch (error) {
+    logAiError('MCP ai_analysis_instrument error', error, { userId })
+    void logAiRequest({
+      userId,
+      route: 'mcp://ai_analysis_instrument',
+      feature: 'analysis',
+      model: 'unknown',
+      provider: 'unknown',
+      latencyMs: Date.now() - startedAt,
+      success: false,
+      errorCategory: categorizeAiError(error),
+      errorCode: getAiErrorCode(error),
+      sampleRate: 1,
+    })
     throw new Error('Failed instrument analysis')
   }
 }
@@ -279,6 +306,19 @@ export async function aiAnalysisTimeOfDayHandler(ctx: McpAuthContext, args: Reco
     void logAiRequest({ userId, route: 'mcp://ai_analysis_time_of_day', feature: 'analysis', model: policy.model, provider: policy.provider, usage: extractUsage(result.usage), latencyMs: Date.now()-startedAt, success: true, sampleRate: policy.logSampleRate })
     return { type: 'time-of-day', text: result.text, tradeCount: trades.length }
   } catch (error) {
+    logAiError('MCP ai_analysis_time_of_day error', error, { userId })
+    void logAiRequest({
+      userId,
+      route: 'mcp://ai_analysis_time_of_day',
+      feature: 'analysis',
+      model: 'unknown',
+      provider: 'unknown',
+      latencyMs: Date.now() - startedAt,
+      success: false,
+      errorCategory: categorizeAiError(error),
+      errorCode: getAiErrorCode(error),
+      sampleRate: 1,
+    })
     throw new Error('Failed time-of-day analysis')
   }
 }
@@ -299,6 +339,19 @@ export async function aiSearchDateHandler(ctx: McpAuthContext, args: Record<stri
     void logAiRequest({ userId, route: 'mcp://ai_search_date', feature: 'search', model: policy.model, provider: policy.provider, usage: extractUsage(result.usage), latencyMs: Date.now()-startedAt, success: true, sampleRate: policy.logSampleRate })
     return { query, parsed: result.text }
   } catch (error) {
+    logAiError('MCP ai_search_date error', error, { userId })
+    void logAiRequest({
+      userId,
+      route: 'mcp://ai_search_date',
+      feature: 'search',
+      model: 'unknown',
+      provider: 'unknown',
+      latencyMs: Date.now() - startedAt,
+      success: false,
+      errorCategory: categorizeAiError(error),
+      errorCode: getAiErrorCode(error),
+      sampleRate: 1,
+    })
     throw new Error('Failed date search parse')
   }
 }
