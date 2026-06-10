@@ -40,7 +40,13 @@ export async function GET() {
       },
       tools: totalTools,
     },
-    { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } },
+    {
+      headers: {
+        ...CORS_HEADERS,
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
+      },
+    },
   )
 }
 

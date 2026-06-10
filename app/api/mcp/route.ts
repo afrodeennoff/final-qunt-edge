@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
       "This is the stable, production MCP server used by Claude Desktop, Cursor, Cline, and other agents. Streamable HTTP compatible (POST + optional SSE per Accept).",
       "For Grok / xAI Remote MCP: use this URL as server_url and pass your qunt_usr_* key via the authorization field in the MCP tool config.",
     ],
-  }, { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } })
+  }, { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400' } })
 }
 
 export async function DELETE(request: NextRequest) {
