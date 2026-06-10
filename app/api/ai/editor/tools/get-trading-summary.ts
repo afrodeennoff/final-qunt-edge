@@ -1,6 +1,7 @@
 import { groupBy } from "@/lib/utils";
 import { normalizeTrades, type AnalyticsTrade } from "@/lib/ai/trade-normalization";
 import { getAiTrades } from "@/lib/ai/trade-access";
+import { getUserId } from "@/server/auth";
 import { tool } from "ai";
 import { z } from 'zod/v3';
 import { isSameDay } from "date-fns";
@@ -38,14 +39,16 @@ function generateTradeSummary(trades: AnalyticsTrade[]): TradeSummary[] {
     });
 }
 
-export const getDayData = tool({
+export function createGetDayDataTool(userId?: string) {
+  return tool({
     description: 'Get trades database for the given day.',
     inputSchema: z.object({
         date: z.string().datetime()
     }),
     execute: async ({ date }) => {
-        const tradesResult = await getAiTrades({ profile: 'analysis' });
-    const allTrades = tradesResult.trades;
+        const resolvedUserId = userId || (await getUserId().catch(() => undefined));
+        const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
+        const allTrades = tradesResult.trades;
         const filteredTrades = normalizeTrades(allTrades).filter(trade => {
             const tradeDate = trade.entryDate;
             return isSameDay(tradeDate, new Date(date));
@@ -57,4 +60,7 @@ export const getDayData = tool({
             dataQualityWarning: tradesResult.dataQualityWarning,
         };
     },
-}) 
+  });
+}
+
+export const getDayData = createGetDayDataTool();

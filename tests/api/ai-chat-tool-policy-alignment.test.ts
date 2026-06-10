@@ -16,19 +16,24 @@ describe("ai chat tool policy alignment", () => {
       /if \(intent === "analytics_data"\) \{[\s\S]*?allowedToolNames:\s*\[([\s\S]*?)\],/,
     )
     const availableToolsMatch = source.match(
-      /const availableChatTools = \{([\s\S]*?)\};/,
-    )
+      /createAvailableChatTools\(userId[^)]*\) \{([\s\S]*?)\s+getJournalEntries:/,
+    );
 
     expect(analyticsAllowedMatch?.[1]).toBeTruthy()
     expect(availableToolsMatch?.[1]).toBeTruthy()
 
     const analyticsAllowed = extractQuotedNames(analyticsAllowedMatch?.[1] ?? "")
+    // Extract bare tool names from the create block (keys like getFoo: createGetFooTool )
     const availableToolNames = new Set(
       (availableToolsMatch?.[1] ?? "")
         .split("\n")
         .map((line) => line.trim())
-        .filter(Boolean)
-        .map((line) => line.replace(/,$/, "")),
+        .filter((line) => line.includes(": create") || /^[a-zA-Z0-9_]+:/.test(line))
+        .map((line) => {
+          const m = line.match(/^\s*([a-zA-Z0-9_]+)\s*:/);
+          return m ? m[1] : line.replace(/,$/, "").trim();
+        })
+        .filter(Boolean),
     )
 
     const staleAllowed = analyticsAllowed.filter((name) => !availableToolNames.has(name))

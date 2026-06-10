@@ -56,7 +56,7 @@ TASK: Summarize the provided trading note in a concise and insightful way.
     let toolCallsCount = 0;
 
     const result = streamText({
-      model: getAiLanguageModel("editor"),
+      model: getAiLanguageModel("editor", userId),
       prompt: content,
       system: systemPrompt,
       temperature: 0.3,

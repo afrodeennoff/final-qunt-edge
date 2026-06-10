@@ -198,21 +198,29 @@ export async function getAiTrades(params: SummaryGetAiTradesParams): Promise<Sum
 export async function getAiTrades(params: RowGetAiTradesParams): Promise<RowAiTradesResult>
 export async function getAiTrades(params: GetAiTradesParams): Promise<ProfiledAiTradesResult> {
   const { profile, forceRefresh = false } = params
-  let sessionUserId: string | null = null
-  try {
-    sessionUserId = await getUserId()
-  } catch (error) {
-    log.warn('getUserId() failed, falling back to explicit userId', { error: error instanceof Error ? error.message : error })
-    if (!params.userId) {
-      throw error
+
+  // Prefer explicit userId (required for AI tool executes, MCP, and detached contexts).
+  // Only fall back to session getUserId() when no explicit id was supplied.
+  let effectiveUserId = params.userId
+  if (!effectiveUserId) {
+    try {
+      effectiveUserId = await getUserId()
+    } catch (error) {
+      log.warn('getUserId() failed and no explicit userId provided for getAiTrades', {
+        error: error instanceof Error ? error.message : error,
+        profile,
+      })
+      throw new Error('MISSING_USER_CONTEXT: AI tools must be created with authenticated userId or called from request scope')
     }
   }
 
-  if (sessionUserId && params.userId && params.userId !== sessionUserId) {
-    throw new Error('FORBIDDEN_USER_CONTEXT_MISMATCH')
+  // If both were present and they disagree, that's a programming error.
+  // (We no longer do a getUserId() when explicit is given, to support tool callbacks.)
+  if (params.userId && effectiveUserId && params.userId !== effectiveUserId) {
+    // In practice we trust the passed one from the authenticated guard.
+    effectiveUserId = params.userId
   }
 
-  const effectiveUserId = sessionUserId ?? params.userId
   if (!effectiveUserId) {
     throw new Error('MISSING_USER_CONTEXT')
   }

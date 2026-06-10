@@ -245,8 +245,8 @@ export const getAccountPerformance = tool({
   execute: async ({ startDate, endDate, minTrades = 1 }: { startDate?: string, endDate?: string, minTrades?: number }) => {
     const safeMinTrades = Math.min(1000, Math.max(1, Math.floor(minTrades)));
 
-    const userId = await getUserId();
-    const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId, profile: 'analysis' });
+    const resolvedUserId = (await getUserId().catch(() => (undefined as any)));
+    const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
     let trades = normalizeTrades(allTrades || []);
 
     // Filter trades by date range if provided

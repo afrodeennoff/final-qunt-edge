@@ -1,9 +1,9 @@
 import { streamText, stepCountIs } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v3";
-import { getCurrentDayData } from "./tools/get-current-day-data";
+import { createGetCurrentDayDataTool } from "./tools/get-current-day-data";
 import { ActionSchema } from "./schema";
-import { getDayData } from "./tools/get-trading-summary";
+import { createGetDayDataTool } from "./tools/get-trading-summary";
 import { getAiLanguageModel, checkAiConfig } from "@/lib/ai/client";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
@@ -119,16 +119,16 @@ export async function POST(req: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const tools: Record<string, any> = {};
     if (validatedAction === "suggest_question") {
-      tools.getCurrentDayData = getCurrentDayData;
+      tools.getCurrentDayData = createGetCurrentDayDataTool(userId);
     }
     if (validatedAction === "trades_summary") {
-      tools.getDayData = getDayData;
+      tools.getDayData = createGetDayDataTool(userId);
     }
 
     let toolCallsCount = 0;
 
     const result = streamText({
-      model: getAiLanguageModel("editor"),
+      model: getAiLanguageModel("editor", userId),
       prompt,
       system: systemPrompt,
       temperature:

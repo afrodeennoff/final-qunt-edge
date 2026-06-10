@@ -2,15 +2,15 @@ import { streamText, stepCountIs, convertToModelMessages, type ToolSet } from "a
 import { NextRequest } from "next/server";
 import { z } from "zod/v3";
 import { getFinancialNews } from "./tools/get-financial-news";
-import { getLastTradesData } from "./tools/get-last-trade-data";
-import { getTradesDetails } from "./tools/get-trades-details";
-import { getTradesSummary } from "./tools/get-trades-summary";
-import { getCurrentWeekSummary } from "./tools/get-current-week-summary";
-import { getPreviousWeekSummary } from "./tools/get-previous-week-summary";
-import { getWeekSummaryForDate } from "./tools/get-week-summary-for-date";
-import { getPreviousConversation } from "./tools/get-previous-conversation";
-import { generateEquityChart } from "./tools/generate-equity-chart";
-import { getJournalEntries } from "./tools/get-journal-entries";
+import { createGetLastTradesDataTool } from "./tools/get-last-trade-data";
+import { createGetTradesDetailsTool } from "./tools/get-trades-details";
+import { createGetTradesSummaryTool } from "./tools/get-trades-summary";
+import { createGetCurrentWeekSummaryTool } from "./tools/get-current-week-summary";
+import { createGetPreviousWeekSummaryTool } from "./tools/get-previous-week-summary";
+import { createGetWeekSummaryForDateTool } from "./tools/get-week-summary-for-date";
+import { createGetPreviousConversationTool } from "./tools/get-previous-conversation";
+import { createGenerateEquityChartTool } from "./tools/generate-equity-chart";
+import { createGetJournalEntriesTool } from "./tools/get-journal-entries";
 import { startOfWeek, endOfWeek, subWeeks } from "date-fns";
 import { buildSystemPrompt } from "./prompts";
 import { getAiLanguageModel, checkAiConfig } from "@/lib/ai/client";
@@ -49,20 +49,24 @@ const chatRequestSchema = z.object({
 type ParsedChatRequest = z.infer<typeof chatRequestSchema>;
 type ParsedChatMessage = ParsedChatRequest["messages"][number];
 
-const availableChatTools = {
-  getPreviousConversation,
-  getLastTradesData,
-  getTradesDetails,
-  getTradesSummary,
-  getCurrentWeekSummary,
-  getPreviousWeekSummary,
-  getWeekSummaryForDate,
-  getFinancialNews,
-  generateEquityChart,
-  getJournalEntries,
-} satisfies ToolSet;
+function createAvailableChatTools(userId: string) {
+  // Use userId-bound tool creators so execute() closures have the authenticated user even
+  // when the AI SDK invokes them outside the original request auth context (cookies() etc).
+  return {
+    getPreviousConversation: createGetPreviousConversationTool(userId),
+    getLastTradesData: createGetLastTradesDataTool(userId),
+    getTradesDetails: createGetTradesDetailsTool(userId),
+    getTradesSummary: createGetTradesSummaryTool(userId),
+    getCurrentWeekSummary: createGetCurrentWeekSummaryTool(userId),
+    getPreviousWeekSummary: createGetPreviousWeekSummaryTool(userId),
+    getWeekSummaryForDate: createGetWeekSummaryForDateTool(userId),
+    getFinancialNews,
+    generateEquityChart: createGenerateEquityChartTool(userId),
+    getJournalEntries: createGetJournalEntriesTool(userId),
+  } satisfies ToolSet;
+}
 
-type ChatToolName = keyof typeof availableChatTools;
+type ChatToolName = keyof ReturnType<typeof createAvailableChatTools>;
 
 function extractLastUserText(messages: ParsedChatMessage[]): string {
   const lastUserMessage = [...messages].reverse().find((message) => message?.role === "user");
@@ -293,14 +297,14 @@ export async function POST(req: NextRequest) {
     const dataQualityPrompt =
       `\n\nDATA QUALITY RULE: If a tool output contains 'dataQualityWarning' or 'truncated: true', clearly disclose that the analysis may be incomplete.`;
 
-    const availableTools = withToolGuards(availableChatTools);
+    const availableTools = withToolGuards(createAvailableChatTools(userId));
 
-    const scopedTools = scopeTools(availableTools, toolPolicy.allowedToolNames);
+    const scopedTools = scopeTools(availableTools, toolPolicy.allowedToolNames as any);
 
     let toolCallsCount = 0;
 
     const result = streamText({
-      model: getAiLanguageModel("chat"),
+      model: getAiLanguageModel("chat", userId),
       messages: convertedMessages,
       system: `${systemPrompt}${intentPrompt}${dataQualityPrompt}${promptSafetyPreamble}`,
       temperature: policy.temperature,

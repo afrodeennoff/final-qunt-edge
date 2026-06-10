@@ -291,6 +291,19 @@ export async function getMoodHistory(fromDate?: Date, toDate?: Date): Promise<Mo
   }
 }
 
+/**
+ * AI-safe version: fetch mood/journal history for a specific userId without relying on request auth context.
+ * Use this from AI tool executes and MCP handlers.
+ */
+export async function getMoodHistoryForUser(userId: string, fromDate?: Date, toDate?: Date): Promise<Mood[]> {
+  try {
+    return _getMoodHistoryCached(userId, fromDate, toDate)
+  } catch (error) {
+    console.error('Error getting mood history for user:', error)
+    throw error
+  }
+}
+
 export async function deleteMindset(date: string) {
   try {
     const userId = await getDatabaseUserId()

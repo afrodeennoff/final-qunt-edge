@@ -84,9 +84,10 @@ export function getAiPolicy(feature: AiFeature): AiFeaturePolicy {
     "analyze-patterns": env.AI_MODEL_ANALYZE_PATTERNS || env.AI_ANALYTICS_MODEL,
   };
 
+  const provider = env.AI_PROVIDER_BASE_URL ? 'custom' : DEFAULT_PROVIDER;
   return {
     feature,
-    provider: DEFAULT_PROVIDER,
+    provider,
     model: featureModelOverride[feature] || base.model || "",
     timeoutMs: base.timeoutMs,
     maxSteps: base.maxSteps,

@@ -1,6 +1,7 @@
 import { groupBy } from "@/lib/utils";
 import { normalizeTrades, type AnalyticsTrade } from "@/lib/ai/trade-normalization";
 import { getAiTrades } from "@/lib/ai/trade-access";
+import { getUserId } from "@/server/auth";
 import { tool } from "ai";
 import { z } from 'zod/v3';
 import { startOfWeek, endOfWeek, format } from "date-fns";
@@ -38,7 +39,8 @@ function generateTradeSummary(trades: AnalyticsTrade[]): TradeSummary[] {
     });
 }
 
-export const getCurrentWeekSummary = tool({
+export function createGetCurrentWeekSummaryTool(userId?: string) {
+  return tool({
     description: 'Get trades summary for the current week (Monday to Sunday). This automatically calculates the current week boundaries.',
     inputSchema: z.object({}),
     execute: async () => {
@@ -46,9 +48,9 @@ export const getCurrentWeekSummary = tool({
         const currentWeekStart = startOfWeek(now, { weekStartsOn: 1 });
         const currentWeekEnd = endOfWeek(now, { weekStartsOn: 1 });
 
-
-        const tradesResult = await getAiTrades({ profile: 'analysis' });
-    const allTrades = tradesResult.trades;
+        const resolvedUserId = userId || (await getUserId().catch(() => undefined));
+        const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
+        const allTrades = tradesResult.trades;
         const filteredTrades = normalizeTrades(allTrades).filter(trade => {
             const tradeDate = trade.entryDate;
             return tradeDate >= currentWeekStart && tradeDate <= currentWeekEnd;
@@ -65,4 +67,7 @@ export const getCurrentWeekSummary = tool({
             dataQualityWarning: tradesResult.dataQualityWarning,
         };
     },
-}) 
+  });
+}
+
+export const getCurrentWeekSummary = createGetCurrentWeekSummaryTool();

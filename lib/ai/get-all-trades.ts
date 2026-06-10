@@ -29,7 +29,17 @@ export async function getAllTradesForAi(
   const pageSize = Math.max(1, Math.floor(options.pageSize ?? DEFAULT_PAGE_SIZE));
   const maxPages = Math.max(1, Math.floor(options.maxPages ?? MAX_PAGES));
   const forceRefresh = options.forceRefresh ?? false;
-  const userId = options.userId || (await getUserId());
+
+  let userId = options.userId;
+  if (!userId) {
+    try {
+      userId = await getUserId();
+    } catch (e) {
+      // Explicit userId is required for AI tool executes (detached from request auth context).
+      // Routes using streamText tools MUST pass userId via options or bound tools.
+      throw new Error('MISSING_USER_ID_FOR_AI_TRADES: explicit userId required (or call from authenticated request scope)');
+    }
+  }
   if (!userId) {
     throw new Error('MISSING_USER_ID_FOR_AI_TRADES');
   }

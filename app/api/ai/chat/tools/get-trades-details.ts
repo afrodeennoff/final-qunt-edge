@@ -4,7 +4,8 @@ import { tool } from "ai";
 import { z } from 'zod/v3';
 
 
-export const getTradesDetails = tool({
+export function createGetTradesDetailsTool(userId?: string) {
+  return tool({
     description: 'Only use this tool if the user asks for trade details. Get trade details for a maximum of 10 trades with specific filters',
     inputSchema: z.object({
         instrument: z.string().describe('Instrument').optional(),
@@ -22,8 +23,9 @@ export const getTradesDetails = tool({
         if (parsedEnd && Number.isNaN(parsedEnd.getTime())) {
             throw new Error("Invalid endDate format");
         }
-        const userId = await getUserId();
-        const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId, profile: 'detail' });
+        const resolvedUserId = userId || (await getUserId().catch(() => undefined));
+        if (!resolvedUserId) throw new Error('No user context for trades details');
+        const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId: resolvedUserId, profile: 'detail' });
         let trades = allTrades || [];
         if (accountNumber) {
             trades = trades.filter(trade => trade.accountNumber === accountNumber);
@@ -58,4 +60,7 @@ export const getTradesDetails = tool({
             dataQualityWarning,
         };
     }
-})
+  });
+}
+
+export const getTradesDetails = createGetTradesDetailsTool();

@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     const { headers, rows } = requestSchema.parse(body);
 
     const result = streamObject({
-      model: getAiLanguageModel("format-trades"),
+      model: getAiLanguageModel("format-trades", userId),
       schema: tradeSchema,
       output: 'array',
       abortSignal: createAiTimeoutSignal(policy.timeoutMs),

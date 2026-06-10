@@ -38,7 +38,8 @@ function generateTradeSummary(trades: AnalyticsTrade[]): TradeSummary[] {
     });
 }
 
-export const getPreviousWeekSummary = tool({
+export function createGetPreviousWeekSummaryTool(userId?: string) {
+  return tool({
     description: 'Get trades summary for the previous week (Monday to Sunday of last week). This automatically calculates the previous week boundaries.',
     inputSchema: z.object({}),
     execute: async () => {
@@ -47,7 +48,8 @@ export const getPreviousWeekSummary = tool({
         const previousWeekEnd = endOfWeek(subWeeks(now, 1), { weekStartsOn: 1 });
 
 
-        const tradesResult = await getAiTrades({ profile: 'analysis' });
+        const resolvedUserId = (globalThis as any).__AI_USER_ID__ || (await (await import('@/server/auth')).getUserId().catch(() => undefined));
+        const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
     const allTrades = tradesResult.trades;
         const filteredTrades = normalizeTrades(allTrades).filter(trade => {
             const tradeDate = trade.entryDate;
@@ -65,4 +67,7 @@ export const getPreviousWeekSummary = tool({
             dataQualityWarning: tradesResult.dataQualityWarning,
         };
     },
-}) 
+});
+}
+
+export const getPreviousWeekSummary = createGetPreviousWeekSummaryTool();

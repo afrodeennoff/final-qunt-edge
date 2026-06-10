@@ -77,7 +77,7 @@ export async function aiChatHandler(ctx: McpAuthContext, args: Record<string, un
 
     const policy = getAiPolicy('chat')
     const result = await generateText({
-      model: getAiLanguageModel('chat'),
+      model: getAiLanguageModel('chat', userId),
       system,
       prompt: question,
       temperature: policy.temperature,
@@ -152,7 +152,7 @@ export async function aiAnalyzeTradeHandler(ctx: McpAuthContext, args: Record<st
     const prompt = `Analyze this single trade in detail for a trader. Provide: 1. What went well 2. What could improve 3. Risk notes 4. Actionable tip. Data: ${JSON.stringify(tradeData)}`
 
     const result = await generateText({
-      model: getAiLanguageModel('analysis'),
+      model: getAiLanguageModel('analysis', userId),
       prompt,
       temperature: policy.temperature,
     })
@@ -193,7 +193,7 @@ export async function aiAnalysisGlobalHandler(ctx: McpAuthContext, args: Record<
     const prompt = `Provide global trading performance analysis for ${locale}. Total trades: ${trades.length}, Total PnL: ${totalPnl}, Win rate: ${winRate}%. Focus on trends, risk, consistency.`
 
     const result = await generateText({
-      model: getAiLanguageModel('analysis'),
+      model: getAiLanguageModel('analysis', userId),
       prompt,
       system: 'You are expert trading analyst. Be actionable.',
       temperature: policy.temperature,

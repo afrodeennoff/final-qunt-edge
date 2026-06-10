@@ -7,7 +7,8 @@ export const getMostTradedInstruments = tool({
     description: 'Get the most traded instruments',
     inputSchema: z.object({}),
     execute: async () => {
-        const tradesResult = await getAiTrades({ profile: 'analysis' });
+        const resolvedUserId = (await (await import('@/server/auth')).getUserId().catch(() => undefined));
+        const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
     const allTrades = tradesResult.trades || [];
         const instruments = allTrades.map(trade => trade.instrument);
         const instrumentCount = instruments.reduce((acc, instrument) => {

@@ -1,6 +1,7 @@
 import { groupBy } from "@/lib/utils";
 import { normalizeTrades, type AnalyticsTrade } from "@/lib/ai/trade-normalization";
 import { getAiTrades } from "@/lib/ai/trade-access";
+import { getUserId } from "@/server/auth";
 import { tool } from "ai";
 import { z } from 'zod/v3';
 import { startOfWeek, endOfWeek, format, parseISO } from "date-fns";
@@ -38,7 +39,8 @@ function generateTradeSummary(trades: AnalyticsTrade[]): TradeSummary[] {
     });
 }
 
-export const getWeekSummaryForDate = tool({
+export function createGetWeekSummaryForDateTool(userId?: string) {
+  return tool({
     description: 'Get trades summary for the week containing a specific date. Automatically calculates week boundaries (Monday to Sunday) for any given date.',
     inputSchema: z.object({
         date: z.string().describe('Date in format YYYY-MM-DD (e.g., "2025-01-15") or ISO format (e.g., "2025-01-15T10:30:00.000Z")')
@@ -52,9 +54,9 @@ export const getWeekSummaryForDate = tool({
             const weekStart = startOfWeek(inputDate, { weekStartsOn: 1 });
             const weekEnd = endOfWeek(inputDate, { weekStartsOn: 1 });
 
-
-            const tradesResult = await getAiTrades({ profile: 'analysis' });
-    const allTrades = tradesResult.trades;
+            const resolvedUserId = userId || (await getUserId().catch(() => undefined));
+            const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
+            const allTrades = tradesResult.trades;
             const filteredTrades = normalizeTrades(allTrades).filter(trade => {
                 const tradeDate = trade.entryDate;
                 return tradeDate >= weekStart && tradeDate <= weekEnd;
@@ -78,4 +80,7 @@ export const getWeekSummaryForDate = tool({
             throw new Error(`Invalid date format. Please use YYYY-MM-DD format (e.g., "2025-01-15")`);
         }
     },
-}) 
+  });
+}
+
+export const getWeekSummaryForDate = createGetWeekSummaryForDateTool();

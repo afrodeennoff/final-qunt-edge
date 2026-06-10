@@ -6,7 +6,8 @@ import { z } from 'zod/v3';
 
 
 
-export const getLastTradesData = tool({
+export function createGetLastTradesDataTool(userId?: string) {
+  return tool({
     description: `
         Get last trades from user on a given timeframe.
         This can be useful to understand which instrument he is currently trading or trading time,
@@ -28,8 +29,9 @@ export const getLastTradesData = tool({
         if (parsedEnd && Number.isNaN(parsedEnd.getTime())) {
             throw new Error("Invalid endDate format");
         }
-        const userId = await getUserId();
-        const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId, profile: 'detail' });
+        const resolvedUserId = userId || (await getUserId().catch(() => undefined));
+        if (!resolvedUserId) throw new Error('No user context for last trades data');
+        const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId: resolvedUserId, profile: 'detail' });
         let trades = allTrades || [];
         if (accountNumber) {
             trades = trades.filter(trade => trade.accountNumber === accountNumber);
@@ -52,4 +54,7 @@ export const getLastTradesData = tool({
             dataQualityWarning,
         };
     }
-})
+  });
+}
+
+export const getLastTradesData = createGetLastTradesDataTool();

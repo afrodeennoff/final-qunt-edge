@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
     const validatedData = analysisSchema.parse({ username, locale, timezone });
 
     const result = streamText({
-      model: getAiLanguageModel("analysis"),
+      model: getAiLanguageModel("analysis", userId),
       system: getGlobalAnalysisPrompt(validatedData.locale),
       tools: {
         generateAnalysisComponent,

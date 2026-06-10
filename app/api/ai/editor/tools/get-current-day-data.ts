@@ -1,6 +1,7 @@
 import { groupBy } from "@/lib/utils";
 import { normalizeTrades, type AnalyticsTrade } from "@/lib/ai/trade-normalization";
 import { getAiTrades } from "@/lib/ai/trade-access";
+import { getUserId } from "@/server/auth";
 import { tool } from "ai";
 import { z } from 'zod/v3';
 import { isToday } from "date-fns";
@@ -38,12 +39,14 @@ function generateTradeSummary(trades: AnalyticsTrade[]): TradeSummary[] {
     });
 }
 
-export const getCurrentDayData = tool({
+export function createGetCurrentDayDataTool(userId?: string) {
+  return tool({
     description: 'Get trades database for the current day.',
     inputSchema: z.object({}),
     execute: async () => {
-        const tradesResult = await getAiTrades({ profile: 'detail' });
-    const allTrades = tradesResult.trades || [];
+        const resolvedUserId = userId || (await getUserId().catch(() => undefined));
+        const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'detail' });
+        const allTrades = tradesResult.trades || [];
         const filteredTrades = normalizeTrades(allTrades).filter(trade => {
             const tradeDate = trade.entryDate;
             return isToday(tradeDate);
@@ -55,4 +58,7 @@ export const getCurrentDayData = tool({
             dataQualityWarning: tradesResult.dataQualityWarning,
         };
     },
-}) 
+  });
+}
+
+export const getCurrentDayData = createGetCurrentDayDataTool();
