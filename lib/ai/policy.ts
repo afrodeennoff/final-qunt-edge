@@ -7,7 +7,9 @@ export type AiFeature =
   | "mappings"
   | "format-trades"
   | "analysis"
-  | "search";
+  | "search"
+  | "journal-insights"
+  | "analyze-patterns";
 
 export interface AiFeaturePolicy {
   feature: AiFeature;
@@ -66,6 +68,8 @@ export function getAiPolicy(feature: AiFeature): AiFeaturePolicy {
     "format-trades": { temperature: 0.1 },
     analysis: { temperature: 0.25 },
     search: { temperature: 0.1 },
+    "journal-insights": { temperature: 0.2 },
+    "analyze-patterns": { temperature: 0.2 },
   };
 
   const featureModelOverride: Record<AiFeature, string | undefined> = {
@@ -76,6 +80,8 @@ export function getAiPolicy(feature: AiFeature): AiFeaturePolicy {
     "format-trades": env.AI_MODEL_FORMAT_TRADES,
     analysis: env.AI_ANALYTICS_MODEL || env.AI_MODEL_ANALYSIS,
     search: env.AI_MODEL_SEARCH,
+    "journal-insights": env.AI_MODEL_JOURNAL_INSIGHTS || env.AI_ANALYTICS_MODEL,
+    "analyze-patterns": env.AI_MODEL_ANALYZE_PATTERNS || env.AI_ANALYTICS_MODEL,
   };
 
   return {
