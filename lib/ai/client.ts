@@ -37,16 +37,21 @@ function getAiClient(): ReturnType<typeof createOpenAI> {
       throw new Error("[AI] AI_PROVIDER_API_KEY is not configured. Cannot create AI client.");
     }
 
-    const authHeader = `Bearer ${apiKey}`;
+    const authFetch: typeof fetch = async (input, init) => {
+      const authHeader = `Bearer ${apiKey}`;
+      const headers = new Headers(init?.headers);
+      headers.set("Authorization", authHeader);
+      return fetch(input, { ...init, headers });
+    };
 
     aiClient = createOpenAI({
       baseURL: baseURL || undefined,
       apiKey: apiKey,
       headers: {
-        "Authorization": authHeader,
         ...(appUrl ? { "HTTP-Referer": appUrl } : {}),
         "X-Title": "Qunt Edge",
       },
+      fetch: authFetch,
     });
   }
   return aiClient;
