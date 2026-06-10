@@ -11,6 +11,8 @@ export type AiGuardFeature =
   | 'format-trades'
   | 'search'
   | 'transcribe'
+  | 'journal-insights'
+  | 'analyze-patterns'
 
 type EntitlementResult = {
   allowed: boolean
@@ -23,6 +25,8 @@ const INACTIVE_ALLOWED_FEATURES = new Set<AiGuardFeature>([
   'search',
   'mappings',
   'format-trades',
+  'journal-insights',
+  'analyze-patterns',
 ])
 
 export async function canAccessAiFeature(

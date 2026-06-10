@@ -10,6 +10,7 @@ import { getPreviousWeekSummary } from "./tools/get-previous-week-summary";
 import { getWeekSummaryForDate } from "./tools/get-week-summary-for-date";
 import { getPreviousConversation } from "./tools/get-previous-conversation";
 import { generateEquityChart } from "./tools/generate-equity-chart";
+import { getJournalEntries } from "./tools/get-journal-entries";
 import { startOfWeek, endOfWeek, subWeeks } from "date-fns";
 import { buildSystemPrompt } from "./prompts";
 import { getAiLanguageModel, checkAiConfig } from "@/lib/ai/client";
@@ -58,6 +59,7 @@ const availableChatTools = {
   getWeekSummaryForDate,
   getFinancialNews,
   generateEquityChart,
+  getJournalEntries,
 } satisfies ToolSet;
 
 type ChatToolName = keyof typeof availableChatTools;
@@ -125,6 +127,22 @@ function getToolingPolicy(intent: ChatIntent) {
     };
   }
 
+  if (intent === "coaching") {
+    return {
+      requiresTool: true,
+      allowedToolNames: [
+        "getJournalEntries",
+        "getTradesSummary",
+        "getTradesDetails",
+        "getCurrentWeekSummary",
+        "getPreviousWeekSummary",
+        "getWeekSummaryForDate",
+        "generateEquityChart",
+      ] as ChatToolName[],
+    };
+  }
+
+  // general
   return {
     requiresTool: false,
     allowedToolNames: null as ChatToolName[] | null,
