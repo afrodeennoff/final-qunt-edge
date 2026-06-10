@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
   const startedAt = Date.now();
 
   // Check if AI is properly configured
-  const aiApiKey = getEnv().OPENROUTER_API_KEY;
+  const aiApiKey = getEnv().AI_PROVIDER_API_KEY || getEnv().OPENROUTER_API_KEY;
 
   if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
     return apiError(
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       503,
       {
         type: "ai_not_configured",
-        message: "OPENROUTER_API_KEY is not set"
+        message: "AI_PROVIDER_API_KEY is not set"
       }
     );
   }

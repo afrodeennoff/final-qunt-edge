@@ -275,7 +275,7 @@ export async function POST(req: NextRequest) {
   if (!guard.ok) return guard.response;
   const { userId } = guard;
 
-  const aiApiKey = getEnv().OPENROUTER_API_KEY
+  const aiApiKey = getEnv().AI_PROVIDER_API_KEY || getEnv().OPENROUTER_API_KEY
   if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
     return apiError("SERVICE_UNAVAILABLE", "AI service is not configured. Please contact support.", 503);
   }

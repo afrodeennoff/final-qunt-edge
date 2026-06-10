@@ -40,7 +40,7 @@ function normalizeSampleRate(value: number): number {
 
 function getBasePolicy() {
   const env = getEnv();
-  const model = env.AI_MODEL_DEFAULT || env.AI_MODEL || DEFAULT_MODEL;
+  const model = env.AI_DEFAULT_MODEL || env.AI_MODEL_DEFAULT || env.AI_MODEL || DEFAULT_MODEL;
   const timeoutMs = Math.max(5000, parseNumber(env.AI_TIMEOUT_MS, DEFAULT_TIMEOUT_MS));
   const maxSteps = Math.max(1, Math.floor(parseNumber(env.AI_MAX_STEPS, DEFAULT_MAX_STEPS)));
   const logSampleRate = normalizeSampleRate(
@@ -75,7 +75,7 @@ export function getAiPolicy(feature: AiFeature): AiFeaturePolicy {
     editor: env.AI_MODEL_EDITOR,
     mappings: env.AI_MODEL_MAPPINGS,
     "format-trades": env.AI_MODEL_FORMAT_TRADES,
-    analysis: env.AI_MODEL_ANALYSIS,
+    analysis: env.AI_ANALYTICS_MODEL || env.AI_MODEL_ANALYSIS,
     search: env.AI_MODEL_SEARCH,
   };
 

@@ -32,6 +32,10 @@ const envSchema = z.object({
   NEXT_PUBLIC_UI_V2_ENABLED: optionalString(),
   CRON_SECRET: optionalMinString(1),
   UNSUBSCRIBE_TOKEN_SECRET: optionalMinString(32),
+  AI_PROVIDER_BASE_URL: optionalUrl(),
+  AI_PROVIDER_API_KEY: optionalMinString(1),
+  AI_DEFAULT_MODEL: optionalModelId(),
+  AI_ANALYTICS_MODEL: optionalModelId(),
   OPENAI_API_KEY: optionalMinString(1),
   AI_BASE_URL: optionalUrl(),
   AI_MODEL: optionalModelId(), // legacy alias

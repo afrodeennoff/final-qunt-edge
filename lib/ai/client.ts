@@ -5,21 +5,41 @@ import { cacheAiResponse, setAiResponseCache, getAiCacheStats, resetAiCacheStats
 import type { LanguageModelV3, LanguageModelV3CallOptions } from "@ai-sdk/provider";
 import { getEnv } from "@/lib/env";
 
-const baseURL = getEnv().AI_BASE_URL || "https://openrouter.ai/api/v1";
-const aiApiKey = getEnv().OPENROUTER_API_KEY;
+function getProviderBaseUrl(): string | undefined {
+  return getEnv().AI_PROVIDER_BASE_URL || getEnv().AI_BASE_URL || undefined;
+}
+
+function getProviderApiKey(): string | undefined {
+  return getEnv().AI_PROVIDER_API_KEY || getEnv().OPENROUTER_API_KEY;
+}
+
+function getDefaultModel(): string {
+  return getEnv().AI_DEFAULT_MODEL || getEnv().AI_MODEL_DEFAULT || getEnv().AI_MODEL || DEFAULT_MODEL;
+}
+
+function getAnalyticsModel(): string {
+  return getEnv().AI_ANALYTICS_MODEL || getEnv().AI_MODEL_ANALYSIS || getDefaultModel();
+}
+
+const baseURL = getProviderBaseUrl();
+const aiApiKey = getProviderApiKey();
 
 let hasWarnedMissingApiKey = false;
 let hasWarnedMissingBaseUrl = false;
 
-function validateAiConfig() {
-  const errors = [];
+export function validateAiConfig() {
+  const errors: string[] = [];
+  const effectiveApiKey = getProviderApiKey();
+  const effectiveBaseUrl = getProviderBaseUrl();
 
-  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
-    errors.push("OPENROUTER_API_KEY is not configured. Set a valid API key in environment variables.");
+  if (!effectiveApiKey || effectiveApiKey.trim() === "" || effectiveApiKey.includes("your_")) {
+    errors.push(
+      "AI_PROVIDER_API_KEY (or legacy OPENROUTER_API_KEY) is not configured. Set a valid API key in environment variables.",
+    );
   }
 
-  if (!baseURL || baseURL.trim() === "") {
-    errors.push("AI_BASE_URL is not configured. Using default: https://openrouter.ai/api/v1");
+  if (!effectiveBaseUrl || effectiveBaseUrl.trim() === "") {
+    errors.push("AI_PROVIDER_BASE_URL is not configured. The provider's default URL will be used.");
   }
 
   if (errors.length > 0 && !hasWarnedMissingApiKey) {
@@ -30,19 +50,46 @@ function validateAiConfig() {
   }
 
   return {
-    isValid: aiApiKey && aiApiKey.trim() !== "" && !aiApiKey.includes("your_"),
+    isValid: !!effectiveApiKey && effectiveApiKey.trim() !== "" && !effectiveApiKey.includes("your_"),
     errors,
   };
 }
 
+export function assertAiConfigured(): void {
+  const { isValid, errors } = validateAiConfig();
+  if (!isValid) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "[AI] AI_PROVIDER_API_KEY is not configured. AI features are unavailable in production without a valid API key.",
+      );
+    }
+    if (!hasWarnedMissingApiKey) {
+      console.warn("[AI] AI_PROVIDER_API_KEY is missing or invalid. AI routes will fail.");
+      console.warn("[AI] To fix: Add a valid AI_PROVIDER_API_KEY to your environment variables.");
+      hasWarnedMissingApiKey = true;
+    }
+  }
+}
+
 const aiClient = createOpenAI({
-  baseURL,
+  baseURL: baseURL || undefined,
   apiKey: aiApiKey || "dummy-key-for-validation",
   headers: {
     "HTTP-Referer": getEnv().NEXT_PUBLIC_APP_URL || "https://quntedge.com",
     "X-Title": "Qunt Edge",
   },
 });
+
+export const primaryModel = aiClient(getDefaultModel());
+export const analyticsModel = aiClient(getAnalyticsModel());
+
+export function getDefaultModelId(): string {
+  return getDefaultModel();
+}
+
+export function getAnalyticsModelId(): string {
+  return getAnalyticsModel();
+}
 
 function normalizeModelForOpenRouter(model: string): string {
   const trimmed = model.trim();
@@ -69,61 +116,41 @@ function normalizeModelForOpenRouter(model: string): string {
   return trimmed;
 }
 
-// Enhanced AI language model with caching (only for non-streaming generations)
 export function getAiLanguageModel(feature: AiFeature, userId?: string) {
-  const config = validateAiConfig();
+  assertAiConfigured();
 
-  if (!config.isValid) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('[AI] OPENROUTER_API_KEY is not configured. AI features are unavailable in production without a valid API key.')
-    }
-    if (!hasWarnedMissingApiKey) {
-      console.warn("[AI] OPENROUTER_API_KEY is missing or invalid. AI routes will fail.");
-      console.warn("[AI] To fix: Add a valid OPENROUTER_API_KEY to your environment variables.");
-      hasWarnedMissingApiKey = true;
-    }
-  }
-
-  if (!getEnv().AI_BASE_URL && !hasWarnedMissingBaseUrl) {
-    console.warn(`[AI] AI_BASE_URL not set, defaulting to OpenRouter: ${baseURL}`);
+  if (!getProviderBaseUrl() && !hasWarnedMissingBaseUrl) {
+    console.warn(`[AI] AI_PROVIDER_BASE_URL not set, defaulting to provider's native URL.`);
     hasWarnedMissingBaseUrl = true;
   }
 
   const { model } = getAiPolicy(feature);
   const rawModel = aiClient(normalizeModelForOpenRouter(model));
-  
-   // Return a wrapped model that adds caching for doGenerate only
+
    return new Proxy(rawModel, {
      get(target, p: PropertyKey, receiver: object) {
-       // If it's a method we want to wrap for caching, return our cached version
        if (p === 'doGenerate') {
          return async function(options: LanguageModelV3CallOptions) {
-           // Generate cache key based on feature and options
            const featureStr = String(feature);
-           
-            // Try to get from cache first
-            const cached = await cacheAiResponse(featureStr, options, userId);
-            if (cached !== null) {
-              return cached;
-            }
-            
-            // Not in cache, call the original method
-            const result = await Reflect.get(target, p, receiver)(options);
-            
-            // Cache the result (with a default TTL of 5 minutes)
-            await setAiResponseCache(featureStr, options, result, userId);
-           
-           return result;
-         };
-       }
-       
-       // For all other properties/methods (including doStream), delegate to the target
-       return Reflect.get(target, p, receiver);
-     }
-   }) as LanguageModelV3;
+
+             const cached = await cacheAiResponse(featureStr, options, userId);
+             if (cached !== null) {
+               return cached;
+             }
+
+             const result = await Reflect.get(target, p, receiver)(options);
+
+             await setAiResponseCache(featureStr, options, result, userId);
+
+            return result;
+          };
+        }
+
+        return Reflect.get(target, p, receiver);
+      }
+    }) as LanguageModelV3;
 }
 
-// Cache statistics export
 export { getAiCacheStats, resetAiCacheStats };
 
 export function getAiLanguageModelById(modelId: string) {
@@ -131,5 +158,5 @@ export function getAiLanguageModelById(modelId: string) {
 }
 
 export function getAiBaseURL(): string {
-  return baseURL;
+  return getProviderBaseUrl() || "https://openrouter.ai/api/v1";
 }
