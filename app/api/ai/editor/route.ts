@@ -13,6 +13,7 @@ import { apiError } from "@/lib/api-response";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
 import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout"
 import { detectPromptInjection } from "@/lib/ai/prompt-safety";
+import { getEnv } from "@/lib/env";
 
 export const maxDuration = 90;
 const editorRateLimit = rateLimit({ limit: 15, window: 60_000, identifier: "ai-editor" });
@@ -87,7 +88,7 @@ export async function POST(req: NextRequest) {
   const startedAt = Date.now();
 
   // Check if AI is properly configured
-  const aiApiKey = process.env.OPENROUTER_API_KEY;
+  const aiApiKey = getEnv().OPENROUTER_API_KEY;
 
   if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
     return apiError(

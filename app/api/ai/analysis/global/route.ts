@@ -18,6 +18,7 @@ import { getCurrentWeekSummary } from "../../chat/tools/get-current-week-summary
 import { getPreviousWeekSummary } from "../../chat/tools/get-previous-week-summary";
 import { getTradesSummary } from "../../chat/tools/get-trades-summary";
 import { getMostTradedInstruments } from "../../chat/tools/get-most-traded-instruments";
+import { getEnv } from "@/lib/env";
 
 export const maxDuration = 30;
 const globalAnalysisRateLimit = rateLimit({ limit: 10, window: 60_000, identifier: "ai-analysis-global" });
@@ -84,7 +85,7 @@ export async function POST(req: NextRequest) {
   let toolCallsCount = 0;
 
   // Check if AI is properly configured
-  const aiApiKey = process.env.OPENROUTER_API_KEY;
+  const aiApiKey = getEnv().OPENROUTER_API_KEY;
 
   if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
     return apiError(

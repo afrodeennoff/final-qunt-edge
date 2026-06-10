@@ -21,6 +21,7 @@ import { guardAiRequest } from "@/lib/ai/route-guard";
 import { SAFETY_PREAMBLE, enforcePromptSafety, sanitizeUserMessages } from "@/lib/ai/prompt-safety";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
 import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
+import { getEnv } from "@/lib/env";
 
 export const maxDuration = 60;
 const MAX_CHAT_BODY_BYTES = 1024 * 1024;
@@ -193,7 +194,7 @@ export async function POST(req: NextRequest) {
   const startedAt = Date.now();
 
   // Check if AI is properly configured
-  const aiApiKey = process.env.OPENROUTER_API_KEY;
+  const aiApiKey = getEnv().OPENROUTER_API_KEY;
 
   if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
     return apiError(

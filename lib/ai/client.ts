@@ -3,9 +3,10 @@ import type { AiFeature } from "./policy";
 import { getAiPolicy, DEFAULT_MODEL } from "./policy";
 import { cacheAiResponse, setAiResponseCache, getAiCacheStats, resetAiCacheStats } from "./cache";
 import type { LanguageModelV3, LanguageModelV3CallOptions } from "@ai-sdk/provider";
+import { getEnv } from "@/lib/env";
 
-const baseURL = process.env.AI_BASE_URL || "https://openrouter.ai/api/v1";
-const aiApiKey = process.env.OPENROUTER_API_KEY;
+const baseURL = getEnv().AI_BASE_URL || "https://openrouter.ai/api/v1";
+const aiApiKey = getEnv().OPENROUTER_API_KEY;
 
 let hasWarnedMissingApiKey = false;
 let hasWarnedMissingBaseUrl = false;
@@ -38,7 +39,7 @@ const aiClient = createOpenAI({
   baseURL,
   apiKey: aiApiKey || "dummy-key-for-validation",
   headers: {
-    "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "https://quntedge.com",
+    "HTTP-Referer": getEnv().NEXT_PUBLIC_APP_URL || "https://quntedge.com",
     "X-Title": "Qunt Edge",
   },
 });
@@ -83,7 +84,7 @@ export function getAiLanguageModel(feature: AiFeature, userId?: string) {
     }
   }
 
-  if (!process.env.AI_BASE_URL && !hasWarnedMissingBaseUrl) {
+  if (!getEnv().AI_BASE_URL && !hasWarnedMissingBaseUrl) {
     console.warn(`[AI] AI_BASE_URL not set, defaulting to OpenRouter: ${baseURL}`);
     hasWarnedMissingBaseUrl = true;
   }

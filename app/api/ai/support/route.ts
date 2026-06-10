@@ -21,6 +21,7 @@ import {
 } from "@/lib/ai/error-utils";
 import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout"
 import { sanitizeUserMessages, enforcePromptSafety } from "@/lib/ai/prompt-safety";
+import { getEnv } from "@/lib/env";
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 const supportRateLimit = rateLimit({ limit: 12, window: 60_000, identifier: "ai-support" });
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
   if (!guard.ok) return guard.response
   const { userId } = guard
 
-  const aiApiKey = process.env.OPENROUTER_API_KEY
+  const aiApiKey = getEnv().OPENROUTER_API_KEY
   if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
     return apiError("SERVICE_UNAVAILABLE", "AI service is not configured. Please contact support.", 503);
   }
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest) {
     }
 
     selectedModel = model && isSupportModelId(model) ? model : policy.model;
-    const webSearchModel = process.env.AI_SUPPORT_WEBSEARCH_MODEL;
+    const webSearchModel = getEnv().AI_SUPPORT_WEBSEARCH_MODEL;
     const webSearchFallback = webSearch && !webSearchModel;
 
     // Remove first message if it's assistant message

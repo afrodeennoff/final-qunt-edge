@@ -9,6 +9,7 @@ import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetr
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
 import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
+import { getEnv } from "@/lib/env";
 
 export const maxDuration = 30;
 const dateSearchRateLimit = rateLimit({ limit: 30, window: 60_000, identifier: "ai-search-date" });
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
   if (!guard.ok) return guard.response
   const { userId } = guard
 
-  const aiApiKey = process.env.OPENROUTER_API_KEY
+  const aiApiKey = getEnv().OPENROUTER_API_KEY
   if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
     return apiError("SERVICE_UNAVAILABLE", "AI service is not configured. Please contact support.", 503);
   }

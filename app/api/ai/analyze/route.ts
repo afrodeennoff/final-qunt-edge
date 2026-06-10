@@ -14,6 +14,7 @@ import {
   handleTimeOfDayAnalysis,
   handleGlobalAnalysis
 } from "./handlers";
+import { getEnv } from "@/lib/env";
 
 export const maxDuration = 300;
 
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
   if (!guard.ok) return guard.response;
   const { userId } = guard;
 
-  const aiApiKey = process.env.OPENROUTER_API_KEY
+  const aiApiKey = getEnv().OPENROUTER_API_KEY
   if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
     return apiError("SERVICE_UNAVAILABLE", "AI service is not configured. Please contact support.", 503);
   }

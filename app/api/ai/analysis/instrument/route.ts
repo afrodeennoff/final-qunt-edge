@@ -26,13 +26,14 @@ export const maxDuration = 30;
 
 // Import shared handler
 import { handleInstrumentAnalysis } from "../../analyze/handlers";
+import { getEnv } from "@/lib/env";
 
 export async function POST(req: NextRequest) {
   const policy = getAiPolicy("analysis");
   const startedAt = Date.now();
 
   // Check if AI is properly configured
-  const aiApiKey = process.env.OPENROUTER_API_KEY;
+  const aiApiKey = getEnv().OPENROUTER_API_KEY;
 
   if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
     return apiError(

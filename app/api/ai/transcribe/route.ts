@@ -5,6 +5,7 @@ import { guardAiRequest } from '@/lib/ai/route-guard'
 import { apiError } from '@/lib/api-response'
 import { categorizeAiError, logAiRequest } from '@/lib/ai/telemetry'
 import { estimateTokenCountFromText, getAiErrorCode, logAiError } from '@/lib/ai/error-utils'
+import { getEnv } from '@/lib/env'
 
 export const maxDuration = 60
 const transcribeRateLimit = rateLimit({ limit: 10, window: 60_000, identifier: 'ai-transcribe' })
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest) {
   const { userId } = guard
 
   try {
-    if (!process.env.OPENAI_API_KEY) {
+    if (!getEnv().OPENAI_API_KEY) {
       return apiError('SERVICE_UNAVAILABLE', 'Transcription service is not configured', 503)
     }
 
@@ -77,10 +78,10 @@ export async function POST(request: NextRequest) {
       type: audioFile.type,
     })
 
-    const baseURL = process.env.AI_TRANSCRIBE_BASE_URL || 'https://api.z.ai/api/paas/v4';
+    const baseURL = getEnv().AI_TRANSCRIBE_BASE_URL || 'https://api.z.ai/api/paas/v4';
     const openai = new OpenAI({
       baseURL,
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: getEnv().OPENAI_API_KEY,
     })
 
     // Transcribe using OpenAI Whisper
