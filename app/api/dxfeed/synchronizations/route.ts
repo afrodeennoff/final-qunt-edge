@@ -1,18 +1,26 @@
-import { NextRequest, NextResponse } from 'next/server'
 import {
   getDxFeedAccounts,
   getDxFeedSynchronizations,
   removeDxFeedToken,
 } from '@/app/[locale]/dashboard/components/import/dxfeed/sync/actions'
+import { createRouteClient } from "@/lib/supabase/route-client"
+import { withApiRoute, apiSuccess, apiErrorWithId } from "@/lib/api/with-api-route"
+import { z } from "zod"
+import { parseJson, toValidationErrorResponse } from "@/app/api/_utils/validate"
 
-export async function GET() {
-  try {
+const deleteSchema = z.object({
+  accountId: z.string().min(1, "accountId is required"),
+})
+
+export const GET = withApiRoute(
+  async (ctx) => {
+    const supabase = createRouteClient(ctx.request)
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) return apiErrorWithId(ctx.requestId, 'UNAUTHORIZED', 'Unauthorized', 401)
+
     const result = await getDxFeedSynchronizations()
     if (result.error) {
-      return NextResponse.json(
-        { success: false, message: result.error },
-        { status: 400 },
-      )
+      return apiErrorWithId(ctx.requestId, 'BAD_REQUEST', result.error, 400)
     }
 
     const sanitized = await Promise.all(
@@ -54,48 +62,36 @@ export async function GET() {
       }),
     )
 
-    return NextResponse.json({
+    return apiSuccess({
       success: true,
       data: sanitized,
     })
-  } catch (error) {
-    console.error('Error fetching DxFeed synchronizations:', error)
-    return NextResponse.json(
-      { success: false, message: 'Failed to fetch DxFeed synchronizations' },
-      { status: 500 },
-    )
-  }
-}
+  },
+  { rateLimitId: 'dxfeed-sync-read', rateLimitMax: 30, routeName: 'dxfeed-synchronizations' }
+)
 
-export async function DELETE(request: NextRequest) {
-  try {
-    const body = await request.json()
-    const accountId = body?.accountId as string | undefined
+export const DELETE = withApiRoute(
+  async (ctx) => {
+    const supabase = createRouteClient(ctx.request)
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) return apiErrorWithId(ctx.requestId, 'UNAUTHORIZED', 'Unauthorized', 401)
 
-    if (!accountId) {
-      return NextResponse.json(
-        { success: false, message: 'accountId is required' },
-        { status: 400 },
-      )
+    try {
+      const { accountId } = await parseJson(ctx.request, deleteSchema)
+      const result = await removeDxFeedToken(accountId)
+      if (result.error) {
+        return apiErrorWithId(ctx.requestId, 'BAD_REQUEST', result.error, 400)
+      }
+
+      return apiSuccess({
+        success: true,
+        message: 'Synchronization removed',
+      })
+    } catch (error) {
+      const parsed = toValidationErrorResponse(error)
+      if (parsed) return parsed
+      return apiErrorWithId(ctx.requestId, 'INTERNAL_ERROR', 'Failed to delete synchronization', 500)
     }
-
-    const result = await removeDxFeedToken(accountId)
-    if (result.error) {
-      return NextResponse.json(
-        { success: false, message: result.error },
-        { status: 400 },
-      )
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: 'Synchronization removed',
-    })
-  } catch (error) {
-    console.error('Error deleting DxFeed synchronization:', error)
-    return NextResponse.json(
-      { success: false, message: 'Failed to delete synchronization' },
-      { status: 500 },
-    )
-  }
-}
+  },
+  { rateLimitId: 'dxfeed-sync-delete', rateLimitMax: 30, routeName: 'dxfeed-synchronizations' }
+)

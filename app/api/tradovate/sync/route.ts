@@ -1,57 +1,50 @@
-import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import {
   getTradovateToken,
   getTradovateTrades,
 } from "@/app/[locale]/dashboard/components/import/tradovate/sync/actions"
 import { createRouteClient } from "@/lib/supabase/route-client"
-import { rateLimit } from "@/lib/rate-limit"
-import { parseJson } from "@/app/api/_utils/validate"
-
-const rlCheck = rateLimit({ interval: 60, limit: 30 })
+import { withApiRoute, apiSuccess, apiErrorWithId } from "@/lib/api/with-api-route"
+import { parseJson, toValidationErrorResponse } from "@/app/api/_utils/validate"
 
 const syncSchema = z.object({
   accountId: z.string().min(1, "accountId is required"),
 })
 
-export async function POST(request: NextRequest) {
-  const supabase = createRouteClient(request)
-  const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) {
-    return NextResponse.json({ error: { code: "UNAUTHORIZED", message: "Unauthorized" } }, { status: 401 })
-  }
-
-  const rlResult = await rlCheck(request)
-  if (!rlResult.success) {
-    return NextResponse.json({ error: { code: "RATE_LIMITED", message: "Too many requests" } }, { status: 429 })
-  }
-
-  try {
-    const { accountId } = await parseJson(request, syncSchema)
-
-    const tokenResult = await getTradovateToken(accountId)
-    if (tokenResult.error || !tokenResult.accessToken) {
-      return NextResponse.json(
-        { success: false, message: tokenResult.error || "Missing Tradovate access token" },
-        { status: 400 },
-      )
+export const POST = withApiRoute(
+  async (ctx) => {
+    const supabase = createRouteClient(ctx.request)
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      return apiErrorWithId(ctx.requestId, 'UNAUTHORIZED', 'Unauthorized', 401)
     }
 
-    const syncResult = await getTradovateTrades(tokenResult.accessToken, {
-      includedFeeTypes: tokenResult.includedFeeTypes,
-    })
-    if (syncResult.error) {
-      return NextResponse.json({ success: false, message: syncResult.error }, { status: 400 })
-    }
+    try {
+      const { accountId } = await parseJson(ctx.request, syncSchema)
 
-    return NextResponse.json({
-      success: true,
-      savedCount: syncResult.savedCount ?? 0,
-      ordersCount: syncResult.ordersCount ?? 0,
-      message: "Sync completed",
-    })
-  } catch (error) {
-    console.error("Error performing Tradovate sync:", error)
-    return NextResponse.json({ success: false, message: "Failed to perform Tradovate sync" }, { status: 500 })
-  }
-}
+      const tokenResult = await getTradovateToken(accountId)
+      if (tokenResult.error || !tokenResult.accessToken) {
+        return apiErrorWithId(ctx.requestId, 'BAD_REQUEST', tokenResult.error || "Missing Tradovate access token", 400)
+      }
+
+      const syncResult = await getTradovateTrades(tokenResult.accessToken, {
+        includedFeeTypes: tokenResult.includedFeeTypes,
+      })
+      if (syncResult.error) {
+        return apiErrorWithId(ctx.requestId, 'BAD_REQUEST', syncResult.error, 400)
+      }
+
+      return apiSuccess({
+        success: true,
+        savedCount: syncResult.savedCount ?? 0,
+        ordersCount: syncResult.ordersCount ?? 0,
+        message: "Sync completed",
+      })
+    } catch (error) {
+      const parsed = toValidationErrorResponse(error)
+      if (parsed) return parsed
+      return apiErrorWithId(ctx.requestId, 'INTERNAL_ERROR', "Failed to perform Tradovate sync", 500)
+    }
+  },
+  { rateLimitId: 'tradovate-sync-write', rateLimitMax: 30, routeName: 'tradovate-sync' }
+)

@@ -4,6 +4,7 @@ import { getDatabaseUserId } from './auth'
 import { prisma } from '@/lib/prisma'
 import { cacheTag, cacheLife } from 'next/cache'
 import { CACHE_TAGS, invalidateTagRelatedCaches } from '@/lib/cache/cache-invalidation'
+import { logger } from '@/lib/logger'
 
 async function _getTags(userId: string) {
   const tags = await prisma.tag.findMany({
@@ -47,7 +48,7 @@ export async function createTagAction(formData: {
     invalidateTagRelatedCaches(userId)
     return { tag }
   } catch (error) {
-    console.error('Failed to create tag:', error)
+    logger.error('Failed to create tag:', { error: error instanceof Error ? error.message : String(error) })
     throw new Error('Failed to create tag')
   }
 }
@@ -97,7 +98,7 @@ export async function updateTagAction(id: string, formData: {
     invalidateTagRelatedCaches(userId)
     return { success: true }
   } catch (error) {
-    console.error('Failed to update tag:', error)
+    logger.error('Failed to update tag:', { error: error instanceof Error ? error.message : String(error) })
     throw new Error('Failed to update tag')
   }
 }
@@ -139,7 +140,7 @@ export async function deleteTagAction(id: string) {
     invalidateTagRelatedCaches(userId)
     return { success: true }
   } catch (error) {
-    console.error('Failed to delete tag:', error)
+    logger.error('Failed to delete tag:', { error: error instanceof Error ? error.message : String(error) })
     throw new Error('Failed to delete tag')
   }
 }
@@ -190,7 +191,7 @@ export async function syncTradeTagsToTagTableAction() {
       totalUniqueTags: uniqueTradeTags.length
     }
   } catch (error) {
-    console.error('Failed to sync tags:', error)
+    logger.error('Failed to sync tags:', { error: error instanceof Error ? error.message : String(error) })
     throw new Error('Failed to sync tags')
   }
 } 

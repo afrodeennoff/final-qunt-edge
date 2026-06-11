@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { createSecureSlug } from '@/lib/security/slug'
 import type { Prisma } from '@/prisma/generated/prisma'
+import { logger } from '@/lib/logger'
 
 export type ReferralTier = {
   level: number
@@ -108,7 +109,7 @@ export async function getOrCreateReferral(userId: string) {
 
     return referral
   } catch (error) {
-    console.error('Error getting or creating referral:', error)
+    logger.error('Error getting or creating referral:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -151,7 +152,7 @@ export async function addReferredUser(referralId: string, referredUserId: string
     if (error instanceof ReferralAlreadyAppliedError) {
       throw error
     }
-    console.error('Error adding referred user:', error)
+    logger.error('Error adding referred user:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -178,7 +179,7 @@ export async function getReferralBySlug(slug: string) {
 
     return referral
   } catch (error) {
-    console.error('Error getting referral by slug:', error)
+    logger.error('Error getting referral by slug:', { error: error instanceof Error ? error.message : String(error) })
     return null
   }
 }

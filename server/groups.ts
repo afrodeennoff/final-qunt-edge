@@ -36,7 +36,7 @@ export async function getGroupsAction(): Promise<GroupWithAccounts[]> {
   try {
     return _getGroupsCached(userId)
   } catch (error) {
-    console.error('Error fetching groups:', error)
+    logger.error('Error fetching groups:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -46,7 +46,7 @@ export async function getGroupsActionForUser(userId: string): Promise<GroupWithA
   try {
     return _getGroupsCached(userId)
   } catch (error) {
-    console.error('Error fetching groups for user:', error)
+    logger.error('Error fetching groups for user:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -72,7 +72,7 @@ export async function renameGroupAction(groupId: string, name: string): Promise<
     invalidateGroupRelatedCaches(userId)
     return group
   } catch (error) {
-    console.error('Error renaming group:', error)
+    logger.error('Error renaming group:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -101,7 +101,7 @@ export async function saveGroupAction(name: string): Promise<GroupWithAccounts> 
     invalidateGroupRelatedCaches(userId)
     return group
   } catch (error) {
-    console.error('Error creating group:', error)
+    logger.error('Error creating group:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -127,7 +127,7 @@ export async function updateGroupAction(groupId: string, name: string): Promise<
     invalidateGroupRelatedCaches(userId)
     return group
   } catch (error) {
-    console.error('Error updating group:', error)
+    logger.error('Error updating group:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -158,7 +158,7 @@ export async function deleteGroupAction(groupId: string): Promise<void> {
     })
     invalidateGroupRelatedCaches(userId)
   } catch (error) {
-    console.error('Error deleting group:', error)
+    logger.error('Error deleting group:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -190,7 +190,7 @@ export async function moveAccountToGroupAction(accountId: string, targetGroupId:
     })
     invalidateGroupRelatedCaches(userId)
   } catch (error) {
-    console.error('Error moving account to group:', error)
+    logger.error('Error moving account to group:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }

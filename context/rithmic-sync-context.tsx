@@ -19,6 +19,8 @@ import { useRithmicSyncStore, RithmicMessage } from "@/store/rithmic-sync-store"
 import { useTradingDomainStore } from "@/store/trading-domain-store";
 import { getDatabaseUserId } from "@/server/auth";
 import { useUserStore } from "@/store/user-store";
+import { api, ApiError } from "@/lib/api-client";
+import { Synchronization } from "@/prisma/generated/prisma";
 
 interface RithmicCredentials {
   username: string;
@@ -723,22 +725,10 @@ export function RithmicSyncContextProvider({
         });
 
         // Update last sync time in the database
-        // Call API route instead of server action
-        const syncResponse = await fetch("/api/rithmic/synchronizations", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            accountId: savedData.id,
-            lastSyncedAt: new Date(),
-          }),
+        await api.post("/api/rithmic/synchronizations", {
+          accountId: savedData.id,
+          lastSyncedAt: new Date(),
         });
-
-        if (!syncResponse.ok) {
-          const errorData = await syncResponse.json();
-          throw new Error(
-            errorData.message || "Failed to update synchronization"
-          );
-        }
 
         return {
           success: true,
@@ -886,17 +876,7 @@ export function RithmicSyncContextProvider({
 
     isAutoSyncingRef.current = true;
     try {
-      // Call API route instead of server action
-      const response = await fetch("/api/rithmic/synchronizations", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch synchronizations");
-      }
-
-      const result = await response.json();
+      const result = await api.get<{ data: Synchronization[] }>("/api/rithmic/synchronizations");
       const synchronizations = result.data || [];
 
       for (const sync of synchronizations) {

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { toast } from 'sonner'
 import { useI18n } from '@/locales/client'
 import { useDashboardActions } from '@/context/data-provider'
+import { api, ApiError } from '@/lib/api-client'
 
 export interface DxFeedSyncAccount {
   id: string
@@ -91,24 +92,13 @@ export function DxFeedSyncContextProvider({ children }: { children: React.ReactN
 
   const loadAccounts = useCallback(async () => {
     try {
-      const response = await fetch('/api/dxfeed/synchronizations', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      })
-
-      if (response.status === 401) {
+      const result = await api.get<DxFeedSyncApiPayload>('/api/dxfeed/synchronizations')
+      setAccounts((result.data || []).map(normalizeSynchronization))
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 401) {
         setAccounts([])
         return
       }
-
-      const result = (await response.json()) as DxFeedSyncApiPayload
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || 'Failed to fetch DxFeed synchronizations')
-      }
-
-      setAccounts((result.data || []).map(normalizeSynchronization))
-    } catch (error) {
-
     }
   }, [])
 
@@ -116,17 +106,11 @@ export function DxFeedSyncContextProvider({ children }: { children: React.ReactN
     async (accountId: string) => {
       const previousAccounts = accounts
       setAccounts((prev) => prev.filter((acc) => acc.accountId !== accountId))
-
-      const response = await fetch('/api/dxfeed/synchronizations', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ accountId }),
-      })
-
-      const payload = (await response.json().catch(() => null)) as DxFeedSyncApiPayload | null
-      if (!response.ok || !payload?.success) {
+      try {
+        await api.delete('/api/dxfeed/synchronizations', { body: { accountId } })
+      } catch (error) {
         setAccounts(previousAccounts)
-        throw new Error(payload?.message || `Failed to delete synchronization (${response.status})`)
+        throw error
       }
     },
     [accounts],
@@ -142,23 +126,21 @@ export function DxFeedSyncContextProvider({ children }: { children: React.ReactN
       if (!account.hasToken) return { success: false, message: `Token for account ${accountId} is missing` }
 
       const runSync = async () => {
-        const response = await fetch('/api/dxfeed/sync', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ accountId }),
-        })
-        const payload = (await response.json()) as DxFeedSyncApiPayload
-
-        if (payload?.message === 'DUPLICATE_TRADES') {
-          return {
-            success: true,
-            message: t('dxfeedSync.multiAccount.alreadyImportedTrades'),
-            savedCount: 0,
+        let payload: { savedCount?: number; tradesCount?: number; message?: string }
+        try {
+          payload = await api.post<{ savedCount?: number; tradesCount?: number; message?: string }>(
+            '/api/dxfeed/sync',
+            { accountId },
+          )
+        } catch (error) {
+          if (error instanceof ApiError && error.message === 'DUPLICATE_TRADES') {
+            return {
+              success: true,
+              message: t('dxfeedSync.multiAccount.alreadyImportedTrades'),
+              savedCount: 0,
+            }
           }
-        }
-
-        if (!response.ok || !payload?.success) {
-          throw new Error(payload?.message || `Sync error for account ${accountId}`)
+          throw error
         }
 
         const savedCount = payload.savedCount || 0

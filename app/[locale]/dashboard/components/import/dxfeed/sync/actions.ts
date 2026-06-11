@@ -32,7 +32,7 @@ const DXFEED_HISTORY_LOOKBACK_DAYS = Math.max(
 )
 
 const logger = {
-  debug: (message: string, data?: any) => {
+  debug: (message: string, data?: unknown) => {
     if (IS_DEV) console.warn(`[DXFEED-DEBUG] ${message}`, data ?? '')
   },
   info: (message: string) => {
@@ -569,7 +569,11 @@ export async function removeDxFeedToken(accountId?: string) {
       return { error: 'User not authenticated' }
     }
 
-    const whereClause: any = {
+    const whereClause: {
+      userId: string
+      service: string
+      accountId?: string
+    } = {
       userId: user.id,
       service: 'dxfeed',
     }

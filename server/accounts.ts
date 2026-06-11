@@ -11,6 +11,7 @@ import {
   invalidateAllUserCaches,
   invalidateDashboardDataCaches,
 } from '@/lib/cache/cache-invalidation'
+import { logger } from '@/lib/logger'
 
 type GroupedTrade = Pick<Trade, 'id' | 'accountNumber' | 'instrument'>
 type GroupedTrades = Record<string, Record<string, GroupedTrade[]>>
@@ -219,7 +220,7 @@ export async function renameAccountAction(oldAccountNumber: string, newAccountNu
     invalidateAccountRelatedCaches(userId)
     invalidateAllUserCaches(userId)
   } catch (error) {
-    console.error('Error renaming account:', error)
+    logger.error('Error renaming account:', { error: error instanceof Error ? error.message : String(error) })
     if (error instanceof Error) {
       throw error
     }
@@ -426,7 +427,7 @@ export async function getAccountsAction() {
       payouts: account.payouts,
     }))
   } catch (error) {
-    console.error('Error fetching accounts:', error)
+    logger.error('Error fetching accounts:', { error: error instanceof Error ? error.message : String(error) })
     throw new Error('Failed to fetch accounts')
   }
 }
@@ -522,7 +523,7 @@ export async function savePayoutAction(payout: Payout) {
     invalidateAllUserCaches(userId)
     return result
   } catch (error) {
-    console.error('Error adding payout:', error)
+    logger.error('Error adding payout:', { error: error instanceof Error ? error.message : String(error) })
     throw new Error('Failed to add payout')
   }
 }
@@ -580,7 +581,7 @@ export async function deletePayoutAction(payoutId: string) {
     invalidateAllUserCaches(userId)
     return true;
   } catch (error) {
-    console.error('Failed to delete payout:', error);
+    logger.error('Failed to delete payout:', { error: error instanceof Error ? error.message : String(error) });
     throw new Error('Failed to delete payout');
   }
 }
@@ -603,7 +604,7 @@ export async function renameInstrumentAction(accountNumber: string, oldInstrumen
     // Invalidate all user-related caches
     invalidateAllUserCaches(userId)
   } catch (error) {
-    console.error('Error renaming instrument:', error)
+    logger.error('Error renaming instrument:', { error: error instanceof Error ? error.message : String(error) })
     if (error instanceof Error) {
       throw error
     }
@@ -662,7 +663,7 @@ export async function createAccountAction(accountNumber: string) {
     invalidateAllUserCaches(userId)
     return account
   } catch (error) {
-    console.error('Error creating account:', error)
+    logger.error('Error creating account:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }

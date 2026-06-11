@@ -143,6 +143,7 @@ function toCompatUser(record: CoreUserCompatRecord, authUserId: string): User {
     mt5TokenHash: null,
     mt5TokenExpiresAt: null,
     journalTagDefaults: {},
+    tradingPreferences: null,
     createdAt: record.createdAt,
     updatedAt: record.updatedAt
   }

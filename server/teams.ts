@@ -5,6 +5,7 @@ import { getDatabaseUserId } from '@/server/auth'
 import { MemberRole, Prisma } from '@/prisma/generated/prisma'
 import { ensureTeamMembership } from '@/server/team-membership'
 import { cacheLife, cacheTag, updateTag } from 'next/cache'
+import { logger } from '@/lib/logger'
 
 const TEAMS_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as const
 
@@ -39,7 +40,7 @@ export async function createTeam(userId: string, name: string, organizationId?: 
     invalidateTeamsCache([userId])
     return { success: true, team }
   } catch (error) {
-    console.error('Error creating team:', error)
+    logger.error('Error creating team:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: 'Failed to create team' }
   }
 }
@@ -79,7 +80,7 @@ export async function getTeamsByUser(userId: string) {
   try {
     return _getTeamsByUserCached(userId)
   } catch (error) {
-    console.error('Error fetching teams:', error)
+    logger.error('Error fetching teams:', { error: error instanceof Error ? error.message : String(error) })
     return []
   }
 }
@@ -123,7 +124,7 @@ export async function getTeamById(teamId: string, userId: string) {
 
     return team
   } catch (error) {
-    console.error('Error fetching team:', error)
+    logger.error('Error fetching team:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -149,7 +150,7 @@ export async function updateTeam(teamId: string, userId: string, data: { name?: 
     invalidateTeamsCache([userId])
     return { success: true, team: updatedTeam }
   } catch (error) {
-    console.error('Error updating team:', error)
+    logger.error('Error updating team:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: 'Failed to update team' }
   }
 }
@@ -176,7 +177,7 @@ export async function deleteTeam(teamId: string, userId?: string) {
     invalidateTeamsCache(team.traderIds || [actorUserId])
     return { success: true }
   } catch (error) {
-    console.error('Error deleting team:', error)
+    logger.error('Error deleting team:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: 'Failed to delete team' }
   }
 }
@@ -245,7 +246,7 @@ export async function inviteMember(teamId: string, email: string, invitedBy: str
     invalidateTeamsCache([invitedBy])
     return { success: true, invitation }
   } catch (error) {
-    console.error('Error inviting member:', error)
+    logger.error('Error inviting member:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: 'Failed to send invitation' }
   }
 }
@@ -308,7 +309,7 @@ export async function acceptInvitation(invitationId: string, userId: string) {
     invalidateTeamsCache(affectedUsers)
     return { success: true }
   } catch (error) {
-    console.error('Error accepting invitation:', error)
+    logger.error('Error accepting invitation:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: error instanceof Error ? error.message : 'Failed to accept invitation' }
   }
 }
@@ -346,7 +347,7 @@ export async function updateMemberRole(teamId: string, userId: string, requester
     invalidateTeamsCache([userId, requesterUserId])
     return { success: true }
   } catch (error) {
-    console.error('Error updating member role:', error)
+    logger.error('Error updating member role:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: error instanceof Error ? error.message : 'Failed to update member role' }
   }
 }
@@ -390,7 +391,7 @@ export async function removeMember(teamId: string, userId: string, requesterUser
     invalidateTeamsCache([userId, requesterUserId])
     return { success: true }
   } catch (error) {
-    console.error('Error removing member:', error)
+    logger.error('Error removing member:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: error instanceof Error ? error.message : 'Failed to remove member' }
   }
 }
@@ -438,7 +439,7 @@ export async function getTeamAnalytics(teamId: string, period: 'daily' | 'weekly
 
     return created
   } catch (error) {
-    console.error('Error fetching team analytics:', error)
+    logger.error('Error fetching team analytics:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -563,7 +564,7 @@ export async function updateTeamAnalytics(
     invalidateTeamsCache(userIds)
     return { success: true, analytics }
   } catch (error) {
-    console.error('Error updating team analytics:', error)
+    logger.error('Error updating team analytics:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: 'Failed to update analytics' }
   }
 }
@@ -670,7 +671,7 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
     }
 
   } catch (error) {
-    console.error('Error fetching team overview:', error)
+    logger.error('Error fetching team overview:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: error instanceof Error ? error.message : 'Failed to fetch overview' }
   }
 }
@@ -698,7 +699,7 @@ export async function getTeamInvitations(userId: string) {
 
     return invitations
   } catch (error) {
-    console.error('Error fetching invitations:', error)
+    logger.error('Error fetching invitations:', { error: error instanceof Error ? error.message : String(error) })
     return []
   }
 }

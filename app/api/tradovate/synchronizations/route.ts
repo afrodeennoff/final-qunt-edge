@@ -1,66 +1,56 @@
-import { NextRequest, NextResponse } from "next/server"
+import { z } from "zod"
 import {
   getTradovateSynchronizations,
   removeTradovateToken,
 } from "@/app/[locale]/dashboard/components/import/tradovate/sync/actions"
 import { createRouteClient } from "@/lib/supabase/route-client"
+import { withApiRoute, apiSuccess, apiErrorWithId } from "@/lib/api/with-api-route"
+import { parseJson, toValidationErrorResponse } from "@/app/api/_utils/validate"
 
-async function getUser(req: NextRequest) {
-  const supabase = createRouteClient(req)
-  const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) return null
-  return data.user
-}
+const deleteSchema = z.object({
+  accountId: z.string().min(1, "accountId is required"),
+})
 
-export async function GET(request: NextRequest) {
-  const user = await getUser(request)
-  if (!user) {
-    return NextResponse.json({ error: { code: "UNAUTHORIZED", message: "Unauthorized" } }, { status: 401 })
-  }
+export const GET = withApiRoute(
+  async (ctx) => {
+    const supabase = createRouteClient(ctx.request)
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) return apiErrorWithId(ctx.requestId, 'UNAUTHORIZED', 'Unauthorized', 401)
 
-  try {
-    const result = await getTradovateSynchronizations()
-    if (result.error) {
-      return NextResponse.json({ success: false, message: result.error }, { status: 400 })
+    try {
+      const result = await getTradovateSynchronizations()
+      if (result.error) {
+        return apiErrorWithId(ctx.requestId, 'BAD_REQUEST', result.error, 400)
+      }
+      return apiSuccess({ success: true, data: result.synchronizations || [] })
+    } catch (error) {
+      return apiErrorWithId(ctx.requestId, 'INTERNAL_ERROR', "Failed to fetch Tradovate synchronizations", 500)
     }
-    return NextResponse.json({ success: true, data: result.synchronizations || [] })
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch Tradovate synchronizations" },
-      { status: 500 },
-    )
-  }
-}
+  },
+  { rateLimitId: 'tradovate-sync-read', rateLimitMax: 30, routeName: 'tradovate-synchronizations' }
+)
 
-export async function DELETE(request: NextRequest) {
-  const user = await getUser(request)
-  if (!user) {
-    return NextResponse.json({ error: { code: "UNAUTHORIZED", message: "Unauthorized" } }, { status: 401 })
-  }
+export const DELETE = withApiRoute(
+  async (ctx) => {
+    const supabase = createRouteClient(ctx.request)
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) return apiErrorWithId(ctx.requestId, 'UNAUTHORIZED', 'Unauthorized', 401)
 
-  try {
-    const body = await request.json()
-    const accountId = body?.accountId as string | undefined
+    try {
+      const { accountId } = await parseJson(ctx.request, deleteSchema)
+      const result = await removeTradovateToken(accountId)
+      const deletedCount = typeof result === "object" && result !== null ? (result as { deletedCount?: number }).deletedCount : undefined
 
-    if (!accountId) {
-      return NextResponse.json({ error: { code: "VALIDATION_FAILED", message: "accountId is required" } }, { status: 400 })
+      if (deletedCount === 0) {
+        return apiErrorWithId(ctx.requestId, 'NOT_FOUND', "Synchronization not found", 404)
+      }
+
+      return apiSuccess({ success: true, message: "Synchronization removed" })
+    } catch (error) {
+      const parsed = toValidationErrorResponse(error)
+      if (parsed) return parsed
+      return apiErrorWithId(ctx.requestId, 'INTERNAL_ERROR', "Failed to delete synchronization", 500)
     }
-
-    const result = await removeTradovateToken(accountId)
-    const deletedCount = typeof result === "object" && result !== null ? (result as { deletedCount?: number }).deletedCount : undefined
-
-    if (deletedCount === 0) {
-      return NextResponse.json(
-        { error: { code: "NOT_FOUND", message: "Synchronization not found" } },
-        { status: 404 },
-      )
-    }
-
-    return NextResponse.json({ success: true, message: "Synchronization removed" })
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, message: "Failed to delete synchronization" },
-      { status: 500 },
-    )
-  }
-}
+  },
+  { rateLimitId: 'tradovate-sync-delete', rateLimitMax: 30, routeName: 'tradovate-synchronizations' }
+)

@@ -4168,7 +4168,7 @@ img[loading='lazy'] {
 }
 
 /* Make shell content tighter like reference */
-.qe-home-ref .marketing-shell .px-2.sm\\:px-4 {
+.qe-home-ref .marketing-shell [class*="sm:px-4"] {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
@@ -4183,12 +4183,12 @@ img[loading='lazy'] {
 
 /* Hero — reference density and layout feel (no text changes) */
 .qe-home-ref .pt-20.pb-16,
-.qe-home-ref .sm\\:pt-24.sm\\:pb-20 {
+.qe-home-ref [class*="sm:pt-24"][class*="sm:pb-20"] {
   padding-top: 64px !important;
   padding-bottom: 80px !important;
 }
 
-.qe-home-ref .grid.gap-10.lg\\:grid-cols-2 {
+.qe-home-ref [class*="lg:grid-cols-2"] {
   gap: 48px !important;
 }
 
@@ -4197,14 +4197,15 @@ img[loading='lazy'] {
 }
 
 /* Feature grid tighter like reference cards */
-.qe-home-ref .grid.gap-4.sm\\:gap-5.md\\:grid-cols-2 {
+.qe-home-ref [class*="sm:gap-5"][class*="md:grid-cols-2"] {
   gap: 16px !important;
 }
 
 /* All remaining cards (AI suite, How it Works, Analytics, Trust, CTA) forced to reference glassy style */
 .qe-home-ref .ref-feature-card,
 .qe-home-ref [class*="cardMain"],
-.qe-home-ref .rounded-xl.border.border-\\[var\\(--qe-ref-card-border\\)\\] {
+.qe-home-ref [class="rounded-xl border border-[var(--qe-ref-card-border)]"],
+.qe-home-ref [class*="rounded-xl border"][class*="qe-ref-card-border"] {
   background: #111411 !important;
   border: 1px solid rgba(255,255,255,0.08) !important;
   border-radius: 16px !important;

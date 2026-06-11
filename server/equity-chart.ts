@@ -7,6 +7,7 @@ import { eachDayOfInterval, startOfDay, endOfDay, isValid } from 'date-fns'
 import { withPrismaSchemaMismatchFallback } from '@/lib/prisma-guard'
 import { cacheLife, cacheTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
+import { logger } from '@/lib/logger'
 
 const EQUITY_CHART_CACHE_LIFETIME = { stale: 60, revalidate: 60, expire: 600 } as const
 
@@ -460,7 +461,7 @@ export async function getEquityChartDataAction(params: EquityChartParams): Promi
 
     return await getEquityChartDataCached(userId, params)
   } catch (error) {
-    console.error('[getEquityChartDataAction] Error:', error)
+    logger.error('[getEquityChartDataAction] Error:', { error: error instanceof Error ? error.message : String(error) })
     return EMPTY_EQUITY_CHART_RESULT
   }
 }

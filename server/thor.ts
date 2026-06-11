@@ -5,6 +5,7 @@ import { updateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { generateSecureToken } from '@/lib/api-auth'
 import { invalidateEquityChart } from '@/lib/cache/cache-invalidation'
+import { logger } from '@/lib/logger'
 
 export async function generateThorToken() {
   const supabase = await createClient()
@@ -29,7 +30,7 @@ export async function generateThorToken() {
     return { token }
   } catch (error) {
     // Security: Log only error type and message, not full error object
-    console.error('Failed to generate Thor token:', error instanceof Error ? error.message : 'Unknown error')
+    logger.error('Failed to generate Thor token', { error: error instanceof Error ? error.message : 'Unknown error' })
     return { error: 'Failed to generate token' }
   }
 }
@@ -61,7 +62,7 @@ export async function getThorToken() {
     return { token: null, hasToken }
   } catch (error) {
     // Security: Log only error type and message, not full error object
-    console.error('Failed to get Thor token:', error instanceof Error ? error.message : 'Unknown error')
+    logger.error('Failed to get Thor token', { error: error instanceof Error ? error.message : 'Unknown error' })
     return { error: 'Failed to get token' }
   }
 } 

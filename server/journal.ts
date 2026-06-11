@@ -6,6 +6,7 @@ import { cacheLife, cacheTag } from 'next/cache'
 import { getDatabaseUserId } from './auth';
 import { CACHE_TAGS, invalidateJournalRelatedCaches } from '@/lib/cache/cache-invalidation';
 import { isStoredChatConversationExpired, readStoredChatConversation } from '@/lib/chat-retention';
+import { logger } from '@/lib/logger'
 
 const JOURNAL_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as const
 
@@ -108,7 +109,7 @@ export async function saveMindset(
     invalidateJournalRelatedCaches(userId)
     return newMood
   } catch (error) {
-    console.error('Error saving mindset:', error)
+    logger.error('Error saving mindset:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -168,7 +169,7 @@ export async function saveMood(
     invalidateJournalRelatedCaches(userId)
     return newMood
   } catch (error) {
-    console.error('Error saving mood:', error)
+    logger.error('Error saving mood:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -211,7 +212,7 @@ export async function getMoodForDay(date: string) {
     const userId = await getDatabaseUserId()
     return _getMoodForDayCached(userId, date)
   } catch (error) {
-    console.error('Error getting mood:', error)
+    logger.error('Error getting mood:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -286,7 +287,7 @@ export async function getMoodHistory(fromDate?: Date, toDate?: Date): Promise<Mo
   try {
     return _getMoodHistoryCached(userId, fromDate, toDate)
   } catch (error) {
-    console.error('Error getting mood history:', error)
+    logger.error('Error getting mood history:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -301,7 +302,7 @@ export async function getMoodHistoryForUser(userId: string, fromDate?: Date, toD
     logger.info('AI journal history fetch', { userId, fromDate, toDate })
     return _getMoodHistoryCached(userId, fromDate, toDate)
   } catch (error) {
-    console.error('Error getting mood history for user:', error)
+    logger.error('Error getting mood history for user:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -333,7 +334,7 @@ export async function deleteMindset(date: string) {
       invalidateJournalRelatedCaches(userId)
     }
   } catch (error) {
-    console.error('Error deleting mood:', error)
+    logger.error('Error deleting mood:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -400,7 +401,7 @@ export async function saveJournal(
     invalidateJournalRelatedCaches(userId)
     return newMood
   } catch (error) {
-    console.error('Error saving journal:', error)
+    logger.error('Error saving journal:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }

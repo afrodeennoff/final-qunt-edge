@@ -8,23 +8,17 @@ async function authenticateRequest(req: NextRequest) {
   const authHeader = req.headers.get('authorization')
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return {
-      authenticated: false,
-      error: { code: 'UNAUTHORIZED', message: 'Unauthorized', status: 401 },
-    }
+    return { authenticated: false as const, error: { code: 'UNAUTHORIZED' as const, message: 'Unauthorized', status: 401 as const } }
   }
 
   const token = authHeader.split(' ')[1]
 
-  const user = await verifySecureToken(token)
+  const user = await verifySecureToken(token, 'etp')
   if (!user) {
-    return {
-      authenticated: false,
-      error: { code: 'UNAUTHORIZED', message: 'Unauthorized', status: 401 },
-    }
+    return { authenticated: false as const, error: { code: 'UNAUTHORIZED' as const, message: 'Unauthorized', status: 401 as const } }
   }
 
-  return { authenticated: true, user }
+  return { authenticated: true as const, user }
 }
 
 export async function POST(req: NextRequest) {
@@ -39,13 +33,14 @@ export async function POST(req: NextRequest) {
   try {
     const auth = await authenticateRequest(req)
     if (!auth.authenticated) {
+      const err = auth as { authenticated: false; error: { code: string; message: string; status: number } }
       return NextResponse.json(
-        { error: { code: auth.error.code, message: auth.error.message } },
-        { status: auth.error.status },
+        { error: { code: err.error.code, message: err.error.message } },
+        { status: err.error.status },
       )
     }
 
-    const user = auth.user!
+    const user = auth.user
     const body = await req.json()
     const { orders } = body
 
@@ -99,13 +94,14 @@ export async function DELETE(req: NextRequest) {
   try {
     const auth = await authenticateRequest(req)
     if (!auth.authenticated) {
+      const err = auth as { authenticated: false; error: { code: string; message: string; status: number } }
       return NextResponse.json(
-        { error: { code: auth.error.code, message: auth.error.message } },
-        { status: auth.error.status },
+        { error: { code: err.error.code, message: err.error.message } },
+        { status: err.error.status },
       )
     }
 
-    const user = auth.user!
+    const user = auth.user
     const result = await prisma.order.deleteMany({
       where: { userId: user.id },
     })

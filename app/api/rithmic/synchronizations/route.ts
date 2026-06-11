@@ -1,4 +1,3 @@
-import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import {
   getRithmicSynchronizations,
@@ -6,10 +5,8 @@ import {
   removeRithmicSynchronization,
 } from "@/app/[locale]/dashboard/components/import/rithmic/sync/actions"
 import { createRouteClient } from "@/lib/supabase/route-client"
-import { rateLimit } from "@/lib/rate-limit"
+import { withApiRoute, apiSuccess, apiErrorWithId } from "@/lib/api/with-api-route"
 import { parseJson, toValidationErrorResponse } from "@/app/api/_utils/validate"
-
-const rlCheck = rateLimit({ interval: 60, limit: 30 })
 
 const synchronizationSchema = z.object({
   accountId: z.string().min(1),
@@ -19,74 +16,62 @@ const deleteSchema = z.object({
   accountId: z.string().min(1, "accountId is required"),
 })
 
-async function getUser(req: NextRequest) {
-  const supabase = createRouteClient(req)
-  const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) return null
-  return data.user
-}
+export const GET = withApiRoute(
+  async (ctx) => {
+    const supabase = createRouteClient(ctx.request)
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) return apiErrorWithId(ctx.requestId, 'UNAUTHORIZED', 'Unauthorized', 401)
 
-export async function GET(request: NextRequest) {
-  const user = await getUser(request)
-  if (!user) {
-    return NextResponse.json({ error: { code: "UNAUTHORIZED", message: "Unauthorized" } }, { status: 401 })
-  }
-
-  const rateLimitResult = await rlCheck(request)
-  if (!rateLimitResult.success) {
-    return NextResponse.json({ error: { code: "RATE_LIMITED", message: "Too many requests" } }, { status: 429 })
-  }
-
-  try {
-    const synchronizations = await getRithmicSynchronizations()
-    return NextResponse.json({ success: true, data: synchronizations })
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error instanceof Error ? error.message : "Failed to fetch synchronizations" },
-      { status: 500 },
-    )
-  }
-}
-
-export async function POST(request: NextRequest) {
-  const user = await getUser(request)
-  if (!user) {
-    return NextResponse.json({ error: { code: "UNAUTHORIZED", message: "Unauthorized" } }, { status: 401 })
-  }
-
-  try {
-    const body = await parseJson(request, synchronizationSchema)
-    await setRithmicSynchronization({ ...body, service: "rithmic" })
-    return NextResponse.json({ success: true, message: "Synchronization updated successfully" })
-  } catch (error) {
-    const parsed = toValidationErrorResponse(error)
-    if (parsed) return parsed
-    return NextResponse.json({ success: false, message: error instanceof Error ? error.message : "Failed to update synchronization" }, { status: 500 })
-  }
-}
-
-export async function DELETE(request: NextRequest) {
-  const user = await getUser(request)
-  if (!user) {
-    return NextResponse.json({ error: { code: "UNAUTHORIZED", message: "Unauthorized" } }, { status: 401 })
-  }
-
-  try {
-    const { accountId } = await parseJson(request, deleteSchema)
-    const result = await removeRithmicSynchronization(accountId)
-    const deletedCount = typeof result === "object" && result !== null ? (result as { deletedCount?: number }).deletedCount : undefined
-
-    if (deletedCount === 0) {
-      return NextResponse.json(
-        { error: { code: "NOT_FOUND", message: "Synchronization not found" } },
-        { status: 404 },
-      )
+    try {
+      const synchronizations = await getRithmicSynchronizations()
+      return apiSuccess({ success: true, data: synchronizations })
+    } catch (error) {
+      return apiErrorWithId(ctx.requestId, 'INTERNAL_ERROR', error instanceof Error ? error.message : "Failed to fetch synchronizations", 500)
     }
+  },
+  { rateLimitId: 'rithmic-sync-read', rateLimitMax: 30, routeName: 'rithmic-synchronizations' }
+)
 
-    return NextResponse.json({ success: true, message: "Synchronization removed successfully" })
-  } catch (error) {
-    const parsed = toValidationErrorResponse(error)
-    if (parsed) return parsed
-    return NextResponse.json({ success: false, message: error instanceof Error ? error.message : "Failed to delete synchronization" }, { status: 500 })
-  }
-}
+export const POST = withApiRoute(
+  async (ctx) => {
+    const supabase = createRouteClient(ctx.request)
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) return apiErrorWithId(ctx.requestId, 'UNAUTHORIZED', 'Unauthorized', 401)
+
+    try {
+      const body = await parseJson(ctx.request, synchronizationSchema)
+      await setRithmicSynchronization({ ...body, service: "rithmic" })
+      return apiSuccess({ success: true, message: "Synchronization updated successfully" })
+    } catch (error) {
+      const parsed = toValidationErrorResponse(error)
+      if (parsed) return parsed
+      return apiErrorWithId(ctx.requestId, 'INTERNAL_ERROR', error instanceof Error ? error.message : "Failed to update synchronization", 500)
+    }
+  },
+  { rateLimitId: 'rithmic-sync-write', rateLimitMax: 30, routeName: 'rithmic-synchronizations' }
+)
+
+export const DELETE = withApiRoute(
+  async (ctx) => {
+    const supabase = createRouteClient(ctx.request)
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) return apiErrorWithId(ctx.requestId, 'UNAUTHORIZED', 'Unauthorized', 401)
+
+    try {
+      const { accountId } = await parseJson(ctx.request, deleteSchema)
+      const result = await removeRithmicSynchronization(accountId)
+      const deletedCount = typeof result === "object" && result !== null ? (result as { deletedCount?: number }).deletedCount : undefined
+
+      if (deletedCount === 0) {
+        return apiErrorWithId(ctx.requestId, 'NOT_FOUND', "Synchronization not found", 404)
+      }
+
+      return apiSuccess({ success: true, message: "Synchronization removed successfully" })
+    } catch (error) {
+      const parsed = toValidationErrorResponse(error)
+      if (parsed) return parsed
+      return apiErrorWithId(ctx.requestId, 'INTERNAL_ERROR', error instanceof Error ? error.message : "Failed to delete synchronization", 500)
+    }
+  },
+  { rateLimitId: 'rithmic-sync-delete', rateLimitMax: 30, routeName: 'rithmic-synchronizations' }
+)
