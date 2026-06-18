@@ -14,7 +14,10 @@ interface SendNewsletterParams {
   youtubeId: string
   introMessage: string
   features: string[]
-  firstName: string
+  // NOTE: firstName is intentionally unused by sendNewsletter — the per-subscriber
+  // stored firstName is authoritative. Kept (optional) for API/back-compat with
+  // the newsletter builder editor payload.
+  firstName?: string
 }
 
 export async function getSubscribers() {

@@ -359,7 +359,7 @@ export async function sendEmailsToUsersInternal(
           const emailSubject = subject || getDefaultSubject(template, user.language)
 
           return {
-            from: "Qunt Edge <updates@eu.updates.qunt-edge.vercel.app>",
+            from: getFromAddress(template),
             to: [user.email],
             subject: emailSubject,
             reply_to: replyTo,
@@ -394,6 +394,26 @@ export async function sendEmailsToUsers(
 ) {
   await assertAdminAccess()
   return sendEmailsToUsersInternal(template, userIds, customProps, subject)
+}
+
+// Per-template from-address. The generic admin sender previously used a single
+// `updates@` address for all 9 templates, which mismatches the dedicated senders
+// used by the automated flows (welcome/newsletter/renewals) and can hurt DKIM/SPF
+// alignment. EMAIL_FROM_ADDRESS overrides globally if set.
+function getFromAddress(template: EmailTemplate): string {
+  const envFrom = process.env.EMAIL_FROM_ADDRESS
+  if (envFrom) return envFrom
+  const base = "eu.updates.qunt-edge.vercel.app"
+  switch (template) {
+    case "welcome":
+      return `Qunt Edge <welcome@${base}>`
+    case "new-feature":
+      return `Qunt Edge <newsletter@${base}>`
+    case "renewal-notice":
+      return `Qunt Edge <renewals@${base}>`
+    default:
+      return `Qunt Edge <updates@${base}>`
+  }
 }
 
 function getDefaultSubject(template: EmailTemplate, language: string): string {

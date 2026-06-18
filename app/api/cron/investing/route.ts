@@ -72,9 +72,13 @@ async function fetchInvestingCalendarEvents(lang: 'fr' | 'en' = 'fr') {
       // Check if this is a date row
       if (row.includes('theDay')) {
         dateRowCount++
-        const dateMatch = row.match(/<td[^>]*class="theDay"[^>]*>([^<]+)<\/td>/)
-        if (dateMatch) {
-          const dateStr = dateMatch[1].trim()
+        // Capture the full cell inner HTML and strip nested tags, so a date
+        // wrapped in <span>/<div> still parses (investing.com wraps dates in
+        // nested markup; the old ([^<]+) capture only matched flat text and
+        // silently dropped every timed event).
+        const cellMatch = row.match(/<td[^>]*class="theDay"[^>]*>([\s\S]*?)<\/td>/)
+        if (cellMatch) {
+          const dateStr = cellMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
           // Parse date format (e.g., "Mercredi 7 mai 2025" / "Wednesday 7 May 2025")
           const [, date, month, year] = dateStr.split(' ')
           const monthMap: Record<string, number> = {
@@ -311,9 +315,12 @@ export async function GET(request: Request) {
         const events = await fetchInvestingCalendarEvents(lang)
 
         if (events.length === 0) {
+          // Surface silent scraping failures: upstream HTML structure changes
+          // (e.g. nested date markup) previously caused every event to be dropped.
+          logger.warn('[cron/investing] parsed 0 events — upstream HTML structure may have changed', { lang })
           return NextResponse.json({
             success: false,
-            error: 'No events found',
+            error: 'No events found — investing.com markup may have changed',
           }, { status: 404 })
         }
 
