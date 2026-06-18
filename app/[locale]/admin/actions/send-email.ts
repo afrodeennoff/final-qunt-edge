@@ -7,6 +7,7 @@ import { createClient, type User } from "@supabase/supabase-js"
 import { render } from "@react-email/render"
 import { assertAdminAccess } from "@/server/authz"
 import { buildUnsubscribeUrl } from "@/lib/unsubscribe-url"
+import { getSiteUrl } from "@/lib/site-url"
 
 function getSupabaseAdminClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
@@ -117,7 +118,7 @@ export async function getDefaultTemplateProps(template: EmailTemplate): Promise<
         teamName: "Sample Team",
         inviterName: "John Doe",
         inviterEmail: "john@example.com",
-        joinUrl: "https://qunt-edge.vercel.app",
+        joinUrl: `${getSiteUrl()}/teams/join`,
         language: "en",
       }
     case "missing-data":
@@ -339,11 +340,17 @@ export async function sendEmailsToUsersInternal(
       try {
         const emailBatch = batch.map((user) => {
           const unsubscribeUrl = buildUnsubscribeUrl(user.email)
+          // BlackFridayEmail reads prop `locale` (not `language`); derive it from
+          // the recipient's language so EN users don't receive the FR copy.
+          const derivedLocale =
+            (customProps?.locale as string | undefined) ??
+            (user.language === "fr" ? "fr" : "en")
           const mergedProps: TemplateProps = {
             ...customProps,
             firstName: user.firstName,
             email: user.email,
             language: user.language,
+            locale: derivedLocale,
             userEmail: user.email,
             userFirstName: user.firstName,
             unsubscribeUrl,
@@ -400,8 +407,8 @@ function getDefaultSubject(template: EmailTemplate, language: string): string {
       fr: "Bienvenue sur Qunt Edge",
     },
     "weekly-recap": {
-      en: "Your weekly trading statistics - Qunt Edge",
-      fr: "Vos statistiques de trading de la semaine - Qunt Edge",
+      en: "Your trading statistics for the week 📈",
+      fr: "Vos statistiques de trading de la semaine 📈",
     },
     "new-feature": {
       en: "New features on Qunt Edge",
