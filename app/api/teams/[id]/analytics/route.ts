@@ -50,7 +50,7 @@ async function handleGet(req: NextRequest, { params }: { params: Promise<{ id: s
       return apiError('NOT_FOUND', 'Team not found', 404, { requestId })
     }
 
-    const analytics = await getTeamAnalytics(teamId, period)
+    const analytics = await getTeamAnalytics(teamId, period, teamUserId)
     return apiSuccess(analytics)
   } catch (error) {
     if (error instanceof Error && error.message === 'Team not found') {

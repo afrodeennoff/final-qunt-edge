@@ -14,6 +14,7 @@ const inviteRateLimit = rateLimit({ limit: 10, window: 60_000, identifier: "team
 const inviteSchema = z.object({
   teamId: z.string().min(1),
   email: z.string().email(),
+  role: z.enum(['TRADER', 'ANALYST', 'VIEWER']).optional(),
 })
 
 const SUPPORTED_LOCALES = new Set([
@@ -52,7 +53,7 @@ export async function POST(req: Request) {
       })
     }
 
-    const { teamId, email } = await parseJson(req, inviteSchema)
+    const { teamId, email, role } = await parseJson(req, inviteSchema)
 
     const supabase = createRouteClient(req)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -79,6 +80,14 @@ export async function POST(req: Request) {
           },
           select: { id: true },
         },
+        members: {
+          where: {
+            userId: inviter.id,
+            isActive: true,
+            role: 'ADMIN',
+          },
+          select: { id: true },
+        },
       },
     })
 
@@ -86,9 +95,13 @@ export async function POST(req: Request) {
       return apiError("NOT_FOUND", "Team not found", 404)
     }
 
+    // Authorize on owner OR admin-TeamManager OR active TeamMember ADMIN.
+    // (Previously only owner/admin-TeamManager — a TeamMember ADMIN such as the
+    // team creator was denied, diverging from inviteMember's own authz.)
     const isOwner = team.userId === inviter.id
     const isAdminManager = team.managers.length > 0
-    if (!isOwner && !isAdminManager) {
+    const isAdminMember = team.members.length > 0
+    if (!isOwner && !isAdminManager && !isAdminMember) {
       return apiError("FORBIDDEN", "Forbidden", 403)
     }
 
@@ -123,6 +136,16 @@ export async function POST(req: Request) {
       )
     }
 
+    // Don't resurrect an already-accepted invitation (would re-email the member
+    // and resurrect a consumed invite).
+    if (existingInvitation && existingInvitation.status === 'ACCEPTED') {
+      return apiError(
+        "BAD_REQUEST",
+        "This email has already accepted an invitation",
+        400
+      )
+    }
+
     // Create or update invitation
     const invitation = await prisma.teamInvitation.upsert({
       where: {
@@ -135,6 +158,7 @@ export async function POST(req: Request) {
         status: 'PENDING',
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
         invitedBy: inviter.id,
+        ...(role ? { role } : {}),
       },
       create: {
         teamId,
@@ -142,6 +166,7 @@ export async function POST(req: Request) {
         invitedBy: inviter.id,
         status: 'PENDING',
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        ...(role ? { role } : {}),
       },
     })
 
