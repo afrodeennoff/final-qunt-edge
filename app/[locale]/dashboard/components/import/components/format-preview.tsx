@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils"; // Assuming you have a utility for className m
 import { Button } from "@/components/ui/button";
 import { ArrowDownToLine, ChevronDown } from "lucide-react";
 import { parsePositionTime } from "@/lib/utils";
+import { decimalToNumber } from "@/lib/trade-types";
 import { useI18n } from "@/locales/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -582,7 +583,7 @@ export function FormatPreview({
         <div className="font-medium">{t('trade-table.pnl')}</div>
       ),
       cell: ({ row }) => {
-        const pnl = row.original.pnl?.toNumber() ?? 0;
+        const pnl = decimalToNumber(row.original.pnl);
         const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'pnl')];
         const originalPnl = originalData ? parseFloat(originalData.replace(/[,$]/g, '')) : null;
         const isMismatch = originalPnl !== null && Math.abs(pnl - originalPnl) > 0.01;
@@ -626,7 +627,7 @@ export function FormatPreview({
         <div className="font-medium">{t('calendar.modal.commission')}</div>
       ),
       cell: ({ row }) => {
-        const commission = row.original.commission ?? 0;
+        const commission = decimalToNumber(row.original.commission);
         const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'commission')];
         return (
           <TooltipProvider>
@@ -656,7 +657,7 @@ export function FormatPreview({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                {parsePositionTime(row.original.timeInPosition?.toNumber() ?? 0)}
+                {parsePositionTime(decimalToNumber(row.original.timeInPosition))}
               </TooltipTrigger>
               {originalData && (
                 <TooltipContent>
@@ -695,8 +696,8 @@ export function FormatPreview({
 
   // Calculate totals for footer
   const totals = useMemo(() => {
-    const totalPnl = processedTrades.reduce((sum, trade) => sum + (trade.pnl?.toNumber() ?? 0), 0);
-    const totalCommission = processedTrades.reduce((sum, trade) => sum + (trade.commission?.toNumber() ?? 0), 0);
+    const totalPnl = processedTrades.reduce((sum, trade) => sum + decimalToNumber(trade.pnl), 0);
+    const totalCommission = processedTrades.reduce((sum, trade) => sum + decimalToNumber(trade.commission), 0);
     const netPnl = totalPnl - totalCommission;
     
     return {

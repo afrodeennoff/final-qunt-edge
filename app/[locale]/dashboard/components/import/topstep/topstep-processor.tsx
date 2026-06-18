@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Prisma, Trade } from '@/prisma/generated/prisma/client'
+import { decimalToNumber } from '@/lib/trade-types'
 import { Button } from "@/components/ui/button"
 import { formatInTimeZone } from 'date-fns-tz'
 import { useUserStore } from '@/store/user-store'
@@ -151,8 +152,8 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
         processTrades();
     }, [processTrades]);
 
-    const totalPnL = processedTrades.reduce((sum, trade) => sum + (trade.pnl?.toNumber() || 0), 0);
-    const totalCommission = processedTrades.reduce((sum, trade) => sum + (trade.commission?.toNumber() || 0), 0);
+    const totalPnL = processedTrades.reduce((sum, trade) => sum + decimalToNumber(trade.pnl), 0);
+    const totalCommission = processedTrades.reduce((sum, trade) => sum + decimalToNumber(trade.commission), 0);
     const uniqueInstruments = Array.from(new Set(processedTrades.map(trade => trade.instrument)));
 
     return (
@@ -180,19 +181,19 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
                                     <TableRow key={trade.id}>
                                         <TableCell>{trade.instrument}</TableCell>
                                         <TableCell>{trade.side}</TableCell>
-                                        <TableCell>{trade.quantity?.toNumber()}</TableCell>
-                                        <TableCell>{trade.entryPrice?.toNumber()}</TableCell>
-                                        <TableCell>{trade.closePrice?.toNumber()}</TableCell>
+                                        <TableCell>{decimalToNumber(trade.quantity)}</TableCell>
+                                        <TableCell>{decimalToNumber(trade.entryPrice, null) ?? ''}</TableCell>
+                                        <TableCell>{decimalToNumber(trade.closePrice, null) ?? ''}</TableCell>
                                         <TableCell>
                                             {trade.entryDate ? formatInTimeZone(new Date(trade.entryDate), timezone, 'yyyy-MM-dd HH:mm:ss') : '-'}
                                         </TableCell>
                                         <TableCell>
                                             {trade.closeDate ? formatInTimeZone(new Date(trade.closeDate), timezone, 'yyyy-MM-dd HH:mm:ss') : '-'}
                                         </TableCell>
-                                        <TableCell className={trade.pnl ? (trade.pnl.toNumber() < 0 ? 'text-[color:var(--destructive)]' : 'text-[color:var(--success)]') : ''}>
-                                            {trade.pnl?.toNumber()?.toFixed(2)}
+                                        <TableCell className={trade.pnl ? (decimalToNumber(trade.pnl) < 0 ? 'text-[color:var(--destructive)]' : 'text-[color:var(--success)]') : ''}>
+                                            {decimalToNumber(trade.pnl).toFixed(2)}
                                         </TableCell>
-                                        <TableCell>{trade.commission?.toNumber()?.toFixed(2)}</TableCell>
+                                        <TableCell>{decimalToNumber(trade.commission).toFixed(2)}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

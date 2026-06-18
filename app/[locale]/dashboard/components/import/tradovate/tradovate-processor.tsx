@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from 'sonner'
 import { Prisma, Trade } from '@/prisma/generated/prisma'
+import { decimalToNumber } from '@/lib/trade-types'
 import { useI18n } from '@/locales/client'
 import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { generateTradeHash } from '@/lib/utils'
@@ -183,7 +184,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
             if (item.instrument) {
                 item.instrument = item.instrument.slice(0, -2)
                 if (existingCommissions[item.instrument]) {
-                    item.commission = new Prisma.Decimal(existingCommissions[item.instrument] * item.quantity!.toNumber())
+                    item.commission = new Prisma.Decimal(existingCommissions[item.instrument] * decimalToNumber(item.quantity))
                 } else {
                     missingCommissionsTemp[item.instrument] = true
                 }
@@ -232,7 +233,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
             if (missingCommissions.hasOwnProperty(trade.instrument)) {
                 return {
                     ...trade,
-                    commission: new Prisma.Decimal(missingCommissions[trade.instrument] * trade.quantity.toNumber())
+                    commission: new Prisma.Decimal(missingCommissions[trade.instrument] * decimalToNumber(trade.quantity))
                 } as Partial<Trade>;
             }
             return trade;
@@ -246,8 +247,8 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
         });
     };
 
-    const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.pnl?.toNumber() || 0), 0), [processedTrades]);
-    const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.commission?.toNumber() || 0), 0), [processedTrades]);
+    const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + decimalToNumber(trade.pnl), 0), [processedTrades]);
+    const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + decimalToNumber(trade.commission), 0), [processedTrades]);
     const uniqueInstruments = useMemo(() => Array.from(new Set(processedTrades.map(trade => trade.instrument))), [processedTrades]);
 
     return (
@@ -310,16 +311,16 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
                                     <TableRow key={trade.id}>
                                         <TableCell>{trade.instrument}</TableCell>
                                         <TableCell>{trade.side}</TableCell>
-                                        <TableCell>{trade.quantity?.toNumber()}</TableCell>
-                                        <TableCell>{trade.entryPrice?.toNumber()}</TableCell>
-                                        <TableCell>{trade.closePrice?.toNumber() ?? '-'}</TableCell>
+                                        <TableCell>{decimalToNumber(trade.quantity)}</TableCell>
+                                        <TableCell>{decimalToNumber(trade.entryPrice, null) ?? ''}</TableCell>
+                                        <TableCell>{decimalToNumber(trade.closePrice, null) ?? '-'}</TableCell>
                                         <TableCell>{trade.entryDate ? new Date(trade.entryDate).toLocaleString() : '-'}</TableCell>
                                         <TableCell>{trade.closeDate ? new Date(trade.closeDate).toLocaleString() : '-'}</TableCell>
-                                        <TableCell className={trade.pnl && trade.pnl.toNumber() >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}>
-                                            {trade.pnl?.toNumber()?.toFixed(2)}
+                                        <TableCell className={trade.pnl && decimalToNumber(trade.pnl) >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}>
+                                            {decimalToNumber(trade.pnl).toFixed(2)}
                                         </TableCell>
-                                        <TableCell>{`${Math.floor((trade.timeInPosition?.toNumber() || 0) / 60)}m ${Math.floor((trade.timeInPosition?.toNumber() || 0) % 60)}s`}</TableCell>
-                                        <TableCell>{trade.commission?.toNumber()?.toFixed(2)}</TableCell>
+                                        <TableCell>{`${Math.floor(decimalToNumber(trade.timeInPosition) / 60)}m ${Math.floor(decimalToNumber(trade.timeInPosition) % 60)}s`}</TableCell>
+                                        <TableCell>{decimalToNumber(trade.commission).toFixed(2)}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

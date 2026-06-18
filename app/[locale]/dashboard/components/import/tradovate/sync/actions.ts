@@ -5,6 +5,7 @@ import { saveTradesAction } from '@/server/database'
 import { Prisma, Trade, TickDetails } from '@/prisma/generated/prisma/client'
 import crypto from 'crypto'
 import { generateDeterministicTradeId } from '@/lib/trade-id-utils'
+import { decimalToNumber } from '@/lib/trade-types'
 import { getTickDetails } from '@/server/tick-details'
 import { prisma } from '@/lib/prisma'
 
@@ -1100,8 +1101,8 @@ async function buildTradesFromFillPairs(
       
       // Calculate P&L using tick value (more accurate for futures)
       const tickDetail = tickDetails.find(detail => detail.ticker === contractSymbol)
-      const tickSize = tickDetail?.tickSize?.toNumber() ?? 0.25 // Default tick size for MES
-      const tickValue = tickDetail?.tickValue?.toNumber() ?? 5.0 // Default tick value for MES
+      const tickSize = decimalToNumber(tickDetail?.tickSize) || 0.25 // Default tick size for MES
+      const tickValue = decimalToNumber(tickDetail?.tickValue) || 5.0 // Default tick value for MES
       
       // Determine entry and exit prices based on trade direction
       const entryPrice = isBuyFirst ? fillPair.buyPrice : fillPair.sellPrice

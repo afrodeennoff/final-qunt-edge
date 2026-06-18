@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Prisma, Trade } from '@/prisma/generated/prisma'
+import { decimalToNumber } from '@/lib/trade-types'
 import { PlatformProcessorProps } from '../config/platforms'
 
 const newMappings: { [key: string]: string } = {
@@ -92,8 +93,8 @@ export default function TradezellaProcessor({ headers, csvData, setProcessedTrad
     processTrades();
   }, [processTrades]);
 
-  const totalPnL = useMemo(() => trades.reduce((sum, trade) => sum + (trade.pnl?.toNumber() || 0), 0), [trades]);
-  const totalCommission = useMemo(() => trades.reduce((sum, trade) => sum + (trade.commission?.toNumber() || 0), 0), [trades]);
+  const totalPnL = useMemo(() => trades.reduce((sum, trade) => sum + decimalToNumber(trade.pnl), 0), [trades]);
+  const totalCommission = useMemo(() => trades.reduce((sum, trade) => sum + decimalToNumber(trade.commission), 0), [trades]);
   const uniqueInstruments = useMemo(() => Array.from(new Set(trades.map(trade => trade.instrument))), [trades]);
 
   return (
@@ -120,14 +121,14 @@ export default function TradezellaProcessor({ headers, csvData, setProcessedTrad
               <TableRow key={trade.id}>
                 <TableCell>{trade.instrument}</TableCell>
                 <TableCell>{trade.side}</TableCell>
-                <TableCell>{trade.quantity.toNumber()}</TableCell>
-                <TableCell>{trade.entryPrice?.toNumber()}</TableCell>
-                <TableCell>{trade.closePrice?.toNumber() ?? '-'}</TableCell>
+                <TableCell>{decimalToNumber(trade.quantity)}</TableCell>
+                <TableCell>{decimalToNumber(trade.entryPrice, null) ?? ''}</TableCell>
+                <TableCell>{decimalToNumber(trade.closePrice, null) ?? '-'}</TableCell>
                 <TableCell>{new Date(trade.entryDate).toLocaleString()}</TableCell>
                 <TableCell>{trade.closeDate ? new Date(trade.closeDate).toLocaleString() : '-'}</TableCell>
-                <TableCell>{trade.pnl?.toNumber()?.toFixed(2)}</TableCell>
-                <TableCell>{`${Math.floor((trade.timeInPosition?.toNumber() || 0) / 60)}m ${Math.floor((trade.timeInPosition?.toNumber() || 0) % 60)}s`}</TableCell>
-                <TableCell>{trade.commission?.toNumber()?.toFixed(2)}</TableCell>
+                <TableCell>{decimalToNumber(trade.pnl).toFixed(2)}</TableCell>
+                <TableCell>{`${Math.floor(decimalToNumber(trade.timeInPosition) / 60)}m ${Math.floor(decimalToNumber(trade.timeInPosition) % 60)}s`}</TableCell>
+                <TableCell>{decimalToNumber(trade.commission).toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

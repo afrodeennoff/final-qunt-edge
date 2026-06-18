@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { Prisma, Trade } from '@/prisma/generated/prisma'
+import { decimalToNumber } from '@/lib/trade-types'
 import { PlatformProcessorProps } from '../config/platforms'
 
 const newMappings: { [key: string]: string } = {
@@ -96,8 +97,8 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
         processTrades();
     }, [processTrades]);
 
-    const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.pnl?.toNumber() ?? 0), 0), [processedTrades]);
-    const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.commission?.toNumber() ?? 0), 0), [processedTrades]);
+    const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + decimalToNumber(trade.pnl), 0), [processedTrades]);
+    const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + decimalToNumber(trade.commission), 0), [processedTrades]);
     const uniqueInstruments = useMemo(() => Array.from(new Set(processedTrades.map(trade => trade.instrument))), [processedTrades]);
 
     return (
@@ -124,14 +125,14 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
                             <TableRow key={trade.id}>
                                 <TableCell>{trade.instrument}</TableCell>
                                 <TableCell>{trade.side}</TableCell>
-                                <TableCell>{trade.quantity?.toNumber()}</TableCell>
-                                <TableCell>{trade.entryPrice?.toNumber()}</TableCell>
-                                <TableCell>{trade.closePrice?.toNumber() ?? '-'}</TableCell>
+                                <TableCell>{decimalToNumber(trade.quantity)}</TableCell>
+                                <TableCell>{decimalToNumber(trade.entryPrice, null) ?? ''}</TableCell>
+                                <TableCell>{decimalToNumber(trade.closePrice, null) ?? '-'}</TableCell>
                                 <TableCell>{trade.entryDate ? new Date(trade.entryDate).toLocaleString() : '-'}</TableCell>
                                 <TableCell>{trade.closeDate ? new Date(trade.closeDate).toLocaleString() : '-'}</TableCell>
-                                <TableCell>{trade.pnl?.toFixed(2)}</TableCell>
-                                <TableCell>{`${Math.floor((trade.timeInPosition?.toNumber() ?? 0) / 60)}m ${Math.floor((trade.timeInPosition?.toNumber() ?? 0) % 60)}s`}</TableCell>
-                                <TableCell>{trade.commission?.toFixed(2)}</TableCell>
+                                <TableCell>{decimalToNumber(trade.pnl).toFixed(2)}</TableCell>
+                                <TableCell>{`${Math.floor(decimalToNumber(trade.timeInPosition) / 60)}m ${Math.floor(decimalToNumber(trade.timeInPosition) % 60)}s`}</TableCell>
+                                <TableCell>{decimalToNumber(trade.commission).toFixed(2)}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

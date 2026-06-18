@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 import { Prisma, TickDetails, Trade } from '@/prisma/generated/prisma'
+import { decimalToNumber } from '@/lib/trade-types'
 import { getTickDetails } from '@/server/tick-details'
 import { PlatformProcessorProps } from '../config/platforms'
 
@@ -205,7 +206,7 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
         
         const tickDetail = tickDetails.find(detail => detail.ticker === symbol)
         const contractSpec: ContractSpec = tickDetail
-          ? { tickSize: tickDetail.tickSize.toNumber(), tickValue: tickDetail.tickValue.toNumber() }
+          ? { tickSize: decimalToNumber(tickDetail.tickSize), tickValue: decimalToNumber(tickDetail.tickValue) }
           : { tickSize: 1/64, tickValue: 15.625 }
 
         const newOrder: Order = {
@@ -352,8 +353,8 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
     setTickDetails(updatedTickDetails)
   }
 
-  const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.pnl?.toNumber() ?? 0), 0), [processedTrades])
-  const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.commission?.toNumber() ?? 0), 0), [processedTrades])
+  const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + decimalToNumber(trade.pnl), 0), [processedTrades])
+  const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + decimalToNumber(trade.commission), 0), [processedTrades])
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -382,7 +383,7 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
                     <label className="text-sm">Tick Size:</label>
                     <Input
                       type="number"
-                      value={detail.tickSize.toNumber()}
+                      value={decimalToNumber(detail.tickSize)}
                       onChange={(e) => handleContractSpecChange(detail.ticker, 'tickSize', e.target.value)}
                       className="w-24"
                     />
@@ -391,7 +392,7 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
                     <label className="text-sm">Tick Value:</label>
                     <Input
                       type="number"
-                      value={detail.tickValue.toNumber()}
+                      value={decimalToNumber(detail.tickValue)}
                       onChange={(e) => handleContractSpecChange(detail.ticker, 'tickValue', e.target.value)}
                       className="w-24"
                     />
@@ -424,14 +425,14 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
                     <TableCell>{trade.accountNumber}</TableCell>
                     <TableCell>{trade.instrument}</TableCell>
                     <TableCell>{trade.side}</TableCell>
-                    <TableCell>{trade.quantity?.toNumber()}</TableCell>
-                    <TableCell>{trade.entryPrice?.toNumber()}</TableCell>
-                    <TableCell>{trade.closePrice?.toNumber() ?? '-'}</TableCell>
+                    <TableCell>{decimalToNumber(trade.quantity)}</TableCell>
+                    <TableCell>{decimalToNumber(trade.entryPrice, null) ?? ''}</TableCell>
+                    <TableCell>{decimalToNumber(trade.closePrice, null) ?? '-'}</TableCell>
                     <TableCell>{trade.entryDate ? new Date(trade.entryDate).toLocaleString() : '-'}</TableCell>
                     <TableCell>{trade.closeDate ? new Date(trade.closeDate).toLocaleString() : '-'}</TableCell>
-                    <TableCell>{trade.pnl ? trade.pnl.toFixed(2) : '-'}</TableCell>
-                    <TableCell>{trade.timeInPosition ? `${Math.floor(trade.timeInPosition.toNumber() / 60)}m ${Math.floor(trade.timeInPosition.toNumber() % 60)}s` : '-'}</TableCell>
-                    <TableCell>{trade.commission ? trade.commission.toFixed(2) : '-'}</TableCell>
+                    <TableCell>{trade.pnl ? decimalToNumber(trade.pnl).toFixed(2) : '-'}</TableCell>
+                    <TableCell>{trade.timeInPosition ? `${Math.floor(decimalToNumber(trade.timeInPosition) / 60)}m ${Math.floor(decimalToNumber(trade.timeInPosition) % 60)}s` : '-'}</TableCell>
+                    <TableCell>{trade.commission ? decimalToNumber(trade.commission).toFixed(2) : '-'}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

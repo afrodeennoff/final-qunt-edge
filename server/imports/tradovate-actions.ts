@@ -4,6 +4,7 @@ import { createClient, getDatabaseUserId } from '@/server/auth'
 import { resolveWritableUserId, saveTradesForUserAction } from '@/server/database'
 import { TickDetails } from '@/prisma/generated/prisma'
 import type { ImportTradeDraft as Trade } from '@/lib/trade-types'
+import { decimalToNumber } from '@/lib/trade-types'
 import crypto from 'crypto'
 import { generateDeterministicTradeId } from '@/lib/trade-id-utils'
 import { getTickDetails } from '@/server/tick-details'
@@ -1027,8 +1028,8 @@ async function buildTradesFromFillPairs(
 
       // Calculate P&L using tick value (more accurate for futures)
       const tickDetail = tickDetails.find(detail => detail.ticker === contractSymbol)
-      const tickSize = tickDetail?.tickSize || 0.25 // Default tick size for MES
-      const tickValue = tickDetail?.tickValue || 5.0 // Default tick value for MES
+      const tickSize = decimalToNumber(tickDetail?.tickSize) || 0.25 // Default tick size for MES
+      const tickValue = decimalToNumber(tickDetail?.tickValue) || 5.0 // Default tick value for MES
 
       // Determine entry and exit prices based on trade direction
       const entryPrice = isBuyFirst ? fillPair.buyPrice : fillPair.sellPrice
@@ -1038,8 +1039,8 @@ async function buildTradesFromFillPairs(
 
       // Calculate price difference (exit - entry)
       const priceDifference = exitPrice - entryPrice
-      const ticks = priceDifference / Number(tickSize)
-      let pnl = ticks * Number(tickValue) * fillPair.qty
+      const ticks = priceDifference / tickSize
+      let pnl = ticks * tickValue * fillPair.qty
 
       // For short trades, we need to reverse the P&L calculation
       // Short: sell first (entry), buy later (exit) = profit when exit price < entry price
