@@ -192,8 +192,10 @@ export default function ImportButton() {
       ] as unknown as DomainTrade[];
       setTradesStore(mergedTrades);
 
-      // Keep server cache fresh (server action will update tags); avoid full refresh
-      await refreshTradesOnly({ force: false });
+      // Force-refresh from server so the optimistic merge is not clobbered by a
+      // stale IndexedDB cache (in dev, force:false reads the pre-import cache and
+      // wipes the just-merged trades from the store before the cache is rewritten).
+      await refreshTradesOnly({ force: true });
 
       // Show success message
       const successDescription = t("import.successDescription", {
