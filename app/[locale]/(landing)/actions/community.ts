@@ -505,7 +505,7 @@ async function sendCommentNotificationEmail({
         unsubscribeUrl,
         language
       }),
-      replyTo: 'hugo.demenez@qunt-edge.vercel.app'
+      ...(process.env.CONTACT_REPLY_TO ? { replyTo: process.env.CONTACT_REPLY_TO } : {})
     })
   } catch (error) {
     console.warn('Failed to send comment notification email:', error)

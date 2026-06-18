@@ -2057,7 +2057,7 @@ export const DataProvider: React.FC<{
         setTrades(updatedTrades)
         const updatedCount = await updateTradesAction(tradeIds, update)
 
-        clearDashboardBrowserCache('trades', 'updateTrades')
+        clearDashboardBrowserCache('all', 'updateTrades')
 
         if (updatedCount === 0 || updatedCount !== tradeIds.length) {
           throw new Error(
@@ -2134,7 +2134,7 @@ export const DataProvider: React.FC<{
         // Delete from database
         await deleteTradesByIdsAction(tradeIds)
 
-        clearDashboardBrowserCache('trades', 'deleteTrades')
+        clearDashboardBrowserCache('all', 'deleteTrades')
       } catch (error) {
         // On error, refresh to restore the correct state
         logger.error({ error }, 'Error deleting trades')

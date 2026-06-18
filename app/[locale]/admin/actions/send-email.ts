@@ -277,6 +277,8 @@ export async function sendEmailsToUsersInternal(
   subject?: string
 ) {
   try {
+    await assertAdminAccess()
+
     const supabase = getSupabaseAdminClient()
 
     if (!process.env.RESEND_API_KEY) {
@@ -284,6 +286,7 @@ export async function sendEmailsToUsersInternal(
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY)
+    const replyTo = process.env.CONTACT_REPLY_TO ?? "team@qunt-edge.com"
     const EmailComponent = await getEmailTemplate(template)
 
     const dbUsers = await prisma.user.findMany({
@@ -352,7 +355,7 @@ export async function sendEmailsToUsersInternal(
             from: "Qunt Edge <updates@eu.updates.qunt-edge.vercel.app>",
             to: [user.email],
             subject: emailSubject,
-            reply_to: "hugo.demenez@qunt-edge.vercel.app",
+            reply_to: replyTo,
             react: React.createElement(EmailComponent, mergedProps),
             headers: {
               "List-Unsubscribe": `<${unsubscribeUrl}>`,

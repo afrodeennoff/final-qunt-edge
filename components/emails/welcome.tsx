@@ -13,20 +13,22 @@ import {
   Tailwind,
   Text,
 } from '@react-email/components';
+import { getSiteUrl } from '@/lib/site-url';
 
 interface WelcomeEmailProps {
   firstName: string;
   email?: string;
   language: string;
   youtubeId: string;
+  unsubscribeUrl?: string;
+  siteUrl?: string;
 }
 
-export default function WelcomeEmail({ firstName = 'trader', email, language, youtubeId }: WelcomeEmailProps) {
+export default function WelcomeEmail({ firstName = 'trader', email, language, youtubeId, unsubscribeUrl, siteUrl }: WelcomeEmailProps) {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || '';
   const thumbnailUrl = `${baseUrl}/api/email/thumbnail/${youtubeId}/maxresdefault`;
-  const unsubscribeUrl = email
-    ? `https://qunt-edge.vercel.app/api/email/unsubscribe?email=${encodeURIComponent(email)}`
-    : '#';
+  const resolvedSiteUrl = siteUrl ?? getSiteUrl();
+  const unsubscribeHref = unsubscribeUrl || '#';
 
   if (language === 'fr') {
     return (
@@ -80,7 +82,7 @@ export default function WelcomeEmail({ firstName = 'trader', email, language, yo
                 <Section className="text-center">
                   <Button 
                     className="bg-black text-white text-sm px-6 py-2.5 rounded-md font-medium box-border"
-                    href="https://qunt-edge.vercel.app/dashboard"
+                    href={`${resolvedSiteUrl}/dashboard`}
                   >
                     Accéder à mon tableau de bord →
                   </Button>
@@ -91,7 +93,7 @@ export default function WelcomeEmail({ firstName = 'trader', email, language, yo
                 <Text className="text-gray-400 text-xs text-center">
                   Cet email vous a été envoyé par Qunt Edge
                   {' • '}
-                  <Link href={unsubscribeUrl} className="text-gray-400 underline">
+                  <Link href={unsubscribeHref} className="text-gray-400 underline">
                     Se désabonner
                   </Link>
                 </Text>
@@ -153,7 +155,7 @@ export default function WelcomeEmail({ firstName = 'trader', email, language, yo
                 <Section className="text-center">
                   <Button 
                     className="bg-black text-white text-sm px-6 py-2.5 rounded-md font-medium box-border"
-                    href="https://qunt-edge.vercel.app/dashboard"
+                    href={`${resolvedSiteUrl}/dashboard`}
                   >
                     Access my dashboard →
                   </Button>
@@ -164,7 +166,7 @@ export default function WelcomeEmail({ firstName = 'trader', email, language, yo
                 <Text className="text-gray-400 text-xs text-center">
                   This email was sent by Qunt Edge
                   {' • '}
-                  <Link href={unsubscribeUrl} className="text-gray-400 underline">
+                  <Link href={unsubscribeHref} className="text-gray-400 underline">
                     Unsubscribe
                   </Link>
                 </Text>

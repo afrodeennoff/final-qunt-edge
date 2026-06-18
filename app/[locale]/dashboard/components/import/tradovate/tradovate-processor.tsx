@@ -71,6 +71,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
     const existingTrades = useTradingDomainStore((state => state.trades))
     const [missingCommissions, setMissingCommissions] = useState<{ [key: string]: number }>({})
     const [showCommissionPrompt, setShowCommissionPrompt] = useState(false)
+    const [skippedCount, setSkippedCount] = useState(0)
     const t = useI18n()
 
 
@@ -92,6 +93,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
     const processTrades = useCallback(() => {
         const newTrades: Trade[] = [];
         const missingCommissionsTemp: { [key: string]: boolean } = {};
+        let skipped = 0;
 
         csvData.forEach(row => {
             const item: Partial<Trade> = {};
@@ -108,6 +110,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
                         case 'pnl':
                             const { pnl, error } = formatPnl(cellValue)
                             if (error) {
+                                skipped++
                                 return
                             }
                             item[key] = new Prisma.Decimal(pnl)
@@ -174,10 +177,12 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
 
             if (!item.entryDate) {
                 console.warn('Missing required entryDate');
+                skipped++;
                 return;
             }
 
             if (item.instrument == '') {
+                skipped++;
                 return;
             }
 
@@ -212,6 +217,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
         })
 
         setProcessedTrades(newTrades);
+        setSkippedCount(skipped);
         setMissingCommissions(Object.keys(missingCommissionsTemp).reduce((acc, key) => ({
             ...acc,
             [key]: existingCommissions[key] || 0
@@ -291,6 +297,9 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
                     )}
                     <div className="px-2">
                         <h3 className="text-lg font-semibold mb-2">Processed Trades</h3>
+                        {skippedCount > 0 && (
+                            <p className="text-sm text-yellow-700 mb-2">{skippedCount} rows skipped</p>
+                        )}
                         <Table>
                             <TableHeader>
                                 <TableRow>

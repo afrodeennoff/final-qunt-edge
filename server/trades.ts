@@ -11,7 +11,7 @@ import { v5 as uuidv5 } from 'uuid'
 import { logger } from '@/lib/logger'
 import { z } from 'zod'
 import { invalidateNamespace } from '@/lib/cache/cache-service'
-import { invalidateTradeDataCaches } from '@/lib/cache/cache-invalidation'
+import { invalidateTradeDataCaches, invalidateAccountRelatedCaches } from '@/lib/cache/cache-invalidation'
 
 const TRADE_PAGE_CACHE_LIFETIME = {
   stale: 3_600,
@@ -793,6 +793,7 @@ export async function updateTradesAction(tradesIds: string[], update: Partial<No
     }
 
     await invalidateTradeRelatedCaches(userId)
+    invalidateAccountRelatedCaches(userId)
     return ownedTrades.length
   } catch (error) {
     logger.error('[updateTrades] Error', { error })

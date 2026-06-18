@@ -15,6 +15,7 @@ import {
   Tailwind,
   Text,
 } from '@react-email/components';
+import { getSiteUrl } from '@/lib/site-url';
 
 interface TraderStatsEmailProps {
   email: string;
@@ -30,6 +31,8 @@ interface TraderStatsEmailProps {
   resultAnalysisIntro: string;
   tipsForNextWeek: string;
   language?: string;
+  unsubscribeUrl?: string;
+  siteUrl?: string;
 }
 
 const translations = {
@@ -281,7 +284,7 @@ function calculateTradingStreak(dailyPnL: TraderStatsEmailProps['dailyPnL']): { 
 }
 
 // Reusable ActionButtons component
-const ActionButtons = ({ t }: { t: typeof translations.fr }) => (
+const ActionButtons = ({ t, siteUrl }: { t: typeof translations.fr; siteUrl: string }) => (
   <Section className="mb-8">
     <table className="w-full border-collapse mb-[20px]">
       <tbody>
@@ -299,7 +302,7 @@ const ActionButtons = ({ t }: { t: typeof translations.fr }) => (
           <td className="w-[50%] pl-[8px]">
             <div className="bg-white border border-primary rounded-[6px] text-center py-[12px] px-[16px] box-border">
               <Link
-                href="https://qunt-edge.vercel.app/dashboard"
+                href={`${siteUrl}/dashboard`}
                 className="text-primary font-medium no-underline text-[14px]"
               >
                 {t.visitDashboard}
@@ -336,12 +339,12 @@ export default function TraderStatsEmail({
   resultAnalysisIntro,
   tipsForNextWeek,
   language = "fr",
+  unsubscribeUrl,
+  siteUrl,
 }: TraderStatsEmailProps) {
   const t = translations[language as keyof typeof translations] || translations.fr;
-
-  const unsubscribeUrl = email
-    ? `https://qunt-edge.vercel.app/api/email/unsubscribe?email=${encodeURIComponent(email)}`
-    : '#';
+  const resolvedSiteUrl = siteUrl ?? getSiteUrl();
+  const unsubscribeHref = unsubscribeUrl || '#';
 
   // Calculate win rate percentage
   const totalTrades = winLossStats.wins + winLossStats.losses;
@@ -556,7 +559,7 @@ export default function TraderStatsEmail({
                     {tipsForNextWeek}
                   </Text>
 
-                  <ActionButtons t={t} />
+                  <ActionButtons t={t} siteUrl={resolvedSiteUrl} />
                 </>
               ) : (
                 <>
@@ -578,7 +581,7 @@ export default function TraderStatsEmail({
                       {t.nextStepsTitle}
                     </Heading>
 
-                    <ActionButtons t={t} />
+                    <ActionButtons t={t} siteUrl={resolvedSiteUrl} />
                   </Section>
                 </>
               )}
@@ -594,7 +597,7 @@ export default function TraderStatsEmail({
               <Text className="text-gray-400 text-xs text-center">
                 {t.sentBy}
                 {' • '}
-                <Link href={unsubscribeUrl} className="text-gray-400 underline">
+                <Link href={unsubscribeHref} className="text-gray-400 underline">
                   {t.unsubscribe}
                 </Link>
               </Text>

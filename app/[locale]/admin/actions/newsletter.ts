@@ -1,6 +1,5 @@
 "use server"
 
-import { User } from "@/prisma/generated/prisma"
 import { prisma } from "@/lib/prisma"
 import { Resend } from 'resend'
 import NewsletterEmail from '@/components/emails/new-feature'
@@ -109,15 +108,22 @@ export async function sendNewsletter({
       throw new Error("RESEND_API_KEY is not configured")
     }
     const resend = new Resend(process.env.RESEND_API_KEY)
+    const replyTo = process.env.CONTACT_REPLY_TO ?? 'team@qunt-edge.com'
 
-    // get all users
-    const users = await prisma.user.findMany()
-
-    // For all french users, check if they are subscribed to the newsletter
-    const frenchUsers = users.filter((user: User) => user.language === 'fr')
+    // Query active newsletter subscribers directly (avoids full-table scan on User)
     const subscribers = await prisma.newsletter.findMany({
-      where: { email: { in: frenchUsers.map((user: User) => user.email) }, isActive: true },
+      where: { isActive: true },
+      select: { email: true, firstName: true, lastName: true },
     })
+
+    // Join subscribers to users by email to resolve per-recipient language
+    const subscribedUsers = await prisma.user.findMany({
+      where: { email: { in: subscribers.map((s) => s.email) } },
+      select: { email: true, language: true },
+    })
+    const languageByEmail = new Map(
+      subscribedUsers.map((u) => [u.email, u.language] as const)
+    )
 
 
 
@@ -142,18 +148,20 @@ export async function sendNewsletter({
       try {
         const emailBatch = batch.map(({ email, firstName }) => {
           const unsubscribeUrl = buildUnsubscribeUrl(email)
+          const language = languageByEmail.get(email) || 'en'
 
           return {
             from: 'Qunt Edge <newsletter@eu.updates.qunt-edge.vercel.app>',
             to: [email],
             subject,
-            reply_to: 'hugo.demenez@qunt-edge.vercel.app',
+            reply_to: replyTo,
             react: NewsletterEmail({
               youtubeId,
               introMessage,
               features,
               email,
               firstName: firstName || '',
+              language,
               unsubscribeUrl
             }),
             headers: {
@@ -193,6 +201,7 @@ export async function sendTestNewsletter(email: string, firstName: string, param
     const resend = new Resend(process.env.RESEND_API_KEY)
 
     const unsubscribeUrl = buildUnsubscribeUrl(email)
+    const replyTo = process.env.CONTACT_REPLY_TO ?? 'team@qunt-edge.com'
 
     await resend.emails.send({
       from: 'Qunt Edge <newsletter@eu.updates.qunt-edge.vercel.app>',
@@ -206,7 +215,7 @@ export async function sendTestNewsletter(email: string, firstName: string, param
         firstName: params.firstName,
         unsubscribeUrl
       }),
-      replyTo: 'hugo.demenez@qunt-edge.vercel.app',
+      replyTo,
       headers: {
         'List-Unsubscribe': `<${unsubscribeUrl}>`,
         'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'

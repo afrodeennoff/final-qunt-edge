@@ -82,10 +82,6 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
             }
             // This is going to be set later
             item.userId = ''
-            if (!item.accountNumber) {
-                item.accountNumber = accountNumber;
-            }
-            item.id = `${item.entryId}-${item.closeId}`;
             newTrades.push(item as Trade);
         });
 
@@ -120,8 +116,8 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {processedTrades.map((trade) => (
-                            <TableRow key={trade.id}>
+                        {processedTrades.map((trade, index) => (
+                            <TableRow key={`rithmic-${index}`}>
                                 <TableCell>{trade.instrument}</TableCell>
                                 <TableCell>{trade.side}</TableCell>
                                 <TableCell>{decimalToNumber(trade.quantity)}</TableCell>

@@ -107,7 +107,7 @@ export async function POST(req: Request, props: { params: Promise<{ userid: stri
           'List-Unsubscribe': `<${unsubscribeUrl}>`,
           'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
         },
-        replyTo: 'hugo.demenez@qunt-edge.vercel.app'
+        replyTo: process.env.CONTACT_REPLY_TO ?? 'team@qunt-edge.com'
       }
     })
 

@@ -166,16 +166,6 @@ export default function ImportButton() {
       );
       const result = await saveTradesAction(newTrades);
 
-      // Optimistically merge new trades into local store to avoid full refetch
-      const newIds = new Set(newTrades.map((t) => t.id));
-      const mergedTrades = [
-        ...newTrades,
-        ...trades.filter((t) => !newIds.has(t.id)),
-      ] as unknown as DomainTrade[];
-      setTradesStore(mergedTrades);
-
-      // Keep server cache fresh (server action will update tags); avoid full refresh
-      await refreshTradesOnly({ force: false });
       if (result.error) {
         if (result.error === "DUPLICATE_TRADES") {
           toast.error(t("import.error.duplicateTrades"), {
@@ -193,11 +183,28 @@ export default function ImportButton() {
         // Don't proceed further if there's an error
         return;
       }
+
+      // Optimistically merge new trades into local store to avoid full refetch
+      const newIds = new Set(newTrades.map((t) => t.id));
+      const mergedTrades = [
+        ...newTrades,
+        ...trades.filter((t) => !newIds.has(t.id)),
+      ] as unknown as DomainTrade[];
+      setTradesStore(mergedTrades);
+
+      // Keep server cache fresh (server action will update tags); avoid full refresh
+      await refreshTradesOnly({ force: false });
+
       // Show success message
+      const successDescription = t("import.successDescription", {
+        numberOfTradesAdded: result.numberOfTradesAdded,
+      });
+      const skippedCount = result.warnings?.length ?? 0;
       toast.success(t("import.success"), {
-        description: t("import.successDescription", {
-          numberOfTradesAdded: result.numberOfTradesAdded,
-        }),
+        description:
+          skippedCount > 0
+            ? `${successDescription} (${skippedCount} skipped)`
+            : successDescription,
       });
       setIsOpen(false);
       // Reset the import process

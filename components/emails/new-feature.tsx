@@ -13,10 +13,13 @@ import {
   Tailwind,
   Text,
 } from '@react-email/components';
+import { getSiteUrl } from '@/lib/site-url';
 
 interface NewsletterEmailProps {
   firstName?: string;
   email?: string;
+  language?: string;
+  siteUrl?: string;
   youtubeId: string;
   introMessage: string;
   features: string[];
@@ -29,9 +32,11 @@ export default function NewsletterEmail({
   features,
   firstName,
   unsubscribeUrl,
+  siteUrl,
 }: NewsletterEmailProps) {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || '';
   const thumbnailUrl = `${baseUrl}/api/email/thumbnail/${youtubeId}/maxresdefault`;
+  const resolvedSiteUrl = siteUrl ?? getSiteUrl();
   return (
     <Html>
       <Head />
@@ -83,7 +88,7 @@ export default function NewsletterEmail({
               <Section className="text-center">
                 <Button 
                   className="bg-black text-white text-sm px-6 py-2.5 rounded-md font-medium box-border"
-                  href="https://qunt-edge.vercel.app/dashboard"
+                  href={`${resolvedSiteUrl}/dashboard`}
                 >
                   Accéder à mon tableau de bord →
                 </Button>

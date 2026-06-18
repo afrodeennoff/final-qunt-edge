@@ -12,11 +12,14 @@ import {
   Tailwind,
   Text,
 } from '@react-email/components';
+import { getSiteUrl } from '@/lib/site-url';
 
 interface MissingYouEmailProps {
   email: string;
   firstName?: string;
   language?: string;
+  unsubscribeUrl?: string;
+  siteUrl?: string;
 }
 
 const content = {
@@ -74,12 +77,13 @@ export default function MissingYouEmail({
   email = "jean.dupont@example.com",
   firstName = "trader",
   language = "fr",
+  unsubscribeUrl,
+  siteUrl,
 }: MissingYouEmailProps) {
   const lang = language === "en" ? "en" : "fr";
   const t = content[lang];
-  const unsubscribeUrl = email
-    ? `https://qunt-edge.vercel.app/api/email/unsubscribe?email=${encodeURIComponent(email)}`
-    : '#';
+  const resolvedSiteUrl = siteUrl ?? getSiteUrl();
+  const unsubscribeHref = unsubscribeUrl || '#';
 
   return (
     <Html>
@@ -177,7 +181,7 @@ export default function MissingYouEmail({
               <Section className="text-center mb-8">
                 <Button 
                   className="bg-primary text-white text-sm px-[24px] py-[10px] rounded-[4px] font-medium box-border"
-                  href="https://qunt-edge.vercel.app/authentication"
+                  href={`${resolvedSiteUrl}/authentication`}
                 >
                   {t.importButton}
                 </Button>
@@ -195,7 +199,7 @@ export default function MissingYouEmail({
                 {t.footer}
                 <br />
                 {' • '}
-                <Link href={unsubscribeUrl} className="text-gray-400 underline">
+                <Link href={unsubscribeHref} className="text-gray-400 underline">
                   {t.unsubscribe}
                 </Link>
                 {' • '}

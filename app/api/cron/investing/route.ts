@@ -75,18 +75,19 @@ async function fetchInvestingCalendarEvents(lang: 'fr' | 'en' = 'fr') {
         const dateMatch = row.match(/<td[^>]*class="theDay"[^>]*>([^<]+)<\/td>/)
         if (dateMatch) {
           const dateStr = dateMatch[1].trim()
-          // Parse French date format (e.g., "Mercredi 7 mai 2025")
+          // Parse date format (e.g., "Mercredi 7 mai 2025" / "Wednesday 7 May 2025")
           const [, date, month, year] = dateStr.split(' ')
-          const monthMap: { [key: string]: string } = {
-            'janvier': '01', 'février': '02', 'mars': '03', 'avril': '04',
-            'mai': '05', 'juin': '06', 'juillet': '07', 'août': '08',
-            'septembre': '09', 'octobre': '10', 'novembre': '11', 'décembre': '12'
+          const monthMap: Record<string, number> = {
+            'janvier': 1, 'février': 2, 'mars': 3, 'avril': 4, 'mai': 5, 'juin': 6,
+            'juillet': 7, 'août': 8, 'septembre': 9, 'octobre': 10, 'novembre': 11, 'décembre': 12,
+            'january': 1, 'february': 2, 'march': 3, 'april': 4, 'may': 5, 'june': 6,
+            'july': 7, 'august': 8, 'september': 9, 'october': 10, 'november': 11, 'december': 12,
           }
           try {
             // Create date in UTC
             currentDate = new Date(Date.UTC(
               parseInt(year),
-              parseInt(monthMap[month.toLowerCase()]) - 1,
+              monthMap[month.toLowerCase()] - 1,
               parseInt(date)
             ))
 

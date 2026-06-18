@@ -60,7 +60,7 @@ export async function generateAnalysis(content: WeeklyRecapContent) {
 
     const analysis = await generateTradingAnalysis(
       sortedContent.dailyPnL,
-      'fr' // Default to French for now, can be made dynamic based on user preferences
+      'en'
     )
 
     return {
@@ -76,7 +76,11 @@ export async function generateAnalysis(content: WeeklyRecapContent) {
   }
 }
 
-export async function renderEmail(content: WeeklyRecapContent, analysis: { resultAnalysisIntro: string, tipsForNextWeek: string }) {
+export async function renderEmail(
+  content: WeeklyRecapContent,
+  analysis: { resultAnalysisIntro: string, tipsForNextWeek: string },
+  options?: { language?: string, email?: string }
+) {
   await assertAdminAccess()
   try {
     const html = await render(
@@ -84,9 +88,10 @@ export async function renderEmail(content: WeeklyRecapContent, analysis: { resul
         firstName: content.firstName,
         dailyPnL: content.dailyPnL,
         winLossStats: content.winLossStats,
-        email: "preview@example.com",
+        email: options?.email ?? "preview@example.com",
         resultAnalysisIntro: analysis.resultAnalysisIntro,
-        tipsForNextWeek: analysis.tipsForNextWeek
+        tipsForNextWeek: analysis.tipsForNextWeek,
+        language: options?.language ?? 'en'
       })
     )
 
