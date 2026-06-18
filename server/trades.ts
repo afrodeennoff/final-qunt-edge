@@ -22,7 +22,7 @@ const TRADE_PAGE_CACHE_LIFETIME = {
 const importTradeSchema = z.object({
   accountNumber: z.string().min(1, 'Account number is required'),
   instrument: z.string().min(1, 'Instrument is required'),
-  side: z.string().optional(),
+  side: z.string().nullish(),
   quantity: z.union([z.string(), z.number()]).transform(v => v.toString()),
   entryPrice: z.union([z.string(), z.number()]).transform(v => v.toString()),
   closePrice: z.union([z.string(), z.number()]).transform(v => v.toString()),
@@ -46,9 +46,9 @@ const importTradeSchema = z.object({
     }
   }),
   timeInPosition: z.union([z.string(), z.number()]).optional().transform(v => v?.toString()),
-  entryId: z.string().optional(),
-  closeId: z.string().optional(),
-  comment: z.string().optional(),
+  entryId: z.string().nullish(),
+  closeId: z.string().nullish(),
+  comment: z.string().nullish(),
   tags: z.array(z.string()).optional(),
   groupId: z.string().nullish(),
 }).refine((trade) => {

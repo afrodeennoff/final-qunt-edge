@@ -100,6 +100,33 @@ describe('saveTradesAction', () => {
     expect(updateTagMock).toHaveBeenCalledWith('trades-db-user-1')
   })
 
+  it('accepts CSV-imported trades with null entryId/closeId/comment/side (createTradeWithDefaults output)', async () => {
+    // Mirrors the payload produced by createTradeWithDefaults() for CSV imports
+    // where broker entryId/closeId are absent -> factory emits null.
+    // The Zod schema MUST accept null for these nullable fields.
+    const csvImportTrade = {
+      ...baseTrade,
+      entryId: null,
+      closeId: null,
+      comment: null,
+      side: null,
+    }
+
+    const findMany = vi.fn().mockResolvedValue([])
+    const createManyAccounts = vi.fn().mockResolvedValue({ count: 1 })
+    const createManyTrades = vi.fn().mockResolvedValue({ count: 1 })
+    prismaMock.$transaction.mockImplementation(async (cb: (tx: unknown) => Promise<unknown>) =>
+      cb({
+        account: { findMany, createMany: createManyAccounts },
+        trade: { createMany: createManyTrades },
+      }),
+    )
+
+    const result = await saveTradesAction([csvImportTrade])
+
+    expect(result).toMatchObject({ error: false, numberOfTradesAdded: 1 })
+  })
+
   it('accepts partial valid batches and persists only valid trades', async () => {
     const findMany = vi.fn().mockResolvedValue([])
     const createManyAccounts = vi.fn().mockResolvedValue({ count: 1 })
