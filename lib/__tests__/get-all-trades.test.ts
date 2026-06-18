@@ -3,16 +3,11 @@ import { getAllTradesForAi } from "@/lib/ai/get-all-trades";
 import type { PaginatedTrades } from "@/server/database";
 
 const getTradesActionMock = vi.fn();
-const getUserIdMock = vi.fn();
 const getRedisJsonMock = vi.fn();
 const setRedisJsonMock = vi.fn();
 
 vi.mock("@/server/database", () => ({
   getTradesAction: (...args: unknown[]) => getTradesActionMock(...args),
-}));
-
-vi.mock("@/server/auth", () => ({
-  getUserId: () => getUserIdMock(),
 }));
 
 vi.mock("@/lib/redis-client", () => ({
@@ -55,11 +50,9 @@ function buildPage(total: number, page: number, hasMore: boolean): PaginatedTrad
 describe("getAllTradesForAi", () => {
   beforeEach(() => {
     getTradesActionMock.mockReset();
-    getUserIdMock.mockReset();
     getRedisJsonMock.mockReset();
     setRedisJsonMock.mockReset();
 
-    getUserIdMock.mockResolvedValue("u-1");
     getRedisJsonMock.mockResolvedValue(null);
     setRedisJsonMock.mockResolvedValue(undefined);
   });
@@ -67,13 +60,14 @@ describe("getAllTradesForAi", () => {
   it("returns full data without truncation when pagination ends", async () => {
     getTradesActionMock.mockResolvedValueOnce(buildPage(1, 1, false));
 
-    const result = await getAllTradesForAi({ pageSize: 100, maxPages: 5 });
+    const result = await getAllTradesForAi({ pageSize: 100, maxPages: 5, userId: "u-1" });
 
     expect(result.trades).toHaveLength(1);
     expect(result.truncated).toBe(false);
     expect(result.fetchedPages).toBe(1);
     expect(result.dataQualityWarning).toBeUndefined();
-    expect(getTradesActionMock).toHaveBeenCalledWith("u-1", 1, 100, false, false);
+    // New contract: explicit userId is forwarded as both the owner and the trusted bypass.
+    expect(getTradesActionMock).toHaveBeenCalledWith("u-1", 1, 100, false, false, "u-1");
   });
 
   it("marks result as truncated when max page cap is reached", async () => {
@@ -81,21 +75,23 @@ describe("getAllTradesForAi", () => {
       .mockResolvedValueOnce(buildPage(1000, 1, true))
       .mockResolvedValueOnce(buildPage(1000, 2, true));
 
-    const result = await getAllTradesForAi({ pageSize: 100, maxPages: 2 });
+    const result = await getAllTradesForAi({ pageSize: 100, maxPages: 2, userId: "u-1" });
 
     expect(result.trades).toHaveLength(2);
     expect(result.truncated).toBe(true);
     expect(result.fetchedPages).toBe(2);
     expect(result.dataQualityWarning).toContain("capped subset");
-    expect(getTradesActionMock).toHaveBeenNthCalledWith(1, "u-1", 1, 100, false, false);
-    expect(getTradesActionMock).toHaveBeenNthCalledWith(2, "u-1", 2, 100, false, false);
+    expect(getTradesActionMock).toHaveBeenNthCalledWith(1, "u-1", 1, 100, false, false, "u-1");
+    expect(getTradesActionMock).toHaveBeenNthCalledWith(2, "u-1", 2, 100, false, false, "u-1");
   });
 
-  it("fails closed when authenticated user cannot be resolved", async () => {
-    getUserIdMock.mockRejectedValueOnce(new Error("auth unavailable"));
-
+  it("fails closed when no explicit userId is provided", async () => {
+    // Security contract: AI data access requires an explicit, authenticated userId.
+    // No userId => no data (fail closed). This replaces the legacy getUserId() fallback,
+    // which cannot run inside AI tool execute callbacks.
     await expect(getAllTradesForAi({ pageSize: 100, maxPages: 1 })).rejects.toThrow(
-      "auth unavailable",
+      "MISSING_USER_ID_FOR_AI_TRADES",
     );
+    expect(getTradesActionMock).not.toHaveBeenCalled();
   });
 });

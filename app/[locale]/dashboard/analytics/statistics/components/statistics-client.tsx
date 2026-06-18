@@ -124,6 +124,9 @@ export default function StatisticsClient() {
   }, [userId])
 
   const [period, setPeriod] = useState<TimePeriod>('all')
+  // Stable "now" captured once per mount. Date.now() is impure and must not be
+  // called directly inside useMemo/render (React Compiler purity rule).
+  const [now] = useState(() => Date.now())
   const [selectedAccount, setSelectedAccount] = useState<string | null>(null)
   const [accountOpen, setAccountOpen] = useState(false)
   const accountDropRef = useRef<HTMLDivElement>(null)
@@ -142,7 +145,7 @@ export default function StatisticsClient() {
       let trades = Array.isArray(formattedTrades) ? formattedTrades : []
 
       if (period !== 'all') {
-        const cutoff = new Date(Date.now() - (PERIOD_DAYS[period] || 0) * 86400000)
+        const cutoff = new Date(now - (PERIOD_DAYS[period] || 0) * 86400000)
         trades = trades.filter(t => {
           const d = t?.entryDate ? new Date(t.entryDate) : null
           return d && !isNaN(d.getTime()) && d >= cutoff
@@ -171,7 +174,7 @@ export default function StatisticsClient() {
       console.error('Statistics computation failed:', e)
       return { grandTotal: 0, tickerStats: [], weekdayStats: [], setupStats: [], timeframeStats: [], dailyStats: [], allPnls: [], grandPnl: 0, grandWinRate: 0, avgRR: 0, profitFactor: 0, bestDay: 0, featuredExcerpts: [] }
     }
-  }, [formattedTrades, period, selectedAccount, journalMap])
+  }, [formattedTrades, period, selectedAccount, journalMap, now])
 
   // Use provider's loading state
   const isLoading = providerLoading || !Array.isArray(formattedTrades)

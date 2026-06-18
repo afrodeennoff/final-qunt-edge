@@ -23,6 +23,7 @@ vi.mock('@/lib/rate-limit', () => ({
     vi.fn(async () => ({ success: true, limit: 20, remaining: 19, resetTime: 0 })),
   ),
   createRateLimitResponse: vi.fn(),
+  getTrustedClientIp: vi.fn(() => '127.0.0.1'),
 }))
 
 describe('DELETE /api/tradovate/synchronizations', () => {

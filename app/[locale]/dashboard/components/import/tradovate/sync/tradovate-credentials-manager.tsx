@@ -38,6 +38,9 @@ import { useTradovateSyncStore } from "@/store/tradovate-sync-store";
 import { useTradovateSyncContext } from "@/context/tradovate-sync-context";
 
 export function TradovateCredentialsManager() {
+  // Stable "now" captured once per mount for token-expiry checks.
+  // Date.now() is impure and must not be read directly during render.
+  const [now] = useState(() => Date.now())
   const {
     performSyncForAccount,
     performSyncForAllAccounts,
@@ -348,7 +351,7 @@ export function TradovateCredentialsManager() {
               const isExpired =
                 !account.token ||
                 (account.tokenExpiresAt
-                  ? new Date(account.tokenExpiresAt).getTime() <= Date.now()
+                  ? new Date(account.tokenExpiresAt).getTime() <= now
                   : false);
 
               return (

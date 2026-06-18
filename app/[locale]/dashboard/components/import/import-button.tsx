@@ -9,6 +9,7 @@ import {
   type UploadIconHandle,
 } from "@/components/animated-icons/upload";
 import { Trade } from "@/prisma/generated/prisma";
+import type { Trade as DomainTrade } from "@/lib/data-types";
 import { saveTradesAction } from "@/server/database";
 import ImportTypeSelection, { ImportType } from "./import-type-selection";
 import FileUpload from "./file-upload";
@@ -74,6 +75,19 @@ export default function ImportButton() {
   const { refreshTradesOnly } = useData();
   const t = useI18n();
 
+  const resetImportState = useCallback(() => {
+    setImportType("");
+    setStep("select-import-type");
+    setRawCsvData([]);
+    setCsvData([]);
+    setHeaders([]);
+    setMappings({});
+    setAccountNumbers([]);
+    setNewAccountNumber("");
+    setProcessedTrades([]);
+    setError(null);
+  }, []);
+
   const handleSave = useCallback(async () => {
     console.warn("[ImportButton] First:", processedTrades);
     if (!user || !supabaseUser) {
@@ -119,10 +133,10 @@ export default function ImportButton() {
       // Optimistically merge new trades into local store to avoid full refetch
       const newIds = new Set(newTrades.map((t) => t.id));
       const mergedTrades = [
-        ...newTrades as any[],
+        ...newTrades,
         ...trades.filter((t) => !newIds.has(t.id)),
-      ] as Trade[];
-      setTradesStore(mergedTrades as any);
+      ] as unknown as DomainTrade[];
+      setTradesStore(mergedTrades);
 
       // Keep server cache fresh (server action will update tags); avoid full refresh
       await refreshTradesOnly({ force: false });
@@ -160,20 +174,7 @@ export default function ImportButton() {
     } finally {
       setIsSaving(false);
     }
-  }, [processedTrades, accountNumbers, selectedAccountNumbers, importType, user, supabaseUser, t, refreshTradesOnly]);
-
-  const resetImportState = () => {
-    setImportType("");
-    setStep("select-import-type");
-    setRawCsvData([]);
-    setCsvData([]);
-    setHeaders([]);
-    setMappings({});
-    setAccountNumbers([]);
-    setNewAccountNumber("");
-    setProcessedTrades([]);
-    setError(null);
-  };
+  }, [processedTrades, accountNumbers, selectedAccountNumbers, importType, user, supabaseUser, t, refreshTradesOnly, resetImportState]);
 
   const handleNextStep = useCallback(async () => {
     const platform =

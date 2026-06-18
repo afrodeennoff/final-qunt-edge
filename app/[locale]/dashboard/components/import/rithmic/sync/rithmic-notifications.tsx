@@ -36,7 +36,7 @@ function formatYYYYMMDD(dateStr: string): string {
 
 export function RithmicSyncNotifications() {
   const t = useI18n()
-  const [notifications, setNotifications] = useState<Record<string, Notification>>({
+  const [notifications, setNotifications] = useState<Record<string, Notification>>(() => ({
     progress: {
       id: 'progress',
       type: 'info',
@@ -49,7 +49,7 @@ export function RithmicSyncNotifications() {
         ordersProcessed: 0
       }
     }
-  })
+  }))
   const [isComplete, setIsComplete] = useState(false)
   const { isCollapsed, setIsCollapsed } = useNotificationStore()
   const { isConnected } = useRithmicSyncContext()

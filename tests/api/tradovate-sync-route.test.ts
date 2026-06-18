@@ -26,6 +26,7 @@ vi.mock('@/app/[locale]/dashboard/components/import/tradovate/sync/actions', () 
 vi.mock('@/lib/rate-limit', () => ({
   rateLimit: vi.fn(() => vi.fn(async () => ({ success: true, limit: 20, remaining: 19, resetTime: 0 }))),
   createRateLimitResponse: vi.fn(),
+  getTrustedClientIp: vi.fn(() => '127.0.0.1'),
 }))
 
 describe('POST /api/tradovate/sync', () => {

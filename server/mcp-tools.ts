@@ -1,5 +1,6 @@
 import type { McpAuthContext } from './mcp-auth'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/prisma/generated/prisma'
 import { maskEmail } from '@/lib/redact-pii'
 import { toolError, toolSuccess, clampInt, buildDateFilter, requireParam, type McpToolResult, type ToolDefinition } from './mcp-helpers'
 import { assertNoCrossUserAccess } from './mcp/security'
@@ -29,8 +30,8 @@ async function getAccountHealth(ctx: McpAuthContext, args: Record<string, unknow
     const { getAccountHealthHandler } = await import('@/server/mcp/handlers/account')
     const data = await getAccountHealthHandler(ctx, args)
     return toolSuccess(data)
-  } catch (e: any) {
-    return toolError(e.message)
+  } catch (e: unknown) {
+  return toolError(e instanceof Error ? e.message : String(e))
   }
 }
 
@@ -39,8 +40,8 @@ async function aiChat(ctx: McpAuthContext, args: Record<string, unknown>): Promi
     const { aiChatHandler } = await import('@/server/mcp/handlers/ai')
     const data = await aiChatHandler(ctx, args)
     return toolSuccess(data)
-  } catch (e: any) {
-    return toolError(e.message)
+  } catch (e: unknown) {
+  return toolError(e instanceof Error ? e.message : String(e))
   }
 }
 
@@ -49,8 +50,8 @@ async function aiAnalyzeTrade(ctx: McpAuthContext, args: Record<string, unknown>
     const { aiAnalyzeTradeHandler } = await import('@/server/mcp/handlers/ai')
     const data = await aiAnalyzeTradeHandler(ctx, args)
     return toolSuccess(data)
-  } catch (e: any) {
-    return toolError(e.message)
+  } catch (e: unknown) {
+  return toolError(e instanceof Error ? e.message : String(e))
   }
 }
 
@@ -59,8 +60,8 @@ async function aiAnalysisGlobal(ctx: McpAuthContext, args: Record<string, unknow
     const { aiAnalysisGlobalHandler } = await import('@/server/mcp/handlers/ai')
     const data = await aiAnalysisGlobalHandler(ctx, args)
     return toolSuccess(data)
-  } catch (e: any) {
-    return toolError(e.message)
+  } catch (e: unknown) {
+  return toolError(e instanceof Error ? e.message : String(e))
   }
 }
 
@@ -69,8 +70,8 @@ async function aiAnalysisAccounts(ctx: McpAuthContext, args: Record<string, unkn
     const { aiAnalysisAccountsHandler } = await import('@/server/mcp/handlers/ai')
     const data = await aiAnalysisAccountsHandler(ctx, args)
     return toolSuccess(data)
-  } catch (e: any) {
-    return toolError(e.message)
+  } catch (e: unknown) {
+  return toolError(e instanceof Error ? e.message : String(e))
   }
 }
 
@@ -79,8 +80,8 @@ async function aiAnalysisInstrument(ctx: McpAuthContext, args: Record<string, un
     const { aiAnalysisInstrumentHandler } = await import('@/server/mcp/handlers/ai')
     const data = await aiAnalysisInstrumentHandler(ctx, args)
     return toolSuccess(data)
-  } catch (e: any) {
-    return toolError(e.message)
+  } catch (e: unknown) {
+  return toolError(e instanceof Error ? e.message : String(e))
   }
 }
 
@@ -89,8 +90,8 @@ async function aiAnalysisTimeOfDay(ctx: McpAuthContext, args: Record<string, unk
     const { aiAnalysisTimeOfDayHandler } = await import('@/server/mcp/handlers/ai')
     const data = await aiAnalysisTimeOfDayHandler(ctx, args)
     return toolSuccess(data)
-  } catch (e: any) {
-    return toolError(e.message)
+  } catch (e: unknown) {
+  return toolError(e instanceof Error ? e.message : String(e))
   }
 }
 
@@ -99,8 +100,8 @@ async function aiSearchDate(ctx: McpAuthContext, args: Record<string, unknown>):
     const { aiSearchDateHandler } = await import('@/server/mcp/handlers/ai')
     const data = await aiSearchDateHandler(ctx, args)
     return toolSuccess(data)
-  } catch (e: any) {
-    return toolError(e.message)
+  } catch (e: unknown) {
+  return toolError(e instanceof Error ? e.message : String(e))
   }
 }
 
@@ -959,7 +960,7 @@ async function getRiskMetrics(ctx: McpAuthContext, args: Record<string, unknown>
   }
 
   const trades = await prisma.trade.findMany({
-    where: where as any,
+    where: where as Prisma.TradeWhereInput,
     orderBy: { entryDate: 'asc' },
     take: 10_000,
     select: { pnl: true, entryPrice: true, closePrice: true, entryDate: true },
@@ -1116,7 +1117,7 @@ async function listTrades(ctx: McpAuthContext, args: Record<string, unknown>) {
   const dateFilter = buildDateFilter(args)
   if (dateFilter) where.entryDate = dateFilter
   const trades = await prisma.trade.findMany({
-    where: where as any,
+    where: where as Prisma.TradeWhereInput,
     orderBy: { entryDate: 'desc' },
     take: limit,
     skip: offset,
@@ -1145,10 +1146,10 @@ async function getPerformanceSummary(ctx: McpAuthContext, args: Record<string, u
       _count: { id: true },
     }),
     prisma.trade.count({
-      where: { ...where, pnl: { gt: 0 } } as any,
+      where: { ...where, pnl: { gt: 0 } } as Prisma.TradeWhereInput,
     }),
     prisma.trade.count({
-      where: { ...where, pnl: { lt: 0 } } as any,
+      where: { ...where, pnl: { lt: 0 } } as Prisma.TradeWhereInput,
     }),
     prisma.trade.aggregate({
       where: { ...where, pnl: { gt: 0 } } as Parameters<typeof prisma.trade.aggregate>[0]['where'],
@@ -1275,7 +1276,7 @@ async function runMonteCarlo(ctx: McpAuthContext, args: Record<string, unknown>)
   }
 
   const trades = await prisma.trade.findMany({
-    where: where as any,
+    where: where as Prisma.TradeWhereInput,
     select: { pnl: true },
     take: 10_000,
   })

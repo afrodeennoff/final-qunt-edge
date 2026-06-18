@@ -43,18 +43,18 @@ const DEBUG_MODE = process.env.NODE_ENV === 'development' || process.env.TRADOVA
 
 // Logger utility for conditional logging
 const logger = {
-  debug: (message: string, data?: any) => {
+  debug: (message: string, data?: unknown) => {
     if (DEBUG_MODE) {
       console.warn(`[TRADOVATE-DEBUG] ${message}`, data)
     }
   },
-  info: (message: string, data?: any) => {
+  info: (message: string, data?: unknown) => {
     console.warn(`[TRADOVATE] ${message}`, data)
   },
-  warn: (message: string, error?: any) => {
+  warn: (message: string, error?: unknown) => {
     console.warn(`[TRADOVATE] ${message}`, error)
   },
-  error: (message: string, error?: any) => {
+  error: (message: string, error?: unknown) => {
     console.error(`[TRADOVATE] ${message}`, error)
   }
 }
@@ -146,9 +146,32 @@ interface TradovateFillPair {
   active: boolean
 }
 
+// Raw fill shape returned by the Tradovate fills API.
+// Fields used downstream are typed as required numbers (the consuming code assumes
+// they are present and would throw otherwise); the index signature keeps the rest
+// permissive without falling back to `any`.
+interface TradovateFill {
+  id: number
+  contractId: number
+  orderId: number
+  accountId: number
+  price: number
+  qty: number
+  timestamp: string | number
+  [key: string]: unknown
+}
+
+// Raw order shape returned by the Tradovate orders API.
+interface TradovateOrder {
+  id: number
+  accountId: number
+  contractId: number
+  [key: string]: unknown
+}
+
 // Combined fill data with details and commission
 interface Fill {
-  details: any
+  details: TradovateFill
   commission: number
 }
 
@@ -333,7 +356,7 @@ async function getFillPairs(accessToken: string): Promise<TradovateFillPair[]> {
 }
 
 // Helper function to fetch multiple fills by IDs in batch with fallback
-async function getFillsByIds(accessToken: string, fillIds: number[]): Promise<any[]> {
+async function getFillsByIds(accessToken: string, fillIds: number[]): Promise<TradovateFill[]> {
   console.warn('getFillsByIds')
   try {
     if (fillIds.length === 0) return []
@@ -341,7 +364,7 @@ async function getFillsByIds(accessToken: string, fillIds: number[]): Promise<an
     const apiBaseUrl = TRADOVATE_ENVIRONMENTS.demo.api
     const BATCH_SIZE = 5 // Limit batch size to 5 IDs at a time
     
-    const fills: any[] = []
+    const fills: TradovateFill[] = []
     
     // Process in batches of 5 IDs
     for (let i = 0; i < fillIds.length; i += BATCH_SIZE) {
@@ -411,7 +434,7 @@ async function getFillsByIds(accessToken: string, fillIds: number[]): Promise<an
 }
 
 // Helper function to fetch individual fill details (kept for backward compatibility)
-async function getFillById(accessToken: string, fillId: number): Promise<any | null> {
+async function getFillById(accessToken: string, fillId: number): Promise<TradovateFill | null> {
   try {
     const apiBaseUrl = TRADOVATE_ENVIRONMENTS.demo.api
     const params = new URLSearchParams({ id: String(fillId) }).toString()
@@ -435,7 +458,7 @@ async function getFillById(accessToken: string, fillId: number): Promise<any | n
 }
 
 // Helper function to fetch multiple orders by IDs in batch with fallback
-async function getOrdersByIds(accessToken: string, orderIds: number[]): Promise<any[]> {
+async function getOrdersByIds(accessToken: string, orderIds: number[]): Promise<TradovateOrder[]> {
   try {
     if (orderIds.length === 0) return []
     
@@ -443,7 +466,7 @@ async function getOrdersByIds(accessToken: string, orderIds: number[]): Promise<
     console.warn('getOrdersByIds', JSON.stringify(orderIds))
     const BATCH_SIZE = 5 // Limit batch size to 5 IDs at a time
     
-    const orders: any[] = []
+    const orders: TradovateOrder[] = []
     
     // Process in batches of 5 IDs
     for (let i = 0; i < orderIds.length; i += BATCH_SIZE) {
@@ -513,7 +536,7 @@ async function getOrdersByIds(accessToken: string, orderIds: number[]): Promise<
 }
 
 // Helper function to fetch order details by orderId (kept for backward compatibility)
-async function getOrderById(accessToken: string, orderId: number): Promise<any | null> {
+async function getOrderById(accessToken: string, orderId: number): Promise<TradovateOrder | null> {
   try {
     const apiBaseUrl = TRADOVATE_ENVIRONMENTS.demo.api
     const params = new URLSearchParams({ id: String(orderId) }).toString()
@@ -1004,7 +1027,7 @@ async function buildTradesFromFillPairs(
   fillPairs: TradovateFillPair[],
   contracts: Map<number, TradovateContract>,
   fillsById: Map<number, Fill>,
-  ordersById: Map<number, any>,
+  ordersById: Map<number, TradovateOrder>,
   accountsById: Map<number, TradovateAccount>,
   userId: string,
   tickDetails: TickDetails[]
@@ -1299,7 +1322,7 @@ export async function updateTradovateIncludedFeeTypes(
           accountId
         }
       },
-      data: { includedFeeTypes } as any
+      data: { includedFeeTypes } as Record<string, unknown>
     })
 
     return { success: true }
@@ -1319,7 +1342,11 @@ export async function removeTradovateToken(accountId?: string) {
       return { error: 'User not authenticated' }
     }
 
-    const whereClause: any = {
+    const whereClause: {
+      userId: string
+      service: string
+      accountId?: string
+    } = {
       userId: user.id,
       service: 'tradovate'
     }
@@ -1607,7 +1634,7 @@ export async function getTradovateTrades(
 
     // Fetch only sell order details in batch
     const sellOrders = await getOrdersByIds(accessToken, Array.from(sellOrderIds))
-    const ordersById = new Map<number, any>()
+    const ordersById = new Map<number, TradovateOrder>()
     sellOrders.forEach(order => {
       ordersById.set(order.id, order)
       logger.debug(`Order ${order.id}: accountId=${order.accountId}`)

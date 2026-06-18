@@ -215,6 +215,7 @@ export function RithmicCredentialsManager({
       authenticateAndGetAccounts,
       connect,
       getWebSocketUrl,
+      updateLastSyncTime,
       t,
       user?.id,
     ]
