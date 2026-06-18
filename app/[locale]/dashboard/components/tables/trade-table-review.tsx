@@ -257,7 +257,7 @@ interface TradeTableReviewProps {
 function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProps) {
   const t = useI18n()
   const { formattedTrades } = useDashboardStats()
-  const { updateTrades, deleteTrades } = useDashboardActions()
+  const { updateTrades, deleteTrades, groupTrades, ungroupTrades } = useDashboardActions()
   const tags = useUserStore((state) => state.tags)
   const timezone = useUserStore((state) => state.timezone)
   const tickDetails = useTickDetailsStore((state) => state.tickDetails)
@@ -379,12 +379,11 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
   const handleGroupTrades = async () => {
     if (selectedTrades.length < 2) return
 
-    // Generate a temporary groupId using timestamp + random number
-    const tempGroupId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-
     try {
-      // Update local state immediately
-      await updateTrades(selectedTrades, { groupId: tempGroupId })
+      // Use the dedicated groupTrades action (sets groupId = first trade id,
+      // ownership-checked, MUDI-safe) instead of updateTrades with a synthetic
+      // temp id that produced semantically-wrong group references in the DB.
+      await groupTrades(selectedTrades)
 
       // Reset table selection
       table.resetRowSelection()
@@ -401,8 +400,8 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
     if (selectedTrades.length === 0) return
 
     try {
-      // Update local state immediately
-      await updateTrades(selectedTrades, { groupId: null })
+      // Use the dedicated ungroupTrades action (clears groupId, MUDI-safe).
+      await ungroupTrades(selectedTrades)
 
       // Reset table selection
       table.resetRowSelection()

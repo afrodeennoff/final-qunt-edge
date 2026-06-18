@@ -1023,6 +1023,18 @@ export const DataProvider: React.FC<{
           const cachedTrades = await getTradesCache(userId)
           if (cachedTrades && Array.isArray(cachedTrades) && cachedTrades.length > 0) {
             setTrades(sanitizeTradesForState(cachedTrades))
+            // Background refresh so the dev cache can never drift from the server
+            // (e.g. after a server-action mutation that bypassed cache invalidation).
+            // Non-blocking: do not await.
+            void (async () => {
+              try {
+                const fresh = await fetchAllTrades(userId, true)
+                setTrades(sanitizeTradesForState(fresh))
+                await setTradesCache(userId, fresh)
+              } catch (err) {
+                logger.error({ err }, 'dev background trade refresh failed')
+              }
+            })()
             if (withLoading) setIsLoading(false)
             return
           }
@@ -2045,6 +2057,17 @@ export const DataProvider: React.FC<{
 
       const previousTrades = [...trades]
 
+      // Server-only transform keys consumed by updateTradesAction. These are not
+      // real Trade fields; spreading them into local trade objects pollutes state
+      // with ghost fields AND the actual entryDate/instrument values are computed
+      // server-side, so the optimistic copy would show stale values until refresh.
+      const hadServerOnlyKeys =
+        'entryDateOffset' in update ||
+        'closeDateOffset' in update ||
+        'instrumentTrim' in update ||
+        'instrumentPrefix' in update ||
+        'instrumentSuffix' in update
+
       try {
         const updatedTrades = trades.map((trade: Trade) =>
           tradeIds.includes(trade.id)
@@ -2064,13 +2087,20 @@ export const DataProvider: React.FC<{
             `Failed to persist trade updates (updated ${updatedCount}/${tradeIds.length})`,
           )
         }
+
+        // If the update contained server-only offset/instrument transforms, the
+        // optimistic local copy has ghost fields and stale computed values. Force
+        // a refresh so client state matches the server-computed values.
+        if (hadServerOnlyKeys) {
+          await refreshTradesOnly({ force: true })
+        }
       } catch (error) {
         logger.error({ error }, 'Error updating trades, rolling back')
         setTrades(previousTrades)
         throw error
       }
     },
-    [supabaseUser?.id, trades, setTrades, clearDashboardBrowserCache],
+    [supabaseUser?.id, trades, setTrades, clearDashboardBrowserCache, refreshTradesOnly],
   )
 
   const groupTrades = useCallback(
@@ -2086,7 +2116,7 @@ export const DataProvider: React.FC<{
         )
         await groupTradesAction(tradeIds)
 
-        clearDashboardBrowserCache('trades', 'groupTrades')
+        clearDashboardBrowserCache('all', 'groupTrades')
       } catch (error) {
         logger.error({ error }, 'Error grouping trades, rolling back')
         setTrades(previousTrades)
@@ -2108,7 +2138,7 @@ export const DataProvider: React.FC<{
         )
         await ungroupTradesAction(tradeIds)
 
-        clearDashboardBrowserCache('trades', 'ungroupTrades')
+        clearDashboardBrowserCache('all', 'ungroupTrades')
       } catch (error) {
         logger.error({ error }, 'Error ungrouping trades, rolling back')
         setTrades(previousTrades)
