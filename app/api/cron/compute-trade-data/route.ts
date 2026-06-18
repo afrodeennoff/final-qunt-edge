@@ -254,6 +254,21 @@ function calculateMAEMFE(
 async function processInstrumentTrades(instrumentData: InstrumentData): Promise<TradeWithMAEMFE[]> {
   const { instrument, trades, earliestDate, latestDate } = instrumentData;
 
+  // Databento GLBX.MDP3 returns fixed-point integers scaled per-instrument.
+  // fetchDatabentoBars divides by 1e9, which is correct for the equity-index
+  // futures below (price_increment = 1e-9). For FX (6E/6J/...), bonds (ZB/ZN/...),
+  // metals (GC/SI/...), energies (CL/NG/...) and DX the scale differs, so MAE/MFE
+  // would be garbage and the >0.5 priceDifference flag would false-fire. Skip those
+  // instruments until a per-symbol scale lookup is added. (Analytics math is
+  // intentionally NOT changed here — only the input gating.)
+  const NANO_SCALE_SYMBOLS = new Set([
+    'ES', 'MES', 'NQ', 'MNQ', 'YM', 'MYM', 'RTY', 'M2K',
+  ]);
+  if (!NANO_SCALE_SYMBOLS.has(instrument)) {
+    console.warn(`[compute-trade-data] skipping ${instrument}: price scale not supported (1e9 divisor assumed)`);
+    return [];
+  }
+
   try {
     // Format dates for Databento API (YYYY-MM-DD)
     const startDateStr = format(earliestDate, 'yyyy-MM-dd');
@@ -386,9 +401,16 @@ export async function GET(request: Request) {
           });
         }
 
-        // Group trades by instrument
+        // Group trades by instrument.
+        // Open positions (null closeDate) have no realized exit, so MAE/MFE is
+        // undefined for them; including them would also poison the Databento date
+        // range via `new Date(null)` -> Invalid Date, crashing date-fns format()
+        // and zeroing analytics for the whole instrument group. Skip them.
         const instrumentGroups = trades.reduce((acc, trade) => {
           const instrument = trade.instrument;
+          if (!trade.closeDate) {
+            return acc;
+          }
           if (!acc[instrument]) {
             acc[instrument] = {
               instrument,
