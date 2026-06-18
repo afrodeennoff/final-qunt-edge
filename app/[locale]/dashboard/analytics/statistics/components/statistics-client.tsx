@@ -92,9 +92,8 @@ export default function StatisticsClient() {
 
     async function fetchAll() {
       let hasMore = true
-      const uid = userId!
       while (hasMore) {
-        const result = await getJournalTradesAction(uid, currentPage, pageSize)
+        const result = await getJournalTradesAction(currentPage, pageSize)
         if (cancelled) return
         for (const entry of result.entries) {
           allEntries.push(entry as typeof allEntries[number])

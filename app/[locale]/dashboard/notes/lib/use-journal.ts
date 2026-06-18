@@ -96,7 +96,7 @@ export function useJournal(userId: string | null): UseJournalReturn {
       let hasMore = true
 
       while (hasMore) {
-        const result = await getJournalTradesAction(undefined, currentPage, JOURNAL_PAGE_SIZE, {
+        const result = await getJournalTradesAction(currentPage, JOURNAL_PAGE_SIZE, {
           status: filters.status !== 'all' ? filters.status : undefined,
           search: filters.search || undefined,
           instrument: filters.instrument || undefined,

@@ -450,12 +450,14 @@ export interface JournalTradesResult {
 }
 
 export async function getJournalTradesAction(
-  inputUserId?: string,
   page: number = 1,
   pageSize: number = 30,
   filters?: JournalTradesFilters,
 ): Promise<JournalTradesResult> {
-  const userId = inputUserId ?? (await getDatabaseUserId().catch(() => null))
+  // SECURITY: userId MUST come from the session, never from a client argument.
+  // The previous signature accepted an `inputUserId` param that bypassed session
+  // resolution and allowed cross-user reads of trades + journal entries.
+  const userId = await getDatabaseUserId().catch(() => null)
   if (!userId) {
     return { entries: [], total: 0, page, pageSize, totalPages: 0 }
   }
