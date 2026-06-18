@@ -28,7 +28,6 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
 
     const processTrades = useCallback(() => {
         const newTrades: Trade[] = [];
-        const accountNumber = 'default-account'; // Replace with actual account number
 
         csvData.forEach(row => {
             const item: Partial<Trade> = {};

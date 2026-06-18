@@ -774,6 +774,7 @@ model Team {
   @@unique([name, userId])
   @@index([userId])
   @@index([organizationId])
+  @@index([traderIds], type: Gin, map: "Team_traderIds_gin_idx")
   @@schema("public")
 }
 

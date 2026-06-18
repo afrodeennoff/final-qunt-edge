@@ -11,6 +11,7 @@ import TeamInvitationEmail from '@/components/emails/team-invitation'
 import { MemberRole } from '@/prisma/generated/prisma'
 import { ensureTeamMembership, resolveTeamUserId } from '@/server/team-membership'
 import { isAdminUser } from '@/server/authz'
+import { getSiteUrl } from '@/lib/site-url'
 
 export async function updateUsername(username: string) {
   try {
@@ -810,9 +811,8 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
     })
 
     // Generate join URL
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ||
-      (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://qunt-edge.vercel.app')
-    const joinUrl = `${baseUrl}/teams/join?invitation=${invitation.id}`
+    const inviteLocale = existingUser?.language || 'en'
+    const joinUrl = getSiteUrl(`/${inviteLocale}/teams/join?invitation=${invitation.id}`)
 
     // Render email
     const emailHtml = await render(
@@ -832,14 +832,16 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY)
+    const fromAddress = process.env.TEAM_INVITE_FROM || 'Qunt Edge Team <team@eu.updates.qunt-edge.vercel.app>'
+    const replyToAddress = process.env.TEAM_INVITE_REPLY_TO || 'team@qunt-edge.com'
     const { error: emailError } = await resend.emails.send({
-      from: 'Qunt Edge Team <team@eu.updates.qunt-edge.vercel.app>',
+      from: fromAddress,
       to: normalizedTraderEmail,
       subject: existingUser?.language === 'fr'
         ? `Invitation à rejoindre ${team.name} sur Qunt Edge`
         : `Invitation to join ${team.name} on Qunt Edge`,
       html: emailHtml,
-      replyTo: 'hugo.demenez@qunt-edge.vercel.app',
+      replyTo: replyToAddress,
     })
 
     if (emailError) {

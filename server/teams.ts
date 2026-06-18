@@ -93,6 +93,7 @@ export async function getTeamById(teamId: string, userId: string) {
         OR: [
           { userId },
           { members: { some: { userId } } },
+          { managers: { some: { managerId: userId } } },
         ],
       },
       include: {
@@ -101,6 +102,7 @@ export async function getTeamById(teamId: string, userId: string) {
             user: true,
           }
         },
+        managers: true,
         invitations: true,
         teamSubscription: true,
         analytics: {
@@ -115,10 +117,11 @@ export async function getTeamById(teamId: string, userId: string) {
       throw new Error('Team not found')
     }
 
-    // Defensive post-query membership verification
+    // Defensive post-query membership verification (owner, member, or manager)
     const isOwner = team.userId === userId
     const isMember = team.members.some(m => m.userId === userId)
-    if (!isOwner && !isMember) {
+    const isManager = team.managers.some(m => m.managerId === userId)
+    if (!isOwner && !isMember && !isManager) {
       throw new Error('Team not found')
     }
 
@@ -377,8 +380,26 @@ export async function removeMember(teamId: string, userId: string, requesterUser
       throw new Error('Cannot remove yourself from team. Delete the team instead.')
     }
 
+    // Protect the team owner from being removed from their own roster.
+    if (team.userId === userId) {
+      throw new Error('Cannot remove the team owner. Transfer ownership or delete the team instead.')
+    }
+
     await prisma.teamMember.delete({
       where: { id: member.id }
+    })
+
+    // Revoke manager access too, otherwise the ex-member retains admin powers
+    // (privilege-escalation-by-staleness).
+    await prisma.teamManager.deleteMany({
+      where: { teamId, managerId: userId },
+    })
+
+    // Null out a dangling bestMemberId reference in team analytics so the UI
+    // never tries to resolve a removed user as "best performer".
+    await prisma.teamAnalytics.updateMany({
+      where: { teamId, bestMemberId: userId },
+      data: { bestMemberId: null },
     })
 
     await prisma.team.update({
@@ -521,11 +542,12 @@ export async function updateTeamAnalytics(
     const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((s, t) => s + Number(t.pnl), 0) / losses.length) : 0;
     const averageRr = avgLoss > 0 ? avgWin / avgLoss : 0;
     
-    // Get winning trades count
+    // Get winning trades count (period-scoped to match totalTrades denominator).
     const winningTradesResult = await prisma.trade.count({
       where: {
         userId: { in: userIds },
-        pnl: { gt: 0 }
+        pnl: { gt: 0 },
+        entryDate: { gte: periodStart }
       }
     });
 
@@ -577,6 +599,9 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
         members: {
           select: { userId: true }
         },
+        managers: {
+          select: { managerId: true }
+        },
         analytics: {
           where: { period: 'monthly' },
           take: 1
@@ -588,9 +613,11 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
 
     const memberUserIds = team.members.map(m => m.userId)
 
-    // Find if user is a member
+    // Authorization: owner, member, or manager may view the overview.
+    const isOwner = team.userId === userId
     const isMember = memberUserIds.includes(userId)
-    if (!isMember) throw new Error('Unauthorized')
+    const isManager = team.managers.some(m => m.managerId === userId)
+    if (!isOwner && !isMember && !isManager) throw new Error('Unauthorized')
 
     const users = await prisma.user.findMany({
       where: { id: { in: memberUserIds } },
@@ -609,11 +636,12 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
       else accountsByUser.set(a.userId, [a])
     }
 
-    const accountNumbers = accounts.map(a => a.number)
-
+    // MUDI: query trades by userId (NOT accountNumber). Account.number is only
+    // unique per-user (@@unique([number, userId])), so filtering by accountNumber
+    // alone would leak trades from other tenants sharing the same number string.
     const trades = await prisma.trade.findMany({
-      where: { accountNumber: { in: accountNumbers } },
-      select: { id: true, accountNumber: true, createdAt: true, instrument: true, pnl: true },
+      where: { userId: { in: memberUserIds } },
+      select: { id: true, accountNumber: true, userId: true, createdAt: true, instrument: true, pnl: true },
       orderBy: { createdAt: 'desc' },
       take: 10_000,
     })

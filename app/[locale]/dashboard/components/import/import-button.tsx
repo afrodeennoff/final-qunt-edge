@@ -110,24 +110,60 @@ export default function ImportButton() {
       }
 
       let newTrades: ImportTradeDraft[] = [];
-      // If accountNumbers is empty, we should just save processedTrades with the accountNumber from the processedTrades
+      const skipped: number[] = [];
+
+      /**
+       * Build a draft, injecting the selected account number when the trade
+       * itself doesn't carry one. Generic CSV/AI imports select the account in
+       * a separate step (accountNumbers state), so it must be applied here —
+       * otherwise createTradeWithDefaults throws and the whole save fails.
+       */
+      const buildDraft = (
+        trade: Partial<Trade>,
+        accountNumber?: string
+      ): ImportTradeDraft | null => {
+        const candidate = accountNumber
+          ? { ...(trade as object), accountNumber }
+          : trade;
+        try {
+          return createTradeWithDefaults(
+            candidate as unknown as Partial<ImportTradeDraft>
+          );
+        } catch (err) {
+          console.warn("[ImportButton] Skipping trade missing required fields:", err);
+          return null;
+        }
+      };
+
       if (accountNumbers.length === 0) {
-        newTrades = tradesToSave.map((trade) => {
-          return createTradeWithDefaults(trade as unknown as Partial<ImportTradeDraft>);
-        });
+        // No account selected: rely on each trade's own accountNumber (broker/platform imports).
+        for (const trade of tradesToSave) {
+          const draft = buildDraft(trade);
+          if (draft) newTrades.push(draft);
+          else skipped.push(1);
+        }
       } else {
+        // Apply each selected account number to every trade (CSV/AI import flow).
         for (const accountNumber of accountNumbers) {
           console.warn("[ImportButton] Account number:", accountNumber);
-          newTrades = [
-            ...newTrades,
-            ...tradesToSave.map((trade) => {
-              return createTradeWithDefaults(trade as unknown as Partial<ImportTradeDraft>);
-            }),
-          ];
+          for (const trade of tradesToSave) {
+            const draft = buildDraft(trade, accountNumber);
+            if (draft) newTrades.push(draft);
+            else skipped.push(1);
+          }
         }
       }
 
-      console.warn("[ImportButton] Saving trades:", newTrades);
+      if (newTrades.length === 0) {
+        toast.error(t("import.error.failed"), {
+          description: t("import.error.failedDescription"),
+        });
+        return;
+      }
+
+      console.warn(
+        `[ImportButton] Saving ${newTrades.length} trades (skipped ${skipped.length})`
+      );
       const result = await saveTradesAction(newTrades);
 
       // Optimistically merge new trades into local store to avoid full refetch
