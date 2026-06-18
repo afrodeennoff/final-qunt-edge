@@ -5,6 +5,7 @@ import { render } from "@react-email/render"
 import { generateTradingAnalysis } from "./actions/analysis"
 import { getUserData, computeTradingStats } from "./actions/user-data"
 import { buildUnsubscribeUrl } from "@/lib/unsubscribe-url"
+import { getSiteUrl } from "@/lib/site-url"
 import { requireServiceAuth, toErrorResponse } from "@/server/authz"
 import { z } from "zod"
 import { rateLimit, createRateLimitResponse } from "@/lib/rate-limit"
@@ -54,11 +55,16 @@ export async function POST(req: Request, props: { params: Promise<{ userid: stri
 
     // If no trades, return missing you email data
     if (trades.length === 0) {
+      const subscriberEmail = newsletter.email
+      const unsubscribeUrl = buildUnsubscribeUrl(subscriberEmail, req)
+      const siteUrl = getSiteUrl()
       const missingYouEmailHtml = await render(
         MissingYouEmail({
           firstName: newsletter.firstName || 'trader',
-          email: newsletter.email,
-          language: user.language
+          email: subscriberEmail,
+          language: user.language,
+          unsubscribeUrl,
+          siteUrl,
         })
       )
 
@@ -66,10 +72,14 @@ export async function POST(req: Request, props: { params: Promise<{ userid: stri
         success: true,
         emailData: {
           from: 'Qunt Edge <newsletter@eu.updates.qunt-edge.vercel.app>',
-          to: [newsletter.email],
-          replyTo: process.env.WEEKLY_SUMMARY_REPLY_TO ?? 'team@qunt-edge.com',
+          to: [subscriberEmail],
           subject: user.language === 'fr' ? 'Nous manquons de vous voir sur Qunt Edge' : 'We miss you on Qunt Edge',
-          html: missingYouEmailHtml
+          html: missingYouEmailHtml,
+          headers: {
+            'List-Unsubscribe': `<${unsubscribeUrl}>`,
+            'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+          },
+          reply_to: process.env.WEEKLY_SUMMARY_REPLY_TO ?? process.env.CONTACT_REPLY_TO ?? 'team@qunt-edge.com',
         }
       })
     }
@@ -80,34 +90,36 @@ export async function POST(req: Request, props: { params: Promise<{ userid: stri
       user.language as 'fr' | 'en'
     )
 
-    const unsubscribeUrl = buildUnsubscribeUrl(user.email, req)
+    const subscriberEmail = newsletter.email
+    const unsubscribeUrl = buildUnsubscribeUrl(subscriberEmail, req)
+    const siteUrl = getSiteUrl()
 
     const weeklyStatsEmailHtml = await render(
       TraderStatsEmail({
         firstName: newsletter.firstName || 'trader',
         dailyPnL: stats.dailyPnL,
         winLossStats: stats.winLossStats,
-        email: newsletter.email,
+        email: subscriberEmail,
         resultAnalysisIntro: analysis.resultAnalysisIntro,
         tipsForNextWeek: analysis.tipsForNextWeek,
-        language: user.language
+        language: user.language,
+        unsubscribeUrl,
+        siteUrl,
       })
     )
-
-
 
     return NextResponse.json({
       success: true,
       emailData: {
         from: 'Qunt Edge <newsletter@eu.updates.qunt-edge.vercel.app>',
-        to: [user.email],
+        to: [subscriberEmail],
         subject: user.language === 'fr' ? 'Vos statistiques de trading de la semaine 📈' : 'Your trading statistics for the week 📈',
         html: weeklyStatsEmailHtml,
         headers: {
           'List-Unsubscribe': `<${unsubscribeUrl}>`,
           'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
         },
-        replyTo: process.env.CONTACT_REPLY_TO ?? 'team@qunt-edge.com'
+        reply_to: process.env.WEEKLY_SUMMARY_REPLY_TO ?? process.env.CONTACT_REPLY_TO ?? 'team@qunt-edge.com'
       }
     })
 
