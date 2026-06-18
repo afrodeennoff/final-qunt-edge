@@ -72,9 +72,11 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
                 })
                 return;
             }
-            // On rithmic performance, the side is stored as 'B' or 'S'
+            // On rithmic performance, the side is stored as 'B' or 'S'.
+            // Normalize to lowercase long/short — every other importer and all
+            // downstream side-based styling/filtering consumers compare lowercase.
             if (item.side === 'B' || item.side === 'S') {
-                item.side = item.side === 'B' ? 'Long' : 'Short';
+                item.side = item.side === 'B' ? 'long' : 'short';
             }
 
             if (item.instrument) {
