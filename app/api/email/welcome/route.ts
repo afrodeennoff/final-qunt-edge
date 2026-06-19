@@ -5,6 +5,7 @@ import WelcomeEmail from '@/components/emails/welcome'
 import { getLatestVideoFromPlaylist } from "@/app/[locale]/admin/actions/youtube"
 import crypto from 'crypto'
 import { buildUnsubscribeUrl } from "@/lib/unsubscribe-url"
+import { getSiteUrl } from "@/lib/site-url"
 import { z } from "zod"
 import { parseJson, toValidationErrorResponse } from "@/app/api/_utils/validate"
 import { logger, withLogContext } from "@/lib/logger"
@@ -114,7 +115,7 @@ async function handlePost(req: Request) {
           from: 'Qunt Edge <welcome@eu.updates.qunt-edge.vercel.app>',
           to: record.email,
           subject: userLanguage === 'fr' ? 'Bienvenue sur Qunt Edge' : 'Welcome to Qunt Edge',
-          react: WelcomeEmail({ firstName, email: record.email, language: userLanguage, youtubeId: youtubeId || 'ZBrIZpCh_7Q' }),
+          react: WelcomeEmail({ firstName, email: record.email, language: userLanguage, youtubeId: youtubeId || 'ZBrIZpCh_7Q', unsubscribeUrl, siteUrl: getSiteUrl() }),
           replyTo: process.env.WELCOME_REPLY_TO ?? 'team@qunt-edge.com',
           headers: {
             'List-Unsubscribe': `<${unsubscribeUrl}>`,
