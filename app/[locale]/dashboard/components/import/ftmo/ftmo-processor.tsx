@@ -117,8 +117,6 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
 
 
     const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (Number(trade.pnl) || 0), 0), [processedTrades]);
-    const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + (Number((trade as any).commissionOnly) || 0), 0), [processedTrades]);
-    const totalSwap = useMemo(() => processedTrades.reduce((sum, trade) => sum + (Number((trade as any).swap) || 0), 0), [processedTrades]);
     const totalCost = useMemo(() => processedTrades.reduce((sum, trade) => sum + (Number(trade.commission) || 0), 0), [processedTrades]);
     const uniqueInstruments = useMemo(() => Array.from(new Set(processedTrades.map(trade => trade.instrument))), [processedTrades]);
 
@@ -147,8 +145,6 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
                                     <TableHead>Close Date</TableHead>
                                     <TableHead>PnL</TableHead>
                                     <TableHead>Time in Position</TableHead>
-                                    <TableHead>Commission</TableHead>
-                                    <TableHead>Swap</TableHead>
                                     <TableHead>Total Cost</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -167,33 +163,17 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
                                             {Number(trade.pnl).toFixed(2)}
                                         </TableCell>
                                         <TableCell>{formatDuration(Number(trade.timeInPosition) || 0)}</TableCell>
-                                        <TableCell>${(trade as any).commissionOnly?.toFixed(2) || '0.00'}</TableCell>
-                                        <TableCell className={(trade as any).swap >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}>
-                                            ${(trade as any).swap?.toFixed(2) || '0.00'}
-                                        </TableCell>
                                         <TableCell className="font-semibold">${trade.commission?.toFixed(2) || '0.00'}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-2 py-4">
+                    <div className="grid grid-cols-2 md:grid-cols-2 gap-4 px-2 py-4">
                         <div>
                             <h3 className="text-lg font-semibold mb-2">Total PnL</h3>
                             <p className={`text-xl font-bold ${totalPnL >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'}`}>
                                 ${totalPnL.toFixed(2)}
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-semibold mb-2">Total Commission</h3>
-                            <p className="text-xl font-bold text-blue-600">
-                                ${totalCommission.toFixed(2)}
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-semibold mb-2">Total Swap</h3>
-                            <p className="text-xl font-bold text-orange-600">
-                                ${totalSwap.toFixed(2)}
                             </p>
                         </div>
                         <div>

@@ -106,7 +106,12 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 border-05 h-auto max-w-[150px] transition-[opacity,background-color,border-color] hover:border-transparent"
  style={{
  backgroundColor: metadata?.color || 'hsl(var(--foreground) / 0.35)',
- color: 'var(--foreground)'
+ // Pick a readable foreground based on the tag background luminance (hex only;
+ // CSS-var/HSL fallbacks keep the default foreground).
+ color: (() => {
+   const c = metadata?.color
+   return c && c.startsWith('#') ? getContrastColor(c) : 'var(--foreground)'
+ })()
  }}
  >
  {tag}

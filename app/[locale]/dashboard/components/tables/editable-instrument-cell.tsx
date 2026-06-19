@@ -53,8 +53,11 @@ export function EditableInstrumentCell({
  return
  }
 
+ // Empty instrument is invalid; close the editor without saving (the server
+ // would reject it anyway) and let the user re-open to retry. Previously this
+ // early-returned WITHOUT closing, trapping the user in edit mode.
  if (trimmedValue === '') {
- // Don't allow empty instrument names
+ handleCancel()
  return
  }
 
@@ -64,7 +67,10 @@ export function EditableInstrumentCell({
  await onUpdate(tradeIds, { instrument: trimmedValue })
  setIsEditing(false)
  } catch {
-
+ // Swallowing the error silently hid failures and left the editor stuck open.
+ // Always close the editor on blur; the optimistic update is rolled back by
+ // updateTrades' catch handler, so the value reverts on next render.
+ setIsEditing(false)
  } finally {
  setIsSaving(false)
  }
