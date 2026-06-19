@@ -109,7 +109,7 @@ export default function ImportButton() {
         );
       }
 
-      let newTrades: ImportTradeDraft[] = [];
+      const newTrades: ImportTradeDraft[] = [];
       const skipped: number[] = [];
 
       /**
