@@ -34,8 +34,11 @@ export default function TradezellaProcessor({ headers, csvData, setProcessedTrad
 
   const processTrades = useCallback(() => {
     const newTrades: Trade[] = [];
-    //TODO: Ask user for account number using account selection component
-    const accountNumber = 'default-account';
+    // Default account used when the CSV has no "Account Name" column. Previously
+    // this was declared but never applied to trades, so every trade was saved
+    // with accountNumber = undefined -> createTradeWithDefaults threw and the
+    // entire save silently failed ("Save button doesn't work").
+    const defaultAccountNumber = 'default-account';
 
     csvData.forEach(row => {
       const item: Partial<Trade> = {};
@@ -75,6 +78,10 @@ export default function TradezellaProcessor({ headers, csvData, setProcessedTrad
         return
       }
 
+      // Fall back to the default account when the CSV did not provide one.
+      if (!item.accountNumber) {
+        item.accountNumber = defaultAccountNumber;
+      }
 
       // Compute entryDate and closeDate with the time from entryTime and closeTime
       if (entryTime && closeTime) {

@@ -155,8 +155,14 @@ export default function ImportButton() {
       }
 
       if (newTrades.length === 0) {
+        // All trades were skipped (missing required accountNumber/instrument).
+        // Give the user an actionable message instead of a generic failure so
+        // the "Save" button doesn't appear to silently do nothing.
         toast.error(t("import.error.failed"), {
-          description: t("import.error.failedDescription"),
+          description:
+            skipped.length > 0
+              ? `${skipped.length} ${t("import.error.skippedDescription")}`
+              : t("import.error.failedDescription"),
         });
         return;
       }

@@ -8,7 +8,10 @@ type ToasterProps = React.ComponentProps<typeof Sonner>
 const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
-      theme="dark"
+      // Do not hardcode a sonner theme: this app uses CSS-variable theming
+      // (bg-background / text-foreground below), and forcing theme="dark"
+      // layered sonner's built-in dark palette on top, which clashed with the
+      // light dashboard theme and made toasts hard to read.
       position="bottom-right"
       duration={4000}
       visibleToasts={3}

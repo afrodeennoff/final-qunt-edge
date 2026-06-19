@@ -628,6 +628,8 @@ export default {
   'import.error.noTradesAdded': 'Aucun trade ajouté',
   'import.error.noTradesAddedDescription':
     "Aucun trade n'a été ajouté. Veuillez vérifier vos données et réessayer.",
+  'import.error.skippedDescription':
+    "trade(s) ignoré(s) — numéro de compte ou instrument manquant.",
   'widgets.addWidget': 'Ajouter',
   'widgets.removeWidget': 'Supprimer',
   'widgets.removeWidgetConfirm': 'Êtes-vous sûr ?',
