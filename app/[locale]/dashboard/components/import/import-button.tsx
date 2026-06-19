@@ -171,19 +171,28 @@ export default function ImportButton() {
         `[ImportButton] Saving ${newTrades.length} trades (skipped ${skipped.length})`
       );
       const result = await saveTradesAction(newTrades);
+      // Surface the server's detailed error so save failures are diagnosable
+      // instead of a silent generic toast.
+      console.warn("[ImportButton] saveTradesAction result:", result);
 
       if (result.error) {
+        // The server returns the precise validation reason in `details` (e.g.
+        // "Trade ES has a future entry date" or "missing account number").
+        const detail =
+          typeof result.details === "string" && result.details.length > 0
+            ? result.details
+            : undefined;
         if (result.error === "DUPLICATE_TRADES") {
           toast.error(t("import.error.duplicateTrades"), {
-            description: t("import.error.duplicateTradesDescription"),
+            description: detail ?? t("import.error.duplicateTradesDescription"),
           });
         } else if (result.error === "NO_TRADES_ADDED") {
           toast.error(t("import.error.noTradesAdded"), {
-            description: t("import.error.noTradesAddedDescription"),
+            description: detail ?? t("import.error.noTradesAddedDescription"),
           });
         } else {
           toast.error(t("import.error.failed"), {
-            description: t("import.error.failedDescription"),
+            description: detail ?? t("import.error.failedDescription"),
           });
         }
         // Don't proceed further if there's an error
