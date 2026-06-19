@@ -7,6 +7,7 @@ import { startOfWeek, endOfWeek, subWeeks, format } from "date-fns";
 import { requireServiceAuth, toErrorResponse } from "@/server/authz";
 import { logger, withLogContext } from "@/lib/logger";
 import { safeArrayMax } from '@/lib/array-utils';
+import { DATABENTO_BASE_URL } from '@/lib/databento';
 
 // PURPOSE:
 // - Compute MAE and MFE for all trades of the week
@@ -68,7 +69,7 @@ interface InstrumentData {
 
 // Databento API configuration
 const DATABENTO_API_KEY = process.env.DATABENTO_API_KEY;
-const DATABENTO_BASE_URL = 'https://hist.databento.com/v0';
+// DATABENTO_BASE_URL is imported from lib/databento (single source of truth).
 
 // Databento symbol mapping for futures
 const FUTURES_SYMBOL_MAP: { [key: string]: string } = {

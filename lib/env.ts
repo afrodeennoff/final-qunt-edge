@@ -64,6 +64,19 @@ const envSchema = z.object({
   AI_TRANSCRIBE_BASE_URL: optionalUrl(),
   AI_TRANSCRIBE_MODEL: optionalModelId(),
   AI_SUPPORT_WEBSEARCH_MODEL: optionalModelId(),
+  // Auth / admin gates — previously read raw from process.env with no validation.
+  ALLOWED_ADMIN_USER_ID: optionalString(),
+  ADMIN_USER_ID: optionalString(),
+  ADMIN_EMAIL_DOMAINS: optionalString(),
+  VERCEL_CRON_SECRET: optionalMinString(1),
+  // Service reply-to (defaults handled at call sites).
+  CONTACT_REPLY_TO: optionalString(),
+  // Broker / market-data configuration.
+  TRADOVATE_ENVIRONMENT: optionalString(),
+  DATABENTO_API_KEY: optionalMinString(1),
+  DATABENTO_BASE_URL: optionalUrl(),
+  // MCP stdio remote URL (local dev).
+  MCP_URL: optionalUrl(),
 });
 
 type AppEnv = z.infer<typeof envSchema>;
