@@ -338,6 +338,13 @@ export async function updateMemberRole(teamId: string, userId: string, requester
       throw new Error('Member not found')
     }
 
+    // Protect the team owner: their role cannot be changed by anyone (including
+    // other admins). Only the self-downgrade guard previously existed, so a
+    // member-admin could downgrade any other admin, including the de-facto owner.
+    if (userId === team.userId) {
+      throw new Error('Cannot modify the team owner role')
+    }
+
     if (requester.userId === userId && member.role === MemberRole.ADMIN) {
       throw new Error('Cannot remove admin role from yourself')
     }
