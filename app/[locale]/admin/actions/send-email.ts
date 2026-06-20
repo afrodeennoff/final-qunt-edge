@@ -73,7 +73,7 @@ async function getEmailTemplate(template: EmailTemplate): Promise<TemplateCompon
 export async function getDefaultTemplateProps(template: EmailTemplate): Promise<TemplateProps> {
   switch (template) {
     case "black-friday":
-      return { firstName: "Trader", locale: "fr" }
+      return { firstName: "Trader", locale: "en" }
     case "welcome":
       return {
         firstName: "Trader",

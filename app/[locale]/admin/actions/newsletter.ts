@@ -215,7 +215,8 @@ export async function sendTestNewsletter(email: string, firstName: string, param
         introMessage: params.introMessage,
         features: params.features,
         email,
-        firstName: params.firstName,
+        firstName,
+        language: 'en',
         unsubscribeUrl
       }),
       replyTo,

@@ -1075,7 +1075,7 @@ async function importTrades(ctx: McpAuthContext, args: Record<string, unknown>):
   })
   if (!account) return toolError('Account not found')
 
-  const tradeRecords = []
+  const tradeRecords: unknown[] = []
   for (let i = 0; i < tradesRaw.length; i++) {
     const t = tradesRaw[i] as Record<string, unknown>
     if (typeof t.instrument !== 'string' || !t.instrument) return toolError(`Trade ${i}: instrument is required`)
@@ -1083,17 +1083,15 @@ async function importTrades(ctx: McpAuthContext, args: Record<string, unknown>):
     if (typeof t.closePrice !== 'number') return toolError(`Trade ${i}: closePrice must be a number`)
     if (typeof t.pnl !== 'number') return toolError(`Trade ${i}: pnl must be a number`)
 
-    const entryDate = parseOptionalDate(t.entryDate)
-    const closeDate = parseOptionalDate(t.closeDate)
+    const entryDate = typeof t.entryDate === 'string' ? t.entryDate : null
+    const closeDate = typeof t.closeDate === 'string' ? t.closeDate : null
     if (!entryDate) return toolError(`Trade ${i}: invalid entryDate`)
-    if (!closeDate) return toolError(`Trade ${i}: invalid closeDate`)
 
     tradeRecords.push({
       accountNumber,
-      userId: ctx.userId,
       instrument: t.instrument,
       side: typeof t.side === 'string' ? t.side : '',
-      quantity: typeof t.quantity === 'number' ? t.quantity : 0,
+      quantity: t.quantity,
       entryPrice: t.entryPrice,
       closePrice: t.closePrice,
       pnl: t.pnl,
@@ -1105,9 +1103,13 @@ async function importTrades(ctx: McpAuthContext, args: Record<string, unknown>):
     })
   }
 
-  const result = await prisma.trade.createMany({ data: tradeRecords })
+  const { saveTradesForUserAction } = await import('@/server/database')
+  const saveResult = await saveTradesForUserAction(tradeRecords, ctx.userId)
+  if (saveResult.error) {
+    return toolError(`Import failed: ${saveResult.error}`)
+  }
 
-  return toolSuccess({ imported: result.count, accountNumber })
+  return toolSuccess({ imported: saveResult.numberOfTradesAdded || 0, accountNumber })
 }
 
 async function createTrade(ctx: McpAuthContext, args: Record<string, unknown>): Promise<McpToolResult> {
