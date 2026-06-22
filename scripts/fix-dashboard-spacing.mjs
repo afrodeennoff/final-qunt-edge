@@ -23,7 +23,7 @@ function fixDashboardSpacing() {
         const content = readFileSync(fullPath, 'utf-8')
 
         // Fix common spacing issues in dashboard
-        let fixedContent = content
+        const fixedContent = content
           .replace(/gap-5/g, 'gap-6')
           .replace(/gap-7/g, 'gap-6')
           .replace(/gap-9/g, 'gap-8')

@@ -9,7 +9,7 @@ import { join } from 'path'
 import { execSync } from 'child_process'
 
 function walkDir(dir, ext = '.tsx') {
-  let results = []
+  const results = []
   try {
     const list = execSync(`find "${dir}" -name "*${ext}" -not -path "*/node_modules/*" -not -path "*/.next/*"`, { encoding: 'utf-8' }).trim().split('\n').filter(Boolean)
     return list
@@ -27,7 +27,7 @@ let totalChanges = 0
 for (const f of dirs) {
   try {
     let c = readFileSync(f, 'utf-8')
-    let orig = c
+    const orig = c
     
     // Replace transition-all with specific transition properties
     // But skip if it's already a specific transition
