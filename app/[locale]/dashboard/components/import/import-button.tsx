@@ -89,8 +89,15 @@ export default function ImportButton() {
   }, []);
 
   const handleSave = useCallback(async () => {
-    console.warn("[ImportButton] First:", processedTrades);
+    console.log("[ImportButton] handleSave called", { 
+      hasUser: !!user, 
+      hasSupabaseUser: !!supabaseUser, 
+      processedTradesCount: processedTrades.length,
+      accountNumbersCount: accountNumbers.length,
+      importType 
+    });
     if (!user || !supabaseUser) {
+      console.error("[ImportButton] Auth check failed", { user: !!user, supabaseUser: !!supabaseUser });
       toast.error(t("import.error.auth"), {
         description: t("import.error.authDescription"),
       });
@@ -155,9 +162,11 @@ export default function ImportButton() {
       }
 
       if (newTrades.length === 0) {
-        // All trades were skipped (missing required accountNumber/instrument).
-        // Give the user an actionable message instead of a generic failure so
-        // the "Save" button doesn't appear to silently do nothing.
+        console.error("[ImportButton] All trades skipped — newTrades is empty", { 
+          skippedCount: skipped.length, 
+          processedTradesCount: tradesToSave.length,
+          accountNumbersCount: accountNumbers.length,
+        });
         toast.error(t("import.error.failed"), {
           description:
             skipped.length > 0
@@ -167,13 +176,11 @@ export default function ImportButton() {
         return;
       }
 
-      console.warn(
+      console.log(
         `[ImportButton] Saving ${newTrades.length} trades (skipped ${skipped.length})`
       );
       const result = await saveTradesAction(newTrades);
-      // Surface the server's detailed error so save failures are diagnosable
-      // instead of a silent generic toast.
-      console.warn("[ImportButton] saveTradesAction result:", result);
+      console.log("[ImportButton] saveTradesAction result:", result);
 
       if (result.error) {
         // The server returns the precise validation reason in `details` (e.g.
@@ -498,7 +505,17 @@ export default function ImportButton() {
             step={step}
             importType={importType}
             onBack={handleBackStep}
-            onNext={handleNextStep}
+            onNext={async () => {
+              try {
+                console.log("[ImportButton] Next/Save button clicked", { step, importType });
+                await handleNextStep();
+              } catch (err) {
+                console.error("[ImportButton] handleNextStep threw:", err);
+                toast.error("Import error", {
+                  description: err instanceof Error ? err.message : "Unexpected error during import",
+                });
+              }
+            }}
             isSaving={isSaving}
             isNextDisabled={isNextDisabled()}
           />

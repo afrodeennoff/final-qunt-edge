@@ -159,10 +159,16 @@ export async function resolveWritableUserId(rawUserId: string): Promise<string> 
     select: { id: true },
   })
 
-  const byAuthId = await prisma.user.findUnique({
-    where: { auth_user_id: rawUserId },
-    select: { id: true },
-  })
+  let byAuthId: { id: string } | null = null
+  try {
+    byAuthId = await prisma.user.findUnique({
+      where: { auth_user_id: rawUserId },
+      select: { id: true },
+    })
+  } catch {
+    // auth_user_id column may not exist in some deployments — skip gracefully
+  }
+
   if (byAuthId?.id && byAuthId.id !== rawUserId) {
     logger.warn('[resolveWritableUserId] Divergent auth mapping detected; using auth_user_id row', {
       rawUserId,
@@ -400,17 +406,39 @@ export async function saveTradesAction(
   _options?: { userId?: string }
 ): Promise<TradeResponse> {
   void _options
-  const rawUserId = await getUserId()
-  const userId = await resolveWritableUserId(rawUserId)
-  return saveTradesForResolvedUser(data, userId, rawUserId)
+  try {
+    const rawUserId = await getUserId()
+    const userId = await resolveWritableUserId(rawUserId)
+    return await saveTradesForResolvedUser(data, userId, rawUserId)
+  } catch (error) {
+    logger.error('[saveTradesAction] Unhandled error', { error })
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      error: 'DATABASE_ERROR',
+      numberOfTradesAdded: 0,
+      skippedCount: data.length,
+      details: message,
+    }
+  }
 }
 
 export async function saveTradesForUserAction(
   data: unknown[],
   rawUserId: string
 ): Promise<TradeResponse> {
-  const userId = await resolveWritableUserId(rawUserId)
-  return saveTradesForResolvedUser(data, userId, rawUserId)
+  try {
+    const userId = await resolveWritableUserId(rawUserId)
+    return await saveTradesForResolvedUser(data, userId, rawUserId)
+  } catch (error) {
+    logger.error('[saveTradesForUserAction] Unhandled error', { error })
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      error: 'DATABASE_ERROR',
+      numberOfTradesAdded: 0,
+      skippedCount: data.length,
+      details: message,
+    }
+  }
 }
 
 // Pre-computed statistics type
