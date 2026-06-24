@@ -11,7 +11,7 @@ interface ImportDialogFooterProps {
   step: Step
   importType: ImportType
   onBack: () => void
-  onNext: () => void
+  onNext: () => void | Promise<void>
   isSaving: boolean
   isNextDisabled?: boolean
 }
@@ -57,16 +57,16 @@ export function ImportDialogFooter({
         )}
         <Button
           type="button"
-          onClick={(e) => {
+          onClick={async (e) => {
             e.preventDefault()
             e.stopPropagation()
-            onNext()
+            await onNext()
           }}
           className={cn(
             "w-fit min-w-[100px]",
             (currentStepIndex === 0 && (importType === 'rithmic-sync' || importType === 'tradovate-sync' || importType === 'dxfeed-sync')) && "invisible"
           )}
-          disabled={isSaving || isNextDisabled}
+          disabled={isSaving || (!isLastStep && isNextDisabled)}
         >
           {getNextButtonText()}
         </Button>

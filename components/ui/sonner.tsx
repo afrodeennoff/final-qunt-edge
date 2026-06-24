@@ -18,13 +18,13 @@ const Toaster = ({ ...props }: ToasterProps) => {
       richColors
       closeButton
       className="toaster group"
-      style={{ zIndex: 99999 }}
+      style={{ zIndex: 2147483647 }}
       toastOptions={{
         classNames: {
           toast:
-            "group toast group-[.toaster]:bg-background/80 group-[.toaster]:backdrop-blur-xl " +
+            "group toast group-[.toaster]:bg-background group-[.toaster]:backdrop-blur-xl " +
             "group-[.toaster]:text-foreground group-[.toaster]:border-primary/20 " +
-            "group-[.toaster]:shadow-[0_0_0_1px_hsl(var(--primary)/0.08),0_8px_40px_-12px_rgba(0,0,0,0.8),0_0_60px_-20px_hsl(var(--primary)/0.15)] " +
+            "group-[.toaster]:shadow-[0_0_0_1px_hsl(var(--primary)/0.18),0_16px_60px_-16px_rgba(0,0,0,0.95),0_0_80px_-24px_hsl(var(--primary)/0.25)] " +
             "group-[.toaster]:rounded-xl group-[.toaster]:p-4",
           description: "group-[.toast]:text-muted-foreground/80 group-[.toast]:text-xs group-[.toast]:mt-0.5",
           actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground group-[.toast]:rounded-lg group-[.toast]:text-xs group-[.toast]:px-3 group-[.toast]:font-medium",
