@@ -32,10 +32,11 @@ export function ImportDialogFooter({
   if (!currentStep) return null
 
   const currentStepIndex = platform.steps.findIndex(s => s.id === step)
+  const isLastStep = Boolean(currentStep.isLastStep) || currentStepIndex === platform.steps.length - 1
 
   const getNextButtonText = () => {
     if (isSaving) return t('import.button.saving')
-    if (currentStep.isLastStep) {
+    if (isLastStep) {
       return t('import.button.save')
     }
     return t('import.button.next')
@@ -45,25 +46,31 @@ export function ImportDialogFooter({
     <div className="flex-none p-4 border-t bg-background/95 h-[68px]">
       <div className="flex justify-end items-center gap-4">
         {currentStepIndex > 0 && (
-          <Button 
-            variant="outline" 
+          <Button
+            type="button"
+            variant="outline"
             onClick={onBack}
             className="w-fit min-w-[100px]"
           >
             {t('import.button.back')}
           </Button>
         )}
-        <Button 
-          onClick={onNext}
+        <Button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            onNext()
+          }}
           className={cn(
             "w-fit min-w-[100px]",
             (currentStepIndex === 0 && (importType === 'rithmic-sync' || importType === 'tradovate-sync' || importType === 'dxfeed-sync')) && "invisible"
           )}
-          disabled={isNextDisabled}
+          disabled={isSaving || isNextDisabled}
         >
           {getNextButtonText()}
         </Button>
       </div>
     </div>
   )
-} 
+}

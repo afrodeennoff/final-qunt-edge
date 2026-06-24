@@ -29,7 +29,6 @@ import { usePdfProcessingStore } from "@/store/pdf-processing-store";
 import PdfUpload from "./ibkr-pdf/pdf-upload";
 import PdfProcessing from "./ibkr-pdf/pdf-processing";
 import AtasFileUpload from "./atas/atas-file-upload";
-import { generateTradeHash } from "@/lib/utils";
 import { createTradeWithDefaults } from "@/lib/trade-factory";
 import type { ImportTradeDraft } from "@/lib/trade-types";
 
@@ -89,13 +88,6 @@ export default function ImportButton() {
   }, []);
 
   const handleSave = useCallback(async () => {
-    console.log("[ImportButton] handleSave called", { 
-      hasUser: !!user, 
-      hasSupabaseUser: !!supabaseUser, 
-      processedTradesCount: processedTrades.length,
-      accountNumbersCount: accountNumbers.length,
-      importType 
-    });
     if (!user || !supabaseUser) {
       console.error("[ImportButton] Auth check failed", { user: !!user, supabaseUser: !!supabaseUser });
       toast.error(t("import.error.auth"), {
@@ -116,15 +108,16 @@ export default function ImportButton() {
         );
       }
 
-      const newTrades: ImportTradeDraft[] = [];
-      const skipped: number[] = [];
+      const effectiveAccountNumbers =
+        accountNumbers.length > 0
+          ? accountNumbers.map((accountNumber) => accountNumber.trim()).filter(Boolean)
+          : newAccountNumber.trim()
+            ? [newAccountNumber.trim()]
+            : [];
 
-      /**
-       * Build a draft, injecting the selected account number when the trade
-       * itself doesn't carry one. Generic CSV/AI imports select the account in
-       * a separate step (accountNumbers state), so it must be applied here —
-       * otherwise createTradeWithDefaults throws and the whole save fails.
-       */
+      const newTrades: ImportTradeDraft[] = [];
+      let skippedCount = 0;
+
       const buildDraft = (
         trade: Partial<Trade>,
         accountNumber?: string
@@ -142,45 +135,38 @@ export default function ImportButton() {
         }
       };
 
-      if (accountNumbers.length === 0) {
-        // No account selected: rely on each trade's own accountNumber (broker/platform imports).
+      if (effectiveAccountNumbers.length === 0) {
         for (const trade of tradesToSave) {
           const draft = buildDraft(trade);
           if (draft) newTrades.push(draft);
-          else skipped.push(1);
+          else skippedCount += 1;
         }
       } else {
-        // Apply each selected account number to every trade (CSV/AI import flow).
-        for (const accountNumber of accountNumbers) {
-          console.warn("[ImportButton] Account number:", accountNumber);
+        for (const accountNumber of effectiveAccountNumbers) {
           for (const trade of tradesToSave) {
             const draft = buildDraft(trade, accountNumber);
             if (draft) newTrades.push(draft);
-            else skipped.push(1);
+            else skippedCount += 1;
           }
         }
       }
 
       if (newTrades.length === 0) {
         console.error("[ImportButton] All trades skipped — newTrades is empty", { 
-          skippedCount: skipped.length, 
+          skippedCount,
           processedTradesCount: tradesToSave.length,
-          accountNumbersCount: accountNumbers.length,
+          accountNumbersCount: effectiveAccountNumbers.length,
         });
         toast.error(t("import.error.failed"), {
           description:
-            skipped.length > 0
-              ? `${skipped.length} ${t("import.error.skippedDescription")}`
+            skippedCount > 0
+              ? `${skippedCount} ${t("import.error.skippedDescription")}`
               : t("import.error.failedDescription"),
         });
         return;
       }
 
-      console.log(
-        `[ImportButton] Saving ${newTrades.length} trades (skipped ${skipped.length})`
-      );
       const result = await saveTradesAction(newTrades);
-      console.log("[ImportButton] saveTradesAction result:", result);
 
       if (result.error) {
         // The server returns the precise validation reason in `details` (e.g.
@@ -223,11 +209,11 @@ export default function ImportButton() {
       const successDescription = t("import.successDescription", {
         numberOfTradesAdded: result.numberOfTradesAdded,
       });
-      const skippedCount = result.warnings?.length ?? 0;
+      const warningCount = result.warnings?.length ?? 0;
       toast.success(t("import.success"), {
         description:
-          skippedCount > 0
-            ? `${successDescription} (${skippedCount} skipped)`
+          warningCount > 0
+            ? `${successDescription} (${warningCount} skipped)`
             : successDescription,
       });
       setIsOpen(false);
@@ -241,7 +227,7 @@ export default function ImportButton() {
     } finally {
       setIsSaving(false);
     }
-  }, [processedTrades, accountNumbers, selectedAccountNumbers, importType, user, supabaseUser, t, refreshTradesOnly, resetImportState]);
+  }, [processedTrades, accountNumbers, newAccountNumber, selectedAccountNumbers, importType, user, supabaseUser, t, trades, setTradesStore, refreshTradesOnly, resetImportState]);
 
   const handleNextStep = useCallback(async () => {
     const platform =
@@ -507,12 +493,28 @@ export default function ImportButton() {
             onBack={handleBackStep}
             onNext={async () => {
               try {
-                console.log("[ImportButton] Next/Save button clicked", { step, importType });
+                // On the last step, call handleSave directly — skip handleNextStep entirely
+                const platform =
+                  platforms.find((p) => p.type === importType) ||
+                  platforms.find((p) => p.platformName === "csv-ai");
+                if (platform) {
+                  const currentStepIndex = platform.steps.findIndex((s) => s.id === step);
+                  const currentStep = platform.steps[currentStepIndex];
+                  const isFinalStep =
+                    currentStepIndex >= 0 &&
+                    (currentStep?.isLastStep || currentStepIndex === platform.steps.length - 1);
+                  if (isFinalStep) {
+                    await handleSave();
+                    return;
+                  }
+                }
+                
+                // Otherwise advance to next step
                 await handleNextStep();
               } catch (err) {
-                console.error("[ImportButton] handleNextStep threw:", err);
+                console.error("[ImportButton] Button handler error:", err);
                 toast.error("Import error", {
-                  description: err instanceof Error ? err.message : "Unexpected error during import",
+                  description: err instanceof Error ? err.message : "Unexpected error",
                 });
               }
             }}
