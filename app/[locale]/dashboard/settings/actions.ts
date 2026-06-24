@@ -828,6 +828,8 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
 
     // Send email
     if (!process.env.RESEND_API_KEY) {
+      // Revert the invitation so retries aren't blocked by an orphaned PENDING row.
+      await prisma.teamInvitation.delete({ where: { id: invitation.id } }).catch(() => {})
       throw new Error('RESEND_API_KEY is not configured')
     }
 
@@ -845,7 +847,10 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
     })
 
     if (emailError) {
-      console.error('Error sending invitation email:', emailError)
+      console.error('Error sending invitation email:', emailError.name, emailError.message)
+      // Revert the invitation so retries aren't blocked for 7 days by an
+      // orphaned PENDING row (no email was ever delivered).
+      await prisma.teamInvitation.delete({ where: { id: invitation.id } }).catch(() => {})
       throw new Error('Failed to send invitation email')
     }
 

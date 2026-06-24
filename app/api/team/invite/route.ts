@@ -192,7 +192,7 @@ export async function POST(req: Request) {
 
     // Send email
     const { error } = await resend.emails.send({
-      from: process.env.TEAM_INVITE_FROM ?? 'Qunt Edge Team <team@qunt-edge.com>',
+      from: process.env.TEAM_INVITE_FROM ?? 'Qunt Edge Team <team@eu.updates.qunt-edge.vercel.app>',
       to: email,
       subject: existingUser?.language === 'fr'
         ? `Invitation à rejoindre ${team.name} sur Qunt Edge`
@@ -204,6 +204,9 @@ export async function POST(req: Request) {
     if (error) {
       // Security: Log only non-sensitive error info
       console.error('Error sending invitation email:', error.name, error.message)
+      // Revert the invitation so retries aren't blocked for 7 days by an
+      // orphaned PENDING row (no email was ever delivered).
+      await prisma.teamInvitation.delete({ where: { id: invitation.id } }).catch(() => {})
       return apiError(
         "INTERNAL_ERROR",
         'Failed to send invitation email',
