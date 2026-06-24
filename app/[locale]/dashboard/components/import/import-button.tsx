@@ -61,6 +61,11 @@ export default function ImportButton() {
   const [accountNumbers, setAccountNumbers] = useState<string[]>([]);
   const [newAccountNumber, setNewAccountNumber] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [saveFeedback, setSaveFeedback] = useState<{
+    type: "loading" | "error" | "success";
+    title: string;
+    description?: string;
+  } | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [processedTrades, setProcessedTrades] = useState<Partial<Trade>[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -85,9 +90,12 @@ export default function ImportButton() {
     setNewAccountNumber("");
     setProcessedTrades([]);
     setError(null);
+    setSaveFeedback(null);
   }, []);
 
   const handleSave = useCallback(async () => {
+    if (isSaving) return;
+
     if (!user || !supabaseUser) {
       console.error("[ImportButton] Auth check failed", { user: !!user, supabaseUser: !!supabaseUser });
       toast.error(t("import.error.auth"), {
@@ -97,6 +105,8 @@ export default function ImportButton() {
     }
 
     setIsSaving(true);
+    setSaveFeedback({ type: "loading", title: t("import.button.saving") });
+    const savingToastId = toast.loading(t("import.button.saving"));
     try {
       // Filter trades for ATAS based on selectedAccountNumbers
       let tradesToSave = processedTrades;
@@ -152,16 +162,23 @@ export default function ImportButton() {
       }
 
       if (newTrades.length === 0) {
+        const emptyDescription =
+          skippedCount > 0
+            ? `${skippedCount} ${t("import.error.skippedDescription")}`
+            : t("import.error.failedDescription");
         console.error("[ImportButton] All trades skipped — newTrades is empty", { 
           skippedCount,
           processedTradesCount: tradesToSave.length,
           accountNumbersCount: effectiveAccountNumbers.length,
         });
+        setSaveFeedback({
+          type: "error",
+          title: t("import.error.failed"),
+          description: emptyDescription,
+        });
         toast.error(t("import.error.failed"), {
-          description:
-            skippedCount > 0
-              ? `${skippedCount} ${t("import.error.skippedDescription")}`
-              : t("import.error.failedDescription"),
+          id: savingToastId,
+          description: emptyDescription,
         });
         return;
       }
@@ -176,15 +193,33 @@ export default function ImportButton() {
             ? result.details
             : undefined;
         if (result.error === "DUPLICATE_TRADES") {
+          setSaveFeedback({
+            type: "error",
+            title: t("import.error.duplicateTrades"),
+            description: detail ?? t("import.error.duplicateTradesDescription"),
+          });
           toast.error(t("import.error.duplicateTrades"), {
+            id: savingToastId,
             description: detail ?? t("import.error.duplicateTradesDescription"),
           });
         } else if (result.error === "NO_TRADES_ADDED") {
+          setSaveFeedback({
+            type: "error",
+            title: t("import.error.noTradesAdded"),
+            description: detail ?? t("import.error.noTradesAddedDescription"),
+          });
           toast.error(t("import.error.noTradesAdded"), {
+            id: savingToastId,
             description: detail ?? t("import.error.noTradesAddedDescription"),
           });
         } else {
+          setSaveFeedback({
+            type: "error",
+            title: t("import.error.failed"),
+            description: detail ?? t("import.error.failedDescription"),
+          });
           toast.error(t("import.error.failed"), {
+            id: savingToastId,
             description: detail ?? t("import.error.failedDescription"),
           });
         }
@@ -210,26 +245,40 @@ export default function ImportButton() {
         numberOfTradesAdded: result.numberOfTradesAdded,
       });
       const warningCount = result.warnings?.length ?? 0;
+      const finalSuccessDescription =
+        warningCount > 0
+          ? `${successDescription} (${warningCount} skipped)`
+          : successDescription;
+      setSaveFeedback({
+        type: "success",
+        title: t("import.success"),
+        description: finalSuccessDescription,
+      });
       toast.success(t("import.success"), {
-        description:
-          warningCount > 0
-            ? `${successDescription} (${warningCount} skipped)`
-            : successDescription,
+        id: savingToastId,
+        description: finalSuccessDescription,
       });
       setIsOpen(false);
       // Reset the import process
       resetImportState();
     } catch (error) {
       console.error("Error saving trades:", error);
+      setSaveFeedback({
+        type: "error",
+        title: t("import.error.failed"),
+        description: t("import.error.failedDescription"),
+      });
       toast.error(t("import.error.failed"), {
+        id: savingToastId,
         description: t("import.error.failedDescription"),
       });
     } finally {
       setIsSaving(false);
     }
-  }, [processedTrades, accountNumbers, newAccountNumber, selectedAccountNumbers, importType, user, supabaseUser, t, trades, setTradesStore, refreshTradesOnly, resetImportState]);
+  }, [processedTrades, accountNumbers, newAccountNumber, selectedAccountNumbers, importType, user, supabaseUser, t, trades, setTradesStore, refreshTradesOnly, resetImportState, isSaving]);
 
   const handleNextStep = useCallback(async () => {
+    setSaveFeedback(null);
     const platform =
       platforms.find((p) => p.type === importType) ||
       platforms.find((p) => p.platformName === "csv-ai");
@@ -262,6 +311,7 @@ export default function ImportButton() {
   }, [step, importType, files, t, handleSave]);
 
   const handleBackStep = () => {
+    setSaveFeedback(null);
     const platform =
       platforms.find((p) => p.type === importType) ||
       platforms.find((p) => p.platformName === "csv-ai");
@@ -486,6 +536,24 @@ export default function ImportButton() {
           <ImportDialogHeader step={step} importType={importType} />
 
           <div className="flex-1 overflow-hidden p-6">{renderStep()}</div>
+
+          {saveFeedback && (
+            <div
+              className={cn(
+                "mx-4 mb-3 rounded-md border px-4 py-3 text-sm",
+                saveFeedback.type === "loading" && "border-primary/30 bg-primary/10 text-foreground",
+                saveFeedback.type === "error" && "border-destructive/40 bg-destructive/10 text-foreground",
+                saveFeedback.type === "success" && "border-primary/30 bg-primary/10 text-foreground"
+              )}
+              role="status"
+              aria-live="polite"
+            >
+              <p className="font-semibold">{saveFeedback.title}</p>
+              {saveFeedback.description ? (
+                <p className="mt-1 text-muted-foreground">{saveFeedback.description}</p>
+              ) : null}
+            </div>
+          )}
 
           <ImportDialogFooter
             step={step}
