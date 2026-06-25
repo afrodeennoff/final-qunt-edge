@@ -287,8 +287,8 @@ export default function ImportButton() {
     const currentStepIndex = platform.steps.findIndex((s) => s.id === step);
     if (currentStepIndex === -1) return;
 
-    // Handle PDF upload step
-    if (step === "upload-file" && importType === "pdf") {
+    // Handle PDF upload step (IBKR PDF import type)
+    if (step === "upload-file" && importType === "ibkr-pdf-import") {
       if (files.length === 0) {
         setError(t("import.errors.noFilesSelected"));
         return;
@@ -560,24 +560,11 @@ export default function ImportButton() {
             importType={importType}
             onBack={handleBackStep}
             onNext={async () => {
+              // handleNextStep is the single source of truth: it advances to the
+              // next step, or triggers handleSave() when on the last step.
+              // Do NOT duplicate last-step detection here — that was the root
+              // cause of the recurring "dead save button" regressions.
               try {
-                // On the last step, call handleSave directly — skip handleNextStep entirely
-                const platform =
-                  platforms.find((p) => p.type === importType) ||
-                  platforms.find((p) => p.platformName === "csv-ai");
-                if (platform) {
-                  const currentStepIndex = platform.steps.findIndex((s) => s.id === step);
-                  const currentStep = platform.steps[currentStepIndex];
-                  const isFinalStep =
-                    currentStepIndex >= 0 &&
-                    (currentStep?.isLastStep || currentStepIndex === platform.steps.length - 1);
-                  if (isFinalStep) {
-                    await handleSave();
-                    return;
-                  }
-                }
-                
-                // Otherwise advance to next step
                 await handleNextStep();
               } catch (err) {
                 console.error("[ImportButton] Button handler error:", err);
