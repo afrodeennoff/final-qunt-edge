@@ -286,6 +286,7 @@ export default function ImportButton() {
 
     const currentStepIndex = platform.steps.findIndex((s) => s.id === step);
     if (currentStepIndex === -1) return;
+    const currentStep = platform.steps[currentStepIndex];
 
     // Handle PDF upload step (IBKR PDF import type)
     if (step === "upload-file" && importType === "ibkr-pdf-import") {
@@ -294,6 +295,13 @@ export default function ImportButton() {
         return;
       }
       setStep("process-file");
+      return;
+    }
+
+    // Custom components (RithmicSync, TradovateSync, DxFeedSync, ThorSync)
+    // handle their own flow internally — the footer button is hidden and disabled,
+    // but guard here too so handleSave is never accidentally triggered.
+    if (platform.customComponent && currentStep?.component === platform.customComponent) {
       return;
     }
 

@@ -33,6 +33,7 @@ export function ImportDialogFooter({
 
   const currentStepIndex = platform.steps.findIndex(s => s.id === step)
   const isLastStep = Boolean(currentStep.isLastStep) || currentStepIndex === platform.steps.length - 1
+  const isCustomComponentStep = Boolean(platform.customComponent && currentStep.component === platform.customComponent)
 
   const getNextButtonText = () => {
     if (isSaving) return t('import.button.saving')
@@ -64,9 +65,10 @@ export function ImportDialogFooter({
           }}
           className={cn(
             "w-fit min-w-[100px]",
-            (currentStepIndex === 0 && (importType === 'rithmic-sync' || importType === 'tradovate-sync' || importType === 'dxfeed-sync')) && "invisible"
+            isCustomComponentStep && "invisible",
+            (currentStepIndex === 0 && (importType === 'rithmic-sync' || importType === 'tradovate-sync' || importType === 'dxfeed-sync' || importType === 'thor-sync')) && "invisible"
           )}
-          disabled={isSaving || (!isLastStep && isNextDisabled)}
+          disabled={isSaving || isCustomComponentStep || (!isLastStep && isNextDisabled)}
         >
           {getNextButtonText()}
         </Button>
