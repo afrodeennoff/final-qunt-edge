@@ -73,7 +73,6 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
         'date-fns',
         'date-fns-tz',
         'lucide-react',
-        'framer-motion',
         'motion',
         'decimal.js',
         // Form state — used in auth, admin, community pages
