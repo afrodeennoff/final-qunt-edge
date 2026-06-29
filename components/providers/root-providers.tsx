@@ -170,9 +170,9 @@ export function RootProviders({
     return (
         <TooltipProvider>
             <ThemeProvider scope={themeScope} initialTheme={initialTheme}>
-                <Toaster />
                 {children}
             </ThemeProvider>
+            <Toaster />
         </TooltipProvider>
     );
 }

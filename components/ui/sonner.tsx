@@ -12,13 +12,14 @@ const Toaster = ({ ...props }: ToasterProps) => {
       // (bg-background / text-foreground below), and forcing theme="dark"
       // layered sonner's built-in dark palette on top, which clashed with the
       // light dashboard theme and made toasts hard to read.
-      position="bottom-right"
+      position="top-right"
       duration={4000}
       visibleToasts={3}
       richColors
       closeButton
       className="toaster group"
       style={{ zIndex: 2147483647 }}
+      offset="24px"
       toastOptions={{
         classNames: {
           toast:
