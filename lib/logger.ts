@@ -189,12 +189,16 @@ function safeJsonStringify(value: unknown): string {
 }
 
 function writeStructuredLog(entry: LogEntry): void {
-  process.stdout.write(`${safeJsonStringify(entry)}\n`);
+  if (typeof process !== 'undefined' && process.stdout) {
+    process.stdout.write(`${safeJsonStringify(entry)}\n`);
+  }
 }
 
 function writeDevLog(entry: LogEntry, level: LogLevel, message: string, meta: Record<string, unknown>): void {
-  const metaString = Object.keys(meta).length > 0 ? safeJsonStringify(meta) : "";
-  process.stdout.write(`[${entry.timestamp}] ${level.toUpperCase()}: ${message} ${metaString}\n`);
+  if (typeof process !== 'undefined' && process.stdout) {
+    const metaString = Object.keys(meta).length > 0 ? safeJsonStringify(meta) : "";
+    process.stdout.write(`[${entry.timestamp}] ${level.toUpperCase()}: ${message} ${metaString}\n`);
+  }
 }
 
 function write(level: LogLevel, a: unknown, b?: unknown) {

@@ -94,14 +94,11 @@ export default function ImportButton() {
   }, []);
 
   const handleSave = useCallback(async () => {
-    console.log("[ImportButton] handleSave called", { isSaving, hasUser: !!user, hasSupabaseUser: !!supabaseUser, processedTradesCount: processedTrades.length });
     if (isSaving) {
-      console.log("[ImportButton] handleSave: already saving, skipping");
       return;
     }
 
     if (!user || !supabaseUser) {
-      console.error("[ImportButton] Auth check failed", { user: !!user, supabaseUser: !!supabaseUser });
       toast.error(t("import.error.auth"), {
         description: t("import.error.authDescription"),
       });
@@ -170,11 +167,6 @@ export default function ImportButton() {
           skippedCount > 0
             ? `${skippedCount} ${t("import.error.skippedDescription")}`
             : t("import.error.failedDescription");
-        console.error("[ImportButton] All trades skipped — newTrades is empty", { 
-          skippedCount,
-          processedTradesCount: tradesToSave.length,
-          accountNumbersCount: effectiveAccountNumbers.length,
-        });
         setSaveFeedback({
           type: "error",
           title: t("import.error.failed"),
