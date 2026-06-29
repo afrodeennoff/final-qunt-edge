@@ -94,7 +94,11 @@ export default function ImportButton() {
   }, []);
 
   const handleSave = useCallback(async () => {
-    if (isSaving) return;
+    console.log("[ImportButton] handleSave called", { isSaving, hasUser: !!user, hasSupabaseUser: !!supabaseUser, processedTradesCount: processedTrades.length });
+    if (isSaving) {
+      console.log("[ImportButton] handleSave: already saving, skipping");
+      return;
+    }
 
     if (!user || !supabaseUser) {
       console.error("[ImportButton] Auth check failed", { user: !!user, supabaseUser: !!supabaseUser });
@@ -278,11 +282,15 @@ export default function ImportButton() {
   }, [processedTrades, accountNumbers, newAccountNumber, selectedAccountNumbers, importType, user, supabaseUser, t, trades, setTradesStore, refreshTradesOnly, resetImportState, isSaving]);
 
   const handleNextStep = useCallback(async () => {
+    console.log("[ImportButton] handleNextStep called", { step, importType });
     setSaveFeedback(null);
     const platform =
       platforms.find((p) => p.type === importType) ||
       platforms.find((p) => p.platformName === "csv-ai");
-    if (!platform) return;
+    if (!platform) {
+      console.log("[ImportButton] handleNextStep: platform not found", { importType });
+      return;
+    }
 
     const currentStepIndex = platform.steps.findIndex((s) => s.id === step);
     if (currentStepIndex === -1) return;
@@ -302,6 +310,7 @@ export default function ImportButton() {
     // handle their own flow internally — the footer button is hidden and disabled,
     // but guard here too so handleSave is never accidentally triggered.
     if (platform.customComponent && currentStep?.component === platform.customComponent) {
+      console.log("[ImportButton] handleNextStep: custom component guard triggered", { platform: platform.platformName, step });
       return;
     }
 
@@ -311,7 +320,9 @@ export default function ImportButton() {
     // Handle standard flow
     const nextStep = platform.steps[currentStepIndex + 1];
     if (!nextStep) {
+      console.log("[ImportButton] handleNextStep: calling handleSave", { step, platform: platform.platformName, processedTradesCount: processedTrades.length });
       await handleSave();
+      console.log("[ImportButton] handleNextStep: handleSave completed");
       return;
     }
 
