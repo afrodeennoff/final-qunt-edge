@@ -371,7 +371,7 @@ export const THEME_PALETTES: Record<DashboardTheme, Record<string, string>> = {
     '--shadow-offset-x': '0.25px',
     '--shadow-offset-y': '1px',
     '--letter-spacing': '0em',
-    '--spacing': '0.28rem',
+    '--spacing': '0.25rem',
   },
   cmo7mn5wv000204jrbl2rfyxz: {
     '--background': '#090909',
@@ -488,3 +488,5 @@ export function serializeThemeVars(theme: DashboardTheme | string | null | undef
     .map(([key, value]) => `root.style.setProperty('${key}', '${value}')`)
     .join(';')
 }
+
+
