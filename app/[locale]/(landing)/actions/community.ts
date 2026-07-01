@@ -491,7 +491,7 @@ async function sendCommentNotificationEmail({
   }
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: 'Qunt Edge Community <community@eu.updates.qunt-edge.vercel.app>',
       to: recipientEmail,
       subject: language === 'fr' ? 'Nouveau commentaire sur votre publication' : 'New comment on your post',
@@ -507,6 +507,9 @@ async function sendCommentNotificationEmail({
       }),
       ...(process.env.CONTACT_REPLY_TO ? { replyTo: process.env.CONTACT_REPLY_TO } : {})
     })
+    if (error) {
+      console.warn('Failed to send comment notification email:', error)
+    }
   } catch (error) {
     console.warn('Failed to send comment notification email:', error)
   }
