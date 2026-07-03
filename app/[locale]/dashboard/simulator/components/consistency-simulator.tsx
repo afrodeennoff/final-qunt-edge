@@ -19,11 +19,11 @@ import {
     BarChart3,
 } from "lucide-react"
 import { unifiedSectionPanelClassName, unifiedInfoLabelClassName } from "@/components/layout/unified-page-recipes"
+import { Progress } from "@/components/ui/progress"
 import { useDataTradeItems, useDataAccountsList } from "@/context/providers/data-state-provider"
 import type { Trade } from "@/lib/data-types"
 import { toValidDate } from "@/lib/date-utils"
 
-type ProgramType = "nitro" | "nitro_x" | "instant_standard" | "instant_pro" | "instant_plus" | "custom"
 type PhaseType = "phase_1" | "funded"
 type SimMode = "live" | "simulate"
 
@@ -39,81 +39,18 @@ interface Preset {
     id: string
     name: string
     description: string
-    days: TradingDay[]
+    ratios: number[]
 }
 
-const PROGRAMS: Record<ProgramType, { label: string; limit: number }> = {
-    nitro: { label: "NITRO", limit: 50 },
-    nitro_x: { label: "NITRO X", limit: 25 },
-    instant_standard: { label: "INSTANT STANDARD", limit: 15 },
-    instant_pro: { label: "INSTANT PRO", limit: 15 },
-    instant_plus: { label: "INSTANT PLUS", limit: 15 },
-    custom: { label: "CUSTOM", limit: 30 },
-}
+const ACCOUNT_SIZES = [5000, 10000, 25000, 50000, 100000, 150000]
 
-const PRESETS: Preset[] = [
-    {
-        id: "steady_grinder",
-        name: "Steady Grinder",
-        description: "Five disciplined sessions, no single day dominates.",
-        days: [
-            { id: "sg1", pnl: 280, isReal: false },
-            { id: "sg2", pnl: 195, isReal: false },
-            { id: "sg3", pnl: 340, isReal: false },
-            { id: "sg4", pnl: 220, isReal: false },
-            { id: "sg5", pnl: 265, isReal: false },
-        ],
-    },
-    {
-        id: "lucky_strike",
-        name: "Lucky Strike",
-        description: "One outsized day, quiet rest — the classic breach.",
-        days: [
-            { id: "ls1", pnl: 85, isReal: false },
-            { id: "ls2", pnl: -120, isReal: false },
-            { id: "ls3", pnl: 2100, isReal: false },
-            { id: "ls4", pnl: 45, isReal: false },
-            { id: "ls5", pnl: -70, isReal: false },
-        ],
-    },
-    {
-        id: "rollercoaster",
-        name: "Rollercoaster",
-        description: "Sharp wins and losses on alternating days.",
-        days: [
-            { id: "rc1", pnl: 890, isReal: false },
-            { id: "rc2", pnl: -650, isReal: false },
-            { id: "rc3", pnl: 1120, isReal: false },
-            { id: "rc4", pnl: -430, isReal: false },
-            { id: "rc5", pnl: 760, isReal: false },
-            { id: "rc6", pnl: -310, isReal: false },
-        ],
-    },
-    {
-        id: "challenge_pass",
-        name: "Challenge Pass",
-        description: "Clears every program with a ~14.4% score.",
-        days: [
-            { id: "cp1", pnl: 420, isReal: false },
-            { id: "cp2", pnl: 380, isReal: false },
-            { id: "cp3", pnl: 510, isReal: false },
-            { id: "cp4", pnl: 355, isReal: false },
-            { id: "cp5", pnl: 475, isReal: false },
-            { id: "cp6", pnl: 390, isReal: false },
-            { id: "cp7", pnl: 440, isReal: false },
-        ],
-    },
-    {
-        id: "funded_month",
-        name: "Funded Month",
-        description: "Twenty active days with one best session.",
-        days: Array.from({ length: 20 }, (_, i) => ({
-            id: `fm${i}`,
-            pnl: i === 12 ? 1850 : Math.floor(Math.random() * 400) + 150,
-            isReal: false as const,
-        })),
-    },
-]
+function formatSizeLabel(value: number): string {
+    if (value >= 1000) {
+        const k = value / 1000
+        return Number.isInteger(k) ? `$${k}K` : `$${k}K`
+    }
+    return `$${value}`
+}
 
 function formatCurrency(value: number): string {
     return new Intl.NumberFormat("en-US", {
@@ -130,6 +67,50 @@ function formatDate(dateStr: string): string {
     } catch {
         return dateStr
     }
+}
+
+const PRESETS: Preset[] = [
+    {
+        id: "steady_grinder",
+        name: "Steady Grinder",
+        description: "Five disciplined sessions, no single day dominates.",
+        ratios: [0.006, 0.004, 0.007, 0.005, 0.006],
+    },
+    {
+        id: "lucky_strike",
+        name: "Lucky Strike",
+        description: "One outsized day, quiet rest — the classic breach.",
+        ratios: [0.002, -0.003, 0.042, 0.001, -0.002],
+    },
+    {
+        id: "rollercoaster",
+        name: "Rollercoaster",
+        description: "Sharp wins and losses on alternating days.",
+        ratios: [0.018, -0.013, 0.022, -0.009, 0.015, -0.006],
+    },
+    {
+        id: "challenge_pass",
+        name: "Challenge Pass",
+        description: "Clean week that clears the consistency rule with room to spare.",
+        ratios: [0.009, 0.008, 0.011, 0.007, 0.010, 0.008, 0.009],
+    },
+    {
+        id: "funded_month",
+        name: "Funded Month",
+        description: "Twenty active days with one session that tests the limit.",
+        ratios: [
+            0.006, 0.005, 0.007, 0.004, -0.002, 0.006, 0.008, 0.005, 0.004, 0.006,
+            0.007, 0.003, 0.036, 0.005, 0.004, 0.006, -0.001, 0.007, 0.005, 0.006,
+        ],
+    },
+]
+
+function presetToDays(preset: Preset, balance: number): TradingDay[] {
+    return preset.ratios.map((ratio, i) => ({
+        id: `${preset.id}_${i}`,
+        pnl: Math.round(ratio * balance),
+        isReal: false,
+    }))
 }
 
 function aggregateTradesByDay(trades: Trade[], accountNumber?: string): TradingDay[] {
@@ -161,10 +142,11 @@ export function ConsistencySimulator() {
     const accounts = useDataAccountsList()
 
     const [activeTab, setActiveTab] = React.useState<"consistency" | "drawdown">("consistency")
-    const [selectedProgram, setSelectedProgram] = React.useState<ProgramType>("custom")
     const [simMode, setSimMode] = React.useState<SimMode>("live")
     const [userSelectedAccountId, setUserSelectedAccountId] = React.useState<string | null>(null)
-    const [customLimitPercent, setCustomLimitPercent] = React.useState<number>(30)
+    const [consistencyPct, setConsistencyPct] = React.useState<number>(30)
+    const [customSize, setCustomSize] = React.useState<string>("50000")
+    const [useCustomSize, setUseCustomSize] = React.useState<boolean>(false)
     const [phase, setPhase] = React.useState<PhaseType>("phase_1")
     const [simulatedDays, setSimulatedDays] = React.useState<TradingDay[]>([])
 
@@ -179,7 +161,7 @@ export function ConsistencySimulator() {
         return accounts.find(a => a.id === selectedAccountId) || accounts.find(a => a.number === selectedAccountId) || null
     }, [selectedAccountId, accounts])
 
-    const effectiveStartingBalance = React.useMemo(() => {
+    const accountDefaultSize = React.useMemo(() => {
         if (selectedAccount?.startingBalance && selectedAccount.startingBalance > 0) {
             return selectedAccount.startingBalance
         }
@@ -190,21 +172,20 @@ export function ConsistencySimulator() {
         return 50000
     }, [selectedAccount])
 
-    const effectiveConsistencyPct = React.useMemo(() => {
-        if (selectedProgram !== "custom") return PROGRAMS[selectedProgram].limit
-        return customLimitPercent
-    }, [selectedProgram, customLimitPercent])
+    const effectiveStartingBalance = useCustomSize
+        ? Math.max(100, Number(customSize) || accountDefaultSize)
+        : accountDefaultSize
+
+    const effectiveProfitTarget = React.useMemo(() => {
+        if (selectedAccount?.profitTarget && selectedAccount.profitTarget > 0 && !useCustomSize) {
+            return Number(selectedAccount.profitTarget)
+        }
+        return effectiveStartingBalance * 0.1
+    }, [selectedAccount, effectiveStartingBalance, useCustomSize])
 
     const accountConsistencyPct = selectedAccount?.consistencyPercentage
         ? Number(selectedAccount.consistencyPercentage)
         : null
-
-    const effectiveProfitTarget = React.useMemo(() => {
-        if (selectedAccount?.profitTarget && selectedAccount.profitTarget > 0) {
-            return Number(selectedAccount.profitTarget)
-        }
-        return effectiveStartingBalance * 0.1
-    }, [selectedAccount, effectiveStartingBalance])
 
     const realTradingDays = React.useMemo(() => {
         if (!hasTrades) return []
@@ -232,14 +213,13 @@ export function ConsistencySimulator() {
 
     const maxAllowedDaily = React.useMemo(() => {
         const profitBase = Math.max(totalProfit, effectiveProfitTarget)
-        return (effectiveConsistencyPct / 100) * profitBase
-    }, [totalProfit, effectiveProfitTarget, effectiveConsistencyPct])
+        return (consistencyPct / 100) * profitBase
+    }, [totalProfit, effectiveProfitTarget, consistencyPct])
 
-    const isBreached = consistencyScore > effectiveConsistencyPct
-    const isWarning = consistencyScore > effectiveConsistencyPct * 0.8 && !isBreached
+    const isBreached = consistencyScore > consistencyPct
+    const isWarning = consistencyScore > consistencyPct * 0.8 && !isBreached
     const isPassing = !isBreached && totalProfit > 0
 
-    // Drawdown metrics
     const maxDrawdown = React.useMemo(() => {
         if (activeDays.length === 0) return 0
         let peak = effectiveStartingBalance
@@ -255,12 +235,14 @@ export function ConsistencySimulator() {
     }, [activeDays, effectiveStartingBalance])
 
     const maxDrawdownPct = effectiveStartingBalance > 0 ? (maxDrawdown / effectiveStartingBalance) * 100 : 0
-    const dailyLossLimit = selectedAccount?.dailyLoss ? Number(selectedAccount.dailyLoss) : effectiveStartingBalance * 0.05
-    const drawdownThreshold = selectedAccount?.drawdownThreshold ? Number(selectedAccount.drawdownThreshold) : effectiveStartingBalance * 0.1
+    const dailyLossLimit = selectedAccount?.dailyLoss && !useCustomSize ? Number(selectedAccount.dailyLoss) : effectiveStartingBalance * 0.05
+    const drawdownThreshold = selectedAccount?.drawdownThreshold && !useCustomSize ? Number(selectedAccount.drawdownThreshold) : effectiveStartingBalance * 0.1
     const ddUsedPct = drawdownThreshold > 0 ? (maxDrawdown / drawdownThreshold) * 100 : 0
+    const remainingLoss = Math.max(0, drawdownThreshold - maxDrawdown)
     const isDrawdownBreached = maxDrawdown >= drawdownThreshold
+    const ddRemainingIsSafe = remainingLoss > drawdownThreshold * 0.5
+    const ddRemainingIsWarning = remainingLoss > drawdownThreshold * 0.2 && !ddRemainingIsSafe
 
-    // Consecutive loss days
     const maxConsecutiveLosses = React.useMemo(() => {
         if (activeDays.length === 0) return 0
         let maxStreak = 0
@@ -277,12 +259,11 @@ export function ConsistencySimulator() {
     }, [activeDays])
 
     function addDay(pnl?: number) {
-        const newDay: TradingDay = {
+        setSimulatedDays(prev => [...prev, {
             id: `sim_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
             pnl: pnl ?? 0,
             isReal: false,
-        }
-        setSimulatedDays(prev => [...prev, newDay])
+        }])
     }
 
     function removeDay(id: string) {
@@ -295,16 +276,16 @@ export function ConsistencySimulator() {
 
     function applyPreset(preset: Preset) {
         setSimMode("simulate")
-        setSimulatedDays(preset.days.map(d => ({ ...d, id: `${preset.id}_${d.id}` })))
+        setSimulatedDays(presetToDays(preset, effectiveStartingBalance))
     }
 
     function clearSimulated() {
         setSimulatedDays([])
     }
 
-    function loadFromRealData() {
-        setSimMode("live")
-        setSimulatedDays([])
+    function selectSize(size: number) {
+        setUseCustomSize(false)
+        setCustomSize(String(size))
     }
 
     return (
@@ -337,7 +318,6 @@ export function ConsistencySimulator() {
 
             {activeTab === "consistency" && (
                 <>
-                    {/* Header */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div className="flex items-center gap-2 text-muted-foreground">
                             <Zap className="h-3.5 w-3.5" />
@@ -352,24 +332,17 @@ export function ConsistencySimulator() {
                         </p>
                     </div>
 
-                    {/* Account & Program Row */}
-                    <div className={cn("grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4", unifiedSectionPanelClassName, "p-4 sm:p-5")}>
+                    {/* Config Row */}
+                    <div className={cn(unifiedSectionPanelClassName, "p-4 sm:p-5 grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5")}>
                         {/* Account Selector */}
                         <div>
-                            <div className="flex items-baseline justify-between mb-3">
-                                <div>
-                                    <p className={unifiedInfoLabelClassName}>Account</p>
-                                    <p className="text-[11px] text-muted-foreground/50 mt-0.5">Select account or view all combined</p>
-                                </div>
-                                {effectiveStartingBalance > 0 && (
-                                    <span className="text-lg sm:text-xl font-black text-foreground tabular-nums">
-                                        {formatCurrency(effectiveStartingBalance)}
-                                    </span>
-                                )}
+                            <div className="mb-3">
+                                <p className={unifiedInfoLabelClassName}>Account</p>
+                                <p className="text-[11px] text-muted-foreground/50 mt-0.5">Select account or view all</p>
                             </div>
-                            <div className="space-y-1.5">
+                            <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
                                 <button
-                                    onClick={() => { setUserSelectedAccountId("all"); loadFromRealData() }}
+                                    onClick={() => { setUserSelectedAccountId("all"); setSimMode("live"); setSimulatedDays([]) }}
                                     className={cn(
                                         "w-full rounded-lg px-3 py-2 text-left text-[12px] font-medium transition-all duration-200 border flex items-center justify-between",
                                         selectedAccountId === "all"
@@ -377,13 +350,13 @@ export function ConsistencySimulator() {
                                             : "bg-muted/30 text-muted-foreground/80 border-border/20 hover:bg-muted/50 hover:text-foreground"
                                     )}
                                 >
-                                    <span>All Accounts Combined</span>
+                                    <span>All Accounts</span>
                                     {hasTrades && <span className="text-[10px] tabular-nums opacity-60">{rawTrades.length} trades</span>}
                                 </button>
                                 {accounts.map(acc => (
                                     <button
                                         key={acc.id}
-                                        onClick={() => { setUserSelectedAccountId(acc.id || acc.number); loadFromRealData() }}
+                                        onClick={() => { setUserSelectedAccountId(acc.id || acc.number); setSimMode("live"); setSimulatedDays([]); setUseCustomSize(false) }}
                                         className={cn(
                                             "w-full rounded-lg px-3 py-2 text-left text-[12px] font-medium transition-all duration-200 border flex items-center justify-between",
                                             selectedAccountId === (acc.id || acc.number)
@@ -393,7 +366,7 @@ export function ConsistencySimulator() {
                                     >
                                         <div className="flex items-center gap-2 min-w-0">
                                             <Wallet className="h-3 w-3 shrink-0 opacity-50" />
-                                            <span className="truncate">{acc.propfirm || acc.number || `Account ${acc.number}`}</span>
+                                            <span className="truncate">{acc.propfirm || acc.number}</span>
                                             {acc.accountSizeName && (
                                                 <span className="text-[9px] font-bold uppercase tracking-wider opacity-40 shrink-0">{acc.accountSizeName}</span>
                                             )}
@@ -406,84 +379,100 @@ export function ConsistencySimulator() {
                                 {!hasAccounts && (
                                     <div className="rounded-lg px-3 py-3 text-center border border-dashed border-border/20">
                                         <p className="text-[11px] text-muted-foreground/40">No accounts found</p>
-                                        <p className="text-[10px] text-muted-foreground/30 mt-0.5">Add an account in Settings to enable live data</p>
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        {/* Program / Rules */}
+                        {/* Account Size */}
+                        <div>
+                            <div className="flex items-baseline justify-between mb-3">
+                                <div>
+                                    <p className={unifiedInfoLabelClassName}>Account Size</p>
+                                    <p className="text-[11px] text-muted-foreground/50 mt-0.5">Starting balance for simulation</p>
+                                </div>
+                                <span className="text-lg font-black text-foreground tabular-nums">
+                                    {formatCurrency(effectiveStartingBalance)}
+                                </span>
+                            </div>
+                            <div className="grid grid-cols-3 gap-1.5">
+                                {ACCOUNT_SIZES.map(size => {
+                                    const isActive = !useCustomSize && Number(customSize) === size
+                                    return (
+                                        <button
+                                            key={size}
+                                            onClick={() => selectSize(size)}
+                                            className={cn(
+                                                "rounded-lg px-2 py-2 text-[11px] font-bold transition-all duration-200 border",
+                                                isActive
+                                                    ? "bg-primary text-primary-foreground border-primary shadow-sm shadow-primary/20"
+                                                    : "bg-muted/30 text-muted-foreground/80 border-border/20 hover:bg-muted/50 hover:text-foreground"
+                                            )}
+                                        >
+                                            {formatSizeLabel(size)}
+                                        </button>
+                                    )
+                                })}
+                            </div>
+                            <div className="mt-1.5">
+                                <div className={cn(
+                                    "flex items-center gap-2 rounded-lg border px-3 py-2 transition-colors",
+                                    useCustomSize ? "border-primary/40 bg-primary/5" : "border-border/20 bg-muted/30"
+                                )}>
+                                    <span className="text-[11px] font-medium text-muted-foreground/60 shrink-0">Custom</span>
+                                    <span className="text-muted-foreground/40">$</span>
+                                    <input
+                                        type="number"
+                                        value={customSize}
+                                        onFocus={() => setUseCustomSize(true)}
+                                        onChange={e => { setUseCustomSize(true); setCustomSize(e.target.value) }}
+                                        className="w-full bg-transparent text-[12px] font-semibold tabular-nums text-foreground focus:outline-none"
+                                        placeholder="50000"
+                                        min="100"
+                                        step="100"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Consistency Rule — custom only */}
                         <div>
                             <div className="mb-3">
                                 <p className={unifiedInfoLabelClassName}>Consistency Rule</p>
                                 <p className="text-[11px] text-muted-foreground/50 mt-0.5">
                                     {selectedAccount?.propfirm
-                                        ? `Rules from ${selectedAccount.propfirm}`
-                                        : "Pick a program or set custom %"}
+                                        ? `Custom — ${selectedAccount.propfirm} default`
+                                        : "Set the max daily profit %"}
                                 </p>
                             </div>
-
-                            {/* Program Cards - compact row */}
-                            <div className="grid grid-cols-3 gap-1.5 mb-3">
-                                {(Object.entries(PROGRAMS) as [ProgramType, typeof PROGRAMS[ProgramType]][]).map(
-                                    ([key, program]) => (
-                                        <button
-                                            key={key}
-                                            onClick={() => setSelectedProgram(key)}
-                                            className={cn(
-                                                "relative rounded-lg p-2 text-left transition-all duration-200 border",
-                                                selectedProgram === key
-                                                    ? "bg-primary/10 border-primary/30 shadow-sm shadow-primary/10"
-                                                    : "bg-card/30 border-border/20 hover:border-border/40 hover:bg-card/50"
-                                            )}
-                                        >
-                                            <div className="flex items-center justify-between mb-0.5">
-                                                <span className="text-[9px] font-bold tracking-wide text-foreground/70 truncate">
-                                                    {program.label}
-                                                </span>
-                                                {selectedProgram === key && (
-                                                    <div className="h-1.5 w-1.5 rounded-full bg-primary ring-2 ring-primary/20" />
-                                                )}
-                                            </div>
-                                            <span className="text-sm font-black text-foreground">{program.limit}%</span>
-                                        </button>
-                                    )
+                            <div className="rounded-lg bg-background/40 p-3 border border-border/15">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-[10px] font-medium text-muted-foreground/70">Max best day</span>
+                                    <span className="text-xl font-black text-foreground tabular-nums">{consistencyPct}%</span>
+                                </div>
+                                <input
+                                    type="range"
+                                    min="5"
+                                    max="100"
+                                    step="5"
+                                    value={consistencyPct}
+                                    onChange={e => setConsistencyPct(Number(e.target.value))}
+                                    className="w-full h-1.5 bg-muted/50 rounded-full appearance-none cursor-pointer accent-primary"
+                                />
+                                <div className="flex justify-between mt-1">
+                                    <span className="text-[9px] text-muted-foreground/30">5%</span>
+                                    <span className="text-[9px] text-muted-foreground/30">100%</span>
+                                </div>
+                                {accountConsistencyPct && accountConsistencyPct !== consistencyPct && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setConsistencyPct(accountConsistencyPct)}
+                                        className="text-[9px] text-primary/70 mt-1.5 hover:text-primary transition-colors"
+                                    >
+                                        Your account uses {accountConsistencyPct}% — click to apply
+                                    </button>
                                 )}
                             </div>
-
-                            {/* Custom slider when custom is selected */}
-                            {selectedProgram === "custom" && (
-                                <div className="rounded-lg bg-background/40 p-3 border border-border/15">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-[10px] font-medium text-muted-foreground/70">Custom Limit</span>
-                                        <span className="text-sm font-black text-foreground tabular-nums">{effectiveConsistencyPct}%</span>
-                                    </div>
-                                    <input
-                                        type="range"
-                                        min="5"
-                                        max="100"
-                                        step="5"
-                                        value={customLimitPercent}
-                                        onChange={e => setCustomLimitPercent(Number(e.target.value))}
-                                        className="w-full h-1.5 bg-muted/50 rounded-full appearance-none cursor-pointer accent-primary"
-                                    />
-                                    <div className="flex justify-between mt-1">
-                                        <span className="text-[9px] text-muted-foreground/30">5%</span>
-                                        <span className="text-[9px] text-muted-foreground/30">100%</span>
-                                    </div>
-                                    {accountConsistencyPct && (
-                                        <button
-                                            type="button"
-                                            onClick={() => setCustomLimitPercent(accountConsistencyPct)}
-                                            className="text-[9px] text-primary/60 mt-1.5 hover:text-primary transition-colors"
-                                        >
-                                            Your account uses {accountConsistencyPct}% — click to apply
-                                        </button>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Phase */}
                             <div className="mt-3">
                                 <p className="text-[10px] font-medium text-muted-foreground/50 mb-1.5">Phase</p>
                                 <div className="grid grid-cols-2 gap-1.5">
@@ -517,7 +506,7 @@ export function ConsistencySimulator() {
                     {/* Mode Toggle */}
                     <div className="flex items-center gap-1 rounded-lg bg-muted/30 p-1 w-fit border border-border/15">
                         <button
-                            onClick={() => loadFromRealData()}
+                            onClick={() => { setSimMode("live"); setSimulatedDays([]) }}
                             className={cn(
                                 "rounded-md px-3 py-1.5 text-[11px] font-semibold transition-all duration-200",
                                 simMode === "live"
@@ -562,8 +551,8 @@ export function ConsistencySimulator() {
                                     <span className="text-[10px] text-muted-foreground/50 tabular-nums">
                                         {activeDays.length} days
                                     </span>
-                                    {simMode === "live" && winningDays > 0 && (
-                                        <span className="text-[9px] font-medium text-emerald-400/70">
+                                    {winningDays > 0 && (
+                                        <span className="text-[9px] font-medium text-success">
                                             {winningDays}W {losingDays}L
                                         </span>
                                     )}
@@ -572,7 +561,7 @@ export function ConsistencySimulator() {
                                     {simMode === "simulate" && simulatedDays.length > 0 && (
                                         <button
                                             onClick={clearSimulated}
-                                            className="text-[11px] font-medium text-muted-foreground/50 hover:text-red-400 transition-colors"
+                                            className="text-[11px] font-medium text-muted-foreground/50 hover:text-destructive transition-colors"
                                         >
                                             Clear all
                                         </button>
@@ -657,13 +646,13 @@ export function ConsistencySimulator() {
                                             )}
                                             <div className="flex-1 flex items-center justify-end gap-2">
                                                 {day.pnl >= 0 ? (
-                                                    <ArrowUpRight className="h-3 w-3 text-emerald-500/50 shrink-0" />
+                                                    <ArrowUpRight className="h-3 w-3 text-success/50 shrink-0" />
                                                 ) : (
-                                                    <ArrowDownRight className="h-3 w-3 text-red-500/50 shrink-0" />
+                                                    <ArrowDownRight className="h-3 w-3 text-destructive/50 shrink-0" />
                                                 )}
                                                 <span className={cn(
                                                     "text-sm font-semibold tabular-nums text-right min-w-[80px]",
-                                                    day.pnl >= 0 ? "text-emerald-400" : "text-red-400"
+                                                    day.pnl >= 0 ? "text-success" : "text-destructive"
                                                 )}>
                                                     {day.pnl >= 0 ? "+" : ""}{formatCurrency(day.pnl)}
                                                 </span>
@@ -675,12 +664,12 @@ export function ConsistencySimulator() {
                                                             onChange={e => updateDayPnl(day.id, parseFloat(e.target.value) || 0)}
                                                             className={cn(
                                                                 "w-24 rounded-md bg-background/60 border border-border/20 px-2 py-1 text-right text-xs font-medium tabular-nums focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/40",
-                                                                day.pnl >= 0 ? "text-emerald-400" : "text-red-400"
+                                                                day.pnl >= 0 ? "text-success" : "text-destructive"
                                                             )}
                                                         />
                                                         <button
                                                             onClick={() => removeDay(day.id)}
-                                                            className="opacity-0 group-hover:opacity-100 text-muted-foreground/30 hover:text-red-400 transition-all text-[10px]"
+                                                            className="opacity-0 group-hover:opacity-100 text-muted-foreground/30 hover:text-destructive transition-all text-[10px]"
                                                         >
                                                             Remove
                                                         </button>
@@ -699,32 +688,32 @@ export function ConsistencySimulator() {
                             <div className={cn(
                                 "rounded-xl p-3 sm:p-4 border flex items-start gap-3",
                                 isBreached
-                                    ? "bg-red-500/5 border-red-500/20"
+                                    ? "bg-destructive/5 border-destructive/20"
                                     : isWarning
-                                        ? "bg-yellow-500/5 border-yellow-500/20"
+                                        ? "bg-semantic-warning/5 border-semantic-warning/20"
                                         : isPassing
-                                            ? "bg-emerald-500/5 border-emerald-500/20"
+                                            ? "bg-success/5 border-success/20"
                                             : "bg-muted/30 border-border/15"
                             )}>
                                 {isBreached ? (
-                                    <XCircle className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
+                                    <XCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
                                 ) : isPassing ? (
-                                    <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+                                    <CheckCircle2 className="h-5 w-5 text-success shrink-0 mt-0.5" />
                                 ) : (
-                                    <AlertTriangle className="h-5 w-5 text-yellow-400/60 shrink-0 mt-0.5" />
+                                    <AlertTriangle className="h-5 w-5 text-semantic-warning shrink-0 mt-0.5" />
                                 )}
                                 <div>
                                     <p className={cn(
                                         "text-[12px] font-bold",
-                                        isBreached ? "text-red-400" : isPassing ? "text-emerald-400" : "text-yellow-400/80"
+                                        isBreached ? "text-destructive" : isPassing ? "text-success" : "text-semantic-warning"
                                     )}>
                                         {isBreached ? "BREACHED" : isPassing ? "PASSING" : activeDays.length > 0 ? "WARNING" : "AWAITING DATA"}
                                     </p>
                                     <p className="text-[10px] text-muted-foreground/50 mt-0.5 leading-relaxed">
                                         {isBreached
-                                            ? `Best day (${formatCurrency(bestDay)}) exceeds ${effectiveConsistencyPct}% of profit target.`
+                                            ? `Best day (${formatCurrency(bestDay)}) exceeds ${consistencyPct}% of profit target.`
                                             : isPassing
-                                                ? `Your best day is within the ${effectiveConsistencyPct}% threshold.`
+                                                ? `Your best day is within the ${consistencyPct}% threshold.`
                                                 : activeDays.length > 0
                                                     ? "Add more profitable days to see your score."
                                                     : "Add trading days to calculate your consistency score."}
@@ -740,50 +729,49 @@ export function ConsistencySimulator() {
                                         <span className="text-[9px] font-medium text-muted-foreground/40">{selectedAccount.propfirm}</span>
                                     )}
                                 </div>
-                                <p className="text-2xl font-black text-foreground mt-1">{effectiveConsistencyPct}%</p>
+                                <p className="text-2xl font-black text-foreground mt-1">{consistencyPct}%</p>
 
                                 <div className="mt-4">
                                     <div className="flex items-center justify-between mb-2">
                                         <span className="text-[11px] font-semibold text-foreground/70">SCORE</span>
-                                        <span className="text-[10px] text-muted-foreground/50">Best day ÷ Profit base</span>
+                                        <span className="text-[10px] text-muted-foreground/50">Best day / Profit base</span>
                                     </div>
-                                    <div className="relative h-3 rounded-full bg-muted/50 overflow-hidden">
-                                        {/* Limit marker */}
+                                    <div className="relative h-3 rounded-full bg-muted/40 overflow-hidden">
                                         <div
                                             className="absolute inset-y-0 w-px bg-foreground/30 z-10"
-                                            style={{ left: `${Math.min(100, effectiveConsistencyPct)}%` }}
+                                            style={{ left: `${Math.min(100, consistencyPct)}%` }}
                                         />
                                         <div
                                             className={cn(
                                                 "absolute inset-y-0 left-0 rounded-full transition-all duration-500",
-                                                isBreached ? "bg-red-500" : isWarning ? "bg-yellow-500" : "bg-primary"
+                                                isBreached ? "bg-destructive" : isWarning ? "bg-semantic-warning" : "bg-primary"
                                             )}
                                             style={{ width: `${Math.min(100, consistencyScore)}%` }}
                                         />
                                     </div>
                                     <div className="flex items-center justify-between mt-1.5">
-                                        <span className={cn("text-[10px] font-bold tabular-nums", isBreached ? "text-red-400" : "text-muted-foreground/50")}>
+                                        <span className={cn("text-[10px] font-bold tabular-nums", isBreached ? "text-destructive" : "text-muted-foreground/50")}>
                                             {consistencyScore}%
                                         </span>
-                                        <span className="text-[10px] font-medium text-muted-foreground/50">{effectiveConsistencyPct}% limit</span>
+                                        <span className="text-[10px] font-medium text-muted-foreground/50">{consistencyPct}% limit</span>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Key Metrics Grid */}
+                            {/* Key Metrics */}
                             <div className="grid grid-cols-2 gap-3">
                                 <div className={cn(unifiedSectionPanelClassName, "p-3 sm:p-4")}>
                                     <p className={unifiedInfoLabelClassName}>Balance</p>
                                     <p className="text-base sm:text-lg font-black text-foreground tabular-nums mt-1">
                                         {formatCurrency(currentBalance)}
                                     </p>
-                                    <p className={cn("text-[10px] tabular-nums mt-0.5", totalProfit >= 0 ? "text-emerald-400/60" : "text-red-400/60")}>
+                                    <p className={cn("text-[10px] tabular-nums mt-0.5", totalProfit >= 0 ? "text-success/70" : "text-destructive/70")}>
                                         {totalProfit >= 0 ? "+" : ""}{formatCurrency(totalProfit)}
                                     </p>
                                 </div>
                                 <div className={cn(unifiedSectionPanelClassName, "p-3 sm:p-4")}>
                                     <p className={unifiedInfoLabelClassName}>Total Profit</p>
-                                    <p className={cn("text-base sm:text-lg font-black tabular-nums mt-1", totalProfit >= 0 ? "text-emerald-400" : "text-red-400")}>
+                                    <p className={cn("text-base sm:text-lg font-black tabular-nums mt-1", totalProfit >= 0 ? "text-success" : "text-destructive")}>
                                         {formatCurrency(totalProfit)}
                                     </p>
                                     <p className="text-[10px] text-muted-foreground/40 tabular-nums mt-0.5">
@@ -808,7 +796,7 @@ export function ConsistencySimulator() {
                                         {formatCurrency(maxAllowedDaily)}
                                     </p>
                                     <p className="text-[10px] text-muted-foreground/40 mt-0.5">
-                                        {effectiveConsistencyPct}% of target
+                                        {consistencyPct}% of target
                                     </p>
                                 </div>
                             </div>
@@ -820,17 +808,16 @@ export function ConsistencySimulator() {
                                 </div>
                                 <div className={cn(unifiedSectionPanelClassName, "p-2.5 text-center")}>
                                     <p className="text-[9px] font-semibold text-muted-foreground/50 uppercase tracking-wider">Avg Day</p>
-                                    <p className={cn("text-base font-black tabular-nums mt-0.5", avgDay >= 0 ? "text-foreground" : "text-red-400")}>
+                                    <p className={cn("text-base font-black tabular-nums mt-0.5", avgDay >= 0 ? "text-foreground" : "text-destructive")}>
                                         {formatCurrency(avgDay)}
                                     </p>
                                 </div>
                                 <div className={cn(unifiedSectionPanelClassName, "p-2.5 text-center")}>
                                     <p className="text-[9px] font-semibold text-muted-foreground/50 uppercase tracking-wider">Worst</p>
-                                    <p className="text-base font-black text-red-400 tabular-nums mt-0.5">{formatCurrency(worstDay)}</p>
+                                    <p className="text-base font-black text-destructive tabular-nums mt-0.5">{formatCurrency(worstDay)}</p>
                                 </div>
                             </div>
 
-                            {/* What This Means */}
                             <div className={cn(unifiedSectionPanelClassName, "p-4 sm:p-5")}>
                                 <div className="flex items-center gap-2 mb-2">
                                     <Info className="h-3.5 w-3.5 text-primary" />
@@ -841,43 +828,43 @@ export function ConsistencySimulator() {
                                 <p className="text-[12px] leading-relaxed text-muted-foreground/60">
                                     {simMode === "live"
                                         ? <>Your <span className="font-semibold text-foreground/80">{activeDays.length} real trading days</span> are evaluated against the{" "}
-                                            <span className="font-semibold text-foreground/80">{effectiveConsistencyPct}%</span> rule. Best day ({formatCurrency(bestDay)}) must not exceed{" "}
-                                            {effectiveConsistencyPct}% of total profit ({formatCurrency(Math.max(totalProfit, effectiveProfitTarget))}).</>
+                                            <span className="font-semibold text-foreground/80">{consistencyPct}%</span> rule. Best day ({formatCurrency(bestDay)}) must not exceed{" "}
+                                            {consistencyPct}% of profit ({formatCurrency(Math.max(totalProfit, effectiveProfitTarget))}).</>
                                         : <>Simulate scenarios to test how the{" "}
-                                            <span className="font-semibold text-foreground/80">{effectiveConsistencyPct}%</span> consistency rule reacts to different P&amp;L patterns.</>}
+                                            <span className="font-semibold text-foreground/80">{consistencyPct}%</span> consistency rule reacts to different P&amp;L patterns.</>}
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Try A Preset Section — only show in simulate mode or when no real data */}
+                    {/* Try A Preset */}
                     {(simMode === "simulate" || !hasTrades) && (
                         <div className="flex items-start gap-2 pt-2">
                             <Sparkles className="h-3.5 w-3.5 text-muted-foreground/40 mt-0.5 shrink-0" />
-                            <div>
-                                <div className="flex items-center gap-2 mb-3">
+                            <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
                                     <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/80">
                                         Try A Preset
                                     </span>
-                                    <span className="text-[10px] text-muted-foreground/40">Load a scenario and watch the rule respond</span>
+                                    <span className="text-[10px] text-muted-foreground/40">Scaled to {formatCurrency(effectiveStartingBalance)}</span>
                                 </div>
+                                <p className="text-[11px] text-muted-foreground/40 mb-3">Each scenario auto-scales to your selected account size. Click to load it.</p>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-3">
                                     {PRESETS.map(preset => {
-                                        const presetProfit = preset.days.reduce((s, d) => s + d.pnl, 0)
-                                        const presetBest = Math.max(...preset.days.map(d => d.pnl))
+                                        const days = presetToDays(preset, effectiveStartingBalance)
+                                        const presetProfit = days.reduce((s, d) => s + d.pnl, 0)
+                                        const presetBest = Math.max(...days.map(d => d.pnl))
                                         const presetScore = presetProfit > 0 ? Math.round((presetBest / Math.max(presetProfit, effectiveProfitTarget)) * 100) : 0
-                                        const wouldBreach = presetScore > effectiveConsistencyPct
+                                        const wouldBreach = presetScore > consistencyPct
                                         return (
                                             <button
                                                 key={preset.id}
                                                 onClick={() => applyPreset(preset)}
-                                                className={cn(
-                                                    "group rounded-xl p-3 sm:p-4 text-left transition-all duration-200 border bg-card/30 border-border/20 hover:border-primary/20 hover:bg-card/50 hover:shadow-lg hover:shadow-primary/5"
-                                                )}
+                                                className="group rounded-xl p-3 sm:p-4 text-left transition-all duration-200 border bg-card/30 border-border/20 hover:border-primary/20 hover:bg-card/50 hover:shadow-lg hover:shadow-primary/5"
                                             >
                                                 <div className="flex items-end gap-0.5 h-8 mb-3">
-                                                    {preset.days.slice(0, 8).map((day, i) => {
-                                                        const maxAbs = Math.max(...preset.days.map(d => Math.abs(d.pnl)), 1)
+                                                    {days.slice(0, 8).map((day, i) => {
+                                                        const maxAbs = Math.max(...days.map(d => Math.abs(d.pnl)), 1)
                                                         const height = Math.max(2, (Math.abs(day.pnl) / maxAbs) * 32)
                                                         const isPositive = day.pnl >= 0
                                                         return (
@@ -885,7 +872,7 @@ export function ConsistencySimulator() {
                                                                 key={i}
                                                                 className={cn(
                                                                     "flex-1 rounded-sm min-w-[3px] transition-all",
-                                                                    isPositive ? "bg-emerald-500/40 group-hover:bg-emerald-500/60" : "bg-red-500/40 group-hover:bg-red-500/60"
+                                                                    isPositive ? "bg-success/40 group-hover:bg-success/60" : "bg-destructive/40 group-hover:bg-destructive/60"
                                                                 )}
                                                                 style={{ height }}
                                                             />
@@ -894,17 +881,16 @@ export function ConsistencySimulator() {
                                                 </div>
                                                 <div className="flex items-center justify-between">
                                                     <p className="text-[12px] font-bold text-foreground/90">{preset.name}</p>
-                                                    {wouldBreach && (
-                                                        <XCircle className="h-3 w-3 text-red-400/50 shrink-0" />
-                                                    )}
-                                                    {!wouldBreach && presetScore > 0 && (
-                                                        <CheckCircle2 className="h-3 w-3 text-emerald-400/50 shrink-0" />
+                                                    {wouldBreach ? (
+                                                        <XCircle className="h-3 w-3 text-destructive/50 shrink-0" />
+                                                    ) : (
+                                                        <CheckCircle2 className="h-3 w-3 text-success/50 shrink-0" />
                                                     )}
                                                 </div>
                                                 <p className="text-[10px] text-muted-foreground/50 line-clamp-2 mt-1 leading-relaxed">
                                                     {preset.description}
                                                 </p>
-                                                <p className={cn("text-[9px] font-medium mt-1.5 tabular-nums", wouldBreach ? "text-red-400/60" : "text-emerald-400/60")}>
+                                                <p className={cn("text-[9px] font-medium mt-1.5 tabular-nums", wouldBreach ? "text-destructive/70" : "text-success/70")}>
                                                     Score: {presetScore}% {wouldBreach ? "(breach)" : "(pass)"}
                                                 </p>
                                             </button>
@@ -919,7 +905,6 @@ export function ConsistencySimulator() {
 
             {activeTab === "drawdown" && (
                 <div className="flex flex-col gap-4 sm:gap-6">
-                    {/* Header */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div className="flex items-center gap-2 text-muted-foreground">
                             <TrendingDown className="h-3.5 w-3.5" />
@@ -933,7 +918,6 @@ export function ConsistencySimulator() {
                     </div>
 
                     <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 sm:gap-4">
-                        {/* Drawdown Chart Area */}
                         <div className={cn("xl:col-span-2", unifiedSectionPanelClassName, "p-4 sm:p-5")}>
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-2 text-muted-foreground">
@@ -954,15 +938,11 @@ export function ConsistencySimulator() {
                                 </div>
                             ) : (
                                 <div className="space-y-4">
-                                    {/* Visual equity curve */}
                                     <div className="relative h-48 bg-background/30 rounded-lg overflow-hidden border border-border/10">
                                         <svg className="w-full h-full" viewBox={`0 0 ${Math.max(activeDays.length * 40, 400)} 192`} preserveAspectRatio="none">
-                                            {/* Grid lines */}
                                             {[0, 1, 2, 3, 4].map(i => (
                                                 <line key={i} x1="0" y1={i * 48} x2="100%" y2={i * 48} stroke="currentColor" strokeWidth="0.5" className="text-border/20" />
                                             ))}
-
-                                            {/* Zero line (starting balance) */}
                                             {(() => {
                                                 const values = getEquityCurve(activeDays, effectiveStartingBalance)
                                                 const minVal = Math.min(effectiveStartingBalance, ...values) * 0.98
@@ -971,8 +951,6 @@ export function ConsistencySimulator() {
                                                 const zeroY = 192 - ((effectiveStartingBalance - minVal) / range) * 192
                                                 return <line x1="0" y1={zeroY} x2="100%" y2={zeroY} stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" className="text-muted-foreground/30" />
                                             })()}
-
-                                            {/* Equity curve path */}
                                             {(() => {
                                                 const values = getEquityCurve(activeDays, effectiveStartingBalance)
                                                 const minVal = Math.min(effectiveStartingBalance, ...values) * 0.98
@@ -983,19 +961,8 @@ export function ConsistencySimulator() {
                                                     const y = 192 - ((v - minVal) / range) * 192
                                                     return `${x},${y}`
                                                 }).join(" ")
-
-                                                return (
-                                                    <polyline
-                                                        points={points}
-                                                        fill="none"
-                                                        stroke="url(#ddGradient)"
-                                                        strokeWidth="2"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                )
+                                                return <polyline points={points} fill="none" stroke="url(#ddGradient)" strokeWidth="2" strokeLinejoin="round" />
                                             })()}
-
-                                            {/* Peak line */}
                                             {(() => {
                                                 const values = getEquityCurve(activeDays, effectiveStartingBalance)
                                                 const minVal = Math.min(effectiveStartingBalance, ...values) * 0.98
@@ -1011,13 +978,11 @@ export function ConsistencySimulator() {
                                                         peakPoints.push(`${x},${y}`)
                                                     }
                                                 })
-
                                                 if (peakPoints.length > 1) {
-                                                    return <polyline points={peakPoints.join(" ")} fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" className="text-emerald-500/30" />
+                                                    return <polyline points={peakPoints.join(" ")} fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" className="text-success/40" />
                                                 }
                                                 return null
                                             })()}
-
                                             <defs>
                                                 <linearGradient id="ddGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                                     <stop offset="0%" stopColor="currentColor" className="text-primary/60" />
@@ -1027,7 +992,6 @@ export function ConsistencySimulator() {
                                         </svg>
                                     </div>
 
-                                    {/* Daily bars */}
                                     <div className="flex items-end gap-1 h-20 px-1">
                                         {activeDays.map((day, i) => {
                                             const maxAbs = Math.max(...activeDays.map(d => Math.abs(d.pnl)), 1)
@@ -1036,10 +1000,7 @@ export function ConsistencySimulator() {
                                             return (
                                                 <div key={day.id} className="flex-1 flex flex-col items-center gap-0.5 min-w-[4px]">
                                                     <div
-                                                        className={cn(
-                                                            "w-full rounded-t-sm transition-all",
-                                                            isPositive ? "bg-emerald-500/50" : "bg-red-500/50"
-                                                        )}
+                                                        className={cn("w-full rounded-t-sm transition-all", isPositive ? "bg-success/50" : "bg-destructive/50")}
                                                         style={{ height }}
                                                         title={`${day.date || `Day ${i+1}`}: ${formatCurrency(day.pnl)}`}
                                                     />
@@ -1048,31 +1009,25 @@ export function ConsistencySimulator() {
                                         })}
                                     </div>
 
-                                    {/* Day list summary */}
                                     <div className="space-y-1 max-h-[180px] overflow-y-auto pr-1">
                                         {activeDays.map((day, i) => {
-                                            const eqBefore = effectiveStartingBalance + activeDays.slice(0, i).reduce((s, d) => s + d.pnl, 0)
-                                            const eqAfter = eqBefore + day.pnl
-                                            const ddFromPeak = Math.max(0, ...activeDays.slice(0, i + 1).reduce(
-                                                (arr, d, j) => {
-                                                    const running = effectiveStartingBalance + activeDays.slice(0, j + 1).reduce((ss, dd) => ss + dd.pnl, 0)
-                                                    arr.push(running)
-                                                    return arr
-                                                }, [] as number[]
-                                            )) - eqAfter
-
+                                            const equityValues = getEquityCurve(activeDays.slice(0, i + 1), effectiveStartingBalance)
+                                            const peak = Math.max(effectiveStartingBalance, ...equityValues)
+                                            const eqAfter = effectiveStartingBalance + activeDays.slice(0, i + 1).reduce((s, d) => s + d.pnl, 0)
+                                            const ddFromPeak = Math.max(0, peak - eqAfter)
                                             return (
                                                 <div key={day.id} className="flex items-center gap-2 rounded-md bg-background/30 px-2.5 py-1.5 text-[11px]">
                                                     <span className="text-muted-foreground/35 w-5 text-right font-mono">{i + 1}.</span>
-                                                    {day.date && <span className="text-muted-foreground/40 w-12 shrink-nowrap">{formatDate(day.date)}</span>}
-                                                    <span className={cn("font-semibold tabular-nums w-20 text-right", day.pnl >= 0 ? "text-emerald-400" : "text-red-400")}>
+                                                    {day.date && <span className="text-muted-foreground/40 w-12 shrink-0">{formatDate(day.date)}</span>}
+                                                    <span className={cn("font-semibold tabular-nums w-20 text-right", day.pnl >= 0 ? "text-success" : "text-destructive")}>
                                                         {day.pnl >= 0 ? "+" : ""}{formatCurrency(day.pnl)}
                                                     </span>
                                                     <span className="tabular-nums text-muted-foreground/50 w-24 text-right">{formatCurrency(eqAfter)}</span>
-                                                    {ddFromPeak > 0 && (
-                                                        <span className="tabular-nums text-red-400/60 w-20 text-right">-{formatCurrency(ddFromPeak)}</span>
+                                                    {ddFromPeak > 0 ? (
+                                                        <span className="tabular-nums text-destructive/70 w-20 text-right">-{formatCurrency(ddFromPeak)}</span>
+                                                    ) : (
+                                                        <span className="w-20" />
                                                     )}
-                                                    {ddFromPeak <= 0 && <span className="w-20" />}
                                                 </div>
                                             )
                                         })}
@@ -1081,54 +1036,70 @@ export function ConsistencySimulator() {
                             )}
                         </div>
 
-                        {/* Drawdown Stats Sidebar */}
+                        {/* Drawdown Stats */}
                         <div className="space-y-3">
-                            {/* Max Drawdown Status */}
                             <div className={cn(
                                 unifiedSectionPanelClassName, "p-4 sm:p-5",
-                                isDrawdownBreached ? "border-red-500/30 bg-red-500/5" : ""
+                                isDrawdownBreached ? "border-destructive/30 bg-destructive/5" : ""
                             )}>
                                 <div className="flex items-center gap-2 mb-1">
-                                    <TrendingDown className={cn("h-4 w-4", isDrawdownBreached ? "text-red-400" : "text-muted-foreground")} />
+                                    <TrendingDown className={cn("h-4 w-4", isDrawdownBreached ? "text-destructive" : "text-muted-foreground")} />
                                     <p className={unifiedInfoLabelClassName}>Max Drawdown</p>
                                 </div>
-                                <p className={cn("text-2xl font-black tabular-nums", isDrawdownBreached ? "text-red-400" : "text-foreground")}>
+                                <p className={cn("text-2xl font-black tabular-nums", isDrawdownBreached ? "text-destructive" : "text-foreground")}>
                                     {formatCurrency(maxDrawdown)}
                                 </p>
                                 <p className="text-[11px] text-muted-foreground/50 mt-0.5">
                                     {maxDrawdownPct.toFixed(1)}% of starting balance
                                 </p>
-
-                                {/* DD Progress bar */}
                                 <div className="mt-3">
-                                    <div className="flex items-center justify-between mb-1">
-                                        <span className="text-[10px] font-medium text-muted-foreground/50">Used</span>
-                                        <span className={cn("text-[10px] font-bold tabular-nums", isDrawdownBreached ? "text-red-400" : "text-muted-foreground/50")}>
+                                    <div className="flex items-center justify-between mb-1.5">
+                                        <span className="text-[10px] font-medium text-muted-foreground/50">Drawdown used</span>
+                                        <span className={cn("text-[10px] font-bold tabular-nums",
+                                            isDrawdownBreached ? "text-destructive" : ddUsedPct > 75 ? "text-semantic-warning" : "text-success"
+                                        )}>
                                             {ddUsedPct.toFixed(0)}%
                                         </span>
                                     </div>
-                                    <div className="relative h-2 rounded-full bg-muted/50 overflow-hidden">
-                                        <div
-                                            className={cn(
-                                                "absolute inset-y-0 left-0 rounded-full transition-all duration-500",
-                                                isDrawdownBreached ? "bg-red-500" : ddUsedPct > 75 ? "bg-yellow-500" : "bg-primary"
-                                            )}
-                                            style={{ width: `${Math.min(100, ddUsedPct)}%` }}
-                                        />
-                                        {/* Threshold marker at configured level */}
-                                        <div
-                                            className="absolute inset-y-0 w-px bg-foreground/40 z-10"
-                                            style={{ left: "100%" }}
-                                        />
-                                    </div>
+                                    <Progress
+                                        value={Math.min(100, ddUsedPct)}
+                                        className="h-1.5 bg-muted/40"
+                                        indicatorClassName={cn("transition-all",
+                                            isDrawdownBreached ? "bg-destructive" : ddUsedPct > 75 ? "bg-semantic-warning" : "bg-primary/60"
+                                        )}
+                                    />
                                     <div className="flex items-center justify-between mt-1">
-                                        <span className="text-[9px] text-muted-foreground/30">$0</span>
+                                        <span className="text-[9px] text-muted-foreground/30">{formatCurrency(maxDrawdown)}</span>
                                         <span className="text-[9px] text-muted-foreground/40">Limit: {formatCurrency(drawdownThreshold)}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Key DD Metrics */}
+                            {/* Remaining — same style as accounts page */}
+                            <div className={cn(unifiedSectionPanelClassName, "p-4 sm:p-5")}>
+                                <div className="space-y-1.5">
+                                    <div className="flex items-center justify-between gap-2 text-[12px]">
+                                        <span className="text-muted-foreground/70">Remaining</span>
+                                        <span className={cn("tabular-nums font-medium",
+                                            isDrawdownBreached ? "text-destructive"
+                                                : ddRemainingIsSafe ? "text-success"
+                                                    : ddRemainingIsWarning ? "text-semantic-warning" : "text-destructive"
+                                        )}>
+                                            {remainingLoss > 0 ? `${formatCurrency(remainingLoss)} left` : "Breached"}
+                                        </span>
+                                    </div>
+                                    <Progress
+                                        value={drawdownThreshold > 0 ? Math.max(0, 100 - ddUsedPct) : 0}
+                                        className="h-1.5 bg-muted/40"
+                                        indicatorClassName={cn("transition-all",
+                                            isDrawdownBreached ? "bg-destructive"
+                                                : ddRemainingIsSafe ? "bg-success"
+                                                    : ddRemainingIsWarning ? "bg-semantic-warning" : "bg-destructive"
+                                        )}
+                                    />
+                                </div>
+                            </div>
+
                             <div className="grid grid-cols-2 gap-3">
                                 <div className={cn(unifiedSectionPanelClassName, "p-3 sm:p-4")}>
                                     <p className={unifiedInfoLabelClassName}>Threshold</p>
@@ -1136,28 +1107,7 @@ export function ConsistencySimulator() {
                                         {formatCurrency(drawdownThreshold)}
                                     </p>
                                     <p className="text-[10px] text-muted-foreground/40 mt-0.5">
-                                        From account config
-                                    </p>
-                                </div>
-                                <div className={cn(unifiedSectionPanelClassName, "p-3 sm:p-4")}>
-                                    <p className={unifiedInfoLabelClassName}>Remaining</p>
-                                    <p className={cn("text-base font-black tabular-nums mt-1", (drawdownThreshold - maxDrawdown) > 0 ? "text-foreground" : "text-red-400")}>
-                                        {formatCurrency(Math.max(0, drawdownThreshold - maxDrawdown))}
-                                    </p>
-                                    <p className="text-[10px] text-muted-foreground/40 mt-0.5">
-                                        Before breach
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className={cn(unifiedSectionPanelClassName, "p-3 sm:p-4")}>
-                                    <p className={unifiedInfoLabelClassName}>Consec. Losses</p>
-                                    <p className={cn("text-base font-black tabular-nums mt-1", maxConsecutiveLosses >= 3 ? "text-red-400" : "text-foreground")}>
-                                        {maxConsecutiveLosses}
-                                    </p>
-                                    <p className="text-[10px] text-muted-foreground/40 mt-0.5">
-                                        Worst streak
+                                        {useCustomSize ? `${(drawdownThreshold / effectiveStartingBalance * 100).toFixed(0)}% of balance` : "From account config"}
                                     </p>
                                 </div>
                                 <div className={cn(unifiedSectionPanelClassName, "p-3 sm:p-4")}>
@@ -1165,30 +1115,43 @@ export function ConsistencySimulator() {
                                     <p className="text-base font-black text-foreground tabular-nums mt-1">
                                         {formatCurrency(dailyLossLimit)}
                                     </p>
-                                    <p className="text-[10px] text-muted-foreground/40 mt-0.5">
-                                        Per-day max
-                                    </p>
+                                    <p className="text-[10px] text-muted-foreground/40 mt-0.5">Per-day max</p>
                                 </div>
                             </div>
 
-                            {/* Days that breached daily limit */}
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className={cn(unifiedSectionPanelClassName, "p-3 sm:p-4")}>
+                                    <p className={unifiedInfoLabelClassName}>Consec. Losses</p>
+                                    <p className={cn("text-base font-black tabular-nums mt-1", maxConsecutiveLosses >= 3 ? "text-destructive" : "text-foreground")}>
+                                        {maxConsecutiveLosses}
+                                    </p>
+                                    <p className="text-[10px] text-muted-foreground/40 mt-0.5">Worst streak</p>
+                                </div>
+                                <div className={cn(unifiedSectionPanelClassName, "p-3 sm:p-4")}>
+                                    <p className={unifiedInfoLabelClassName}>Peak Balance</p>
+                                    <p className="text-base font-black text-foreground tabular-nums mt-1">
+                                        {activeDays.length > 0 ? formatCurrency(Math.max(effectiveStartingBalance, ...getEquityCurve(activeDays, effectiveStartingBalance))) : formatCurrency(effectiveStartingBalance)}
+                                    </p>
+                                    <p className="text-[10px] text-muted-foreground/40 mt-0.5">Highest reached</p>
+                                </div>
+                            </div>
+
                             {activeDays.length > 0 && (() => {
                                 const breaches = activeDays.filter(d => d.pnl < -dailyLossLimit)
                                 if (breaches.length === 0) return null
                                 return (
-                                    <div className={cn(unifiedSectionPanelClassName, "p-3 sm:p-4 border-red-500/20 bg-red-500/5")}>
+                                    <div className={cn(unifiedSectionPanelClassName, "p-3 sm:p-4 border-destructive/20 bg-destructive/5")}>
                                         <div className="flex items-center gap-2 mb-1">
-                                            <AlertTriangle className="h-3.5 w-3.5 text-red-400" />
-                                            <p className="text-[10px] font-bold text-red-400 uppercase tracking-wider">Daily Limit Breaches</p>
+                                            <AlertTriangle className="h-3.5 w-3.5 text-destructive" />
+                                            <p className="text-[10px] font-bold text-destructive uppercase tracking-wider">Daily Limit Breaches</p>
                                         </div>
-                                        <p className="text-[12px] text-red-400/80">
+                                        <p className="text-[12px] text-destructive/80">
                                             {breaches.length} day{breaches.length > 1 ? "s" : ""} exceeded the {formatCurrency(dailyLossLimit)} daily loss limit
                                         </p>
                                     </div>
                                 )
                             })()}
 
-                            {/* Info panel */}
                             <div className={cn(unifiedSectionPanelClassName, "p-4 sm:p-5")}>
                                 <div className="flex items-center gap-2 mb-2">
                                     <Info className="h-3.5 w-3.5 text-primary" />
