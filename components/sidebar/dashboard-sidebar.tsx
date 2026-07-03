@@ -12,10 +12,10 @@ import {
     Database,
     FileUp,
     FileText,
+    FlaskConical,
     LayoutDashboard,
     RefreshCw,
     Settings,
-    Sparkles,
     TrendingUp,
     Shield,
     Users,
@@ -100,6 +100,12 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             label: "Sync",
             icon: <RefreshCw className={NAV_ICON_SIZE} />,
             action: () => refreshAllData({ force: true }),
+            group: "Tools"
+        },
+        {
+            href: `/${locale}/dashboard/simulator`,
+            icon: <FlaskConical className={NAV_ICON_SIZE} />,
+            label: "Simulator",
             group: "Tools"
         },
 
