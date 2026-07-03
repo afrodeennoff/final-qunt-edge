@@ -2,7 +2,6 @@
 
 import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import * as XLSX from "xlsx";
 import { ImportType } from "../import-type-selection";
 import { Progress } from "@/components/ui/progress";
 import { XIcon, FileIcon, AlertCircle, ArrowUpCircle } from "lucide-react";
@@ -69,7 +68,8 @@ const normalizeAtasHeaderKey = (header: string): string =>
 const normalizeAtasHeader = (header: string): string =>
   ATAS_HEADER_MAPPINGS[normalizeAtasHeaderKey(header)] || header.trim();
 
-const parseAtasWorkbook = (data: ArrayBuffer): string[][] => {
+const parseAtasWorkbook = async (data: ArrayBuffer): Promise<string[][]> => {
+  const XLSX = await import("xlsx");
   const workbook = XLSX.read(data, { type: "array", cellDates: true });
   const journalSheetName = ATAS_JOURNAL_SHEET_NAMES.find(
     (sheetName) => workbook.Sheets[sheetName],
@@ -154,7 +154,7 @@ export default function AtasFileUpload({
 
         reader.onload = async (e) => {
           try {
-            const fileData = parseAtasWorkbook(e.target?.result as ArrayBuffer);
+            const fileData = await parseAtasWorkbook(e.target?.result as ArrayBuffer);
 
             setParsedFiles((prevFiles) => {
               const newFiles = [...prevFiles];

@@ -54,7 +54,18 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
     compiler: {
       removeConsole: process.env.NODE_ENV === 'production',
     },
-    serverExternalPackages: ['pdf2json', 'canvas', 'sharp', 'openai'],
+    serverExternalPackages: [
+      'pdf2json',
+      'canvas',
+      'sharp',
+      'openai',
+      '@octokit/rest',
+      'stripe',
+      'resend',
+      'dompurify',
+      '@react-email/render',
+      '@react-email/components',
+    ],
     cacheComponents: !cacheComponentsDisabled,
     // Bundle optimization - tree shake heavy libraries
     experimental: {

@@ -234,6 +234,31 @@ export function ConsistencySimulator() {
         return maxDD
     }, [activeDays, effectiveStartingBalance])
 
+    const equityCurve = React.useMemo(
+        () => getEquityCurve(activeDays, effectiveStartingBalance),
+        [activeDays, effectiveStartingBalance],
+    )
+    const equityBounds = React.useMemo(() => {
+        const values = equityCurve
+        const minVal = Math.min(effectiveStartingBalance, ...values) * 0.98
+        const maxVal = Math.max(effectiveStartingBalance, ...values) * 1.02
+        const range = maxVal - minVal || 1
+        return { minVal, maxVal, range }
+    }, [equityCurve, effectiveStartingBalance])
+    const peakBalance = equityCurve.length > 0 ? Math.max(effectiveStartingBalance, ...equityCurve) : effectiveStartingBalance
+
+    const dayStats = React.useMemo(() => {
+        const stats: Array<{ eqAfter: number; ddFromPeak: number }> = []
+        let running = effectiveStartingBalance
+        let peak = effectiveStartingBalance
+        for (const day of activeDays) {
+            running += day.pnl
+            if (running > peak) peak = running
+            stats.push({ eqAfter: running, ddFromPeak: Math.max(0, peak - running) })
+        }
+        return stats
+    }, [activeDays, effectiveStartingBalance])
+
     const maxDrawdownPct = effectiveStartingBalance > 0 ? (maxDrawdown / effectiveStartingBalance) * 100 : 0
     const dailyLossLimit = selectedAccount?.dailyLoss && !useCustomSize ? Number(selectedAccount.dailyLoss) : effectiveStartingBalance * 0.05
     const drawdownThreshold = selectedAccount?.drawdownThreshold && !useCustomSize ? Number(selectedAccount.drawdownThreshold) : effectiveStartingBalance * 0.1
@@ -944,34 +969,25 @@ export function ConsistencySimulator() {
                                                 <line key={i} x1="0" y1={i * 48} x2="100%" y2={i * 48} stroke="currentColor" strokeWidth="0.5" className="text-border/20" />
                                             ))}
                                             {(() => {
-                                                const values = getEquityCurve(activeDays, effectiveStartingBalance)
-                                                const minVal = Math.min(effectiveStartingBalance, ...values) * 0.98
-                                                const maxVal = Math.max(effectiveStartingBalance, ...values) * 1.02
-                                                const range = maxVal - minVal || 1
+                                                const { minVal, range } = equityBounds
                                                 const zeroY = 192 - ((effectiveStartingBalance - minVal) / range) * 192
                                                 return <line x1="0" y1={zeroY} x2="100%" y2={zeroY} stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" className="text-muted-foreground/30" />
                                             })()}
                                             {(() => {
-                                                const values = getEquityCurve(activeDays, effectiveStartingBalance)
-                                                const minVal = Math.min(effectiveStartingBalance, ...values) * 0.98
-                                                const maxVal = Math.max(effectiveStartingBalance, ...values) * 1.02
-                                                const range = maxVal - minVal || 1
-                                                const points = values.map((v, i) => {
-                                                    const x = (i / Math.max(values.length - 1, 1)) * (values.length * 40)
+                                                const { minVal, range } = equityBounds
+                                                const points = equityCurve.map((v, i) => {
+                                                    const x = (i / Math.max(equityCurve.length - 1, 1)) * (equityCurve.length * 40)
                                                     const y = 192 - ((v - minVal) / range) * 192
                                                     return `${x},${y}`
                                                 }).join(" ")
                                                 return <polyline points={points} fill="none" stroke="url(#ddGradient)" strokeWidth="2" strokeLinejoin="round" />
                                             })()}
                                             {(() => {
-                                                const values = getEquityCurve(activeDays, effectiveStartingBalance)
-                                                const minVal = Math.min(effectiveStartingBalance, ...values) * 0.98
-                                                const maxVal = Math.max(effectiveStartingBalance, ...values) * 1.02
-                                                const range = maxVal - minVal || 1
+                                                const { minVal, range } = equityBounds
                                                 let peak = effectiveStartingBalance
                                                 const peakPoints: string[] = []
-                                                values.forEach((v, i) => {
-                                                    const x = (i / Math.max(values.length - 1, 1)) * (values.length * 40)
+                                                equityCurve.forEach((v, i) => {
+                                                    const x = (i / Math.max(equityCurve.length - 1, 1)) * (equityCurve.length * 40)
                                                     if (v >= peak) {
                                                         peak = v
                                                         const y = 192 - ((peak - minVal) / range) * 192
@@ -1011,10 +1027,7 @@ export function ConsistencySimulator() {
 
                                     <div className="space-y-1 max-h-[180px] overflow-y-auto pr-1">
                                         {activeDays.map((day, i) => {
-                                            const equityValues = getEquityCurve(activeDays.slice(0, i + 1), effectiveStartingBalance)
-                                            const peak = Math.max(effectiveStartingBalance, ...equityValues)
-                                            const eqAfter = effectiveStartingBalance + activeDays.slice(0, i + 1).reduce((s, d) => s + d.pnl, 0)
-                                            const ddFromPeak = Math.max(0, peak - eqAfter)
+                                            const stats = dayStats[i]
                                             return (
                                                 <div key={day.id} className="flex items-center gap-2 rounded-md bg-background/30 px-2.5 py-1.5 text-[11px]">
                                                     <span className="text-muted-foreground/35 w-5 text-right font-mono">{i + 1}.</span>
@@ -1022,9 +1035,9 @@ export function ConsistencySimulator() {
                                                     <span className={cn("font-semibold tabular-nums w-20 text-right", day.pnl >= 0 ? "text-success" : "text-destructive")}>
                                                         {day.pnl >= 0 ? "+" : ""}{formatCurrency(day.pnl)}
                                                     </span>
-                                                    <span className="tabular-nums text-muted-foreground/50 w-24 text-right">{formatCurrency(eqAfter)}</span>
-                                                    {ddFromPeak > 0 ? (
-                                                        <span className="tabular-nums text-destructive/70 w-20 text-right">-{formatCurrency(ddFromPeak)}</span>
+                                                    <span className="tabular-nums text-muted-foreground/50 w-24 text-right">{formatCurrency(stats.eqAfter)}</span>
+                                                    {stats.ddFromPeak > 0 ? (
+                                                        <span className="tabular-nums text-destructive/70 w-20 text-right">-{formatCurrency(stats.ddFromPeak)}</span>
                                                     ) : (
                                                         <span className="w-20" />
                                                     )}
@@ -1130,7 +1143,7 @@ export function ConsistencySimulator() {
                                 <div className={cn(unifiedSectionPanelClassName, "p-3 sm:p-4")}>
                                     <p className={unifiedInfoLabelClassName}>Peak Balance</p>
                                     <p className="text-base font-black text-foreground tabular-nums mt-1">
-                                        {activeDays.length > 0 ? formatCurrency(Math.max(effectiveStartingBalance, ...getEquityCurve(activeDays, effectiveStartingBalance))) : formatCurrency(effectiveStartingBalance)}
+                                        {activeDays.length > 0 ? formatCurrency(peakBalance) : formatCurrency(effectiveStartingBalance)}
                                     </p>
                                     <p className="text-[10px] text-muted-foreground/40 mt-0.5">Highest reached</p>
                                 </div>

@@ -1442,20 +1442,15 @@ export const DataProvider: React.FC<{
   const statistics = useMemo(() => {
     const stats = calculateStatistics(formattedTrades, accounts)
 
-    // Calculate gross profits and gross losses including commissions
-    const grossProfits = formattedTrades.reduce((sum, trade) => {
-      const totalPnL = (trade.pnl || 0) - (trade.commission || 0)
-      return totalPnL > 0 ? sum + totalPnL : sum
-    }, 0)
+    let grossProfits = 0
+    let grossLosses = 0
+    for (let i = 0; i < formattedTrades.length; i++) {
+      const totalPnL = (formattedTrades[i].pnl || 0) - (formattedTrades[i].commission || 0)
+      if (totalPnL > 0) grossProfits += totalPnL
+      else grossLosses += totalPnL
+    }
+    grossLosses = Math.abs(grossLosses)
 
-    const grossLosses = Math.abs(
-      formattedTrades.reduce((sum, trade) => {
-        const totalPnL = (trade.pnl || 0) - (trade.commission || 0)
-        return totalPnL < 0 ? sum + totalPnL : sum
-      }, 0),
-    )
-
-    // Calculate profit factor (handle division by zero)
     const profitFactor =
       grossLosses === 0
         ? grossProfits > 0
@@ -1474,22 +1469,20 @@ export const DataProvider: React.FC<{
     [formattedTrades, accounts],
   )
 
-  const isPlusUser = () => {
+  const isPlusUser = useCallback(() => {
     if (isAdmin) return true
-    // Use Whop subscription store for more accurate subscription status
     const whopSubscription = useSubscriptionStore.getState().subscription
     if (whopSubscription) {
       const planName = whopSubscription.plan?.name?.toLowerCase() || ''
       return planName.includes('plus') || planName.includes('pro')
     }
 
-    // Fallback to database subscription
     const dbSubscription = useUserStore.getState().subscription
     return Boolean(
       dbSubscription?.status === 'ACTIVE' &&
       ['PLUS', 'PRO'].includes(dbSubscription?.plan?.split('_')[0].toUpperCase() || ''),
     )
-  }
+  }, [isAdmin])
 
   const clearDashboardBrowserCache = useCallback(
     async (scope: 'trades' | 'all', reason: string) => {
