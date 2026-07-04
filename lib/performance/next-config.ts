@@ -52,7 +52,9 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
     poweredByHeader: false,
     reactStrictMode: true,
     compiler: {
-      removeConsole: process.env.NODE_ENV === 'production',
+      removeConsole: process.env.NODE_ENV === 'production'
+        ? { exclude: ['error', 'warn'] }
+        : undefined,
     },
     serverExternalPackages: [
       'pdf2json',
@@ -62,7 +64,7 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
       '@octokit/rest',
       'stripe',
       'resend',
-      'dompurify',
+
       '@react-email/render',
       '@react-email/components',
     ],
@@ -72,7 +74,7 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
       ...(cpus ? { cpus } : {}),
       staleTimes: {
         dynamic: 30,
-        static: 180,
+        static: 600,
       },
       // Optimize package imports for better tree shaking
       // Each package below gets optimized module resolution + dead code elimination

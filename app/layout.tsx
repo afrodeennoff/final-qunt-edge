@@ -147,8 +147,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         {/* Resource Hinting for Performance */}
         <link rel="dns-prefetch" href={siteOrigin} />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {process.env.NEXT_PUBLIC_SUPABASE_URL && (
           <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
         )}

@@ -66,7 +66,7 @@ function SyncContextBridge({ children }: { children: ReactNode }) {
         message: result.message,
       };
     },
-    [rithmic, tradovate]
+    [rithmic, tradovate, dxfeed]
   );
 
   const value = useMemo(
