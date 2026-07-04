@@ -59,7 +59,7 @@ export function StatsTable({
               const pnlPos = row.pnl >= 0
               const rrPos = row.avgRR >= 0
               return (
-                <tr key={row.name} className={cn('transition-colors hover:bg-muted/20', i < rows.length - 1 && 'border-t border-border/20')}>
+                <tr key={row.name} className={cn('transition-colors hover:bg-muted/20', i < rows.length - 1 && 'border-t border-transparent')}>
                   <td className="pl-3 sm:pl-5 pr-2 sm:pr-3 py-2.5 font-semibold text-foreground">{row.name}</td>
                   <td className="px-2 sm:px-3 py-2.5 text-right tabular-nums text-muted-foreground">{row.totalTrades}</td>
                   <td className={cn('px-2 sm:px-3 py-2.5 text-right tabular-nums font-semibold', row.winRate >= 50 ? 'text-success' : 'text-destructive')}>

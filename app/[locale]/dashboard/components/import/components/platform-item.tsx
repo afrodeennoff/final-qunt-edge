@@ -45,7 +45,7 @@ export function PlatformItem({
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         !isInteractive && "opacity-40 cursor-not-allowed",
         isInteractive && "cursor-pointer",
-        isInteractive && !isSelected && "border-border/60 bg-card hover:border-primary/30 hover:bg-primary/[0.02] hover:shadow-sm",
+        isInteractive && !isSelected && "border-transparent bg-card hover:border-primary/30 hover:bg-primary/[0.02] hover:shadow-sm",
         isSelected && "border-primary bg-primary/[0.04] shadow-sm",
         isSelected && "hover:border-primary hover:bg-primary/[0.06]"
       )}

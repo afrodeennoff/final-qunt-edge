@@ -17,7 +17,7 @@ export function OAuthConsentForm({
   userEmail,
 }: OAuthConsentFormProps) {
   return (
-    <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+    <div className="rounded-xl border border-transparent bg-card p-6 shadow-sm">
       <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Authorize MCP access</p>
       <h1 className="mt-2 text-2xl font-semibold">{clientName}</h1>
       <p className="mt-2 text-sm text-muted-foreground">
@@ -60,7 +60,7 @@ export function OAuthConsentForm({
           type="submit"
           name="decision"
           value="deny"
-          className="inline-flex h-10 flex-1 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium"
+          className="inline-flex h-10 flex-1 items-center justify-center rounded-md border border-transparent bg-background px-4 text-sm font-medium"
         >
           Deny
         </button>

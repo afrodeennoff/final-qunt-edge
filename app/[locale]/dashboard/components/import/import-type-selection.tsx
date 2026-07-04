@@ -81,7 +81,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
   return (
     <div className="flex flex-col h-full">
       <div className="grid md:grid-cols-2 gap-0 h-full min-h-0">
-        <div className="h-full min-h-0 flex flex-col border-r border-border/50">
+        <div className="h-full min-h-0 flex flex-col border-r border-transparent">
           <div className="relative shrink-0 px-5 pt-2 pb-3">
             <Search className="absolute left-7 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             <Input
@@ -89,7 +89,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('import.type.search')}
-              className="pl-9 h-9 text-sm rounded-lg bg-muted/50 border-border/60 focus-visible:bg-background"
+              className="pl-9 h-9 text-sm rounded-lg bg-muted/50 border-transparent focus-visible:bg-background"
             />
             {searchQuery && (
               <button
