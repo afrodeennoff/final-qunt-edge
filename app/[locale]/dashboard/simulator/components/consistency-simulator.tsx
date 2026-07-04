@@ -53,6 +53,7 @@ import {
 } from "recharts"
 
 type SimTab = "monte_carlo" | "consistency" | "drawdown"
+type ProgramType = "nitro" | "nitro_x" | "instant_standard" | "instant_pro" | "instant_plus" | "custom"
 
 interface TradingDay {
   id: string
@@ -70,6 +71,23 @@ interface ResultsCache {
 const ACCOUNT_SIZES = [5000, 10000, 25000, 50000, 100000, 150000]
 
 const POPULAR_FIRMS = listPopularFirms()
+
+const PROGRAMS: Record<ProgramType, { label: string; limit: number }> = {
+  nitro: { label: "NITRO", limit: 50 },
+  nitro_x: { label: "NITRO X", limit: 25 },
+  instant_standard: { label: "INSTANT STANDARD", limit: 15 },
+  instant_pro: { label: "INSTANT PRO", limit: 15 },
+  instant_plus: { label: "INSTANT PLUS", limit: 15 },
+  custom: { label: "CUSTOM", limit: 30 },
+}
+
+const SCENARIO_PRESETS = [
+  { id: "steady", name: "Steady Grind", desc: "Small consistent wins", days: [280, 195, 340, 220, 265] },
+  { id: "lucky", name: "One Big Day", desc: "One outsized day breaches", days: [85, -120, 2100, 45, -70] },
+  { id: "roller", name: "Rollercoaster", desc: "Sharp wins and losses", days: [890, -650, 1120, -430, 760, -310] },
+  { id: "pass", name: "Challenge Pass", desc: "~14% score, passes all", days: [420, 380, 510, 355, 475, 390, 440] },
+  { id: "funded", name: "Funded Month", desc: "20 days, one best session", days: [350, 420, 280, 510, 390, 340, 460, 380, 410, 320, 360, 440, 1850, 350, 380, 420, 390, 370, 400, 360] },
+]
 
 function formatSizeLabel(value: number): string {
   if (value >= 1000) {
@@ -364,6 +382,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
 
   const [selectedFirm, setSelectedFirm] = React.useState<string | null>(null)
   const [selectedSize, setSelectedSize] = React.useState<string | null>(null)
+  const [selectedProgram, setSelectedProgram] = React.useState<ProgramType>("custom")
   const [firmPreset, setFirmPreset] = React.useState<FirmPresetResult | null>(null)
   const [mcWinRate, setMcWinRate] = React.useState(0.5)
   const [mcRR, setMcRR] = React.useState(2)
@@ -419,6 +438,11 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
     }
     return effectiveStartingBalance * 0.1
   }, [firmPreset, customDrawdown, selectedAccount, effectiveStartingBalance])
+
+  const effectiveConsistencyPct = React.useMemo(() => {
+    if (selectedProgram !== "custom") return PROGRAMS[selectedProgram].limit
+    return consistencyPct
+  }, [selectedProgram, consistencyPct])
 
   const hasTrades = rawTrades.length > 0
 
@@ -486,10 +510,10 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
 
   const maxAllowedDaily = React.useMemo(() => {
     const base = totalProfit > 0 ? totalProfit : effectiveProfitTarget
-    return base * (consistencyPct / 100)
-  }, [totalProfit, effectiveProfitTarget, consistencyPct])
+    return base * (effectiveConsistencyPct / 100)
+  }, [totalProfit, effectiveProfitTarget, effectiveConsistencyPct])
 
-  const consistencyBreached = consistencyScore > consistencyPct
+  const consistencyBreached = consistencyScore > effectiveConsistencyPct
 
   const maxDrawdown = React.useMemo(() => {
     if (activeDays.length === 0) return 0
@@ -867,6 +891,25 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
+                  <label className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">Program Type</label>
+                  <div className="mt-1 flex flex-wrap gap-1.5">
+                    {(Object.entries(PROGRAMS) as [ProgramType, { label: string; limit: number }][]).map(([key, prog]) => (
+                      <button
+                        key={key}
+                        onClick={() => { setSelectedProgram(key); if (key !== "custom") setConsistencyPct(prog.limit) }}
+                        className={cn(
+                          "px-2.5 py-1 rounded-md text-[11px] font-semibold border transition-colors",
+                          selectedProgram === key
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-muted/30 text-muted-foreground/80 border-border/20 hover:bg-muted/50",
+                        )}
+                      >
+                        {prog.label} {key !== "custom" && `(${prog.limit}%)`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
                   <label className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">Account</label>
                   <div className="mt-1 flex flex-wrap gap-1.5">
                     {accounts.slice(0, 6).map(acc => (
@@ -923,13 +966,15 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                   <div className="mt-1 space-y-2">
                     <input
                       type="range"
-                      value={consistencyPct}
-                      onChange={e => setConsistencyPct(parseInt(e.target.value))}
+                      value={selectedProgram !== "custom" ? PROGRAMS[selectedProgram].limit : consistencyPct}
+                      onChange={e => { setConsistencyPct(parseInt(e.target.value)); setSelectedProgram("custom") }}
                       min={5} max={100} step={1}
-                      className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-muted/40 accent-primary [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:shadow-sm"
+                      disabled={selectedProgram !== "custom"}
+                      className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-muted/40 accent-primary disabled:opacity-50 disabled:cursor-not-allowed [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:shadow-sm"
                     />
                     <div className="flex justify-between text-[10px] text-muted-foreground/60">
-                      <span>{consistencyPct}%</span>
+                      <span>{selectedProgram !== "custom" ? PROGRAMS[selectedProgram].label : "Custom"}: {effectiveConsistencyPct}%</span>
+                      <span>Max: {effectiveConsistencyPct}%</span>
                     </div>
                   </div>
                 </div>
@@ -937,9 +982,31 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
             </div>
 
             <div className={cn(unifiedSectionPanelClassName, "p-4 sm:p-5")}>
-              <div className="flex items-center gap-2 text-muted-foreground mb-4">
-                <CalendarDays className="h-3.5 w-3.5" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.14em]">Trading Sessions {activeDays.length > 0 && <span className="text-muted-foreground/60">({activeDays.length})</span>}</span>
+              <div className="flex items-center justify-between gap-2 text-muted-foreground mb-4">
+                <div className="flex items-center gap-2">
+                  <CalendarDays className="h-3.5 w-3.5" />
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.14em]">Trading Sessions {activeDays.length > 0 && <span className="text-muted-foreground/60">({activeDays.length})</span>}</span>
+                </div>
+                <div className="flex bg-muted/30 border border-border/20 rounded-lg p-0.5">
+                  <button
+                    onClick={() => setSimMode("live")}
+                    className={cn(
+                      "px-2.5 py-1 text-[10px] font-bold rounded-md transition-colors",
+                      simMode === "live" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground/60 hover:text-foreground",
+                    )}
+                  >
+                    Live Data
+                  </button>
+                  <button
+                    onClick={() => setSimMode("simulate")}
+                    className={cn(
+                      "px-2.5 py-1 text-[10px] font-bold rounded-md transition-colors",
+                      simMode === "simulate" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground/60 hover:text-foreground",
+                    )}
+                  >
+                    Simulate
+                  </button>
+                </div>
               </div>
 
               {activeDays.length === 0 ? (
@@ -969,22 +1036,47 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
               )}
 
               {simMode === "simulate" && (
-                <div className="mt-3 flex gap-2">
-                  <button
-                    onClick={() => setManualDays(prev => [...prev, { id: `manual-${Date.now()}`, pnl: 0, isReal: false }])}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold bg-muted/30 border border-border/20 rounded-lg hover:bg-muted/50 transition-colors"
-                  >
-                    <Plus className="h-3 w-3" /> Add Day
-                  </button>
-                  {manualDays.length > 0 && (
+                <>
+                  <div className="mt-3 flex gap-2">
                     <button
-                      onClick={clearSimulated}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold bg-destructive/10 text-destructive border border-destructive/20 rounded-lg hover:bg-destructive/20 transition-colors"
+                      onClick={() => setManualDays(prev => [...prev, { id: `manual-${Date.now()}`, pnl: 0, isReal: false }])}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold bg-muted/30 border border-border/20 rounded-lg hover:bg-muted/50 transition-colors"
                     >
-                      Clear All
+                      <Plus className="h-3 w-3" /> Add Day
                     </button>
-                  )}
-                </div>
+                    {manualDays.length > 0 && (
+                      <button
+                        onClick={clearSimulated}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold bg-destructive/10 text-destructive border border-destructive/20 rounded-lg hover:bg-destructive/20 transition-colors"
+                      >
+                        Clear All
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t border-border/10">
+                    <div className="flex items-center gap-2 text-muted-foreground mb-3">
+                      <Zap className="h-3.5 w-3.5" />
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.14em]">Try Presets</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                    {SCENARIO_PRESETS.map(preset => (
+                        <button
+                          key={preset.id}
+                          onClick={() => {
+                            setActivePreset({ id: preset.id, name: preset.name, description: preset.desc, ratios: preset.days.map(d => d / effectiveStartingBalance) })
+                            setManualDays(preset.days.map((pnl, i) => ({ id: `preset-${preset.id}-${i}`, pnl, isReal: false })))
+                          }}
+                          className="flex-1 min-w-[120px] px-3 py-2 rounded-lg border border-border/20 bg-muted/20 hover:bg-muted/40 transition-colors text-left"
+                        >
+                          <div className="text-[11px] font-bold">{preset.name}</div>
+                          <div className="text-[9px] text-muted-foreground/60 mt-0.5">{preset.desc}</div>
+                          <div className="text-[9px] text-muted-foreground/40 mt-0.5">{preset.days.length} sessions</div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           </div>
@@ -1000,7 +1092,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                   {consistencyScore.toFixed(1)}%
                 </div>
                 <div className="text-[10px] text-muted-foreground/60 mt-1">
-                  {consistencyBreached ? "BREACHED" : `Limit: ${consistencyPct}%`}
+                  {consistencyBreached ? "BREACHED" : `Limit: ${effectiveConsistencyPct}%`}
                 </div>
               </div>
               <Progress
@@ -1056,7 +1148,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                 <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/80">Consistency Rule</span>
               </div>
               <p className="text-[12px] leading-relaxed text-muted-foreground/60">
-                Most prop firms require no single day exceeds {consistencyPct}% of total profit.
+                Most prop firms require no single day exceeds {effectiveConsistencyPct}% of total profit.
                 Best day is {formatCurrency(bestDay)} of {formatCurrency(totalProfit)} total.
               </p>
             </div>
