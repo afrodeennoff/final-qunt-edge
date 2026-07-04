@@ -54,6 +54,7 @@ import {
   saveGroupAction,
   deleteGroupAction,
   moveAccountToGroupAction,
+  bulkMoveAccountsToGroupAction,
   renameGroupAction,
 } from '@/server/groups'
 import { createClient } from '@/lib/supabase'
@@ -497,7 +498,7 @@ export const DataProvider: React.FC<{
       const allTrades: Trade[] = []
       let page = 1
       let hasMore = true
-      const pageSize = 500
+      const pageSize = 2000
       const MAX_TRADES = 15000
 
       while (hasMore && allTrades.length < MAX_TRADES) {
@@ -1883,7 +1884,7 @@ export const DataProvider: React.FC<{
           }),
         )
 
-        await Promise.all(accountIds.map((id) => moveAccountToGroupAction(id, targetGroupId)))
+        await bulkMoveAccountsToGroupAction(accountIds, targetGroupId)
         clearDashboardBrowserCache('all', 'moveAccountsToGroup')
       } catch (error) {
         logger.error({ error }, 'Error moving accounts to group, rolling back')

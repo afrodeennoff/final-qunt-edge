@@ -72,24 +72,44 @@ async function getEquityChartData(userId: string, params: EquityChartParams) {
   const transactionResult = await withPrismaSchemaMismatchFallback(
     'dashboard:equity-chart:transaction',
     async () => {
+      const tradesWhere: Parameters<typeof prisma.trade.findMany>[0] = {
+        where: { userId },
+        orderBy: { entryDate: 'desc' },
+        take: 10_000,
+        select: {
+          id: true,
+          accountNumber: true,
+          entryDate: true,
+          pnl: true,
+          commission: true,
+          instrument: true,
+          timeInPosition: true,
+          tags: true,
+        },
+      }
+      if (params.accountNumbers.length > 0) {
+        (tradesWhere.where as Record<string, unknown>).accountNumber = { in: params.accountNumbers }
+      }
+      if (params.dateRange?.from) {
+        (tradesWhere.where as Record<string, unknown>).entryDate = {
+          ...(tradesWhere.where as Record<string, unknown>).entryDate as Record<string, unknown> || {},
+          gte: new Date(params.dateRange.from),
+        }
+      }
+      if (params.dateRange?.to) {
+        (tradesWhere.where as Record<string, unknown>).entryDate = {
+          ...(tradesWhere.where as Record<string, unknown>).entryDate as Record<string, unknown> || {},
+          lte: new Date(params.dateRange.to),
+        }
+      }
+
       const [trades, accounts, groups] = await prisma.$transaction([
-        prisma.trade.findMany({
-          where: { userId },
-          orderBy: { entryDate: 'desc' },
-          take: 10_000,
-          select: {
-            id: true,
-            accountNumber: true,
-            entryDate: true,
-            pnl: true,
-            commission: true,
-            instrument: true,
-            timeInPosition: true,
-            tags: true,
-          },
-        }),
+        prisma.trade.findMany(tradesWhere),
         prisma.account.findMany({
-          where: { userId },
+          where: {
+            userId,
+            ...(params.accountNumbers.length > 0 ? { number: { in: params.accountNumbers } } : {}),
+          },
           select: {
             number: true,
             groupId: true,

@@ -6,14 +6,22 @@ import { createRouteClient } from '@/lib/supabase/route-client'
 import { apiSuccess, withRateLimited } from '@/lib/api/with-api-route'
 
 function serializeWithDecimals<T>(value: T): T {
-  return JSON.parse(
-    JSON.stringify(value, (_key, nested) => {
-      if (nested instanceof Prisma.Decimal) {
-        return nested.toNumber()
-      }
-      return nested
-    }),
-  ) as T
+  if (value === null || value === undefined) return value
+  if (typeof value !== 'object') return value
+  if (Array.isArray(value)) return value.map(serializeWithDecimals) as unknown as T
+  if (value instanceof Prisma.Decimal) return value.toNumber() as unknown as T
+
+  const result: Record<string, unknown> = {}
+  for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+    if (v instanceof Prisma.Decimal) {
+      result[k] = v.toNumber()
+    } else if (typeof v === 'object' && v !== null) {
+      result[k] = serializeWithDecimals(v)
+    } else {
+      result[k] = v
+    }
+  }
+  return result as T
 }
 
 async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<string, string>> }) {

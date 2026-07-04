@@ -37,4 +37,5 @@ export {
   updateGroupAction,
   deleteGroupAction,
   moveAccountToGroupAction,
+  bulkMoveAccountsToGroupAction,
 } from './groups'

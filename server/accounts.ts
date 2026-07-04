@@ -134,22 +134,25 @@ export async function updateCommissionForGroupAction(accountNumber: string, inst
       return // No trades to update
     }
 
-    // Calculate new commission for each trade and prepare batch updates
-    const updateOperations = trades.map(trade => {
-      const updatedCommission = new Prisma.Decimal(newCommission).times(new Prisma.Decimal(trade.quantity))
-      return tx.trade.updateMany({
-        where: {
-          id: trade.id,
-          userId
-        },
-        data: {
-          commission: updatedCommission
-        }
-      })
-    })
+    // Batch update all trades with a single parameterized SQL statement
+    const params: (string | number)[] = []
+    const whenClauses: string[] = []
+    const idRefs: string[] = []
 
-    // Execute all updates in parallel within the transaction
-    await Promise.all(updateOperations)
+    for (const trade of trades) {
+      const base = params.length + 1
+      const updatedCommission = new Prisma.Decimal(newCommission).times(new Prisma.Decimal(trade.quantity))
+      whenClauses.push(`WHEN $${base}::text THEN $${base + 1}::decimal(18,2)`)
+      idRefs.push(`$${base}::text`)
+      params.push(trade.id, Number(updatedCommission))
+    }
+
+    const userIdIdx = params.length + 1
+    params.push(userId)
+
+    const sql = `UPDATE "Trade" SET commission = CASE id ${whenClauses.join(' ')} END WHERE id IN (${idRefs.join(', ')}) AND user_id = $${userIdIdx}::text`
+
+    await tx.$executeRawUnsafe(sql, ...params)
   })
 
   invalidateAccountRelatedCaches(userId)

@@ -165,7 +165,7 @@ async function handleGet(request: NextRequest) {
     const [trades, total] = await Promise.all([
       prisma.trade.findMany({
         where,
-        include: { journal: true },
+        include: { journal: { select: { id: true, preTradeNotes: true, postTradeReview: true, customTags: true, excerptTitle: true, featuredExcerpt: true, emotions: true, session: true, timeframe: true, createdAt: true, updatedAt: true } } },
         orderBy,
         skip: (page - 1) * pageSize,
         take: pageSize,

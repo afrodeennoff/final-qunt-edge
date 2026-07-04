@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, memo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from "@/components/ui/label"
@@ -47,7 +47,7 @@ const toDecimal = (value: number | string | null | undefined) => Number(value ??
 const toNumber = (value: unknown) => (value == null ? 0 : Number(value))
 const toInputValue = (value: unknown) => (value == null ? '' : Number(value))
 
-export function AccountConfigurator({ 
+const AccountConfigurator = memo(function AccountConfigurator({ 
  account, 
  pendingChanges,
  setPendingChanges,
@@ -1089,7 +1089,9 @@ export function AccountConfigurator({
  </div>
  </AccordionContent>
  </AccordionItem>
- </Accordion>
- </div>
- )
-}
+  </Accordion>
+  </div>
+  )
+})
+
+export { AccountConfigurator }

@@ -213,6 +213,37 @@ export async function groupTradesAction(tradeIds: string[]): Promise<boolean> {
   }
 }
 
+export async function bulkMoveAccountsToGroupAction(accountIds: string[], targetGroupId: string | null): Promise<void> {
+  const userId = await getDatabaseUserId()
+  try {
+    const accountsCount = await prisma.account.count({
+      where: { id: { in: accountIds }, userId },
+    })
+    if (accountsCount !== accountIds.length) {
+      throw new Error('One or more accounts not found')
+    }
+
+    if (targetGroupId) {
+      const targetGroup = await prisma.group.findFirst({
+        where: { id: targetGroupId, userId },
+        select: { id: true },
+      })
+      if (!targetGroup) {
+        throw new Error('Target group not found')
+      }
+    }
+
+    await prisma.account.updateMany({
+      where: { id: { in: accountIds }, userId },
+      data: { groupId: targetGroupId },
+    })
+    invalidateGroupRelatedCaches(userId)
+  } catch (error) {
+    logger.error('Error bulk moving accounts to group:', { error: error instanceof Error ? error.message : String(error) })
+    throw error
+  }
+}
+
 export async function ungroupTradesAction(tradeIds: string[]): Promise<boolean> {
   try {
     const userId = await resolveWritableUserId(await getUserId())

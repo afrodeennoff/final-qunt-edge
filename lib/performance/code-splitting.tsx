@@ -120,7 +120,7 @@ export function usePreloadComponents(keys: string[]) {
   useEffect(() => {
     const promises = keys.map(key => componentRegistry.preload(key))
     Promise.allSettled(promises)
-  }, keys)
+  }, [keys])
 }
 
 export function createChunkPreloader() {

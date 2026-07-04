@@ -1104,12 +1104,8 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
       t,
       timezone,
       tags,
-      expanded,
       tickDetails,
       showPoints,
-      getAllTradeIds,
-      areAllTradesSelected,
-      selectedTrades,
       updateTrades,
     ],
   )

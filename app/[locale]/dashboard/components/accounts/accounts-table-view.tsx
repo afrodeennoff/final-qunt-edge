@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState, memo } from "react"
 import {
  ColumnDef,
  flexRender,
@@ -120,7 +120,7 @@ function getGroupAccountSortKey(groupRow: AccountGroupRow) {
  )
 }
 
-function AccountsTableSection({
+const AccountsTableSection = memo(function AccountsTableSection({
  rows,
  onSelectAccount,
  columns,
@@ -395,11 +395,11 @@ function AccountsTableSection({
  </div>
  </div>
  )}
- </div>
- )
-}
+  </div>
+  )
+})
 
-export function AccountsTableView({
+const AccountsTableView = memo(function AccountsTableView({
  accounts,
  groups,
  onSelectAccount,
@@ -1051,6 +1051,9 @@ export function AccountsTableView({
  onSortingChange={onSortingChange}
  totalSummary={totalSummary}
  />
- </div>
- )
-}
+  </div>
+  )
+})
+
+export { AccountsTableView }
+
