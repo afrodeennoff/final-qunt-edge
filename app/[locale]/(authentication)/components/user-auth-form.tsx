@@ -163,15 +163,15 @@ export function UserAuthForm({ className, forcedNextUrl, ...props }: UserAuthFor
  router.prefetch(redirectDestination)
  }, [redirectDestination, router])
 
- React.useEffect(() => {
- if (!alreadySignedIn || typeof window === 'undefined') return
+  React.useEffect(() => {
+    if (!alreadySignedIn || typeof window === 'undefined') return
 
- const redirectHandle = window.setTimeout(() => {
- window.location.replace(redirectDestination)
- }, 250)
+    const redirectHandle = window.setTimeout(() => {
+      router.replace(redirectDestination)
+    }, 250)
 
- return () => window.clearTimeout(redirectHandle)
- }, [alreadySignedIn, redirectDestination])
+    return () => window.clearTimeout(redirectHandle)
+  }, [alreadySignedIn, redirectDestination, router])
 
  React.useEffect(() => {
  if (countdown > 0) {
@@ -377,9 +377,9 @@ export function UserAuthForm({ className, forcedNextUrl, ...props }: UserAuthFor
 	 toast.success(t('success'), { description: t('auth.signIn') })
 	 }
 	 if (typeof window !== 'undefined') {
-	 window.location.assign(result.next || redirectDestination)
+	 router.push(result.next || redirectDestination)
 	 }
- setLastAuthPreference('password')
+  setLastAuthPreference('password')
  } catch (error) {
  const parsedError = parseAuthError(error)
 
@@ -423,15 +423,15 @@ export function UserAuthForm({ className, forcedNextUrl, ...props }: UserAuthFor
 	 description:"Successfully verified. Redirecting...",
 	 })
 	 if (typeof window !== 'undefined') {
-	 window.location.assign(redirectDestination)
+	 router.push(redirectDestination)
 	 }
- } catch (error) {
- toast.error("Error", {
- description: error instanceof Error ? error.message :"Failed to verify code",
- })
- } finally {
- setIsLoading(false)
- }
+  } catch (error) {
+    toast.error("Error", {
+    description: error instanceof Error ? error.message :"Failed to verify code",
+    })
+  } finally {
+    setIsLoading(false)
+  }
  }
 
  async function onSubmitDiscord(event: React.SyntheticEvent) {
@@ -541,7 +541,7 @@ export function UserAuthForm({ className, forcedNextUrl, ...props }: UserAuthFor
  <Button
  size="sm"
  className="shrink-0 rounded-[0.95rem] border-success/40 bg-success/20 text-success hover:bg-success/30 active:scale-[0.97]"
- onClick={() => window.location.assign(redirectDestination)}
+  onClick={() => router.push(redirectDestination)}
  >
  Go to Dashboard
  </Button>

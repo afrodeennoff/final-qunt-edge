@@ -97,7 +97,7 @@ function TimeOfDayTooltip({
   );
 }
 
-export default function TimeOfDayPerformanceChart({
+export default React.memo(function TimeOfDayPerformanceChart({
   trades,
 }: {
   trades: TradeLike[];
@@ -225,4 +225,4 @@ export default function TimeOfDayPerformanceChart({
       </CardContent>
     </Card>
   );
-}
+})

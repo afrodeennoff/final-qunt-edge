@@ -429,7 +429,7 @@ export async function getIndividualUserEquityData(userId: string) {
   }
 }
 
-export async function getTeamEquityData(teamId: string, page: number = 1, limit: number = 100) {
+export async function getTeamEquityData(teamId: string, page: number = 1, limit: number = 100, dateFrom?: Date, dateTo?: Date) {
   const { team, authorized } = await getAuthorizedTeam(teamId)
 
   if (!authorized || !team) {
@@ -468,12 +468,14 @@ export async function getTeamEquityData(teamId: string, page: number = 1, limit:
     }
   })
 
-  // Get all trades for these users
+  const defaultFrom = dateFrom || new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
+  const defaultTo = dateTo || new Date()
   const trades = await prisma.trade.findMany({
     where: {
       userId: {
         in: paginatedTraderIds
-      }
+      },
+      entryDate: { gte: defaultFrom, lte: defaultTo }
     },
     select: {
       id: true,

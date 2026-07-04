@@ -1340,7 +1340,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   )
 }
 
-export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; localePrefix: string }) {
+const FirmDetailClient = React.memo(function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; localePrefix: string }) {
   const [activeTab, setActiveTab] = React.useState('overview')
   const visibleReviewCount = getVisibleReviewCount(firm)
   const visibleCouponCount = getVisibleCouponCount(firm)
@@ -1411,4 +1411,6 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
       </div>
     </div>
   )
-}
+})
+
+export { FirmDetailClient }

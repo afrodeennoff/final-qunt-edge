@@ -51,13 +51,14 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
  {locale === 'fr' && milestone.youtubeVideoId && (
  <div className="mt-4 rounded-lg overflow-hidden bg-muted/40 dark:bg-muted/40">
  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
- <iframe
- className="absolute top-0 left-0 w-full h-full"
- src={`https://www.youtube.com/embed/${milestone.youtubeVideoId}`}
- title={milestone.title}
- allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
- allowFullScreen
- />
+  <iframe
+  className="absolute top-0 left-0 w-full h-full"
+  src={`https://www.youtube.com/embed/${milestone.youtubeVideoId}`}
+  title={milestone.title}
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+  loading="lazy"
+  />
  </div>
  </div>
  )}

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   ArrowRight,
   BadgePercent,
@@ -266,7 +266,7 @@ function getSpotlightDeals(deals: DealItem[]): DealItem[] {
   return sortDeals(deals, 'discount').slice(0, 8)
 }
 
-export function DealsExperience({
+function DealsExperienceInner({
   locale,
   deals,
   firms,
@@ -1759,3 +1759,7 @@ function DealRowCard({
     </div>
   )
 }
+
+const DealsExperience = React.memo(DealsExperienceInner)
+
+export { DealsExperience }

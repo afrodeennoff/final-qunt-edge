@@ -78,7 +78,9 @@ async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<st
       "behavior-insights"
     )
 
-    return NextResponse.json(insights)
+    const insightsResponse = NextResponse.json(insights)
+    insightsResponse.headers.set('Cache-Control', 'private, max-age=30')
+    return insightsResponse
   } catch (error) {
     if (isPrerenderInterruption(error)) {
       return NextResponse.json(null)

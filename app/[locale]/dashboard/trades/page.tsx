@@ -1,3 +1,4 @@
+import React from 'react'
 import dynamic from 'next/dynamic'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { Metadata } from "next";
@@ -31,7 +32,7 @@ export async function generateMetadata({
   };
 }
 
-export default function TradesPage() {
+const TradesPage = React.memo(function TradesPage() {
   return (
     <div className="flex min-h-full w-full flex-col pb-[max(env(safe-area-inset-bottom),0.75rem)]">
       <div className={cn(unifiedSectionPanelClassName, 'p-4 sm:p-6')}>
@@ -39,4 +40,6 @@ export default function TradesPage() {
       </div>
     </div>
   );
-}
+})
+
+export default TradesPage

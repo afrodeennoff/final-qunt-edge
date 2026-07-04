@@ -10,6 +10,10 @@ import {
   invalidateAccountRelatedCaches,
   invalidateAllUserCaches,
   invalidateDashboardDataCaches,
+  invalidateAccountMetrics,
+  invalidateAccountSettings,
+  invalidateTradeData,
+  invalidateGroupData,
 } from '@/lib/cache/cache-invalidation'
 import { logger } from '@/lib/logger'
 
@@ -220,8 +224,8 @@ export async function renameAccountAction(oldAccountNumber: string, newAccountNu
       })
     })
 
-    invalidateAccountRelatedCaches(userId)
-    invalidateAllUserCaches(userId)
+    invalidateAccountSettings(userId)
+    invalidateTradeData(userId)
   } catch (error) {
     logger.error('Error renaming account:', { error: error instanceof Error ? error.message : String(error) })
     if (error instanceof Error) {
@@ -389,9 +393,8 @@ export async function setupAccountAction(account: Account): Promise<Account> {
     payouts: savedAccount.payouts,
     group: savedAccount.group,
   } as unknown as Account
-  invalidateAccountRelatedCaches(userId)
-  // Invalidate all user-related caches
-  invalidateAllUserCaches(userId)
+  invalidateAccountMetrics(userId)
+  invalidateAccountSettings(userId)
   return result
 }
 
@@ -403,9 +406,10 @@ export async function deleteAccountAction(account: Account) {
       userId: userId
     }
   })
-  invalidateAccountRelatedCaches(userId)
-  // Invalidate all user-related caches
-  invalidateAllUserCaches(userId)
+  invalidateAccountSettings(userId)
+  invalidateAccountMetrics(userId)
+  invalidateTradeData(userId)
+  invalidateGroupData(userId)
 }
 
 export async function getAccountsAction() {
@@ -525,9 +529,7 @@ export async function savePayoutAction(payout: Payout) {
       return payoutResult
     })
 
-    invalidateAccountRelatedCaches(userId)
-    // Invalidate all user-related caches
-    invalidateAllUserCaches(userId)
+    invalidateAccountMetrics(userId)
     return result
   } catch (error) {
     logger.error('Error adding payout:', { error: error instanceof Error ? error.message : String(error) })
@@ -583,9 +585,7 @@ export async function deletePayoutAction(payoutId: string) {
       });
     });
 
-    invalidateAccountRelatedCaches(userId)
-    // Invalidate all user-related caches
-    invalidateAllUserCaches(userId)
+    invalidateAccountMetrics(userId)
     return true;
   } catch (error) {
     logger.error('Failed to delete payout:', { error: error instanceof Error ? error.message : String(error) });
@@ -607,9 +607,8 @@ export async function renameInstrumentAction(accountNumber: string, oldInstrumen
         instrument: newInstrumentName
       }
     })
-    invalidateAccountRelatedCaches(userId)
-    // Invalidate all user-related caches
-    invalidateAllUserCaches(userId)
+    invalidateAccountSettings(userId)
+    invalidateTradeData(userId)
   } catch (error) {
     logger.error('Error renaming instrument:', { error: error instanceof Error ? error.message : String(error) })
     if (error instanceof Error) {

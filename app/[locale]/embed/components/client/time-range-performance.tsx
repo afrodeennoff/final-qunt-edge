@@ -137,7 +137,7 @@ function TimeRangeTooltip({
   );
 }
 
-export default function TimeRangePerformanceChart({
+export default React.memo(function TimeRangePerformanceChart({
   trades,
   theme,
 }: {
@@ -319,4 +319,4 @@ export default function TimeRangePerformanceChart({
       </CardContent>
     </Card>
   );
-}
+})

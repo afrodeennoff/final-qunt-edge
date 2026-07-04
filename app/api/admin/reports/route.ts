@@ -7,6 +7,19 @@ import { parseQuery, toValidationErrorResponse } from '@/app/api/_utils/validate
 import { z } from 'zod'
 import { redactUserResponse } from '@/lib/redact-pii'
 
+const reportCache = new Map<string, { data: unknown; timestamp: number }>()
+const CACHE_TTL = 5 * 60 * 1000
+
+function getCachedReport(key: string) {
+  const entry = reportCache.get(key)
+  if (entry && Date.now() - entry.timestamp < CACHE_TTL) return entry.data
+  return null
+}
+
+function setCachedReport(key: string, data: unknown) {
+  reportCache.set(key, { data, timestamp: Date.now() })
+}
+
 type DateFilter = { gte?: Date; lte?: Date }
 
 const reportTypeSchema = z.enum([
@@ -124,6 +137,10 @@ export async function GET(req: NextRequest) {
 }
 
 async function generateOverviewReport(dateFilter: DateFilter) {
+  const cacheKey = `overview:${dateFilter.gte?.toISOString() || ''}:${dateFilter.lte?.toISOString() || ''}`
+  const cached = getCachedReport(cacheKey)
+  if (cached) return NextResponse.json(cached)
+
   const [
     totalRevenue,
     activeSubscriptions,
@@ -179,7 +196,7 @@ async function generateOverviewReport(dateFilter: DateFilter) {
   const arr = mrr * 12
   const ltv = arpu / 0.05
 
-  return NextResponse.json({
+  const overviewData = {
     overview: {
       totalRevenue: totalRevenue._sum.amount || 0,
       activeSubscriptions,
@@ -193,10 +210,18 @@ async function generateOverviewReport(dateFilter: DateFilter) {
       arpu,
       ltv,
     },
-  })
+  }
+  setCachedReport(cacheKey, overviewData)
+  const overviewRes = NextResponse.json(overviewData)
+  overviewRes.headers.set('Cache-Control', 'private, max-age=60')
+  return overviewRes
 }
 
 async function generateRevenueReport(dateFilter: DateFilter) {
+  const cacheKey = `revenue:${dateFilter.gte?.toISOString() || ''}:${dateFilter.lte?.toISOString() || ''}`
+  const cached = getCachedReport(cacheKey)
+  if (cached) return NextResponse.json(cached)
+
   const transactions = await prisma.paymentTransaction.findMany({
     where: {
       status: 'COMPLETED',
@@ -292,11 +317,15 @@ async function generateRevenueReport(dateFilter: DateFilter) {
     revenue,
   }))
 
-  return NextResponse.json({
+  const revenueData = {
     transactions,
     revenueByPlan: revenueByPlanFormatted,
     revenueByMonth,
-  })
+  }
+  setCachedReport(cacheKey, revenueData)
+  const revenueRes = NextResponse.json(revenueData)
+  revenueRes.headers.set('Cache-Control', 'private, max-age=60')
+  return revenueRes
 }
 
 async function generateChurnReport(dateFilter: DateFilter) {
@@ -345,14 +374,17 @@ async function generateChurnReport(dateFilter: DateFilter) {
     return acc
   }, {} as Record<string, number>)
 
-  return NextResponse.json({
+  const churnData = {
     churnRate: churnRate.toFixed(2) + '%',
     cancelledSubscriptions: cancelledSubs.length,
     activeSubscriptionsAtStart: activeSubsAtStart,
     churnByPlan,
     cancellationReasons: reasonCounts,
     recentCancellations: redactUserResponse(cancelledSubs.slice(0, 20), ['email']),
-  })
+  }
+  const churnRes = NextResponse.json(churnData)
+  churnRes.headers.set('Cache-Control', 'private, max-age=60')
+  return churnRes
 }
 
 async function generateSubscriptionReport(dateFilter: DateFilter) {
@@ -388,13 +420,16 @@ async function generateSubscriptionReport(dateFilter: DateFilter) {
   const conversionRate =
     trialToPaid.length > 0 ? (conversions / trialToPaid.length) * 100 : 0
 
-  return NextResponse.json({
+  const subData = {
     totalNewSubscriptions: subscriptions.length,
     subscriptionBreakdown: subscriptionCounts,
     trialConversions: conversions,
     conversionRate: conversionRate.toFixed(2) + '%',
     recentSubscriptions: redactUserResponse(subscriptions.slice(0, 50), ['email']),
-  })
+  }
+  const subRes = NextResponse.json(subData)
+  subRes.headers.set('Cache-Control', 'private, max-age=60')
+  return subRes
 }
 
 async function generateTransactionReport(dateFilter: DateFilter) {
@@ -430,11 +465,14 @@ async function generateTransactionReport(dateFilter: DateFilter) {
     take: 50,
   })
 
-  return NextResponse.json({
+  const txData = {
     transactions: redactUserResponse(transactions, ['email']),
     stats: transactionStats,
     failedTransactions,
-  })
+  }
+  const txRes = NextResponse.json(txData)
+  txRes.headers.set('Cache-Control', 'private, max-age=60')
+  return txRes
 }
 
 async function calculateMRR(): Promise<number> {

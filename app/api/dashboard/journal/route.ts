@@ -184,7 +184,7 @@ async function handleGet(request: NextRequest) {
       page,
       pageSize,
       totalPages: Math.ceil(total / pageSize),
-    })
+    }, 200, 'private, max-age=30')
   } catch (error) {
     return apiError('INTERNAL_ERROR', 'Failed to fetch journal entries', 500, { requestId })
   }

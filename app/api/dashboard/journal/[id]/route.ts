@@ -96,7 +96,7 @@ async function handlePut(
       return apiError('NOT_FOUND', 'Journal entry not found', 404, { requestId })
     }
 
-    return apiSuccess(serializeWithDecimals(updated))
+    return apiSuccess(serializeWithDecimals(updated), 200, 'private, max-age=30')
   } catch (error) {
     return apiError('INTERNAL_ERROR', 'Failed to update journal entry', 500, { requestId })
   }
@@ -138,7 +138,7 @@ async function handleDelete(
       return apiError('NOT_FOUND', 'Journal entry not found', 404, { requestId })
     }
 
-    return apiSuccess({ deleted: true })
+    return apiSuccess({ deleted: true }, 200, 'private, max-age=30')
   } catch (error) {
     return apiError('INTERNAL_ERROR', 'Failed to delete journal entry', 500, { requestId })
   }

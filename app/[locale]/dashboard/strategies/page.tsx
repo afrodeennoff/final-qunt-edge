@@ -1,3 +1,4 @@
+import React from 'react'
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
 import dynamic from 'next/dynamic'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -7,7 +8,7 @@ const TradeTableReview = dynamic(
   { loading: () => <div className="flex h-[80vh] items-center justify-center"><Skeleton className="h-32 w-full max-w-4xl rounded-xl" /></div> }
 )
 
-export default function DashboardStrategiesPage() {
+const DashboardStrategiesPage = React.memo(function DashboardStrategiesPage() {
   return (
     <UnifiedPageShell density="compact">
       <div className="flex min-h-full w-full flex-col pb-[max(env(safe-area-inset-bottom),0.75rem)]">
@@ -17,4 +18,6 @@ export default function DashboardStrategiesPage() {
       </div>
     </UnifiedPageShell>
   )
-}
+})
+
+export default DashboardStrategiesPage

@@ -598,7 +598,7 @@ export async function updateTeamAnalytics(
   }
 }
 
-export async function getTeamOverviewData(teamId: string, userId: string) {
+export async function getTeamOverviewData(teamId: string, userId: string, dateFrom?: Date, dateTo?: Date) {
   try {
     const team = await prisma.team.findFirst({
       where: { id: teamId },
@@ -646,8 +646,10 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
     // MUDI: query trades by userId (NOT accountNumber). Account.number is only
     // unique per-user (@@unique([number, userId])), so filtering by accountNumber
     // alone would leak trades from other tenants sharing the same number string.
+    const defaultFrom = dateFrom || new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
+    const defaultTo = dateTo || new Date()
     const trades = await prisma.trade.findMany({
-      where: { userId: { in: memberUserIds } },
+      where: { userId: { in: memberUserIds }, entryDate: { gte: defaultFrom, lte: defaultTo } },
       select: { id: true, accountNumber: true, userId: true, createdAt: true, instrument: true, pnl: true },
       orderBy: { createdAt: 'desc' },
       take: 10_000,

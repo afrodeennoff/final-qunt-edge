@@ -328,7 +328,7 @@ function DebugDataBadge() {
  );
 }
 
-export default function WidgetCanvas() {
+const WidgetCanvas = React.memo(function WidgetCanvas() {
  const isMobile = useDataIsMobile()
  const layouts = useUserStore((state) => state.dashboardLayout)
  const setLayouts = useUserStore((state) => state.setDashboardLayout)
@@ -727,4 +727,6 @@ export default function WidgetCanvas() {
   )}
  </div>
  )
-}
+})
+
+export default WidgetCanvas

@@ -56,6 +56,26 @@ export interface ApiSuccessOptions {
   cacheStatus?: string
 }
 
+function convertDecimals(obj: unknown): unknown {
+  if (obj === null || obj === undefined) return obj
+  if (typeof obj === 'object' && 'toNumber' in obj && typeof (obj as Record<string, unknown>).toNumber === 'function') {
+    return (obj as { toNumber: () => number }).toNumber()
+  }
+  if (Array.isArray(obj)) return obj.map(convertDecimals)
+  if (typeof obj === 'object') {
+    const result: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
+      result[key] = convertDecimals(value)
+    }
+    return result
+  }
+  return obj
+}
+
+export function serializeWithDecimals<T>(data: T): T {
+  return convertDecimals(data) as T
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -67,9 +87,13 @@ function generateRequestId(): string {
 /**
  * Create a standardized success response.
  */
-export function apiSuccess<T>(data: T, status = 200, options?: ApiSuccessOptions): NextResponse {
+export function apiSuccess<T>(data: T, status = 200, cacheControl?: string | ApiSuccessOptions): NextResponse {
+  const options = typeof cacheControl === 'object' ? cacheControl : undefined
+  const cc = typeof cacheControl === 'string' ? cacheControl : undefined
   const headers = new Headers(options?.headers)
-  if (!headers.has('Cache-Control')) {
+  if (cc) {
+    headers.set('Cache-Control', cc)
+  } else if (!headers.has('Cache-Control')) {
     headers.set('Cache-Control', 'no-store, max-age=0')
   }
 

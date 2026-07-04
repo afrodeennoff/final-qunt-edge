@@ -319,7 +319,7 @@ function getErrorMessage(error: Error): { title: string; detail?: string } {
     }
 
 // Main Component
-export default function ChatWidget({ size ="large" }: ChatWidgetProps) {
+const ChatWidget = React.memo(function ChatWidget({ size ="large" }: ChatWidgetProps) {
      const timezone = useUserStore((state) => state.timezone);
      const { supabaseUser: user } = useUserStore.getState();
      const locale = useCurrentLocale();
@@ -874,6 +874,8 @@ export default function ChatWidget({ size ="large" }: ChatWidgetProps) {
      </div>
      </div>
      )}
-     </Card>
-     );
-    }
+      </Card>
+      );
+     })
+
+export default ChatWidget

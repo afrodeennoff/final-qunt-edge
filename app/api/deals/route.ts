@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { connection } from 'next/server'
-import { getActiveDeals, type DealItem } from '@/server/deals'
+import { getActiveDeals, type DealFilters } from '@/server/deals'
 import { logger } from '@/lib/logger'
 import { requireDealsApiAuth } from './_auth'
 import { apiError } from '@/lib/api-response'
@@ -61,82 +61,52 @@ async function handleGet(request: NextRequest) {
     }
     const { search, market, platform, payoutModel, drawdownType, minFee, maxFee, sortBy, sortOrder, limit, offset } = params
     
-    // Get all active deals
-    const allDeals = await getActiveDeals()
+    const dealFilters: DealFilters = {}
+    if (search) dealFilters.search = search
+    if (market) dealFilters.market = market
+    if (platform) dealFilters.platform = platform
+    if (sortBy) {
+      dealFilters.sortBy = sortBy
+      dealFilters.sortOrder = sortOrder
+    }
     
-    // Apply filters
-    const filteredDeals = allDeals.filter(deal => {
-      // Search filter
-      if (search && !deal.firmName.toLowerCase().includes(search.toLowerCase())) {
-        return false
-      }
-      
-      // Market filter
-      if (market && deal.category !== market) {
-        return false
-      }
-      
-      // Platform filter
-      if (platform && deal.platform !== platform) {
-        return false
-      }
-      
-      // Payout model filter
-      if (payoutModel && deal.payoutModel !== payoutModel) {
-        return false
-      }
-      
-      // Drawdown type filter
-      if (drawdownType && deal.drawdownType !== drawdownType) {
-        return false
-      }
-      
-      // Fee range filter
-      if (minFee !== undefined && deal.challengeFee < minFee) {
-        return false
-      }
-      
-      if (maxFee !== undefined && deal.challengeFee > maxFee) {
-        return false
-      }
-      
-      return true
-    })
+    // Get deals with filters pushed to Prisma
+    const allDeals = await getActiveDeals(
+      search || market || platform ? dealFilters : undefined
+    )
     
-    // Apply sorting
-    const sortKey = sortBy as keyof DealItem
-    filteredDeals.sort((a, b) => {
-      const valueA = a[sortKey]
-      const valueB = b[sortKey]
-      
-      // Handle special sorting cases
-      if (sortKey === 'challengeFee') {
-        const feeA = (valueA as number) ?? 0
-        const feeB = (valueB as number) ?? 0
-        return sortOrder === 'asc' ? feeA - feeB : feeB - feeA
-      }
-      
-      // String comparison
-      if (typeof valueA === 'string' && typeof valueB === 'string') {
-        return sortOrder === 'asc' 
-          ? valueA.localeCompare(valueB) 
-          : valueB.localeCompare(valueA)
-      }
-      
-      // For all other types, convert to numbers for comparison
-      let numA: number = Number(valueA)
-      let numB: number = Number(valueB)
-      
-      // Handle NaN values
-      if (Number.isNaN(numA)) {
-        numA = 0
-      }
-      if (Number.isNaN(numB)) {
-        numB = 0
-      }
-      
-      return sortOrder === 'asc' ? numA - numB : numB - numA
-    })
+    // Apply remaining filters (payoutModel, drawdownType, minFee, maxFee) in JS
+    let filteredDeals = allDeals
+    if (payoutModel || drawdownType || minFee !== undefined || maxFee !== undefined) {
+      filteredDeals = allDeals.filter(deal => {
+        if (payoutModel && deal.payoutModel !== payoutModel) return false
+        if (drawdownType && deal.drawdownType !== drawdownType) return false
+        if (minFee !== undefined && deal.challengeFee < minFee) return false
+        if (maxFee !== undefined && deal.challengeFee > maxFee) return false
+        return true
+      })
+    }
+    
+    // Sort remaining filters that Prisma can't handle
+    if (sortBy && !['discountPercent', 'challengeFee'].includes(sortBy)) {
+      filteredDeals.sort((a, b) => {
+        const key = sortBy as keyof typeof a
+        const valueA = a[key]
+        const valueB = b[key]
+        
+        if (typeof valueA === 'string' && typeof valueB === 'string') {
+          return sortOrder === 'asc' 
+            ? valueA.localeCompare(valueB) 
+            : valueB.localeCompare(valueA)
+        }
+        
+        let numA: number = Number(valueA)
+        let numB: number = Number(valueB)
+        if (Number.isNaN(numA)) numA = 0
+        if (Number.isNaN(numB)) numB = 0
+        return sortOrder === 'asc' ? numA - numB : numB - numA
+      })
+    }
     
     // Apply pagination
     const paginatedDeals = filteredDeals.slice(offset, offset + limit)
@@ -150,7 +120,7 @@ async function handleGet(request: NextRequest) {
         hasMore: offset + limit < filteredDeals.length
       }
     })
-    dealsRes.headers.set('Cache-Control', 'public, max-age=300, s-maxage=600')
+    dealsRes.headers.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=60')
     return dealsRes
   } catch (error) {
     if (isPrerenderInterruption(error)) {

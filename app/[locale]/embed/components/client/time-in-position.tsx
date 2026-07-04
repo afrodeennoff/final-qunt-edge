@@ -55,7 +55,7 @@ function CustomTooltip({ active, payload, label, t }: CustomTooltipProps) {
   return null
 }
 
-export default function TimeInPositionByHourChart({ trades }: { trades: TradeLike[] }) {
+export default React.memo(function TimeInPositionByHourChart({ trades }: { trades: TradeLike[] }) {
   const t = useI18n()
   
   const chartData = React.useMemo(() => {
@@ -135,4 +135,4 @@ export default function TimeInPositionByHourChart({ trades }: { trades: TradeLik
       </CardContent>
     </Card>
   )
-}
+})

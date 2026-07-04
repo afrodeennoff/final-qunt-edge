@@ -27,7 +27,7 @@ async function handleGet(
     
     const deals = await getFirmDeals(id)
     
-    return NextResponse.json({
+    const response = NextResponse.json({
       deals,
       pagination: {
         total: deals.length,
@@ -36,6 +36,8 @@ async function handleGet(
         hasMore: false
       }
     })
+    response.headers.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=60')
+    return response
   } catch (error) {
     logger.error('[api/deals/firms/[id]/deals] Error fetching firm deals:', error)
     return NextResponse.json(

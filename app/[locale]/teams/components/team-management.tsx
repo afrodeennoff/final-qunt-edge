@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useI18n } from "@/locales/client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -96,7 +96,7 @@ interface TeamManagementProps {
  onViewClick?: (team: Team) => void
 }
 
-export function TeamManagement({
+const TeamManagement = React.memo(function TeamManagement({
  // Event handlers reserved for future use
  // onTeamClick,
  // onManageClick,
@@ -192,42 +192,64 @@ export function TeamManagement({
  const [isSubmitting, setIsSubmitting] = useState(false)
  const [pendingInvitations, setPendingInvitations] = useState<Array<{ id: string; email: string; status: string; createdAt: Date | string; expiresAt: Date | string }>>([])
 
- // Load data on component mount
- useEffect(() => {
- let isMounted = true
+  // Cache for team data to avoid duplicate fetches
+  const teamDataCache = useRef<{ teams: typeof userTeams; managed: ManagedTeam[] } | null>(null)
 
- loadTeamData()
+  // Load data on component mount
+  useEffect(() => {
+  let isMounted = true
 
- return () => {
-   isMounted = false
- }
- }, [])
+  if (!teamDataCache.current) {
+    loadTeamData()
+  } else {
+    setUserTeams(teamDataCache.current.teams)
+    setManagedTeams(teamDataCache.current.managed)
+    setIsLoading(false)
+  }
 
- async function loadTeamData() {
- setIsLoading(true)
- try {
- // Load owned and joined teams
- const teamsResult = await getUserTeams()
- if (teamsResult.success) {
- setUserTeams({
- ownedTeams: teamsResult.ownedTeams || [],
- joinedTeams: teamsResult.joinedTeams || [],
- })
- }
+  return () => {
+    isMounted = false
+  }
+  }, [])
 
- // Load managed teams
- const managedResult = await getUserTeamAccess()
- if (managedResult.success) {
- setManagedTeams(managedResult.managedTeams || [])
- }
- } catch {
+  async function loadTeamData() {
+  setIsLoading(true)
+  try {
+  // Load owned and joined teams
+  const teamsResult = await getUserTeams()
+  if (teamsResult.success) {
+  const teams = {
+  ownedTeams: teamsResult.ownedTeams || [],
+  joinedTeams: teamsResult.joinedTeams || [],
+  }
+  setUserTeams(teams)
 
- toast.error(t('dashboard.teams.error'))
- } finally {
- setIsLoading(false)
- setIsRedirecting(false)
- }
- }
+  // Load managed teams
+  const managedResult = await getUserTeamAccess()
+  const managed = managedResult.managedTeams || []
+
+  if (managedResult.success) {
+  setManagedTeams(managed)
+  }
+
+  teamDataCache.current = { teams, managed }
+  } else {
+  // If getUserTeams fails, still try managed teams
+  const managedResult = await getUserTeamAccess()
+  if (managedResult.success) {
+  const managed = managedResult.managedTeams || []
+  setManagedTeams(managed)
+  teamDataCache.current = { teams: { ownedTeams: [], joinedTeams: [] }, managed }
+  }
+  }
+  } catch {
+
+  toast.error(t('dashboard.teams.error'))
+  } finally {
+  setIsLoading(false)
+  setIsRedirecting(false)
+  }
+  }
 
  const handleCreateTeam = async () => {
  if (!newTeamName.trim()) {
@@ -1218,4 +1240,6 @@ export function TeamManagement({
  </Dialog>
  </div>
  )
-} 
+})
+
+export { TeamManagement } 

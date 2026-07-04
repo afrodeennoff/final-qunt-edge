@@ -65,7 +65,7 @@ function CustomTooltip({ active, payload, t }: CustomTooltipProps) {
   return null
 }
 
-export default function PnLPerContractChartEmbed({ trades }: { trades: TradeLike[] }) {
+export default React.memo(function PnLPerContractChartEmbed({ trades }: { trades: TradeLike[] }) {
   const t = useI18n()
   const chartData = React.useMemo(() => {
     const groups: Record<string, { totalPnl: number; totalContracts: number; winCount: number; trades: number }> = {}
@@ -162,4 +162,4 @@ export default function PnLPerContractChartEmbed({ trades }: { trades: TradeLike
       </CardContent>
     </Card>
   )
-}
+})

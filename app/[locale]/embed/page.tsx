@@ -1,20 +1,7 @@
 'use client'
 
-import React from 'react'
-import {
-  DailyPnLChartEmbed,
-  TimeOfDayPerformanceChart,
-  TimeInPositionByHourChart,
-  PnLBySideChartEmbed,
-  TradeDistributionChartEmbed,
-  WeekdayPnLChartEmbed,
-  PnLPerContractChartEmbed,
-  PnLPerContractDailyChartEmbed,
-  TickDistributionChartEmbed,
-  CommissionsPnLEmbed,
-  ContractQuantityChartEmbed,
-  TimeRangePerformanceChart,
-} from './index'
+import React, { Suspense } from 'react'
+import dynamic from 'next/dynamic'
 import { toast, Toaster } from 'sonner'
 import { useSearchParams } from 'next/navigation'
 import { applyEmbedTheme, THEME_PRESETS, getOverridesFromSearchParams } from './theme'
@@ -28,12 +15,20 @@ import {
 } from '@/components/animation/enhanced-motion'
 import {
   unifiedChipClassName,
-  unifiedHeroPanelClassName,
-  unifiedInsetPanelClassName,
-  unifiedMetricPanelClassName,
 } from '@/components/layout/unified-page-recipes'
-import { WORKSPACE_SHELL_WIDTH } from '@/lib/constants/layout'
-import { cn } from '@/lib/utils'
+
+const TimeRangePerformanceChart = dynamic(() => import('./components/time-range-performance'), { ssr: false })
+const DailyPnLChartEmbed = dynamic(() => import('./components/pnl-bar-chart'), { ssr: false })
+const TimeOfDayPerformanceChart = dynamic(() => import('./components/pnl-time-bar-chart'), { ssr: false })
+const TimeInPositionByHourChart = dynamic(() => import('./components/time-in-position'), { ssr: false })
+const PnLBySideChartEmbed = dynamic(() => import('./components/pnl-by-side'), { ssr: false })
+const TradeDistributionChartEmbed = dynamic(() => import('./components/trade-distribution'), { ssr: false })
+const WeekdayPnLChartEmbed = dynamic(() => import('./components/weekday-pnl'), { ssr: false })
+const PnLPerContractChartEmbed = dynamic(() => import('./components/pnl-per-contract'), { ssr: false })
+const PnLPerContractDailyChartEmbed = dynamic(() => import('./components/pnl-per-contract-daily'), { ssr: false })
+const TickDistributionChartEmbed = dynamic(() => import('./components/tick-distribution'), { ssr: false })
+const CommissionsPnLEmbed = dynamic(() => import('./components/commissions-pnl'), { ssr: false })
+const ContractQuantityChartEmbed = dynamic(() => import('./components/contract-quantity'), { ssr: false })
 
 // Removed ThemeProvider import - using simple theme implementation
 
@@ -259,6 +254,7 @@ export default function EmbedPage() {
   }, [chartDefinitions, selectedCharts, sendChartClickMessage])
 
   return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
     <I18nProviderClient locale={lang}>
       <div className="qe-v2-app-shell relative min-h-dvh w-full pb-20">
         <BackgroundGlow variant="default" />
@@ -323,5 +319,6 @@ export default function EmbedPage() {
         </div>
       </div>
     </I18nProviderClient>
+    </Suspense>
   )
 }

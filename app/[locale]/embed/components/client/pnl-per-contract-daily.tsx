@@ -65,7 +65,7 @@ function CustomTooltip({ active, payload, t }: CustomTooltipProps) {
   return null
 }
 
-export default function PnLPerContractDailyChartEmbed({ trades, instrument }: { trades: TradeLike[], instrument: string }) {
+export default React.memo(function PnLPerContractDailyChartEmbed({ trades, instrument }: { trades: TradeLike[], instrument: string }) {
   const t = useI18n()
   const chartData = React.useMemo(() => {
     if (!instrument) return []
@@ -161,4 +161,4 @@ export default function PnLPerContractDailyChartEmbed({ trades, instrument }: { 
       </CardContent>
     </Card>
   )
-}
+})

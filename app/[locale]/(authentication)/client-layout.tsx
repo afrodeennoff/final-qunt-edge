@@ -5,7 +5,8 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCurrentLocale } from "@/locales/client";
-import { RootProviders } from "@/components/providers/root-providers";
+import { ThemeProvider } from "@/context/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 interface AuthenticationLayoutProps {
  children: React.ReactNode;
 }
@@ -43,9 +44,10 @@ export default function AuthenticationLayout({
        <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
          <div className="h-[500px] w-[500px] rounded-full bg-primary/[0.03] blur-2xl animate-[pulse_8s_ease-in-out_infinite]" />
        </div>
-        <div className="relative z-10 pt-8 md:pt-16">
-          <RootProviders>{children}</RootProviders>
-        </div>
+         <div className="relative z-10 pt-8 md:pt-16">
+           <ThemeProvider scope="fixed-green">{children}</ThemeProvider>
+           <Toaster />
+         </div>
      </div>
    );
 

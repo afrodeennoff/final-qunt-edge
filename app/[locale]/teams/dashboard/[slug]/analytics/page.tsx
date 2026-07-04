@@ -2,15 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'next/navigation'
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
+import dynamic from 'next/dynamic'
+
+const EquityChart = dynamic(() => import('./equity-chart'), { ssr: false })
 import { AlertTriangle, BarChart3, RefreshCw, Target, TrendingUp, Zap } from 'lucide-react'
 import {
   unifiedInsetPanelClassName,
@@ -309,32 +303,7 @@ export default function TeamAnalyticsPage() {
           </CardHeader>
           <CardContent className="h-[320px] sm:h-[380px]">
             {data?.chartData?.length ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={data.chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="4 4" stroke="transparent" vertical={false} />
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
-                    tickFormatter={(value: string) => new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
-                    tickFormatter={(value: number) => `$${Math.round(value / 1000)}k`}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Area
-                    type="monotone"
-                    dataKey="cumulativePnL"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2.5}
-                    fill="hsl(var(--primary) / 0.12)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              <EquityChart data={data.chartData} formatCurrency={formatCurrency} CustomTooltip={CustomTooltip} />
             ) : (
               <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
                 No equity data available yet.

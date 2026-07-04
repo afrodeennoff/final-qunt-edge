@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useI18n } from '@/locales/client'
 import type { ApiKeyResult } from '@/server/mcp-key-service'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -692,7 +692,7 @@ function ApiKeySection() {
   )
 }
 
-export default function SettingsPage() {
+const SettingsPage = React.memo(function SettingsPage() {
   const t = useI18n()
   const changeLocale = useChangeLocale()
   const currentLocale = useCurrentLocale()
@@ -1239,4 +1239,6 @@ export default function SettingsPage() {
       </div>
     </UnifiedPageShell>
   )
-}
+})
+
+export default SettingsPage

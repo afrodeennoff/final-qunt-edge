@@ -756,43 +756,36 @@ export async function updateTradesAction(tradesIds: string[], update: Partial<No
     }
 
     if (entryDateOffset || closeDateOffset || instrumentTrim || instrumentPrefix || instrumentSuffix) {
-      const trades = await prisma.trade.findMany({
-        where: { id: { in: tradesIds }, userId },
-        select: { id: true, entryDate: true, closeDate: true, instrument: true }
-      })
+      const updates: string[] = []
 
-      const updateOps = trades.map((trade) => {
-        const data = {} as Prisma.TradeUpdateManyMutationInput
+      if (entryDateOffset) {
+        updates.push(`"entryDate" = "entryDate" + interval '${entryDateOffset} hours'`)
+      }
 
-        if (entryDateOffset) {
-          const d = new Date(trade.entryDate)
-          d.setHours(d.getHours() + entryDateOffset)
-          data.entryDate = formatTimestamp(d.toISOString())
-        }
-        if (closeDateOffset && trade.closeDate) {
-          const d = new Date(trade.closeDate)
-          d.setHours(d.getHours() + closeDateOffset)
-          data.closeDate = formatTimestamp(d.toISOString())
-        }
+      if (closeDateOffset) {
+        updates.push(`"closeDate" = "closeDate" + interval '${closeDateOffset} hours'`)
+      }
 
-        let newInst = trade.instrument
+      if (instrumentTrim || instrumentPrefix || instrumentSuffix) {
+        let expr = '"instrument"'
         if (instrumentTrim) {
-          newInst = newInst.substring(instrumentTrim.fromStart, newInst.length - instrumentTrim.fromEnd)
+          const { fromStart, fromEnd } = instrumentTrim
+          expr = `SUBSTRING(${expr} FROM ${fromStart + 1} FOR GREATEST(0, LENGTH(${expr}) - ${fromStart} - ${fromEnd}))`
         }
-        if (instrumentPrefix) newInst = instrumentPrefix + newInst
-        if (instrumentSuffix) newInst = newInst + instrumentSuffix
-
-        if (newInst !== trade.instrument) data.instrument = newInst
-
-        if (Object.keys(data).length > 0) {
-          return prisma.trade.update({ where: { id: trade.id }, data })
+        if (instrumentPrefix) {
+          expr = `'${instrumentPrefix}' || ${expr}`
         }
-        return null
-      }).filter((op): op is ReturnType<typeof prisma.trade.update> => op !== null)
+        if (instrumentSuffix) {
+          expr = `${expr} || '${instrumentSuffix}'`
+        }
+        updates.push(`"instrument" = ${expr}`)
+      }
 
-      for (let index = 0; index < updateOps.length; index += TRADE_UPDATE_BATCH_SIZE) {
-        const batch = updateOps.slice(index, index + TRADE_UPDATE_BATCH_SIZE)
-        await prisma.$transaction(batch)
+      if (updates.length > 0) {
+        const ids = tradesIds.map(id => `'${id}'`).join(', ')
+        await prisma.$executeRawUnsafe(
+          `UPDATE "public"."Trade" SET ${updates.join(', ')} WHERE "id" IN (${ids}) AND "userId" = '${userId}'`
+        )
       }
     }
 

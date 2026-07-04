@@ -1,9 +1,10 @@
+import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataManagementCard } from "@/app/[locale]/dashboard/data/components/data-management/data-management-card"
 import { TradeTableReview } from "../components/tables/trade-table-review"
 import { UnifiedPageShell, UnifiedSurface } from "@/components/layout/unified-page-shell"
 
-export default function DashboardPage() {
+const DashboardPage = React.memo(function DashboardPage() {
   return (
     <UnifiedPageShell density="compact">
       <div className="flex w-full flex-1 flex-col min-h-0">
@@ -26,4 +27,6 @@ export default function DashboardPage() {
       </div>
     </UnifiedPageShell>
   )
-}
+})
+
+export default DashboardPage

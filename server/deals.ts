@@ -452,7 +452,15 @@ function getWebSourcedDealsFallback(): DealItem[] {
   })
 }
 
-const _getActiveDeals = async (): Promise<DealItem[]> => {
+export interface DealFilters {
+  search?: string
+  market?: string
+  platform?: string
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
+}
+
+const _getActiveDeals = async (filters?: DealFilters): Promise<DealItem[]> => {
   if (!hasConfiguredDatabaseConnection) {
     return getWebSourcedDealsFallback()
   }
@@ -463,10 +471,30 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
 
   const now = new Date()
   try {
+    const propFirmWhere: Record<string, unknown> = { isActive: true }
+    if (filters?.search) {
+      propFirmWhere.name = { contains: filters.search, mode: 'insensitive' }
+    }
+    if (filters?.market) {
+      propFirmWhere.category = filters.market
+    }
+    if (filters?.platform) {
+      propFirmWhere.platform = filters.platform
+    }
+
+    let orderBy: Record<string, unknown>
+    if (filters?.sortBy === 'discountPercent') {
+      orderBy = { discountPercent: filters.sortOrder || 'desc' }
+    } else if (filters?.sortBy === 'challengeFee') {
+      orderBy = { challengeFee: filters.sortOrder || 'desc' }
+    } else {
+      orderBy = { discountPercent: 'desc' }
+    }
+
     const coupons = await prisma.propFirmCoupon.findMany({
       where: {
         isActive: true,
-        propFirm: { isActive: true },
+        propFirm: propFirmWhere,
         ...buildPublicCouponWindowWhere(now),
       },
       include: {
@@ -483,7 +511,7 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
           },
         },
       },
-      orderBy: { discountPercent: 'desc' },
+      orderBy,
     })
 
     if (coupons.length === 0) {
@@ -632,7 +660,10 @@ async function getUnifiedFirmsCached(): Promise<UnifiedFirm[]> {
   return _getUnifiedFirms()
 }
 
-export async function getActiveDeals(): Promise<DealItem[]> {
+export async function getActiveDeals(filters?: DealFilters): Promise<DealItem[]> {
+  if (filters && (filters.search || filters.market || filters.platform || filters.sortBy)) {
+    return _getActiveDeals(filters)
+  }
   return getActiveDealsCached()
 }
 

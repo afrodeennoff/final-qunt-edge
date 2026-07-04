@@ -1,3 +1,4 @@
+import React from 'react'
 import dynamic from 'next/dynamic'
 import type { Metadata } from "next";
 import { getCanonicalUrl } from "@/lib/seo";
@@ -29,6 +30,8 @@ export async function generateMetadata({
   };
 }
 
-export default function AccountsPage() {
+const AccountsPage = React.memo(function AccountsPage() {
   return <AccountsOverview size="large" />;
-}
+})
+
+export default AccountsPage

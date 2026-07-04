@@ -349,7 +349,7 @@ function SliderInput({ label, value, onChange, min, max, step, format }: {
   )
 }
 
-export function ConsistencySimulator() {
+const ConsistencySimulator = React.memo(function ConsistencySimulator() {
   const rawTrades = useDataTradeItems()
   const accounts = useDataAccountsList()
 
@@ -1229,7 +1229,9 @@ export function ConsistencySimulator() {
       )}
     </div>
   )
-}
+})
+
+export { ConsistencySimulator }
 
 function formatDate(dateStr: string): string {
   try {
