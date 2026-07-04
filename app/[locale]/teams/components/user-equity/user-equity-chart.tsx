@@ -46,7 +46,7 @@ function CustomTooltip({ active, payload, label, showDailyView }: CustomTooltipP
  })
  
  return (
- <div className="rounded-lg border bg-background p-2 shadow-xs">
+ <div className="rounded-xl border-0 bg-gradient-to-br from-muted/50 to-muted/20 p-3 shadow-lg">
  <div className="grid gap-2">
  <div className="flex flex-col">
  <span className="text-[0.70rem] uppercase text-muted-foreground">
@@ -88,7 +88,7 @@ function CustomTooltip({ active, payload, label, showDailyView }: CustomTooltipP
  const cumulativeValue = payload[0]?.payload?.cumulativePnL || 0
  
  return (
- <div className="rounded-lg border bg-background p-2 shadow-xs">
+ <div className="rounded-xl border-0 bg-gradient-to-br from-muted/50 to-muted/20 p-3 shadow-lg">
  <div className="grid gap-2">
  <div className="flex flex-col">
  <span className="text-[0.70rem] uppercase text-muted-foreground">

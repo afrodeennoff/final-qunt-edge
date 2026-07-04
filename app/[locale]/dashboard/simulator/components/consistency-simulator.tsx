@@ -166,8 +166,8 @@ function MetricCard({
 }
 
 function RiskLevel({ value }: { value: number }) {
-  if (value < 0.3) return <span className="text-emerald-500">Low</span>
-  if (value < 0.6) return <span className="text-amber-500">Medium</span>
+  if (value < 0.3) return <span className="text-success">Low</span>
+  if (value < 0.6) return <span className="text-semantic-warning">Medium</span>
   return <span className="text-destructive">High</span>
 }
 
@@ -178,7 +178,7 @@ const MCResultDashboard = React.memo(function MCResultDashboard({
   result: MonteCarloResult
   challengeCost?: number
 }) {
-  const evColor = result.expectedValue >= 0 ? "text-emerald-500" : "text-destructive"
+  const evColor = result.expectedValue >= 0 ? "text-success" : "text-destructive"
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
@@ -186,7 +186,7 @@ const MCResultDashboard = React.memo(function MCResultDashboard({
         label="Pass Probability"
         value={formatPct(result.passProbability)}
         icon={Trophy}
-        color={result.passProbability > 0.5 ? "text-emerald-500" : result.passProbability > 0.3 ? "text-amber-500" : "text-destructive"}
+        color={result.passProbability > 0.5 ? "text-success" : result.passProbability > 0.3 ? "text-semantic-warning" : "text-destructive"}
         sub={`${result.pathResults.pass} of ${result.pathResults.pass + result.pathResults.fail + result.pathResults.maxTrades} paths`}
       />
       <MetricCard
@@ -220,20 +220,20 @@ const MCResultDashboard = React.memo(function MCResultDashboard({
         label="Risk of Ruin"
         value={formatPct(result.riskOfRuin)}
         icon={Shield}
-        color={result.riskOfRuin < 0.05 ? "text-emerald-500" : result.riskOfRuin < 0.2 ? "text-amber-500" : "text-destructive"}
+        color={result.riskOfRuin < 0.05 ? "text-success" : result.riskOfRuin < 0.2 ? "text-semantic-warning" : "text-destructive"}
         sub={<RiskLevel value={result.riskOfRuin} />}
       />
       <MetricCard
         label="Sharpe Ratio"
         value={result.sharpeRatio.toFixed(2)}
         icon={BarChart3}
-        color={result.sharpeRatio > 1 ? "text-emerald-500" : result.sharpeRatio > 0 ? "text-amber-500" : "text-destructive"}
+        color={result.sharpeRatio > 1 ? "text-success" : result.sharpeRatio > 0 ? "text-semantic-warning" : "text-destructive"}
       />
       <MetricCard
         label="Profit Factor"
         value={result.profitFactor === Infinity ? "∞" : result.profitFactor.toFixed(2)}
         icon={Zap}
-        color={result.profitFactor > 1.5 ? "text-emerald-500" : result.profitFactor > 1 ? "text-amber-500" : "text-destructive"}
+        color={result.profitFactor > 1.5 ? "text-success" : result.profitFactor > 1 ? "text-semantic-warning" : "text-destructive"}
       />
     </div>
   )
@@ -344,11 +344,11 @@ function StrategyMetrics({ winRate, rewardRatio, riskPerTrade, startingBalance }
   })
 
   const metrics = [
-    { label: "Edge", value: edge > 0 ? `${(edge * 100).toFixed(2)}%` : `${(edge * 100).toFixed(2)}%`, color: edge > 0 ? "text-emerald-500" : "text-destructive" },
-    { label: "Expectancy", value: formatCurrency(exp), color: exp > 0 ? "text-emerald-500" : "text-destructive" },
-    { label: "Kelly %", value: kelly > 0 ? `${(kelly * 100).toFixed(2)}%` : `${(kelly * 100).toFixed(2)}%`, color: kelly > 0 ? "text-emerald-500" : "text-destructive" },
+    { label: "Edge", value: edge > 0 ? `${(edge * 100).toFixed(2)}%` : `${(edge * 100).toFixed(2)}%`, color: edge > 0 ? "text-success" : "text-destructive" },
+    { label: "Expectancy", value: formatCurrency(exp), color: exp > 0 ? "text-success" : "text-destructive" },
+    { label: "Kelly %", value: kelly > 0 ? `${(kelly * 100).toFixed(2)}%` : `${(kelly * 100).toFixed(2)}%`, color: kelly > 0 ? "text-success" : "text-destructive" },
     { label: "Half-Kelly", value: `${(half * 100).toFixed(2)}%`, color: "text-primary" },
-    { label: "Risk of Ruin", value: `${(ror * 100).toFixed(1)}%`, color: ror < 0.05 ? "text-emerald-500" : ror < 0.2 ? "text-amber-500" : "text-destructive" },
+    { label: "Risk of Ruin", value: `${(ror * 100).toFixed(1)}%`, color: ror < 0.05 ? "text-success" : ror < 0.2 ? "text-semantic-warning" : "text-destructive" },
   ]
 
   return (
@@ -929,10 +929,10 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-xs text-emerald-500 font-semibold">Passed</span>
+                    <span className="text-xs text-success font-semibold">Passed</span>
                     <span className="text-xs font-bold tabular-nums">{mcResult.result.pathResults.pass} ({formatPct(mcResult.result.passProbability)})</span>
                   </div>
-                  <Progress value={mcResult.result.passProbability * 100} className="h-1.5 bg-muted/40" indicatorClassName="bg-emerald-500" />
+                  <Progress value={mcResult.result.passProbability * 100} className="h-1.5 bg-muted/40" indicatorClassName="bg-success" />
                   <div className="flex justify-between items-center mt-2">
                     <span className="text-xs text-destructive font-semibold">Blown</span>
                     <span className="text-xs font-bold tabular-nums">{mcResult.result.pathResults.fail} ({formatPct(mcResult.result.blowoutProbability)})</span>
@@ -1097,7 +1097,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                     onClick={() => setConsistencyPct(accountConsistencyPct)}
                     className="text-[9px] text-primary/70 mt-1.5 hover:text-primary transition-colors"
                   >
-                    Your account uses {accountConsistencyPct}% \u2014 click to apply
+                    Your account uses {accountConsistencyPct}% — click to apply
                   </button>
                 )}
               </div>
@@ -1538,12 +1538,6 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                     preserveAspectRatio="none"
                     className="w-full h-full"
                   >
-                    <defs>
-                      <linearGradient id="ddGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.6" />
-                        <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.05" />
-                      </linearGradient>
-                    </defs>
                     {[0, 1, 2, 3, 4].map(i => (
                       <line key={i} x1="0" y1={i * 48} x2={Math.max(activeDays.length * 40, 400)} y2={i * 48} stroke="var(--border)" strokeOpacity="0.3" strokeWidth="0.5" />
                     ))}
@@ -1568,16 +1562,6 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                           strokeOpacity="0.2"
                           strokeWidth="1"
                           strokeDasharray="2 4"
-                        />
-                        <line
-                          x1="0"
-                          y1={192 - ((effectiveStartingBalance - drawdownLimit - equityBounds.min) / (equityBounds.max - equityBounds.min)) * 192}
-                          x2={Math.max(activeDays.length * 40, 400)}
-                          y2={192 - ((effectiveStartingBalance - drawdownLimit - equityBounds.min) / (equityBounds.max - equityBounds.min)) * 192}
-                          stroke="var(--destructive)"
-                          strokeOpacity="0.4"
-                          strokeWidth="1"
-                          strokeDasharray="6 3"
                         />
                         <polyline
                           points={equityCurve.map((b, i) => `${(i / Math.max(equityCurve.length - 1, 1)) * Math.max(activeDays.length * 40, 400)},${192 - ((b - equityBounds.min) / (equityBounds.max - equityBounds.min)) * 192}`).join(" ")}
@@ -1624,7 +1608,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                           key={day.id}
                           className={cn(
                             "flex-1 rounded-t transition-all duration-200 hover:opacity-80",
-                            day.pnl >= 0 ? "bg-emerald-500/50" : "bg-destructive/50",
+                            day.pnl >= 0 ? "bg-success/50" : "bg-destructive/50",
                           )}
                           style={{ height }}
                           title={`Day ${i + 1}: ${formatCurrency(day.pnl)}`}
@@ -1650,7 +1634,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                   {dayDrawdowns.map(dd => (
                     <div key={dd.day} className="flex items-center justify-between px-2 py-1.5 rounded text-xs hover:bg-muted/10">
                       <span className="text-muted-foreground/60 w-6 tabular-nums">#{dd.day}</span>
-                      <span className={cn("font-bold tabular-nums flex-1", (dd.balance - effectiveStartingBalance) >= 0 ? "text-emerald-500" : "text-destructive")}>
+                      <span className={cn("font-bold tabular-nums flex-1", (dd.balance - effectiveStartingBalance) >= 0 ? "text-success" : "text-destructive")}>
                         {formatCurrency(dd.balance)}
                       </span>
                       <span className={cn("font-bold tabular-nums w-20 text-right", dd.drawdown > 0 ? "text-destructive" : "text-muted-foreground/40")}>
@@ -1674,7 +1658,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                 <span className="text-[11px] font-semibold uppercase tracking-[0.14em]">Drawdown</span>
               </div>
               <div className="text-center py-3">
-                <div className={cn("text-3xl font-black tabular-nums", drawdownBreached ? "text-destructive" : "text-amber-500")}>
+                <div className={cn("text-3xl font-black tabular-nums", drawdownBreached ? "text-destructive" : "text-semantic-warning")}>
                   {formatCurrency(maxDrawdown)}
                 </div>
                 <div className="text-xs text-muted-foreground/60 mt-1">
@@ -1684,7 +1668,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
               <Progress
                 value={drawdownLimit > 0 ? (maxDrawdown / drawdownLimit) * 100 : 0}
                 className="h-2 bg-muted/40"
-                indicatorClassName={drawdownBreached ? "bg-destructive" : maxDrawdown > drawdownLimit * 0.75 ? "bg-amber-500" : "bg-emerald-500"}
+                indicatorClassName={drawdownBreached ? "bg-destructive" : maxDrawdown > drawdownLimit * 0.75 ? "bg-semantic-warning" : "bg-success"}
               />
               <div className={cn("text-[10px] font-semibold mt-2", drawdownBreached ? "text-destructive" : "text-muted-foreground/60")}>
                 {drawdownBreached ? "DRAWDOWN BREACHED" : `${formatCurrency(drawdownLimit - maxDrawdown)} remaining until breach`}
@@ -1699,13 +1683,13 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
               <div className="grid grid-cols-2 gap-3">
                   <div>
                     <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">Peak</div>
-                    <div className="text-sm font-bold tabular-nums text-emerald-500">
+                    <div className="text-sm font-bold tabular-nums text-success">
                       {equityCurve.length > 0 ? formatCurrency(Math.max(...equityCurve)) : "\u2014"}
                     </div>
                   </div>
                   <div>
                     <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">Current</div>
-                    <div className={cn("text-sm font-bold tabular-nums", equityCurve.length > 0 && (equityCurve[equityCurve.length - 1] ?? 0) >= effectiveStartingBalance ? "text-emerald-500" : "text-destructive")}>
+                    <div className={cn("text-sm font-bold tabular-nums", equityCurve.length > 0 && (equityCurve[equityCurve.length - 1] ?? 0) >= effectiveStartingBalance ? "text-success" : "text-destructive")}>
                       {equityCurve.length > 0 ? formatCurrency(equityCurve[equityCurve.length - 1]!) : "\u2014"}
                     </div>
                   </div>
@@ -1715,7 +1699,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                 </div>
                 <div>
                   <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">Total P&L</div>
-                  <div className={cn("text-sm font-bold tabular-nums", totalPnl >= 0 ? "text-emerald-500" : "text-destructive")}>
+                  <div className={cn("text-sm font-bold tabular-nums", totalPnl >= 0 ? "text-success" : "text-destructive")}>
                     {totalPnl >= 0 ? "+" : ""}{formatCurrency(totalPnl)}
                   </div>
                 </div>

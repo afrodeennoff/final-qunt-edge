@@ -1,6 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
+import { unifiedSectionPanelClassName } from '@/components/layout/unified-page-recipes'
 
 export type StatsTableRow = {
   name: string
@@ -26,55 +27,55 @@ export function StatsTable({
 }: StatsTableProps & { firstColLabel?: string }) {
   if (rows.length === 0) {
     return (
-      <div className="rounded-2xl overflow-hidden bg-card">
-        <div className="px-5 py-3 text-[10px] font-semibold tracking-[2px] uppercase text-primary/70">
+      <div className={cn(unifiedSectionPanelClassName, 'overflow-hidden')}>
+        <div className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50">
           {title}
         </div>
-        <div className="px-5 py-6 text-center">
-          <p className="text-xs text-muted-foreground">{emptyMessage}</p>
+        <div className="px-5 py-8 text-center">
+          <p className="text-xs text-muted-foreground/50">{emptyMessage}</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="rounded-2xl overflow-hidden bg-card">
-      <div className="px-4 sm:px-5 py-3 text-[10px] font-semibold tracking-[2px] uppercase text-primary/70">
+    <div className={cn(unifiedSectionPanelClassName, 'overflow-hidden')}>
+      <div className="px-4 sm:px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50">
         {title}
       </div>
       <div className="overflow-x-auto">
-      <table className="w-full text-sm min-w-[420px]">
-        <thead>
-          <tr className="text-[10px] uppercase tracking-[1px] text-muted-foreground">
-            <th className="text-left pl-3 sm:pl-5 pr-2 sm:pr-3 py-2 font-medium">{firstColLabel}</th>
-            <th className="text-right px-2 sm:px-3 py-2 font-medium">TRADES</th>
-            <th className="text-right px-2 sm:px-3 py-2 font-medium">WIN %</th>
-            <th className="text-right px-2 sm:px-3 py-2 font-medium">PNL</th>
-            <th className="text-right pl-2 sm:pl-3 pr-3 sm:pr-5 py-2 font-medium">AVG R</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map(row => {
-            const pnlPos = row.pnl >= 0
-            const rrPos = row.avgRR >= 0
-            return (
-              <tr key={row.name} className="last:border-0 hover:bg-muted/30">
-                <td className="pl-3 sm:pl-5 pr-2 sm:pr-3 py-2 font-medium text-foreground">{row.name}</td>
-                <td className="px-2 sm:px-3 py-2 text-right tabular-nums text-muted-foreground">{row.totalTrades}</td>
-                <td className={cn('px-2 sm:px-3 py-2 text-right tabular-nums', row.winRate >= 50 ? 'text-primary' : 'text-destructive')}>
-                  {row.winRate.toFixed(1)}%
-                </td>
-                <td className={cn('px-2 sm:px-3 py-2 text-right tabular-nums font-medium', pnlPos ? 'text-primary' : 'text-destructive')}>
-                  {row.pnl > 0 ? '+' : row.pnl < 0 ? '-' : ''}${Math.abs(row.pnl).toLocaleString('en-US', { minimumFractionDigits: 0 })}
-                </td>
-                <td className={cn('pl-2 sm:pl-3 pr-3 sm:pr-5 py-2 text-right tabular-nums', rrPos ? 'text-primary' : 'text-destructive')}>
-                  {rrPos ? '+' : ''}{row.avgRR.toFixed(1)}R
-                </td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+        <table className="w-full text-sm min-w-[420px]">
+          <thead>
+            <tr className="text-[10px] uppercase tracking-[0.1em] text-muted-foreground/40">
+              <th className="text-left pl-3 sm:pl-5 pr-2 sm:pr-3 py-2 font-semibold">{firstColLabel}</th>
+              <th className="text-right px-2 sm:px-3 py-2 font-semibold">TRADES</th>
+              <th className="text-right px-2 sm:px-3 py-2 font-semibold">WIN %</th>
+              <th className="text-right px-2 sm:px-3 py-2 font-semibold">PNL</th>
+              <th className="text-right pl-2 sm:pl-3 pr-3 sm:pr-5 py-2 font-semibold">AVG R</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => {
+              const pnlPos = row.pnl >= 0
+              const rrPos = row.avgRR >= 0
+              return (
+                <tr key={row.name} className={cn('transition-colors hover:bg-muted/20', i < rows.length - 1 && 'border-t border-border/20')}>
+                  <td className="pl-3 sm:pl-5 pr-2 sm:pr-3 py-2.5 font-semibold text-foreground">{row.name}</td>
+                  <td className="px-2 sm:px-3 py-2.5 text-right tabular-nums text-muted-foreground">{row.totalTrades}</td>
+                  <td className={cn('px-2 sm:px-3 py-2.5 text-right tabular-nums font-semibold', row.winRate >= 50 ? 'text-success' : 'text-destructive')}>
+                    {row.winRate.toFixed(1)}%
+                  </td>
+                  <td className={cn('px-2 sm:px-3 py-2.5 text-right tabular-nums font-bold', pnlPos ? 'text-success' : 'text-destructive')}>
+                    {row.pnl > 0 ? '+' : row.pnl < 0 ? '-' : ''}${Math.abs(row.pnl).toLocaleString('en-US', { minimumFractionDigits: 0 })}
+                  </td>
+                  <td className={cn('pl-2 sm:pl-3 pr-3 sm:pr-5 py-2.5 text-right tabular-nums font-semibold', rrPos ? 'text-success' : 'text-destructive')}>
+                    {rrPos ? '+' : ''}{row.avgRR.toFixed(1)}R
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   )

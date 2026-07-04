@@ -418,7 +418,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  </div>
 
  {/* Additional Metrics */}
- <div className="pt-2 border-t">
+  <div className="pt-2 border-t border-border/40">
  <div className="grid grid-cols-2 gap-2 text-xs">
  <div className="flex justify-between">
  <span className="text-muted-foreground">{t('teams.equity.maxDD')}:</span>

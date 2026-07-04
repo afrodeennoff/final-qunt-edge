@@ -215,7 +215,7 @@ export default function TeamAnalyticsPage() {
       <section className="space-y-6">
         <AnalyticsPageHeader />
 
-        <Card className="bg-card border-0">
+        <Card className="bg-gradient-to-br from-card/50 to-card/10 border-0">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
             <h3 className="text-lg font-semibold mb-2">Failed to load analytics</h3>
@@ -242,7 +242,7 @@ export default function TeamAnalyticsPage() {
           Monitor collective performance and individual consistency to improve team execution quality.
         </p>
 
-        <Card className="bg-card border-0">
+        <Card className="bg-gradient-to-br from-card/50 to-card/10 border-0">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <BarChart3 className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">No analytics data yet</h3>
@@ -290,7 +290,7 @@ export default function TeamAnalyticsPage() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-12">
-        <Card data-chart-surface="modern" className="bg-card border-0 xl:col-span-8">
+        <Card data-chart-surface="modern" className="bg-gradient-to-br from-card/50 to-card/10 border-0 xl:col-span-8">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Cumulative Equity</CardTitle>
             <CardDescription className="text-[13px] leading-[1.55]">Rolling team performance over time</CardDescription>
@@ -306,7 +306,7 @@ export default function TeamAnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-0 xl:col-span-4">
+        <Card className="bg-gradient-to-br from-card/50 to-card/10 border-0 xl:col-span-4">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Member Breakdown</CardTitle>
             <CardDescription className="text-[13px] leading-[1.55]">Per-trader contribution</CardDescription>
@@ -354,7 +354,7 @@ export default function TeamAnalyticsPage() {
         </Card>
       </div>
 
-      <Card className="bg-card border-0">
+      <Card className="bg-gradient-to-br from-card/50 to-card/10 border-0">
         <CardHeader>
           <CardTitle className="inline-flex items-center gap-2 text-lg font-semibold">
             <TrendingUp className="h-5 w-5 text-primary" />
