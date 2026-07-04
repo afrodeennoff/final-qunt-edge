@@ -432,14 +432,15 @@ export function AccountConfigurator({
  <Label>{t('propFirm.target')}</Label>
  <Input
  type="number"
- value={toInputValue(pendingChanges?.profitTarget ?? account.profitTarget)}
- onChange={(e) =>
- handleInputChange(
- 'profitTarget',
- toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0)
- )
- }
- />
+  value={toInputValue(pendingChanges?.profitTarget ?? account.profitTarget)}
+  onChange={(e) =>
+  handleInputChange(
+  'profitTarget',
+  toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0)
+  )
+  }
+  placeholder="0"
+  />
  </div>
  {/* Consistency moved to dedicated subsection below */}
  <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
@@ -565,11 +566,12 @@ export function AccountConfigurator({
  <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Drawdown Config</span>
  <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.drawdown')}</Label>
- <Input
- type="number"
- value={toInputValue(pendingChanges?.drawdownThreshold ?? account.drawdownThreshold)}
- onChange={(e) => handleInputChange('drawdownThreshold', toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0))}
- />
+  <Input
+  type="number"
+  value={toInputValue(pendingChanges?.drawdownThreshold ?? account.drawdownThreshold)}
+  onChange={(e) => handleInputChange('drawdownThreshold', toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0))}
+  placeholder="0"
+  />
  </div>
 
  <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
@@ -614,17 +616,19 @@ export function AccountConfigurator({
  <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.trailingType')}</Label>
  <Select
- value={pendingChanges?.trailing ?? account.trailing ?? 'EOD'}
- onValueChange={(value) => handleInputChange('trailing', value as 'EOD' | 'Intraday')}
- >
- <SelectTrigger>
- <SelectValue placeholder={t('propFirm.configurator.placeholders.selectTrailingType')} />
- </SelectTrigger>
- <SelectContent>
- <SelectItem value="EOD">{t('propFirm.configurator.trailingTypes.eod')}</SelectItem>
- <SelectItem value="Intraday">{t('propFirm.configurator.trailingTypes.intraday')}</SelectItem>
- </SelectContent>
- </Select>
+  value={pendingChanges?.trailing ?? account.trailing ?? 'EOD'}
+  onValueChange={(value) => handleInputChange('trailing', value as 'EOD' | 'Intraday' | 'Static' | 'DIRECTLY FUNDED')}
+  >
+  <SelectTrigger>
+  <SelectValue placeholder={t('propFirm.configurator.placeholders.selectTrailingType')} />
+  </SelectTrigger>
+  <SelectContent>
+  <SelectItem value="EOD">{t('propFirm.configurator.trailingTypes.eod')}</SelectItem>
+  <SelectItem value="Intraday">{t('propFirm.configurator.trailingTypes.intraday')}</SelectItem>
+  <SelectItem value="Static">{t('propFirm.configurator.trailingTypes.static')}</SelectItem>
+  <SelectItem value="DIRECTLY FUNDED">Directly Funded</SelectItem>
+  </SelectContent>
+  </Select>
  </div>
 
  {/* Buffer Configuration */}
@@ -689,11 +693,12 @@ export function AccountConfigurator({
  <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Daily Loss Rules</span>
  <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.dailyLoss')}</Label>
- <Input
- type="number"
- value={toInputValue(pendingChanges?.dailyLoss ?? account.dailyLoss)}
- onChange={(e) => handleInputChange('dailyLoss', toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0))}
- />
+  <Input
+  type="number"
+  value={toInputValue(pendingChanges?.dailyLoss ?? account.dailyLoss)}
+  onChange={(e) => handleInputChange('dailyLoss', toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0))}
+  placeholder="0"
+  />
  </div>
 
  <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">

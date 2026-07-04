@@ -110,17 +110,17 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
               />
             </div>
 
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between gap-2 text-[12px]">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-2 text-xs">
                 <span className="text-muted-foreground/70">{t('propFirm.card.drawdown')}</span>
-                <span className={cn('tabular-nums font-medium', remainingLoss > drawdownThreshold * 0.5 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]')}>
+                <span className={cn('tabular-nums font-medium', remainingLoss > drawdownThreshold * 0.5 ? 'text-success' : 'text-destructive')}>
                   {remainingLoss > 0 ? `$${remainingLoss.toFixed(0)} left` : 'Breached'}
                 </span>
               </div>
               <Progress
                 value={drawdownProgress}
-                className="h-1.5 bg-muted/40"
-                indicatorClassName="bg-primary/60 transition-all"
+                className="h-2 bg-muted/40"
+                indicatorClassName="bg-primary transition-all"
               />
             </div>
 

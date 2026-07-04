@@ -6,6 +6,7 @@ import { CalendarEntry } from "@/app/[locale]/dashboard/types/calendar"
 import { useI18n } from '@/locales/client'
 import Decimal from 'decimal.js'
 import type { Trade } from '@/lib/data-types'
+import { cn } from '@/lib/utils'
 
 interface DailyStatsProps {
  dayData: CalendarEntry | undefined;
@@ -133,18 +134,21 @@ export function DailyStats({ dayData, isWeekly = false }: DailyStatsProps) {
  </CardContent>
  </Card>
 
- <Card className="flex flex-col">
- <CardHeader className="pb-1 flex-1">
- <CardTitle className="text-base md:text-lg">
- {isWeekly ? t('calendar.charts.weeklyMaxDrawdown') : t('calendar.charts.dailyMaxDrawdown')}
- </CardTitle>
- </CardHeader>
- <CardContent className="pt-2 mt-auto">
- <p className={`text-xl md:text-2xl font-bold ${maxDrawdown > 0 ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
- -{formatCurrency(maxDrawdown)}
- </p>
- </CardContent>
- </Card>
+  <Card className="flex flex-col">
+  <CardHeader className="pb-2 flex-1">
+  <CardTitle className="text-base md:text-lg">
+  {isWeekly ? t('calendar.charts.weeklyMaxDrawdown') : t('calendar.charts.dailyMaxDrawdown')}
+  </CardTitle>
+  </CardHeader>
+  <CardContent className="pt-2 mt-auto">
+  <p className={cn(
+  'text-xl md:text-2xl font-semibold tabular-nums',
+  maxDrawdown < 0 ? 'text-destructive' : 'text-muted-foreground',
+  )}>
+  -{formatCurrency(maxDrawdown)}
+  </p>
+  </CardContent>
+  </Card>
 
  <Card className="flex flex-col">
  <CardHeader className="pb-1 flex-1">

@@ -282,8 +282,12 @@ export async function setupAccountAction(account: Account): Promise<Account> {
     aboveBuffer,
     considerBuffer,
     trades,
+    payoutCount: _payoutCount,
+    nextPaymentDate: _nextPaymentDate,
+    renewalNoticeLastSentAt: _renewalNoticeLastSentAt,
+    updatedAt: _updatedAt,
     ...baseAccountData
-  } = account
+  } = account as Account & { updatedAt?: unknown }
 
   // Only include considerBuffer when explicitly provided to avoid overriding unintentionally
   const considerBufferUpdate = considerBuffer === undefined ? {} : { considerBuffer }

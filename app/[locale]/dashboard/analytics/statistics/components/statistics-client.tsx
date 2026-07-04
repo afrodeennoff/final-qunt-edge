@@ -326,7 +326,7 @@ export default function StatisticsClient() {
       {risk && (
         <div className="rounded-2xl bg-card p-5">
           <div className="text-[10px] tracking-[2px] uppercase text-primary/70 mb-4">RISK & PERFORMANCE METRICS</div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-4">
             {[
               { label: 'SHARPE RATIO', value: risk.sharpe },
               { label: 'SORTINO RATIO', value: risk.sortino },
@@ -335,9 +335,9 @@ export default function StatisticsClient() {
               { label: 'PROFIT FACTOR', value: risk.profitFactor },
               { label: 'WIN / LOSS RATIO', value: risk.winLossRatio },
             ].map((m, i) => (
-              <div key={i} className="rounded-xl bg-muted/40 p-3">
-                <div className="text-[9px] tracking-widest text-muted-foreground">{m.label}</div>
-                <div className={cn('text-2xl font-semibold tabular-nums mt-1', m.negative ? 'text-destructive' : 'text-foreground')}>
+              <div key={i} className="min-w-0 rounded-xl bg-muted/40 p-4">
+                <div className="text-[11px] tracking-wider text-muted-foreground">{m.label}</div>
+                <div className={cn('text-2xl font-semibold tabular-nums mt-2', m.negative ? 'text-destructive' : 'text-foreground')}>
                   {m.value}
                 </div>
               </div>

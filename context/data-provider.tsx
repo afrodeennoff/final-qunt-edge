@@ -1531,8 +1531,9 @@ export const DataProvider: React.FC<{
 
           // If the new account has a groupId, update the groups state to include it
           if (accountWithMetrics.groupId) {
+            const currentGroups = useUserStore.getState().groups
             setGroups(
-              groups.map((group) => {
+              currentGroups.map((group) => {
                 if (group.id === accountWithMetrics.groupId) {
                   return {
                     ...group,

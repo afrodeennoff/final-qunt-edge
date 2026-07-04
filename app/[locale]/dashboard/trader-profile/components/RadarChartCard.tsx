@@ -41,16 +41,16 @@ export default function RadarChartCard({
         </Badge>
       </div>
 
-      <div className={cn(insetPanelClassName, 'mt-5 p-3')}>
-        <div className="h-64 2xl:h-80">
+      <div className={cn(insetPanelClassName, 'mt-5 p-4')}>
+        <div className="h-72 2xl:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={radarData}>
-              <PolarGrid stroke="transparent" strokeOpacity={0} />
+              <PolarGrid stroke="var(--border)" strokeOpacity={0.4} />
               <PolarAngleAxis
                 dataKey="metric"
                 tick={{
                   fill: 'var(--muted-foreground)',
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: 600,
                 }}
               />
