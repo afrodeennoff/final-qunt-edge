@@ -78,7 +78,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             group: "Review"
         },
         {
-            href: `/${locale}/dashboard/analytics/statistics`,
+            href: `/${locale}/dashboard/statistics`,
             icon: <BarChart3 className={NAV_ICON_SIZE} />,
             label: "Statistics",
             group: "Review"

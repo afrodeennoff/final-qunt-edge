@@ -5,7 +5,7 @@ import { Prisma } from '@/prisma/generated/prisma'
 import { getDatabaseUserId } from './auth'
 import type {
   StatisticsResult, TickerStat, DailyStat, SetupStat, WeekdayStat,
-} from '@/app/[locale]/dashboard/analytics/statistics/types'
+} from '@/app/[locale]/dashboard/statistics/types'
 
 const KNOWN_TIMEFRAMES = new Set(['5m', '15m', '30m', '1H', '4H', 'Daily'])
 const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -265,11 +265,33 @@ export async function getStatisticsAction(
   // 9. Best/worst day
   const dayPnls = dailyRows.map(r => Number(r.gross_pnl))
 
-  // 10. All PnLs for chart (limit to reduce payload)
+  // 10. Consecutive win/loss streaks
+  const sortedForStreak = [...tradesWithJournal]
+    .sort((a, b) => new Date(a.entryDate).getTime() - new Date(b.entryDate).getTime())
+  let maxConsecWins = 0
+  let maxConsecLosses = 0
+  let curWins = 0
+  let curLosses = 0
+  for (const t of sortedForStreak) {
+    const pnl = Number(t.pnl)
+    if (pnl > 0) { curWins++; curLosses = 0; if (curWins > maxConsecWins) maxConsecWins = curWins }
+    else if (pnl < 0) { curLosses++; curWins = 0; if (curLosses > maxConsecLosses) maxConsecLosses = curLosses }
+  }
+
+  // 11. All PnLs for chart (limit to reduce payload)
   const allPnls = tradesWithJournal.map(t => ({
     pnl: Number(t.pnl),
     entryDate: formatISO(t.entryDate),
   }))
+
+  const grossProfit = grandTotalGrossWin
+  const grossLoss = grandTotalGrossLoss
+  const winningTrades = grandTotalWins
+  const losingTrades = grandTotalLosses
+  const avgWin = winningTrades > 0 ? grossProfit / winningTrades : 0
+  const avgLoss = losingTrades > 0 ? grossLoss / losingTrades : 0
+  const totalRMultiple = avgLoss > 0 ? grandPnl / avgLoss : 0
+  const expectancy = grandTotal > 0 ? grandPnl / grandTotal : 0
 
   return {
     tickerStats,
@@ -285,6 +307,16 @@ export async function getStatisticsAction(
     worstDay: dayPnls.length > 0 ? Math.min(...dayPnls) : 0,
     profitFactor: grandTotalRR,
     avgRR: grandAvgRR,
+    grossProfit,
+    grossLoss,
+    avgWin,
+    avgLoss,
+    maxConsecWins,
+    maxConsecLosses,
+    totalRMultiple,
+    winningTrades,
+    losingTrades,
+    expectancy,
     featuredExcerpts,
   }
 }

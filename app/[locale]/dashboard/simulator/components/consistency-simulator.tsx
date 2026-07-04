@@ -725,7 +725,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
         <span className="text-xs font-semibold uppercase tracking-[0.14em]">Simulator</span>
       </div>
 
-      <div className="flex border-b border-border/20">
+      <div className="flex border-b border-transparent">
         {[
           { id: "monte_carlo" as SimTab, label: "Monte Carlo", icon: BarChart3 },
           { id: "consistency" as SimTab, label: "Consistency", icon: Percent },
@@ -764,7 +764,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                       "px-3 py-2 rounded-lg text-[11px] font-semibold border transition-colors text-center",
                       selectedFirm === f.key
                         ? "bg-primary text-primary-foreground border-primary shadow-sm shadow-primary/20"
-                        : "bg-muted/30 text-muted-foreground/80 border-border/20 hover:bg-muted/50 hover:text-foreground",
+                        : "bg-muted/30 text-muted-foreground/80 border-transparent hover:bg-muted/50 hover:text-foreground",
                     )}
                   >
                     {f.name}
@@ -783,7 +783,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                           "px-3 py-1.5 rounded-lg text-[11px] font-bold border transition-colors",
                           selectedSize === s.key
                             ? "bg-primary text-primary-foreground border-primary shadow-sm shadow-primary/20"
-                            : "bg-muted/30 text-muted-foreground/80 border-border/20 hover:bg-muted/50 hover:text-foreground",
+                            : "bg-muted/30 text-muted-foreground/80 border-transparent hover:bg-muted/50 hover:text-foreground",
                         )}
                       >
                         {s.name} — {formatCurrency(s.price)}
@@ -792,7 +792,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                   </div>
 
                   {firmPreset && (
-                    <div className={cn("bg-muted/20 border border-border/20 rounded-lg p-3 sm:p-4 space-y-3")}>
+                    <div className={cn("bg-muted/20 border border-transparent rounded-lg p-3 sm:p-4 space-y-3")}>
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-bold">{firmPreset.firmName} — {firmPreset.sizeName}</span>
                         <span className="text-[11px] text-muted-foreground/60">{formatCurrency(firmPreset.price)} {firmPreset.evaluation ? "(Evaluation)" : "(Instant)"}</span>
@@ -809,7 +809,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                 </div>
               )}
 
-              <div className="mt-4 pt-4 border-t border-border/10">
+              <div className="mt-4 pt-4 border-t border-transparent">
                 <div className="flex items-center gap-2 text-muted-foreground mb-3">
                   <Sliders className="h-3.5 w-3.5" />
                   <span className="text-[11px] font-semibold uppercase tracking-[0.14em]">Custom Configuration</span>
@@ -817,22 +817,22 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
                   <div>
                     <label className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">Account Size</label>
-                    <input value={customBalance} onChange={e => setCustomBalance(e.target.value)} placeholder={formatSizeLabel(effectiveStartingBalance)} className="w-full mt-1 bg-muted/20 border border-border/20 rounded-lg px-2.5 py-1.5 text-xs font-bold tabular-nums focus:outline-none focus:border-primary/40" />
+                    <input value={customBalance} onChange={e => setCustomBalance(e.target.value)} placeholder={formatSizeLabel(effectiveStartingBalance)} className="w-full mt-1 bg-muted/20 border border-transparent rounded-lg px-2.5 py-1.5 text-xs font-bold tabular-nums focus:outline-none focus:border-primary/40" />
                   </div>
                   <div>
                     <label className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">Profit Target ($)</label>
-                    <input value={customTarget} onChange={e => setCustomTarget(e.target.value)} placeholder={formatCurrency(effectiveProfitTarget)} className="w-full mt-1 bg-muted/20 border border-border/20 rounded-lg px-2.5 py-1.5 text-xs font-bold tabular-nums focus:outline-none focus:border-primary/40" />
+                    <input value={customTarget} onChange={e => setCustomTarget(e.target.value)} placeholder={formatCurrency(effectiveProfitTarget)} className="w-full mt-1 bg-muted/20 border border-transparent rounded-lg px-2.5 py-1.5 text-xs font-bold tabular-nums focus:outline-none focus:border-primary/40" />
                   </div>
                   <div>
                     <label className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">Max Drawdown ($)</label>
-                    <input value={customDrawdown} onChange={e => setCustomDrawdown(e.target.value)} placeholder={formatCurrency(effectiveMaxDrawdown)} className="w-full mt-1 bg-muted/20 border border-border/20 rounded-lg px-2.5 py-1.5 text-xs font-bold tabular-nums focus:outline-none focus:border-primary/40" />
+                    <input value={customDrawdown} onChange={e => setCustomDrawdown(e.target.value)} placeholder={formatCurrency(effectiveMaxDrawdown)} className="w-full mt-1 bg-muted/20 border border-transparent rounded-lg px-2.5 py-1.5 text-xs font-bold tabular-nums focus:outline-none focus:border-primary/40" />
                   </div>
                   <div>
                     <label className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">Drawdown Type</label>
                     <select
                       value={drawdownType}
                       onChange={e => setDrawdownType(e.target.value as typeof drawdownType)}
-                      className="w-full mt-1 bg-muted/20 border border-border/20 rounded-lg px-2.5 py-1.5 text-xs font-bold focus:outline-none focus:border-primary/40"
+                      className="w-full mt-1 bg-muted/20 border border-transparent rounded-lg px-2.5 py-1.5 text-xs font-bold focus:outline-none focus:border-primary/40"
                     >
                       <option value="static">Static</option>
                       <option value="trailing_eod">Trailing EOD</option>
@@ -978,7 +978,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                     "w-full rounded-lg px-3 py-2 text-left text-[12px] font-medium transition-all duration-200 border flex items-center justify-between",
                     selectedAccountId === "all"
                       ? "bg-primary/10 text-primary border-primary/30"
-                      : "bg-muted/30 text-muted-foreground/80 border-border/20 hover:bg-muted/50 hover:text-foreground",
+                      : "bg-muted/30 text-muted-foreground/80 border-transparent hover:bg-muted/50 hover:text-foreground",
                   )}
                 >
                   <span>All Accounts</span>
@@ -992,7 +992,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                       "w-full rounded-lg px-3 py-2 text-left text-[12px] font-medium transition-all duration-200 border flex items-center justify-between",
                       selectedAccountId === (acc.id || acc.number)
                         ? "bg-primary/10 text-primary border-primary/30"
-                        : "bg-muted/30 text-muted-foreground/80 border-border/20 hover:bg-muted/50 hover:text-foreground",
+                        : "bg-muted/30 text-muted-foreground/80 border-transparent hover:bg-muted/50 hover:text-foreground",
                     )}
                   >
                     <div className="flex items-center gap-2 min-w-0">
@@ -1008,7 +1008,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                   </button>
                 ))}
                 {accounts.length === 0 && (
-                  <div className="rounded-lg px-3 py-3 text-center border border-dashed border-border/20">
+                  <div className="rounded-lg px-3 py-3 text-center border border-dashed border-muted-foreground/15">
                     <p className="text-[11px] text-muted-foreground/40">No accounts found</p>
                   </div>
                 )}
@@ -1036,7 +1036,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                         "rounded-lg px-2 py-2 text-[11px] font-bold transition-all duration-200 border",
                         isActive
                           ? "bg-primary text-primary-foreground border-primary shadow-sm shadow-primary/20"
-                          : "bg-muted/30 text-muted-foreground/80 border-border/20 hover:bg-muted/50 hover:text-foreground",
+                          : "bg-muted/30 text-muted-foreground/80 border-transparent hover:bg-muted/50 hover:text-foreground",
                       )}
                     >
                       {formatSizeLabel(size)}
@@ -1047,7 +1047,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
               <div className="mt-1.5">
                 <div className={cn(
                   "flex items-center gap-2 rounded-lg border px-3 py-2 transition-colors",
-                  userSelectedSize !== null && !ACCOUNT_SIZES.includes(userSelectedSize) ? "border-primary/40 bg-primary/5" : "border-border/20 bg-muted/30",
+                  userSelectedSize !== null && !ACCOUNT_SIZES.includes(userSelectedSize) ? "border-primary/40 bg-primary/5" : "border-transparent bg-muted/30",
                 )}>
                   <span className="text-[11px] font-medium text-muted-foreground/60 shrink-0">Custom</span>
                   <span className="text-muted-foreground/40">$</span>
@@ -1073,7 +1073,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                     : "Set the max daily profit %"}
                 </p>
               </div>
-              <div className="rounded-lg bg-background/40 p-3 border border-border/15">
+              <div className="rounded-lg bg-background/40 p-3 border border-transparent">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[10px] font-medium text-muted-foreground/70">Max best day</span>
                   <span className="text-xl font-black text-foreground tabular-nums">{consistencyPct}%</span>
@@ -1110,7 +1110,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                       "rounded-md px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all duration-200 border",
                       phase === "phase_1"
                         ? "bg-primary text-primary-foreground border-primary shadow-sm shadow-primary/20"
-                        : "bg-muted/30 text-muted-foreground/70 border-border/20 hover:bg-muted/50",
+                        : "bg-muted/30 text-muted-foreground/70 border-transparent hover:bg-muted/50",
                     )}
                   >
                     Phase 1
@@ -1121,7 +1121,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                       "rounded-md px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all duration-200 border",
                       phase === "funded"
                         ? "bg-primary text-primary-foreground border-primary shadow-sm shadow-primary/20"
-                        : "bg-muted/30 text-muted-foreground/70 border-border/20 hover:bg-muted/50",
+                        : "bg-muted/30 text-muted-foreground/70 border-transparent hover:bg-muted/50",
                     )}
                   >
                     Funded
@@ -1131,7 +1131,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
             </div>
           </div>
 
-          <div className="flex items-center gap-1 rounded-lg bg-muted/30 p-1 w-fit border border-border/15">
+          <div className="flex items-center gap-1 rounded-lg bg-muted/30 p-1 w-fit border border-transparent">
             <button
               onClick={() => { setSimMode("live"); setActivePreset(null); setManualDays([]) }}
               className={cn(
@@ -1204,7 +1204,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
               </div>
 
               {activeDays.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-16 px-4 rounded-lg border border-dashed border-border/20">
+                <div className="flex flex-col items-center justify-center py-16 px-4 rounded-lg border border-dashed border-muted-foreground/15">
                   {simMode === "live" ? (
                     <>
                       <BarChart3 className="h-8 w-8 text-muted-foreground/20 mb-3" />
@@ -1288,7 +1288,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                               value={day.pnl}
                               onChange={e => updateDayPnl(day.id, parseFloat(e.target.value) || 0)}
                               className={cn(
-                                "w-24 rounded-md bg-background/60 border border-border/20 px-2 py-1 text-right text-xs font-medium tabular-nums focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/40",
+                                "w-24 rounded-md bg-background/60 border border-transparent px-2 py-1 text-right text-xs font-medium tabular-nums focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/40",
                                 day.pnl >= 0 ? "text-success" : "text-destructive",
                               )}
                             />
@@ -1316,7 +1316,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                     ? "bg-semantic-warning/5 border-semantic-warning/20"
                     : isPassing
                       ? "bg-success/5 border-success/20"
-                      : "bg-muted/30 border-border/15",
+                      : "bg-muted/30 border-transparent",
               )}>
                 {consistencyBreached ? (
                   <XCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
@@ -1480,7 +1480,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                       <button
                         key={preset.id}
                         onClick={() => applyPreset(preset)}
-                        className="group rounded-xl p-3 sm:p-4 text-left transition-all duration-200 border bg-card/30 border-border/20 hover:border-primary/20 hover:bg-card/50 hover:shadow-lg hover:shadow-primary/5"
+                        className="group rounded-xl p-3 sm:p-4 text-left transition-all duration-200 border bg-card/30 border-transparent hover:border-primary/20 hover:bg-card/50 hover:shadow-lg hover:shadow-primary/5"
                       >
                         <div className="flex items-end gap-0.5 h-8 mb-3">
                           {days.slice(0, 8).map((day, i) => {
@@ -1602,7 +1602,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                   </svg>
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-48 rounded-lg border border-dashed border-border/20">
+                <div className="flex items-center justify-center h-48 rounded-lg border border-dashed border-muted-foreground/15">
                   <p className="text-[11px] text-muted-foreground/40">No trading data yet</p>
                 </div>
               )}
@@ -1634,7 +1634,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                   })()}
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-20 rounded-lg border border-dashed border-border/20">
+                <div className="flex items-center justify-center h-20 rounded-lg border border-dashed border-muted-foreground/15">
                   <p className="text-[11px] text-muted-foreground/40">No trading data yet</p>
                 </div>
               )}
@@ -1660,7 +1660,7 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
                   ))}
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-20 rounded-lg border border-dashed border-border/20">
+                <div className="flex items-center justify-center h-20 rounded-lg border border-dashed border-muted-foreground/15">
                   <p className="text-[11px] text-muted-foreground/40">No day details</p>
                 </div>
               )}

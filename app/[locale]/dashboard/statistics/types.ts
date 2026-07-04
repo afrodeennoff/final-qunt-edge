@@ -70,5 +70,15 @@ export type StatisticsResult = {
   worstDay: number
   profitFactor: number
   avgRR: number
+  grossProfit: number
+  grossLoss: number
+  avgWin: number
+  avgLoss: number
+  maxConsecWins: number
+  maxConsecLosses: number
+  totalRMultiple: number
+  winningTrades: number
+  losingTrades: number
+  expectancy: number
   featuredExcerpts: FeaturedExcerptStat[]
 }

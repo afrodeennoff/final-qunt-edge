@@ -26,7 +26,13 @@ function formatPnl(pnl: number) {
   return `${sign}$${Math.abs(pnl).toFixed(2)}`
 }
 
-function computeRiskMetrics(pnls: number[], profitFactor: number) {
+function formatCompact(n: number) {
+  if (Math.abs(n) >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
+  if (Math.abs(n) >= 1_000) return `${(n / 1_000).toFixed(1)}K`
+  return n.toFixed(0)
+}
+
+function computeRiskMetrics(pnls: number[]) {
   if (pnls.length === 0) return null
   const mean = pnls.reduce((s, v) => s + v, 0) / pnls.length
   const stdDev = Math.sqrt(pnls.reduce((s, v) => s + (v - mean) ** 2, 0) / pnls.length)
@@ -47,19 +53,7 @@ function computeRiskMetrics(pnls: number[], profitFactor: number) {
     if (dd > maxDd) maxDd = dd
   }
 
-  const wins = pnls.filter(v => v > 0)
-  const losses = pnls.filter(v => v < 0)
-  const avgWin = wins.length > 0 ? wins.reduce((s, v) => s + v, 0) / wins.length : 0
-  const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((s, v) => s + v, 0) / losses.length) : 0
-
-  return {
-    sharpe: sharpe.toFixed(2),
-    sortino: sortino.toFixed(2),
-    expectancy: mean.toFixed(2),
-    maxDrawdown: maxDd.toFixed(2),
-    profitFactor: profitFactor > 0 ? profitFactor.toFixed(2) : '--',
-    winLossRatio: avgLoss > 0 ? (avgWin / avgLoss).toFixed(1) : '--',
-  }
+  return { sharpe: sharpe.toFixed(2), sortino: sortino.toFixed(2), maxDrawdown: maxDd.toFixed(2) }
 }
 
 function statToRow(s: TickerStat | SetupStat | WeekdayStat): StatsTableRow {
@@ -74,13 +68,33 @@ function statToRow(s: TickerStat | SetupStat | WeekdayStat): StatsTableRow {
   }
 }
 
+type KpiDef = {
+  label: string
+  value: string
+  positive?: boolean
+  negative?: boolean
+}
+
+function KpiCard({ label, value, positive, negative }: KpiDef) {
+  return (
+    <div className="rounded-2xl bg-card p-4">
+      <div className="text-[9px] tracking-[1.5px] uppercase text-muted-foreground">{label}</div>
+      <div className={cn(
+        'text-2xl font-semibold tabular-nums mt-1 tracking-[-0.5px]',
+        negative ? 'text-destructive' : positive ? 'text-primary' : 'text-foreground',
+      )}>
+        {value}
+      </div>
+    </div>
+  )
+}
+
 export default function StatisticsClient() {
   const accounts = useUserStore(s => s.accounts)
   const userId = useUserStore(s => s.supabaseUser?.id ?? s.user?.id ?? null)
   const { formattedTrades, statistics } = useDashboardStats()
   const providerLoading = useUserStore(s => s.isLoading)
 
-  // Fetch journal entries to merge with trades for tag/excerpt statistics
   const [journalMap, setJournalMap] = useState<Map<string, { customTags: string[]; excerptTitle: string | null; featuredExcerpt: string | null }>>(new Map())
 
   useEffect(() => {
@@ -123,8 +137,6 @@ export default function StatisticsClient() {
   }, [userId])
 
   const [period, setPeriod] = useState<TimePeriod>('all')
-  // Stable "now" captured once per mount. Date.now() is impure and must not be
-  // called directly inside useMemo/render (React Compiler purity rule).
   const [now] = useState(() => Date.now())
   const [selectedAccount, setSelectedAccount] = useState<string | null>(null)
   const [accountOpen, setAccountOpen] = useState(false)
@@ -171,11 +183,10 @@ export default function StatisticsClient() {
       return computeStatistics(computable)
     } catch (e) {
       console.error('Statistics computation failed:', e)
-      return { grandTotal: 0, tickerStats: [], weekdayStats: [], setupStats: [], timeframeStats: [], dailyStats: [], allPnls: [], grandPnl: 0, grandWinRate: 0, avgRR: 0, profitFactor: 0, bestDay: 0, featuredExcerpts: [] }
+      return { grandTotal: 0, tickerStats: [], weekdayStats: [], setupStats: [], timeframeStats: [], dailyStats: [], allPnls: [], grandPnl: 0, grandWinRate: 0, avgRR: 0, profitFactor: 0, bestDay: 0, worstDay: 0, grossProfit: 0, grossLoss: 0, avgWin: 0, avgLoss: 0, maxConsecWins: 0, maxConsecLosses: 0, totalRMultiple: 0, winningTrades: 0, losingTrades: 0, expectancy: 0, featuredExcerpts: [] }
     }
   }, [formattedTrades, period, selectedAccount, journalMap, now])
 
-  // Use provider's loading state
   const isLoading = providerLoading || !Array.isArray(formattedTrades)
 
   if (isLoading) {
@@ -207,7 +218,33 @@ export default function StatisticsClient() {
   const timeframeRows: StatsTableRow[] = data.timeframeStats.map(statToRow)
 
   const pnlValues = data.allPnls.map(p => p.pnl)
-  const risk = computeRiskMetrics(pnlValues, data.profitFactor)
+  const risk = computeRiskMetrics(pnlValues)
+
+  const perfKpis: KpiDef[] = [
+    { label: 'TOTAL NET PROFIT', value: formatPnl(data.grandPnl), positive: data.grandPnl >= 0 },
+    { label: 'TOTAL R MULTIPLE', value: `${data.totalRMultiple >= 0 ? '+' : ''}${data.totalRMultiple.toFixed(1)}R`, positive: data.totalRMultiple >= 0 },
+    { label: 'PROFIT FACTOR', value: (data.profitFactor ?? 0).toFixed(2), positive: (data.profitFactor ?? 0) >= 1 },
+    { label: 'WIN RATE', value: `${(data.grandWinRate ?? 0).toFixed(1)}%`, positive: (data.grandWinRate ?? 0) >= 50 },
+    { label: 'TOTAL TRADES', value: data.grandTotal.toString() },
+    { label: 'AVG WIN/LOSS RATIO', value: `${(data.avgRR ?? 0) >= 1 ? '+' : ''}${(data.avgRR ?? 0).toFixed(2)}R`, positive: (data.avgRR ?? 0) >= 1 },
+  ]
+
+  const pnlKpis: KpiDef[] = [
+    { label: 'GROSS PROFIT', value: formatPnl(data.grossProfit), positive: true },
+    { label: 'GROSS LOSS', value: formatPnl(data.grossLoss), negative: true },
+    { label: 'AVERAGE WIN', value: formatPnl(data.avgWin), positive: true },
+    { label: 'AVERAGE LOSS', value: formatPnl(data.avgLoss), negative: true },
+    { label: 'MAX CONS WINS', value: (data.maxConsecWins ?? 0).toString(), positive: true },
+    { label: 'MAX CONS LOSSES', value: (data.maxConsecLosses ?? 0).toString(), negative: true },
+  ]
+
+  const riskKpis: KpiDef[] = [
+    { label: 'MAX DRAWDOWN', value: `-$${formatCompact(Number(risk?.maxDrawdown ?? 0))}`, negative: true },
+    { label: 'SHARPE RATIO', value: risk?.sharpe ?? '--', positive: Number(risk?.sharpe ?? 0) >= 1 },
+    { label: 'SORTINO RATIO', value: risk?.sortino ?? '--', positive: Number(risk?.sortino ?? 0) >= 1 },
+    { label: 'WINNING TRADES', value: (data.winningTrades ?? 0).toString(), positive: true },
+    { label: 'LOSING TRADES', value: (data.losingTrades ?? 0).toString(), negative: true },
+  ]
 
   return (
     <div className="w-full px-4 lg:px-6 py-6 space-y-5 bg-background min-h-screen text-foreground">
@@ -275,26 +312,29 @@ export default function StatisticsClient() {
         </div>
       </div>
 
-      {/* KPI Bar — exact 6 cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        {[
-          { label: 'TOTAL PNL', value: formatPnl(data.grandPnl ?? 0), positive: (data.grandPnl ?? 0) >= 0 },
-          { label: 'WIN RATE', value: `${(data.grandWinRate ?? 0).toFixed(1)}%` },
-          { label: 'AVG R', value: `${(data.avgRR ?? 0) >= 1 ? '+' : ''}${(data.avgRR ?? 0).toFixed(2)}R`, positive: (data.avgRR ?? 0) >= 1 },
-          { label: 'PROFIT FACTOR', value: (data.profitFactor ?? 0).toFixed(2) },
-          { label: 'TOTAL TRADES', value: (data.grandTotal ?? 0).toString() },
-          { label: 'BEST DAY', value: formatPnl(data.bestDay ?? 0), positive: true },
-        ].map((kpi, i) => (
-          <div key={i} className="rounded-2xl bg-card p-4">
-            <div className="text-[9px] tracking-[1.5px] uppercase text-muted-foreground">{kpi.label}</div>
-            <div className={cn('text-2xl font-semibold tabular-nums mt-1 tracking-[-0.5px]', kpi.positive ? 'text-primary' : 'text-destructive')}>
-              {kpi.value}
-            </div>
-          </div>
-        ))}
+      {/* Section headers */}
+      <div>
+        <div className="text-[10px] tracking-[2px] uppercase text-muted-foreground/60 mb-3">Performance Summary</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          {perfKpis.map((kpi, i) => <KpiCard key={i} {...kpi} />)}
+        </div>
       </div>
 
-      {/* 2x2 Tables — pixel perfect */}
+      <div>
+        <div className="text-[10px] tracking-[2px] uppercase text-muted-foreground/60 mb-3">Profit & Loss Detail</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          {pnlKpis.map((kpi, i) => <KpiCard key={i} {...kpi} />)}
+        </div>
+      </div>
+
+      <div>
+        <div className="text-[10px] tracking-[2px] uppercase text-muted-foreground/60 mb-3">Risk & Consistency</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          {riskKpis.map((kpi, i) => <KpiCard key={i} {...kpi} />)}
+        </div>
+      </div>
+
+      {/* 2x2 Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <StatsTable
           title="SYMBOL PERFORMANCE"
@@ -322,31 +362,7 @@ export default function StatisticsClient() {
         />
       </div>
 
-      {/* Risk & Performance Metrics — exact bottom section */}
-      {risk && (
-        <div className="rounded-2xl bg-card p-5">
-          <div className="text-[10px] tracking-[2px] uppercase text-primary/70 mb-4">RISK & PERFORMANCE METRICS</div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-            {[
-              { label: 'SHARPE RATIO', value: risk.sharpe },
-              { label: 'SORTINO RATIO', value: risk.sortino },
-              { label: 'EXPECTANCY', value: `+$${risk.expectancy}` },
-              { label: 'MAX DRAWDOWN', value: `-$${risk.maxDrawdown}`, negative: true },
-              { label: 'PROFIT FACTOR', value: risk.profitFactor },
-              { label: 'WIN / LOSS RATIO', value: risk.winLossRatio },
-            ].map((m, i) => (
-              <div key={i} className="min-w-0 rounded-xl bg-muted/40 p-4">
-                <div className="text-[11px] tracking-wider text-muted-foreground">{m.label}</div>
-                <div className={cn('text-2xl font-semibold tabular-nums mt-2', m.negative ? 'text-destructive' : 'text-foreground')}>
-                  {m.value}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Journal Excerpts — clickable headline cards */}
+      {/* Journal Excerpts */}
       {data?.featuredExcerpts && data.featuredExcerpts.length > 0 && (
         <div className="rounded-2xl bg-card p-5">
           <div className="text-[10px] tracking-[2px] uppercase text-primary/70 mb-4">JOURNAL EXCERPTS</div>
@@ -410,7 +426,6 @@ export default function StatisticsClient() {
               className="w-full max-w-3xl max-h-[85vh] flex flex-col rounded-2xl overflow-hidden bg-card animate-in slide-in-from-bottom-4 duration-250"
               onClick={e => e.stopPropagation()}
             >
-              {/* Header */}
               <div className="flex items-center justify-between px-6 py-4 bg-card shrink-0">
                 <div>
                   <div className="text-[17px] font-semibold tracking-tight text-white">
@@ -443,7 +458,6 @@ export default function StatisticsClient() {
                 </div>
               </div>
 
-              {/* Body */}
               <div className="flex-1 overflow-y-auto p-6 bg-background">
                 {selectedExcerpt.featuredExcerpt ? (
                   <div
