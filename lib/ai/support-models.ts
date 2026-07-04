@@ -1,19 +1,11 @@
 export const SUPPORT_MODEL_OPTIONS = [
   {
-    name: 'Dynamic (Cloudflare Gateway)',
-    value: 'dynamic/Test',
+    name: 'Llama 3.3 70B (Groq)',
+    value: 'llama-3.3-70b-versatile',
   },
   {
-    name: 'GLM 4.7 Flash',
-    value: 'glm-4.7-flash',
-  },
-  {
-    name: 'GPT 4o Mini',
-    value: 'gpt-4o-mini',
-  },
-  {
-    name: 'GPT 4.1 Mini',
-    value: 'gpt.4.1-mini',
+    name: 'Llama 3.1 8B Instant (Groq)',
+    value: 'llama-3.1-8b-instant',
   },
 ] as const;
 

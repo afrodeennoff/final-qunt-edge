@@ -121,7 +121,7 @@ export function getAiLanguageModel(feature: AiFeature, userId?: string) {
   const rawModel = getAiClient().chat(model);
 
    return new Proxy(rawModel, {
-     get(target, p: PropertyKey, receiver: object) {
+     get(target: any, p: PropertyKey) {
        if (p === 'doGenerate') {
          return async function(options: LanguageModelV3CallOptions) {
            const featureStr = String(feature);
@@ -131,7 +131,7 @@ export function getAiLanguageModel(feature: AiFeature, userId?: string) {
                return cached;
              }
 
-             const result = await Reflect.get(target, p, receiver)(options);
+             const result = await target.doGenerate(options);
 
              await setAiResponseCache(featureStr, options, result, userId);
 
@@ -139,7 +139,7 @@ export function getAiLanguageModel(feature: AiFeature, userId?: string) {
           };
         }
 
-        return Reflect.get(target, p, receiver);
+        return Reflect.get(target, p);
       }
     }) as LanguageModelV3;
 }
