@@ -139,6 +139,18 @@ function CustomTooltip({
   )
 }
 
+function AnalyticsPageHeader() {
+  return (
+    <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
+      <div className="flex items-center gap-2 text-muted-foreground">
+        <BarChart3 className="h-4 w-4 text-primary" />
+        <p className="text-[10px] font-black uppercase tracking-[0.12em]">Team Intelligence</p>
+      </div>
+      <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Analytics</h1>
+    </header>
+  )
+}
+
 export default function TeamAnalyticsPage() {
   const params = useParams<{ slug: string }>()
   const slug = params.slug
@@ -201,13 +213,7 @@ export default function TeamAnalyticsPage() {
   if (error) {
     return (
       <section className="space-y-6">
-        <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <BarChart3 className="h-4 w-4 text-primary" />
-            <p className="text-[10px] font-black uppercase tracking-[0.12em]">Team Intelligence</p>
-          </div>
-          <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Analytics</h1>
-        </header>
+        <AnalyticsPageHeader />
 
         <Card className="bg-card border-0">
           <CardContent className="flex flex-col items-center justify-center py-12">
@@ -231,16 +237,10 @@ export default function TeamAnalyticsPage() {
   if (!data || data.chartData.length === 0) {
     return (
       <section className="space-y-6">
-        <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <BarChart3 className="h-4 w-4 text-primary" />
-            <p className="text-[10px] font-black uppercase tracking-[0.12em]">Team Intelligence</p>
-          </div>
-          <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Analytics</h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Monitor collective performance and individual consistency to improve team execution quality.
-          </p>
-        </header>
+        <AnalyticsPageHeader />
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+          Monitor collective performance and individual consistency to improve team execution quality.
+        </p>
 
         <Card className="bg-card border-0">
           <CardContent className="flex flex-col items-center justify-center py-12">
@@ -257,16 +257,10 @@ export default function TeamAnalyticsPage() {
 
   return (
     <section className="space-y-6">
-      <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <BarChart3 className="h-4 w-4 text-primary" />
-          <p className="text-[10px] font-black uppercase tracking-[0.12em]">Team Intelligence</p>
-        </div>
-        <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Analytics</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Monitor collective performance and individual consistency to improve team execution quality.
-        </p>
-      </header>
+      <AnalyticsPageHeader />
+      <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+        Monitor collective performance and individual consistency to improve team execution quality.
+      </p>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <DashboardStatCard
@@ -320,14 +314,14 @@ export default function TeamAnalyticsPage() {
           <CardContent className="space-y-3">
             {data?.membersPerformance?.length ? (
               data.membersPerformance.slice(0, 8).map((member) => (
-                <div key={member.userId} className={cn(unifiedInsetPanelClassName, 'p-3')}>
+                <div key={member.userId} className={cn(unifiedInsetPanelClassName, 'p-3 hover:bg-muted/20 transition-colors duration-150')}>
                   <div className="flex items-center justify-between gap-3">
                     <p className="truncate text-sm font-semibold">{member.email.split('@')[0]}</p>
-                    <p className={cn('text-sm font-black', member.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}>
-                      {formatCurrency(member.totalPnL)}
+                    <p className={cn('text-sm font-black tabular-nums', member.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}>
+                      {member.totalPnL >= 0 ? '+' : ''}{formatCurrency(member.totalPnL)}
                     </p>
                   </div>
-                  <div className="mt-1 flex items-center gap-3 text-[11px] text-muted-foreground">
+                  <div className="mt-1.5 flex items-center gap-3 text-[11px] text-muted-foreground">
                     <span className="inline-flex items-center gap-1">
                       <Target className="h-3 w-3" />
                       {member.winRate.toFixed(1)}%
@@ -337,6 +331,20 @@ export default function TeamAnalyticsPage() {
                       {member.totalTrades} trades
                     </span>
                   </div>
+                  {/* Mini contribution bar */}
+                  {data.membersPerformance.length > 1 && (
+                    <div className="mt-2 h-1 rounded-full bg-muted/30 overflow-hidden">
+                      <div 
+                        className={cn(
+                          "h-full rounded-full transition-all",
+                          member.totalPnL >= 0 ? "bg-primary/40" : "bg-destructive/40"
+                        )}
+                        style={{ 
+                          width: `${Math.min(100, Math.max(2, (Math.abs(member.totalPnL) / Math.max(...data.membersPerformance.map(m => Math.abs(m.totalPnL)), 1)) * 100))}%` 
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               ))
             ) : (

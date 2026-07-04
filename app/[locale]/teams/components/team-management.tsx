@@ -67,6 +67,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
  unifiedSectionPanelClassName,
+ unifiedInsetPanelClassName,
 } from '@/components/layout/unified-page-recipes'
 
 const getDisplayName = (user: { email: string; username?: string | null }) => {
@@ -190,7 +191,7 @@ const TeamManagement = React.memo(function TeamManagement({
  const [renameTeamName, setRenameTeamName] = useState('')
  const [newTraderEmail, setNewTraderEmail] = useState('')
  const [isSubmitting, setIsSubmitting] = useState(false)
- const [pendingInvitations, setPendingInvitations] = useState<Array<{ id: string; email: string; status: string; createdAt: Date | string; expiresAt: Date | string }>>([])
+ const [pendingInvitations, setPendingInvitations] = useState<Array<{ id: string; email: string; status: string; createdAt: Date | string; expiresAt: Date | string; username?: null }>>([])
 
   // Cache for team data to avoid duplicate fetches
   const teamDataCache = useRef<{ teams: typeof userTeams; managed: ManagedTeam[] } | null>(null)
@@ -708,17 +709,21 @@ const TeamManagement = React.memo(function TeamManagement({
  const filteredTeams = Array.from(allTeams.values())
 
  if (isLoading || isRedirecting) {
- return (
- <div className="container mx-auto py-8 px-4">
- <div className="flex flex-col items-center justify-center h-64 gap-4">
- <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
- <p className="text-sm text-muted-foreground">
- {isRedirecting ? 'Loading team workspace...' : 'Loading teams...'}
- </p>
- </div>
- </div>
- )
- }
+  return (
+  <div className="container mx-auto py-8 px-4">
+  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+  {[1,2,3].map(i => (
+    <div key={i} className="rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10 p-5 animate-pulse">
+      <div className="h-4 bg-muted/40 rounded w-3/4 mb-3" />
+      <div className="h-3 bg-muted/30 rounded w-1/2 mb-2" />
+      <div className="h-3 bg-muted/30 rounded w-2/3 mb-4" />
+      <div className="h-8 bg-muted/40 rounded w-full" />
+    </div>
+  ))}
+  </div>
+  </div>
+  )
+  }
 
  return (
  <div className="mx-auto py-4">
@@ -738,15 +743,14 @@ const TeamManagement = React.memo(function TeamManagement({
  const isActive = pathname.includes(`/teams/dashboard/${team.id}`)
 
   return (
-  <Card
-    key={team.id}
-    variant="default"
-    hover
-    className={cn(
-      "cursor-pointer",
-      isActive && "ring-2 ring-primary/35 border-primary/25"
-    )}
-  >
+   <Card
+     key={team.id}
+     variant="default"
+     className={cn(
+       "rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10 transition-all duration-200 hover:ring-1 hover:ring-primary/20",
+       selectedTeam?.id === team.id && "ring-2 ring-primary/35"
+     )}
+   >
  <CardHeader className="pb-3">
  <div className="flex items-start justify-between">
  <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -795,10 +799,8 @@ const TeamManagement = React.memo(function TeamManagement({
  setSelectedTeam(team)
  setRenameTeamName(team.name)
  setManageDialogOpen(true)
- // Load pending invitations when dialog opens
- setTimeout(async () => {
- await loadPendingInvitations()
- }, 100)
+   // Load pending invitations when dialog opens
+   await loadPendingInvitations()
  }}
  >
  <Settings className="h-3 w-3 mr-1" />
@@ -884,59 +886,29 @@ const TeamManagement = React.memo(function TeamManagement({
  )
  })}
 
- {/* Create New Team Card - only show if there's at least one team */}
- {filteredTeams.length > 0 && (
- <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
- <DialogTrigger asChild>
-  <Card
-    variant="outlined"
-    className="cursor-pointer border-dashed border-2 border-primary/12 bg-primary/5 hover:border-primary/30 hover:bg-primary/8 transition-[background-color,border-color] duration-200 ease-[0.22,1,0.36,1]"
-  >
- <CardContent className="flex flex-col items-center justify-center h-48 p-6">
- <Plus className="h-12 w-12 text-muted-foreground mb-4" />
- <CardTitle className="text-lg text-center mb-2">
- {t('teams.management.component.createButtonText')}
- </CardTitle>
- <p className="text-sm text-muted-foreground text-center">
- {t('teams.management.createTeamDescription')}
- </p>
- </CardContent>
- </Card>
- </DialogTrigger>
- <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
- <DialogHeader>
- <DialogTitle>{t('teams.management.createTeamTitle')}</DialogTitle>
- <DialogDescription>
- {t('teams.management.createTeamDialogDescription')}
- </DialogDescription>
- </DialogHeader>
- <div className="space-y-4">
- <div>
- <Label htmlFor="team-name">{t('teams.management.teamName')}</Label>
- <Input
- id="team-name"
- value={newTeamName}
- onChange={(e) => setNewTeamName(e.target.value)}
- placeholder={t('teams.management.enterTeamName')}
- />
- </div>
- </div>
- <DialogFooter>
- <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
- {t('teams.management.cancel')}
- </Button>
- <Button onClick={handleCreateTeam} disabled={isSubmitting}>
- {isSubmitting ? t('teams.management.saving') : t('teams.management.createTeamTitle')}
- </Button>
- </DialogFooter>
- </DialogContent>
- </Dialog>
- )}
- </div>
+  {/* Create New Team Card - only show if there's at least one team */}
+  {filteredTeams.length > 0 && (
+   <Card
+     variant="outlined"
+     className="cursor-pointer border-dashed border-2 border-primary/12 bg-primary/5 hover:border-primary/30 hover:bg-primary/8 transition-[background-color,border-color] duration-200 ease-[0.22,1,0.36,1]"
+     onClick={() => setCreateDialogOpen(true)}
+   >
+  <CardContent className="flex flex-col items-center justify-center h-48 p-6">
+  <Plus className="h-12 w-12 text-muted-foreground mb-4" />
+  <CardTitle className="text-lg text-center mb-2">
+  {t('teams.management.component.createButtonText')}
+  </CardTitle>
+  <p className="text-sm text-muted-foreground text-center">
+  {t('teams.management.createTeamDescription')}
+  </p>
+  </CardContent>
+  </Card>
+  )}
+  </div>
 
  {/* Empty State */}
- {filteredTeams.length === 0 && (
- <div className="text-center py-12">
+  {filteredTeams.length === 0 && (
+  <div className={cn(unifiedSectionPanelClassName, "flex flex-col items-center justify-center py-16 px-4")}>
  <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
  <h3 className="text-lg font-semibold mb-2 text-foreground">
  {t('teams.management.component.emptyStateMessage')}
@@ -944,43 +916,10 @@ const TeamManagement = React.memo(function TeamManagement({
  <p className="text-muted-foreground mb-4">
  {t('teams.management.getStarted')}
  </p>
- {(
- <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
- <DialogTrigger asChild>
- <Button >
- <Plus className="h-4 w-4 mr-2" />
- {t('teams.management.component.createButtonText')}
- </Button>
- </DialogTrigger>
- <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
- <DialogHeader>
- <DialogTitle>{t('teams.management.createTeamTitle')}</DialogTitle>
- <DialogDescription>
- {t('teams.management.createTeamDialogDescription')}
- </DialogDescription>
- </DialogHeader>
- <div className="space-y-4">
- <div>
- <Label htmlFor="team-name">{t('teams.management.teamName')}</Label>
- <Input
- id="team-name"
- value={newTeamName}
- onChange={(e) => setNewTeamName(e.target.value)}
- placeholder={t('teams.management.enterTeamName')}
- />
- </div>
- </div>
- <DialogFooter>
- <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
- {t('teams.management.cancel')}
- </Button>
- <Button onClick={handleCreateTeam} disabled={isSubmitting}>
- {isSubmitting ? t('teams.management.saving') : t('teams.management.startSubscription')}
- </Button>
- </DialogFooter>
- </DialogContent>
- </Dialog>
- )}
+  <Button onClick={() => setCreateDialogOpen(true)}>
+  <Plus className="h-4 w-4 mr-2" />
+  {t('teams.management.component.createButtonText')}
+  </Button>
  </div>
  )}
 
@@ -1001,9 +940,9 @@ const TeamManagement = React.memo(function TeamManagement({
  </DialogHeader>
 
  <div className="space-y-6 overflow-y-auto flex-1 pr-2 -mr-2 px-1">
- {/* Rename Team Section */}
- <div>
- <h4 className="font-medium mb-3">{t('teams.rename.title')}</h4>
+  {/* Rename Team Section */}
+  <div className={cn(unifiedInsetPanelClassName, "p-4 space-y-3")}>
+  <h4 className="font-medium mb-3">{t('teams.rename.title')}</h4>
  <div className="flex gap-2">
  <Input
  placeholder={t('teams.rename.placeholder')}
@@ -1027,28 +966,28 @@ const TeamManagement = React.memo(function TeamManagement({
  <div>
  <h4 className="font-medium mb-3">{t('teams.traders')}</h4>
 
- {/* Current Traders */}
- <div className="mb-4">
- <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.traders.current')}</h5>
+  {/* Current Traders */}
+  <div className={cn(unifiedInsetPanelClassName, "p-4 space-y-3")}>
+  <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.traders.current')}</h5>
  <div className="space-y-2">
  {(selectedTeam?.traders.length || 0) === 0 ? (
  <p className="text-sm text-muted-foreground">{t('teams.traders.noTraders')}</p>
  ) : (
  <div className="space-y-1">
  {selectedTeam?.traders.map((trader: { id: string; email: string }) => (
- <div key={trader.id} className="flex items-center justify-between bg-primary/5 p-2.5 rounded-xl text-sm border border-primary/10 hover:bg-primary/10 transition-colors duration-150 ease-[0.22,1,0.36,1]">
- <span>{getDisplayName(trader)}</span>
+<div key={trader.id} className="flex items-center justify-between rounded-xl bg-card border-0 p-3 hover:bg-muted/10 transition-colors duration-150 text-sm">
+  <span>{getDisplayName(trader)}</span>
  <div className="flex items-center gap-2">
  <Badge variant="outline">{t('teams.management.member')}</Badge>
  <AlertDialog>
- <AlertDialogTrigger asChild>
- <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground">
- <UserMinus className="h-3 w-3" />
- </Button>
- </AlertDialogTrigger>
- <AlertDialogContent className="w-[95vw] sm:w-full">
- <AlertDialogHeader>
- <AlertDialogTitle>{t('teams.management.removeTrader')}</AlertDialogTitle>
+           <AlertDialogTrigger asChild>
+           <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground" aria-label="Remove trader">
+           <UserMinus className="h-3 w-3" />
+           </Button>
+           </AlertDialogTrigger>
+           <AlertDialogContent className="w-[95vw] sm:w-full">
+           <AlertDialogHeader>
+           <AlertDialogTitle>{t('teams.management.removeTrader')}</AlertDialogTitle>
  <AlertDialogDescription>
  {t('teams.management.removeTraderConfirm').replace('{email}', getDisplayName(trader))}
  </AlertDialogDescription>
@@ -1072,9 +1011,10 @@ const TeamManagement = React.memo(function TeamManagement({
  </div>
  </div>
 
- {/* Add New Trader */}
- <div>
- <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.traders.addNew')}</h5>
+  <div className={cn(unifiedInsetPanelClassName, "p-4 space-y-3")}>
+  {/* Add New Trader */}
+  <div>
+  <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.traders.addNew')}</h5>
  <p className="text-sm text-muted-foreground mb-3">
  {t('teams.traders.add.description')}
  </p>
@@ -1085,17 +1025,18 @@ const TeamManagement = React.memo(function TeamManagement({
  onChange={(e) => setNewTraderEmail(e.target.value)}
  className="flex-1"
  />
- <Button 
- onClick={handleAddTrader}
- disabled={isSubmitting || !newTraderEmail.trim()}
- size="sm"
- >
- {isSubmitting ? t('teams.management.saving') : <UserPlus className="h-4 w-4" />}
- </Button>
- </div>
- </div>
+   <Button 
+   onClick={handleAddTrader}
+   disabled={isSubmitting || !newTraderEmail.trim()}
+   size="sm"
+   aria-label="Add trader"
+   >
+   {isSubmitting ? t('teams.management.saving') : <UserPlus className="h-4 w-4" />}
+   </Button>
+   </div>
+   </div>
 
- {/* Pending Invitations */}
+   {/* Pending Invitations */}
  <div className="mt-4">
  <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.invitations.pending')}</h5>
  {pendingInvitations.length === 0 ? (
@@ -1103,19 +1044,19 @@ const TeamManagement = React.memo(function TeamManagement({
  ) : (
  <div className="space-y-1">
  {pendingInvitations.map((invitation) => (
- <div key={invitation.id} className="flex items-center justify-between bg-primary/5 p-2.5 rounded-xl text-sm border border-primary/10 hover:bg-primary/10 transition-colors duration-150 ease-[0.22,1,0.36,1]">
- <span>{getDisplayName(invitation)}</span>
+<div key={invitation.id} className="flex items-center justify-between rounded-xl bg-card border-0 p-3 hover:bg-muted/10 transition-colors duration-150 text-sm">
+  <span>{getDisplayName(invitation)}</span>
  <div className="flex items-center gap-2">
  <Badge variant="outline">{t('teams.management.pending')}</Badge>
  <AlertDialog>
- <AlertDialogTrigger asChild>
- <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground">
- <XCircle className="h-3 w-3" />
- </Button>
- </AlertDialogTrigger>
- <AlertDialogContent className="w-[95vw] sm:w-full">
- <AlertDialogHeader>
- <AlertDialogTitle>{t('teams.management.cancelInvitation')}</AlertDialogTitle>
+   <AlertDialogTrigger asChild>
+   <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground" aria-label="Cancel invitation">
+   <XCircle className="h-3 w-3" />
+   </Button>
+   </AlertDialogTrigger>
+   <AlertDialogContent className="w-[95vw] sm:w-full">
+   <AlertDialogHeader>
+   <AlertDialogTitle>{t('teams.management.cancelInvitation')}</AlertDialogTitle>
  <AlertDialogDescription>
  {t('teams.management.cancelInvitationConfirm').replace('{email}', getDisplayName(invitation))}
  </AlertDialogDescription>
@@ -1135,27 +1076,28 @@ const TeamManagement = React.memo(function TeamManagement({
  </div>
  ))}
  </div>
- )}
- </div>
- </div>
+  )}
+  </div>
+  </div>
+  </div>
 
- <Separator />
+  <Separator />
 
- {/* Managers Section */}
+  {/* Managers Section */}
  <div>
  <h4 className="font-medium mb-3">{t('teams.managers')}</h4>
 
- {/* Current Managers */}
- <div className="mb-4">
- <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.managers.current')}</h5>
+  {/* Current Managers */}
+  <div className={cn(unifiedInsetPanelClassName, "p-4 space-y-3")}>
+  <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.managers.current')}</h5>
  <div className="space-y-2">
  {(selectedTeam?.managers.length || 0) === 0 ? (
  <p className="text-sm text-muted-foreground">{t('teams.managers.noManagers')}</p>
  ) : (
  <div className="space-y-1">
  {selectedTeam?.managers.map((manager) => (
- <div key={manager.id} className="flex items-center justify-between bg-primary/5 p-2.5 rounded-xl text-sm border border-primary/10 hover:bg-primary/10 transition-colors duration-150 ease-[0.22,1,0.36,1]">
- <span>{getDisplayName(manager)}</span>
+<div key={manager.id} className="flex items-center justify-between rounded-xl bg-card border-0 p-3 hover:bg-muted/10 transition-colors duration-150 text-sm">
+  <span>{getDisplayName(manager)}</span>
  <div className="flex items-center gap-2">
  <Badge variant="outline">
  {manager.access === 'admin' ? t('dashboard.teams.admin') : t('dashboard.teams.viewer')}
@@ -1173,14 +1115,14 @@ const TeamManagement = React.memo(function TeamManagement({
  </SelectContent>
  </Select>
  <AlertDialog>
- <AlertDialogTrigger asChild>
- <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground">
- <UserMinus className="h-3 w-3" />
- </Button>
- </AlertDialogTrigger>
- <AlertDialogContent className="w-[95vw] sm:w-full">
- <AlertDialogHeader>
- <AlertDialogTitle>{t('teams.management.removeManager')}</AlertDialogTitle>
+   <AlertDialogTrigger asChild>
+   <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground" aria-label="Remove manager">
+   <UserMinus className="h-3 w-3" />
+   </Button>
+   </AlertDialogTrigger>
+   <AlertDialogContent className="w-[95vw] sm:w-full">
+   <AlertDialogHeader>
+   <AlertDialogTitle>{t('teams.management.removeManager')}</AlertDialogTitle>
  <AlertDialogDescription>
  {t('teams.management.removeManagerConfirm').replace('{email}', getDisplayName(manager))}
  </AlertDialogDescription>
@@ -1204,9 +1146,9 @@ const TeamManagement = React.memo(function TeamManagement({
  </div>
  </div>
 
- {/* Add New Manager */}
- <div>
- <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.managers.addNew')}</h5>
+  {/* Add New Manager */}
+  <div className={cn(unifiedInsetPanelClassName, "p-4 space-y-3")}>
+  <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.managers.addNew')}</h5>
  <div className="flex gap-2">
  <Input
  placeholder={t('dashboard.teams.managerEmail')}
@@ -1223,23 +1165,54 @@ const TeamManagement = React.memo(function TeamManagement({
  <SelectItem value="admin">{t('dashboard.teams.admin')}</SelectItem>
  </SelectContent>
  </Select>
- <Button onClick={handleAddManager} disabled={isSubmitting}>
- {isSubmitting ? t('teams.management.saving') : <UserPlus className="h-4 w-4" />}
- </Button>
- </div>
- </div>
- </div>
- </div>
+   <Button onClick={handleAddManager} disabled={isSubmitting} aria-label="Add manager">
+   {isSubmitting ? t('teams.management.saving') : <UserPlus className="h-4 w-4" />}
+   </Button>
+   </div>
+    </div>
+    </div>
+    </div>
 
- <DialogFooter className="shrink-0 mt-4">
+   <DialogFooter className="shrink-0 mt-4">
  <Button variant="outline" onClick={() => setManageDialogOpen(false)}>
  {t('teams.management.close')}
  </Button>
  </DialogFooter>
  </DialogContent>
- </Dialog>
- </div>
- )
+  </Dialog>
+
+  {/* Create Team Dialog */}
+  <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+  <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
+  <DialogHeader>
+  <DialogTitle>{t('teams.management.createTeamTitle')}</DialogTitle>
+  <DialogDescription>
+  {t('teams.management.createTeamDialogDescription')}
+  </DialogDescription>
+  </DialogHeader>
+  <div className="space-y-4">
+  <div>
+  <Label htmlFor="team-name">{t('teams.management.teamName')}</Label>
+  <Input
+  id="team-name"
+  value={newTeamName}
+  onChange={(e) => setNewTeamName(e.target.value)}
+  placeholder={t('teams.management.enterTeamName')}
+  />
+  </div>
+  </div>
+  <DialogFooter>
+  <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
+  {t('teams.management.cancel')}
+  </Button>
+  <Button onClick={handleCreateTeam} disabled={isSubmitting}>
+  {isSubmitting ? t('teams.management.saving') : t('teams.management.createTeamTitle')}
+  </Button>
+  </DialogFooter>
+  </DialogContent>
+  </Dialog>
+  </div>
+  )
 })
 
 export { TeamManagement } 

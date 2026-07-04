@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useI18n } from "@/locales/client"
-import { useParams } from 'next/navigation'
-import { useSearchParams } from 'next/navigation'
+import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -19,6 +18,7 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
+import { unifiedSectionPanelClassName, unifiedInsetPanelClassName } from '@/components/layout/unified-page-recipes'
 import { joinTeamByInvitation, getTeamInvitationDetails } from '../../dashboard/settings/actions'
 import Link from 'next/link'
 
@@ -36,6 +36,7 @@ export default function TeamJoinPage() {
   const t = useI18n()
   const params = useParams<{ locale?: string }>()
   const searchParams = useSearchParams()
+  const router = useRouter()
   const localePrefix = params?.locale ? `/${params.locale}` : ''
   const dashboardRoot = `${localePrefix}/teams/dashboard`
 
@@ -94,10 +95,8 @@ export default function TeamJoinPage() {
         toast.success(t('teams.join.success'))
         // Redirect to team dashboard after successful join
         setTimeout(() => {
-          if (typeof window !== 'undefined') {
-            window.location.href = `${dashboardRoot}/${invitation.teamId}`
-          }
-        }, 1500)
+          router.push(`${dashboardRoot}/${invitation.teamId}`)
+        }, 1000)
       } else {
         toast.error(result.error || t('teams.join.error'))
       }
@@ -124,7 +123,7 @@ export default function TeamJoinPage() {
       case 'pending':
         return <Badge variant="secondary">{t('teams.management.pending')}</Badge>
       case 'accepted':
-        return <Badge variant="default" className="bg-background/0.09 text-foreground">{t('teams.invitations.accepted')}</Badge>
+        return <Badge variant="default" className="bg-emerald-500/10 text-emerald-500">{t('teams.invitations.accepted')}</Badge>
       case 'expired':
         return <Badge variant="destructive">{t('teams.invitations.expired')}</Badge>
       default:
@@ -224,7 +223,7 @@ export default function TeamJoinPage() {
           </p>
         </div>
 
-        <Card>
+        <Card className={cn(unifiedSectionPanelClassName, "max-w-2xl mx-auto")}>
           <CardHeader>
             <div className="flex items-center gap-3">
               <Building2 className="h-8 w-8 text-primary" />
@@ -239,7 +238,7 @@ export default function TeamJoinPage() {
 
           <CardContent className="space-y-6">
             {/* Invitation Status */}
-            <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+            <div className={cn(unifiedInsetPanelClassName, "flex items-center justify-between p-4")}>
               <div className="flex items-center gap-3">
                 {getStatusIcon(invitation.status)}
                 <div>
