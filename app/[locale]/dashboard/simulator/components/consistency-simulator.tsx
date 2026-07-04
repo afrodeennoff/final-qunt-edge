@@ -145,10 +145,10 @@ export function ConsistencySimulator() {
     const [simMode, setSimMode] = React.useState<SimMode>("live")
     const [userSelectedAccountId, setUserSelectedAccountId] = React.useState<string | null>(null)
     const [consistencyPct, setConsistencyPct] = React.useState<number>(30)
-    const [customSize, setCustomSize] = React.useState<string>("50000")
-    const [useCustomSize, setUseCustomSize] = React.useState<boolean>(false)
+    const [userSelectedSize, setUserSelectedSize] = React.useState<number | null>(null)
     const [phase, setPhase] = React.useState<PhaseType>("phase_1")
-    const [simulatedDays, setSimulatedDays] = React.useState<TradingDay[]>([])
+    const [activePreset, setActivePreset] = React.useState<Preset | null>(null)
+    const [manualDays, setManualDays] = React.useState<TradingDay[]>([])
 
     const hasAccounts = accounts.length > 0
     const hasTrades = rawTrades.length > 0
@@ -172,16 +172,14 @@ export function ConsistencySimulator() {
         return 50000
     }, [selectedAccount])
 
-    const effectiveStartingBalance = useCustomSize
-        ? Math.max(100, Number(customSize) || accountDefaultSize)
-        : accountDefaultSize
+    const effectiveStartingBalance = userSelectedSize ?? accountDefaultSize
 
     const effectiveProfitTarget = React.useMemo(() => {
-        if (selectedAccount?.profitTarget && selectedAccount.profitTarget > 0 && !useCustomSize) {
+        if (selectedAccount?.profitTarget && selectedAccount.profitTarget > 0 && userSelectedSize === null) {
             return Number(selectedAccount.profitTarget)
         }
         return effectiveStartingBalance * 0.1
-    }, [selectedAccount, effectiveStartingBalance, useCustomSize])
+    }, [selectedAccount, effectiveStartingBalance, userSelectedSize])
 
     const accountConsistencyPct = selectedAccount?.consistencyPercentage
         ? Number(selectedAccount.consistencyPercentage)
@@ -192,6 +190,13 @@ export function ConsistencySimulator() {
         const accNum = selectedAccountId === "all" ? undefined : (selectedAccount?.number || selectedAccountId)
         return aggregateTradesByDay(rawTrades, accNum)
     }, [rawTrades, selectedAccountId, selectedAccount, hasTrades])
+
+    const simulatedDays = React.useMemo(() => {
+        if (activePreset) {
+            return presetToDays(activePreset, effectiveStartingBalance)
+        }
+        return manualDays
+    }, [activePreset, manualDays, effectiveStartingBalance])
 
     const activeDays = simMode === "live" ? realTradingDays : simulatedDays
 
@@ -260,8 +265,8 @@ export function ConsistencySimulator() {
     }, [activeDays, effectiveStartingBalance])
 
     const maxDrawdownPct = effectiveStartingBalance > 0 ? (maxDrawdown / effectiveStartingBalance) * 100 : 0
-    const dailyLossLimit = selectedAccount?.dailyLoss && !useCustomSize ? Number(selectedAccount.dailyLoss) : effectiveStartingBalance * 0.05
-    const drawdownThreshold = selectedAccount?.drawdownThreshold && !useCustomSize ? Number(selectedAccount.drawdownThreshold) : effectiveStartingBalance * 0.1
+    const dailyLossLimit = selectedAccount?.dailyLoss && userSelectedSize === null ? Number(selectedAccount.dailyLoss) : effectiveStartingBalance * 0.05
+    const drawdownThreshold = selectedAccount?.drawdownThreshold && userSelectedSize === null ? Number(selectedAccount.drawdownThreshold) : effectiveStartingBalance * 0.1
     const ddUsedPct = drawdownThreshold > 0 ? (maxDrawdown / drawdownThreshold) * 100 : 0
     const remainingLoss = Math.max(0, drawdownThreshold - maxDrawdown)
     const isDrawdownBreached = maxDrawdown >= drawdownThreshold
@@ -283,8 +288,19 @@ export function ConsistencySimulator() {
         return maxStreak
     }, [activeDays])
 
+    function detachPreset(): TradingDay[] {
+        if (activePreset) {
+            const frozen = presetToDays(activePreset, effectiveStartingBalance)
+            setActivePreset(null)
+            setManualDays(frozen)
+            return frozen
+        }
+        return manualDays
+    }
+
     function addDay(pnl?: number) {
-        setSimulatedDays(prev => [...prev, {
+        const base = detachPreset()
+        setManualDays([...base, {
             id: `sim_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
             pnl: pnl ?? 0,
             isReal: false,
@@ -292,25 +308,28 @@ export function ConsistencySimulator() {
     }
 
     function removeDay(id: string) {
-        setSimulatedDays(prev => prev.filter(d => d.id !== id))
+        const base = detachPreset()
+        setManualDays(base.filter(d => d.id !== id))
     }
 
     function updateDayPnl(id: string, pnl: number) {
-        setSimulatedDays(prev => prev.map(d => (d.id === id ? { ...d, pnl } : d)))
+        const base = detachPreset()
+        setManualDays(base.map(d => (d.id === id ? { ...d, pnl } : d)))
     }
 
     function applyPreset(preset: Preset) {
         setSimMode("simulate")
-        setSimulatedDays(presetToDays(preset, effectiveStartingBalance))
+        setActivePreset(preset)
+        setManualDays([])
     }
 
     function clearSimulated() {
-        setSimulatedDays([])
+        setActivePreset(null)
+        setManualDays([])
     }
 
     function selectSize(size: number) {
-        setUseCustomSize(false)
-        setCustomSize(String(size))
+        setUserSelectedSize(size)
     }
 
     return (
@@ -367,7 +386,7 @@ export function ConsistencySimulator() {
                             </div>
                             <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
                                 <button
-                                    onClick={() => { setUserSelectedAccountId("all"); setSimMode("live"); setSimulatedDays([]) }}
+                                    onClick={() => { setUserSelectedAccountId("all"); setSimMode("live"); setActivePreset(null); setManualDays([]) }}
                                     className={cn(
                                         "w-full rounded-lg px-3 py-2 text-left text-[12px] font-medium transition-all duration-200 border flex items-center justify-between",
                                         selectedAccountId === "all"
@@ -381,7 +400,7 @@ export function ConsistencySimulator() {
                                 {accounts.map(acc => (
                                     <button
                                         key={acc.id}
-                                        onClick={() => { setUserSelectedAccountId(acc.id || acc.number); setSimMode("live"); setSimulatedDays([]); setUseCustomSize(false) }}
+                                        onClick={() => { setUserSelectedAccountId(acc.id || acc.number); setSimMode("live"); setActivePreset(null); setManualDays([]); setUserSelectedSize(null) }}
                                         className={cn(
                                             "w-full rounded-lg px-3 py-2 text-left text-[12px] font-medium transition-all duration-200 border flex items-center justify-between",
                                             selectedAccountId === (acc.id || acc.number)
@@ -422,7 +441,7 @@ export function ConsistencySimulator() {
                             </div>
                             <div className="grid grid-cols-3 gap-1.5">
                                 {ACCOUNT_SIZES.map(size => {
-                                    const isActive = !useCustomSize && Number(customSize) === size
+                                    const isActive = userSelectedSize === size
                                     return (
                                         <button
                                             key={size}
@@ -442,15 +461,14 @@ export function ConsistencySimulator() {
                             <div className="mt-1.5">
                                 <div className={cn(
                                     "flex items-center gap-2 rounded-lg border px-3 py-2 transition-colors",
-                                    useCustomSize ? "border-primary/40 bg-primary/5" : "border-border/20 bg-muted/30"
+                                    userSelectedSize !== null && !ACCOUNT_SIZES.includes(userSelectedSize) ? "border-primary/40 bg-primary/5" : "border-border/20 bg-muted/30"
                                 )}>
                                     <span className="text-[11px] font-medium text-muted-foreground/60 shrink-0">Custom</span>
                                     <span className="text-muted-foreground/40">$</span>
                                     <input
                                         type="number"
-                                        value={customSize}
-                                        onFocus={() => setUseCustomSize(true)}
-                                        onChange={e => { setUseCustomSize(true); setCustomSize(e.target.value) }}
+                                        value={userSelectedSize ?? accountDefaultSize}
+                                        onChange={e => setUserSelectedSize(Math.max(100, Number(e.target.value) || accountDefaultSize))}
                                         className="w-full bg-transparent text-[12px] font-semibold tabular-nums text-foreground focus:outline-none"
                                         placeholder="50000"
                                         min="100"
@@ -531,7 +549,7 @@ export function ConsistencySimulator() {
                     {/* Mode Toggle */}
                     <div className="flex items-center gap-1 rounded-lg bg-muted/30 p-1 w-fit border border-border/15">
                         <button
-                            onClick={() => { setSimMode("live"); setSimulatedDays([]) }}
+                            onClick={() => { setSimMode("live"); setActivePreset(null); setManualDays([]) }}
                             className={cn(
                                 "rounded-md px-3 py-1.5 text-[11px] font-semibold transition-all duration-200",
                                 simMode === "live"
@@ -1120,7 +1138,7 @@ export function ConsistencySimulator() {
                                         {formatCurrency(drawdownThreshold)}
                                     </p>
                                     <p className="text-[10px] text-muted-foreground/40 mt-0.5">
-                                        {useCustomSize ? `${(drawdownThreshold / effectiveStartingBalance * 100).toFixed(0)}% of balance` : "From account config"}
+                                        {userSelectedSize !== null ? `${(drawdownThreshold / effectiveStartingBalance * 100).toFixed(0)}% of balance` : "From account config"}
                                     </p>
                                 </div>
                                 <div className={cn(unifiedSectionPanelClassName, "p-3 sm:p-4")}>
