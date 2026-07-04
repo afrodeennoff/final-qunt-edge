@@ -1,5 +1,9 @@
 export const SUPPORT_MODEL_OPTIONS = [
   {
+    name: 'Dynamic (Cloudflare Gateway)',
+    value: 'dynamic/Test',
+  },
+  {
     name: 'GLM 4.7 Flash',
     value: 'glm-4.7-flash',
   },
@@ -9,7 +13,7 @@ export const SUPPORT_MODEL_OPTIONS = [
   },
   {
     name: 'GPT 4.1 Mini',
-    value: 'gpt-4.1-mini',
+    value: 'gpt.4.1-mini',
   },
 ] as const;
 
