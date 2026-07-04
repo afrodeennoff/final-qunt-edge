@@ -63,6 +63,7 @@ const envSchema = z.object({
   OPENROUTER_API_KEY: optionalMinString(1),
   AI_TRANSCRIBE_BASE_URL: optionalUrl(),
   AI_TRANSCRIBE_MODEL: optionalModelId(),
+  CF_AIG_TOKEN: optionalMinString(1),
   AI_SUPPORT_WEBSEARCH_MODEL: optionalModelId(),
   // Auth / admin gates — previously read raw from process.env with no validation.
   ALLOWED_ADMIN_USER_ID: optionalString(),

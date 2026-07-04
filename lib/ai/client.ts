@@ -31,16 +31,20 @@ function getAiClient(): ReturnType<typeof createOpenAI> {
   if (!aiClient) {
     const baseURL = getProviderBaseUrl();
     const apiKey = getProviderApiKey();
+    const cfToken = process.env.CF_AIG_TOKEN;
 
     if (!apiKey) {
       throw new Error("[AI] AI_PROVIDER_API_KEY is not configured. Cannot create AI client.");
     }
 
-    console.log(`[AI] Initializing client — baseURL: ${baseURL || "(default)"}, model: ${getDefaultModel() || "(none)"}`);
+    console.log(`[AI] Initializing — baseURL: ${baseURL || "(default)"}, model: ${getDefaultModel() || "(none)"}, cfGateway: ${cfToken ? "yes" : "no"}`);
 
     aiClient = createOpenAI({
       baseURL: baseURL || undefined,
       apiKey: apiKey,
+      headers: cfToken
+        ? { "cf-aig-authorization": `Bearer ${cfToken}` }
+        : undefined,
     });
   }
   return aiClient;
