@@ -1,11 +1,7 @@
 export const SUPPORT_MODEL_OPTIONS = [
   {
-    name: 'Llama 3.3 70B (Groq)',
-    value: 'llama-3.3-70b-versatile',
-  },
-  {
-    name: 'Llama 3.1 8B Instant (Groq)',
-    value: 'llama-3.1-8b-instant',
+    name: 'Dynamic (Cloudflare Gateway)',
+    value: 'dynamic/Test',
   },
 ] as const;
 
