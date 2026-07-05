@@ -44,9 +44,10 @@ export default function EquityChart({ data, formatCurrency, CustomTooltip }: Equ
         <Area
           type="monotone"
           dataKey="cumulativePnL"
-          stroke="hsl(var(--primary))"
+          stroke="var(--primary)"
           strokeWidth={2.5}
-          fill="hsl(var(--primary) / 0.12)"
+          fill="var(--primary)"
+          fillOpacity={0.12}
         />
       </AreaChart>
     </ResponsiveContainer>

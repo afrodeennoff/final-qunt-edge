@@ -1067,143 +1067,157 @@ const TeamManagement = React.memo(function TeamManagement({
  </div>
 
   <div className={cn(unifiedInsetPanelClassName, "p-4 space-y-3")}>
-  {/* Add New Trader */}
-  <div>
-  <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.traders.addNew')}</h5>
- <p className="text-sm text-muted-foreground mb-3">
- {t('teams.traders.add.description')}
- </p>
- <div className="flex gap-2">
- <Input
- placeholder={t('teams.traders.add.placeholder')}
- value={newTraderEmail}
- onChange={(e) => setNewTraderEmail(e.target.value)}
- className="flex-1"
- />
-   <Button 
-   onClick={handleAddTrader}
-   disabled={isSubmitting || !newTraderEmail.trim()}
-   size="sm"
-   aria-label="Add trader"
-   >
-   {isSubmitting ? t('teams.management.saving') : <UserPlus className="h-4 w-4" />}
-   </Button>
-   </div>
-   </div>
+   {/* Add New Trader */}
+   <div>
+   <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.traders.addNew')}</h5>
+  <p className="text-sm text-muted-foreground mb-3">
+  {t('teams.traders.add.description')}
+  </p>
+  <div className="flex gap-2">
+  <Input
+  placeholder={t('teams.traders.add.placeholder')}
+  value={newTraderEmail}
+  onChange={(e) => setNewTraderEmail(e.target.value)}
+  className="flex-1"
+  />
+    <Button 
+    onClick={handleAddTrader}
+    disabled={isSubmitting || !newTraderEmail.trim()}
+    size="sm"
+    aria-label="Add trader"
+    >
+    {isSubmitting ? t('teams.management.saving') : <UserPlus className="h-4 w-4" />}
+    </Button>
+    </div>
+    </div>
 
-   {/* Pending Invitations */}
-  <div className="mt-4">
-  <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.invitations.pending')}</h5>
-  {pendingInvitations.length === 0 ? (
-  <p className="text-sm text-muted-foreground">{t('teams.management.noPendingInvitations')}</p>
-  ) : (
-  <div className="space-y-2">
-  {pendingInvitations.map((invitation) => (
-    invitation.status === 'PENDING_APPROVAL' ? (
-      <div key={invitation.id} className="flex items-center justify-between rounded-xl bg-amber-50 border border-amber-200 p-3 text-sm">
-        <div className="flex items-center gap-2">
-          <AlertCircle className="h-4 w-4 text-amber-500" />
-          <span>{getDisplayName(invitation)}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className="border-amber-500 text-amber-500">Pending Approval</Badge>
+    {/* Invite Link Section */}
+    {selectedTeam && (
+      <div className="mt-3 p-3 rounded-xl bg-primary/5 border border-primary/20">
+        <h5 className="text-xs font-medium text-primary mb-1">Share Invite Link</h5>
+        <p className="text-[11px] text-muted-foreground mb-2">
+          Share this link with traders to let them request to join this team.
+        </p>
+        <div className="flex gap-2 items-center">
+          <div className="flex-1 truncate rounded-lg bg-card border-0 px-3 py-2 text-xs font-mono text-muted-foreground">
+            {`${typeof window !== 'undefined' ? window.location.origin : ''}/${pathname.split('/')[1] || 'en'}/teams/join?team=${selectedTeam.id}`}
+          </div>
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
-            className="h-7 w-7 p-0 hover:bg-emerald-500 hover:text-white"
-            onClick={() => handleApproveJoinRequest(invitation.id)}
-            aria-label="Approve join request"
-          >
-            <CheckCircle className="h-4 w-4" />
-          </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 hover:bg-destructive hover:text-destructive-foreground" aria-label="Reject join request">
-                <XCircle className="h-4 w-4" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="w-[95vw] sm:w-full">
-              <AlertDialogHeader>
-                <AlertDialogTitle>Reject join request</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to reject {getDisplayName(invitation)}'s request to join this team?
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => handleRejectJoinRequest(invitation.id)}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                >
-                  Reject
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-      </div>
-    ) : (
-      <div key={invitation.id} className="flex items-center justify-between rounded-xl bg-card border-0 p-3 hover:bg-muted/10 transition-colors duration-150 text-sm">
-        <span>{getDisplayName(invitation)}</span>
-        <div className="flex items-center gap-2">
-          <Badge variant="outline">{t('teams.management.pending')}</Badge>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-7 w-7 p-0 hover:bg-primary hover:text-primary-foreground"
+            className="h-8 shrink-0 gap-1.5 text-xs"
             onClick={() => {
-              const locale = pathname.split('/')[1] || 'en'
-              const url = `${window.location.origin}/${locale}/teams/join?invitation=${invitation.id}`
-              handleCopyInviteLink(url, invitation.id)
+              const url = `${typeof window !== 'undefined' ? window.location.origin : ''}/${pathname.split('/')[1] || 'en'}/teams/join?team=${selectedTeam.id}`
+              handleCopyInviteLink(url, 'team-link')
             }}
-            aria-label="Copy invite link"
           >
-            {copiedInviteId === invitation.id ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+            {copiedInviteId === 'team-link' ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+            {copiedInviteId === 'team-link' ? 'Copied!' : 'Copy'}
           </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground" aria-label="Cancel invitation">
-                <XCircle className="h-3 w-3" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="w-[95vw] sm:w-full">
-              <AlertDialogHeader>
-                <AlertDialogTitle>{t('teams.management.cancelInvitation')}</AlertDialogTitle>
-                <AlertDialogDescription>
-                  {t('teams.management.cancelInvitationConfirm').replace('{email}', getDisplayName(invitation))}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => handleCancelInvitation(invitation.id)}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                >
-                  {t('teams.management.cancelInvitationAction')}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
         </div>
       </div>
-    )
-  ))}
-  </div>
-   )}
-   {lastInviteUrl && (
-     <div className="mt-2 p-2 rounded-md bg-primary/5 border border-primary/20 text-xs flex items-center justify-between gap-2">
-       <span className="truncate text-muted-foreground">{lastInviteUrl}</span>
-       <Button
-         variant="ghost"
-         size="sm"
-         className="h-6 shrink-0"
-         onClick={() => handleCopyInviteLink(lastInviteUrl, 'last')}
-       >
-         {copiedInviteId === 'last' ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
-       </Button>
-     </div>
-   )}
+    )}
+
+    {/* Pending Invitations */}
+   <div className="mt-4">
+   <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.invitations.pending')}</h5>
+   {pendingInvitations.length === 0 ? (
+   <p className="text-sm text-muted-foreground">{t('teams.management.noPendingInvitations')}</p>
+   ) : (
+   <div className="space-y-2">
+   {pendingInvitations.map((invitation) => (
+     invitation.status === 'PENDING_APPROVAL' ? (
+       <div key={invitation.id} className="flex items-center justify-between rounded-xl bg-amber-50 border border-amber-200 p-3 text-sm">
+         <div className="flex items-center gap-2">
+           <AlertCircle className="h-4 w-4 text-amber-500" />
+           <span>{getDisplayName(invitation)}</span>
+         </div>
+         <div className="flex items-center gap-2">
+           <Badge variant="outline" className="border-amber-500 text-amber-500">Pending Approval</Badge>
+           <Button
+             variant="ghost"
+             size="sm"
+             className="h-7 w-7 p-0 hover:bg-emerald-500 hover:text-white"
+             onClick={() => handleApproveJoinRequest(invitation.id)}
+             aria-label="Approve join request"
+           >
+             <CheckCircle className="h-4 w-4" />
+           </Button>
+           <AlertDialog>
+             <AlertDialogTrigger asChild>
+               <Button variant="ghost" size="sm" className="h-7 w-7 p-0 hover:bg-destructive hover:text-destructive-foreground" aria-label="Reject join request">
+                 <XCircle className="h-4 w-4" />
+               </Button>
+             </AlertDialogTrigger>
+             <AlertDialogContent className="w-[95vw] sm:w-full">
+               <AlertDialogHeader>
+                 <AlertDialogTitle>Reject join request</AlertDialogTitle>
+                 <AlertDialogDescription>
+                   Are you sure you want to reject {getDisplayName(invitation)}'s request to join this team?
+                 </AlertDialogDescription>
+               </AlertDialogHeader>
+               <AlertDialogFooter>
+                 <AlertDialogCancel>Cancel</AlertDialogCancel>
+                 <AlertDialogAction
+                   onClick={() => handleRejectJoinRequest(invitation.id)}
+                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                 >
+                   Reject
+                 </AlertDialogAction>
+               </AlertDialogFooter>
+             </AlertDialogContent>
+           </AlertDialog>
+         </div>
+       </div>
+     ) : (
+       <div key={invitation.id} className="flex items-center justify-between rounded-xl bg-card border-0 p-3 hover:bg-muted/10 transition-colors duration-150 text-sm">
+         <span>{getDisplayName(invitation)}</span>
+         <div className="flex items-center gap-2">
+           <Badge variant="outline">{t('teams.management.pending')}</Badge>
+           <Button
+             variant="ghost"
+             size="sm"
+             className="h-7 w-7 p-0 hover:bg-primary hover:text-primary-foreground"
+             onClick={() => {
+               const locale = pathname.split('/')[1] || 'en'
+               const url = `${window.location.origin}/${locale}/teams/join?invitation=${invitation.id}`
+               handleCopyInviteLink(url, invitation.id)
+             }}
+             aria-label="Copy invite link"
+           >
+             {copiedInviteId === invitation.id ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+           </Button>
+           <AlertDialog>
+             <AlertDialogTrigger asChild>
+               <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground" aria-label="Cancel invitation">
+                 <XCircle className="h-3 w-3" />
+               </Button>
+             </AlertDialogTrigger>
+             <AlertDialogContent className="w-[95vw] sm:w-full">
+               <AlertDialogHeader>
+                 <AlertDialogTitle>{t('teams.management.cancelInvitation')}</AlertDialogTitle>
+                 <AlertDialogDescription>
+                   {t('teams.management.cancelInvitationConfirm').replace('{email}', getDisplayName(invitation))}
+                 </AlertDialogDescription>
+               </AlertDialogHeader>
+               <AlertDialogFooter>
+                 <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+                 <AlertDialogAction
+                   onClick={() => handleCancelInvitation(invitation.id)}
+                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                 >
+                   {t('teams.management.cancelInvitationAction')}
+                 </AlertDialogAction>
+               </AlertDialogFooter>
+             </AlertDialogContent>
+           </AlertDialog>
+         </div>
+       </div>
+     )
+   ))}
    </div>
+    )}
+    </div>
   </div>
   </div>
 

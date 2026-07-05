@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 
 const EquityChart = dynamic(() => import('./equity-chart'), { ssr: false })
-import { AlertTriangle, BarChart3, RefreshCw, Target, TrendingUp, Zap } from 'lucide-react'
+import { AlertTriangle, BarChart3, RefreshCw, Target, TrendingUp, Zap, TrendingDown, Award, Medal, Flame } from 'lucide-react'
 import {
   unifiedInsetPanelClassName,
   unifiedSectionPanelClassName,
@@ -309,15 +309,27 @@ export default function TeamAnalyticsPage() {
         <Card className="bg-gradient-to-br from-card/50 to-card/10 border-0 xl:col-span-4">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Member Breakdown</CardTitle>
-            <CardDescription className="text-[13px] leading-[1.55]">Per-trader contribution</CardDescription>
+            <CardDescription className="text-[13px] leading-[1.55]">Per-trader contribution & performance tiers</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {data?.membersPerformance?.length ? (
-              data.membersPerformance.slice(0, 8).map((member) => (
+              (() => {
+                const sorted = [...data.membersPerformance].sort((a, b) => b.totalPnL - a.totalPnL)
+                const maxAbs = Math.max(...sorted.map(m => Math.abs(m.totalPnL)), 1)
+                const totalAbs = sorted.reduce((s, m) => s + Math.abs(m.totalPnL), 0)
+                return sorted.slice(0, 10).map((member, index) => {
+                  const tier = index === 0 && member.totalPnL > 0 ? 'top' : member.totalPnL > 0 ? 'positive' : member.totalPnL < 0 ? 'negative' : 'neutral'
+                  const contribPct = totalAbs > 0 ? (Math.abs(member.totalPnL) / totalAbs * 100) : 0
+                  const isHotStreak = member.winRate > 60 && member.totalTrades > 10
+                  return (
                 <div key={member.userId} className={cn(unifiedInsetPanelClassName, 'p-3 hover:bg-muted/20 transition-colors duration-150')}>
                   <div className="flex items-center justify-between gap-3">
-                    <p className="truncate text-sm font-semibold">{member.email.split('@')[0]}</p>
-                    <p className={cn('text-sm font-black tabular-nums', member.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}>
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      {tier === 'top' && <Award className="h-3.5 w-3.5 shrink-0 text-warning" />}
+                      {isHotStreak && <Flame className="h-3 w-3 shrink-0 text-primary" />}
+                      <p className="truncate text-sm font-semibold">{member.email.split('@')[0]}</p>
+                    </div>
+                    <p className={cn('text-sm font-black tabular-nums shrink-0', member.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}>
                       {member.totalPnL >= 0 ? '+' : ''}{formatCurrency(member.totalPnL)}
                     </p>
                   </div>
@@ -330,23 +342,47 @@ export default function TeamAnalyticsPage() {
                       <Zap className="h-3 w-3" />
                       {member.totalTrades} trades
                     </span>
+                    {contribPct > 5 && (
+                      <span className={cn('inline-flex items-center gap-1 font-medium', 
+                        member.totalPnL >= 0 ? 'text-primary' : 'text-destructive'
+                      )}>
+                        {member.totalPnL >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                        {contribPct.toFixed(0)}%
+                      </span>
+                    )}
                   </div>
                   {/* Mini contribution bar */}
                   {data.membersPerformance.length > 1 && (
-                    <div className="mt-2 h-1 rounded-full bg-muted/30 overflow-hidden">
+                    <div className="mt-2 h-1.5 rounded-full bg-muted/30 overflow-hidden">
                       <div 
                         className={cn(
                           "h-full rounded-full transition-all",
                           member.totalPnL >= 0 ? "bg-primary/40" : "bg-destructive/40"
                         )}
-                        style={{ 
-                          width: `${Math.min(100, Math.max(2, (Math.abs(member.totalPnL) / Math.max(...data.membersPerformance.map(m => Math.abs(m.totalPnL)), 1)) * 100))}%` 
-                        }}
+                        style={{ width: `${Math.min(100, Math.max(2, (Math.abs(member.totalPnL) / maxAbs) * 100))}%` }}
                       />
                     </div>
                   )}
+                  {/* Performance badge */}
+                  {tier === 'top' && (
+                    <div className="mt-1.5">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-warning">Top Performer</span>
+                    </div>
+                  )}
+                  {isHotStreak && tier !== 'top' && (
+                    <div className="mt-1.5">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-primary">On Fire</span>
+                    </div>
+                  )}
+                  {member.winRate < 30 && member.totalTrades > 5 && (
+                    <div className="mt-1.5">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-destructive">Needs Review</span>
+                    </div>
+                  )}
                 </div>
-              ))
+                  )
+                })
+              })()
             ) : (
               <p className="text-sm text-muted-foreground">No member activity data yet.</p>
             )}
