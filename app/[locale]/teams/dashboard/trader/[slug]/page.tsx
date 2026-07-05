@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { unifiedSectionPanelClassName, unifiedInsetPanelClassName } from "@/components/layout/unified-page-recipes";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, TrendingUp, BarChart3, Activity } from "lucide-react";
-import { getTraderById, getTraderVarSummary } from "../../../actions/user";
+import { getTraderById } from "../../../actions/user";
 import { prisma } from "@/lib/prisma";
 import { DashboardStatCard } from "@/components/ui/dashboard-stat-card";
 
@@ -60,19 +60,19 @@ async function TraderStats({ userId }: { userId: string }) {
         label="Total PnL"
         value={formatCurrency(totalPnL)}
         valueClassName={totalPnL >= 0 ? 'text-primary' : 'text-destructive'}
-        icon={TrendingUp}
+        icon={<TrendingUp className="h-4 w-4" />}
         size="md"
       />
       <DashboardStatCard
         label="Win Rate"
         value={`${winRate.toFixed(1)}%`}
-        icon={BarChart3}
+        icon={<BarChart3 className="h-4 w-4" />}
         size="md"
       />
       <DashboardStatCard
         label="Total Trades"
         value={total}
-        icon={Activity}
+        icon={<Activity className="h-4 w-4" />}
         size="md"
       />
       <DashboardStatCard
