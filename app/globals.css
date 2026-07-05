@@ -357,27 +357,27 @@
 
   /* ── Core tokens defined below (dark defaults) — light overrides in .light class ── */
 
-  /* ── CHART PALETTE — macOS semantic ── */
+  /* ── CHART PALETTE — vibrant ── */
   --chart-1: #007AFF;
-  --chart-2: #1A7F37;
-  --chart-3: #C0392B;
-  --chart-4: hsl(150, 80%, 45%);
-  --chart-5: #D35400;
-  --chart-6: #0E7490;
-  --chart-7: #0E7490;
-  --chart-8: #6E6E73;
+  --chart-2: #00E676;
+  --chart-3: #FF1744;
+  --chart-4: #FF9100;
+  --chart-5: #D500F9;
+  --chart-6: #00BCD4;
+  --chart-7: #76FF03;
+  --chart-8: #FFEA00;
   --chart-axis: color-mix(in srgb, var(--foreground) 58%, transparent);
   --chart-axis-muted: color-mix(in srgb, var(--foreground) 50%, transparent);
-  --chart-grid: transparent;
-  --chart-grid-muted: transparent;
-  --chart-grid-cursor: transparent;
+  --chart-grid: color-mix(in srgb, rgba(255,255,255,0.5) 8%, transparent);
+  --chart-grid-muted: color-mix(in srgb, rgba(255,255,255,0.5) 5%, transparent);
+  --chart-grid-cursor: color-mix(in srgb, var(--foreground) 25%, transparent);
   --chart-tooltip: color-mix(in srgb, var(--card) 96%, transparent);
-  --chart-tooltip-border: transparent;
-  --chart-foreground-muted: color-mix(in srgb, var(--foreground) 55%, transparent);
-  --chart-foreground-faint: color-mix(in srgb, var(--foreground) 8%, transparent);
-  --chart-primary-faint: color-mix(in srgb, var(--primary) 3%, transparent);
-  --chart-positive: #1A7F37;
-  --chart-negative: #C0392B;
+  --chart-tooltip-border: color-mix(in srgb, var(--border) 60%, transparent);
+  --chart-foreground-muted: color-mix(in srgb, var(--foreground) 60%, transparent);
+  --chart-foreground-faint: color-mix(in srgb, var(--foreground) 12%, transparent);
+  --chart-primary-faint: color-mix(in srgb, var(--primary) 8%, transparent);
+  --chart-positive: #00E676;
+  --chart-negative: #FF1744;
 
   /* ── Sidebar tokens defined below (dark defaults) — light overrides in .light class ── */
   /* ── RADIUS — macOS native ── */
@@ -582,66 +582,66 @@
   --easing-enter: cubic-bezier(0.4, 0, 1, 1); /* Elements entering */
   --easing-leave: cubic-bezier(0, 0, 0.2, 1); /* Elements leaving */
 
-  /* ── BACKGROUND & SURFACE — Dark Green-Black Canvas (Public) ── */
+  /* ── BACKGROUND & SURFACE — Dark Green Velvet Canvas ── */
   --background: #0a0c0a;
   --foreground: #EAEAEA;
-  --card: #0a0c0a;
+  --card: #111611;
   --card-foreground: #EAEAEA;
-  --popover: #0a0c0a;
+  --popover: #111611;
   --popover-foreground: #EAEAEA;
-  --sidebar: #0a0c0a;
-  --sidebar-background: #0a0c0a;
-  --muted: hsl(0, 0%, 5%);
-  --muted-foreground: #888888;
-  --subtle-foreground: #666666;
+  --sidebar: #0c0f0c;
+  --sidebar-background: #0c0f0c;
+  --muted: #161c16;
+  --muted-foreground: #a0a0a0;
+  --subtle-foreground: #7a7a7a;
 
-  /* ── BRAND (Neon Green — default palette locked for public pages) ── */
+  /* ── BRAND (Neon Green) ── */
   --primary: hsl(150, 100%, 50%);
   --primary-foreground: #000000;
   --accent: hsl(150, 60%, 12%);
   --accent-foreground: hsl(150, 100%, 50%);
 
-  /* ── SEMANTIC TRADING COLORS (strong, high contrast) ── */
-  --success: #0ECB81;
-  --success-foreground: #FFFFFF;
-  --warning: hsl(38, 92%, 50%);
+  /* ── SEMANTIC TRADING COLORS ── */
+  --success: #00E676;
+  --success-foreground: #000000;
+  --warning: hsl(38, 100%, 50%);
   --warning-foreground: #000000;
-  --destructive: #F6465D;
-  --destructive-foreground: #FFFFFF;
+  --destructive: #FF1744;
+  --destructive-foreground: #000000;
 
   /* ── SEMANTIC TOKENS (Tailwind v4 — bare HSL channel values) ── */
-  --semantic-success: 155 58% 39%;
-  --semantic-success-fg: 0 0% 100%;
-  --semantic-success-bg: 155 58% 39% / 0.08;
-  --semantic-success-border: 155 58% 39% / 0.25;
-  --semantic-error: 0 62% 55%;
-  --semantic-error-fg: 0 0% 100%;
-  --semantic-error-bg: 0 62% 55% / 0.08;
-  --semantic-error-border: 0 62% 55% / 0.25;
-  --semantic-warning: 38 92% 50%;
+  --semantic-success: 152 100% 45%;
+  --semantic-success-fg: 0 0% 0%;
+  --semantic-success-bg: 152 100% 45% / 0.20;
+  --semantic-success-border: 152 100% 45% / 0.40;
+  --semantic-error: 354 100% 55%;
+  --semantic-error-fg: 0 0% 0%;
+  --semantic-error-bg: 354 100% 55% / 0.20;
+  --semantic-error-border: 354 100% 55% / 0.40;
+  --semantic-warning: 38 100% 50%;
   --semantic-warning-fg: 0 0% 0%;
-  --semantic-warning-bg: 38 92% 50% / 0.08;
-  --semantic-warning-border: 38 92% 50% / 0.25;
+  --semantic-warning-bg: 38 100% 50% / 0.20;
+  --semantic-warning-border: 38 100% 50% / 0.40;
   --semantic-info: 150 100% 50%;
   --semantic-info-fg: 0 0% 0%;
-  --semantic-info-bg: 150 100% 50% / 0.08;
-  --semantic-info-border: 150 100% 50% / 0.25;
+  --semantic-info-bg: 150 100% 50% / 0.20;
+  --semantic-info-border: 150 100% 50% / 0.40;
 
-  /* ── BORDER & RING — Neon Green only for focus/ring ── */
-  --border: hsl(150, 12%, 16%);
-  --border-subtle: hsl(150, 8%, 13%);
-  --input: hsl(150, 10%, 12%);
+  /* ── BORDER & RING ── */
+  --border: hsl(150, 15%, 22%);
+  --border-subtle: hsl(150, 10%, 18%);
+  --input: hsl(150, 12%, 16%);
   --ring: hsl(150, 100%, 50%);
 
-  /* ── SIDEBAR */
-  --sidebar: #0a0c0a;
-  --sidebar-background: #0a0c0a;
+  /* ── SIDEBAR ── */
+  --sidebar: #0c0f0c;
+  --sidebar-background: #0c0f0c;
   --sidebar-foreground: #EAEAEA;
   --sidebar-primary: hsl(150, 100%, 50%);
   --sidebar-primary-foreground: #000000;
-  --sidebar-accent: hsl(150, 60%, 10%);
+  --sidebar-accent: hsl(150, 60%, 14%);
   --sidebar-accent-foreground: hsl(150, 100%, 50%);
-  --sidebar-border: hsl(150, 20%, 12%);
+  --sidebar-border: hsl(150, 18%, 20%);
   --sidebar-ring: hsl(150, 100%, 50%);
 
   /* Legacy compat (minimal) */
@@ -829,15 +829,15 @@
   --input: rgba(0,0,0,0.15);
   --ring: #007AFF;
   --chart-1: #007AFF;
-  --chart-2: #1A7F37;
-  --chart-3: #C0392B;
-  --chart-4: hsl(150, 80%, 45%);
-  --chart-5: #D35400;
-  --chart-6: #0E7490;
-  --chart-7: #0E7490;
-  --chart-8: #6E6E73;
-  --chart-positive: #1A7F37;
-  --chart-negative: #C0392B;
+  --chart-2: #00E676;
+  --chart-3: #FF1744;
+  --chart-4: #FF9100;
+  --chart-5: #D500F9;
+  --chart-6: #00BCD4;
+  --chart-7: #76FF03;
+  --chart-8: #FFEA00;
+  --chart-positive: #00C853;
+  --chart-negative: #FF1744;
   --sidebar: rgba(246,246,248,0.82);
   --sidebar-background: rgba(246,246,248,0.82);
   --sidebar-foreground: #1D1D1F;
@@ -1014,22 +1014,22 @@
   --v2-glow-error: none;
 
   /* ── SEMANTIC TOKENS — Light Mode (bare HSL channel values) ── */
-  --semantic-success: 134 60% 25%;
+  --semantic-success: 152 100% 35%;
   --semantic-success-fg: 0 0% 100%;
-  --semantic-success-bg: 134 60% 25% / 0.08;
-  --semantic-success-border: 134 60% 25% / 0.20;
-  --semantic-error: 0 65% 45%;
+  --semantic-success-bg: 152 100% 35% / 0.14;
+  --semantic-success-border: 152 100% 35% / 0.30;
+  --semantic-error: 354 100% 48%;
   --semantic-error-fg: 0 0% 100%;
-  --semantic-error-bg: 0 65% 45% / 0.08;
-  --semantic-error-border: 0 65% 45% / 0.20;
-  --semantic-warning: 30 90% 45%;
+  --semantic-error-bg: 354 100% 48% / 0.14;
+  --semantic-error-border: 354 100% 48% / 0.30;
+  --semantic-warning: 38 100% 45%;
   --semantic-warning-fg: 0 0% 100%;
-  --semantic-warning-bg: 30 90% 45% / 0.08;
-  --semantic-warning-border: 30 90% 45% / 0.20;
-  --semantic-info: 225 75% 55%;
+  --semantic-warning-bg: 38 100% 45% / 0.14;
+  --semantic-warning-border: 38 100% 45% / 0.30;
+  --semantic-info: 225 100% 55%;
   --semantic-info-fg: 0 0% 100%;
-  --semantic-info-bg: 225 75% 55% / 0.08;
-  --semantic-info-border: 225 75% 55% / 0.20;
+  --semantic-info-bg: 225 100% 55% / 0.14;
+  --semantic-info-border: 225 100% 55% / 0.30;
 
   /* ── TEXT HIERARCHY — macOS light ── */
   --text-strong: #1D1D1F;
