@@ -1410,3 +1410,105 @@ export async function getAvatarUrlAction(): Promise<string | null> {
     return null
   }
 }
+
+export async function getTeamForJoin(teamId: string) {
+  try {
+    const team = await prisma.team.findUnique({
+      where: { id: teamId },
+      select: {
+        id: true,
+        name: true,
+        traderIds: true,
+        createdAt: true,
+        user: {
+          select: { username: true, email: true }
+        }
+      }
+    })
+
+    if (!team) {
+      return { success: false, error: 'Team not found' }
+    }
+
+    return {
+      success: true,
+      team: {
+        id: team.id,
+        name: team.name,
+        memberCount: team.traderIds.length,
+        createdBy: team.user.username || team.user.email?.split('@')[0] || 'Unknown',
+        createdAt: team.createdAt.toISOString(),
+      }
+    }
+  } catch (error) {
+    console.error('Error getting team for join:', error)
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to get team info' }
+  }
+}
+
+export async function requestToJoinTeamById(teamId: string) {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user?.id) {
+      throw new Error('You must be logged in to request to join a team')
+    }
+    const teamUserId = await resolveTeamUserId(user.id)
+    const userEmail = user.email?.toLowerCase()
+    if (!userEmail) {
+      throw new Error('No email found on your account')
+    }
+
+    // Check if team exists
+    const team = await prisma.team.findUnique({
+      where: { id: teamId },
+      select: { id: true, name: true, traderIds: true }
+    })
+
+    if (!team) {
+      throw new Error('Team not found')
+    }
+
+    // Check if user is already a member
+    if (team.traderIds.includes(teamUserId)) {
+      throw new Error('You are already a member of this team')
+    }
+
+    // Check for existing invitation
+    const existing = await prisma.teamInvitation.findUnique({
+      where: { teamId_email: { teamId, email: userEmail } }
+    })
+
+    if (existing) {
+      if (existing.status === 'PENDING_APPROVAL') {
+        throw new Error('You already have a pending join request for this team')
+      }
+      if (existing.status === 'ACCEPTED') {
+        throw new Error('You are already a member of this team')
+      }
+      if (existing.status === 'REJECTED') {
+        throw new Error('Your previous join request was rejected')
+      }
+      // For PENDING or expired, update it
+      await prisma.teamInvitation.delete({ where: { id: existing.id } })
+    }
+
+    // Create PENDING_APPROVAL invitation
+    const invitation = await prisma.teamInvitation.create({
+      data: {
+        teamId,
+        email: userEmail,
+        invitedBy: teamUserId,
+        status: 'PENDING_APPROVAL',
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      }
+    })
+
+    revalidatePath('/dashboard/settings')
+    revalidatePath('/teams/dashboard')
+    return { success: true, invitationId: invitation.id }
+  } catch (error) {
+    console.error('Error requesting to join team:', error)
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to request to join team' }
+  }
+}
