@@ -49,6 +49,7 @@ const envSchema = z.object({
   AI_MODEL_SEARCH: optionalModelId(),
   AI_MODEL_JOURNAL_INSIGHTS: optionalModelId(),
   AI_MODEL_ANALYZE_PATTERNS: optionalModelId(),
+  AI_STRUCTURED_OUTPUT_MODEL: optionalModelId(),
   NEXT_PUBLIC_APP_URL: optionalUrl(),
   AI_TIMEOUT_MS: optionalString(),
   AI_MAX_STEPS: optionalString(),

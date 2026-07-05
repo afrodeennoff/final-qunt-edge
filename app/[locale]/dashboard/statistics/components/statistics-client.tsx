@@ -1,12 +1,12 @@
 'use client'
 
-import { useRef, useState, useMemo, useEffect } from 'react'
+import { useRef, useState, useMemo, useEffect, useCallback } from 'react'
 import { computeStatistics, type ComputableTrade } from '@/lib/compute-statistics'
 import { StatsTable, type StatsTableRow } from './stats-table'
 import type { SetupStat, WeekdayStat, TickerStat } from '../types'
 import { useUserStore } from '@/store/user-store'
 import { cn } from '@/lib/utils'
-import { ChevronDown, X, Wallet } from 'lucide-react'
+import { ChevronDown, X, Wallet, Download, Eye, EyeOff } from 'lucide-react'
 import { useDashboardStats } from '@/context/data-provider'
 import { getJournalTradesAction } from '@/server/journal'
 import {
@@ -14,6 +14,20 @@ import {
   unifiedMetricPanelClassName,
   unifiedSectionEyebrowClassName,
 } from '@/components/layout/unified-page-recipes'
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts'
 
 
 type TimePeriod = '7d' | '14d' | '30d' | '90d' | 'all'
@@ -25,6 +39,9 @@ const PERIOD_DAYS: Record<TimePeriod, number | undefined> = {
   '90d': 90,
   'all': undefined,
 }
+
+const BATCH_SIZE = 4
+const PAGE_SIZE = 200
 
 function formatPnl(pnl: number) {
   const sign = pnl >= 0 ? '+' : ''
@@ -43,7 +60,7 @@ function computeRiskMetrics(pnls: number[]) {
   const stdDev = Math.sqrt(pnls.reduce((s, v) => s + (v - mean) ** 2, 0) / pnls.length)
   const downside = pnls.filter(v => v < 0)
   const downsideDev = downside.length > 0
-    ? Math.sqrt(downside.reduce((s, v) => s + (v - mean) ** 2, 0) / downside.length)
+    ? Math.sqrt(downside.reduce((s, v) => s + (v - 0) ** 2, 0) / downside.length)
     : 0
   const sharpe = stdDev > 0 ? (mean / stdDev) * Math.sqrt(252) : 0
   const sortino = downsideDev > 0 ? (mean / downsideDev) * Math.sqrt(252) : 0
@@ -62,15 +79,34 @@ function computeRiskMetrics(pnls: number[]) {
 }
 
 function statToRow(s: TickerStat | SetupStat | WeekdayStat): StatsTableRow {
-  const pnl = 'pnl' in s ? s.pnl : 0
   return {
     name: 'ticker' in s ? s.ticker : 'day' in s ? s.day : s.tag,
     totalTrades: s.totalTrades,
     winRate: s.winRate,
     avgRR: s.avgRR,
     totalRR: s.totalRR,
-    pnl,
+    pnl: s.pnl,
   }
+}
+
+function downloadCSV(data: StatsTableRow[], title: string) {
+  const headers = ['Name', 'Total Trades', 'Win Rate', 'Avg R', 'Total R', 'PnL']
+  const rows = data.map(r => [
+    r.name,
+    r.totalTrades.toString(),
+    `${r.winRate.toFixed(1)}%`,
+    `${r.avgRR.toFixed(2)}R`,
+    `${r.totalRR.toFixed(2)}R`,
+    r.pnl.toFixed(2),
+  ])
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n')
+  const blob = new Blob([csv], { type: 'text/csv' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${title.toLowerCase().replace(/\s+/g, '-')}-statistics.csv`
+  a.click()
+  URL.revokeObjectURL(url)
 }
 
 type KpiDef = {
@@ -102,25 +138,34 @@ export default function StatisticsClient() {
   const providerLoading = useUserStore(s => s.isLoading)
 
   const [journalMap, setJournalMap] = useState<Map<string, { customTags: string[]; excerptTitle: string | null; featuredExcerpt: string | null }>>(new Map())
+  const [showAllExcerpts, setShowAllExcerpts] = useState(false)
 
   useEffect(() => {
     if (!userId) return
     let cancelled = false
-    let currentPage = 1
-    const pageSize = 200
     const allEntries: Array<{ trade: Record<string, unknown>; journal: Record<string, unknown> | null }> = []
 
     async function fetchAll() {
-      let hasMore = true
-      while (hasMore) {
-        const result = await getJournalTradesAction(currentPage, pageSize)
-        if (cancelled) return
-        for (const entry of result.entries) {
-          allEntries.push(entry as typeof allEntries[number])
-        }
-        hasMore = currentPage < result.totalPages
-        currentPage++
+      const first = await getJournalTradesAction(1, PAGE_SIZE)
+      if (cancelled) return
+      allEntries.push(...first.entries as typeof allEntries)
+      const totalPages = first.totalPages
+
+      const batches: number[][] = []
+      for (let p = 2; p <= totalPages; p += BATCH_SIZE) {
+        batches.push(Array.from({ length: Math.min(BATCH_SIZE, totalPages - p + 1) }, (_, i) => p + i))
       }
+
+      for (const batch of batches) {
+        if (cancelled) return
+        const results = await Promise.all(
+          batch.map(page => getJournalTradesAction(page, PAGE_SIZE))
+        )
+        for (const r of results) {
+          allEntries.push(...r.entries as typeof allEntries)
+        }
+      }
+
       if (cancelled) return
       const map = new Map<string, { customTags: string[]; excerptTitle: string | null; featuredExcerpt: string | null }>()
       for (const entry of allEntries) {
@@ -195,6 +240,53 @@ export default function StatisticsClient() {
 
   const isLoading = providerLoading || !Array.isArray(formattedTrades)
 
+  const equityCurveData = useMemo(() => {
+    if (!data?.allPnls?.length) return []
+    let cumulative = 0
+    return data.allPnls.map((p, i) => {
+      cumulative += p.pnl
+      return { trade: i + 1, pnl: cumulative }
+    })
+  }, [data])
+
+  const pnlDistData = useMemo(() => {
+    if (!data?.allPnls?.length) return []
+    const buckets: Record<string, { range: string; count: number; fill: string }> = {}
+    const ranges = [
+      { max: -1000, label: '< -$1K', fill: '#F6465D' },
+      { max: -500, label: '-$1K to -$500', fill: '#F6465D' },
+      { max: -200, label: '-$500 to -$200', fill: '#F6465D' },
+      { max: -50, label: '-$200 to -$50', fill: '#F6465D' },
+      { max: 0, label: '-$50 to $0', fill: '#F6465D' },
+      { max: 50, label: '$0 to $50', fill: '#0ECB81' },
+      { max: 200, label: '$50 to $200', fill: '#0ECB81' },
+      { max: 500, label: '$200 to $500', fill: '#0ECB81' },
+      { max: 1000, label: '$500 to $1K', fill: '#0ECB81' },
+      { max: Infinity, label: '> $1K', fill: '#0ECB81' },
+    ]
+    for (const r of ranges) {
+      buckets[r.label] = { range: r.label, count: 0, fill: r.fill }
+    }
+    for (const p of data.allPnls) {
+      for (const r of ranges) {
+        if (p.pnl <= r.max) {
+          buckets[r.label].count++
+          break
+        }
+      }
+    }
+    return Object.values(buckets)
+  }, [data])
+
+  const winLossData = useMemo(() => {
+    const wins = data?.winningTrades ?? 0
+    const losses = data?.losingTrades ?? 0
+    return [
+      { name: 'Wins', value: wins, fill: '#0ECB81' },
+      { name: 'Losses', value: losses, fill: '#F6465D' },
+    ]
+  }, [data])
+
   if (isLoading) {
     return (
       <div className="w-full px-4 lg:px-6 py-6 space-y-5 bg-background min-h-screen">
@@ -250,17 +342,25 @@ export default function StatisticsClient() {
     { label: 'SORTINO RATIO', value: risk?.sortino ?? '--', tone: Number(risk?.sortino ?? 0) >= 1 ? 'positive' : 'neutral' },
     { label: 'MAX CONS WINS', value: (data.maxConsecWins ?? 0).toString(), tone: 'positive' },
     { label: 'MAX CONS LOSSES', value: (data.maxConsecLosses ?? 0).toString(), tone: 'negative' },
+    { label: 'BEST DAY', value: formatPnl(data.bestDay), tone: 'positive' },
+    { label: 'WORST DAY', value: formatPnl(data.worstDay), tone: 'negative' },
   ]
 
   const selectedAccountLabel = accounts.find(a => a.number === selectedAccount)
+  const displayExcerpts = showAllExcerpts ? data.featuredExcerpts : data.featuredExcerpts.slice(0, 15)
+
+  const tooltipContentStyle = {
+    background: 'var(--popover)',
+    border: '1px solid var(--border)',
+    borderRadius: 8,
+    fontSize: 12,
+  }
 
   return (
     <div className="w-full px-4 lg:px-6 py-6 space-y-6 bg-background min-h-screen text-foreground">
 
-      {/* Page eyebrow */}
       <div className={unifiedSectionEyebrowClassName}>Statistics</div>
 
-      {/* Filter bar — account + time period */}
       <div className={cn(unifiedSectionPanelClassName, 'flex flex-wrap items-center justify-between gap-3 p-3 sm:p-4')}>
         <div ref={accountDropRef} className="relative">
           <button
@@ -328,7 +428,6 @@ export default function StatisticsClient() {
         </div>
       </div>
 
-      {/* Performance Summary */}
       <div>
         <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-3">Performance Summary</div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -336,7 +435,6 @@ export default function StatisticsClient() {
         </div>
       </div>
 
-      {/* Profit & Loss Detail */}
       <div>
         <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-3">Profit &amp; Loss Detail</div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -344,7 +442,6 @@ export default function StatisticsClient() {
         </div>
       </div>
 
-      {/* Risk & Consistency */}
       <div>
         <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-3">Risk &amp; Consistency</div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -352,40 +449,133 @@ export default function StatisticsClient() {
         </div>
       </div>
 
-      {/* 2x2 Tables */}
+      {equityCurveData.length > 0 && (
+        <div className={cn(unifiedSectionPanelClassName, 'p-4 sm:p-5')}>
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50">Equity Curve</div>
+          </div>
+          <ResponsiveContainer width="100%" height={260}>
+            <LineChart data={equityCurveData} margin={{ top: 4, right: 8, bottom: 4, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+              <XAxis dataKey="trade" tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
+              <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} width={60} tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} domain={['auto', 'auto']} />
+              <Tooltip
+                contentStyle={tooltipContentStyle}
+                formatter={(value: number) => [formatPnl(value), 'Cumulative PnL']}
+                labelFormatter={(label: number) => `Trade #${label}`}
+              />
+              <Line type="monotone" dataKey="pnl" stroke="var(--primary)" strokeWidth={2} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {pnlDistData.length > 0 && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className={cn(unifiedSectionPanelClassName, 'p-4 sm:p-5')}>
+            <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-4">PnL Distribution</div>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={pnlDistData} margin={{ top: 4, right: 8, bottom: 4, left: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                <XAxis dataKey="range" tickLine={false} axisLine={false} tick={{ fontSize: 9, fill: 'var(--muted-foreground)' }} angle={-25} textAnchor="end" height={60} />
+                <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} width={30} />
+                <Tooltip contentStyle={tooltipContentStyle} formatter={(value: number) => [value, 'Trades']} />
+                <Bar dataKey="count" radius={[2, 2, 0, 0]}>
+                  {pnlDistData.map((entry, i) => (
+                    <Cell key={i} fill={entry.fill} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className={cn(unifiedSectionPanelClassName, 'p-4 sm:p-5')}>
+            <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-4">Win / Loss</div>
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+                <Pie
+                  data={winLossData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={90}
+                  paddingAngle={4}
+                  dataKey="value"
+                >
+                  {winLossData.map((entry, i) => (
+                    <Cell key={i} fill={entry.fill} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={tooltipContentStyle}
+                  formatter={(value: number, name: string) => [value, name]}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="flex justify-center gap-6 mt-2 text-xs">
+              <span className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-sm" style={{ background: '#0ECB81' }} />
+                Wins: {data.winningTrades} ({data.grandWinRate.toFixed(1)}%)
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-sm" style={{ background: '#F6465D' }} />
+                Losses: {data.losingTrades} ({(100 - data.grandWinRate).toFixed(1)}%)
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <StatsTable
           title="SYMBOL PERFORMANCE"
           rows={tickerRows}
           firstColLabel="SYMBOL"
           emptyMessage="No trades found"
+          onExport={tickerRows.length > 0 ? () => downloadCSV(tickerRows, 'symbol-performance') : undefined}
         />
         <StatsTable
           title="WEEKDAY PERFORMANCE"
           rows={weekdayRows}
           firstColLabel="DAY"
           emptyMessage="No trades found"
+          onExport={weekdayRows.length > 0 ? () => downloadCSV(weekdayRows, 'weekday-performance') : undefined}
         />
         <StatsTable
           title="CONCEPT / TAG PERFORMANCE"
           rows={setupRows}
           firstColLabel="TAG"
           emptyMessage="Tag your trades in the journal to see setup stats"
+          onExport={setupRows.length > 0 ? () => downloadCSV(setupRows, 'tag-performance') : undefined}
         />
         <StatsTable
           title="TIMEFRAME PERFORMANCE"
           rows={timeframeRows}
           firstColLabel="TIMEFRAME"
           emptyMessage="Tag your trades with timeframe tags (5m, 15m, 1H, etc.)"
+          onExport={timeframeRows.length > 0 ? () => downloadCSV(timeframeRows, 'timeframe-performance') : undefined}
         />
       </div>
 
-      {/* Journal Excerpts */}
       {data?.featuredExcerpts && data.featuredExcerpts.length > 0 && (
         <div className={cn(unifiedSectionPanelClassName, 'p-5')}>
-          <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-4">Journal Excerpts</div>
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50">
+              Journal Excerpts ({data.featuredExcerpts.length})
+            </div>
+            {data.featuredExcerpts.length > 15 && (
+              <button
+                type="button"
+                onClick={() => setShowAllExcerpts(!showAllExcerpts)}
+                className="flex items-center gap-1.5 text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors"
+              >
+                {showAllExcerpts ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                {showAllExcerpts ? 'Show less' : `Show all (${data.featuredExcerpts.length})`}
+              </button>
+            )}
+          </div>
           <div className="space-y-2">
-            {data.featuredExcerpts.slice(0, 15).map(ex => (
+            {displayExcerpts.map(ex => (
               <button
                 key={ex.id}
                 type="button"
@@ -425,15 +615,9 @@ export default function StatisticsClient() {
               </button>
             ))}
           </div>
-          {data.featuredExcerpts.length > 15 && (
-            <div className="mt-2 text-center text-[9px] text-muted-foreground/50">
-              Showing 15 of {data.featuredExcerpts.length} excerpts
-            </div>
-          )}
         </div>
       )}
 
-      {/* Excerpt Detail Modal */}
       {selectedExcerpt && (
         <div
           className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"

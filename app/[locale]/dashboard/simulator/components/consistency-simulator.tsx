@@ -281,26 +281,38 @@ function EquityFanChart({ percentiles }: { percentiles: MonteCarloResult["equity
   )
 }
 
-function PassRateCurve(_props: { result: MonteCarloResult }) {
+function PassRateCurve({ startingBalance, winRate, rewardRatio, tradesPerDay, maxTrades, profitTarget, maxDrawdown, drawdownType, challengeType, dailyLossLimit }: {
+  startingBalance: number
+  winRate: number
+  rewardRatio: number
+  tradesPerDay: number
+  maxTrades: number
+  profitTarget: number
+  maxDrawdown: number
+  drawdownType: "static" | "trailing_eod" | "trailing_intraday"
+  challengeType: '1_step' | '2_step' | '3_step' | 'instant_funding'
+  dailyLossLimit?: number
+}) {
   const gridResults = React.useMemo(() => {
     const risks = [0.005, 0.01, 0.015, 0.02, 0.025, 0.03]
     return risks.map(r => {
       const mc = runMonteCarlo({
-        startingBalance: 50000,
-        winRate: 0.5,
-        rewardRatio: 2,
+        startingBalance,
+        winRate,
+        rewardRatio,
         riskPerTrade: r,
-        tradesPerDay: 5,
-        maxTrades: 500,
+        tradesPerDay,
+        maxTrades,
         numSimulations: 500,
-        profitTarget: 5000,
-        maxDrawdown: 5000,
-        drawdownType: 'static',
-        challengeType: '1_step',
+        profitTarget,
+        maxDrawdown,
+        drawdownType,
+        challengeType,
+        dailyLossLimit,
       })
       return { risk: r * 100, passProb: mc.passProbability, ev: mc.expectedValue }
     })
-  }, [])
+  }, [startingBalance, winRate, rewardRatio, tradesPerDay, maxTrades, profitTarget, maxDrawdown, drawdownType, challengeType, dailyLossLimit])
 
   return (
     <div className={cn(unifiedSectionPanelClassName, "p-4")}>
@@ -894,7 +906,18 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
             {mcResult && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <EquityFanChart percentiles={mcResult.result.equityPercentiles} />
-                <PassRateCurve result={mcResult.result} />
+                <PassRateCurve
+                  startingBalance={firmPreset?.balance ?? (parseFloat(customBalance) || effectiveStartingBalance)}
+                  winRate={mcWinRate}
+                  rewardRatio={mcRR}
+                  tradesPerDay={mcTradesPerDay}
+                  maxTrades={mcMaxTrades}
+                  profitTarget={firmPreset?.profitTarget ?? (parseFloat(customTarget) || effectiveStartingBalance * 0.1)}
+                  maxDrawdown={firmPreset?.maxDrawdown ?? (parseFloat(customDrawdown) || effectiveStartingBalance * 0.1)}
+                  drawdownType={firmPreset?.drawdownType ?? drawdownType}
+                  challengeType={firmPreset?.evaluation === false ? 'instant_funding' : '1_step'}
+                  dailyLossLimit={firmPreset?.dailyLossLimit ?? undefined}
+                />
               </div>
             )}
           </div>
@@ -1724,8 +1747,6 @@ const ConsistencySimulator = React.memo(function ConsistencySimulator() {
   )
 })
 
-export { ConsistencySimulator }
-
 function formatDate(dateStr: string): string {
   try {
     return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric" })
@@ -1733,3 +1754,5 @@ function formatDate(dateStr: string): string {
     return dateStr
   }
 }
+
+export default ConsistencySimulator

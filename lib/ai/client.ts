@@ -5,6 +5,22 @@ import { cacheAiResponse, setAiResponseCache, getAiCacheStats, resetAiCacheStats
 import type { LanguageModelV3, LanguageModelV3CallOptions } from "@ai-sdk/provider";
 import { getEnv } from "@/lib/env";
 
+const JSON_SCHEMA_ERROR_MESSAGES = [
+  "does not support response format `json_schema`",
+  "does not support `json_schema`",
+];
+
+function isJsonSchemaError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const err = error as Record<string, unknown>;
+  if ((err as any)?.statusCode !== 400) return false;
+  const body =
+    typeof (err as any).responseBody === "string"
+      ? (err as any).responseBody
+      : "";
+  return JSON_SCHEMA_ERROR_MESSAGES.some((msg) => body.includes(msg));
+}
+
 function getProviderBaseUrl(): string | undefined {
   return getEnv().AI_PROVIDER_BASE_URL || getEnv().AI_BASE_URL || undefined;
 }
@@ -124,24 +140,38 @@ export function getAiLanguageModel(feature: AiFeature, userId?: string) {
 
   const rawModel = getAiClient().chat(model);
 
+   function jsonSchemaToJsonObject(options: LanguageModelV3CallOptions): LanguageModelV3CallOptions {
+     const rf = (options as any).responseFormat;
+     if (!rf || rf.type !== 'json_schema') return options;
+     return { ...options, responseFormat: { type: 'json' as const } };
+   }
+
    return new Proxy(rawModel, {
      get(target: any, p: PropertyKey) {
        if (p === 'doGenerate') {
          return async function(options: LanguageModelV3CallOptions) {
            const featureStr = String(feature);
+           const patched = jsonSchemaToJsonObject(options);
 
-             const cached = await cacheAiResponse(featureStr, options, userId);
+             const cached = await cacheAiResponse(featureStr, patched, userId);
              if (cached !== null) {
                return cached;
              }
 
-             const result = await target.doGenerate(options);
+             const result = await target.doGenerate(patched);
 
-             await setAiResponseCache(featureStr, options, result, userId);
+             await setAiResponseCache(featureStr, patched, result, userId);
 
             return result;
           };
-        }
+         }
+
+       if (p === 'doStream') {
+         return async function(options: LanguageModelV3CallOptions) {
+           const patched = jsonSchemaToJsonObject(options);
+           return await target.doStream(patched);
+         };
+       }
 
         return Reflect.get(target, p);
       }

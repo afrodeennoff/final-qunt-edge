@@ -1,7 +1,11 @@
 export const SUPPORT_MODEL_OPTIONS = [
   {
-    name: 'Dynamic (Cloudflare Gateway)',
-    value: 'dynamic/Test',
+    name: 'Llama 4 Scout 17B (Groq)',
+    value: 'groq/meta-llama/llama-4-scout-17b-16e-instruct',
+  },
+  {
+    name: 'Qwen 3 32B (Groq)',
+    value: 'groq/qwen/qwen3-32b',
   },
 ] as const;
 

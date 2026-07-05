@@ -1,6 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
+import { Download } from 'lucide-react'
 import { unifiedSectionPanelClassName } from '@/components/layout/unified-page-recipes'
 
 export type StatsTableRow = {
@@ -17,6 +18,7 @@ type StatsTableProps = {
   rows: StatsTableRow[]
   emptyMessage?: string
   firstColLabel?: string
+  onExport?: () => void
 }
 
 export function StatsTable({
@@ -24,7 +26,8 @@ export function StatsTable({
   rows,
   firstColLabel = 'Symbol',
   emptyMessage = 'No data yet',
-}: StatsTableProps & { firstColLabel?: string }) {
+  onExport,
+}: StatsTableProps) {
   if (rows.length === 0) {
     return (
       <div className={cn(unifiedSectionPanelClassName, 'overflow-hidden')}>
@@ -40,8 +43,20 @@ export function StatsTable({
 
   return (
     <div className={cn(unifiedSectionPanelClassName, 'overflow-hidden')}>
-      <div className="px-4 sm:px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50">
-        {title}
+      <div className="flex items-center justify-between px-4 sm:px-5 py-3.5">
+        <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50">
+          {title}
+        </div>
+        {onExport && (
+          <button
+            type="button"
+            onClick={onExport}
+            className="flex items-center gap-1 text-[10px] font-semibold text-muted-foreground/50 hover:text-primary transition-colors"
+          >
+            <Download className="h-3 w-3" />
+            CSV
+          </button>
+        )}
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm min-w-[420px]">
@@ -51,7 +66,8 @@ export function StatsTable({
               <th className="text-right px-2 sm:px-3 py-2 font-semibold">TRADES</th>
               <th className="text-right px-2 sm:px-3 py-2 font-semibold">WIN %</th>
               <th className="text-right px-2 sm:px-3 py-2 font-semibold">PNL</th>
-              <th className="text-right pl-2 sm:pl-3 pr-3 sm:pr-5 py-2 font-semibold">AVG R</th>
+              <th className="text-right px-2 sm:px-3 py-2 font-semibold">AVG R</th>
+              <th className="text-right pl-2 sm:pl-3 pr-3 sm:pr-5 py-2 font-semibold">TOTAL R</th>
             </tr>
           </thead>
           <tbody>
@@ -68,8 +84,11 @@ export function StatsTable({
                   <td className={cn('px-2 sm:px-3 py-2.5 text-right tabular-nums font-bold', pnlPos ? 'text-success' : 'text-destructive')}>
                     {row.pnl > 0 ? '+' : row.pnl < 0 ? '-' : ''}${Math.abs(row.pnl).toLocaleString('en-US', { minimumFractionDigits: 0 })}
                   </td>
-                  <td className={cn('pl-2 sm:pl-3 pr-3 sm:pr-5 py-2.5 text-right tabular-nums font-semibold', rrPos ? 'text-success' : 'text-destructive')}>
+                  <td className={cn('px-2 sm:px-3 py-2.5 text-right tabular-nums font-semibold', rrPos ? 'text-success' : 'text-destructive')}>
                     {rrPos ? '+' : ''}{row.avgRR.toFixed(1)}R
+                  </td>
+                  <td className={cn('pl-2 sm:pl-3 pr-3 sm:pr-5 py-2.5 text-right tabular-nums font-semibold', row.totalRR >= 0 ? 'text-success' : 'text-destructive')}>
+                    {row.totalRR >= 0 ? '+' : ''}{row.totalRR.toFixed(1)}R
                   </td>
                 </tr>
               )

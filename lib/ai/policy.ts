@@ -72,16 +72,18 @@ export function getAiPolicy(feature: AiFeature): AiFeaturePolicy {
     "analyze-patterns": { temperature: 0.2 },
   };
 
+  const structuredOutputModel = env.AI_STRUCTURED_OUTPUT_MODEL;
+
   const featureModelOverride: Record<AiFeature, string | undefined> = {
     chat: env.AI_MODEL_CHAT,
     support: env.AI_MODEL_SUPPORT,
     editor: env.AI_MODEL_EDITOR,
-    mappings: env.AI_MODEL_MAPPINGS,
-    "format-trades": env.AI_MODEL_FORMAT_TRADES,
-    analysis: env.AI_ANALYTICS_MODEL || env.AI_MODEL_ANALYSIS,
-    search: env.AI_MODEL_SEARCH,
-    "journal-insights": env.AI_MODEL_JOURNAL_INSIGHTS || env.AI_ANALYTICS_MODEL,
-    "analyze-patterns": env.AI_MODEL_ANALYZE_PATTERNS || env.AI_ANALYTICS_MODEL,
+    mappings: env.AI_MODEL_MAPPINGS || structuredOutputModel,
+    "format-trades": env.AI_MODEL_FORMAT_TRADES || structuredOutputModel,
+    analysis: env.AI_ANALYTICS_MODEL || env.AI_MODEL_ANALYSIS || structuredOutputModel,
+    search: env.AI_MODEL_SEARCH || structuredOutputModel,
+    "journal-insights": env.AI_MODEL_JOURNAL_INSIGHTS || env.AI_ANALYTICS_MODEL || structuredOutputModel,
+    "analyze-patterns": env.AI_MODEL_ANALYZE_PATTERNS || env.AI_ANALYTICS_MODEL || structuredOutputModel,
   };
 
   const provider = env.AI_PROVIDER_BASE_URL ? 'custom' : DEFAULT_PROVIDER;
