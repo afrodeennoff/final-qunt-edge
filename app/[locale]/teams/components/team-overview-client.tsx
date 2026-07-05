@@ -8,7 +8,7 @@ import { getTeamAnalyticsDataAction } from '../actions/analytics'
 import { unifiedInsetPanelClassName, unifiedSectionPanelClassName } from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Users, TrendingUp, BarChart3, Activity, Lightbulb, Target, AlertTriangle, Award } from 'lucide-react'
+import { Users, TrendingUp, BarChart3, Activity, Lightbulb, Target, AlertTriangle, Award, TrendingDown, DollarSign } from 'lucide-react'
 
 interface TeamOverviewClientProps {
   teamId: string
@@ -51,7 +51,7 @@ export function TeamOverviewClient({ teamId }: TeamOverviewClientProps) {
         if (result.success && result.data) {
           const d = result.data
           setAggregate({
-            totalPnL: toNumber(d.analytics?.totalPnl ?? (d as unknown as { analytics?: { totalPnL?: unknown } }).analytics?.totalPnL ?? 0),
+            totalPnL: toNumber(d.analytics?.totalPnl ?? 0),
             winRate: toNumber(d.analytics?.winRate ?? 0),
             totalTrades: toNumber(d.analytics?.totalTrades ?? 0),
             profitFactor: toNumber(d.analytics?.profitFactor ?? 0),
@@ -77,6 +77,8 @@ export function TeamOverviewClient({ teamId }: TeamOverviewClientProps) {
   const needsReview = totalTrades > 0 && winRate < 35
   const onFire = winRate > 60 && totalTrades > 20
   const profitable = totalPnL > 0
+  const strongPF = profitFactor > 1.5
+  const weakPF = profitFactor > 0 && profitFactor < 1
 
   return (
     <div className="space-y-6">
@@ -92,7 +94,7 @@ export function TeamOverviewClient({ teamId }: TeamOverviewClientProps) {
               label="Total Team PnL"
               value={formatCurrency(totalPnL)}
               valueClassName={totalPnL >= 0 ? 'text-primary' : 'text-destructive'}
-              icon={TrendingUp}
+              icon={DollarSign}
               size="md"
             />
             <DashboardStatCard
@@ -106,12 +108,14 @@ export function TeamOverviewClient({ teamId }: TeamOverviewClientProps) {
               value={`${winRate.toFixed(1)}%`}
               icon={BarChart3}
               size="md"
+              valueClassName={winRate >= 50 ? 'text-primary' : winRate > 0 ? 'text-warning' : undefined}
             />
             <DashboardStatCard
-              label="Total Trades"
-              value={totalTrades}
+              label="Profit Factor"
+              value={profitFactor.toFixed(2)}
               icon={Activity}
               size="md"
+              valueClassName={profitFactor >= 1.5 ? 'text-primary' : profitFactor > 0 ? 'text-warning' : undefined}
             />
           </div>
 
@@ -123,13 +127,13 @@ export function TeamOverviewClient({ teamId }: TeamOverviewClientProps) {
             </div>
             <p className="text-sm leading-relaxed text-foreground/85">
               {activeMembers === 0 ? (
-                <>No trader activity yet. Invite traders to your team to start seeing aggregate performance and behavioral patterns.</>
-              ) : !profitable ? (
-                <>{activeMembers} trader{activeMembers !== 1 ? 's are' : ' is'} currently underwater. Focus on reviewing trade plans and risk management rules. Try filtering by negative PnL on the equity grid below to identify who needs the most support.</>
+                <>No trader activity yet. Invite traders to your team to start seeing aggregate performance and behavioral patterns below.</>
+              ) : !profitable && weakPF ? (
+                <><AlertTriangle className="h-3.5 w-3.5 inline text-destructive mr-1" />Team is underwater with a profit factor of {profitFactor.toFixed(2)}. Review trade plans and risk management rules. Filter by negative PnL on the equity grid to identify who needs support.</>
               ) : needsReview ? (
-                <>Win rate is below 35% — review execution quality and rule adherence. High trade frequency with low win rate often signals process drift before a drawdown event.</>
-              ) : onFire ? (
-                <><Award className="h-3.5 w-3.5 inline text-warning mr-1" />Team is performing well with a win rate above 60%. Focus on identifying and replicating winning patterns across the team.</>
+                <><Target className="h-3.5 w-3.5 inline text-warning mr-1" />Win rate is below 35% — review execution quality and rule adherence. High frequency with low win rate often signals process drift before a drawdown event.</>
+              ) : onFire && strongPF ? (
+                <><Award className="h-3.5 w-3.5 inline text-warning mr-1" />Team is performing well — {winRate.toFixed(0)}% win rate with {profitFactor.toFixed(2)} profit factor. Identify and replicate winning patterns across the roster.</>
               ) : (
                 <>{activeMembers} active trader{activeMembers !== 1 ? 's' : ''} across {totalTrades} trade{totalTrades !== 1 ? 's' : ''}. Keep monitoring consistency scores and drawdown levels to maintain discipline.</>
               )}

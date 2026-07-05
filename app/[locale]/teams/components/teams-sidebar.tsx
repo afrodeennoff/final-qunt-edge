@@ -1,6 +1,6 @@
 "use client"
 
-import { LayoutDashboard, Users, BarChart3, TrendingUp, Globe, ArrowLeftFromLine, User } from "lucide-react"
+import { LayoutDashboard, Users, BarChart3, TrendingUp, Globe, ArrowLeftFromLine, User, BadgePercent } from "lucide-react"
 import { useUserStore } from "@/store/user-store"
 import { UnifiedSidebar, UnifiedSidebarItem } from "@/components/ui/unified-sidebar"
 import { usePathname } from "next/navigation"
@@ -100,7 +100,7 @@ export function TeamsSidebar() {
 		},
 		{
 			href: `${localePrefix}/deals`,
-			icon: <Globe className={NAV_ICON_SIZE} />,
+			icon: <BadgePercent className={NAV_ICON_SIZE} />,
 			label:"Deals",
 			group:"Resources",
 		},

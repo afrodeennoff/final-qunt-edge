@@ -115,9 +115,7 @@ export default async function TeamManageLayout({
             </main>
           </div>
           <TeamsMobileBottomNav
-            dashboardRoot={dashboardRoot}
             slug={slug}
-            backHref={`/${locale}/dashboard`}
           />
         </SidebarInset>
       </DashboardProviders>

@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { createClient } from '@/server/auth'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
+import { prisma } from '@/lib/prisma'
 import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from '@/lib/sidebar-state'
 import { SidebarRootProviders } from '@/components/providers/root-providers'
 import { DashboardProviders } from '@/components/providers/dashboard-providers'
@@ -18,6 +19,8 @@ import {
   WORKSPACE_SHELL_WIDTH,
   APP_SHELL_SOFT_BORDER_STYLE,
 } from '@/lib/constants/layout'
+import Link from 'next/link'
+import { ChevronRight } from 'lucide-react'
 
 export const metadata: Metadata = {
   robots: {
@@ -31,8 +34,6 @@ function resolveTeamPathContext(pathname: string) {
   const teamsIndex = segments.indexOf('teams')
   const hasLocalePrefix = teamsIndex === 1
   const localePrefix = hasLocalePrefix ? `/${segments[0]}` : ''
-  const teamsRoot = `${localePrefix}/teams`
-  const dashboardRoot = `${teamsRoot}/dashboard`
   const slug =
     teamsIndex !== -1 &&
     segments[teamsIndex + 1] === 'dashboard' &&
@@ -42,7 +43,33 @@ function resolveTeamPathContext(pathname: string) {
         : segments[teamsIndex + 2]
       : undefined
 
-  return { localePrefix, teamsRoot, dashboardRoot, slug }
+  let page: string | undefined
+  if (slug && segments[teamsIndex + 3]) {
+    page = segments[teamsIndex + 3]
+  }
+
+  return { localePrefix, slug, page }
+}
+
+async function getTeamName(teamId: string): Promise<string | null> {
+  try {
+    const team = await prisma.team.findUnique({
+      where: { id: teamId },
+      select: { name: true },
+    })
+    return team?.name ?? null
+  } catch {
+    return null
+  }
+}
+
+function getPageLabel(page?: string): string {
+  switch (page) {
+    case 'analytics': return 'Insights'
+    case 'traders': return 'Roster'
+    case 'members': return 'Access'
+    default: return 'Command'
+  }
 }
 
 export default async function DashboardLayout({
@@ -70,7 +97,9 @@ export default async function DashboardLayout({
   )
 
   const pathname = `/${locale}/teams/dashboard`
-  const { dashboardRoot, slug } = resolveTeamPathContext(pathname)
+  const { slug, page } = resolveTeamPathContext(pathname)
+  const teamName = slug ? await getTeamName(slug) : null
+  const pageLabel = getPageLabel(page)
 
   return (
     <SidebarRootProviders
@@ -95,12 +124,34 @@ export default async function DashboardLayout({
                           <span className="hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] border-transparent bg-background/60 text-muted-foreground">
                             Teams
                           </span>
-                          <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground sm:text-sm sm:uppercase sm:tracking-[0.12em]">
-                            Team Workspace
-                          </h1>
+                          {teamName && (
+                            <>
+                              <ChevronRight className="hidden h-3 w-3 text-muted-foreground/50 sm:block shrink-0" />
+                              <span className="hidden sm:inline truncate text-xs font-semibold text-foreground/80">
+                                {teamName}
+                              </span>
+                            </>
+                          )}
+                          {page && teamName && (
+                            <>
+                              <ChevronRight className="hidden h-3 w-3 text-muted-foreground/50 sm:block shrink-0" />
+                              <span className="truncate text-[11px] font-bold tracking-[0.14em] text-primary sm:text-xs sm:tracking-[0.12em]">
+                                {pageLabel}
+                              </span>
+                            </>
+                          )}
+                          {!teamName && (
+                            <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground sm:text-sm sm:uppercase sm:tracking-[0.12em]">
+                              Team Workspace
+                            </h1>
+                          )}
                         </div>
                         <p className="hidden truncate pt-1 text-xs text-muted-foreground xl:block">
-                          Manage your teams, members, and collaborative analytics
+                          {teamName
+                            ? page
+                              ? `Team ${pageLabel.toLowerCase()} — ${teamName}`
+                              : `Manage ${teamName} and its members`
+                            : 'Manage your teams, members, and collaborative analytics'}
                         </p>
                       </div>
                     </div>
@@ -111,9 +162,7 @@ export default async function DashboardLayout({
           }
           mobileNav={
             <TeamsMobileBottomNav
-              dashboardRoot={dashboardRoot}
               slug={slug}
-              backHref={`/${locale}/dashboard`}
             />
           }
           backgroundVariant="accent"
