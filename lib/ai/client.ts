@@ -5,22 +5,6 @@ import { cacheAiResponse, setAiResponseCache, getAiCacheStats, resetAiCacheStats
 import type { LanguageModelV3, LanguageModelV3CallOptions } from "@ai-sdk/provider";
 import { getEnv } from "@/lib/env";
 
-const JSON_SCHEMA_ERROR_MESSAGES = [
-  "does not support response format `json_schema`",
-  "does not support `json_schema`",
-];
-
-function isJsonSchemaError(error: unknown): boolean {
-  if (!error || typeof error !== "object") return false;
-  const err = error as Record<string, unknown>;
-  if ((err as any)?.statusCode !== 400) return false;
-  const body =
-    typeof (err as any).responseBody === "string"
-      ? (err as any).responseBody
-      : "";
-  return JSON_SCHEMA_ERROR_MESSAGES.some((msg) => body.includes(msg));
-}
-
 function getProviderBaseUrl(): string | undefined {
   return getEnv().AI_PROVIDER_BASE_URL || getEnv().AI_BASE_URL || undefined;
 }
@@ -47,7 +31,7 @@ function getAiClient(): ReturnType<typeof createOpenAI> {
   if (!aiClient) {
     const baseURL = getProviderBaseUrl();
     const apiKey = getProviderApiKey();
-    const cfToken = process.env.CF_AIG_TOKEN;
+    const cfToken = getEnv().CF_AIG_TOKEN;
 
     if (!apiKey) {
       throw new Error("[AI] AI_PROVIDER_API_KEY is not configured. Cannot create AI client.");
@@ -123,6 +107,45 @@ export function getAnalyticsModelId(): string | undefined {
   return getAnalyticsModel();
 }
 
+function jsonSchemaToJsonObject(options: LanguageModelV3CallOptions): LanguageModelV3CallOptions {
+  const rf = (options as any).responseFormat;
+  if (!rf) return options;
+
+  // ai v6 passes { type: "json", schema: {...} } (NOT "json_schema" type).
+  // @ai-sdk/openai provider converts { type: "json", schema } back to json_schema on the wire.
+  // We strip the schema so it maps to json_object instead.
+  if (rf.type === 'json_schema') {
+    return { ...options, responseFormat: { type: 'json' as const } };
+  }
+  if (rf.type === 'json' && rf.schema != null) {
+    return { ...options, responseFormat: { type: 'json' as const } };
+  }
+
+  return options;
+}
+
+function wrapModelWithJsonSchemaFix(rawModel: LanguageModelV3): LanguageModelV3 {
+  return new Proxy(rawModel, {
+    get(target: any, p: PropertyKey) {
+      if (p === 'doGenerate') {
+        return async function(options: LanguageModelV3CallOptions) {
+          const patched = jsonSchemaToJsonObject(options);
+          return await target.doGenerate(patched);
+        };
+      }
+
+      if (p === 'doStream') {
+        return async function(options: LanguageModelV3CallOptions) {
+          const patched = jsonSchemaToJsonObject(options);
+          return await target.doStream(patched);
+        };
+      }
+
+      return Reflect.get(target, p);
+    }
+  }) as LanguageModelV3;
+}
+
 export function getAiLanguageModel(feature: AiFeature, userId?: string) {
   assertAiConfigured();
 
@@ -139,54 +162,36 @@ export function getAiLanguageModel(feature: AiFeature, userId?: string) {
   }
 
   const rawModel = getAiClient().chat(model);
+  const proxiedModel = wrapModelWithJsonSchemaFix(rawModel);
 
-   function jsonSchemaToJsonObject(options: LanguageModelV3CallOptions): LanguageModelV3CallOptions {
-     const rf = (options as any).responseFormat;
-     if (!rf) return options;
+  return new Proxy(proxiedModel, {
+    get(target: any, p: PropertyKey) {
+      if (p === 'doGenerate') {
+        return async function(options: LanguageModelV3CallOptions) {
+          const featureStr = String(feature);
 
-     // ai v6 passes { type: "json", schema: {...} } (NOT "json_schema" type).
-     // @ai-sdk/openai provider converts { type: "json", schema } back to json_schema on the wire.
-     // We strip the schema so it maps to json_object instead.
-     if (rf.type === 'json_schema') {
-       return { ...options, responseFormat: { type: 'json' as const } };
-     }
-     if (rf.type === 'json' && rf.schema != null) {
-       return { ...options, responseFormat: { type: 'json' as const } };
-     }
+          const cached = await cacheAiResponse(featureStr, options, userId);
+          if (cached !== null) {
+            return cached;
+          }
 
-     return options;
-   }
+          const result = await target.doGenerate(options);
 
-   return new Proxy(rawModel, {
-     get(target: any, p: PropertyKey) {
-       if (p === 'doGenerate') {
-         return async function(options: LanguageModelV3CallOptions) {
-           const featureStr = String(feature);
-           const patched = jsonSchemaToJsonObject(options);
+          await setAiResponseCache(featureStr, options, result, userId);
 
-             const cached = await cacheAiResponse(featureStr, patched, userId);
-             if (cached !== null) {
-               return cached;
-             }
-
-             const result = await target.doGenerate(patched);
-
-             await setAiResponseCache(featureStr, patched, result, userId);
-
-            return result;
-          };
-         }
-
-       if (p === 'doStream') {
-         return async function(options: LanguageModelV3CallOptions) {
-           const patched = jsonSchemaToJsonObject(options);
-           return await target.doStream(patched);
-         };
-       }
-
-        return Reflect.get(target, p);
+          return result;
+        };
       }
-    }) as LanguageModelV3;
+
+      if (p === 'doStream') {
+        return async function(options: LanguageModelV3CallOptions) {
+          return await target.doStream(options);
+        };
+      }
+
+      return Reflect.get(target, p);
+    }
+  }) as LanguageModelV3;
 }
 
 export function getTranscribeModelId(): string {
@@ -221,7 +226,7 @@ export function checkAiConfig():
 export { getAiCacheStats, resetAiCacheStats };
 
 export function getAiLanguageModelById(modelId: string) {
-  return getAiClient().chat(modelId);
+  return wrapModelWithJsonSchemaFix(getAiClient().chat(modelId));
 }
 
 export function getAiBaseURL(): string | undefined {
