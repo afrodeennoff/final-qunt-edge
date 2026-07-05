@@ -36,9 +36,10 @@ function resolveTeamPathContext(pathname: string) {
   const slug =
     teamsIndex !== -1 &&
     segments[teamsIndex + 1] === 'dashboard' &&
-    segments[teamsIndex + 2] &&
-    segments[teamsIndex + 2] !== 'trader'
-      ? segments[teamsIndex + 2]
+    segments[teamsIndex + 2]
+      ? segments[teamsIndex + 2] === 'trader'
+        ? undefined
+        : segments[teamsIndex + 2]
       : undefined
 
   return { localePrefix, teamsRoot, dashboardRoot, slug }
