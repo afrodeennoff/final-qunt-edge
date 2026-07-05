@@ -111,17 +111,34 @@ function jsonSchemaToJsonObject(options: LanguageModelV3CallOptions): LanguageMo
   const rf = (options as any).responseFormat;
   if (!rf) return options;
 
-  // ai v6 passes { type: "json", schema: {...} } (NOT "json_schema" type).
-  // @ai-sdk/openai provider converts { type: "json", schema } back to json_schema on the wire.
-  // We strip the schema so it maps to json_object instead.
-  if (rf.type === 'json_schema') {
-    return { ...options, responseFormat: { type: 'json' as const } };
-  }
-  if (rf.type === 'json' && rf.schema != null) {
-    return { ...options, responseFormat: { type: 'json' as const } };
+  const isStructured = rf.type === 'json_schema' || (rf.type === 'json' && rf.schema != null);
+  if (!isStructured) return options;
+
+  // ai v6 passes { type: "json", schema: {...} }. @ai-sdk/openai provider converts
+  // { type: "json", schema } back to json_schema on the wire. Groq's prompt-guard and
+  // llama-3.1-8b-instant reject json_schema with 400. We strip the schema so the
+  // provider sends json_object instead — but we must also embed the schema in the
+  // prompt so the model outputs correct keys.
+  const schemaJson = JSON.stringify(rf.schema);
+
+  const messages = Array.isArray(options.prompt) ? [...options.prompt] : options.prompt;
+  const text = JSON.stringify(messages);
+  const schemaEmbedded = text.includes(schemaJson.substring(0, 60));
+
+  let finalMessages = messages;
+  if (!schemaEmbedded && Array.isArray(messages)) {
+    finalMessages = [
+      {
+        role: 'system' as const,
+        content:
+          `You must respond with valid JSON matching this exact JSON Schema:\n${schemaJson}\n` +
+          'Output ONLY valid JSON matching the schema above. No explanation, no markdown, no extra text.',
+      },
+      ...messages,
+    ];
   }
 
-  return options;
+  return { ...options, responseFormat: { type: 'json' as const }, prompt: finalMessages };
 }
 
 function wrapModelWithJsonSchemaFix(rawModel: LanguageModelV3): LanguageModelV3 {
