@@ -142,8 +142,19 @@ export function getAiLanguageModel(feature: AiFeature, userId?: string) {
 
    function jsonSchemaToJsonObject(options: LanguageModelV3CallOptions): LanguageModelV3CallOptions {
      const rf = (options as any).responseFormat;
-     if (!rf || rf.type !== 'json_schema') return options;
-     return { ...options, responseFormat: { type: 'json' as const } };
+     if (!rf) return options;
+
+     // ai v6 passes { type: "json", schema: {...} } (NOT "json_schema" type).
+     // @ai-sdk/openai provider converts { type: "json", schema } back to json_schema on the wire.
+     // We strip the schema so it maps to json_object instead.
+     if (rf.type === 'json_schema') {
+       return { ...options, responseFormat: { type: 'json' as const } };
+     }
+     if (rf.type === 'json' && rf.schema != null) {
+       return { ...options, responseFormat: { type: 'json' as const } };
+     }
+
+     return options;
    }
 
    return new Proxy(rawModel, {
