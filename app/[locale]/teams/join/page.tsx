@@ -19,7 +19,7 @@ import {
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { unifiedSectionPanelClassName, unifiedInsetPanelClassName } from '@/components/layout/unified-page-recipes'
-import { joinTeamByInvitation, getTeamInvitationDetails } from '../../dashboard/settings/actions'
+import { requestToJoinTeam, getTeamInvitationDetails } from '../../dashboard/settings/actions'
 import Link from 'next/link'
 
 interface TeamInvitation {
@@ -85,18 +85,16 @@ export default function TeamJoinPage() {
     }
   }, [invitationToken])
 
-  const handleJoinTeam = async () => {
+  const handleRequestToJoin = async () => {
     if (!invitationToken || !invitation) return
 
     setIsJoining(true)
     try {
-      const result = await joinTeamByInvitation(invitationToken)
+      const result = await requestToJoinTeam(invitationToken)
       if (result.success) {
-        toast.success(t('teams.join.success'))
-        // Redirect to team dashboard after successful join
-        setTimeout(() => {
-          router.push(`${dashboardRoot}/${invitation.teamId}`)
-        }, 1000)
+        toast.success('Join request sent! Awaiting admin approval.')
+        // Reload invitation details to show updated status
+        loadInvitationDetails()
       } else {
         toast.error(result.error || t('teams.join.error'))
       }
@@ -122,6 +120,8 @@ export default function TeamJoinPage() {
     switch (status) {
       case 'pending':
         return <Badge variant="secondary">{t('teams.management.pending')}</Badge>
+      case 'pending_approval':
+        return <Badge variant="outline" className="border-amber-500 text-amber-500">Pending Approval</Badge>
       case 'accepted':
         return <Badge variant="default" className="bg-emerald-500/10 text-emerald-500">{t('teams.invitations.accepted')}</Badge>
       case 'expired':
@@ -211,7 +211,8 @@ export default function TeamJoinPage() {
   }
 
   const isExpired = new Date(invitation.expiresAt) < new Date()
-  const canJoin = invitation.status === 'pending' && !isExpired
+  const canRequest = invitation.status === 'pending' && !isExpired
+  const isPendingApproval = invitation.status === 'pending_approval' && !isExpired
 
   return (
     <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
@@ -246,11 +247,13 @@ export default function TeamJoinPage() {
                   <p className="text-sm text-muted-foreground">
                     {invitation.status === 'pending' && !isExpired
                       ? t('teams.join.status.ready')
-                      : invitation.status === 'pending' && isExpired
-                        ? t('teams.join.status.expired')
-                        : invitation.status === 'accepted'
-                          ? t('teams.join.status.accepted')
-                          : t('teams.join.status.unknown')
+                      : invitation.status === 'pending_approval'
+                        ? 'Awaiting admin approval'
+                        : invitation.status === 'pending' && isExpired
+                          ? t('teams.join.status.expired')
+                          : invitation.status === 'accepted'
+                            ? t('teams.join.status.accepted')
+                            : t('teams.join.status.unknown')
                     }
                   </p>
                 </div>
@@ -291,13 +294,13 @@ export default function TeamJoinPage() {
 
             {/* Action */}
             <div className="text-center">
-              {canJoin ? (
+              {canRequest ? (
                 <div className="space-y-4">
                   <p className="text-muted-foreground">
                     {t('teams.join.action.description')}
                   </p>
                   <Button 
-                    onClick={handleJoinTeam}
+                    onClick={handleRequestToJoin}
                     disabled={isJoining}
                     size="lg"
                     className="w-full"
@@ -305,15 +308,32 @@ export default function TeamJoinPage() {
                     {isJoining ? (
                       <>
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        {t('teams.join.action.joining')}
+                        "Requesting to join..."
                       </>
                     ) : (
                       <>
-                        {t('teams.join.action.button')}
+                        "Request to Join"
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </>
                     )}
                   </Button>
+                </div>
+              ) : isPendingApproval ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-center gap-2 text-amber-500">
+                    <AlertCircle className="h-5 w-5" />
+                    <span>
+                      {"Your request is pending admin approval"}
+                    </span>
+                  </div>
+                  <Link href={dashboardRoot}>
+                    <Button 
+                      variant="outline"
+                      className="w-full"
+                    >
+                      {t('teams.join.goToManage')}
+                    </Button>
+                  </Link>
                 </div>
               ) : (
                 <div className="space-y-4">

@@ -4,10 +4,7 @@ import { prisma } from '@/lib/prisma'
 import auth from '@/locales/en/auth'
 import { createClient } from '@/server/auth'
 import { revalidatePath } from 'next/cache'
-import { Resend } from 'resend'
 import { usernameSchema } from '@/lib/validations/user'
-import { render } from '@react-email/render'
-import TeamInvitationEmail from '@/components/emails/team-invitation'
 import { MemberRole } from '@/prisma/generated/prisma'
 import { ensureTeamMembership, resolveTeamUserId } from '@/server/team-membership'
 import { isAdminUser } from '@/server/authz'
@@ -783,7 +780,19 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
       throw new Error('User is already a member of this team')
     }
 
-    // Create or update invitation
+    // Check for pending approval requests
+    if (existingInvitation && existingInvitation.status === 'PENDING_APPROVAL') {
+      throw new Error('This user has already requested to join the team and is awaiting approval')
+    }
+
+    // Check for rejected invitations — allow re-inviting
+    if (existingInvitation && existingInvitation.status === 'REJECTED') {
+      await prisma.teamInvitation.delete({
+        where: { id: existingInvitation.id },
+      })
+    }
+
+    // Create invitation
     const invitation = await prisma.teamInvitation.upsert({
       where: {
         teamId_email: {
@@ -793,7 +802,7 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
       },
       update: {
         status: 'PENDING',
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         invitedBy: teamUserId,
       },
       create: {
@@ -801,62 +810,19 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
         email: normalizedTraderEmail,
         invitedBy: teamUserId,
         status: 'PENDING',
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       },
-    })
-
-    // Get inviter information
-    const inviter = await prisma.user.findUnique({
-      where: { id: teamUserId },
     })
 
     // Generate join URL
     const inviteLocale = existingUser?.language || 'en'
     const joinUrl = getSiteUrl(`/${inviteLocale}/teams/join?invitation=${invitation.id}`)
 
-    // Render email
-    const emailHtml = await render(
-      TeamInvitationEmail({
-        email: normalizedTraderEmail,
-        teamName: team.name,
-        inviterName: inviter?.email?.split('@')[0] || 'trader',
-        inviterEmail: inviter?.email || 'trader@example.com',
-        joinUrl,
-        language: existingUser?.language || 'en'
-      })
-    )
-
-    // Send email
-    if (!process.env.RESEND_API_KEY) {
-      // Revert the invitation so retries aren't blocked by an orphaned PENDING row.
-      await prisma.teamInvitation.delete({ where: { id: invitation.id } }).catch(() => {})
-      throw new Error('RESEND_API_KEY is not configured')
-    }
-
-    const resend = new Resend(process.env.RESEND_API_KEY)
-    const fromAddress = process.env.TEAM_INVITE_FROM || 'Qunt Edge Team <team@eu.updates.qunt-edge.vercel.app>'
-    const replyToAddress = process.env.TEAM_INVITE_REPLY_TO || 'team@qunt-edge.com'
-    const { error: emailError } = await resend.emails.send({
-      from: fromAddress,
-      to: normalizedTraderEmail,
-      subject: existingUser?.language === 'fr'
-        ? `Invitation à rejoindre ${team.name} sur Qunt Edge`
-        : `Invitation to join ${team.name} on Qunt Edge`,
-      html: emailHtml,
-      replyTo: replyToAddress,
-    })
-
-    if (emailError) {
-      console.error('Error sending invitation email:', emailError.name, emailError.message)
-      // Revert the invitation so retries aren't blocked for 7 days by an
-      // orphaned PENDING row (no email was ever delivered).
-      await prisma.teamInvitation.delete({ where: { id: invitation.id } }).catch(() => {})
-      throw new Error('Failed to send invitation email')
-    }
+    // NOTE: Email sending removed — admin shares the invite link manually
 
     revalidatePath('/dashboard/settings')
     revalidatePath('/teams/dashboard')
-    return { success: true, invitationId: invitation.id }
+    return { success: true, invitationId: invitation.id, joinUrl }
   } catch (error) {
     console.error('Error sending team invitation:', error)
     return { success: false, error: error instanceof Error ? error.message : 'Failed to send invitation' }
@@ -896,11 +862,11 @@ export async function getTeamInvitations(teamId: string) {
       throw new Error('Unauthorized: Only team owners and admin managers can view invitations')
     }
 
-    // Get pending invitations
+    // Get pending invitations and pending approval requests
     const invitations = await prisma.teamInvitation.findMany({
       where: {
         teamId,
-        status: 'PENDING',
+        status: { in: ['PENDING', 'PENDING_APPROVAL'] },
         expiresAt: {
           gt: new Date(),
         },
@@ -1055,9 +1021,12 @@ export async function getTeamInvitationDetails(invitationToken: string) {
       throw new Error('Invitation has expired')
     }
 
-    // Check if invitation is already accepted
+    // Check if invitation is already accepted or rejected
     if (invitation.status === 'ACCEPTED') {
       throw new Error('Invitation already accepted')
+    }
+    if (invitation.status === 'REJECTED') {
+      throw new Error('Invitation was rejected')
     }
 
     const normalizedUserEmail = user.email?.toLowerCase()
@@ -1085,7 +1054,7 @@ export async function getTeamInvitationDetails(invitationToken: string) {
   }
 }
 
-export async function joinTeamByInvitation(invitationToken: string) {
+export async function requestToJoinTeam(invitationToken: string) {
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
@@ -1117,9 +1086,12 @@ export async function joinTeamByInvitation(invitationToken: string) {
       throw new Error('Invitation has expired')
     }
 
-    // Check if invitation is already accepted
+    // Check if invitation is already accepted or rejected
     if (invitation.status === 'ACCEPTED') {
       throw new Error('Invitation already accepted')
+    }
+    if (invitation.status === 'REJECTED') {
+      throw new Error('Invitation was rejected')
     }
 
     const normalizedUserEmail = user.email?.toLowerCase()
@@ -1134,15 +1106,94 @@ export async function joinTeamByInvitation(invitationToken: string) {
       throw new Error('You are already a member of this team')
     }
 
+    // Set status to PENDING_APPROVAL instead of auto-joining
+    await prisma.teamInvitation.update({
+      where: { id: invitationToken },
+      data: { status: 'PENDING_APPROVAL' }
+    })
+
+    revalidatePath('/dashboard/settings')
+    revalidatePath('/teams/dashboard')
+    return { success: true }
+  } catch (error) {
+    console.error('Error requesting to join team:', error)
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to request to join team' }
+  }
+}
+
+export async function approveJoinRequest(invitationId: string) {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user?.id) {
+      throw new Error('Unauthorized')
+    }
+    const teamUserId = await resolveTeamUserId(user.id)
+
+    // Find the invitation
+    const invitation = await prisma.teamInvitation.findUnique({
+      where: { id: invitationId },
+      include: {
+        team: {
+          select: {
+            id: true,
+            userId: true,
+            traderIds: true,
+          }
+        }
+      }
+    })
+
+    if (!invitation) {
+      throw new Error('Invitation not found')
+    }
+
+    // Only team owner or admin managers can approve
+    const isOwner = invitation.team.userId === teamUserId
+    const isAdminManager = await prisma.teamManager.findUnique({
+      where: {
+        teamId_managerId: {
+          teamId: invitation.teamId,
+          managerId: teamUserId,
+        }
+      }
+    })
+
+    if (!isOwner && (!isAdminManager || isAdminManager.access !== 'admin')) {
+      throw new Error('Unauthorized: Only team owners and admin managers can approve join requests')
+    }
+
+    if (invitation.status !== 'PENDING_APPROVAL') {
+      throw new Error('This invitation is not pending approval')
+    }
+
+    if (invitation.expiresAt < new Date()) {
+      throw new Error('Invitation has expired')
+    }
+
+    // Find the requesting user by email
+    const requestingUser = await prisma.user.findUnique({
+      where: { email: invitation.email },
+    })
+
+    if (!requestingUser) {
+      throw new Error('Requesting user not found')
+    }
+
+    if (invitation.team.traderIds.includes(requestingUser.id)) {
+      throw new Error('User is already a member of this team')
+    }
+
+    // Approve: add user to team, mark invitation as ACCEPTED
     await prisma.$transaction(async (tx) => {
       await ensureTeamMembership(tx, {
         teamId: invitation.teamId,
-        userId: teamUserId,
+        userId: requestingUser.id,
         role: invitation.role ?? MemberRole.TRADER,
       })
 
       await tx.teamInvitation.update({
-        where: { id: invitationToken },
+        where: { id: invitationId },
         data: { status: 'ACCEPTED' }
       })
     })
@@ -1151,8 +1202,67 @@ export async function joinTeamByInvitation(invitationToken: string) {
     revalidatePath('/teams/dashboard')
     return { success: true }
   } catch (error) {
-    console.error('Error joining team by invitation:', error)
-    return { success: false, error: error instanceof Error ? error.message : 'Failed to join team' }
+    console.error('Error approving join request:', error)
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to approve join request' }
+  }
+}
+
+export async function rejectJoinRequest(invitationId: string) {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user?.id) {
+      throw new Error('Unauthorized')
+    }
+    const teamUserId = await resolveTeamUserId(user.id)
+
+    // Find the invitation
+    const invitation = await prisma.teamInvitation.findUnique({
+      where: { id: invitationId },
+      include: {
+        team: {
+          select: {
+            id: true,
+            userId: true,
+          }
+        }
+      }
+    })
+
+    if (!invitation) {
+      throw new Error('Invitation not found')
+    }
+
+    // Only team owner or admin managers can reject
+    const isOwner = invitation.team.userId === teamUserId
+    const isAdminManager = await prisma.teamManager.findUnique({
+      where: {
+        teamId_managerId: {
+          teamId: invitation.teamId,
+          managerId: teamUserId,
+        }
+      }
+    })
+
+    if (!isOwner && (!isAdminManager || isAdminManager.access !== 'admin')) {
+      throw new Error('Unauthorized: Only team owners and admin managers can reject join requests')
+    }
+
+    if (invitation.status !== 'PENDING_APPROVAL') {
+      throw new Error('This invitation is not pending approval')
+    }
+
+    await prisma.teamInvitation.update({
+      where: { id: invitationId },
+      data: { status: 'REJECTED' }
+    })
+
+    revalidatePath('/dashboard/settings')
+    revalidatePath('/teams/dashboard')
+    return { success: true }
+  } catch (error) {
+    console.error('Error rejecting join request:', error)
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to reject join request' }
   }
 }
 

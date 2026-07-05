@@ -376,6 +376,8 @@
   --chart-foreground-muted: color-mix(in srgb, var(--foreground) 55%, transparent);
   --chart-foreground-faint: color-mix(in srgb, var(--foreground) 8%, transparent);
   --chart-primary-faint: color-mix(in srgb, var(--primary) 3%, transparent);
+  --chart-positive: #1A7F37;
+  --chart-negative: #C0392B;
 
   /* ── Sidebar tokens defined below (dark defaults) — light overrides in .light class ── */
   /* ── RADIUS — macOS native ── */
@@ -834,6 +836,8 @@
   --chart-6: #0E7490;
   --chart-7: #0E7490;
   --chart-8: #6E6E73;
+  --chart-positive: #1A7F37;
+  --chart-negative: #C0392B;
   --sidebar: rgba(246,246,248,0.82);
   --sidebar-background: rgba(246,246,248,0.82);
   --sidebar-foreground: #1D1D1F;

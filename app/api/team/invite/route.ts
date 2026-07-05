@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
-import { Resend } from 'resend'
-import TeamInvitationEmail from '@/components/emails/team-invitation'
-import { render } from "@react-email/render"
 import { prisma } from "@/lib/prisma"
 import { createRouteClient } from "@/lib/supabase/route-client"
 import { createRateLimitResponse, rateLimit } from "@/lib/rate-limit"
@@ -31,18 +28,7 @@ const SUPPORTED_LOCALES = new Set([
   "yo",
 ])
 
-// Security: Use environment-configured reply-to address
-const getReplyToEmail = (): string => {
-  return process.env.TEAM_INVITE_REPLY_TO || 'team@qunt-edge.com'
-}
-
 export async function POST(req: Request) {
-  if (!process.env.RESEND_API_KEY) {
-    console.error('RESEND_API_KEY is missing')
-    return apiError("INTERNAL_ERROR", "Missing API key", 500)
-  }
-  const resend = new Resend(process.env.RESEND_API_KEY)
-
   try {
     const limit = await inviteRateLimit(req)
     if (!limit.success) {
@@ -96,8 +82,6 @@ export async function POST(req: Request) {
     }
 
     // Authorize on owner OR admin-TeamManager OR active TeamMember ADMIN.
-    // (Previously only owner/admin-TeamManager — a TeamMember ADMIN such as the
-    // team creator was denied, diverging from inviteMember's own authz.)
     const isOwner = team.userId === inviter.id
     const isAdminManager = team.managers.length > 0
     const isAdminMember = team.members.length > 0
@@ -118,7 +102,7 @@ export async function POST(req: Request) {
       )
     }
 
-    // Check if there's already a pending invitation
+    // Check for existing invitations
     const existingInvitation = await prisma.teamInvitation.findUnique({
       where: {
         teamId_email: {
@@ -136,8 +120,6 @@ export async function POST(req: Request) {
       )
     }
 
-    // Don't resurrect an already-accepted invitation (would re-email the member
-    // and resurrect a consumed invite).
     if (existingInvitation && existingInvitation.status === 'ACCEPTED') {
       return apiError(
         "BAD_REQUEST",
@@ -146,7 +128,22 @@ export async function POST(req: Request) {
       )
     }
 
-    // Create or update invitation
+    if (existingInvitation && existingInvitation.status === 'PENDING_APPROVAL') {
+      return apiError(
+        "BAD_REQUEST",
+        "This user has already requested to join and is awaiting approval",
+        400
+      )
+    }
+
+    // Clean up rejected invitations to allow re-invite
+    if (existingInvitation && existingInvitation.status === 'REJECTED') {
+      await prisma.teamInvitation.delete({
+        where: { id: existingInvitation.id },
+      })
+    }
+
+    // Create invitation
     const invitation = await prisma.teamInvitation.upsert({
       where: {
         teamId_email: {
@@ -156,7 +153,7 @@ export async function POST(req: Request) {
       },
       update: {
         status: 'PENDING',
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         invitedBy: inviter.id,
         ...(role ? { role } : {}),
       },
@@ -165,7 +162,7 @@ export async function POST(req: Request) {
         email,
         invitedBy: inviter.id,
         status: 'PENDING',
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         ...(role ? { role } : {}),
       },
     })
@@ -178,52 +175,17 @@ export async function POST(req: Request) {
 
     const joinUrl = getSiteUrl(`/${inviteLocale}/teams/join?invitation=${invitation.id}`)
 
-    // Render email
-    const emailHtml = await render(
-      TeamInvitationEmail({
-        email,
-        teamName: team.name,
-        inviterName: inviter?.email?.split('@')[0] || 'trader',
-        inviterEmail: inviter?.email || 'trader@example.com',
-        joinUrl,
-        language: existingUser?.language || 'en'
-      })
-    )
-
-    // Send email
-    const { error } = await resend.emails.send({
-      from: process.env.TEAM_INVITE_FROM ?? 'Qunt Edge Team <team@eu.updates.qunt-edge.vercel.app>',
-      to: email,
-      subject: existingUser?.language === 'fr'
-        ? `Invitation à rejoindre ${team.name} sur Qunt Edge`
-        : `Invitation to join ${team.name} on Qunt Edge`,
-      html: emailHtml,
-      replyTo: getReplyToEmail(),
-    })
-
-    if (error) {
-      // Security: Log only non-sensitive error info
-      console.error('Error sending invitation email:', error.name, error.message)
-      // Revert the invitation so retries aren't blocked for 7 days by an
-      // orphaned PENDING row (no email was ever delivered).
-      await prisma.teamInvitation.delete({ where: { id: invitation.id } }).catch(() => {})
-      return apiError(
-        "INTERNAL_ERROR",
-        'Failed to send invitation email',
-        500
-      )
-    }
+    // NOTE: Email sending removed — share the invite link directly
 
     return NextResponse.json(
-      { success: true, invitationId: invitation.id },
+      { success: true, invitationId: invitation.id, joinUrl },
       { status: 200 }
     )
 
   } catch (error) {
     const validationResponse = toValidationErrorResponse(error)
     if (validationResponse.status !== 500) return validationResponse
-    // Security: Log only error type, not full error object which may contain sensitive data
-    console.error('Error sending team invitation:', error instanceof Error ? error.message : 'Unknown error')
+    console.error('Error creating team invitation:', error instanceof Error ? error.message : 'Unknown error')
     return apiError(
       "INTERNAL_ERROR",
       "Internal server error",

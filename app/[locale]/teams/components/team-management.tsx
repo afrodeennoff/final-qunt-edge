@@ -9,14 +9,18 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import {
- Building2,
- Plus,
- UserPlus,
- UserMinus,
- Eye,
- Settings,
- XCircle,
- Trash2
+  Building2,
+  Plus,
+  UserPlus,
+  UserMinus,
+  Eye,
+  Settings,
+  XCircle,
+  Trash2,
+  Copy,
+  Check,
+  CheckCircle,
+  AlertCircle
 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
@@ -57,11 +61,13 @@ import {
  getUserTeamAccess,
  deleteTeam,
  renameTeam,
- sendTeamInvitation,
- getTeamInvitations,
- removeTraderFromTeam,
- cancelTeamInvitation,
- createTeam
+  sendTeamInvitation,
+  getTeamInvitations,
+  removeTraderFromTeam,
+  cancelTeamInvitation,
+  approveJoinRequest,
+  rejectJoinRequest,
+  createTeam
 } from '@/app/[locale]/dashboard/settings/actions'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -189,9 +195,11 @@ const TeamManagement = React.memo(function TeamManagement({
  const [newManagerEmail, setNewManagerEmail] = useState('')
  const [newManagerAccess, setNewManagerAccess] = useState<'admin' | 'viewer'>('viewer')
  const [renameTeamName, setRenameTeamName] = useState('')
- const [newTraderEmail, setNewTraderEmail] = useState('')
- const [isSubmitting, setIsSubmitting] = useState(false)
- const [pendingInvitations, setPendingInvitations] = useState<Array<{ id: string; email: string; status: string; createdAt: Date | string; expiresAt: Date | string; username?: null }>>([])
+  const [newTraderEmail, setNewTraderEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [pendingInvitations, setPendingInvitations] = useState<Array<{ id: string; email: string; status: string; createdAt: Date | string; expiresAt: Date | string; username?: null }>>([])
+  const [copiedInviteId, setCopiedInviteId] = useState<string | null>(null)
+  const [lastInviteUrl, setLastInviteUrl] = useState<string | null>(null)
 
   // Cache for team data to avoid duplicate fetches
   const teamDataCache = useRef<{ teams: typeof userTeams; managed: ManagedTeam[] } | null>(null)
@@ -553,30 +561,32 @@ const TeamManagement = React.memo(function TeamManagement({
  }
  }
 
- const handleAddTrader = async () => {
- if (!selectedTeam || !newTraderEmail.trim()) {
- toast.error(t('teams.traders.add.emailRequired'))
- return
- }
+  const handleAddTrader = async () => {
+    if (!selectedTeam || !newTraderEmail.trim()) {
+      toast.error(t('teams.traders.add.emailRequired'))
+      return
+    }
 
- setIsSubmitting(true)
- try {
- const result = await sendTeamInvitation(selectedTeam.id, newTraderEmail.trim())
- if (result.success) {
- toast.success(t('teams.invitations.sent'))
- setNewTraderEmail('')
- // Only reload pending invitations, no need to reload all team data
- await loadPendingInvitations()
- } else {
- toast.error(result.error || t('teams.traders.add.error'))
- }
- } catch {
+    setIsSubmitting(true)
+    try {
+      const result = await sendTeamInvitation(selectedTeam.id, newTraderEmail.trim())
+      if (result.success) {
+        toast.success(t('teams.invitations.sent'))
+        setNewTraderEmail('')
+        if (result.joinUrl) {
+          setLastInviteUrl(result.joinUrl)
+        }
+        await loadPendingInvitations()
+      } else {
+        toast.error(result.error || t('teams.traders.add.error'))
+      }
+    } catch {
 
- toast.error(t('teams.traders.add.error'))
- } finally {
- setIsSubmitting(false)
- }
- }
+      toast.error(t('teams.traders.add.error'))
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
  const loadPendingInvitations = async () => {
  if (!selectedTeam) return
@@ -637,22 +647,67 @@ const TeamManagement = React.memo(function TeamManagement({
  }
  }
 
- const handleCancelInvitation = async (invitationId: string) => {
- if (!selectedTeam) return
+  const handleCancelInvitation = async (invitationId: string) => {
+    if (!selectedTeam) return
 
- try {
- const cancelResult = await cancelTeamInvitation(selectedTeam.id, invitationId)
- if (cancelResult.success) {
- toast.success('Invitation canceled successfully')
- await loadPendingInvitations()
- } else {
- toast.error(cancelResult.error || t('dashboard.teams.error'))
- }
- } catch {
+    try {
+      const cancelResult = await cancelTeamInvitation(selectedTeam.id, invitationId)
+      if (cancelResult.success) {
+        toast.success('Invitation canceled successfully')
+        await loadPendingInvitations()
+      } else {
+        toast.error(cancelResult.error || t('dashboard.teams.error'))
+      }
+    } catch {
 
- toast.error(t('dashboard.teams.error'))
- }
- }
+      toast.error(t('dashboard.teams.error'))
+    }
+  }
+
+  const handleApproveJoinRequest = async (invitationId: string) => {
+    if (!selectedTeam) return
+
+    try {
+      const result = await approveJoinRequest(invitationId)
+      if (result.success) {
+        toast.success('Join request approved')
+        await loadPendingInvitations()
+      } else {
+        toast.error(result.error || t('dashboard.teams.error'))
+      }
+    } catch {
+
+      toast.error(t('dashboard.teams.error'))
+    }
+  }
+
+  const handleRejectJoinRequest = async (invitationId: string) => {
+    if (!selectedTeam) return
+
+    try {
+      const result = await rejectJoinRequest(invitationId)
+      if (result.success) {
+        toast.success('Join request rejected')
+        await loadPendingInvitations()
+      } else {
+        toast.error(result.error || t('dashboard.teams.error'))
+      }
+    } catch {
+
+      toast.error(t('dashboard.teams.error'))
+    }
+  }
+
+  const handleCopyInviteLink = async (url: string, invitationId: string) => {
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopiedInviteId(invitationId)
+      toast.success('Invite link copied to clipboard')
+      setTimeout(() => setCopiedInviteId(null), 2000)
+    } catch {
+      toast.error('Failed to copy invite link')
+    }
+  }
 
   const getStatusIndicator = (access: string, isOwner: boolean) => {
     if (isOwner) return 'bg-warning'
@@ -1037,47 +1092,118 @@ const TeamManagement = React.memo(function TeamManagement({
    </div>
 
    {/* Pending Invitations */}
- <div className="mt-4">
- <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.invitations.pending')}</h5>
- {pendingInvitations.length === 0 ? (
- <p className="text-sm text-muted-foreground">{t('teams.management.noPendingInvitations')}</p>
- ) : (
- <div className="space-y-1">
- {pendingInvitations.map((invitation) => (
-<div key={invitation.id} className="flex items-center justify-between rounded-xl bg-card border-0 p-3 hover:bg-muted/10 transition-colors duration-150 text-sm">
-  <span>{getDisplayName(invitation)}</span>
- <div className="flex items-center gap-2">
- <Badge variant="outline">{t('teams.management.pending')}</Badge>
- <AlertDialog>
-   <AlertDialogTrigger asChild>
-   <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground" aria-label="Cancel invitation">
-   <XCircle className="h-3 w-3" />
-   </Button>
-   </AlertDialogTrigger>
-   <AlertDialogContent className="w-[95vw] sm:w-full">
-   <AlertDialogHeader>
-   <AlertDialogTitle>{t('teams.management.cancelInvitation')}</AlertDialogTitle>
- <AlertDialogDescription>
- {t('teams.management.cancelInvitationConfirm').replace('{email}', getDisplayName(invitation))}
- </AlertDialogDescription>
- </AlertDialogHeader>
- <AlertDialogFooter>
- <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
- <AlertDialogAction
- onClick={() => handleCancelInvitation(invitation.id)}
- className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
- >
- {t('teams.management.cancelInvitationAction')}
- </AlertDialogAction>
- </AlertDialogFooter>
- </AlertDialogContent>
- </AlertDialog>
- </div>
- </div>
- ))}
- </div>
-  )}
+  <div className="mt-4">
+  <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.invitations.pending')}</h5>
+  {pendingInvitations.length === 0 ? (
+  <p className="text-sm text-muted-foreground">{t('teams.management.noPendingInvitations')}</p>
+  ) : (
+  <div className="space-y-2">
+  {pendingInvitations.map((invitation) => (
+    invitation.status === 'PENDING_APPROVAL' ? (
+      <div key={invitation.id} className="flex items-center justify-between rounded-xl bg-amber-50 border border-amber-200 p-3 text-sm">
+        <div className="flex items-center gap-2">
+          <AlertCircle className="h-4 w-4 text-amber-500" />
+          <span>{getDisplayName(invitation)}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="border-amber-500 text-amber-500">Pending Approval</Badge>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 w-7 p-0 hover:bg-emerald-500 hover:text-white"
+            onClick={() => handleApproveJoinRequest(invitation.id)}
+            aria-label="Approve join request"
+          >
+            <CheckCircle className="h-4 w-4" />
+          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 hover:bg-destructive hover:text-destructive-foreground" aria-label="Reject join request">
+                <XCircle className="h-4 w-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="w-[95vw] sm:w-full">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Reject join request</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to reject {getDisplayName(invitation)}'s request to join this team?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => handleRejectJoinRequest(invitation.id)}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  Reject
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      </div>
+    ) : (
+      <div key={invitation.id} className="flex items-center justify-between rounded-xl bg-card border-0 p-3 hover:bg-muted/10 transition-colors duration-150 text-sm">
+        <span>{getDisplayName(invitation)}</span>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline">{t('teams.management.pending')}</Badge>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 w-7 p-0 hover:bg-primary hover:text-primary-foreground"
+            onClick={() => {
+              const locale = pathname.split('/')[1] || 'en'
+              const url = `${window.location.origin}/${locale}/teams/join?invitation=${invitation.id}`
+              handleCopyInviteLink(url, invitation.id)
+            }}
+            aria-label="Copy invite link"
+          >
+            {copiedInviteId === invitation.id ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground" aria-label="Cancel invitation">
+                <XCircle className="h-3 w-3" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="w-[95vw] sm:w-full">
+              <AlertDialogHeader>
+                <AlertDialogTitle>{t('teams.management.cancelInvitation')}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {t('teams.management.cancelInvitationConfirm').replace('{email}', getDisplayName(invitation))}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => handleCancelInvitation(invitation.id)}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  {t('teams.management.cancelInvitationAction')}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      </div>
+    )
+  ))}
   </div>
+   )}
+   {lastInviteUrl && (
+     <div className="mt-2 p-2 rounded-md bg-primary/5 border border-primary/20 text-xs flex items-center justify-between gap-2">
+       <span className="truncate text-muted-foreground">{lastInviteUrl}</span>
+       <Button
+         variant="ghost"
+         size="sm"
+         className="h-6 shrink-0"
+         onClick={() => handleCopyInviteLink(lastInviteUrl, 'last')}
+       >
+         {copiedInviteId === 'last' ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+       </Button>
+     </div>
+   )}
+   </div>
   </div>
   </div>
 

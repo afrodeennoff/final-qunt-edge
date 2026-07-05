@@ -211,7 +211,7 @@ export function UserEquityChart({ equityCurve, userId, totalPnL, showDailyView =
  const dailyData = groupTradesByDay(equityCurve)
  const chartData = showDailyView ? dailyData : equityCurve
  const xTicks = showDailyView ? getSmartDateTicks(dailyData) : getSmartTicks(equityCurve)
- const trendColor = totalPnL >= 0 ?"hsl(var(--chart-positive))" :"hsl(var(--chart-negative))"
+  const trendColor = totalPnL >= 0 ?"var(--chart-positive)" :"var(--chart-negative)"
 
  return (
  <div data-chart-surface="modern" className="h-32">
