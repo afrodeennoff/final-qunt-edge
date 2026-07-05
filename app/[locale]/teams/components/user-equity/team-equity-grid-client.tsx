@@ -110,25 +110,25 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  setUsers(prev => [...prev, ...data.users])
  setHasMore(data.hasMore)
  setCurrentPage(currentPage + 1)
- } catch {
+    } catch (err) {
+      console.error('Error loading more users:', err)
+    } finally {
+      setIsLoadingMore(false)
+    }
+  }, [teamId, currentPage, hasMore, isLoadingMore])
 
- } finally {
- setIsLoadingMore(false)
- }
- }, [teamId, currentPage, hasMore, isLoadingMore])
-
- // Load initial data
- useEffect(() => {
- const loadInitialData = async () => {
- setIsInitialLoading(true)
- try {
- const data = await getTeamEquityData(teamId, 1, 10)
- setUsers(data.users)
- setHasMore(data.hasMore)
- setCurrentPage(2)
- } catch {
-
- } finally {
+  // Load initial data
+  useEffect(() => {
+    const loadInitialData = async () => {
+      setIsInitialLoading(true)
+      try {
+        const data = await getTeamEquityData(teamId, 1, 10)
+        setUsers(data.users)
+        setHasMore(data.hasMore)
+        setCurrentPage(2)
+      } catch (err) {
+        console.error('Error loading initial data:', err)
+      } finally {
  setIsInitialLoading(false)
  }
  }

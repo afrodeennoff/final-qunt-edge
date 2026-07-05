@@ -97,17 +97,19 @@ interface ManagedTeam extends Team {
 }
 
 interface TeamManagementProps {
- // Event handlers reserved for future use
- onTeamClick?: (team: Team) => void
- onManageClick?: (team: Team) => void
- onViewClick?: (team: Team) => void
+  variant?: 'standalone' | 'embedded'
+  // Event handlers reserved for future use
+  onTeamClick?: (team: Team) => void
+  onManageClick?: (team: Team) => void
+  onViewClick?: (team: Team) => void
 }
 
 const TeamManagement = React.memo(function TeamManagement({
- // Event handlers reserved for future use
- // onTeamClick,
- // onManageClick,
- // onViewClick,
+  variant = 'standalone',
+  // Event handlers reserved for future use
+  // onTeamClick,
+  // onManageClick,
+  // onViewClick,
 }: TeamManagementProps) {
 
  const pathname = usePathname()
@@ -200,6 +202,10 @@ const TeamManagement = React.memo(function TeamManagement({
   const [pendingInvitations, setPendingInvitations] = useState<Array<{ id: string; email: string; status: string; createdAt: Date | string; expiresAt: Date | string; username?: null }>>([])
   const [copiedInviteId, setCopiedInviteId] = useState<string | null>(null)
   const [lastInviteUrl, setLastInviteUrl] = useState<string | null>(null)
+
+  // Invitation loading states
+  const [invitationsLoading, setInvitationsLoading] = useState(false)
+  const [invitationsError, setInvitationsError] = useState<string | null>(null)
 
   // Cache for team data to avoid duplicate fetches
   const teamDataCache = useRef<{ teams: typeof userTeams; managed: ManagedTeam[] } | null>(null)
@@ -588,18 +594,30 @@ const TeamManagement = React.memo(function TeamManagement({
     }
   }
 
- const loadPendingInvitations = async () => {
- if (!selectedTeam) return
+  const loadPendingInvitations = useCallback(async () => {
+    if (!selectedTeam) return
+    setInvitationsLoading(true)
+    setInvitationsError(null)
+    try {
+      const result = await getTeamInvitations(selectedTeam.id)
+      if (result.success) {
+        setPendingInvitations(result.invitations || [])
+      } else {
+        setInvitationsError(result.error || 'Failed to load invitations')
+      }
+    } catch {
+      setInvitationsError('Failed to load invitations')
+    } finally {
+      setInvitationsLoading(false)
+    }
+  }, [selectedTeam])
 
- try {
- const result = await getTeamInvitations(selectedTeam.id)
- if (result.success) {
- setPendingInvitations(result.invitations || [])
- }
- } catch {
-
- }
- }
+  // Auto-load invitations when dialog opens
+  useEffect(() => {
+    if (manageDialogOpen && selectedTeam) {
+      loadPendingInvitations()
+    }
+  }, [manageDialogOpen, selectedTeam, loadPendingInvitations])
 
  const handleRemoveTrader = async (traderId: string) => {
  if (!selectedTeam) return
@@ -780,13 +798,15 @@ const TeamManagement = React.memo(function TeamManagement({
   )
   }
 
- return (
- <div className="mx-auto py-4">
- {/* Header */}
-  <div className={cn(unifiedSectionPanelClassName, 'mb-5 p-5 sm:p-6')}>
- <h1 className="text-2xl font-black tracking-tight text-foreground">{t('teams.management.component.title')}</h1>
- <p className="text-muted-foreground mt-2 text-sm">{t('teams.management.component.description')}</p>
- </div>
+  return (
+  <div className={cn("mx-auto", variant === 'embedded' ? 'py-0' : 'py-4')}>
+  {/* Header - only in standalone mode */}
+  {variant === 'standalone' && (
+   <div className={cn(unifiedSectionPanelClassName, 'mb-5 p-5 sm:p-6')}>
+  <h1 className="text-2xl font-black tracking-tight text-foreground">{t('teams.management.component.title')}</h1>
+  <p className="text-muted-foreground mt-2 text-sm">{t('teams.management.component.description')}</p>
+  </div>
+  )}
 
  {/* Teams Grid */}
  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -850,13 +870,11 @@ const TeamManagement = React.memo(function TeamManagement({
  variant="outline"
  size="sm"
  className="flex-1 text-xs"
- onClick={async () => {
- setSelectedTeam(team)
- setRenameTeamName(team.name)
- setManageDialogOpen(true)
-   // Load pending invitations when dialog opens
-   await loadPendingInvitations()
- }}
+  onClick={() => {
+  setSelectedTeam(team)
+  setRenameTeamName(team.name)
+  setManageDialogOpen(true)
+  }}
  >
  <Settings className="h-3 w-3 mr-1" />
  {t('teams.management.manage')}
@@ -1093,7 +1111,7 @@ const TeamManagement = React.memo(function TeamManagement({
 
     {/* Invite Link Section */}
     {selectedTeam && (
-      <div className="mt-3 p-3 rounded-xl bg-primary/5 border border-primary/20">
+      <div className="mt-3 p-3 rounded-xl bg-primary/8 border border-primary/22">
         <h5 className="text-xs font-medium text-primary mb-1">Share Invite Link</h5>
         <p className="text-[11px] text-muted-foreground mb-2">
           Share this link with traders to let them request to join this team.
@@ -1120,20 +1138,38 @@ const TeamManagement = React.memo(function TeamManagement({
 
     {/* Pending Invitations */}
    <div className="mt-4">
-   <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.invitations.pending')}</h5>
-   {pendingInvitations.length === 0 ? (
+   <div className="flex items-center justify-between mb-2">
+     <h5 className="text-sm font-medium text-muted-foreground">{t('teams.invitations.pending')}</h5>
+     {invitationsError && (
+       <Button variant="ghost" size="sm" className="h-6 text-xs gap-1" onClick={loadPendingInvitations}>
+         Retry
+       </Button>
+     )}
+   </div>
+   {invitationsLoading ? (
+     <div className="space-y-2">
+       {[1,2,3].map(i => (
+         <div key={i} className="h-12 rounded-xl bg-muted/30 animate-pulse" />
+       ))}
+     </div>
+   ) : invitationsError ? (
+     <div className="flex items-center gap-2 rounded-xl bg-destructive/10 border border-destructive/25 p-3 text-sm">
+       <AlertCircle className="h-4 w-4 text-destructive shrink-0" />
+       <span className="text-destructive text-xs">{invitationsError}</span>
+     </div>
+   ) : pendingInvitations.length === 0 ? (
    <p className="text-sm text-muted-foreground">{t('teams.management.noPendingInvitations')}</p>
    ) : (
    <div className="space-y-2">
    {pendingInvitations.map((invitation) => (
-     invitation.status === 'PENDING_APPROVAL' ? (
-       <div key={invitation.id} className="flex items-center justify-between rounded-xl bg-amber-50 border border-amber-200 p-3 text-sm">
-         <div className="flex items-center gap-2">
-           <AlertCircle className="h-4 w-4 text-amber-500" />
-           <span>{getDisplayName(invitation)}</span>
-         </div>
-         <div className="flex items-center gap-2">
-           <Badge variant="outline" className="border-amber-500 text-amber-500">Pending Approval</Badge>
+      invitation.status === 'PENDING_APPROVAL' ? (
+        <div key={invitation.id} className="flex items-center justify-between rounded-xl bg-warning/10 border border-warning/25 p-3 text-sm">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 text-warning" />
+            <span>{getDisplayName(invitation)}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="border-warning/40 text-warning">Pending Approval</Badge>
            <Button
              variant="ghost"
              size="sm"

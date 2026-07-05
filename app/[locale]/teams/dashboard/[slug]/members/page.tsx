@@ -48,7 +48,7 @@ export default function TeamMembersPage() {
 
       <Card variant="default" className="border-transparent">
         <CardContent className="p-4 sm:p-5">
-          <TeamManagement />
+          <TeamManagement variant="embedded" />
         </CardContent>
       </Card>
     </section>

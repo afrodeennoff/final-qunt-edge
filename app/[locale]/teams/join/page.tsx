@@ -150,7 +150,7 @@ export default function TeamJoinPage() {
       case 'pending':
         return <Badge variant="secondary">{t('teams.management.pending')}</Badge>
       case 'pending_approval':
-        return <Badge variant="outline" className="border-amber-500 text-amber-500">Pending Approval</Badge>
+        return <Badge variant="outline" className="border-warning/40 text-warning">Pending Approval</Badge>
       case 'accepted':
         return <Badge variant="default" className="bg-emerald-500/10 text-emerald-500">{t('teams.invitations.accepted')}</Badge>
       case 'expired':
@@ -280,7 +280,7 @@ export default function TeamJoinPage() {
 
                 {showPending && (
                   <div className="space-y-3">
-                    <div className="flex items-center justify-center gap-2 text-amber-500">
+                    <div className="flex items-center justify-center gap-2 text-warning">
                       <AlertCircle className="h-5 w-5" />
                       <span className="font-medium">Request sent! Awaiting admin approval.</span>
                     </div>
@@ -422,7 +422,7 @@ export default function TeamJoinPage() {
                 </div>
               ) : isPendingApproval ? (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-center gap-2 text-amber-500">
+                  <div className="flex items-center justify-center gap-2 text-warning">
                     <AlertCircle className="h-5 w-5" />
                     <span>Your request is pending admin approval</span>
                   </div>
