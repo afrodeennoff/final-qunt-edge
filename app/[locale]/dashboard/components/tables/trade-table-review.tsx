@@ -1435,7 +1435,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
         ) : (
           <div className="relative w-full min-w-fit">
           <table className="type-body-sm w-full table-auto border-separate border-spacing-0 caption-bottom tabular-nums">
-            <thead className="sticky top-0 z-10 border-b-0 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-md [&_tr]:border-b [&_tr]:border-transparent">
+            <thead className="sticky top-0 z-10 border-b-0 bg-muted/30 [&_tr]:border-b [&_tr]:border-transparent">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr
                   key={headerGroup.id}
@@ -1533,7 +1533,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                 </tr>
               )}
             </tbody>
-            <tfoot className="sticky bottom-0 z-10 border-t-0 bg-gradient-to-br from-card/30 to-card/5 backdrop-blur-sm">
+            <tfoot className="sticky bottom-0 z-10 border-t-0 bg-muted/20">
               <tr className="border-b transition-colors">
                 {visibleColumns.map((column, index) => {
                   const columnId = column.id || (column as ColumnAccessor).accessorKey

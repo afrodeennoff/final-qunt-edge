@@ -1,20 +1,20 @@
 export const unifiedHeroPanelClassName =
-  'relative rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10'
+  'relative rounded-xl border-0 bg-card shadow-sm'
 
 export const unifiedSectionPanelClassName =
-  'rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10'
+  'rounded-xl border-0 bg-card shadow-sm'
 
 export const unifiedInsetPanelClassName =
-  'rounded-xl border-0 bg-gradient-to-br from-muted/50 to-muted/20'
+  'rounded-xl border-0 bg-muted/30'
 
 export const unifiedMetricPanelClassName =
-  'rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10 p-4'
+  'rounded-xl border-0 bg-card shadow-sm p-4'
 
 export const unifiedChipClassName =
   'inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary'
 
 export const unifiedGhostActionClassName =
-  'inline-flex items-center justify-center gap-2 rounded-md border-0 bg-gradient-to-br from-card/50 to-card/10 px-3 py-1.5 text-sm font-medium text-foreground transition-all duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15'
+  'inline-flex items-center justify-center gap-2 rounded-md border-0 bg-muted/30 px-3 py-1.5 text-sm font-medium text-foreground transition-all duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15'
 
 export const unifiedPrimaryActionClassName =
   'inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-black text-primary-foreground transition-all duration-300 hover:bg-primary/90 shadow-lg shadow-primary/25'
@@ -34,4 +34,4 @@ export const unifiedInfoValueClassName =
   'text-sm font-medium tracking-[-0.01em] text-foreground'
 
 export const unifiedStatePanelClassName =
-  'relative overflow-hidden rounded-xl border-0 bg-gradient-to-br from-card/50 to-card/10'
+  'relative overflow-hidden rounded-xl border-0 bg-card shadow-sm'

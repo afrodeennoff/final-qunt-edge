@@ -157,7 +157,7 @@ export async function sendNewsletter({
             from: 'Qunt Edge <newsletter@eu.updates.qunt-edge.vercel.app>',
             to: [email],
             subject,
-            reply_to: replyTo,
+            replyTo,
             react: NewsletterEmail({
               youtubeId,
               introMessage,
@@ -175,7 +175,12 @@ export async function sendNewsletter({
         })
 
         const result = await resend.batch.send(emailBatch)
-        successCount += result.data?.data.length || 0
+        if (result.error) {
+          console.error('Failed to send batch:', result.error)
+          errorCount += batch.length
+        } else {
+          successCount += result.data?.data.length || 0
+        }
       } catch (error) {
         console.error('Failed to send batch:', error)
         errorCount += batch.length

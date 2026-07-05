@@ -175,7 +175,7 @@ export default function TraderProfileClient({
     <div className="min-h-dvh">
       <div className="mx-auto max-w-[1200px] animate-fade-up-smooth px-4 pt-28 pb-16 sm:px-6 sm:pb-20 lg:px-8">
         {/* Profile Header */}
-        <div className="mb-6 overflow-hidden rounded-3xl bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
+        <div className="mb-6 overflow-hidden rounded-3xl bg-white/90 shadow-lg dark:bg-zinc-900/90">
           <div className="flex flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex min-w-0 items-start gap-4">
               <Avatar className="h-20 w-20 shrink-0 rounded-2xl sm:h-24 sm:w-24">
@@ -218,7 +218,7 @@ export default function TraderProfileClient({
             <div className="flex flex-wrap gap-2">
               <a
                 href={`/${locale}/leaderboard`}
-                className="inline-flex items-center gap-2 rounded-2xl bg-white/30 px-5 py-2.5 text-sm font-medium backdrop-blur transition-all duration-200 hover:bg-white/40 active:scale-[0.97] dark:bg-zinc-800/30 dark:hover:bg-zinc-800/50"
+                className="inline-flex items-center gap-2 rounded-2xl bg-white/80 px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-[0.97] dark:bg-zinc-800/80 dark:hover:bg-zinc-800/90"
               >
                 <ArrowLeft className="h-4 w-4" /> Leaderboard
               </a>
@@ -271,10 +271,10 @@ export default function TraderProfileClient({
 
         {/* Calendar + Radar grid */}
         <div className="mb-6 grid gap-6 lg:grid-cols-[1fr_380px]">
-          <div className="rounded-2xl bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
+          <div className="rounded-2xl bg-white/90 shadow-lg dark:bg-zinc-900/90">
             <div className="flex items-center justify-between px-6 py-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm dark:bg-zinc-800/20">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/80 dark:bg-zinc-800/80">
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div>
@@ -302,7 +302,7 @@ export default function TraderProfileClient({
             </div>
           </div>
 
-          <div className="rounded-2xl bg-white/30 p-5 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30 sm:p-6">
+          <div className="rounded-2xl bg-white/90 p-5 shadow-lg dark:bg-zinc-900/90 sm:p-6">
             <RadarChartCard
               radarData={radarData}
               isBenchmarkLoading={false}

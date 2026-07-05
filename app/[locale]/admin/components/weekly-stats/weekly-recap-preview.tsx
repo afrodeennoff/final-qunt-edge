@@ -204,7 +204,7 @@ export function WeeklyRecapPreview() {
  }}
  />
  {isOpen && (
- <CommandList className="absolute top-full left-0 right-0 z-50 mt-1 max-h-[300px] overflow-auto rounded-md border bg-background/0.6 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]">
+ <CommandList className="absolute top-full left-0 right-0 z-50 mt-1 max-h-[300px] overflow-auto rounded-md border bg-card shadow-lg">
  <CommandEmpty>No users found.</CommandEmpty>
  <CommandGroup>
  {filteredUsers.map((user) => (

@@ -61,7 +61,7 @@ export function PullToRefreshIndicator() {
             animate={{ height: 48, opacity: 1, y: 0 }}
             exit={{ height: 0, opacity: 0, y: -20 }}
             transition={{ type: 'spring', damping: 20, stiffness: 260 }}
-            className="flex items-center justify-center gap-2.5 text-xs text-muted-foreground bg-background/60 backdrop-blur-sm"
+            className="flex items-center justify-center gap-2.5 text-xs text-muted-foreground bg-background"
           >
             <Spinner />
             <span className="font-medium">Refreshing...</span>

@@ -620,7 +620,7 @@ export default function StatisticsClient() {
 
       {selectedExcerpt && (
         <div
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-50 bg-black/70"
           onClick={() => setSelectedExcerpt(null)}
         >
           <div className="flex items-center justify-center min-h-screen p-4">

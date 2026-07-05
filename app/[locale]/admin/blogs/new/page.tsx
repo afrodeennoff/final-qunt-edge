@@ -44,7 +44,7 @@ export default async function NewBlogPostPage({ params }: PageProps) {
         </div>
       </div>
 
-      <div className="rounded-xl border-0 bg-background/40 p-5 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+      <div className="rounded-xl border-0 bg-card p-5 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
         <BlogForm locale={locale} />
       </div>
     </div>

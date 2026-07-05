@@ -176,7 +176,7 @@ export default async function PropFirmsListPage({
               return (
                 <div
                   key={firm.id}
-                  className="rounded-xl border-0 bg-background/40 p-4"
+                  className="rounded-xl border-0 bg-card p-4"
                 >
                   <div className="flex flex-col gap-4">
                     <div className="space-y-1">
@@ -237,7 +237,7 @@ export default async function PropFirmsListPage({
         <div className="hidden overflow-x-auto lg:block">
           <table className="w-full text-sm">
             <thead>
-               <tr className="border-b-0 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm">
+               <tr className="border-b-0 bg-muted/30">
                 <th   className="type-label pb-3 pr-4 text-left font-medium text-muted-foreground">Name</th>
                 <th   className="type-label pb-3 pr-4 text-left font-medium text-muted-foreground">Category</th>
                 <th   className="type-label pb-3 pr-4 text-left font-medium text-muted-foreground">Platform</th>

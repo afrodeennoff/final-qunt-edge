@@ -28,7 +28,7 @@ export interface TableHeaderProps extends React.HTMLAttributes<HTMLTableSectionE
 
 const TableHeader = React.forwardRef<HTMLTableSectionElement, TableHeaderProps>(
   ({ className, ...props }, ref) => (
-    <thead ref={ref} className={cn('sticky top-0 z-10 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-md [&_tr]:border-b-0', className)} {...props} />
+    <thead ref={ref} className={cn('sticky top-0 z-10 bg-muted/30 [&_tr]:border-b-0', className)} {...props} />
   )
 )
 TableHeader.displayName = 'TableHeader'

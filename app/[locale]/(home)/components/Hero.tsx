@@ -42,7 +42,7 @@ export default async function Hero({ locale }: { locale: string }) {
               </Link>
             </Button>
 
-            <Button asChild size="lg" variant="outline" className="h-12 border-transparent bg-card/50 px-6 text-[14px] backdrop-blur-sm hover:bg-muted/50">
+            <Button asChild size="lg" variant="outline" className="h-12 border-transparent bg-card/80 px-6 text-[14px] hover:bg-muted/80">
               <Link href={`/${locale}/deals`}>
                 <Play className="mr-2 h-4 w-4" /> Watch 60s Demo
               </Link>
@@ -67,7 +67,7 @@ export default async function Hero({ locale }: { locale: string }) {
 
         <div className="relative hidden lg:block">
           <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-primary/20 via-transparent to-transparent blur-xl opacity-60" />
-          <div className="relative overflow-hidden rounded-xl border-0 bg-card/80 backdrop-blur-sm shadow-[0_0_40px_-16px] shadow-primary/20">
+          <div className="relative overflow-hidden rounded-xl border-0 bg-card/90 shadow-[0_0_40px_-16px] shadow-primary/20">
             <div className="flex items-center gap-2 border-b-0 bg-muted/40 px-3 py-2.5 text-[10px] text-muted-foreground">
               <div className="flex gap-1">
                 <div className="h-1.5 w-1.5 rounded-full bg-destructive" />

@@ -913,7 +913,7 @@ export default function JournalClient() {
       {/* ══════════ TRADE DETAIL MODAL ══════════ */}
       {modalOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col items-center overflow-y-auto p-4 animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 bg-black/70 flex flex-col items-center overflow-y-auto p-4 animate-in fade-in duration-200"
           onClick={closeModal}
         >
           <div
@@ -1245,7 +1245,7 @@ export default function JournalClient() {
 
       {/* ── Unsaved changes confirmation ── */}
       {pendingTradeId && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background">
           <div className="w-[380px] rounded-2xl bg-card p-6 shadow-2xl">
             <h3 className="text-sm font-semibold">Unsaved changes</h3>
             <p className="mt-2 text-xs text-muted-foreground/60">

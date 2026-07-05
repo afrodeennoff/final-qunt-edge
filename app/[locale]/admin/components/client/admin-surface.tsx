@@ -2,8 +2,8 @@ import type { ReactNode } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
-const sectionBorder = 'border-transparent'
-const surfaceBg = 'bg-card/98'
+const sectionBorder = 'border-border/10'
+const surfaceBg = 'bg-card'
 const subtleShadow = 'shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
 
 type AdminPageHeaderProps = {

@@ -221,7 +221,7 @@ function CouponBadges({
         </Badge>
       ) : null}
       {expired ? (
-        <Badge variant="outline" className="border-transparent text-muted-foreground">
+        <Badge variant="outline" className="border-border/10 text-muted-foreground">
           Expired
         </Badge>
       ) : null}
@@ -284,7 +284,7 @@ function CouponEditCard({
       hover
       className="overflow-hidden border-0 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
-      <CardHeader size="sm" className="space-y-3 border-b border-transparent">
+      <CardHeader size="sm" className="space-y-3 border-b border-border/10">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -493,7 +493,7 @@ function CouponSuggestionCard({
       hover
       className="overflow-hidden border-0 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
-      <CardHeader size="sm" className="space-y-3 border-b border-transparent">
+      <CardHeader size="sm" className="space-y-3 border-b border-border/10">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">

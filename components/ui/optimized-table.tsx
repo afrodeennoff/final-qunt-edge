@@ -157,7 +157,7 @@ export function OptimizedVirtualTable<TData, TValue>({
           className='relative'
           style={{ height: `${totalHeight}px` }}
         >
-          <div className='sticky top-0 z-10 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-md border-b-0'>
+          <div className='sticky top-0 z-10 bg-muted/30 border-b-0'>
             {table.getHeaderGroups().map((headerGroup) => (
               <div key={headerGroup.id} className='flex'>
                 {headerGroup.headers.map((header) => (

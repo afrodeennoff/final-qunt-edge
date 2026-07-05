@@ -705,7 +705,7 @@ const WidgetCanvas = React.memo(function WidgetCanvas() {
   if (info.offset.y > 100) setExpandedWidget(null)
   }}
   >
-  <div className="sticky top-0 z-10 flex justify-center pt-2 pb-2 bg-background/80 backdrop-blur-sm">
+  <div className="sticky top-0 z-10 flex justify-center pt-2 pb-2 bg-background">
   <button
   onClick={() => setExpandedWidget(null)}
   className="h-1.5 w-12 rounded-full bg-muted-foreground/30 hover:bg-muted-foreground/50 transition-colors touch-manipulation min-h-[24px]"

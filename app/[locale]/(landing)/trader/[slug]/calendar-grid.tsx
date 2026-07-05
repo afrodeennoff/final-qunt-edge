@@ -54,7 +54,7 @@ export function CalendarGrid({ dayPnl }: { dayPnl: Map<string, number> }) {
       <div className="flex items-center justify-between">
         <button
           onClick={() => setCurrentMonth((m) => subMonths(m, 1))}
-          className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-muted-foreground/60 backdrop-blur-sm transition hover:bg-white/30 hover:text-foreground active:scale-[0.95] dark:bg-zinc-800/20"
+          className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/80 text-muted-foreground/60 transition hover:bg-white/90 hover:text-foreground active:scale-[0.95] dark:bg-zinc-800/80"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -78,7 +78,7 @@ export function CalendarGrid({ dayPnl }: { dayPnl: Map<string, number> }) {
         </div>
         <button
           onClick={() => setCurrentMonth((m) => addMonths(m, 1))}
-          className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-muted-foreground/60 backdrop-blur-sm transition hover:bg-white/30 hover:text-foreground active:scale-[0.95] dark:bg-zinc-800/20"
+          className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/80 text-muted-foreground/60 transition hover:bg-white/90 hover:text-foreground active:scale-[0.95] dark:bg-zinc-800/80"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
@@ -113,7 +113,7 @@ export function CalendarGrid({ dayPnl }: { dayPnl: Map<string, number> }) {
                       : format(day, 'MMM d, yyyy')
                   }
                   className={cn(
-                    'relative flex flex-col items-center justify-center rounded-md px-1 py-5 sm:py-7 transition-all duration-200 ease-out backdrop-blur-sm',
+                    'relative flex flex-col items-center justify-center rounded-md px-1 py-5 sm:py-7 transition-all duration-200 ease-out',
                     inMonth &&
                       value !== 0 &&
                       'hover:scale-[1.08] hover:shadow-md active:scale-[0.96]',

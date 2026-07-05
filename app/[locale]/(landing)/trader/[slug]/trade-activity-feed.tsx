@@ -38,7 +38,7 @@ export function TradeActivityFeed({ trades }: { trades: Trade[] }) {
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
-                className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-muted-foreground/60 backdrop-blur-sm transition hover:bg-white/30 hover:text-foreground disabled:pointer-events-none disabled:opacity-30 dark:bg-zinc-800/20"
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/80 text-muted-foreground/60 transition hover:bg-white/90 hover:text-foreground disabled:pointer-events-none disabled:opacity-30 dark:bg-zinc-800/80"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -48,7 +48,7 @@ export function TradeActivityFeed({ trades }: { trades: Trade[] }) {
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page >= totalPages}
-                className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-muted-foreground/60 backdrop-blur-sm transition hover:bg-white/30 hover:text-foreground disabled:pointer-events-none disabled:opacity-30 dark:bg-zinc-800/20"
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/80 text-muted-foreground/60 transition hover:bg-white/90 hover:text-foreground disabled:pointer-events-none disabled:opacity-30 dark:bg-zinc-800/80"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
@@ -57,7 +57,7 @@ export function TradeActivityFeed({ trades }: { trades: Trade[] }) {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl bg-white/30 shadow-lg backdrop-blur-xl dark:bg-zinc-900/30">
+      <div className="overflow-hidden rounded-2xl bg-white/90 shadow-lg dark:bg-zinc-900/90">
         {visible.length > 0 ? (
           <div className="space-y-px">
             {visible.map((trade, idx) => {

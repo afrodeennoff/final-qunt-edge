@@ -358,21 +358,26 @@ export async function sendEmailsToUsersInternal(
 
           const emailSubject = subject || getDefaultSubject(template, user.language)
 
-          return {
-            from: getFromAddress(template),
-            to: [user.email],
-            subject: emailSubject,
-            reply_to: replyTo,
-            react: React.createElement(EmailComponent, mergedProps),
-            headers: {
-              "List-Unsubscribe": `<${unsubscribeUrl}>`,
-              "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
-            },
-          }
+            return {
+              from: getFromAddress(template),
+              to: [user.email],
+              subject: emailSubject,
+              replyTo,
+              react: React.createElement(EmailComponent, mergedProps),
+              headers: {
+                "List-Unsubscribe": `<${unsubscribeUrl}>`,
+                "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+              },
+            }
         })
 
         const result = await resend.batch.send(emailBatch)
-        successCount += result.data?.data.length || 0
+        if (result.error) {
+          console.error("Failed to send batch:", result.error)
+          errorCount += batch.length
+        } else {
+          successCount += result.data?.data.length || 0
+        }
       } catch (error) {
         console.error("Failed to send batch:", error)
         errorCount += batch.length

@@ -306,7 +306,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  <div className="overflow-x-auto">
  <table className="w-full text-sm">
  <thead>
-  <tr className="border-b-0 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm">
+  <tr className="border-b-0 bg-muted/30">
  <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.account")}
  </th>

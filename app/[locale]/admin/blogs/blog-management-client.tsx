@@ -95,7 +95,7 @@ export function BlogManagementClient({
           <div className="overflow-x-auto">
             <table className="w-full text-sm min-w-[480px]">
               <thead>
-                 <tr className="border-b-0 bg-gradient-to-br from-card/40 to-card/10 backdrop-blur-sm text-left text-xs sm:text-sm">
+                 <tr className="border-b-0 bg-muted/30 text-left text-xs sm:text-sm">
                   <th   className="p-2.5 sm:p-4 font-medium text-muted-foreground">Title</th>
                   <th   className="p-2.5 sm:p-4 font-medium text-muted-foreground">Slug</th>
                   <th   className="p-2.5 sm:p-4 font-medium text-muted-foreground">Category</th>
@@ -117,7 +117,7 @@ export function BlogManagementClient({
                       )}
                     </td>
                     <td className="p-4">
-                      <code className="rounded bg-background/0.45 px-2 py-1 text-xs text-muted-foreground">
+                      <code className="rounded bg-muted/30 px-2 py-1 text-xs text-muted-foreground">
                         {post.slug}
                       </code>
                     </td>
