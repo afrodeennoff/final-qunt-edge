@@ -163,7 +163,7 @@ function getToolingPolicy(intent: ChatIntent) {
   };
 }
 
-function withToolGuards<T extends ToolSet>(tools: T, maxCallsPerTool = 2): T {
+function withToolGuards<T extends ToolSet>(tools: T, maxCallsPerTool = 5): T {
   const callCount = new Map<string, number>();
   const seenArgs = new Set<string>();
   const guarded = {} as Partial<T>;

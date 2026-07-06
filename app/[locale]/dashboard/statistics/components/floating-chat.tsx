@@ -1,11 +1,13 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai'
-import { MessageSquare, X, Send, Loader2 } from 'lucide-react'
+import { MessageSquare, X, Send, Loader2, AlertCircle } from 'lucide-react'
 import { useCurrentLocale } from '@/locales/client'
 import { useUserStore } from '@/store/user-store'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 function getMessageContent(msg: { content?: string; parts?: { type: string; text?: string }[] }): string {
   if (msg.content) return msg.content
@@ -89,16 +91,23 @@ export function FloatingChat() {
         {messages.map((m) => {
           const content = getMessageContent(m as { content?: string; parts?: { type: string; text?: string }[] })
           if (!content) return null
+          const isUser = m.role === 'user'
           return (
-            <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div key={m.id} className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
               <div
-                className={`max-w-[85%] rounded-xl px-3.5 py-2 text-sm leading-relaxed ${
-                  m.role === 'user'
+                className={`max-w-[88%] rounded-xl px-4 py-2.5 text-sm leading-relaxed ${
+                  isUser
                     ? 'bg-primary text-primary-foreground'
                     : 'bg-muted text-foreground/90'
                 }`}
               >
-                {content}
+                {isUser ? (
+                  content
+                ) : (
+                  <div className="prose prose-sm prose-invert max-w-none [&_p]:my-1 [&_p]:leading-relaxed [&_strong]:text-foreground [&_h2]:text-sm [&_h2]:font-semibold [&_h2]:text-foreground [&_h2]:mt-3 [&_h2]:mb-1 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-foreground [&_h3]:mt-2 [&_h3]:mb-1 [&_ul]:my-1 [&_ul]:pl-4 [&_li]:my-0.5 [&_code]:bg-muted-foreground/10 [&_code]:px-1 [&_code]:rounded [&_code]:text-xs [&_hr]:border-muted-foreground/20 [&_hr]:my-2">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+                  </div>
+                )}
               </div>
             </div>
           )
@@ -111,8 +120,12 @@ export function FloatingChat() {
           </div>
         )}
         {error && (
-          <div className="rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive">
-            Chat unavailable. Please try again.
+          <div className="flex items-start gap-2 rounded-lg bg-destructive/10 px-3 py-2.5 text-xs text-destructive">
+            <AlertCircle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-semibold">Chat error</span>
+              <p className="mt-0.5 text-destructive/80">Connection issue. Please try your question again.</p>
+            </div>
           </div>
         )}
       </div>
