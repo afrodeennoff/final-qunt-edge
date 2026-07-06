@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai'
 import { MessageSquare, X, Send, Loader2, AlertCircle } from 'lucide-react'
@@ -18,6 +18,29 @@ function getMessageContent(msg: { content?: string; parts?: { type: string; text
   return ''
 }
 
+interface ToolInvocationPart {
+  type: 'tool-invocation'
+  toolInvocation: {
+    toolName: string
+    state: 'call' | 'result'
+    args?: { questions?: string[] }
+    result?: { questions?: string[] }
+  }
+}
+
+function getFollowUpQuestions(msg: { parts?: { type: string; toolInvocation?: Record<string, unknown> }[] }): string[] {
+  if (!msg.parts) return []
+  for (const part of msg.parts) {
+    if (part.type === 'tool-invocation' && part.toolInvocation?.toolName === 'suggestFollowUp') {
+      const ti = part.toolInvocation as ToolInvocationPart['toolInvocation']
+      if (ti.state === 'result' && ti.result?.questions) {
+        return ti.result.questions
+      }
+    }
+  }
+  return []
+}
+
 export function FloatingChat() {
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState('')
@@ -25,7 +48,7 @@ export function FloatingChat() {
   const user = useUserStore()
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const { messages, sendMessage, status, error } = useChat({
+  const { messages, sendMessage, append, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: '/api/ai/chat',
       body: () => ({
@@ -56,7 +79,15 @@ export function FloatingChat() {
     setInput('')
   }
 
+  const handleSuggestionClick = useCallback((question: string) => {
+    if (status === 'streaming') return
+    sendMessage({ role: 'user', parts: [{ type: 'text', text: question }] })
+  }, [sendMessage, status])
+
   const isBusy = status === 'streaming' || status === 'submitted'
+
+  const lastAssistantMsg = [...messages].reverse().find(m => m.role === 'assistant')
+  const suggestions = lastAssistantMsg ? getFollowUpQuestions(lastAssistantMsg as { parts?: { type: string; toolInvocation?: Record<string, unknown> }[] }) : []
 
   if (!open) {
     return (
@@ -130,6 +161,19 @@ export function FloatingChat() {
                   : '') || 'Connection issue. Please try your question again.'}
               </p>
             </div>
+          </div>
+        )}
+        {!isBusy && suggestions.length > 0 && (
+          <div className="flex flex-wrap gap-2 pt-1 pb-2">
+            {suggestions.map((q, i) => (
+              <button
+                key={i}
+                onClick={() => handleSuggestionClick(q)}
+                className="rounded-full border bg-background px-3.5 py-1.5 text-xs text-foreground/80 hover:bg-muted hover:text-foreground transition-colors text-left max-w-full"
+              >
+                {q}
+              </button>
+            ))}
           </div>
         )}
       </div>

@@ -15,4 +15,10 @@ DATA PRESENTATION FORMATTING:
 - Use bullet points for multiple data points
 - Bold key metrics like P&L, win rates, etc.
 - Create visual separation between different accounts or time periods
-- Use tables or structured lists for comparing periods`;
+- Use tables or structured lists for comparing periods
+
+FOLLOW-UP QUESTIONS:
+- At the end of your response, use the suggestFollowUp tool to suggest 2-3 relevant follow-up questions
+- The questions should be specific to what you just discussed and help the user dive deeper
+- Examples: "What caused my biggest loss this week?" after discussing win rate, or "How does my strategy compare to my targets?" after showing metrics
+- Do NOT suggest generic questions — make them specific to the user's data and conversation context`;

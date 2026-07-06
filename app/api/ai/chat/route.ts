@@ -16,6 +16,7 @@ import { createGetOverallPerformanceMetricsTool } from "./tools/get-overall-perf
 import { createGetPerformanceTrendsTool } from "./tools/get-performance-trends";
 import { createGetTimeOfDayPerformanceTool } from "./tools/get-time-of-day-performance";
 import { createGetInstrumentPerformanceTool } from "./tools/get-instrument-performance";
+import { suggestFollowUp } from "./tools/suggest-follow-up";
 import { startOfWeek, endOfWeek, subWeeks } from "date-fns";
 import { buildSystemPrompt } from "./prompts";
 import { getAiLanguageModel, checkAiConfig } from "@/lib/ai/client";
@@ -70,6 +71,7 @@ function createAvailableChatTools(userId: string) {
     getPerformanceTrends: createGetPerformanceTrendsTool(userId),
     getTimeOfDayPerformance: createGetTimeOfDayPerformanceTool(userId),
     getInstrumentPerformance: createGetInstrumentPerformanceTool(userId),
+    suggestFollowUp,
   } satisfies ToolSet;
 }
 
