@@ -2,23 +2,20 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'next/navigation'
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
-import { BarChart3, Target, TrendingUp, Zap } from 'lucide-react'
+import dynamic from 'next/dynamic'
+
+const EquityChart = dynamic(() => import('./equity-chart'), { ssr: false })
+import { AlertTriangle, BarChart3, RefreshCw, Target, TrendingUp, Zap, TrendingDown, Award, Medal, Flame } from 'lucide-react'
 import {
   unifiedInsetPanelClassName,
   unifiedSectionPanelClassName,
 } from '@/components/layout/unified-page-recipes'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { DashboardStatCard } from '@/components/ui/dashboard-stat-card'
 import { cn } from '@/lib/utils'
 import { getTeamAnalyticsDataAction } from '../../../actions/analytics'
+import { Skeleton } from '@/components/ui/skeleton'
 
 type TeamMemberPerformance = {
   userId: string
@@ -132,7 +129,7 @@ function CustomTooltip({
 
   return (
     <div className={cn(unifiedInsetPanelClassName, 'p-3')}>
-      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+      <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
         {new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
       </p>
       <p className={cn('mt-1 text-sm font-black', value >= 0 ? 'text-primary' : 'text-destructive')}>
@@ -142,34 +139,58 @@ function CustomTooltip({
   )
 }
 
+function AnalyticsPageHeader() {
+  return (
+    <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
+      <div className="flex items-center gap-2 text-muted-foreground">
+        <BarChart3 className="h-4 w-4 text-primary" />
+        <p className="text-[10px] font-black uppercase tracking-[0.12em]">Team Intelligence</p>
+      </div>
+      <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Analytics</h1>
+    </header>
+  )
+}
+
 export default function TeamAnalyticsPage() {
   const params = useParams<{ slug: string }>()
   const slug = params.slug
 
   const [data, setData] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [retryKey, setRetryKey] = useState(0)
 
   useEffect(() => {
+    let isMounted = true
+
     async function fetchData() {
       if (!slug) {
         return
       }
 
       setLoading(true)
+      setError(null)
       try {
         const result = await getTeamAnalyticsDataAction(slug)
+        if (!isMounted) return
         if (result.success && result.data) {
           setData(normalizeAnalyticsData(result.data))
+        } else if ('error' in result && result.error) {
+          setError(result.error as string)
         }
-      } catch (error) {
-        console.error('Failed to fetch team analytics:', error)
+      } catch (err) {
+        if (!isMounted) return
+        setError(err instanceof Error ? err.message : 'Failed to load analytics')
       } finally {
-        setLoading(false)
+        if (isMounted) setLoading(false)
       }
     }
 
     fetchData()
-  }, [slug])
+    return () => {
+      isMounted = false
+    }
+  }, [slug, retryKey])
 
   const summary = useMemo(() => {
     return {
@@ -183,27 +204,45 @@ export default function TeamAnalyticsPage() {
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="h-28 animate-pulse rounded-xl border border-border/40 bg-background/70" />
-        <div className="h-80 animate-pulse rounded-xl border border-border/40 bg-background/70" />
+        <Skeleton className="h-28 w-full rounded-xl" />
+        <Skeleton className="h-80 w-full rounded-xl" />
       </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <section className="space-y-6">
+        <AnalyticsPageHeader />
+
+        <Card className="bg-gradient-to-br from-card/50 to-card/10 border-0">
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Failed to load analytics</h3>
+            <p className="text-sm text-muted-foreground text-center max-w-md mb-4">{error}</p>
+            <Button
+              variant="outline"
+              onClick={() => setRetryKey((k) => k + 1)}
+              className="gap-2"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      </section>
     )
   }
 
   if (!data || data.chartData.length === 0) {
     return (
       <section className="space-y-6">
-        <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <BarChart3 className="h-4 w-4 text-primary" />
-            <p className="text-[10px] font-black uppercase tracking-[0.2em]">Team Intelligence</p>
-          </div>
-          <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Analytics</h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Monitor collective performance and individual consistency to improve team execution quality.
-          </p>
-        </header>
+        <AnalyticsPageHeader />
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+          Monitor collective performance and individual consistency to improve team execution quality.
+        </p>
 
-        <Card className="border-border/40 bg-background/72">
+        <Card className="bg-gradient-to-br from-card/50 to-card/10 border-0">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <BarChart3 className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">No analytics data yet</h3>
@@ -218,83 +257,47 @@ export default function TeamAnalyticsPage() {
 
   return (
     <section className="space-y-6">
-      <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <BarChart3 className="h-4 w-4 text-primary" />
-          <p className="text-[10px] font-black uppercase tracking-[0.2em]">Team Intelligence</p>
-        </div>
-        <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Analytics</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Monitor collective performance and individual consistency to improve team execution quality.
-        </p>
-      </header>
+      <AnalyticsPageHeader />
+      <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+        Monitor collective performance and individual consistency to improve team execution quality.
+      </p>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="border-border/40 bg-background/72">
-          <CardHeader className="pb-2">
-            <CardDescription>Total PnL</CardDescription>
-            <CardTitle className={cn('text-xl', summary.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}>
-              {formatCurrency(summary.totalPnL)}
-            </CardTitle>
-          </CardHeader>
-        </Card>
+        <DashboardStatCard
+          label="Total PnL"
+          value={formatCurrency(summary.totalPnL)}
+          valueClassName={cn(summary.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}
+          size="md"
+        />
 
-        <Card className="border-border/40 bg-background/72">
-          <CardHeader className="pb-2">
-            <CardDescription>Win Rate</CardDescription>
-            <CardTitle className="text-xl">{summary.winRate.toFixed(1)}%</CardTitle>
-          </CardHeader>
-        </Card>
+        <DashboardStatCard
+          label="Win Rate"
+          value={`${summary.winRate.toFixed(1)}%`}
+          size="md"
+        />
 
-        <Card className="border-border/40 bg-background/72">
-          <CardHeader className="pb-2">
-            <CardDescription>Total Trades</CardDescription>
-            <CardTitle className="text-xl">{summary.trades}</CardTitle>
-          </CardHeader>
-        </Card>
+        <DashboardStatCard
+          label="Total Trades"
+          value={summary.trades}
+          size="md"
+        />
 
-        <Card className="border-border/40 bg-background/72">
-          <CardHeader className="pb-2">
-            <CardDescription>Profit Factor</CardDescription>
-            <CardTitle className="text-xl">{summary.profitFactor.toFixed(2)}</CardTitle>
-          </CardHeader>
-        </Card>
+        <DashboardStatCard
+          label="Profit Factor"
+          value={summary.profitFactor.toFixed(2)}
+          size="md"
+        />
       </div>
 
       <div className="grid gap-4 xl:grid-cols-12">
-        <Card data-chart-surface="modern" className="border-border/40 bg-background/72 xl:col-span-8">
+        <Card data-chart-surface="modern" className="bg-gradient-to-br from-card/50 to-card/10 border-0 xl:col-span-8">
           <CardHeader>
-            <CardTitle className="text-lg">Cumulative Equity</CardTitle>
-            <CardDescription>Rolling team performance over time</CardDescription>
+            <CardTitle className="text-lg font-semibold">Cumulative Equity</CardTitle>
+            <CardDescription className="text-[13px] leading-[1.55]">Rolling team performance over time</CardDescription>
           </CardHeader>
           <CardContent className="h-[320px] sm:h-[380px]">
             {data?.chartData?.length ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={data.chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="4 4" stroke="hsl(var(--border))" vertical={false} />
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
-                    tickFormatter={(value: string) => new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
-                    tickFormatter={(value: number) => `$${Math.round(value / 1000)}k`}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Area
-                    type="monotone"
-                    dataKey="cumulativePnL"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2.5}
-                    fill="hsl(var(--primary) / 0.12)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              <EquityChart data={data.chartData} formatCurrency={formatCurrency} CustomTooltip={CustomTooltip} />
             ) : (
               <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
                 No equity data available yet.
@@ -303,22 +306,34 @@ export default function TeamAnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-border/40 bg-background/72 xl:col-span-4">
+        <Card className="bg-gradient-to-br from-card/50 to-card/10 border-0 xl:col-span-4">
           <CardHeader>
-            <CardTitle className="text-lg">Member Breakdown</CardTitle>
-            <CardDescription>Per-trader contribution</CardDescription>
+            <CardTitle className="text-lg font-semibold">Member Breakdown</CardTitle>
+            <CardDescription className="text-[13px] leading-[1.55]">Per-trader contribution & performance tiers</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {data?.membersPerformance?.length ? (
-              data.membersPerformance.slice(0, 8).map((member) => (
-                <div key={member.userId} className={cn(unifiedInsetPanelClassName, 'p-3')}>
+              (() => {
+                const sorted = [...data.membersPerformance].sort((a, b) => b.totalPnL - a.totalPnL)
+                const maxAbs = Math.max(...sorted.map(m => Math.abs(m.totalPnL)), 1)
+                const totalAbs = sorted.reduce((s, m) => s + Math.abs(m.totalPnL), 0)
+                return sorted.slice(0, 10).map((member, index) => {
+                  const tier = index === 0 && member.totalPnL > 0 ? 'top' : member.totalPnL > 0 ? 'positive' : member.totalPnL < 0 ? 'negative' : 'neutral'
+                  const contribPct = totalAbs > 0 ? (Math.abs(member.totalPnL) / totalAbs * 100) : 0
+                  const isHotStreak = member.winRate > 60 && member.totalTrades > 10
+                  return (
+                <div key={member.userId} className={cn(unifiedInsetPanelClassName, 'p-3 hover:bg-muted/20 transition-colors duration-150')}>
                   <div className="flex items-center justify-between gap-3">
-                    <p className="truncate text-sm font-semibold">{member.email.split('@')[0]}</p>
-                    <p className={cn('text-sm font-black', member.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}>
-                      {formatCurrency(member.totalPnL)}
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      {tier === 'top' && <Award className="h-3.5 w-3.5 shrink-0 text-warning" />}
+                      {isHotStreak && <Flame className="h-3 w-3 shrink-0 text-primary" />}
+                      <p className="truncate text-sm font-semibold">{member.email.split('@')[0]}</p>
+                    </div>
+                    <p className={cn('text-sm font-black tabular-nums shrink-0', member.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}>
+                      {member.totalPnL >= 0 ? '+' : ''}{formatCurrency(member.totalPnL)}
                     </p>
                   </div>
-                  <div className="mt-1 flex items-center gap-3 text-[11px] text-muted-foreground">
+                  <div className="mt-1.5 flex items-center gap-3 text-[11px] text-muted-foreground">
                     <span className="inline-flex items-center gap-1">
                       <Target className="h-3 w-3" />
                       {member.winRate.toFixed(1)}%
@@ -327,9 +342,47 @@ export default function TeamAnalyticsPage() {
                       <Zap className="h-3 w-3" />
                       {member.totalTrades} trades
                     </span>
+                    {contribPct > 5 && (
+                      <span className={cn('inline-flex items-center gap-1 font-medium', 
+                        member.totalPnL >= 0 ? 'text-primary' : 'text-destructive'
+                      )}>
+                        {member.totalPnL >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                        {contribPct.toFixed(0)}%
+                      </span>
+                    )}
                   </div>
+                  {/* Mini contribution bar */}
+                  {data.membersPerformance.length > 1 && (
+                    <div className="mt-2 h-1.5 rounded-full bg-muted/30 overflow-hidden">
+                      <div 
+                        className={cn(
+                          "h-full rounded-full transition-all",
+                          member.totalPnL >= 0 ? "bg-primary/40" : "bg-destructive/40"
+                        )}
+                        style={{ width: `${Math.min(100, Math.max(2, (Math.abs(member.totalPnL) / maxAbs) * 100))}%` }}
+                      />
+                    </div>
+                  )}
+                  {/* Performance badge */}
+                  {tier === 'top' && (
+                    <div className="mt-1.5">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-warning">Top Performer</span>
+                    </div>
+                  )}
+                  {isHotStreak && tier !== 'top' && (
+                    <div className="mt-1.5">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-primary">On Fire</span>
+                    </div>
+                  )}
+                  {member.winRate < 30 && member.totalTrades > 5 && (
+                    <div className="mt-1.5">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-destructive">Needs Review</span>
+                    </div>
+                  )}
                 </div>
-              ))
+                  )
+                })
+              })()
             ) : (
               <p className="text-sm text-muted-foreground">No member activity data yet.</p>
             )}
@@ -337,9 +390,9 @@ export default function TeamAnalyticsPage() {
         </Card>
       </div>
 
-      <Card className="border-border/40 bg-background/72">
+      <Card className="bg-gradient-to-br from-card/50 to-card/10 border-0">
         <CardHeader>
-          <CardTitle className="inline-flex items-center gap-2 text-lg">
+          <CardTitle className="inline-flex items-center gap-2 text-lg font-semibold">
             <TrendingUp className="h-5 w-5 text-primary" />
             Recommendations
           </CardTitle>

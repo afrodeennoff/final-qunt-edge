@@ -34,7 +34,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={type}
             className={cn(
-              "flex w-full rounded-md border border-border/30 bg-background/90 px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 transition-[border-color] duration-[150ms] focus:outline-none focus:border-primary/60 focus:bg-background",
+              "flex w-full rounded-md border-0 bg-background/90 px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 transition-[border-color] duration-[150ms] focus:outline-none focus:border-primary/60 focus:bg-background",
               leftIcon && 'pl-10',
               rightIcon && 'pr-10',
               error && 'border-destructive/50 focus:border-destructive/60',
@@ -68,7 +68,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <label
             htmlFor={inputId}
             className={cn(
-              'absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground transition-all duration-[150ms]',
+              'absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground transition-[transform,color] duration-[150ms]',
               (isFocused || hasValue) && '-translate-y-7 text-foreground text-sm',
               leftIcon && (isFocused || hasValue) && 'left-10',
               error && 'text-destructive',

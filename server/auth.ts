@@ -134,7 +134,7 @@ export async function signInWithDiscord(next: string | null = null, locale?: str
   const { data } = await supabase.auth.signInWithOAuth({
     provider: 'discord',
     options: {
-      redirectTo: `${websiteURL}api/auth/callback/${callbackParams.toString() ? `?${callbackParams.toString()}` : ''}`,
+      redirectTo: buildAuthCallbackUrl(websiteURL, callbackParams),
     },
   })
   if (data.url) {
@@ -159,12 +159,18 @@ export async function signInWithGoogle(next: string | null = null, locale?: stri
       queryParams: {
         prompt: 'select_account',
       },
-      redirectTo: `${websiteURL}api/auth/callback/${callbackParams.toString() ? `?${callbackParams.toString()}` : ''}`,
+      redirectTo: buildAuthCallbackUrl(websiteURL, callbackParams),
     },
   })
   if (data.url) {
     redirect(data.url)
   }
+}
+
+function buildAuthCallbackUrl(websiteURL: string, params: URLSearchParams): string {
+  const base = websiteURL.endsWith('/') ? websiteURL : `${websiteURL}/`
+  const query = params.toString()
+  return `${base}api/auth/callback${query ? `?${query}` : ''}`
 }
 
 export async function signOut() {
@@ -558,11 +564,12 @@ export async function getUserByUsername(username: string) {
 export async function isUsernameAvailable(username: string): Promise<boolean> {
   const supabase = await createClient()
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('User')
     .select('id')
     .eq('username', username.toLowerCase())
-    .limit(1)
+    .maybeSingle()
 
-  return !error
+  if (error) return false
+  return !data
 }

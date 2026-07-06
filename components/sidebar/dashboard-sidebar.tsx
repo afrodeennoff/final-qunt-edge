@@ -12,14 +12,13 @@ import {
     Database,
     FileUp,
     FileText,
+    FlaskConical,
     LayoutDashboard,
     RefreshCw,
     Settings,
-    Sparkles,
     TrendingUp,
     Shield,
     Users,
-    Compass,
     DollarSign,
 } from "lucide-react"
 
@@ -61,7 +60,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
         {
             href: `/${locale}/dashboard/notes`,
             icon: <FileText className={NAV_ICON_SIZE} />,
-            label: "Notes",
+            label: "Journal",
             group: "Workspace"
         },
         {
@@ -73,35 +72,16 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
 
         // ── Review ──
         {
-            href: `/${locale}/dashboard/analytics`,
-            icon: <Compass className={NAV_ICON_SIZE} />,
-            label: "Analytics",
-            group: "Review"
-        },
-        {
-            href: `/${locale}/dashboard/reports`,
+            href: `/${locale}/dashboard/statistics`,
             icon: <BarChart3 className={NAV_ICON_SIZE} />,
-            label: "Reports",
+            label: "Statistics",
             group: "Review"
         },
-        {
-            href: `/${locale}/dashboard/strategies`,
-            icon: <BookOpen className={NAV_ICON_SIZE} />,
-            label: "Playbook",
-            group: "Review"
-        },
-
         // ── Tools ──
         {
             href: `/${locale}/dashboard/import`,
             icon: <FileUp className={NAV_ICON_SIZE} />,
             label: "Import",
-            group: "Tools"
-        },
-        {
-            href: `/${locale}/dashboard/behavior`,
-            icon: <Sparkles className={NAV_ICON_SIZE} />,
-            label: "AI Assistant",
             group: "Tools"
         },
         {
@@ -114,6 +94,12 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             label: "Sync",
             icon: <RefreshCw className={NAV_ICON_SIZE} />,
             action: () => refreshAllData({ force: true }),
+            group: "Tools"
+        },
+        {
+            href: `/${locale}/dashboard/simulator`,
+            icon: <FlaskConical className={NAV_ICON_SIZE} />,
+            label: "Simulator",
             group: "Tools"
         },
 
@@ -156,6 +142,12 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             label: "Deals",
             group: "Resources"
         },
+        {
+            href: `/${locale}/docs`,
+            icon: <BookOpen className={NAV_ICON_SIZE} />,
+            label: "Docs",
+            group: "Resources"
+        },
 
         // ── System ──
         ...(isAdmin ? [{
@@ -169,8 +161,9 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
     const timezones = [...SUPPORTED_TIMEZONES]
 
     return (
-        <UnifiedSidebar
-            items={navItems}
+        <div className="max-md:hidden">
+            <UnifiedSidebar
+                items={navItems}
             user={{
                 avatar_url: user?.user_metadata?.avatar_url,
                 email: user?.email,
@@ -185,5 +178,6 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             }}
             onLogout={handleLogout}
         />
+            </div>
     )
 }

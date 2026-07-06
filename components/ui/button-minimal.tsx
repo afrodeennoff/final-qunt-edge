@@ -6,13 +6,13 @@ import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap select-none cursor-pointer font-medium tracking-[-0.005em] transition-all duration-[200ms] ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.98]",
+  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap select-none cursor-pointer font-medium tracking-[-0.005em] transition-[opacity,background-color,border-color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97]",
   {
     variants: {
       variant: {
-        primary: "bg-primary text-primary-foreground border border-primary/20 hover:bg-primary/90 hover:shadow-md",
-        secondary: "bg-muted text-muted-foreground border border-border hover:bg-muted/70 hover:text-foreground",
-        outline: "bg-transparent text-foreground border border-border hover:bg-muted/60 hover:text-foreground",
+        primary: "bg-primary text-primary-foreground border border-primary/20 hover:bg-primary/90",
+        secondary: "bg-muted text-muted-foreground border-0 hover:bg-muted/70 hover:text-foreground",
+        outline: "bg-transparent text-foreground border-0 hover:bg-muted/60 hover:text-foreground",
         ghost: "bg-transparent text-foreground hover:bg-muted/60 hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },

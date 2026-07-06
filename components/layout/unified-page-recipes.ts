@@ -1,37 +1,37 @@
 export const unifiedHeroPanelClassName =
-  'relative rounded-2xl border border-border/35 bg-card shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]'
+  'relative rounded-xl border-0 bg-card shadow-sm'
 
 export const unifiedSectionPanelClassName =
-  'rounded-2xl border border-border/35 bg-card/80 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
+  'rounded-xl border-0 bg-card shadow-sm'
 
 export const unifiedInsetPanelClassName =
-  'rounded-xl border border-border/30 bg-background/50'
+  'rounded-xl border-0 bg-muted/30'
 
 export const unifiedMetricPanelClassName =
-  'rounded-xl border border-border/30 bg-background/40 p-4'
+  'rounded-xl border-0 bg-card shadow-sm p-4'
 
 export const unifiedChipClassName =
-  'inline-flex items-center gap-2 rounded-full border border-primary/14 bg-primary/6 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground'
+  'inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary'
 
 export const unifiedGhostActionClassName =
-  'inline-flex items-center justify-center gap-2 rounded-full border border-border/35 bg-background/40 px-4 py-2 text-sm font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-border/50 hover:bg-muted/40 hover:text-foreground'
+  'inline-flex items-center justify-center gap-2 rounded-md border-0 bg-muted/30 px-3 py-1.5 text-sm font-medium text-foreground transition-all duration-300 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15'
 
 export const unifiedPrimaryActionClassName =
-  'inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-[background-color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-primary/90'
+  'inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-black text-primary-foreground transition-all duration-300 hover:bg-primary/90 shadow-lg shadow-primary/25'
 
 export const unifiedSectionEyebrowClassName =
-  'text-[10px] font-semibold uppercase tracking-[0.18em] text-primary/88'
+  'text-[10px] font-semibold uppercase tracking-[0.14em] text-primary'
 
 export const unifiedDisplayTitleClassName =
-  'text-balance font-medium tracking-[-0.04em] text-foreground'
+  'text-balance font-light tracking-tight text-foreground'
 
-export const unifiedBodyCopyClassName = 'text-sm leading-[1.62] text-muted-foreground sm:text-base'
+export const unifiedBodyCopyClassName = 'text-[13px] leading-relaxed text-muted-foreground/70'
 
 export const unifiedInfoLabelClassName =
-  'text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground'
+  'text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60'
 
 export const unifiedInfoValueClassName =
-  'text-sm font-medium tracking-[-0.01em] text-foreground sm:text-[15px]'
+  'text-sm font-medium tracking-[-0.01em] text-foreground'
 
 export const unifiedStatePanelClassName =
-  'relative overflow-hidden rounded-2xl border border-border/35 bg-card/80 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]'
+  'relative overflow-hidden rounded-xl border-0 bg-card shadow-sm'

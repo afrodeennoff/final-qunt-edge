@@ -29,7 +29,7 @@ export function SharedWidgetCanvas() {
   const layoutMode = isMobile ? 'mobile' : 'desktop'
 
   // Enhanced widget rendering with shared theme
-  const renderWidget = (widget: any) => {
+  const renderWidget = (widget: Widget) => {
     if (!isRegisteredWidgetType(widget.type)) {
       return (
         <WidgetShell
@@ -41,22 +41,11 @@ export function SharedWidgetCanvas() {
     }
 
     const effectiveSize = getEffectiveWidgetSize(widget.type, widget.size, isMobile)
-    const WidgetComponent: any = getWidgetComponent(widget.type, effectiveSize)
+    const widgetElement = getWidgetComponent(widget.type, effectiveSize)
 
-    return (
-      <WidgetShell
-        key={widget.i}
-        className="widget-enter-smooth"
-        contentClassName="h-full"
-        state="ready"
-        title={widget.title || 'Widget'}
-        icon={widget.icon}
-      >
-        <div className="h-full w-full">
-          <WidgetComponent size={effectiveSize} />
-        </div>
-      </WidgetShell>
-    )
+    // Return inner widget directly (it provides its own WidgetShell + title)
+    // to avoid double-wrapping and since Widget type has no title/icon
+    return widgetElement
   }
 
   // Enhanced shared layout with empty state
@@ -76,12 +65,17 @@ export function SharedWidgetCanvas() {
     return layoutItems
   }, [activeLayout, layoutMode, sharedParams])
 
+  const responsiveLayouts = useMemo(
+    () => generateResponsiveLayouts(transformedLayout),
+    [transformedLayout]
+  )
+
   // Check if any accounts are selected
   const hasSelectedAccounts = accountNumbers.length > 0
 
   if (!hasSelectedAccounts) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] bg-card/50 rounded-xl border border-dashed border-border/30 p-8">
+      <div className="flex flex-col items-center justify-center min-h-[400px] rounded-xl border-0/20 bg-muted/30 p-8">
         <EmptyState
           icon={<div className="h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center">
             <BarChart3 className="h-6 w-6 text-muted-foreground/50" />
@@ -100,7 +94,7 @@ export function SharedWidgetCanvas() {
 
   if (transformedLayout.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] bg-card/50 rounded-xl border border-dashed border-border/30">
+      <div className="flex flex-col items-center justify-center min-h-[400px] rounded-xl border-0/20 bg-muted/30">
         <EmptyState
           icon={<BarChart3 className="h-12 w-12 text-muted-foreground/50" />}
           title="No Widgets Available"
@@ -114,11 +108,11 @@ export function SharedWidgetCanvas() {
     <div className="relative">
       <ResponsiveGridLayout
         className="layout-enter-smooth"
-        layouts={[[{i: '1', x: 0, y: 0, w: 6, h: 4}, {i: '2', x: 6, y: 0, w: 6, h: 4}]] as any}
-        cols={isMobile ? 1 : 12 as any}
-        rowHeight={isMobile ? 80 : 60 as any}
-        width={1200 as any}
-        isResizable={false as any}
+        layouts={responsiveLayouts}
+        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+        cols={{ lg: 12, md: 12, sm: 12, xs: 12, xxs: 12 }}
+        rowHeight={isMobile ? 80 : 60}
+        isResizable={false}
         isDraggable={false}
         compactType={null}
         margin={[8, 8]}
@@ -129,7 +123,8 @@ export function SharedWidgetCanvas() {
             key={widget.i}
             className={cn(
               "widget-enter-smooth",
-              "bg-card/80 backdrop-blur-sm border border-border/30 rounded-lg shadow-sm hover:shadow-md transition-all duration-300",
+              "rounded-xl bg-card border-0 transition-all duration-300",
+              "hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15",
               widget.type.includes('pnl') && "hover:border-success/30",
               widget.type.includes('chart') && "hover:border-primary/30"
             )}

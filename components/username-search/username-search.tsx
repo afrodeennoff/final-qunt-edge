@@ -1,8 +1,10 @@
 "use client"
+import React from 'react'
 
 import { useState, useEffect } from 'react'
 import { Search, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface SearchUserResult {
   id: string
@@ -33,8 +35,8 @@ export function UsernameSearch({ onSelectUser }: UsernameSearchProps) {
         const data = await response.json()
         setResults(data.users)
         setSelectedIndex(-1)
-      } catch (error) {
-        console.error('Error searching users:', error)
+      } catch {
+
       } finally {
         setIsLoading(false)
       }
@@ -93,12 +95,12 @@ export function UsernameSearch({ onSelectUser }: UsernameSearchProps) {
 
       {isLoading && query.length >= 2 && (
         <div className="absolute mt-1 w-full rounded-lg border border-input bg-background p-2 shadow-md">
-          <div className="h-4 w-24 rounded bg-muted animate-pulse" />
+          <Skeleton className="h-4 w-24 rounded" />
         </div>
       )}
 
       {results.length > 0 && (
-        <div className="absolute z-50 mt-1 w-full rounded-lg border border-input bg-background shadow-lg max-h-80 overflow-auto">
+        <div className="absolute z-50 mt-1 w-full rounded-lg border-0 bg-background shadow-sm max-h-80 overflow-auto">
           {results.map((user, index) => (
             <button
               key={user.id}

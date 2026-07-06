@@ -13,8 +13,6 @@ import Link from "next/link"
 import { useI18n, useCurrentLocale } from "@/locales/client"
 import { useSubscriptionStore } from "@/store/subscription-store"
 
-
-
 export function SubscriptionBadge({ className }: { className?: string }) {
   const t = useI18n()
   const locale = useCurrentLocale()

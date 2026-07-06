@@ -117,15 +117,14 @@ function formatPlanAmount(
 function getPlanCardClassName(popular: boolean): string {
   return cn(
     'relative flex w-full flex-col overflow-hidden transition-[opacity,background-color,border-color,transform] duration-300 hover:-translate-y-1',
-    !popular && 'rounded-2xl border border-border/0.06 bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_8px_32px_-8px_rgba(0,0,0,0.80)]',
-    popular && 'relative rounded-2xl border border-[hsl(var(--primary)/0.35)] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_hsl(var(--primary)/0.30),0_0_40px_hsl(var(--primary)/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
+    !popular && 'rounded-2xl border-0 bg-card shadow-sm',
+    popular && 'relative rounded-2xl border-0 bg-card shadow-sm shadow-primary/10 ring-1 ring-primary/30',
   )
 }
 
 function getPlanCtaClassName(): string {
   return cn(
-    'h-12 w-full rounded-xl bg-primary text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground',
-    'shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-[opacity,background-color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-primary/90 active:translate-y-0 active:shadow-md',
+    'h-12 w-full rounded-xl text-[10px] font-black uppercase tracking-[0.12em]',
     '[font-family:var(--home-copy)]'
   )
 }
@@ -134,7 +133,7 @@ function PlanPopularBadge({ popular }: { popular: boolean }) {
   if (!popular) return null
 
   return (
-    <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary shadow-lg shadow-primary/10">
+    <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-primary shadow-sm">
       <Sparkles className="h-3 w-3" />
       <span>Popular</span>
     </div>
@@ -211,7 +210,7 @@ function FreePlanCard({
     <div className="relative">
       <Card className={getPlanCardClassName(plan.isPopular ?? false)}>
         <CardHeader>
-          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">
+          <CardTitle className="text-[15px] font-black tracking-[-0.02em] text-foreground">
             {plan.name}
           </CardTitle>
           <CardDescription className="text-sm text-muted-foreground">
@@ -239,9 +238,9 @@ function FreePlanCard({
                 className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]"
               >
                 {index > 2 ? (
-                  <X className="size-4 shrink-0 text-[oklch(0.64_0.255_22)]" />
+                  <X className="size-4 shrink-0 text-destructive" />
                 ) : (
-                  <Check className="size-4 text-[oklch(0.82_0.185_155)] shrink-0" />
+                  <Check className="size-4 text-semantic-success shrink-0" />
                 )}
                 <span>{feature}</span>
               </li>
@@ -378,7 +377,7 @@ function PlusPlanCard({
       <Card className={getPlanCardClassName(true)}>
         <PlanPopularBadge popular={plan.isPopular ?? true} />
         <CardHeader>
-          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">
+          <CardTitle className="text-[15px] font-black tracking-[-0.02em] text-foreground">
             {plan.name}
           </CardTitle>
           <CardDescription className="text-sm text-muted-foreground">
@@ -386,19 +385,19 @@ function PlusPlanCard({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="mb-4 space-y-3 rounded-xl border border-border/0.06 bg-background/0.04 p-4">
-            <span className="block text-center text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/35">
+          <div className="mb-4 space-y-3 rounded-xl border-0 bg-background/0.04 p-4">
+            <span className="block text-center text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
               {t('pricing.billingPeriod')}
             </span>
 
-            <div className="grid grid-cols-3 gap-1 rounded-[1rem] border border-border/0.04 bg-black/25 p-1">
+            <div className="grid grid-cols-3 gap-1 rounded-[1rem] border-0 bg-background/25 p-1">
               {recurringBillingOptions.map((option) => (
                 <button
                   key={option.key}
                   className={cn(
                     'rounded-xl px-3 py-2 text-xs capitalize transition-[opacity,background-color,border-color,transform]',
                     billingPeriod === option.key
-                      ? 'bg-white text-black font-semibold shadow-[0_8px_20px_-12px_rgba(255,255,255,0.45)]'
+                       ? 'bg-primary text-primary-foreground font-semibold shadow-[0_8px_20px_-12px_hsl(var(--primary)/0.45)]'
                       : 'text-muted-foreground/75 hover:bg-background/0.09 hover:text-foreground',
                   )}
                   onClick={() => setBillingPeriod(option.key)}
@@ -409,13 +408,13 @@ function PlusPlanCard({
               ))}
             </div>
 
-            <div className="border-t border-border/0.04 pt-3">
+            <div className="border-t border-transparent.04 pt-3">
               <button
                 className={cn(
                   'flex w-full items-center justify-center gap-2 rounded-[1rem] border px-3 py-2 text-xs font-medium transition-[opacity,background-color,border-color,transform]',
                   billingPeriod === 'lifetime'
-                    ? 'border-[hsl(var(--primary)/0.28)] bg-[hsl(var(--primary)/0.08)] text-[oklch(0.75_0.22_260)]'
-                    : 'border-border/0.06 text-muted-foreground hover:bg-background/0.09 hover:text-foreground',
+                    ? 'border-primary/28 bg-primary/8 text-primary'
+                    : 'border-transparent.06 text-muted-foreground hover:bg-background/0.09 hover:text-foreground',
                 )}
                 onClick={() => setBillingPeriod('lifetime')}
               >
@@ -493,14 +492,14 @@ function PlusPlanCard({
                 key={index}
                 className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]"
               >
-                <Check className="size-4 text-[oklch(0.82_0.185_155)] shrink-0" />
+                <Check className="size-4 text-semantic-success shrink-0" />
                 <span>{feature}</span>
               </li>
             ))}
           </ul>
 
           {billingPeriod === 'lifetime' && (
-            <div className="mt-4 border-t border-border pt-3">
+            <div className="mt-4 border-t border-transparent pt-3">
               <div className="gap-1">
                 <p className="text-xs text-muted-foreground">
                   • {t('pricing.lifetimeDisclaimer1')}

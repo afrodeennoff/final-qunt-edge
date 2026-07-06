@@ -4,6 +4,7 @@ import { getLeaderboardData, type LeaderboardSort } from './data/leaderboard-que
 import { LeaderboardContent } from './components/leaderboard-content'
 import { buildPublicMetadata } from '@/lib/seo'
 import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const VALID_SORTS: LeaderboardSort[] = ['monthly_pnl', 'winrate', 'totalTrades']
 
@@ -34,11 +35,26 @@ export default async function LeaderboardPage({
   const sortKey: LeaderboardSort = VALID_SORTS.includes(sort as LeaderboardSort)
     ? (sort as LeaderboardSort)
     : 'monthly_pnl'
-  const entries = await getLeaderboardData(sortKey)
+  const entries = await getLeaderboardData(sortKey).catch(() => [])
 
   return (
     <UnifiedPageShell widthClassName="max-w-[1360px]" className="py-12 sm:py-16">
-      <Suspense fallback={null}>
+      <Suspense
+        fallback={
+          <div className="space-y-4">
+            <div className="grid gap-3 sm:grid-cols-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-28 w-full rounded-xl" />
+              ))}
+            </div>
+            <div className="space-y-3">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <Skeleton key={i} className="h-16 w-full rounded-xl" />
+              ))}
+            </div>
+          </div>
+        }
+      >
         <LeaderboardContent initialEntries={entries} locale={locale} />
       </Suspense>
     </UnifiedPageShell>

@@ -1,5 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+vi.mock("@/lib/ai/client", () => ({
+  checkAiConfig: vi.fn(() => ({ ok: true })),
+  getTranscribeModelId: vi.fn(() => "whisper-1"),
+}));
+
 vi.mock("@/lib/ai/route-guard", () => ({
   guardAiRequest: vi.fn(async () => ({ ok: true, userId: "u_1", email: "u_1@example.com" })),
 }));

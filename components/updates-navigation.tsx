@@ -31,7 +31,7 @@ export function UpdatesNavigation({ previous, next, locale, position = 'bottom' 
         {next ? (
           <Link
             href={`/${locale}/updates/${next.slug}`}
-            className="group flex flex-col gap-1.5 rounded-xl border border-[rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] p-4 transition-[background-color,border-color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[rgba(0,0,0,0.08)] hover:bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)]"
+            className="group flex flex-col gap-1.5 rounded-xl border-0 bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] p-4 transition-[background-color,border-color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-transparent hover:bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)]"
           >
             <span className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
               <ChevronLeft className="h-3.5 w-3.5" />
@@ -50,7 +50,7 @@ export function UpdatesNavigation({ previous, next, locale, position = 'bottom' 
         {previous ? (
           <Link
             href={`/${locale}/updates/${previous.slug}`}
-            className="group flex flex-col items-end gap-1.5 rounded-xl border border-[rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] p-4 transition-[background-color,border-color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[rgba(0,0,0,0.08)] hover:bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)]"
+            className="group flex flex-col items-end gap-1.5 rounded-xl border-0 bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] p-4 transition-[background-color,border-color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-transparent hover:bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)]"
           >
             <span className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
               {t.older}

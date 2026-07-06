@@ -8,6 +8,8 @@ type UnifiedPageShellProps = {
   widthClassName?: string
   density?: 'default' | 'compact' | 'spacious'
   variant?: 'default' | 'refined' | 'minimal'
+  glow?: boolean
+  dotGrid?: boolean
 }
 
 type UnifiedPageHeaderProps = {
@@ -22,8 +24,10 @@ type UnifiedPageHeaderProps = {
 type UnifiedSurfaceProps = {
   children: ReactNode
   className?: string
-  variant?: 'default' | 'glass' | 'gradient-border' | 'elevated' | 'subtle'
+  variant?: 'default' | 'elevated' | 'subtle'
   hover?: boolean
+  glowOnHover?: boolean
+  density?: 'default' | 'compact' | 'comfortable'
 }
 
 export function UnifiedPageShell({
@@ -32,32 +36,38 @@ export function UnifiedPageShell({
   widthClassName = WORKSPACE_SHELL_WIDTH,
   density = 'default',
   variant = 'default',
+  glow = false,
+  dotGrid = false,
 }: UnifiedPageShellProps) {
   const densityClasses =
     density === 'compact'
-      ? 'py-4 sm:py-5 lg:py-6'
+      ? 'py-4 sm:py-6 lg:py-8 2xl:py-10'
       : density === 'spacious'
-        ? 'py-8 sm:py-10 lg:py-12'
-        : 'py-5 sm:py-7 lg:py-8'
+        ? 'py-8 sm:py-10 lg:py-12 2xl:py-14'
+        : 'py-6 sm:py-8 lg:py-10 2xl:py-12'
 
   return (
     <div
       className={cn(
-        'scroll-smooth-butter animate-page-enter relative mx-auto w-full',
-        widthClassName === 'max-w-none' && 'max-w-[1800px]',
+        'animate-fade-up-smooth relative mx-auto w-full',
+        widthClassName === 'max-w-none' && 'max-w-[2400px]',
         widthClassName,
         CONTENT_PADDING,
         densityClasses,
-        variant !== 'minimal' && [
-          'before:absolute before:inset-x-6 before:top-0 before:h-44 before:pointer-events-none before:z-0',
-          'before:rounded-b-2xl before:border before:border-border/20 before:bg-primary/[0.02]',
-          'after:absolute after:inset-x-0 after:top-0 after:h-px after:pointer-events-none after:z-0 after:bg-border/35',
-        ],
+        dotGrid && 'bg-[radial-gradient(oklch(0.15_0.01_260)_0.8px,transparent_1px)] bg-[length:4px_4px]',
         '[&_.scroll-container]:overflow-y-auto [&_.scroll-container]:scrollbar-thin',
         className,
       )}
     >
-      <div className="relative z-10 flex flex-col gap-4 sm:gap-5 lg:gap-6">{children}</div>
+      {glow && (
+        <div className="pointer-events-none absolute inset-0 flex items-start justify-center">
+          <div className="h-64 w-64 rounded-full bg-primary/[0.03] blur-3xl" />
+        </div>
+      )}
+      <div className={cn(
+        'relative z-10 flex flex-col',
+        'gap-4 sm:gap-6 lg:gap-8 2xl:gap-10',
+      )}>{children}</div>
     </div>
   )
 }
@@ -73,87 +83,67 @@ export function UnifiedPageHeader({
   return (
     <header
       className={cn(
-        'mb-8 rounded-xl border px-5 py-6 shadow-sm sm:px-6',
-        'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
-        variant === 'default' && [
-          'border-border/35 bg-card/80',
-          '',
-        ],
-        variant === 'gradient' && [
-          'border-primary/14 bg-[hsl(var(--card)/0.96)]',
-          '',
-        ],
-        variant === 'elevated' && [
-          'border-border/40 bg-card/90 shadow-sm',
-          '',
-        ],
+        'relative overflow-hidden rounded-xl bg-card px-4 py-4 sm:py-6 sm:px-6',
+        'animate-fade-up-smooth transition-all duration-300 ease-out',
+        variant === 'gradient' && 'bg-primary/5',
+        variant === 'elevated' && 'shadow-[0_0_35px_-18px] shadow-primary/15',
         className,
       )}
     >
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
-        <div className="space-y-2">
+      {variant === 'gradient' && (
+        <div className="pointer-events-none absolute top-0 right-0 h-24 w-24 rounded-full bg-primary/[0.04] blur-2xl" />
+      )}
+      <div className="relative flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+        <div className="space-y-3">
           {eyebrow && (
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground mb-2">
+            <span className="inline-block rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
               {eyebrow}
-            </p>
+            </span>
           )}
           <h1
             className={cn(
-              'font-semibold tracking-tight text-foreground sm:tracking-tight',
+              'font-light tracking-tight text-foreground',
               'text-3xl sm:text-4xl',
-              variant === 'gradient' && 'text-foreground',
             )}
           >
             {title}
           </h1>
           {description && (
-            <p
-              className={cn(
-                'max-w-3xl mt-2 text-sm text-muted-foreground sm:text-base',
-                'leading-relaxed',
-              )}
-            >
+            <p className="max-w-3xl text-[14px] text-muted-foreground/70 leading-relaxed">
               {description}
             </p>
           )}
         </div>
-        {actions && <div className="flex flex-wrap items-center gap-2.5">{actions}</div>}
+        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
     </header>
   )
 }
 
-export function UnifiedSurface({ children, className, variant = 'default', hover = false }: UnifiedSurfaceProps) {
+export function UnifiedSurface({ children, className, variant = 'default', hover = false, glowOnHover = false, density = 'default' }: UnifiedSurfaceProps) {
+  const densityPadding = density === 'compact'
+    ? 'p-3 sm:p-4'
+    : density === 'comfortable'
+      ? 'p-5 sm:p-8'
+      : 'p-4 sm:p-6'
+
   return (
     <section
       className={cn(
-        'rounded-xl border p-4 shadow-sm sm:p-6',
-        'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
-        variant === 'default' && [
-          'border-border/35 bg-card/80',
-          hover ? 'hover:border-border/50 hover:bg-card/95' : '',
-        ],
-        variant === 'glass' && [
-          'border-border/30 bg-primary/4',
-          hover ? 'hover:border-border/40 hover:bg-primary/6' : '',
-          '',
-        ],
-        variant === 'gradient-border' && [
-          'border-border/35 bg-card/70',
-          hover ? 'hover:border-border/45' : '',
-        ],
-        variant === 'elevated' && [
-          'border-border/40 bg-card/90 shadow-sm',
-          hover ? 'hover:border-border/50 hover:bg-card/95' : '',
-        ],
-        variant === 'subtle' && [
-          'border-border/35 bg-[hsl(var(--background)/0.62)] shadow-none',
-          hover ? 'hover:border-border/40 hover:bg-background/80' : '',
-        ],
+        'group relative overflow-hidden rounded-xl bg-card',
+        'transition-all duration-200 ease-out',
+        densityPadding,
+        hover && 'hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)]',
+        glowOnHover && 'hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15',
+        variant === 'elevated' && 'shadow-[0_0_35px_-18px] shadow-primary/10',
+        variant === 'subtle' && 'bg-gradient-to-br from-muted/50 to-muted/20',
         className,
       )}
     >
-      {children}
+      {glowOnHover && (
+        <div className="pointer-events-none absolute top-0 right-0 h-24 w-24 rounded-full bg-primary/[0.03] blur-2xl transition-all duration-500 ease-out group-hover:bg-primary/[0.06] group-hover:scale-150" />
+      )}
+      <div className="relative z-10">{children}</div>
     </section>
   )
 }

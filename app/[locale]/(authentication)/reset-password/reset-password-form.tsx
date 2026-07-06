@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -47,14 +48,14 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
 
  if (isSuccess) {
  return (
- <div className="flex min-h-screen items-center justify-center p-4">
- <div className="w-full max-w-md rounded-2xl border border-border/50 bg-card p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_32px_-26px_rgba(0,0,0,0.62)] sm:p-8">
+  <div className="flex min-h-dvh items-center justify-center p-4">
+ <div className="w-full max-w-md rounded-2xl border-0 bg-card p-6 shadow-sm transition-shadow duration-200 hover:shadow-md sm:p-8">
  <div className="flex flex-col items-center gap-4 text-center">
- <h2 className="text-2xl font-semibold tracking-tight text-foreground">Password updated!</h2>
+ <h2 className="text-2xl font-black tracking-tight text-foreground">Password updated!</h2>
  <p className="text-sm text-muted-foreground">
  Your password has been successfully updated. Redirecting to dashboard...
  </p>
- <Link href={`/${locale}/dashboard`} className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline">
+ <Link href={`/${locale}/dashboard`} className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline">
  Go to dashboard
  </Link>
  </div>
@@ -64,11 +65,11 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  }
 
  return (
- <div className="flex min-h-screen items-center justify-center p-4">
- <div className="w-full max-w-md rounded-2xl border border-border/50 bg-card p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_32px_-26px_rgba(0,0,0,0.62)] sm:p-8">
+  <div className="flex min-h-dvh items-center justify-center p-4">
+ <div className="w-full max-w-md rounded-2xl border-0 bg-card p-6 shadow-sm transition-shadow duration-200 hover:shadow-md sm:p-8">
  <div className="flex flex-col gap-6">
  <div className="text-center">
- <h2 className="text-2xl font-semibold tracking-tight text-foreground">Set new password</h2>
+ <h2 className="text-2xl font-black tracking-tight text-foreground">Set new password</h2>
  <p className="text-sm text-muted-foreground mt-2">
  Enter your new password below.
  </p>
@@ -85,7 +86,7 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  autoComplete="new-password"
  data-testid="reset-password"
  disabled={isLoading}
- className="h-11 rounded-xl border border-border/50 bg-background px-4 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring/20"
+ className="h-11 rounded-xl border-0 bg-background px-4 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
  />
  <button
  type="button"
@@ -106,10 +107,10 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  autoComplete="new-password"
  data-testid="reset-password-confirm"
  disabled={isLoading}
- className="h-11 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20"
+ className="h-11 rounded-xl border-0 bg-card px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
  />
 
- <div className="space-y-1.5 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] p-3 shadow-[inset_0_1px_0_rgba(0,0,0,0.03)]">
+ <div className="space-y-1.5 rounded-xl border-0 bg-card p-3 transition-colors duration-200 hover:border-transparent">
  {requirements.map((req) => (
  <div
  key={req.key}
@@ -130,13 +131,13 @@ export default function ResetPasswordForm({ locale }: { locale: string }) {
  </div>
 
  {error && (
- <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
+ <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
  )}
 
  <Button
  type="submit"
  disabled={isLoading || !allMet}
- className="h-11 rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
+ className="h-11 font-semibold px-5 active:scale-[0.97]"
  >
  {isLoading ? 'Updating...' : 'Update password'}
  </Button>

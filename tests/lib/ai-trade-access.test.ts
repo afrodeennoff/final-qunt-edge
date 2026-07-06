@@ -190,12 +190,15 @@ describe('trade-access', () => {
       expect(mockGetAllTradesForAi).toHaveBeenCalledTimes(2)
     })
 
-    it('rejects user context mismatch between explicit and session user', async () => {
-      mockGetUserId.mockResolvedValue('session-user')
-
+    it('rejects calls that omit an explicit user context', async () => {
+      // Security contract: getAiTrades requires an explicit userId obtained from
+      // guardAiRequest/MCP context. Omitting it must fail closed rather than fall
+      // back to a session lookup (which is unavailable inside AI tool callbacks).
       await expect(
-        getAiTrades({ userId: 'other-user', profile: 'detail' })
-      ).rejects.toThrow('FORBIDDEN_USER_CONTEXT_MISMATCH')
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getAiTrades({ profile: 'detail' } as any),
+      ).rejects.toThrow('MISSING_USER_CONTEXT')
+      expect(mockGetAllTradesForAi).not.toHaveBeenCalled()
     })
 
     it('passes through truncated and dataQualityWarning', async () => {

@@ -3,6 +3,7 @@ import { BlogList } from './components/blog-list'
 import { getI18n } from '@/locales/server'
 import type { Metadata } from 'next'
 import { buildPublicMetadata } from '@/lib/seo'
+import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
 
 export async function generateMetadata({
   params,
@@ -25,11 +26,16 @@ export default async function BlogsPage() {
 
   return (
     <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
-      <div className="rounded-xl border border-border/30 bg-background/0.11 p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-semibold text-foreground">{t('blogs.title')}</h1>
-          <p className="mt-1 text-muted-foreground">{t('blogs.description')}</p>
-        </div>
+      <div className="space-y-8">
+        <header className="space-y-4">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Blog</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            {t('blogs.title')}
+          </h1>
+          <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {t('blogs.description')}
+          </p>
+        </header>
         <BlogList initialPosts={posts} />
       </div>
     </div>

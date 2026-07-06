@@ -117,10 +117,10 @@ export function OptimizedVirtualTable<TData, TValue>({
  
  return (
  <div
- className={cn(
- 'flex items-center border-b border-border/30 transition-colors hover:bg-background/80',
- onRowClick && 'cursor-pointer'
- )}
+  className={cn(
+   'flex items-center border-b-0 transition-colors hover:bg-primary/[0.02] max-md:min-h-[44px]',
+  onRowClick && 'cursor-pointer'
+  )}
  style={{
  height: `${itemHeight}px`,
  transform: `translateY(${offset}px)`
@@ -131,7 +131,7 @@ export function OptimizedVirtualTable<TData, TValue>({
  {row.getVisibleCells().map((cell) => (
  <div
  key={cell.id}
- className='px-4 py-2 border-r border-border/30 last:border-r-0'
+  className='px-4 py-2 border-r-0 last:border-r-0'
  style={{ width: cell.column.getSize() }}
  >
  {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -143,46 +143,50 @@ export function OptimizedVirtualTable<TData, TValue>({
 
  MemoizedRow.displayName = 'MemoizedRow'
 
- return (
- <div
- ref={containerRef}
- className={cn('relative overflow-auto', className)}
- style={{ maxHeight: `${maxHeight}px` }}
- onScroll={handleScroll}
- >
- <div
- className='relative'
- style={{ height: `${totalHeight}px` }}
- >
- <div className='sticky top-0 z-10 bg-background border-b'>
- {table.getHeaderGroups().map((headerGroup) => (
- <div key={headerGroup.id} className='flex'>
- {headerGroup.headers.map((header) => (
- <div
- key={header.id}
- className='px-4 py-3 font-medium text-sm text-muted-foreground border-r border-border/30 last:border-r-0'
- style={{ width: header.getSize() }}
- >
- {header.isPlaceholder
- ? null
- : flexRender(header.column.columnDef.header, header.getContext())}
- </div>
- ))}
- </div>
- ))}
- </div>
- 
- <div className='relative'>
- {visibleRows.map((row, index) => (
- <MemoizedRow
- key={row.id}
- row={row}
- index={index}
- offset={offsets[visibleStart + index]}
- />
- ))}
- </div>
- </div>
- </div>
- )
+  return (
+    <div className="relative">
+      {/* Scroll shadow gradient hint for horizontal overflow */}
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-background/40 to-transparent opacity-0 transition-opacity duration-300 md:hidden max-md:opacity-100" />
+      <div
+        ref={containerRef}
+        className={cn('relative overflow-auto', className)}
+        style={{ maxHeight: `${maxHeight}px`, WebkitOverflowScrolling: 'touch' }}
+        onScroll={handleScroll}
+      >
+        <div
+          className='relative'
+          style={{ height: `${totalHeight}px` }}
+        >
+          <div className='sticky top-0 z-10 bg-muted/30 border-b-0'>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <div key={headerGroup.id} className='flex'>
+                {headerGroup.headers.map((header) => (
+                  <div
+                    key={header.id}
+                    className='px-4 py-3 font-medium text-sm text-muted-foreground border-r-0 last:border-r-0'
+                    style={{ width: header.getSize() }}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(header.column.columnDef.header, header.getContext())}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <div className='relative'>
+            {visibleRows.map((row, index) => (
+              <MemoizedRow
+                key={row.id}
+                row={row}
+                index={index}
+                offset={offsets[visibleStart + index]}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }

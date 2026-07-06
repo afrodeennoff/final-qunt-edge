@@ -47,7 +47,7 @@ export default function CalendarWidget({
       }}
       className="w-full min-w-[19rem] p-0"
       classNames={{
-        months: 'flex min-h-[26rem] flex-col gap-4 lg:min-h-[31rem]',
+        months: 'flex min-h-[26rem] flex-col gap-4 lg:min-h-[31rem] 2xl:min-h-[38rem]',
         month: 'space-y-4',
         weekday: 'w-11 text-center text-[0.75rem] font-medium text-muted-foreground sm:w-12',
         day: 'relative h-11 w-11 overflow-hidden rounded-lg p-0 text-center align-middle sm:h-12 sm:w-12',

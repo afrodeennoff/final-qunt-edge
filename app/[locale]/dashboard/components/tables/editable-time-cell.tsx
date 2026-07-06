@@ -89,8 +89,8 @@ export function EditableTimeCell({
  await onUpdate(tradeIds, { [fieldType]: newDateTime.toISOString() })
  setIsEditing(false)
  setIsPopoverOpen(false)
- } catch (error) {
- console.error('Error updating time:', error)
+ } catch {
+
  } finally {
  setIsSaving(false)
  setHourOffset(0)
@@ -116,7 +116,7 @@ export function EditableTimeCell({
  onChange={(e) => setTempValue(e.target.value)}
  onKeyDown={handleKeyDown}
  placeholder="HH:mm:ss"
- className="h-7 text-xs font-mono border-border/65 focus-visible:ring-1"
+ className="h-7 text-xs font-mono border-transparent focus-visible:ring-1"
  disabled={isSaving}
  />
  <Button 
@@ -145,7 +145,7 @@ export function EditableTimeCell({
  <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
  <PopoverTrigger asChild>
  <div
- className={cn("group cursor-pointer hover:bg-secondary/22 rounded px-2 py-1 transition-colors border border-transparent hover:border-border/55",
+ className={cn("group cursor-pointer hover:bg-secondary/22 rounded px-2 py-1 transition-colors border border-transparent hover:border-transparent",
  className
  )}
  onClick={() => setIsPopoverOpen(true)}

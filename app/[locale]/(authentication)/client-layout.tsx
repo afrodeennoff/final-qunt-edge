@@ -1,10 +1,12 @@
 'use client'
+import React from 'react'
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCurrentLocale } from "@/locales/client";
-import { RootProviders } from "@/components/providers/root-providers";
+import { ThemeProvider } from "@/context/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 interface AuthenticationLayoutProps {
  children: React.ReactNode;
 }
@@ -31,10 +33,22 @@ export default function AuthenticationLayout({
  // Clear the hash after showing the toast
  router.replace(`/${locale}/authentication`);
  }
- } catch (error) {
- console.warn('Failed to parse error from URL hash:', error)
+ } catch {
+
  }
  }, [locale, router]);
 
- return <RootProviders>{children}</RootProviders>;
+   return (
+     <div className="min-h-dvh w-full bg-background">
+       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(oklch(0.15_0.01_260)_0.8px,transparent_1px)] bg-[length:4px_4px] opacity-15" />
+       <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
+         <div className="h-[500px] w-[500px] rounded-full bg-primary/[0.03] blur-2xl animate-[pulse_8s_ease-in-out_infinite]" />
+       </div>
+         <div className="relative z-10 pt-8 md:pt-16">
+           <ThemeProvider scope="fixed-green">{children}</ThemeProvider>
+           <Toaster />
+         </div>
+     </div>
+   );
+
 }

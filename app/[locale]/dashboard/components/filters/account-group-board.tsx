@@ -45,7 +45,7 @@ const paletteFromSeed = (seed: string) => {
  acc = ((acc << 5) - acc) + char.charCodeAt(0)
  return acc & acc
  }, 0)
- const levels = ["hsl(var(--chart-2))","hsl(var(--chart-3))","hsl(var(--chart-4))","hsl(var(--chart-5))","hsl(var(--chart-6))","hsl(var(--chart-7))",
+ const levels = ["var(--chart-2)","var(--chart-3)","var(--chart-4)","var(--chart-5)","var(--chart-6)","var(--chart-7)",
  ]
  return { base: levels[Math.abs(hash) % levels.length] }
 }
@@ -244,8 +244,8 @@ export function AccountGroupBoard() {
  })
  setMovingTarget("")
  }
- } catch (error) {
- console.error("Error moving accounts:", error)
+ } catch {
+
  toast.error(t("common.error"), {
  description: t("filters.accountsMovedError"),
  })
@@ -279,8 +279,8 @@ export function AccountGroupBoard() {
  toast.success(t("common.success"), {
  description: t("filters.accountMoved", { account: draggedAccount.number }),
  })
- } catch (error) {
- console.error("Error moving account:", error)
+ } catch {
+
  toast.error(t("common.error"), {
  description: t("filters.errorMovingAccount", { account: draggedAccount.number }),
  })
@@ -327,8 +327,8 @@ export function AccountGroupBoard() {
  toast.success(t("common.success"), {
  description: t("filters.accountDeleted", { account: account.number }),
  })
- } catch (error) {
- console.error("Error deleting account:", error)
+ } catch {
+
  toast.error(t("common.error"), {
  description: t("filters.errorDeletingAccount", { account: account.number }),
  })
@@ -355,8 +355,8 @@ export function AccountGroupBoard() {
  description: t("filters.groupCreated", { name: groupName }),
  })
  return createdGroup
- } catch (error) {
- console.error("Error creating group:", error)
+ } catch {
+
  toast.error(t("common.error"), {
  description: t("filters.errorCreatingGroup", { name: groupName }),
  })
@@ -378,8 +378,8 @@ export function AccountGroupBoard() {
  setSelectedAccountIds(prev =>
  prev.filter(accountId => !groupToDelete.accounts.some(acc => acc.id === accountId)),
  )
- } catch (error) {
- console.error("Error deleting group:", error)
+ } catch {
+
  toast.error(t("common.error"), {
  description: t("filters.errorDeletingGroup", { name: groupToDelete.name }),
  })
@@ -399,8 +399,8 @@ export function AccountGroupBoard() {
  setNewGroupName("")
  setMovingTarget(created.id)
  await handleMoveSelected(created.id)
- } catch (error) {
- console.error("Error creating and moving to group:", error)
+ } catch {
+
  }
  }, [handleCreateGroup, handleMoveSelected, newGroupName])
 
@@ -422,8 +422,8 @@ export function AccountGroupBoard() {
  toast.success(t("common.success"), {
  description: t("filters.groupUpdated", { name: nextName }),
  })
- } catch (error) {
- console.error("Error updating group:", error)
+ } catch {
+
  toast.error(t("common.error"), {
  description: t("filters.errorUpdatingGroup", { name: renameValue.trim() }),
  })

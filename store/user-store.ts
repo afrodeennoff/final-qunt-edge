@@ -9,9 +9,7 @@ import { useTradingDomainStore } from "@/store/trading-domain-store";
 import { useTradovateSyncStore } from "@/store/tradovate-sync-store";
 import { useEquityChartStore } from "@/store/equity-chart-store";
 import { useTableConfigStore } from "@/store/table-config-store";
-import { useAccountOrderStore } from "@/store/account-order-store";
 import { useAccountsGroupExpansionStore } from "@/store/accounts-group-expansion-store";
-import { useDailyTickTargetStore } from "@/store/daily-tick-target-store";
 import { useSubscriptionStore } from "@/store/subscription-store";
 import { useMoodStore } from "@/store/mood-store";
 import { useChatStore } from "@/store/chat-store";
@@ -147,7 +145,7 @@ export const useUserStore = create<UserStore>()(
       isSharedView: false,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       setTimezone: (timezone: string) => set({ timezone }),
-      setUser: (user) => set({ user }),
+      setUser: (user) => set({ user, username: user?.username ?? null }),
       setSupabaseUser: (supabaseUser) => set({ supabaseUser }),
       setSubscription: (subscription) =>
         set({
@@ -272,11 +270,12 @@ export const useUserStore = create<UserStore>()(
     {
       name: "qunt-edge-user-store",
       storage: createJSONStorage(() => localStorage),
-      // Only persist timezone and other non-sensitive settings
+      // Only persist non-sensitive settings
       partialize: (state) => ({
         timezone: state.timezone,
         isMobile: state.isMobile,
         isSharedView: state.isSharedView,
+        username: state.username,
       }),
     },
   ),

@@ -27,7 +27,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      'type-body-sm flex cursor-default select-none items-center rounded-lg px-2.5 py-2 text-foreground/80 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-[oklch(0.052_0.009_260_/_0.72)] focus:text-foreground hover:bg-[oklch(0.052_0.009_260_/_0.72)] hover:text-foreground data-[state=open]:bg-[oklch(0.65_0.22_260_/_0.12)] data-[state=open]:text-primary',
+      'type-body-sm flex cursor-default select-none items-center rounded-lg px-2.5 py-2 text-foreground/95 outline-hidden transition-colors duration-100 focus:bg-muted focus:text-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-primary/10 data-[state=open]:text-primary',
       inset && 'pl-8',
       className,
     )}
@@ -46,12 +46,12 @@ const DropdownMenuSubContent = React.forwardRef<
   <DropdownMenuPrimitive.SubContent
     ref={ref}
     className={cn(
-      'z-50 min-w-[10rem] overflow-hidden rounded-xl border border-border/70 bg-popover p-1.5 text-popover-foreground shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
-      className,
-    )}
-    {...props}
-  />
-))
+      'z-50 min-w-[10rem] max-w-[90vw] overflow-hidden rounded-xl border-00 bg-popover p-1 text-popover-foreground shadow-[0_8px_20px_-12px_rgba(0,0,0,0.5)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+        className,
+      )}
+      {...props}
+    />
+  ))
 DropdownMenuSubContent.displayName = DropdownMenuPrimitive.SubContent.displayName
 
 const DropdownMenuContent = React.forwardRef<
@@ -63,7 +63,7 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        'z-50 min-w-[10rem] overflow-hidden rounded-xl border border-border/70 bg-popover p-1.5 text-popover-foreground shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+        'z-50 min-w-[10rem] max-w-[90vw] overflow-hidden rounded-xl border-00 bg-popover p-1 text-popover-foreground shadow-[0_8px_20px_-12px_rgba(0,0,0,0.5)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
         className,
       )}
       {...props}
@@ -81,8 +81,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      'type-body-sm relative flex cursor-default select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-foreground/80 outline-none transition-[background-color,border-color,color] duration-120 focus:bg-accent/60 focus:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-accent/60 hover:text-foreground',
-      'rounded-lg focus:bg-[oklch(0.052_0.009_260_/_0.72)] hover:bg-[oklch(0.052_0.009_260_/_0.72)]',
+      'type-body-sm relative flex cursor-default select-none items-center gap-2.5 rounded-lg px-2 py-1.5 max-md:min-h-[44px] text-foreground/95 outline-none transition-[background-color,border-color,color] duration-120 active:scale-[0.98] data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       inset && 'pl-8',
       className,
     )}
@@ -98,7 +97,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      'type-body-sm relative flex cursor-default select-none items-center rounded-lg py-2 pl-8 pr-2.5 text-foreground/80 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-[oklch(0.052_0.009_260_/_0.72)] focus:text-foreground hover:bg-[oklch(0.052_0.009_260_/_0.72)] hover:text-foreground data-[state=checked]:bg-[oklch(0.65_0.22_260_/_0.12)] data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
+      'type-body-sm relative flex cursor-default select-none items-center rounded-lg py-2 max-md:min-h-[44px] pl-8 pr-2.5 text-foreground/95 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-primary/4 focus:text-foreground hover:bg-primary/4 hover:text-foreground data-[state=checked]:bg-[var(--primary)] data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
       className,
     )}
     checked={checked}
@@ -121,7 +120,7 @@ const DropdownMenuRadioItem = React.forwardRef<
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      'type-body-sm relative flex cursor-default select-none items-center rounded-lg py-2 pl-8 pr-2.5 text-foreground/80 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-[oklch(0.052_0.009_260_/_0.72)] focus:text-foreground hover:bg-[oklch(0.052_0.009_260_/_0.72)] hover:text-foreground data-[state=checked]:bg-[oklch(0.65_0.22_260_/_0.12)] data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
+      'type-body-sm relative flex cursor-default select-none items-center rounded-lg py-2 max-md:min-h-[44px] pl-8 pr-2.5 text-foreground/95 outline-hidden transition-[background-color,border-color,color] duration-150 focus:bg-primary/4 focus:text-foreground hover:bg-primary/4 hover:text-foreground data-[state=checked]:bg-[var(--primary)] data-[state=checked]:text-primary data-disabled:pointer-events-none data-disabled:opacity-50',
       className,
     )}
     {...props}
@@ -156,7 +155,7 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn('-mx-1 my-1 h-px bg-[oklch(0.65_0.22_260_/_0.08)]', className)}
+    className={cn('-mx-1 my-1 h-px bg-transparent', className)}
     {...props}
   />
 ))

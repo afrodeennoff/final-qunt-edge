@@ -84,8 +84,8 @@ async function transcribeAllSegments(
 
  try {
  results.push(await transcribeSegment(segment))
- } catch (error) {
- console.error(`Failed to transcribe segment ${segment.index}:`, error)
+ } catch {
+
  results.push(createErrorResult(segment))
  }
  }
@@ -139,8 +139,8 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  }
 
  toast.success(`Transcription completed: ${results.length} segments processed`)
- } catch (error) {
- console.error('Transcription failed:', error)
+ } catch {
+
  toast.error('Transcription failed')
  } finally {
  setIsTranscribing(false)
@@ -156,8 +156,8 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
 
  // Reset copied state after 2 seconds
  setTimeout(() => setCopiedIndex(null), 2000)
- } catch (error) {
- console.error('Failed to copy text:', error)
+ } catch {
+
  toast.error('Copy failed')
  }
  }
@@ -173,7 +173,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
 
  if (segments.length === 0) {
  return (
- <Card className="bg-muted/50 dark:bg-background/0.3 border-border/0.42">
+  <Card className="bg-muted/50 border-transparent">
  <CardContent className="p-6 text-center">
  <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
  <p className="text-muted-foreground">
@@ -185,7 +185,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  }
 
  return (
- <Card className="bg-background/0.3 border-border/0.42">
+  <Card className="bg-card border-transparent">
  <CardHeader>
  <CardTitle className="flex items-center gap-2 text-foreground">
  <Mic className="w-5 h-5" />
@@ -253,7 +253,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  onClick={downloadTranscription}
  variant="outline"
  size="sm"
- className="text-foreground border-border/0.56 hover:bg-accent/70"
+  className="text-foreground border-transparent hover:bg-accent/70"
  >
  <Download className="w-4 h-4 mr-2" />
  Download
@@ -267,7 +267,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  .map((result) => (
  <div
  key={result.segmentIndex}
- className="p-3 bg-muted/50 rounded-lg border border-border/0.42"
+ className="p-3 bg-muted/50 rounded-lg border-0"
  >
  <div className="flex items-start justify-between gap-3">
  <div className="flex-1">

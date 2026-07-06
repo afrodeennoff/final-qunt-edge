@@ -53,18 +53,18 @@ export default function AuthenticationPageClient() {
   const locale = useCurrentLocale()
 
   return (
-    <main className="qe-v2-app-shell relative min-h-screen overflow-hidden bg-background text-foreground">
+    <main className="qe-v2-app-shell relative min-h-dvh bg-background text-foreground">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-x-6 top-0 h-36 rounded-b-2xl border border-border/20 bg-primary/[0.02]" />
+        <div className="absolute inset-x-6 top-0 h-36 rounded-b-2xl border-0 bg-primary/[0.02]" />
         <div className="absolute left-[-10rem] top-[-8rem] h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.08),transparent_72%)] opacity-70" />
         <div className="absolute bottom-[-10rem] right-[-8rem] h-[32rem] w-[32rem] rounded-full bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.08),transparent_70%)] opacity-80" />
         <div className="absolute inset-0 marketing-grid opacity-[0.07]" />
       </div>
 
-      <div className="relative mx-auto flex min-h-screen w-full items-center justify-center px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <div className="relative mx-auto flex min-h-dvh w-full items-center justify-center px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <div className={cn(unifiedHeroPanelClassName, 'w-full max-w-[1380px]')}>
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.06fr)_minmax(460px,0.94fr)]">
-            <section className="relative overflow-hidden p-6 sm:p-8 lg:border-r lg:border-border/30 lg:p-10 xl:p-12">
+            <section className="relative overflow-hidden p-6 sm:p-8 lg:border-r lg:border-transparent lg:p-10 xl:p-12">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/20 to-transparent" />
 
               <div className="flex items-center justify-between gap-3">
@@ -72,7 +72,7 @@ export default function AuthenticationPageClient() {
                   href={`/${locale}`}
                   className={cn(
                     unifiedGhostActionClassName,
-                    'px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-foreground/60',
+                    'px-4 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-foreground',
                   )}
                 >
                   <ArrowLeft className="h-3.5 w-3.5" />
@@ -83,26 +83,26 @@ export default function AuthenticationPageClient() {
 
               <div className="auth-entrance-1 mt-10 max-w-[39rem] lg:mt-14">
                 <span className={unifiedSectionEyebrowClassName}>Qunt Edge</span>
-                <div className="mt-4 inline-flex items-center gap-3 rounded-xl border border-border/30 bg-background/30 px-4 py-3 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]">
+                <div className="mt-4 inline-flex items-center gap-3 rounded-xl border-0 bg-background/40 px-4 py-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-primary/16 bg-primary/10 text-primary">
                     <Logo className="h-4.5 w-4.5 fill-current" />
                   </div>
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/60">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground">
                       Daily trading access
                     </p>
-                    <p className="pt-1 text-sm text-foreground/35">Secure entry for the full workspace.</p>
+                    <p className="pt-1 text-sm text-muted-foreground">Secure entry for the full workspace.</p>
                   </div>
                 </div>
 
-                <h1 className="mt-8 text-balance text-4xl font-medium leading-[0.98] tracking-[-0.05em] text-foreground sm:text-5xl lg:text-6xl">
+                <h1 className="mt-8 text-balance text-2xl font-black tracking-tight text-foreground sm:text-3xl lg:text-4xl">
                   Welcome back to your trading command center.
                 </h1>
-                <p className={cn(unifiedBodyCopyClassName, 'mt-5 max-w-xl text-foreground/60')}>
+                <p className={cn(unifiedBodyCopyClassName, 'mt-4 max-w-xl text-foreground')}>
                   {t('authentication.description')}
                 </p>
 
-                <div className="mt-10 grid gap-3 sm:grid-cols-3">
+                <div className="mt-6 grid gap-4 sm:grid-cols-3">
                   {VALUE_POINTS.map((point) => (
                     <div key={point.title} className={cn(unifiedMetricPanelClassName, 'p-4')}>
                       <div className="flex items-start gap-3">
@@ -110,10 +110,10 @@ export default function AuthenticationPageClient() {
                           <point.icon className="h-4 w-4" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold tracking-[-0.01em] text-foreground">
+                          <p className="text-sm font-black tracking-tight text-foreground">
                             {point.title}
                           </p>
-                          <p className="mt-1.5 text-xs leading-[1.65] text-foreground/35">
+                          <p className="mt-1.5 text-xs leading-[1.65] text-muted-foreground">
                             {point.description}
                           </p>
                         </div>
@@ -124,18 +124,18 @@ export default function AuthenticationPageClient() {
               </div>
             </section>
 
-            <section className="flex items-center justify-center border-t border-primary/10 p-6 sm:p-8 lg:border-t-0 lg:p-10 xl:p-12">
+            <section className="flex items-center justify-center border-t border-transparent p-6 sm:p-6 lg:border-t-0 lg:p-8">
               <div className="auth-entrance-2 mx-auto w-full max-w-[560px]">
-                <div className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
-                  <div className="mb-5 flex items-start justify-between gap-4">
+                <div className={cn(unifiedSectionPanelClassName, 'p-4')}>
+                  <div className="mb-4 flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/35">
+                      <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
                         Account access
                       </p>
-                      <h2 className="pt-2 text-2xl font-semibold tracking-tight text-foreground">
+                      <h2 className="pt-2 text-2xl font-black tracking-tight text-foreground">
                         Sign in to continue
                       </h2>
-                      <p className="pt-2 text-sm text-foreground/35">
+                      <p className="pt-2 text-sm text-muted-foreground">
                         Use the method that fits your routine and resume exactly where you left off.
                       </p>
                     </div>
@@ -146,27 +146,27 @@ export default function AuthenticationPageClient() {
 
                   <div className="mb-6 grid gap-2">
                     {ACCESS_POINTS.map((point) => (
-                      <div key={point} className={cn(unifiedInsetPanelClassName, 'flex items-center gap-2.5 px-3.5 py-3')}>
+                      <div key={point} className={cn(unifiedInsetPanelClassName, 'flex items-center gap-2 px-4 py-3')}>
                         <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-primary" />
-                        <span className="text-sm text-foreground/35">{point}</span>
+                        <span className="text-sm text-muted-foreground">{point}</span>
                       </div>
                     ))}
                   </div>
 
                   <UserAuthForm />
 
-                  <p className="mt-8 text-center text-[11px] leading-relaxed text-foreground/35">
+                  <p className="mt-8 text-center text-[11px] leading-relaxed text-muted-foreground">
                     {t('authentication.termsAndPrivacy.prefix')}{' '}
                     <Link
                       href={`/${locale}/terms`}
-                      className="text-foreground underline decoration-border/80 underline-offset-4 hover:text-foreground"
+                      className="text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
                     >
                       {t('authentication.termsAndPrivacy.terms')}
                     </Link>{' '}
                     {t('authentication.termsAndPrivacy.and')}{' '}
                     <Link
                       href={`/${locale}/privacy`}
-                      className="text-foreground underline decoration-border/80 underline-offset-4 hover:text-foreground"
+                      className="text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
                     >
                       {t('authentication.termsAndPrivacy.privacy')}
                     </Link>

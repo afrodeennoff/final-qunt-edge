@@ -19,7 +19,6 @@ import type { Subscription } from '@/prisma/generated/prisma'
 import { LogoutButton } from './logout-button'
 import { maskEmail } from '@/lib/redact-pii'
 
-
 export function AuthProfileButton() {
  const t = useI18n()
  const locale = useCurrentLocale()
@@ -34,7 +33,7 @@ export function AuthProfileButton() {
  <div className="relative inline-block cursor-pointer">
  <Avatar className="h-8 w-8">
  <AvatarImage src={user?.user_metadata.avatar_url} />
- <AvatarFallback className="uppercase text-xs bg-background/0.6 text-secondary-foreground">
+ <AvatarFallback className="uppercase text-xs bg-primary/10 text-primary border border-primary/25">
  {user?.email?.[0]}
  </AvatarFallback>
  </Avatar>

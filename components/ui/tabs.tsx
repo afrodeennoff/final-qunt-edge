@@ -28,7 +28,7 @@ const TabsList = React.forwardRef<
     ref={ref}
     data-slot="tabs-list"
     className={cn(
-      'inline-flex min-h-10 items-center justify-center rounded-xl border border-border/40 bg-background/60 p-1 text-muted-foreground',
+      'inline-flex min-h-10 items-center justify-start overflow-x-auto rounded-xl border-0 bg-background/60 p-0.5 text-muted-foreground',
       className,
     )}
     {...props}
@@ -44,7 +44,7 @@ const TabsTrigger = React.forwardRef<
     ref={ref}
     data-slot="tabs-trigger"
     className={cn(
-      'type-label inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 ring-offset-background transition-[background-color,color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-primary/8 data-[state=active]:text-foreground data-[state=active]:font-medium hover:bg-muted/40 hover:text-foreground',
+      'type-label inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 ring-offset-background transition-[background-color,color] duration-100 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-primary/8 data-[state=active]:text-foreground data-[state=active]:font-medium hover:bg-muted/40 hover:text-foreground',
       className,
     )}
     {...props}
@@ -60,7 +60,7 @@ const TabsContent = React.forwardRef<
     ref={ref}
     data-slot="tabs-content"
     className={cn(
-      'mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      'mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=active]:animate-in data-[state=active]:fade-in-0 data-[state=active]:slide-in-from-bottom-1 data-[state=inactive]:animate-out data-[state=inactive]:fade-out-0 data-[state=inactive]:slide-out-to-bottom-1 data-[state=active]:duration-150 data-[state=inactive]:duration-100',
       className,
     )}
     {...props}

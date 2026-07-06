@@ -9,6 +9,7 @@ import { GroupWithAccounts } from './groups'
 import { createSecureSlug } from '@/lib/security/slug'
 import { isSharedAccessible } from '@/lib/security/shared-access'
 import { getDatabaseUserId } from './auth'
+import { logger } from '@/lib/logger'
 
 export interface SharedParams {
   userId: string
@@ -94,7 +95,7 @@ export async function createShared(data: SharedCreateParams): Promise<string> {
 
     throw new Error('Failed to generate unique slug after multiple attempts')
   } catch (error) {
-    console.error('Error creating shared trades:', error)
+    logger.error('Error creating shared trades:', { error: error instanceof Error ? error.message : String(error) })
     if (error instanceof Error) {
       throw new Error(`Failed to share trades: ${error.message}`)
     }
@@ -132,7 +133,7 @@ export async function getShared(slug: string): Promise<{ params: SharedParams, t
       prisma.shared.update({
         where: { slug },
         data: { viewCount: { increment: 1 } }
-      }).catch(err => console.error('[getShared] Failed to update view count:', err))
+      })      .catch(err => logger.error('[getShared] Failed to update view count', { error: err instanceof Error ? err.message : String(err) }))
     }
 
     return {
@@ -140,7 +141,7 @@ export async function getShared(slug: string): Promise<{ params: SharedParams, t
       trades: normalizeTradesForClient(result.trades)
     }
   } catch (error) {
-    console.error('[getShared] Error:', error)
+    logger.error('[getShared] Error:', { error: error instanceof Error ? error.message : String(error) })
     return null
   }
 }
@@ -258,7 +259,7 @@ export async function getUserShared() {
 
     return sharedTrades
   } catch (error) {
-    console.error('Error getting user shared trades:', error)
+    logger.error('Error getting user shared trades:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -280,7 +281,7 @@ export async function deleteShared(slug: string) {
 
     updateTag(`shared-view-${slug}`)
   } catch (error) {
-    console.error('Error deleting shared:', error)
+    logger.error('Error deleting shared:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }

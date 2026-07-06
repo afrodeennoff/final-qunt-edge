@@ -48,7 +48,7 @@ function LongShortPerformanceCardInner({ size = 'medium' }: LongShortPerformance
  >
  <div className="mx-auto inline-flex items-center justify-center gap-2.5 text-center">
  <ArrowUpFromLine className="h-4 w-4 shrink-0 metric-positive" />
- <span className="shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">L/S</span>
+ <span className="shrink-0 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">L/S</span>
  <span className="font-terminal shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground">
  {longRate}/{shortRate}
  </span>

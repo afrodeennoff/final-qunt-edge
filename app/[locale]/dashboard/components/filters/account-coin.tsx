@@ -87,13 +87,13 @@ export function AccountCoin({
  return acc & acc
  }, 0)
  const level = Math.abs(hash) % 6
- const bases = ["hsl(var(--chart-2))","hsl(var(--chart-3))","hsl(var(--chart-4))","hsl(var(--chart-5))","hsl(var(--chart-6))","hsl(var(--chart-7))",
+ const bases = ["var(--chart-2)","var(--chart-3)","var(--chart-4)","var(--chart-5)","var(--chart-6)","var(--chart-7)",
  ]
  return {
  base: bases[level],
  bg:"hsl(var(--muted) / 0.35)",
- border:"hsl(var(--border) / 0.85)",
- text:"hsl(var(--foreground))",
+ border:"transparent",
+ text:"var(--foreground)",
  }
  }
 

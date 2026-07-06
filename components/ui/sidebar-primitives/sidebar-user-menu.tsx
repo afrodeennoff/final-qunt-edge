@@ -56,7 +56,7 @@ export function SidebarUserMenu({
                       {initials}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-sidebar bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]" />
+                  <div className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-sidebar bg-success shadow-[0_0_6px_hsl(var(--success)/0.5)]" />
                 </div>
                 <div className="grid min-w-0 flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                   <span className="truncate font-semibold text-sidebar-foreground">
@@ -71,14 +71,14 @@ export function SidebarUserMenu({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-xl border border-sidebar-border/35 bg-sidebar/98 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)]"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-xl border border-transparent bg-sidebar/98 shadow-md"
             side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={6}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2.5 bg-gradient-to-r from-sidebar-primary/18 to-sidebar-accent/10 px-3 py-2.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-xl shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+                <Avatar className="h-8 w-8 rounded-xl shadow-sm">
                   <AvatarImage src={user?.avatar_url} alt={displayName} />
                   <AvatarFallback className="rounded-lg bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
                     {initials}
@@ -92,17 +92,17 @@ export function SidebarUserMenu({
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-sidebar-border/12" />
+            <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-sidebar-border/30 to-transparent h-px my-0.5" />
             {timezone && (
               <div className="px-2.5 py-2.5">
-                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-sidebar-foreground/40 px-1 mb-2">
+                <p className="text-[9px] font-black uppercase tracking-[0.12em] text-sidebar-foreground/40 px-1 mb-2">
                   Timezone
                 </p>
                 <Select value={timezone.value} onValueChange={timezone.onChange}>
-                  <SelectTrigger className="w-full border-sidebar-border/24 bg-sidebar-accent/20 text-sm hover:border-sidebar-primary/18 hover:bg-sidebar-accent/34 data-[placeholder]:text-sidebar-foreground/40">
+                  <SelectTrigger className="w-full border-transparent bg-sidebar-accent/20 text-sm hover:border-sidebar-primary/18 hover:bg-sidebar-accent/34 data-[placeholder]:text-sidebar-foreground/40">
                     <SelectValue placeholder="Select timezone" />
                   </SelectTrigger>
-                  <SelectContent className="border-sidebar-border/24 bg-sidebar/98 text-popover-foreground">
+                  <SelectContent className="border-transparent bg-sidebar/98 text-sidebar-foreground">
                     {timezone.options.map((tz) => (
                       <SelectItem key={tz} value={tz}>
                         {tz}
@@ -112,11 +112,11 @@ export function SidebarUserMenu({
                 </Select>
               </div>
             )}
-            <DropdownMenuSeparator className="bg-sidebar-border/12" />
+            <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-sidebar-border/30 to-transparent h-px my-0.5" />
             {onLogout && (
               <DropdownMenuItem
                 onClick={onLogout}
-                className="text-destructive focus:bg-destructive/15 focus:text-destructive cursor-pointer my-1.5 mx-1.5 rounded-lg transition-[opacity,background-color,border-color] duration-200 hover:bg-destructive/10"
+                className="text-destructive focus-visible:bg-destructive/15 focus-visible:text-destructive cursor-pointer my-1.5 mx-1.5 rounded-lg transition-[opacity,background-color,border-color] duration-200 hover:bg-destructive/10"
               >
                 <LogOut className="mr-2 size-4" />
                 <span className="font-medium">Log out</span>

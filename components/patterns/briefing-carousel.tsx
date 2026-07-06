@@ -1,6 +1,5 @@
 import { cn } from './utils'
 import { LucideIcon } from 'lucide-react'
-import React from 'react'
 
 interface BriefingCarouselProps {
   title?: string
@@ -22,7 +21,7 @@ export function BriefingCarousel({
   return (
     <div className={cn('w-full', className)} data-slot="briefing-carousel">
       {title && (
-        <h3 className="text-[18px] font-semibold text-foreground mb-4 px-6">
+        <h3 className="text-[18px] font-black text-foreground mb-4 px-6">
           {title}
         </h3>
       )}
@@ -30,7 +29,7 @@ export function BriefingCarousel({
         {items.map((item, index) => (
           <div
             key={index}
-            className="w-[280px] flex-shrink-0 rounded-2xl p-6 bg-card shadow-card snap-start border border-[hsl(var(--border)/0.18)]"
+            className="w-[280px] flex-shrink-0 rounded-2xl p-6 bg-card shadow-card snap-start border-0"
           >
             <div
               className={cn(

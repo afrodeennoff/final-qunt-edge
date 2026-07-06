@@ -1,4 +1,6 @@
 import { getTraderById, getTraderVarSummary } from "../actions/user";
+import { unifiedInsetPanelClassName } from '@/components/layout/unified-page-recipes'
+import { cn } from '@/lib/utils'
 
 function formatCurrency(value: number): string {
  return new Intl.NumberFormat("en-US", {
@@ -23,58 +25,67 @@ export async function TraderInfo({ slug }: { slug: string }) {
  const insufficient = varSummaryResponse.error ==="insufficientData"
  const failed = !varSummaryResponse.success && varSummaryResponse.error
 
- return (
- <div className="space-y-4">
- <div>
- <h2 className="text-lg font-semibold mb-2">Trader Information</h2>
- <p>
- <strong>Email:</strong>{""}
- {traderInfoResponse?.email
- ? traderInfoResponse.email
- : <span className="text-muted-foreground">No email</span>}
- </p>
- </div>
+  return (
+  <div className="space-y-6">
+    <div>
+      <div className="mb-3 flex items-center gap-2">
+        <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Trader Profile</span>
+      </div>
+      <h2 className="text-lg font-semibold tracking-tight">Trader Information</h2>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Email: {traderInfoResponse?.email ? (
+          <span className="font-medium text-foreground">{traderInfoResponse.email}</span>
+        ) : <span className="text-muted-foreground">No email</span>}
+      </p>
+    </div>
 
- <div>
- <h3 className="text-base font-semibold mb-2">1-Day Value at Risk</h3>
+    <div>
+      <div className="mb-3 flex items-center gap-2">
+        <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Risk Metrics</span>
+      </div>
+      <h3 className="text-base font-semibold tracking-tight">1-Day Value at Risk</h3>
 
  {summary ? (
  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
- <div className="rounded-lg border border-border/0.56 bg-background/0.11 p-3">
- <p className="text-xs font-medium text-muted-foreground">Hist VaR 95%</p>
- <p className="mt-1 text-lg font-semibold">{formatCurrency(summary.hist95.amount)}</p>
- <p className="text-xs text-muted-foreground">{formatPercent(summary.hist95.percent)}</p>
- </div>
- <div className="rounded-lg border border-border/0.56 bg-background/0.11 p-3">
- <p className="text-xs font-medium text-muted-foreground">Hist VaR 99%</p>
- <p className="mt-1 text-lg font-semibold">{formatCurrency(summary.hist99.amount)}</p>
- <p className="text-xs text-muted-foreground">{formatPercent(summary.hist99.percent)}</p>
- </div>
- <div className="rounded-lg border border-border/0.56 bg-background/0.11 p-3">
- <p className="text-xs font-medium text-muted-foreground">Param VaR 95%</p>
- <p className="mt-1 text-lg font-semibold">{formatCurrency(summary.param95.amount)}</p>
- <p className="text-xs text-muted-foreground">{formatPercent(summary.param95.percent)}</p>
- </div>
- <div className="rounded-lg border border-border/0.56 bg-background/0.11 p-3">
- <p className="text-xs font-medium text-muted-foreground">Param VaR 99%</p>
- <p className="mt-1 text-lg font-semibold">{formatCurrency(summary.param99.amount)}</p>
- <p className="text-xs text-muted-foreground">{formatPercent(summary.param99.percent)}</p>
- </div>
+   <div className={cn(unifiedInsetPanelClassName, 'p-4 transition-[border-color,background-color] duration-200 ease-[0.22,1,0.36,1] hover:border-primary/25')}>
+  <p className="text-xs font-medium text-muted-foreground">Hist VaR 95%</p>
+  <p className="mt-1 text-lg font-semibold">{formatCurrency(summary.hist95.amount)}</p>
+  <p className="text-xs text-muted-foreground">{formatPercent(summary.hist95.percent)}</p>
+  </div>
+   <div className={cn(unifiedInsetPanelClassName, 'p-4 transition-[border-color,background-color] duration-200 ease-[0.22,1,0.36,1] hover:border-primary/25')}>
+  <p className="text-xs font-medium text-muted-foreground">Hist VaR 99%</p>
+  <p className="mt-1 text-lg font-semibold">{formatCurrency(summary.hist99.amount)}</p>
+  <p className="text-xs text-muted-foreground">{formatPercent(summary.hist99.percent)}</p>
+  </div>
+   <div className={cn(unifiedInsetPanelClassName, 'p-4 transition-[border-color,background-color] duration-200 ease-[0.22,1,0.36,1] hover:border-primary/25')}>
+  <p className="text-xs font-medium text-muted-foreground">Param VaR 95%</p>
+  <p className="mt-1 text-lg font-semibold">{formatCurrency(summary.param95.amount)}</p>
+  <p className="text-xs text-muted-foreground">{formatPercent(summary.param95.percent)}</p>
+  </div>
+   <div className={cn(unifiedInsetPanelClassName, 'p-4 transition-[border-color,background-color] duration-200 ease-[0.22,1,0.36,1] hover:border-primary/25')}>
+  <p className="text-xs font-medium text-muted-foreground">Param VaR 99%</p>
+  <p className="mt-1 text-lg font-semibold">{formatCurrency(summary.param99.amount)}</p>
+  <p className="text-xs text-muted-foreground">{formatPercent(summary.param99.percent)}</p>
+  </div>
+
  </div>
  ) : null}
 
- {insufficient ? (
- <p className="text-sm text-muted-foreground">
- Not enough trade history to compute VaR (needs 30+ daily observations).
- </p>
- ) : null}
+  {insufficient ? (
+    <div className={cn(unifiedInsetPanelClassName, 'p-4 mt-4 text-sm text-muted-foreground')}>
 
- {failed ? (
- <p className="text-sm text-destructive">
- Could not compute VaR right now. Please try again shortly.
- </p>
- ) : null}
- </div>
- </div>
- );
+      Not enough trade history to compute VaR (needs 30+ daily observations).
+    </div>
+  ) : null}
+
+  {failed ? (
+    <p className="mt-4 text-sm text-destructive">
+      Could not compute VaR right now. Please try again shortly.
+    </p>
+  ) : null}
+  </div>
+  </div>
+  );
 }

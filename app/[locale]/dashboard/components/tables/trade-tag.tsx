@@ -66,8 +66,8 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
 
  setInputValue('')
  setIsOpen(false)
- } catch (error) {
- console.error('Failed to add tag:', error)
+ } catch {
+
  } finally {
  setIsUpdating(false)
  }
@@ -88,8 +88,8 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  tags: prev.tags.filter(t => t !== tagToRemove)
  }))
  }
- } catch (error) {
- console.error('Failed to remove tag:', error)
+ } catch {
+
  } finally {
  setIsUpdating(false)
  }
@@ -98,15 +98,20 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  return (
  <div className="flex items-center gap-2">
  <div className="flex gap-1 flex-wrap">
- {trade.tags.map((tag, index) => {
+ {trade.tags.map((tag) => {
  const metadata = tags.find(t => t.name.toLowerCase() === tag.toLowerCase())
  return (
  <div
- key={index}
- className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 border border-border/55 h-auto max-w-[150px] transition-[opacity,background-color,border-color] hover:border-border/65"
+ key={tag}
+ className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 border-05 h-auto max-w-[150px] transition-[opacity,background-color,border-color] hover:border-transparent"
  style={{
  backgroundColor: metadata?.color || 'hsl(var(--foreground) / 0.35)',
- color: 'hsl(var(--foreground))'
+ // Pick a readable foreground based on the tag background luminance (hex only;
+ // CSS-var/HSL fallbacks keep the default foreground).
+ color: (() => {
+   const c = metadata?.color
+   return c && c.startsWith('#') ? getContrastColor(c) : 'var(--foreground)'
+ })()
  }}
  >
  {tag}
@@ -184,7 +189,7 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  >
  <div className="flex items-center gap-2">
  <div
- className="w-3 h-3 rounded-full shrink-0 border border-border/55"
+ className="w-3 h-3 rounded-full shrink-0 border-05"
  style={{ backgroundColor: tag.color || 'hsl(var(--foreground) / 0.35)' }}
  />
  <span>{tag.name}</span>
@@ -203,7 +208,7 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  </Command>
  {isUpdating && (
  <div className="absolute right-2 top-2">
- <div className="animate-spin rounded-full h-4 w-4 border-2 border-border/20 border-t-transparent" />
+ <div className="animate-spin rounded-full h-4 w-4 border-2 border-transparent border-t-transparent" />
  </div>
  )}
  </PopoverContent>
@@ -226,5 +231,5 @@ function getContrastColor(hexColor: string): string {
  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
 
  // Return black or white based on luminance
- return luminance > 0.5 ? 'hsl(var(--background))' : 'hsl(var(--foreground))'
+ return luminance > 0.5 ? 'var(--background)' : 'var(--foreground)'
 }

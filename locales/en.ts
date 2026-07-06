@@ -300,6 +300,8 @@ export default {
   'import.table.showingFirst': 'Showing first {count} of {total} trades',
   'import.type.search': 'Search import types...',
   'import.type.noResults': 'No import types found.',
+  'import.type.selectPrompt': 'Select an import type',
+  'import.type.selectPromptDescription': 'Choose a platform or method from the list to start importing your trades.',
   'import.type.category.directSync': 'Direct Account Sync',
   'import.type.category.intelligentImport': 'Intelligent Import',
   'import.type.category.platformCsv': 'Platform CSV Import',
@@ -626,6 +628,8 @@ export default {
   'import.error.noTradesAdded': 'No Trades Added',
   'import.error.noTradesAddedDescription':
     'No trades were added. Please check your data and try again.',
+  'import.error.skippedDescription':
+    'trade(s) skipped — missing account number or instrument.',
   'widgets.addWidget': 'Add',
   'widgets.removeWidget': 'Remove',
   'widgets.removeWidgetConfirm': 'Are you sure?',

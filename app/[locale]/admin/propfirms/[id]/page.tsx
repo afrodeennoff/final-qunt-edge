@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { connection } from 'next/server'
 import type { ReactNode } from 'react'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
-import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { propFirms } from '@/lib/prop-firms-config'
 import { getSpotlightCouponSuggestionForFirm } from '@/lib/prop-firms/spotlight-coupon-suggestions'
 import { getPropFirmAdminPageState } from '@/lib/prop-firms/admin-state'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
@@ -325,9 +325,9 @@ function FormFieldGroup({
   children: ReactNode
 }) {
   return (
-    <div className="space-y-4 rounded-xl border border-border/30 bg-background/40 p-4">
+    <div className="space-y-4 rounded-xl border-0 bg-background/40 p-4">
       <div className="space-y-1">
-        <p className="text-sm font-semibold text-foreground">{title}</p>
+        <p className="text-sm font-black text-foreground">{title}</p>
         {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
       </div>
       {children}
@@ -367,7 +367,7 @@ export default async function PropFirmEditPage({
           },
         })
       } catch (error) {
-        console.warn('[Admin PropFirm] DB error loading firm:', error)
+
         firm = buildFallbackFirm(id)
       }
     } else {
@@ -387,14 +387,14 @@ export default async function PropFirmEditPage({
 
   return (
     <div className="max-w-5xl space-y-5">
-      <div className="flex flex-col gap-3 border-b border-border/30 pb-6 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-3 border-b-0 pb-6 md:flex-row md:items-end md:justify-between">
         <div className="space-y-2">
           <Button variant="ghost" size="sm" asChild className="w-fit">
             <Link href={`/${locale}/admin/propfirms`}>← Back to firms</Link>
           </Button>
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-3xl font-semibold tracking-tight">
+              <h1 className="text-2xl font-black tracking-tight">
                 {isNew ? 'Add Prop Firm' : (firm?.name ?? 'Edit Prop Firm')}
               </h1>
               {!isNew && firm ? (
@@ -463,10 +463,10 @@ export default async function PropFirmEditPage({
 
       <form action={handleAction}>
         <Card
-          variant="frost"
-          className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+          variant="elevated"
+          className="border-transparent bg-card shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
         >
-          <CardHeader className="space-y-1 border-b border-border/30">
+          <CardHeader className="space-y-1 border-b-0">
             <CardTitle>Firm details</CardTitle>
             <p className="text-sm text-muted-foreground">
               These fields drive the public catalogue, firm detail page, and admin suggestion
@@ -657,10 +657,10 @@ function ReviewsSection({
 }) {
   return (
     <Card
-      variant="frost"
-      className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+      variant="elevated"
+      className="border-transparent bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
-      <CardHeader className="space-y-3 border-b border-border/30">
+      <CardHeader className="space-y-3 border-b-0">
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
           <div className="space-y-1">
             <CardTitle>Reviews ({firm.reviews.length})</CardTitle>
@@ -684,7 +684,7 @@ function ReviewsSection({
 
         <form
           action={handleCreateReview}
-          className="rounded-xl border border-border/30 bg-background/40 p-4"
+          className="rounded-xl border-0 bg-background/40 p-4"
         >
           <input type="hidden" name="propFirmId" value={firm.id} />
           <input type="hidden" name="locale" value={locale} />
@@ -723,7 +723,7 @@ function ReviewsSection({
             {firm.reviews.map((review) => (
               <div
                 key={review.id}
-                className="rounded-lg border border-border/30 p-4"
+                className="rounded-xl border-0 p-4"
               >
                 <div className="space-y-3">
                   <form action={handleUpdateReview} className="space-y-2">
@@ -770,7 +770,7 @@ function ReviewsSection({
                       </div>
                     </fieldset>
                   </form>
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/30 pt-3">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t-0 pt-3">
                     <p className="text-xs text-muted-foreground">
                       Created: {new Date(review.createdAt).toLocaleDateString()}
                     </p>
@@ -819,10 +819,10 @@ function CouponsSection({
 
   return (
     <Card
-      variant="frost"
-      className="border-border/45 bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+      variant="elevated"
+      className="border-transparent bg-background/72 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
-      <CardHeader className="space-y-3 border-b border-border/30">
+      <CardHeader className="space-y-3 border-b-0">
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
           <div className="space-y-1">
             <CardTitle>Coupons ({firm.coupons.length})</CardTitle>
@@ -851,7 +851,7 @@ function CouponsSection({
         {canManageCoupons ? (
           <form
             action={handleCreateCoupon}
-            className="space-y-4 rounded-xl border border-border/30 p-4"
+            className="space-y-4 rounded-xl border-0 p-4"
           >
             <input type="hidden" name="propFirmId" value={firm.id} />
             <input type="hidden" name="locale" value={locale} />
@@ -1019,11 +1019,11 @@ function CouponEditorCard({
   const timing = getCouponTimingState(coupon)
 
   return (
-    <div className="rounded-xl border border-border/30 p-4">
-      <div className="flex flex-col gap-4 border-b border-border/30 pb-4 md:flex-row md:items-start md:justify-between">
+    <div className="rounded-xl border-0 p-4">
+      <div className="flex flex-col gap-4 border-b-0 pb-4 md:flex-row md:items-start md:justify-between">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-base font-semibold tracking-tight">{coupon.code}</p>
+            <p className="text-base font-black tracking-tight">{coupon.code}</p>
             <Badge variant={coupon.isActive ? 'default' : 'secondary'}>
               {coupon.isActive ? 'Active' : 'Inactive'}
             </Badge>
@@ -1033,17 +1033,17 @@ function CouponEditorCard({
               </Badge>
             ) : null}
             {timing.isScheduled ? (
-              <Badge variant="outline" className="border-sky-500/40 text-sky-300">
+              <Badge variant="outline" className="border-info/40 text-info">
                 Scheduled
               </Badge>
             ) : null}
             {timing.isExpired ? (
-              <Badge variant="outline" className="border-border/40 text-muted-foreground">
+              <Badge variant="outline" className="border-transparent text-muted-foreground">
                 Expired
               </Badge>
             ) : null}
             {timing.isExpiringSoon ? (
-              <Badge variant="outline" className="border-amber-500/40 text-amber-300">
+              <Badge variant="outline" className="border-warning/40 text-warning">
                 Expires soon
               </Badge>
             ) : null}
@@ -1192,7 +1192,7 @@ function CouponEditorCard({
         </fieldset>
       </form>
 
-      <div className="mt-4 flex flex-col gap-3 border-t border-border/30 pt-4 md:flex-row md:items-center md:justify-between">
+      <div className="mt-4 flex flex-col gap-3 border-t-0 pt-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1 text-xs text-muted-foreground">
           <p>Created {new Date(coupon.createdAt).toLocaleString()}</p>
           <p>

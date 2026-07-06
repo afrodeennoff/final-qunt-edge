@@ -137,7 +137,7 @@ export function NewsletterPreview() {
  </div>
  </div>
  ) : (
- <div className="relative bg-background/0.45 rounded-md overflow-hidden h-[calc(100vh-15rem)]">
+ <div className="relative bg-card rounded-md min-h-[calc(100dvh-15rem)]">
  <div className="absolute inset-0 overflow-auto">
  <iframe
  srcDoc={emailHtml}

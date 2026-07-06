@@ -44,7 +44,7 @@ function RouteStateShell({
       )}
     >
       <BackgroundGlow variant="accent" />
-      <div className="pointer-events-none absolute inset-x-6 top-0 h-32 rounded-b-[2rem] border border-border/20 bg-primary/[0.02]" />
+      <div className="pointer-events-none absolute inset-x-6 top-0 h-32 rounded-b-[2rem] border-0 bg-primary/[0.02]" />
 
       <div
         className={cn(
@@ -55,18 +55,18 @@ function RouteStateShell({
         <div
           className={cn(
             unifiedStatePanelClassName,
-            'w-full max-w-[min(40rem,100%)] px-6 py-7 sm:px-8 sm:py-9',
+            'w-full max-w-[min(40rem,100%)] px-6 py-6 sm:px-8 sm:py-8',
             compact && 'max-w-[min(32rem,100%)] px-5 py-6',
             contentClassName,
           )}
         >
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/15 to-transparent" />
           <div className="flex flex-col items-center text-center">
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-border/30 bg-background/40 text-muted-foreground">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl border-0 bg-background/40 text-muted-foreground">
               <Logo className="size-5 fill-current" />
             </div>
             <span className={unifiedChipClassName}>{eyebrow}</span>
-            <h1 className="mt-5 text-balance text-3xl font-medium tracking-[-0.05em] text-foreground sm:text-4xl">
+            <h1 className="mt-4 text-balance text-3xl font-medium tracking-[-0.05em] text-foreground sm:text-4xl">
               {title}
             </h1>
             <p className={cn(unifiedBodyCopyClassName, 'mt-4 max-w-xl text-center')}>{description}</p>
@@ -103,7 +103,7 @@ function RouteLoadingScreen({
       compact={compact}
     >
       <div className="flex flex-col items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-border/30 bg-background/40 text-muted-foreground">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full border-0 bg-background/40 text-muted-foreground">
           <Loader2 className="size-4 animate-spin" />
         </div>
         <div className="w-full max-w-sm space-y-2">

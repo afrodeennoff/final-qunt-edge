@@ -51,7 +51,7 @@ const ChartContainer = React.forwardRef<
  <div
  data-chart={chartId}
  ref={ref}
- className={cn("flex h-full w-full justify-center rounded-lg p-0 text-xs [&_.recharts-cartesian-axis-tick_text]:fill-[hsl(var(--chart-axis))] [&_.recharts-cartesian-axis-tick_text]:font-medium [&_.recharts-cartesian-grid_line]:stroke-[hsl(var(--chart-grid)/0.42)] [&_.recharts-cartesian-grid_line]:[stroke-dasharray:2_6] [&_.recharts-curve.recharts-tooltip-cursor]:stroke-[hsl(var(--foreground)/0.55)] [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_line]:stroke-[hsl(var(--chart-grid)/0.42)] [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-[hsl(var(--foreground)/0.05)] [&_.recharts-reference-line_line]:stroke-[hsl(var(--chart-axis)/0.5)] [&_.recharts-reference-line_line]:[stroke-dasharray:2_8] [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-hidden [&_.recharts-surface]:outline-hidden",
+ className={cn("flex h-full w-full justify-center rounded-lg p-0 text-xs [&_.recharts-cartesian-axis-tick_text]:fill-[var(--chart-axis)] [&_.recharts-cartesian-axis-tick_text]:font-medium [&_.recharts-cartesian-grid_line]:stroke-[var(--chart-grid-muted)] [&_.recharts-cartesian-grid_line]:[stroke-dasharray:2_6] [&_.recharts-curve.recharts-tooltip-cursor]:stroke-[var(--chart-axis-muted)] [&_.recharts-dot[stroke]]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_line]:stroke-[var(--chart-grid-muted)] [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-transparent [&_.recharts-reference-line_line]:stroke-[var(--chart-axis-muted)] [&_.recharts-reference-line_line]:[stroke-dasharray:2_8] [&_.recharts-sector[stroke]]:stroke-transparent [&_.recharts-sector]:outline-hidden [&_.recharts-surface]:outline-hidden",
  className
  )}
  {...props}
@@ -174,7 +174,7 @@ const ChartTooltipContent = React.forwardRef<
  return (
  <div
  ref={ref}
- className={cn("grid min-w-36 items-start gap-1.5 rounded-xl border border-[hsl(var(--chart-tooltip-border))] bg-[hsl(var(--chart-tooltip)/0.96)] px-3 py-2 text-xs shadow-2xl",
+ className={cn("grid min-w-36 items-start gap-1.5 rounded-xl border border-[transparent] bg-[var(--chart-tooltip)] px-3 py-2 text-xs shadow-2xl",
  className
  )}
  >
@@ -201,7 +201,7 @@ const ChartTooltipContent = React.forwardRef<
  ) : (
  !hideIndicator && (
  <div
- className={cn("shrink-0 rounded-sm border-border/30 bg-(--color-bg)",
+ className={cn("shrink-0 rounded-sm border-transparent bg-(--color-bg)",
  {"h-2.5 w-2.5": indicator ==="dot","w-1": indicator ==="line","w-0 border-[1.5px] border-dashed bg-transparent":
  indicator ==="dashed","my-0.5": nestLabel && indicator ==="dashed",
  }

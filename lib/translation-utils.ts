@@ -23,6 +23,22 @@ export function translateWeekday(t: TranslateFunction, day: string): string {
   }
 }
 
+const FEE_TYPE_LABELS: Record<string, string> = {
+  commission: 'import.tradovate.feeTypes.commission',
+  exchangeFee: 'import.tradovate.feeTypes.exchangeFee',
+  clearingFee: 'import.tradovate.feeTypes.clearingFee',
+  nfaFee: 'import.tradovate.feeTypes.nfaFee',
+  brokerageFee: 'import.tradovate.feeTypes.brokerageFee',
+  orderRoutingFee: 'import.tradovate.feeTypes.orderRoutingFee',
+}
+
+export function translateTradovateFeeType(t: TranslateFunction, feeType: string): string {
+  const key = FEE_TYPE_LABELS[feeType]
+  if (!key) return feeType
+  const translated = t(key)
+  return translated === key ? feeType.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase()) : translated
+}
+
 export function translateWeekdayPnL(t: TranslateFunction, day: number): string {
   switch (day) {
     case 0: return t('weekdayPnl.days.sunday')

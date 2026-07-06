@@ -21,14 +21,12 @@ export const THEME_PRESETS: Record<string, EmbedThemeVars> = {
   
       '--chart-1': '12 76% 61%', // orange
       '--chart-2': '343 83% 45%', // raspberry
-      '--chart-3': '43 74% 66%',  // yellow
+      '--chart-3': '12 76% 61%',  // warm orange
       '--chart-4': '330 70% 60%', // pink
       '--chart-5': '27 87% 67%',  // amber
-      '--chart-win': '120 72% 45%', // green
-      '--chart-loss': '0 72% 45%', // red
-      
-  
-      '--success': '142 72% 29%',
+        '--chart-win': '152 78% 45%', // #0ECB81 green
+        '--chart-loss': '350 82% 55%', // #F6465D red
+        '--success': '142 72% 29%',
       '--success-foreground': '144 80% 10%',
       '--destructive': '0 72% 45%',
       '--destructive-foreground': '0 0% 98%',
@@ -89,7 +87,7 @@ export const THEME_PRESETS: Record<string, EmbedThemeVars> = {
     '--chart-1': '0 70% 60%', 
     '--chart-2': '190 92% 45%', // cyan
     '--chart-3': '160 84% 40%', // green
-    '--chart-4': '260 84% 60%', // violet
+    '--chart-4': '150 84% 60%', // green
     '--chart-5': '340 80% 60%', // magenta
     '--chart-loss': '0 70% 60%',
     '--chart-win': '160 84% 40%',

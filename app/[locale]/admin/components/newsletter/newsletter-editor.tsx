@@ -48,7 +48,7 @@ export function NewsletterEditor() {
  toast.error("Unable to retrieve video transcription")
  }
  } catch (error) {
- console.error('Error fetching transcript:', error)
+
  toast.error("Error retrieving transcription")
  } finally {
  setIsLoadingTranscript(false)
@@ -87,11 +87,11 @@ export function NewsletterEditor() {
  }))
  toast.success("Newsletter generated successfully!")
  } else {
- console.error('Newsletter generation failed:', result)
+
  toast.error("Failed to generate content")
  }
  } catch (error) {
- console.error('Error generating newsletter:', error)
+
  toast.error("An error occurred during generation")
  } finally {
  setGenerating(false)
@@ -119,14 +119,14 @@ export function NewsletterEditor() {
  // Restore content in case of error
  setContent(currentContent)
  toast.error(error instanceof Error ? error.message : "Failed to send newsletter")
- console.error(error)
+
  } finally {
  setLoading(false)
  }
  }
 
  return (
- <Card className="border-border/0.42 bg-background/0.3">
+  <Card className="border-transparent bg-card">
  <CardHeader>
  <CardTitle className="text-foreground">Composer une Newsletter</CardTitle>
  </CardHeader>
@@ -140,8 +140,8 @@ export function NewsletterEditor() {
  onChange={e => setYoutubeUrl(e.target.value)}
  placeholder="e.g., https://youtube.com/watch?v=dQw4w9WgXcQ"
  required
- className="border-border/0.42 bg-background text-foreground placeholder:text-muted-foreground"
- />
+  className="border-transparent bg-background text-foreground placeholder:text-muted-foreground"
+  />
  </div>
 
  <AudioExtractor
@@ -170,7 +170,7 @@ export function NewsletterEditor() {
  onChange={e => setDescription(e.target.value)}
  placeholder="Describe what you've worked on in this video. For example: 'I implemented a new trade management feature with interactive charts...'"
  required
- className="min-h-[100px] border-border/0.42 bg-background text-foreground placeholder:text-muted-foreground"
+  className="min-h-[100px] border-transparent bg-background text-foreground placeholder:text-muted-foreground"
  disabled={isLoadingTranscript}
  />
  </div>
@@ -198,7 +198,7 @@ export function NewsletterEditor() {
  <Button
  type="button"
  variant="outline"
- className="flex-1 border-border/0.42 bg-muted/40 text-foreground hover:bg-background/0.45"
+  className="flex-1 border-transparent bg-muted/40 text-foreground hover:bg-muted/30"
  onClick={handleSend}
  disabled={loading || generating || !content.subject}
  >

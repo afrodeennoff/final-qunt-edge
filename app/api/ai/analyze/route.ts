@@ -1,15 +1,17 @@
 import { NextRequest } from "next/server";
 import { z } from "zod/v3";
 import { rateLimit } from "@/lib/rate-limit";
+import { checkAiConfig } from "@/lib/ai/client";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, logAiRequest } from "@/lib/ai/telemetry";
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { apiError } from "@/lib/api-response";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
-import { 
-  unifiedSchema, 
-  handleAccountsAnalysis, 
-  handleInstrumentAnalysis, 
+import { isTimeoutError } from "@/lib/ai/timeout";
+import {
+  unifiedSchema,
+  handleAccountsAnalysis,
+  handleInstrumentAnalysis,
   handleTimeOfDayAnalysis,
   handleGlobalAnalysis
 } from "./handlers";
@@ -27,6 +29,9 @@ const unifiedAnalysisRateLimit = rateLimit({
 export async function POST(req: NextRequest) {
   const policy = getAiPolicy("analysis");
   const startedAt = Date.now();
+
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
 
   // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, "analysis", unifiedAnalysisRateLimit);
@@ -59,6 +64,16 @@ export async function POST(req: NextRequest) {
       return apiError("VALIDATION_FAILED", "Invalid analysis request payload", 400, {
         issues: error.errors,
       });
+    }
+
+    if (isTimeoutError(error)) {
+      return apiError(
+        "TIMEOUT",
+        `AI request timed out after ${Math.round(policy.timeoutMs / 1000)}s`,
+        504,
+        { timeoutMs: policy.timeoutMs },
+        { "Retry-After": String(Math.ceil(policy.timeoutMs / 1000)) },
+      );
     }
 
     void logAiRequest({

@@ -1,6 +1,7 @@
 import { getSubscriptionDetails } from '../../server/subscription'
 import { prisma } from '../prisma'
 import { isAdmin } from '@/server/authz'
+import { hasFeature, getUserPlan } from '@/server/plans'
 
 export type AiGuardFeature =
   | 'chat'
@@ -11,6 +12,8 @@ export type AiGuardFeature =
   | 'format-trades'
   | 'search'
   | 'transcribe'
+  | 'journal-insights'
+  | 'analyze-patterns'
 
 type EntitlementResult = {
   allowed: boolean
@@ -19,17 +22,26 @@ type EntitlementResult = {
   isActive: boolean
 }
 
+const AI_FEATURE_MAP: Partial<Record<AiGuardFeature, string>> = {
+  chat: 'ai_analysis',
+  support: 'ai_analysis',
+  editor: 'ai_journaling',
+  analysis: 'ai_analysis',
+  'journal-insights': 'ai_coaching',
+  'analyze-patterns': 'ai_analysis',
+}
+
 const INACTIVE_ALLOWED_FEATURES = new Set<AiGuardFeature>([
   'search',
   'mappings',
   'format-trades',
+  'transcribe',
 ])
 
 export async function canAccessAiFeature(
   userId: string,
   feature: AiGuardFeature,
 ): Promise<EntitlementResult> {
-  // Admin bypass — skip subscription check
   if (isAdmin(userId)) return { allowed: true, plan: 'ADMIN', isActive: true }
 
   const userSubscription = await prisma.subscription.findFirst({
@@ -52,17 +64,26 @@ export async function canAccessAiFeature(
 
   const fallbackSubscription = hasActiveSubscription ? null : await getSubscriptionDetails()
   const isActive = hasActiveSubscription || Boolean(fallbackSubscription?.isActive)
-  const plan = userSubscription?.plan ?? fallbackSubscription?.plan ?? undefined
+  const plan = userSubscription?.plan ?? fallbackSubscription?.plan ?? null
 
   if (isActive) {
-    return { allowed: true, plan, isActive: true }
+    const requiredFeature = AI_FEATURE_MAP[feature]
+    if (requiredFeature && !hasFeature(plan, requiredFeature)) {
+      return {
+        allowed: false,
+        reason: 'This AI feature requires a Pro subscription.',
+        plan: plan ?? undefined,
+        isActive,
+      }
+    }
+    return { allowed: true, plan: plan ?? undefined, isActive: true }
   }
 
   if (INACTIVE_ALLOWED_FEATURES.has(feature)) {
     return {
       allowed: true,
       reason: 'Allowed on inactive plan for baseline features.',
-      plan,
+      plan: plan ?? undefined,
       isActive: false,
     }
   }
@@ -70,7 +91,7 @@ export async function canAccessAiFeature(
   return {
     allowed: false,
     reason: 'Active subscription required for this AI feature.',
-    plan,
+    plan: plan ?? undefined,
     isActive: false,
   }
 }

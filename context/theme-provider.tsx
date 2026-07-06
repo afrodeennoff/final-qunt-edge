@@ -8,7 +8,6 @@ import {
   normalizeDashboardTheme,
   type DashboardTheme,
 } from '@/lib/constants/dashboard-themes'
-import { colors } from '@/lib/theme/tokens'
 
 type ThemeContextType = {
   theme: DashboardTheme
@@ -36,10 +35,10 @@ async function saveThemeToApi(theme: DashboardTheme): Promise<void> {
       body: JSON.stringify({ theme }),
     })
     if (!response.ok) {
-      console.error('[ThemeProvider] Failed to save theme:', response.status)
+
     }
-  } catch (error) {
-    console.error('[ThemeProvider] Error saving theme:', error)
+  } catch {
+
   }
 }
 
@@ -53,15 +52,22 @@ export function ThemeProvider({
   initialTheme,
 }: {
   children: React.ReactNode
-  scope?: 'dashboard' | 'fixed-purple'
+  scope?: 'dashboard' | 'fixed-green'
   initialTheme?: DashboardTheme | string
 }) {
   const resolved = resolveTheme(initialTheme)
   const [theme, setThemeState] = useState<DashboardTheme>(resolved)
 
+  const isDashboard = scope === 'dashboard'
+
   useEffect(() => {
-    applyTheme(resolved)
-  }, [resolved])
+    // Only apply theme CSS variables on dashboard/teams. On public pages
+    // (fixed-green), the CSS defaults in globals.css provide pure #000000
+    // background with Neon Green accent tokens — no runtime override needed.
+    if (isDashboard) {
+      applyTheme(resolved)
+    }
+  }, [resolved, isDashboard])
 
   const setTheme = useCallback((newTheme: DashboardTheme) => {
     if (!VALID_DASHBOARD_THEMES.includes(newTheme)) return
@@ -75,8 +81,6 @@ export function ThemeProvider({
     const nextIndex = (currentIndex + 1) % VALID_DASHBOARD_THEMES.length
     setTheme(VALID_DASHBOARD_THEMES[nextIndex])
   }, [theme, setTheme])
-
-  const isDashboard = scope === 'dashboard'
 
   const contextValue: ThemeContextType = {
     theme,

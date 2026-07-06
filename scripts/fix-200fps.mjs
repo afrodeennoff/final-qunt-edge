@@ -38,7 +38,7 @@ let totalChanges = 0
 const bgGlow = 'components/ui/background-glow.tsx'
 try {
   let c = readFileSync(bgGlow, 'utf-8')
-  let orig = c
+  const orig = c
   // Remove ALL motion animations - replace with static elements
   c = c.replace(/motion\.(div|circle|path)/g, 'div')
   // Remove animate/transition props from motion elements (now divs)
@@ -61,7 +61,7 @@ try {
 const motionFile = 'components/animation/enhanced-motion.tsx'
 try {
   let c = readFileSync(motionFile, 'utf-8')
-  let orig = c
+  const orig = c
   
   // MotionSection: remove y transform and filter, keep only opacity
   c = c.replace(
@@ -139,7 +139,7 @@ const scrollPathFiles = [
 for (const f of scrollPathFiles) {
   try {
     let c = readFileSync(f, 'utf-8')
-    let orig = c
+    const orig = c
     
     // Remove transition-all from card/widget surfaces
     c = c.replace(/transition-all duration-200 ease-\[cubic-bezier\([^)]+\)\]/g, '')
@@ -191,7 +191,7 @@ const sectionFiles = [
 for (const f of sectionFiles) {
   try {
     let c = readFileSync(f, 'utf-8')
-    let orig = c
+    const orig = c
     
     // Add content-visibility: auto to <section> tags
     c = c.replace(
@@ -219,7 +219,7 @@ const dashFiles = walkDir('app/[locale]/dashboard/components')
 for (const f of dashFiles) {
   try {
     let c = readFileSync(f, 'utf-8')
-    let orig = c
+    const orig = c
     
     // Remove whileHover (causes layout recalc on mouse move)
     c = c.replace(/\s*whileHover=\{[^}]+\}/g, '')

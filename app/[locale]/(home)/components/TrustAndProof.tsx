@@ -1,94 +1,45 @@
-import { Badge } from '@/components/ui/badge'
-import { ShieldCheck, Lock, Server, LifeBuoy, Check } from 'lucide-react'
+'use client'
 
-const trustPillars = [
- {
- title: 'Security By Design',
- body: 'Account-scoped reads and writes with ownership checks across imports, layouts, optimized updates, and uploads.',
- icon: Lock,
- },
- {
- title: 'Reliable Operations',
- body: 'Fail-closed budget enforcement, explicit error contracts, and hardened routes that don’t silently fall back.',
- icon: Server,
- },
- {
- title: 'Data You Control',
- body: 'Bring your existing workflow, export review briefs, and keep your performance loop portable.',
- icon: ShieldCheck,
- },
- {
- title: 'Support You Can Reach',
- body: 'Product support, in-app guidance, and direct escalation paths for active traders and teams.',
- icon: LifeBuoy,
- },
-]
-
-const enforcement = [
- 'Ownership guards across imports, layouts, batch updates, and media deletion paths.',
- 'Clear error envelopes (no mixed formats) so clients can handle failures predictably.',
- 'Budget and routing guardrails designed to fail closed when dependencies are unavailable.',
- 'Isolation regression tests to prevent cross-user data bleed as the product evolves.',
-]
+import { ShieldCheck, Lock, FileCheck, Users } from 'lucide-react'
+import { useTypedI18n } from '@/locales/client'
 
 export default function TrustAndProof() {
- return (
- <section className="relative bg-gradient-to-b from-card/5 to-background px-4 py-12 sm:py-16 lg:py-20 sm:px-6 lg:px-8">
- <div className="mx-auto max-w-6xl">
- <div className="mb-10 text-center sm:mb-14">
- <Badge variant="outline" className="border-primary/35 bg-primary/10 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
- Trust Architecture
- </Badge>
- <h2 className="mt-3 text-[clamp(2rem,4.8vw,3.4rem)] font-semibold leading-[0.92] tracking-[-0.02em] [font-family:var(--home-display)]">
- Built like a trading system:
- <span className="block text-foreground">secure, observable, and review-ready</span>
- </h2>
- <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-[1.78] text-foreground/80 [font-family:var(--home-copy)]">
- Trust is not a slogan. It is enforced boundaries, predictable failure modes, and a review loop you can audit week after week.
- </p>
- </div>
+  const t = useTypedI18n()
 
- <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
- {trustPillars.map((pillar) => {
- const Icon = pillar.icon
- return (
- <article key={pillar.title} className="liquid-panel-premium rounded-xl p-6">
- <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.8)] text-foreground">
- <Icon className="h-5 w-5" />
- </div>
- <h3 className="text-lg font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">{pillar.title}</h3>
- <p className="mt-2 text-sm leading-relaxed text-foreground/80 [font-family:var(--home-copy)]">{pillar.body}</p>
- </article>
- )
- })}
- </div>
+  const badges = [
+    { icon: ShieldCheck, label: t('landing.trust.soc2') },
+    { icon: Lock, label: t('landing.trust.encryption') },
+    { icon: FileCheck, label: t('landing.trust.gdpr') },
+    { icon: Users, label: t('landing.trust.trustedBy', { count: '10,000+' }) },
+  ]
 
- <div className="mt-6">
- <article className="liquid-panel-premium rounded-xl p-6">
- <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-foreground/80 [font-family:var(--home-copy)]">
- What We Enforce
- </p>
- <h3 className="mt-2 text-lg font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">
- Hard boundaries, not hope.
- </h3>
- <ul className="mt-4 space-y-3">
- {enforcement.map((item) => (
- <li key={item} className="flex items-start gap-3 text-sm text-foreground/80 [font-family:var(--home-copy)]">
- <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[hsl(var(--mk-border)/0.32)] bg-[hsl(var(--mk-surface-muted)/0.7)] text-foreground">
- <Check className="h-3.5 w-3.5" />
- </span>
- <span>{item}</span>
- </li>
- ))}
- </ul>
- </article>
- </div>
-
- <div className="mt-5 flex items-center justify-center gap-2 text-xs text-foreground/80 [font-family:var(--home-copy)]">
- <ShieldCheck className="h-4 w-4 text-foreground" />
- <span>Transparent quality bar: secure data boundaries, disciplined review loops, and production-grade reliability.</span>
- </div>
- </div>
- </section>
- )
+  return (
+    <section className="px-4 py-12 sm:py-16 md:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1360px]">
+        <div className="grid gap-8 lg:grid-cols-[1fr_2fr] lg:items-center">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              {t('landing.trust.title')}
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t('landing.trust.integrations')}
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {badges.map(({ icon: Icon, label }) => (
+              <div
+                key={String(label)}
+                className="flex flex-col items-center gap-3 rounded-xl bg-card/80 p-6 text-center shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28)]"
+              >
+                <Icon className="h-8 w-8 text-primary" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
 }

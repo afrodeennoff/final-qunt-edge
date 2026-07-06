@@ -36,7 +36,7 @@ export function TraderProfileShareButton() {
       toast.success(t('share.urlCopied'))
       setTimeout(() => setCopied(false), 2000)
     } catch (error) {
-      console.error('Error copying URL:', error)
+
       toast.error(t('share.error.description'))
     }
   }
@@ -53,7 +53,7 @@ export function TraderProfileShareButton() {
         setOpen(false)
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
-          console.error('Error sharing:', error)
+
         }
       }
     } else {
@@ -66,7 +66,7 @@ export function TraderProfileShareButton() {
       <DialogTrigger asChild>
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 rounded-full border border-border/35 bg-background/70 px-3 py-1.5 text-xs font-medium text-foreground transition-[background-color,border-color] hover:bg-background/90 hover:border-border/50"
+          className="inline-flex items-center gap-1.5 rounded-full border-0 bg-muted px-3 py-1.5 text-xs font-medium text-foreground transition-[background-color,border-color] hover:bg-background/90 hover:border-muted-foreground/30"
         >
           <Share2 className="h-3.5 w-3.5" />
           {t('share.traderProfile.button')}
@@ -104,7 +104,7 @@ export function TraderProfileShareButton() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border/35 bg-muted/30 p-3">
+          <div className="rounded-lg border-0 bg-muted/40 p-3">
             <p className="text-xs text-muted-foreground">
               {t('share.traderProfile.privacyNote')}
             </p>

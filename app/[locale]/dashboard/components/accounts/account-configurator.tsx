@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, memo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog"
 import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon, X, Check, Info, SearchCheck } from "lucide-react"
+import { CalendarIcon, X, Check, Info, SearchCheck, Settings2, Shield, BarChart3, DollarSign, RotateCcw } from "lucide-react"
 // Tooltips replaced by Popovers
 import { format, Locale } from "date-fns"
 import { cn } from "@/lib/utils"
@@ -47,7 +47,7 @@ const toDecimal = (value: number | string | null | undefined) => Number(value ??
 const toNumber = (value: unknown) => (value == null ? 0 : Number(value))
 const toInputValue = (value: unknown) => (value == null ? '' : Number(value))
 
-export function AccountConfigurator({ 
+const AccountConfigurator = memo(function AccountConfigurator({ 
  account, 
  pendingChanges,
  setPendingChanges,
@@ -163,51 +163,42 @@ export function AccountConfigurator({
  })
  return null
  }
- }
+  }
 
- const isSaveDisabled = !pendingChanges || 
- Object.keys(pendingChanges).length === 0 || 
- (pendingChanges?.startingBalance !== undefined && toNumber(pendingChanges.startingBalance) <= 0) ||
- (pendingChanges?.profitTarget !== undefined && toNumber(pendingChanges.profitTarget) <= 0) ||
- (pendingChanges?.drawdownThreshold !== undefined && toNumber(pendingChanges.drawdownThreshold) <= 0) ||
- (pendingChanges?.consistencyPercentage !== undefined && toNumber(pendingChanges.consistencyPercentage) < 0) ||
- (pendingChanges?.trailingDrawdown && pendingChanges?.trailingStopProfit !== undefined && toNumber(pendingChanges.trailingStopProfit) <= 0) ||
- isSaving
-
- // Filter prop firms and account sizes based on search query
- const filteredPropFirms = Object.entries(propFirms).filter(([firmKey, firm]) => {
- if (!searchQuery.trim()) return true
- 
- const query = searchQuery.toLowerCase().trim()
- const firmNameMatch = firm.name.toLowerCase().includes(query)
- 
- // Check if any account size matches
- const hasMatchingAccountSize = Object.entries(firm.accountSizes).some(([sizeKey, accountSize]) => {
- const sizeNameMatch = accountSize.name.toLowerCase().includes(query)
- const balanceMatch = accountSize.balance.toString().includes(query)
- const targetMatch = accountSize.target.toString().includes(query)
- return sizeNameMatch || balanceMatch || targetMatch
- })
- 
- return firmNameMatch || hasMatchingAccountSize
- })
+  // Filter prop firms and account sizes based on search query
+  const filteredPropFirms = Object.entries(propFirms).filter(([, firm]) => {
+  if (!searchQuery.trim()) return true
+  
+  const query = searchQuery.toLowerCase().trim()
+  const firmNameMatch = firm.name.toLowerCase().includes(query)
+  
+  // Check if any account size matches
+  const hasMatchingAccountSize = Object.entries(firm.accountSizes).some(([, accountSize]) => {
+  const sizeNameMatch = accountSize.name.toLowerCase().includes(query)
+  const balanceMatch = accountSize.balance.toString().includes(query)
+  const targetMatch = accountSize.target.toString().includes(query)
+  return sizeNameMatch || balanceMatch || targetMatch
+  })
+  
+  return firmNameMatch || hasMatchingAccountSize
+  })
 
  // Filter account sizes within each firm
- const getFilteredAccountSizes = (firm: typeof propFirms[string]) => {
- if (!searchQuery.trim()) return Object.entries(firm.accountSizes)
- 
- const query = searchQuery.toLowerCase().trim()
- return Object.entries(firm.accountSizes).filter(([sizeKey, accountSize]) => {
- const sizeNameMatch = accountSize.name.toLowerCase().includes(query)
- const balanceMatch = accountSize.balance.toString().includes(query)
- const targetMatch = accountSize.target.toString().includes(query)
- const firmNameMatch = firm.name.toLowerCase().includes(query)
- return sizeNameMatch || balanceMatch || targetMatch || firmNameMatch
- })
- }
+  const getFilteredAccountSizes = (firm: typeof propFirms[string]) => {
+  if (!searchQuery.trim()) return Object.entries(firm.accountSizes)
+  
+  const query = searchQuery.toLowerCase().trim()
+  return Object.entries(firm.accountSizes).filter(([, accountSize]) => {
+  const sizeNameMatch = accountSize.name.toLowerCase().includes(query)
+  const balanceMatch = accountSize.balance.toString().includes(query)
+  const targetMatch = accountSize.target.toString().includes(query)
+  const firmNameMatch = firm.name.toLowerCase().includes(query)
+  return sizeNameMatch || balanceMatch || targetMatch || firmNameMatch
+  })
+  }
 
  return (
- <div className="space-y-6">
+ <div className="space-y-5">
  {/* Template Loading Section */}
  <div className="flex flex-col gap-4 p-4 border rounded-lg bg-muted/50">
  <div className="flex items-center justify-between">
@@ -259,10 +250,12 @@ export function AccountConfigurator({
  const filteredAccountSizes = getFilteredAccountSizes(firm)
  
  return (
- <CarouselItem key={firmKey} className="basis-1/2 xl:basis-1/5">
- <Popover modal>
- <PopoverTrigger asChild>
- <Card className="cursor-pointer hover:bg-muted/50 transition-colors basis-1/2 xl:basis-1/5">
+  <CarouselItem key={firmKey} className="basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
+  <Popover modal>
+  <PopoverTrigger asChild>
+  <Card
+    className="group relative cursor-pointer overflow-hidden rounded-xl border-0 bg-card transition-all basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+  >
  <CardHeader>
  <CardTitle className='whitespace-nowrap text-sm'>{firm.name}</CardTitle>
  </CardHeader>
@@ -350,13 +343,20 @@ export function AccountConfigurator({
  </div>
  </div>
 
- <Accordion type="multiple" defaultValue={["basic-info"]} className="w-full">
+ <Accordion type="multiple" defaultValue={["basic-info"]} className="w-full pt-2">
  {/* Basic Account Info */}
- <AccordionItem value="basic-info">
- <AccordionTrigger>{t('propFirm.configurator.sections.basicInfo')}</AccordionTrigger>
+ <AccordionItem value="basic-info" className="border-transparent">
+ <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
+ <div className="flex items-center gap-2.5">
+ <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
+ <Settings2 className="h-3.5 w-3.5" />
+ </div>
+ <span>{t('propFirm.configurator.sections.basicInfo')}</span>
+ </div>
+ </AccordionTrigger>
  <AccordionContent>
- <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
- <div className="flex flex-col gap-2">
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label>{t('propFirm.configurator.fields.propfirmName')}</Label>
  <Input
  value={pendingChanges?.propfirm ?? account.propfirm ?? ''}
@@ -364,7 +364,7 @@ export function AccountConfigurator({
  placeholder={t('propFirm.configurator.fields.propfirmName')}
  />
  </div>
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label>{t('propFirm.accountSize')}</Label>
  <div className="relative">
  <Input
@@ -400,7 +400,7 @@ export function AccountConfigurator({
  {accountSizeOpen && (
  <Command
  shouldFilter={false}
- className="absolute z-50 mt-1 w-full rounded-md border-border/30 bg-background/30 text-popover-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] top-full left-0 h-fit"
+ className="absolute z-50 mt-1 w-full rounded-md border-transparent bg-background/30 text-popover-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] top-full left-0 h-fit"
  >
  <CommandList className="max-h-24 overflow-y-auto">
  <CommandGroup>
@@ -428,23 +428,24 @@ export function AccountConfigurator({
  )}
  </div>
  </div>
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label>{t('propFirm.target')}</Label>
  <Input
  type="number"
- value={toInputValue(pendingChanges?.profitTarget ?? account.profitTarget)}
- onChange={(e) =>
- handleInputChange(
- 'profitTarget',
- toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0)
- )
- }
- />
+  value={toInputValue(pendingChanges?.profitTarget ?? account.profitTarget)}
+  onChange={(e) =>
+  handleInputChange(
+  'profitTarget',
+  toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0)
+  )
+  }
+  placeholder="0"
+  />
  </div>
  {/* Consistency moved to dedicated subsection below */}
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label>{t('propFirm.configurator.fields.accountType')}</Label>
- <div className="flex items-center gap-x-2">
+ <div className="flex items-center gap-x-2.5 rounded-md bg-muted/15 px-2.5 py-1.5 border-0">
  <Switch
  id="isPerformance"
  checked={pendingChanges?.isPerformance ?? account.isPerformance ?? false}
@@ -455,7 +456,7 @@ export function AccountConfigurator({
  </Label>
  </div>
  </div>
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label>{t('filters.groupName')}</Label>
  {showNewGroupInput ? (
  <div className="flex items-center gap-2">
@@ -549,24 +550,33 @@ export function AccountConfigurator({
  </AccordionItem>
 
  {/* Drawdown & Trading Rules */}
- <AccordionItem value="drawdown-rules">
- <AccordionTrigger>{t('propFirm.configurator.sections.drawdownRules')}</AccordionTrigger>
+ <AccordionItem value="drawdown-rules" className="border-transparent">
+ <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
+ <div className="flex items-center gap-2.5">
+ <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
+ <Shield className="h-3.5 w-3.5" />
+ </div>
+ <span>{t('propFirm.configurator.sections.drawdownRules')}</span>
+ </div>
+ </AccordionTrigger>
  <AccordionContent>
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-5 p-5">
  {/* Drawdown Configuration */}
  <div className="flex flex-col gap-4">
- <div className="flex flex-col gap-2">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Drawdown Config</span>
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.drawdown')}</Label>
- <Input
- type="number"
- value={toInputValue(pendingChanges?.drawdownThreshold ?? account.drawdownThreshold)}
- onChange={(e) => handleInputChange('drawdownThreshold', toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0))}
- />
+  <Input
+  type="number"
+  value={toInputValue(pendingChanges?.drawdownThreshold ?? account.drawdownThreshold)}
+  onChange={(e) => handleInputChange('drawdownThreshold', toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0))}
+  placeholder="0"
+  />
  </div>
 
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.drawdownType')}</Label>
- <div className="flex items-center gap-x-2">
+ <div className="flex items-center gap-x-2.5 rounded-md bg-muted/15 px-2.5 py-1.5 border-0">
  <Switch
  id="trailingDrawdown"
  checked={pendingChanges?.trailingDrawdown ?? account.trailingDrawdown ?? false}
@@ -591,7 +601,7 @@ export function AccountConfigurator({
  </div>
 
  {(pendingChanges?.trailingDrawdown ?? account.trailingDrawdown) && (
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.trailingStopProfit')}</Label>
  <p className="text-xs text-muted-foreground">{t('propFirm.configurator.tooltips.trailingStopProfit')}</p>
  <Input
@@ -603,24 +613,26 @@ export function AccountConfigurator({
  </div>
  )}
 
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.trailingType')}</Label>
  <Select
- value={pendingChanges?.trailing ?? account.trailing ?? 'EOD'}
- onValueChange={(value) => handleInputChange('trailing', value as 'EOD' | 'Intraday')}
- >
- <SelectTrigger>
- <SelectValue placeholder={t('propFirm.configurator.placeholders.selectTrailingType')} />
- </SelectTrigger>
- <SelectContent>
- <SelectItem value="EOD">{t('propFirm.configurator.trailingTypes.eod')}</SelectItem>
- <SelectItem value="Intraday">{t('propFirm.configurator.trailingTypes.intraday')}</SelectItem>
- </SelectContent>
- </Select>
+  value={pendingChanges?.trailing ?? account.trailing ?? 'EOD'}
+  onValueChange={(value) => handleInputChange('trailing', value as 'EOD' | 'Intraday' | 'Static' | 'DIRECTLY FUNDED')}
+  >
+  <SelectTrigger>
+  <SelectValue placeholder={t('propFirm.configurator.placeholders.selectTrailingType')} />
+  </SelectTrigger>
+  <SelectContent>
+  <SelectItem value="EOD">{t('propFirm.configurator.trailingTypes.eod')}</SelectItem>
+  <SelectItem value="Intraday">{t('propFirm.configurator.trailingTypes.intraday')}</SelectItem>
+  <SelectItem value="Static">{t('propFirm.configurator.trailingTypes.static')}</SelectItem>
+  <SelectItem value="DIRECTLY FUNDED">Directly Funded</SelectItem>
+  </SelectContent>
+  </Select>
  </div>
 
  {/* Buffer Configuration */}
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <div className="flex items-center gap-2">
  <Label className="text-sm text-muted-foreground">Buffer</Label>
  <Popover>
@@ -647,7 +659,7 @@ export function AccountConfigurator({
  />
 
  {/* Consider buffer in metrics switch */}
- <div className="flex items-center justify-between pt-1">
+ <div className="flex items-center justify-between rounded-md bg-muted/15 px-2.5 py-1.5 border-0 pt-1">
  <div className="flex items-center gap-2">
  <Label className="text-sm text-muted-foreground">
  {t('propFirm.configurator.fields.considerBuffer')}
@@ -677,17 +689,19 @@ export function AccountConfigurator({
  </div>
 
  {/* Daily Loss Rules */}
- <div className="flex flex-col gap-4">
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-4 md:pl-5 md:border-l md:border-transparent">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Daily Loss Rules</span>
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.dailyLoss')}</Label>
- <Input
- type="number"
- value={toInputValue(pendingChanges?.dailyLoss ?? account.dailyLoss)}
- onChange={(e) => handleInputChange('dailyLoss', toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0))}
- />
+  <Input
+  type="number"
+  value={toInputValue(pendingChanges?.dailyLoss ?? account.dailyLoss)}
+  onChange={(e) => handleInputChange('dailyLoss', toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0))}
+  placeholder="0"
+  />
  </div>
 
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <div className="flex items-center gap-2">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.minPnlToCountAsDay')}</Label>
  <Popover>
@@ -714,9 +728,9 @@ export function AccountConfigurator({
  />
  </div>
 
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.tradingNewsAllowed')}</Label>
- <div className="flex items-center gap-x-2">
+ <div className="flex items-center gap-x-2.5 rounded-md bg-muted/15 px-2.5 py-1.5 border-0">
  <Switch
  id="tradingNewsAllowed"
  checked={pendingChanges?.tradingNewsAllowed ?? account.tradingNewsAllowed ?? false}
@@ -731,10 +745,17 @@ export function AccountConfigurator({
  </AccordionItem>
 
  {/* Consistency Settings */}
- <AccordionItem value="consistency">
- <AccordionTrigger>{t('propFirm.consistency.title')}</AccordionTrigger>
+ <AccordionItem value="consistency" className="border-transparent">
+ <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
+ <div className="flex items-center gap-2.5">
+ <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
+ <BarChart3 className="h-3.5 w-3.5" />
+ </div>
+ <span>{t('propFirm.consistency.title')}</span>
+ </div>
+ </AccordionTrigger>
  <AccordionContent>
- <div className="p-4 border rounded-lg space-y-3 bg-muted/40">
+ <div className="p-5 border rounded-lg space-y-3 bg-muted/40">
  <div className="flex items-center justify-between">
  <div className="flex flex-col">
  <h4 className="text-sm font-medium">{t('propFirm.consistency.title')}</h4>
@@ -742,7 +763,7 @@ export function AccountConfigurator({
  {t('propFirm.consistency.description')}
  </p>
  </div>
- <div className="flex items-center gap-x-2">
+ <div className="flex items-center gap-x-2.5">
  <Switch
  id="consistencyEnabled"
  checked={isConsistencyEnabled}
@@ -763,7 +784,7 @@ export function AccountConfigurator({
  </div>
 
  {isConsistencyEnabled && (
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.coherence')}</Label>
  <Input
  type="number"
@@ -782,13 +803,21 @@ export function AccountConfigurator({
  </AccordionItem>
 
  {/* Pricing & Payout Section */}
- <AccordionItem value="pricing-payout">
- <AccordionTrigger>{t('propFirm.configurator.sections.pricingPayout')}</AccordionTrigger>
+ <AccordionItem value="pricing-payout" className="border-transparent">
+ <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
+ <div className="flex items-center gap-2.5">
+ <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
+ <DollarSign className="h-3.5 w-3.5" />
+ </div>
+ <span>{t('propFirm.configurator.sections.pricingPayout')}</span>
+ </div>
+ </AccordionTrigger>
  <AccordionContent>
- <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-5 p-5">
  {/* Price Section */}
  <div className="flex flex-col gap-4">
- <div className="flex flex-col gap-2">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Price</span>
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.price')}</Label>
  <Input
  type="number"
@@ -801,7 +830,8 @@ export function AccountConfigurator({
 
  {/* Payment & Renewal Section */}
  <div className="flex flex-col gap-4">
- <div className="flex flex-col gap-2">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Payment</span>
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.nextPaymentDate')}</Label>
  <Dialog open={paymentCalendarOpen} onOpenChange={setPaymentCalendarOpen}>
  <DialogTrigger asChild>
@@ -886,7 +916,7 @@ export function AccountConfigurator({
  )}
  </div>
 
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.paymentFrequency')}</Label>
  <Select
  value={pendingChanges?.paymentFrequency ?? account.paymentFrequency ?? 'MONTHLY'}
@@ -905,9 +935,9 @@ export function AccountConfigurator({
  </Select>
  </div>
 
- <div className="flex flex-col gap-2">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.renewalNotification')}</Label>
- <div className="flex items-center gap-x-2">
+ <div className="flex items-center gap-x-2.5 rounded-md bg-muted/15 px-2.5 py-1.5 border-0">
  <Switch
  id="renewalNotification"
  checked={pendingChanges?.autoRenewal ?? account.autoRenewal ?? false}
@@ -933,7 +963,8 @@ export function AccountConfigurator({
 
  {/* Payout Section */}
  <div className="flex flex-col gap-4">
- <div className="flex flex-col gap-2">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">Payout</span>
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3">
  <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.minTradingDays')}</Label>
  <Input
  type="number"
@@ -947,10 +978,17 @@ export function AccountConfigurator({
  </AccordionItem>
 
  {/* Reset Date Section */}
- <AccordionItem value="reset-date">
- <AccordionTrigger>{t('propFirm.configurator.sections.resetDate')}</AccordionTrigger>
+ <AccordionItem value="reset-date" className="border-transparent">
+ <AccordionTrigger className="group border-l-2 border-l-transparent data-[state=open]:border-l-primary/40 pl-3">
+ <div className="flex items-center gap-2.5">
+ <div className="flex items-center justify-center h-6 w-6 rounded-md bg-muted/60 text-muted-foreground group-data-[state=open]:bg-primary/10 group-data-[state=open]:text-primary transition-colors">
+ <RotateCcw className="h-3.5 w-3.5" />
+ </div>
+ <span>{t('propFirm.configurator.sections.resetDate')}</span>
+ </div>
+ </AccordionTrigger>
  <AccordionContent>
- <div className="p-4">
+ <div className="p-5">
  <Dialog open={calendarOpen} onOpenChange={setCalendarOpen}>
  <DialogTrigger asChild>
  <div className="relative w-full">
@@ -1020,8 +1058,8 @@ export function AccountConfigurator({
  </Dialog>
  
  {/* Should Consider Trades Before Reset */}
- <div className="flex flex-col gap-2 mt-4">
- <div className="flex items-center justify-between">
+ <div className="flex flex-col gap-2 rounded-lg border-0 bg-muted/20 p-3 mt-4">
+ <div className="flex items-center justify-between rounded-md bg-muted/15 px-2.5 py-1.5 border-0">
  <div className="flex items-center gap-2">
  <Label className="text-sm text-muted-foreground">
  {t('propFirm.resetDate.shouldConsiderTradesBeforeReset')}
@@ -1051,7 +1089,9 @@ export function AccountConfigurator({
  </div>
  </AccordionContent>
  </AccordionItem>
- </Accordion>
- </div>
- )
-}
+  </Accordion>
+  </div>
+  )
+})
+
+export { AccountConfigurator }

@@ -61,9 +61,9 @@ export default function ReferralPage() {
           className={cn(unifiedHeroPanelClassName, 'animate-fade-up-smooth p-6 sm:p-8 lg:p-10')}
         >
           <div className="relative grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.82fr)] xl:items-end">
-            <div className="space-y-5">
+            <div className="space-y-4">
               <span className={unifiedChipClassName}>{t('referral.landing.heroBadge')}</span>
-              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.3rem)] font-medium leading-[0.98] tracking-[-0.04em] text-foreground">
+              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.3rem)] font-medium leading-[0.98] tracking-tight text-foreground">
                 {t('referral.landing.heroTitle')}
               </h1>
               <p className="max-w-2xl text-sm leading-[1.7] text-muted-foreground sm:text-base">
@@ -97,7 +97,7 @@ export default function ReferralPage() {
                   'animate-scale-reveal animate-scale-reveal-d1',
                 )}
               >
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                   Program focus
                 </p>
                 <p className="mt-2 text-base font-semibold text-foreground">
@@ -113,7 +113,7 @@ export default function ReferralPage() {
                   'animate-scale-reveal animate-scale-reveal-d2',
                 )}
               >
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                   Reward ladder
                 </p>
                 <p className="mt-2 text-base font-semibold text-foreground">
@@ -129,7 +129,7 @@ export default function ReferralPage() {
                   'animate-scale-reveal animate-scale-reveal-d3',
                 )}
               >
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                   Operator note
                 </p>
                 <p className="mt-2 text-base font-semibold text-foreground">
@@ -147,12 +147,12 @@ export default function ReferralPage() {
           id="referral-how-it-works"
           className={cn(
             unifiedSectionPanelClassName,
-            'animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6',
+            'animate-fade-up-smooth animate-fade-up-smooth-d2 p-6',
           )}
         >
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                 How it works
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
@@ -171,7 +171,7 @@ export default function ReferralPage() {
                 key={title}
                 className={cn(
                   unifiedInsetPanelClassName,
-                  'animate-scale-reveal p-5',
+                  'animate-scale-reveal p-6',
                   index === 0 && 'animate-scale-reveal-d1',
                   index === 1 && 'animate-scale-reveal-d2',
                   index === 2 && 'animate-scale-reveal-d3',
@@ -191,11 +191,11 @@ export default function ReferralPage() {
           <section
             className={cn(
               unifiedSectionPanelClassName,
-              'animate-fade-up-smooth animate-fade-up-smooth-d3 p-5 sm:p-6',
+              'animate-fade-up-smooth animate-fade-up-smooth-d3 p-6',
             )}
           >
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                 Requirements
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
@@ -243,11 +243,11 @@ export default function ReferralPage() {
           <section
             className={cn(
               unifiedSectionPanelClassName,
-              'animate-fade-up-smooth animate-fade-up-smooth-d4 p-5 sm:p-6',
+              'animate-fade-up-smooth animate-fade-up-smooth-d4 p-6',
             )}
           >
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                 Reward tiers
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
@@ -263,7 +263,7 @@ export default function ReferralPage() {
                     key={tier.count}
                     className={cn(
                       unifiedInsetPanelClassName,
-                      'animate-scale-reveal flex flex-col items-center p-5 text-center',
+                      'animate-scale-reveal flex flex-col items-center p-6 text-center',
                       index === 0 && 'animate-scale-reveal-d1',
                       index === 1 && 'animate-scale-reveal-d2',
                       index === 2 && 'animate-scale-reveal-d3',
@@ -288,10 +288,10 @@ export default function ReferralPage() {
         <section
           className={cn(
             unifiedSectionPanelClassName,
-            'animate-fade-up-smooth animate-fade-up-smooth-d4 p-5 sm:p-6',
+              'animate-fade-up-smooth animate-fade-up-smooth-d4 p-6',
           )}
         >
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             Important notes
           </p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">

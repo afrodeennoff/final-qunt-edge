@@ -1,37 +1,47 @@
 "use client"
+import React from 'react'
 
 import { Toaster as Sonner } from "sonner"
 
 type ToasterProps = React.ComponentProps<typeof Sonner>
 
 const Toaster = ({ ...props }: ToasterProps) => {
- return (
- <Sonner
- theme="dark"
- position="bottom-right"
- duration={5000}
- visibleToasts={5}
- richColors
- closeButton
- className="toaster group"
- style={{
-  zIndex: 99999,
- }}
- toastOptions={{
- classNames: {
- toast:"group toast group-[.toaster]:bg-popover group-[.toaster]:text-foreground group-[.toaster]:border-border/50 group-[.toaster]:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.7),inset_0_1px_0_hsl(var(--primary)/0.1)] group-[.toaster]:backdrop-blur-xl",
- description:"group-[.toast]:text-muted-foreground",
- actionButton:"group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
- cancelButton:"group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
- success:"group-[.toaster]:border-emerald-500/30 group-[.toaster]:bg-emerald-950/40",
- error:"group-[.toaster]:border-red-500/30 group-[.toaster]:bg-red-950/40",
- warning:"group-[.toaster]:border-amber-500/30 group-[.toaster]:bg-amber-950/40",
- info:"group-[.toaster]:border-blue-500/30 group-[.toaster]:bg-blue-950/40",
- },
- }}
- {...props}
- />
- )
+  return (
+    <Sonner
+      // Do not hardcode a sonner theme: this app uses CSS-variable theming
+      // (bg-background / text-foreground below), and forcing theme="dark"
+      // layered sonner's built-in dark palette on top, which clashed with the
+      // light dashboard theme and made toasts hard to read.
+      position="top-right"
+      duration={4000}
+      visibleToasts={3}
+      richColors
+      closeButton
+      className="toaster group"
+      style={{ zIndex: 2147483647 }}
+      offset="24px"
+      toastOptions={{
+        classNames: {
+          toast:
+            "group toast group-[.toaster]:bg-background " +
+            "group-[.toaster]:text-foreground group-[.toaster]:border-primary/20 " +
+            "group-[.toaster]:shadow-[0_0_0_1px_hsl(var(--primary)/0.18),0_16px_60px_-16px_rgba(0,0,0,0.95),0_0_80px_-24px_hsl(var(--primary)/0.25)] " +
+            "group-[.toaster]:rounded-xl group-[.toaster]:p-4",
+          description: "group-[.toast]:text-muted-foreground/80 group-[.toast]:text-xs group-[.toast]:mt-0.5",
+          actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground group-[.toast]:rounded-lg group-[.toast]:text-xs group-[.toast]:px-3 group-[.toast]:font-medium",
+          cancelButton: "group-[.toast]:bg-muted/30 group-[.toast]:text-muted-foreground group-[.toast]:rounded-lg group-[.toast]:text-xs",
+          closeButton: "group-[.toast]:text-muted-foreground group-[.toast]:hover:text-foreground group-[.toast]:transition-colors",
+          success: "group-[.toaster]:border-primary/25",
+          error: "group-[.toaster]:border-destructive/30",
+          warning: "group-[.toaster]:border-amber-500/25",
+          info: "group-[.toaster]:border-primary/20",
+          title: "group-[.toast]:text-sm group-[.toast]:font-medium",
+          icon: "group-[.toast]:[&>svg]:h-4 group-[.toast]:[&>svg]:w-4",
+        },
+      }}
+      {...props}
+    />
+  )
 }
 
 export { Toaster }

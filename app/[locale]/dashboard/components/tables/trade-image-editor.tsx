@@ -168,7 +168,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  .createSignedUrl(path, SIGNED_URL_TTL_SECONDS);
 
  if (error || !data?.signedUrl) {
- console.error("Failed to create signed URL for trade image:", error?.message);
+
  return imageReference;
  }
 
@@ -206,8 +206,8 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  if (images) {
  setLocalImages(images);
  }
- } catch (error) {
- console.error("Failed to load images:", error);
+ } catch {
+
  } finally {
  setIsLoadingImages(false);
  }
@@ -286,8 +286,8 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  }
 
  toast.success("Image deleted successfully");
- } catch (error) {
- console.error("Error removing image:", error);
+ } catch {
+
  toast.error("Failed to delete image");
  }
  };
@@ -331,9 +331,6 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  });
 
  if (unauthorized.length > 0) {
- console.error("Blocked deletion of image paths outside actor prefix", {
- unauthorized,
- });
  toast.error("Failed to delete image");
  return;
  }
@@ -342,8 +339,8 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  await supabase.storage.from("trade-images").remove(ownedPaths);
  }
  }
- } catch (error) {
- console.error("Error removing all images:", error);
+ } catch {
+
  }
  };
 
@@ -534,11 +531,11 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  </div>
  </TransformComponent>
 
- <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-background/0.14 border border-border/30 z-50">
+ <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-background/0.14 border-0 z-50">
  <Button 
  variant="ghost"
  size="icon"
- className="bg-linear-to-r bg-primary/[0.03] hover:bg-accent/70 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] border border-border/30 ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
+ className="bg-linear-to-r bg-primary/[0.03] hover:bg-accent/70 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] border-0 ring-1 ring-transparent/24 h-7 w-7 sm:h-8 sm:w-8"
  onClick={() => zoomOut()}
  disabled={scale <= 0.5}
  >
@@ -550,7 +547,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  <Button 
  variant="ghost"
  size="icon"
- className="bg-linear-to-r bg-primary/[0.03] hover:bg-accent/70 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] border border-border/30 ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
+ className="bg-linear-to-r bg-primary/[0.03] hover:bg-accent/70 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] border-0 ring-1 ring-transparent/24 h-7 w-7 sm:h-8 sm:w-8"
  onClick={() => zoomIn()}
  disabled={scale >= 3}
  >
@@ -641,9 +638,9 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  duration: 0.3,
  ease: [0.25, 0.46, 0.45, 0.94],
  }}
- className="group relative flex items-center gap-4 p-3 rounded-lg border border-border/30 bg-primary/[0.03] hover:bg-accent/50 transition-colors duration-200"
+ className="group relative flex items-center gap-4 p-3 rounded-lg border-0 bg-primary/[0.03] hover:bg-accent/50 transition-colors duration-200"
  >
- <div className="relative w-24 h-24 rounded-md overflow-hidden flex-shrink-0 border border-border/30">
+ <div className="relative w-24 h-24 rounded-md overflow-hidden flex-shrink-0 border-0">
  <Image
  src={withSupabaseImageTransform(imageUrl, {
  width: 192,

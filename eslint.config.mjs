@@ -42,6 +42,7 @@ const eslintConfig = defineConfig([
       "test-validation-fix.ts",
       "tests/e2e/**/*.ts",
       "tests/e2e/**/*.tsx",
+      "oklch-guardrail.cjs",
     ],
     rules: {
       "no-console": "off",
@@ -59,7 +60,6 @@ const eslintConfig = defineConfig([
     "prisma/generated/**",
     ".worktrees/**",
     ".claude/worktrees/**",
-    "hyperframes/**",
     "components/sidebar/__tests__/**",
   ]),
 ]);

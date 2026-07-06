@@ -38,17 +38,19 @@ function generateTradeSummary(trades: AnalyticsTrade[]): TradeSummary[] {
     });
 }
 
-export const getCurrentWeekSummary = tool({
+export function createGetCurrentWeekSummaryTool(userId?: string) {
+  return tool({
     description: 'Get trades summary for the current week (Monday to Sunday). This automatically calculates the current week boundaries.',
-    inputSchema: z.object({}),
+    inputSchema: z.object({}).catch({}),
     execute: async () => {
         const now = new Date();
         const currentWeekStart = startOfWeek(now, { weekStartsOn: 1 });
         const currentWeekEnd = endOfWeek(now, { weekStartsOn: 1 });
 
-
-        const tradesResult = await getAiTrades({ profile: 'analysis' });
-    const allTrades = tradesResult.trades;
+        if (!userId) return { error: 'AI tool executed without explicit user context — cross-user data access prevented' };
+        const resolvedUserId = userId;
+        const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
+        const allTrades = tradesResult.trades;
         const filteredTrades = normalizeTrades(allTrades).filter(trade => {
             const tradeDate = trade.entryDate;
             return tradeDate >= currentWeekStart && tradeDate <= currentWeekEnd;
@@ -65,4 +67,7 @@ export const getCurrentWeekSummary = tool({
             dataQualityWarning: tradesResult.dataQualityWarning,
         };
     },
-}) 
+  });
+}
+
+export const getCurrentWeekSummary = createGetCurrentWeekSummaryTool();

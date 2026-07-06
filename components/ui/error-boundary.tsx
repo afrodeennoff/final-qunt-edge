@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { AlertCircle, RefreshCw } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 
 // ============================================
@@ -46,11 +45,10 @@ class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo)
-
-    // Log to external error tracking if needed
-    if (typeof window !== 'undefined' && (window as any).Sentry) {
-      ;(window as any).Sentry.captureException(error, {
+    // Log to external error tracking if available (Sentry is optional at runtime)
+    const sentry = (window as unknown as { Sentry?: { captureException: (e: Error, ctx: unknown) => void } }).Sentry
+    if (sentry) {
+      sentry.captureException(error, {
         contexts: {
           react: {
             componentStack: errorInfo.componentStack,
@@ -63,18 +61,10 @@ class ErrorBoundary extends React.Component<
       errorInfo,
     })
 
-    // Call custom error handler
+    // Call custom error handler (consumer is responsible for any logging)
     if (this.props.onError) {
       this.props.onError(error, errorInfo)
     }
-
-    // Log to console with more details
-    console.error(
-      'ErrorBoundary caught an error:',
-      error,
-      '\nComponent Stack:',
-      errorInfo.componentStack
-    )
   }
 
   handleReset = () => {
@@ -131,14 +121,14 @@ export interface ErrorFallbackProps {
 }
 
 export function ErrorFallback({ error, errorInfo, onReset }: ErrorFallbackProps) {
-  return (
-    <div className="flex min-h-[400px] flex-col items-center justify-center gap-6 rounded-xl border border-border/30 bg-background/50 p-8 text-center">
-      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
-        <AlertCircle className="h-8 w-8 text-destructive" />
-      </div>
+      return (
+        <div className="flex min-h-[400px] flex-col items-center justify-center gap-6 rounded-xl bg-muted/30 border-0 p-8 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10 border border-destructive/20">
+          <AlertCircle className="h-8 w-8 text-destructive" />
+        </div>
 
       <div className="space-y-2 max-w-md">
-        <h2 className="type-heading-lg font-semibold text-foreground">Something went wrong</h2>
+        <h2 className="type-heading-lg font-black text-foreground">Something went wrong</h2>
         <p className="type-body-sm text-muted-foreground">
           An unexpected error occurred. Please try again or contact support if the problem persists.
         </p>
@@ -146,7 +136,7 @@ export function ErrorFallback({ error, errorInfo, onReset }: ErrorFallbackProps)
 
       {/* Error details (hidden by default, can be shown for debugging) */}
       {process.env.NODE_ENV === 'development' && (
-        <details className="max-h-48 max-w-md overflow-auto rounded-lg border border-border/30 bg-background/80 p-4 text-left">
+        <details className="max-h-48 max-w-md overflow-auto rounded-lg bg-muted/30 border-0 p-4 text-left">
           <summary className="cursor-pointer type-body-sm font-medium text-muted-foreground">
             Error Details (Development Only)
           </summary>

@@ -10,14 +10,14 @@ export default function Partners() {
  <div className="mx-auto max-w-6xl space-y-6">
  <div className="flex flex-col items-center gap-6 text-center">
  <div className="gap-4">
- <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-foreground">
+ <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground">
  {t('landing.partners.title')}
  </h2>
- <p className="mx-auto max-w-[700px] leading-relaxed text-foreground/60 text-lg">
+ <p className="mx-auto max-w-[700px] leading-relaxed text-foreground text-lg">
  {t('landing.partners.description')}
  </p>
  </div>
- <div className="h-px w-full max-w-[700px] bg-border" />
+ <div className="h-px w-full max-w-[700px] bg-transparent" />
  <div className="grid grid-cols-2 md:grid-cols-5 gap-6 w-full">
  <a className="relative w-full h-20 flex items-center justify-center touch-optimized grayscale opacity-60 transition-[opacity,filter] duration-300 hover:grayscale-0 hover:opacity-100" href="https://ninjatraderdomesticvendor.sjv.io/e1VQMz" target="_blank" rel="noopener noreferrer">
  <Image

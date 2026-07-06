@@ -4,7 +4,10 @@ import { prisma } from '@/lib/prisma'
 import { getDatabaseUserId } from '@/server/auth'
 import { MemberRole, Prisma } from '@/prisma/generated/prisma'
 import { ensureTeamMembership } from '@/server/team-membership'
+import { requireFeature } from '@/server/plan-guard'
+import { Feature } from '@/server/plans'
 import { cacheLife, cacheTag, updateTag } from 'next/cache'
+import { logger } from '@/lib/logger'
 
 const TEAMS_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as const
 
@@ -17,6 +20,9 @@ function invalidateTeamsCache(userIds: string[]): void {
 
 export async function createTeam(userId: string, name: string, organizationId?: string) {
   try {
+    await requireFeature(Feature.CREATE_TEAM).catch(() => {
+      throw new Error('Creating teams is a Pro feature. Upgrade to unlock.')
+    })
     const team = await prisma.$transaction(async (tx) => {
       const createdTeam = await tx.team.create({
         data: {
@@ -39,7 +45,7 @@ export async function createTeam(userId: string, name: string, organizationId?: 
     invalidateTeamsCache([userId])
     return { success: true, team }
   } catch (error) {
-    console.error('Error creating team:', error)
+    logger.error('Error creating team:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: 'Failed to create team' }
   }
 }
@@ -79,7 +85,7 @@ export async function getTeamsByUser(userId: string) {
   try {
     return _getTeamsByUserCached(userId)
   } catch (error) {
-    console.error('Error fetching teams:', error)
+    logger.error('Error fetching teams:', { error: error instanceof Error ? error.message : String(error) })
     return []
   }
 }
@@ -92,6 +98,7 @@ export async function getTeamById(teamId: string, userId: string) {
         OR: [
           { userId },
           { members: { some: { userId } } },
+          { managers: { some: { managerId: userId } } },
         ],
       },
       include: {
@@ -100,6 +107,7 @@ export async function getTeamById(teamId: string, userId: string) {
             user: true,
           }
         },
+        managers: true,
         invitations: true,
         teamSubscription: true,
         analytics: {
@@ -114,16 +122,17 @@ export async function getTeamById(teamId: string, userId: string) {
       throw new Error('Team not found')
     }
 
-    // Defensive post-query membership verification
+    // Defensive post-query membership verification (owner, member, or manager)
     const isOwner = team.userId === userId
     const isMember = team.members.some(m => m.userId === userId)
-    if (!isOwner && !isMember) {
+    const isManager = team.managers.some(m => m.managerId === userId)
+    if (!isOwner && !isMember && !isManager) {
       throw new Error('Team not found')
     }
 
     return team
   } catch (error) {
-    console.error('Error fetching team:', error)
+    logger.error('Error fetching team:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -149,7 +158,7 @@ export async function updateTeam(teamId: string, userId: string, data: { name?: 
     invalidateTeamsCache([userId])
     return { success: true, team: updatedTeam }
   } catch (error) {
-    console.error('Error updating team:', error)
+    logger.error('Error updating team:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: 'Failed to update team' }
   }
 }
@@ -176,7 +185,7 @@ export async function deleteTeam(teamId: string, userId?: string) {
     invalidateTeamsCache(team.traderIds || [actorUserId])
     return { success: true }
   } catch (error) {
-    console.error('Error deleting team:', error)
+    logger.error('Error deleting team:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: 'Failed to delete team' }
   }
 }
@@ -245,7 +254,7 @@ export async function inviteMember(teamId: string, email: string, invitedBy: str
     invalidateTeamsCache([invitedBy])
     return { success: true, invitation }
   } catch (error) {
-    console.error('Error inviting member:', error)
+    logger.error('Error inviting member:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: 'Failed to send invitation' }
   }
 }
@@ -308,7 +317,7 @@ export async function acceptInvitation(invitationId: string, userId: string) {
     invalidateTeamsCache(affectedUsers)
     return { success: true }
   } catch (error) {
-    console.error('Error accepting invitation:', error)
+    logger.error('Error accepting invitation:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: error instanceof Error ? error.message : 'Failed to accept invitation' }
   }
 }
@@ -334,6 +343,13 @@ export async function updateMemberRole(teamId: string, userId: string, requester
       throw new Error('Member not found')
     }
 
+    // Protect the team owner: their role cannot be changed by anyone (including
+    // other admins). Only the self-downgrade guard previously existed, so a
+    // member-admin could downgrade any other admin, including the de-facto owner.
+    if (userId === team.userId) {
+      throw new Error('Cannot modify the team owner role')
+    }
+
     if (requester.userId === userId && member.role === MemberRole.ADMIN) {
       throw new Error('Cannot remove admin role from yourself')
     }
@@ -346,7 +362,7 @@ export async function updateMemberRole(teamId: string, userId: string, requester
     invalidateTeamsCache([userId, requesterUserId])
     return { success: true }
   } catch (error) {
-    console.error('Error updating member role:', error)
+    logger.error('Error updating member role:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: error instanceof Error ? error.message : 'Failed to update member role' }
   }
 }
@@ -376,8 +392,26 @@ export async function removeMember(teamId: string, userId: string, requesterUser
       throw new Error('Cannot remove yourself from team. Delete the team instead.')
     }
 
+    // Protect the team owner from being removed from their own roster.
+    if (team.userId === userId) {
+      throw new Error('Cannot remove the team owner. Transfer ownership or delete the team instead.')
+    }
+
     await prisma.teamMember.delete({
       where: { id: member.id }
+    })
+
+    // Revoke manager access too, otherwise the ex-member retains admin powers
+    // (privilege-escalation-by-staleness).
+    await prisma.teamManager.deleteMany({
+      where: { teamId, managerId: userId },
+    })
+
+    // Null out a dangling bestMemberId reference in team analytics so the UI
+    // never tries to resolve a removed user as "best performer".
+    await prisma.teamAnalytics.updateMany({
+      where: { teamId, bestMemberId: userId },
+      data: { bestMemberId: null },
     })
 
     await prisma.team.update({
@@ -390,7 +424,7 @@ export async function removeMember(teamId: string, userId: string, requesterUser
     invalidateTeamsCache([userId, requesterUserId])
     return { success: true }
   } catch (error) {
-    console.error('Error removing member:', error)
+    logger.error('Error removing member:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: error instanceof Error ? error.message : 'Failed to remove member' }
   }
 }
@@ -438,7 +472,7 @@ export async function getTeamAnalytics(teamId: string, period: 'daily' | 'weekly
 
     return created
   } catch (error) {
-    console.error('Error fetching team analytics:', error)
+    logger.error('Error fetching team analytics:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -511,7 +545,8 @@ export async function updateTeamAnalytics(
     
     const rrTrades = await prisma.trade.findMany({
       where: { userId: { in: userIds }, pnl: { not: 0 }, entryDate: { gte: periodStart } },
-      select: { pnl: true }
+      select: { pnl: true },
+      take: 10_000,
     });
     const wins = rrTrades.filter(t => Number(t.pnl) > 0);
     const losses = rrTrades.filter(t => Number(t.pnl) < 0);
@@ -519,11 +554,12 @@ export async function updateTeamAnalytics(
     const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((s, t) => s + Number(t.pnl), 0) / losses.length) : 0;
     const averageRr = avgLoss > 0 ? avgWin / avgLoss : 0;
     
-    // Get winning trades count
+    // Get winning trades count (period-scoped to match totalTrades denominator).
     const winningTradesResult = await prisma.trade.count({
       where: {
         userId: { in: userIds },
-        pnl: { gt: 0 }
+        pnl: { gt: 0 },
+        entryDate: { gte: periodStart }
       }
     });
 
@@ -562,33 +598,21 @@ export async function updateTeamAnalytics(
     invalidateTeamsCache(userIds)
     return { success: true, analytics }
   } catch (error) {
-    console.error('Error updating team analytics:', error)
+    logger.error('Error updating team analytics:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: 'Failed to update analytics' }
   }
 }
 
-export async function getTeamOverviewData(teamId: string, userId: string) {
+export async function getTeamOverviewData(teamId: string, userId: string, dateFrom?: Date, dateTo?: Date) {
   try {
     const team = await prisma.team.findFirst({
       where: { id: teamId },
       include: {
         members: {
-          include: {
-            user: {
-              include: {
-                accounts: {
-                  include: {
-                    trades: {
-                      orderBy: {
-                        createdAt: 'desc'
-                      },
-                      take: 5
-                    }
-                  }
-                }
-              }
-            }
-          }
+          select: { userId: true }
+        },
+        managers: {
+          select: { managerId: true }
         },
         analytics: {
           where: { period: 'monthly' },
@@ -599,40 +623,80 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
 
     if (!team) throw new Error('Team not found')
 
-    // Find if user is a member
-    const isMember = team.members.some(m => m.userId === userId)
-    if (!isMember) throw new Error('Unauthorized')
+    const memberUserIds = team.members.map(m => m.userId)
+
+    // Authorization: owner, member, or manager may view the overview.
+    const isOwner = team.userId === userId
+    const isMember = memberUserIds.includes(userId)
+    const isManager = team.managers.some(m => m.managerId === userId)
+    if (!isOwner && !isMember && !isManager) throw new Error('Unauthorized')
+
+    const users = await prisma.user.findMany({
+      where: { id: { in: memberUserIds } },
+      select: { id: true, email: true },
+    })
+    const userMap = new Map(users.map(u => [u.id, u]))
+
+    const accounts = await prisma.account.findMany({
+      where: { userId: { in: memberUserIds } },
+      select: { id: true, userId: true, number: true, startingBalance: true, balanceRequired: true },
+    })
+    const accountsByUser = new Map<string, typeof accounts>()
+    for (const a of accounts) {
+      const list = accountsByUser.get(a.userId)
+      if (list) list.push(a)
+      else accountsByUser.set(a.userId, [a])
+    }
+
+    // MUDI: query trades by userId (NOT accountNumber). Account.number is only
+    // unique per-user (@@unique([number, userId])), so filtering by accountNumber
+    // alone would leak trades from other tenants sharing the same number string.
+    const defaultFrom = dateFrom || new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
+    const defaultTo = dateTo || new Date()
+    const trades = await prisma.trade.findMany({
+      where: { userId: { in: memberUserIds }, entryDate: { gte: defaultFrom, lte: defaultTo } },
+      select: { id: true, accountNumber: true, userId: true, createdAt: true, instrument: true, pnl: true },
+      orderBy: { createdAt: 'desc' },
+      take: 10_000,
+    })
+    const tradesByAccount = new Map<string, typeof trades>()
+    for (const t of trades) {
+      const list = tradesByAccount.get(t.accountNumber)
+      if (list) { if (list.length < 5) list.push(t) }
+      else tradesByAccount.set(t.accountNumber, [t])
+    }
 
     let totalBalance = 0
     let activeTraders = 0
-    let recentActivity: Array<{ id: string; type: string; description: string; amount: number; date: Date; userEmail: string }> = []
-
     const now = new Date()
     const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    let recentActivity: Array<{ id: string; type: string; description: string; amount: number; date: Date; userEmail: string }> = []
 
-    team.members.forEach(member => {
+    for (const memberUserId of memberUserIds) {
+      const user = userMap.get(memberUserId)
+      if (!user) continue
+      const memberAccounts = accountsByUser.get(memberUserId) || []
       let memberHasRecentActivity = false
-      member.user.accounts.forEach(account => {
-        totalBalance += Number(account.startingBalance) + Number(account.balanceRequired || 0) // Basic balance calc
 
-        // Check for recent activity
-        const hasRecentTrades = account.trades.some(t => t.createdAt > lastWeek)
+      for (const account of memberAccounts) {
+        totalBalance += Number(account.startingBalance) + Number(account.balanceRequired || 0)
+        const accountTrades = tradesByAccount.get(account.number) || []
+        const hasRecentTrades = accountTrades.some(t => t.createdAt > lastWeek)
         if (hasRecentTrades) memberHasRecentActivity = true
 
-        // Collect recent activity
-        account.trades.forEach(trade => {
+        for (const trade of accountTrades) {
           recentActivity.push({
             id: trade.id,
             type: 'TRADE_CLOSED',
-            description: `${member.user.email} closed ${trade.instrument} with PnL ${trade.pnl}`,
+            description: `${user.email} closed ${trade.instrument} with PnL ${trade.pnl}`,
             amount: Number(trade.pnl),
             date: trade.createdAt,
-            userEmail: member.user.email
+            userEmail: user.email,
           })
-        })
-      })
+        }
+      }
       if (memberHasRecentActivity) activeTraders++
-    })
+    }
 
     // Sort and limit activity
     recentActivity = recentActivity.sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 10)
@@ -649,7 +713,7 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
     }
 
   } catch (error) {
-    console.error('Error fetching team overview:', error)
+    logger.error('Error fetching team overview:', { error: error instanceof Error ? error.message : String(error) })
     return { success: false, error: error instanceof Error ? error.message : 'Failed to fetch overview' }
   }
 }
@@ -677,7 +741,7 @@ export async function getTeamInvitations(userId: string) {
 
     return invitations
   } catch (error) {
-    console.error('Error fetching invitations:', error)
+    logger.error('Error fetching invitations:', { error: error instanceof Error ? error.message : String(error) })
     return []
   }
 }

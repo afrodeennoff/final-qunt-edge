@@ -1,5 +1,4 @@
 import { cn } from './utils'
-import React from 'react'
 
 interface RankedListProps {
   title?: string
@@ -26,7 +25,7 @@ export function RankedList({
       data-slot="ranked-list"
     >
       {title && (
-        <h3 className="text-[18px] font-semibold text-foreground mb-6">
+        <h3 className="text-[18px] font-black text-foreground mb-6">
           {title}
         </h3>
       )}
@@ -36,9 +35,9 @@ export function RankedList({
             key={index}
             className={cn(
               'flex items-center gap-3 p-3 rounded-xl',
-              item.isHighlighted
-                ? 'bg-primary/8 border border-primary/20'
-                : 'bg-muted/50'
+                item.isHighlighted
+                  ? 'bg-primary/8 ring-1 ring-primary/20'
+                  : 'bg-muted/50'
             )}
           >
             <div
@@ -51,7 +50,7 @@ export function RankedList({
             </div>
             <span
               className={cn(
-                'flex-1 font-semibold',
+                'flex-1 font-black',
                 item.isHighlighted ? 'text-primary' : 'text-foreground'
               )}
             >
@@ -67,7 +66,7 @@ export function RankedList({
         ))}
       </div>
       {footer && (
-        <div className="border-t border-border pt-4 mt-4 text-[12px] text-muted-foreground text-center">
+        <div className="border-t border-transparent pt-4 mt-4 text-[12px] text-muted-foreground text-center">
           {footer}
         </div>
       )}

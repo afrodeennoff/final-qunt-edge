@@ -110,8 +110,10 @@ function isLeaderboardUnavailableError(error: unknown): boolean {
   return (
     maybeError.code === 'ECONNREFUSED' ||
     maybeError.code === 'P1001' ||
+    maybeError.code === 'P1002' ||
     message.includes('econnrefused') ||
-    message.includes('can\'t reach database server')
+    message.includes('can\'t reach database server') ||
+    message.includes('timeout exceeded')
   )
 }
 
@@ -146,12 +148,12 @@ export async function getLeaderboardData(
     return []
   }
 
-  const startOfMonth = new Date()
-  startOfMonth.setDate(1)
-  startOfMonth.setHours(0, 0, 0, 0)
+  const ninetyDaysAgo = new Date()
+  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
+  ninetyDaysAgo.setHours(0, 0, 0, 0)
 
   const userIds = eligibleUsers.map((user) => user.id)
-  const dateFilter = { closeDate: { gte: startOfMonth } }
+  const dateFilter = { closeDate: { gte: ninetyDaysAgo } }
 
   let aggregateRows: Array<{
     userId: string
@@ -208,6 +210,7 @@ export async function getLeaderboardData(
           { userId: 'asc' },
           { closeDate: 'asc' },
         ],
+        take: 50_000,
       }),
       prisma.account.groupBy({
         by: ['userId'],

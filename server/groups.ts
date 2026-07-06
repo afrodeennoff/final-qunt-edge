@@ -36,7 +36,17 @@ export async function getGroupsAction(): Promise<GroupWithAccounts[]> {
   try {
     return _getGroupsCached(userId)
   } catch (error) {
-    console.error('Error fetching groups:', error)
+    logger.error('Error fetching groups:', { error: error instanceof Error ? error.message : String(error) })
+    throw error
+  }
+}
+
+/** AI-safe version: fetch groups for explicit userId without request auth context. */
+export async function getGroupsActionForUser(userId: string): Promise<GroupWithAccounts[]> {
+  try {
+    return _getGroupsCached(userId)
+  } catch (error) {
+    logger.error('Error fetching groups for user:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -62,7 +72,7 @@ export async function renameGroupAction(groupId: string, name: string): Promise<
     invalidateGroupRelatedCaches(userId)
     return group
   } catch (error) {
-    console.error('Error renaming group:', error)
+    logger.error('Error renaming group:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -91,7 +101,7 @@ export async function saveGroupAction(name: string): Promise<GroupWithAccounts> 
     invalidateGroupRelatedCaches(userId)
     return group
   } catch (error) {
-    console.error('Error creating group:', error)
+    logger.error('Error creating group:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -117,7 +127,7 @@ export async function updateGroupAction(groupId: string, name: string): Promise<
     invalidateGroupRelatedCaches(userId)
     return group
   } catch (error) {
-    console.error('Error updating group:', error)
+    logger.error('Error updating group:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -148,7 +158,7 @@ export async function deleteGroupAction(groupId: string): Promise<void> {
     })
     invalidateGroupRelatedCaches(userId)
   } catch (error) {
-    console.error('Error deleting group:', error)
+    logger.error('Error deleting group:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -180,7 +190,7 @@ export async function moveAccountToGroupAction(accountId: string, targetGroupId:
     })
     invalidateGroupRelatedCaches(userId)
   } catch (error) {
-    console.error('Error moving account to group:', error)
+    logger.error('Error moving account to group:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -200,6 +210,37 @@ export async function groupTradesAction(tradeIds: string[]): Promise<boolean> {
   } catch (error) {
     logger.error('[groupTrades] Error', { error })
     return false
+  }
+}
+
+export async function bulkMoveAccountsToGroupAction(accountIds: string[], targetGroupId: string | null): Promise<void> {
+  const userId = await getDatabaseUserId()
+  try {
+    const accountsCount = await prisma.account.count({
+      where: { id: { in: accountIds }, userId },
+    })
+    if (accountsCount !== accountIds.length) {
+      throw new Error('One or more accounts not found')
+    }
+
+    if (targetGroupId) {
+      const targetGroup = await prisma.group.findFirst({
+        where: { id: targetGroupId, userId },
+        select: { id: true },
+      })
+      if (!targetGroup) {
+        throw new Error('Target group not found')
+      }
+    }
+
+    await prisma.account.updateMany({
+      where: { id: { in: accountIds }, userId },
+      data: { groupId: targetGroupId },
+    })
+    invalidateGroupRelatedCaches(userId)
+  } catch (error) {
+    logger.error('Error bulk moving accounts to group:', { error: error instanceof Error ? error.message : String(error) })
+    throw error
   }
 }
 

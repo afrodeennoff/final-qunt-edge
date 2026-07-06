@@ -1,6 +1,13 @@
-import { AccountsOverview } from "../components/accounts/accounts-overview";
+import React from 'react'
+import dynamic from 'next/dynamic'
 import type { Metadata } from "next";
 import { getCanonicalUrl } from "@/lib/seo";
+import { Skeleton } from '@/components/ui/skeleton'
+
+const AccountsOverview = dynamic(
+  () => import("../components/accounts/accounts-overview").then(m => ({ default: m.AccountsOverview })),
+  { loading: () => <div className="flex h-[80vh] items-center justify-center"><Skeleton className="h-32 w-full max-w-4xl rounded-xl" /></div> }
+)
 
 export async function generateMetadata({
   params,
@@ -23,6 +30,8 @@ export async function generateMetadata({
   };
 }
 
-export default function AccountsPage() {
-  return <AccountsOverview size="large" surface="embedded" />;
-}
+const AccountsPage = React.memo(function AccountsPage() {
+  return <AccountsOverview size="large" />;
+})
+
+export default AccountsPage

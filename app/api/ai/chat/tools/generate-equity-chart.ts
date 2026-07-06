@@ -17,26 +17,29 @@ interface ChartDataPoint {
   [key: `payoutAmount_${string}`]: number
 }
 
-export const generateEquityChart = tool({
-  description: 'Generate an equity chart with trading data. Use this when the user asks for charts, visualizations, or equity curves. Can filter by account, date range, and show individual or grouped view.',
-  inputSchema: z.object({
-    accountNumbers: z.array(z.string()).optional().describe('Array of account numbers to include in the chart. If empty, includes all accounts.'),
-    startDate: z.string().optional().describe('Start date in format 2025-01-14T00:00:00.000Z'),
-    endDate: z.string().optional().describe('End date in format 2025-01-14T23:59:59.999Z'),
-    showIndividual: z.boolean().optional().default(false).describe('Whether to show individual account lines or grouped total'),
-    timezone: z.string().optional().default('UTC').describe('Timezone for date calculations'),
-    maxAccounts: z.number().optional().default(8).describe('Maximum number of accounts to display in individual view'),
-  }),
-  execute: async ({ 
-    accountNumbers = [], 
-    startDate, 
-    endDate, 
-    showIndividual = false, 
-    timezone = 'UTC',
-    maxAccounts = 8 
-  }) => {
+export function createGenerateEquityChartTool(userId?: string) {
+  return tool({
+    description: 'Generate an equity chart with trading data. Use this when the user asks for charts, visualizations, or equity curves. Can filter by account, date range, and show individual or grouped view.',
+    inputSchema: z.object({
+      accountNumbers: z.array(z.string()).optional().describe('Array of account numbers to include in the chart. If empty, includes all accounts.'),
+      startDate: z.string().optional().describe('Start date in format 2025-01-14T00:00:00.000Z'),
+      endDate: z.string().optional().describe('End date in format 2025-01-14T23:59:59.999Z'),
+      showIndividual: z.boolean().optional().default(false).describe('Whether to show individual account lines or grouped total'),
+      timezone: z.string().optional().default('UTC').describe('Timezone for date calculations'),
+      maxAccounts: z.number().optional().default(8).describe('Maximum number of accounts to display in individual view'),
+    }),
+    execute: async ({ 
+      accountNumbers = [], 
+      startDate, 
+      endDate, 
+      showIndividual = false, 
+      timezone = 'UTC',
+      maxAccounts = 8 
+    }) => {
 
-    const tradesResult = await getAiTrades({ profile: 'analysis' });
+      if (!userId) return { error: 'AI tool executed without explicit user context — cross-user data access prevented' };
+      const resolvedUserId = userId;
+      const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
     const allTrades = tradesResult.trades || [];
     let trades = allTrades;
     
@@ -173,4 +176,7 @@ export const generateEquityChart = tool({
 
     return result;
   },
-})
+  });
+}
+
+export const generateEquityChart = createGenerateEquityChartTool();

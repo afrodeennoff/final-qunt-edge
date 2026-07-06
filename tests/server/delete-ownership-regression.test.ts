@@ -431,7 +431,7 @@ describe('deleteReview', () => {
     await deleteReview('review-1')
 
     expect(propFirmReviewFindUniqueMock).toHaveBeenCalledWith({
-      where: { id: 'review-1' },
+      where: { id: 'review-1', userId: 'db-user-1' },
     })
     expect(propFirmReviewDeleteMock).toHaveBeenCalledWith({
       where: { id: 'review-1' },

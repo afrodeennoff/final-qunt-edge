@@ -223,7 +223,7 @@ function CommentComponent({
         </div>
       </div>
       {comment.replies.length > 0 && (
-        <div className={`ml-4 space-y-4 pl-4 border-l ${level >= 3 ? 'opacity-80' : ''}`}>
+        <div className={`ml-2 sm:ml-4 space-y-4 pl-2 sm:pl-4 border-l ${level >= 3 ? 'opacity-80' : ''}`}>
           {comment.replies.map((reply) => (
             <CommentComponent
               key={reply.id}
@@ -268,7 +268,7 @@ export function CommentSection({
 
   if (!user) {
     return (
-      <div className="rounded-lg border bg-muted/50 p-6 text-center text-muted-foreground">
+      <div className="rounded-lg border bg-muted/10 p-6 text-center text-muted-foreground">
         {t('community.comments.signInPrompt')}
       </div>
     )

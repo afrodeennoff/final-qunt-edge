@@ -27,22 +27,21 @@ export function SidebarLayoutShell({
       {sidebar}
       <SidebarInset
         className={cn(
-          'relative h-dvh overflow-hidden qe-v2-app-shell bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)]',
+          'relative h-dvh overflow-hidden qe-v2-app-shell bg-background',
           className,
         )}
       >
         <BackgroundGlow variant={backgroundVariant} />
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-14 bg-gradient-to-b from-[rgba(0,0,0,0.06)] to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-14 bg-gradient-to-b from-black/6 to-transparent" />
         <div className="relative z-0 flex h-full flex-col">
           {header}
           <div
             className="flex-1 overflow-y-auto overscroll-y-contain"
             style={{
               WebkitOverflowScrolling: 'touch',
-              contain: 'content',
             }}
           >
-            <div className="w-full">
+            <div className="min-h-full w-full">
               {children}
             </div>
           </div>

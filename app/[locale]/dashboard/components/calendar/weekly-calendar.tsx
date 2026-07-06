@@ -105,7 +105,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
  ?"text-foreground dark:text-foreground bg-secondary/30 dark:bg-secondary/22" 
  : monthlyPnl < 0 
  ?"text-semantic-error dark:text-semantic-error/90 bg-semantic-error-bg/50 dark:bg-semantic-error-bg/30" 
- :"text-muted-foreground bg-muted/20"
+ :"text-muted-foreground bg-muted/40"
  )}>
  {formatCurrency(monthlyPnl)}
  </div>
@@ -149,7 +149,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
  return (
  <div
  key={weekIndex}
- className="flex flex-col items-center justify-center border-border/30 rounded p-1 min-h-12 flex-1 bg-muted/10 dark:bg-muted/5"
+ className="flex flex-col items-center justify-center border-transparent rounded p-1 min-h-12 flex-1 bg-muted/10 dark:bg-muted/5"
  />
  )
  }
@@ -160,12 +160,12 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
  <Popover key={`${weekStart.toISOString()}-${weekIndex}`}>
  <PopoverTrigger asChild>
  <div
- className={cn("flex flex-col items-center justify-center border-border/30 rounded p-1 min-h-12 flex-1 cursor-pointer","transition-[opacity,background-color,border-color] duration-200 hover:scale-[1.02] hover:shadow-xs",
+ className={cn("flex flex-col items-center justify-center border-transparent rounded p-1 min-h-12 flex-1 cursor-pointer","transition-[opacity,background-color,border-color] duration-200 hover:scale-[1.02] hover:shadow-xs",
  pnl > 0 
- ?"bg-secondary/30 dark:bg-secondary/22 text-foreground dark:text-foreground border-border/65 dark:border-border/55" 
+ ?"bg-secondary/30 dark:bg-secondary/22 text-foreground dark:text-foreground border-transparent dark:border-transparent" 
  : pnl < 0 
  ?"bg-semantic-error-bg/60 dark:bg-semantic-error-bg/30 text-semantic-error dark:text-semantic-error/90 border-semantic-error-border/80 dark:border-semantic-error-border/40" 
- :"bg-muted/20 dark:bg-muted/10 text-muted-foreground border-border/30"
+ :"bg-muted/40 dark:bg-muted/10 text-muted-foreground border-transparent"
  )}
  >
  <div className="text-[10px] font-medium opacity-80">{t('calendar.week')} {getWeek(weekStart, { locale: dateLocale })}</div>

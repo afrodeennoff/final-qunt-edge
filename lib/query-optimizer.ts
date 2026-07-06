@@ -80,7 +80,7 @@ export async function executeOptimizedQuery<T>(
     return getOrLoad(
       key,
       () => measureQueryPerformance(queryName, queryFn),
-      CachePolicies.publicReference(cacheTtl),
+      CachePolicies.privateSummary(cacheTtl),
       'query-optimizer'
     )
   }

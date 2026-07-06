@@ -1,12 +1,13 @@
 "use client"
 
-import { LayoutDashboard, Users, BarChart3, TrendingUp, Globe } from "lucide-react"
+import { LayoutDashboard, Users, BarChart3, TrendingUp, Globe, ArrowLeftFromLine, User, BadgePercent } from "lucide-react"
 import { useUserStore } from "@/store/user-store"
 import { UnifiedSidebar, UnifiedSidebarItem } from "@/components/ui/unified-sidebar"
 import { usePathname } from "next/navigation"
 import { NAV_ICON_SIZE } from "@/lib/constants/sidebar"
 import { SUPPORTED_TIMEZONES } from "@/lib/constants/timezones"
 import { stripLocalePrefix } from "@/components/ui/sidebar-primitives/use-sidebar-nav"
+import { useEffect, useState } from "react"
 
 function resolveTeamPathContext(pathname: string) {
 	const stripped = stripLocalePrefix(pathname)
@@ -14,21 +15,23 @@ function resolveTeamPathContext(pathname: string) {
 	const localePrefix = hasTeamsPrefix && pathname.length > stripped.length
 	? pathname.slice(0, pathname.length - stripped.length)
 	: ''
-	const teamsRoot = `${localePrefix}/teams`
-	const dashboardRoot = `${teamsRoot}/dashboard`
 
 	const segments = stripped.split('/').filter(Boolean)
 	const teamsIndex = segments.indexOf('teams')
-	const slug =
-	hasTeamsPrefix &&
-	teamsIndex !== -1 &&
-	segments[teamsIndex + 1] === 'dashboard' &&
-	segments[teamsIndex + 2] &&
-	segments[teamsIndex + 2] !== 'trader'
-	? segments[teamsIndex + 2]
-	: undefined
 
-	return { localePrefix, teamsRoot, dashboardRoot, slug }
+	let slug: string | undefined
+
+	if (hasTeamsPrefix && teamsIndex !== -1) {
+		const afterDashboard = segments[teamsIndex + 2]
+		if (afterDashboard === 'trader') {
+			// On trader detail page — try stored team slug
+			slug = undefined
+		} else if (afterDashboard) {
+			slug = afterDashboard
+		}
+	}
+
+	return { localePrefix, slug }
 }
 
 export function TeamsSidebar() {
@@ -36,61 +39,76 @@ export function TeamsSidebar() {
 	const timezone = useUserStore(state => state.timezone)
 	const setTimezone = useUserStore(state => state.setTimezone)
 	const pathname = usePathname()
-	const { localePrefix, teamsRoot, dashboardRoot, slug } = resolveTeamPathContext(pathname)
+	const { localePrefix, slug } = resolveTeamPathContext(pathname)
+	const [storedSlug, setStoredSlug] = useState<string | null>(null)
+
+	useEffect(() => {
+		if (slug) {
+			localStorage.setItem('lastTeamSlug', slug)
+		}
+	}, [slug])
+
+	useEffect(() => {
+		if (!slug) {
+			const saved = localStorage.getItem('lastTeamSlug')
+			if (saved) setStoredSlug(saved)
+		}
+	}, [slug])
+
+	const effectiveSlug = slug || storedSlug || undefined
+
+	const teamsRoot = `${localePrefix}/teams`
+	const dashboardRoot = `${teamsRoot}/dashboard`
 
 	const navItems: UnifiedSidebarItem[] = [
 		{
-			href: slug ? `${dashboardRoot}/${slug}` : `${teamsRoot}/manage`,
+			href: effectiveSlug ? `${dashboardRoot}/${effectiveSlug}` : `${teamsRoot}/manage`,
 			icon: <LayoutDashboard className={NAV_ICON_SIZE} />,
 			label:"Command",
 			group:"Team Workspace",
-			exact: !!slug,
-			disabled: !slug
+			exact: !!effectiveSlug,
 		},
 		{
-			href: slug ? `${dashboardRoot}/${slug}/analytics` : `${teamsRoot}/manage`,
+			href: effectiveSlug ? `${dashboardRoot}/${effectiveSlug}/analytics` : `${teamsRoot}/manage`,
 			icon: <BarChart3 className={NAV_ICON_SIZE} />,
 			label:"Insights",
 			group:"Team Workspace",
-			disabled: !slug
 		},
 		{
-			href: slug ? `${dashboardRoot}/${slug}/traders` : `${teamsRoot}/manage`,
+			href: effectiveSlug ? `${dashboardRoot}/${effectiveSlug}/traders` : `${teamsRoot}/manage`,
 			icon: <TrendingUp className={NAV_ICON_SIZE} />,
 			label:"Roster",
 			group:"Team Workspace",
-			disabled: !slug
 		},
 		{
-			href: slug ? `${dashboardRoot}/${slug}/members` : `${teamsRoot}/manage`,
+			href: effectiveSlug ? `${dashboardRoot}/${effectiveSlug}/members` : `${teamsRoot}/manage`,
 			icon: <Users className={NAV_ICON_SIZE} />,
 			label:"Access",
 			group:"Team Workspace",
-			disabled: !slug
 		},
 		{
 			href: `${teamsRoot}/manage`,
-			icon: <Users className={NAV_ICON_SIZE} />,
+			icon: <ArrowLeftFromLine className={NAV_ICON_SIZE} />,
 			label:"Manage Teams",
-			group:"Management"
+			group:"Management",
 		},
 		{
 			href: `${localePrefix}/propfirms`,
 			icon: <Globe className={NAV_ICON_SIZE} />,
 			label:"Prop Firms",
-			group:"Resources"
+			group:"Resources",
 		},
 		{
 			href: `${localePrefix}/deals`,
-			icon: <Globe className={NAV_ICON_SIZE} />,
+			icon: <BadgePercent className={NAV_ICON_SIZE} />,
 			label:"Deals",
-			group:"Resources"
+			group:"Resources",
 		},
 		{
 			href: `${localePrefix}/dashboard`,
-			icon: <LayoutDashboard className={NAV_ICON_SIZE} />,
+			icon: <User className={NAV_ICON_SIZE} />,
 			label:"Personal Workspace",
-			group:"System"
+			group:"System",
 		},
 	]
 
@@ -99,9 +117,9 @@ export function TeamsSidebar() {
 	const resetUser = useUserStore(state => state.resetUser)
 
 	const handleLogout = async () => {
-	resetUser()
-	const { signOut } = await import("@/server/auth")
-	await signOut()
+		resetUser()
+		const { signOut } = await import("@/server/auth")
+		await signOut()
 	}
 
 	return (

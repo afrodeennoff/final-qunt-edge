@@ -182,7 +182,7 @@ export function BlogForm({ post, locale }: Props) {
         <select
           id="category"
           {...register('category', { required: 'Category is required' })}
-          className="flex h-10 w-full rounded-v2-md border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-v2-accent focus-visible:ring-offset-2 focus-visible:ring-offset-v2-bg-base"
+          className="flex h-10 w-full rounded-v2-md border-0 bg-card px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           {categoryOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -227,7 +227,7 @@ export function BlogForm({ post, locale }: Props) {
         )}
       </div>
 
-      <div className="flex items-center justify-end gap-3 pt-4 border-t border-border/30">
+      <div className="flex items-center justify-end gap-3 pt-4 border-t-0">
         <Button
           type="button"
           variant="outline"

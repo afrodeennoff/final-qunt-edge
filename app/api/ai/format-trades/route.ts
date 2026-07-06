@@ -4,10 +4,11 @@ import { tradeSchema } from "./schema";
 import { z } from 'zod/v3';
 import { apiError } from "@/lib/api-response";
 import { rateLimit } from "@/lib/rate-limit";
-import { getAiLanguageModel } from "@/lib/ai/client";
+import { getAiLanguageModel, checkAiConfig } from "@/lib/ai/client";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, logAiRequest } from "@/lib/ai/telemetry";
 import { guardAiRequest } from "@/lib/ai/route-guard";
+import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
 
 export const maxDuration = 30;
 const MAX_FORMAT_BODY_BYTES = 512 * 1024;
@@ -21,6 +22,9 @@ const requestSchema = z.object({
 export async function POST(req: NextRequest) {
   const policy = getAiPolicy("format-trades");
   const startedAt = Date.now();
+
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
 
   const guard = await guardAiRequest(req, 'format-trades', formatTradesRateLimit);
   if (!guard.ok) return guard.response;
@@ -41,9 +45,10 @@ export async function POST(req: NextRequest) {
     const { headers, rows } = requestSchema.parse(body);
 
     const result = streamObject({
-      model: getAiLanguageModel("format-trades"),
+      model: getAiLanguageModel("format-trades", userId),
       schema: tradeSchema,
       output: 'array',
+      abortSignal: createAiTimeoutSignal(policy.timeoutMs),
       system:`
       You are a trading expert.
       You are given a list of trade data and you need to format it according to the schema.
@@ -148,6 +153,16 @@ export async function POST(req: NextRequest) {
       return apiError("VALIDATION_FAILED", "Invalid request format", 400, {
         issues: error.errors,
       });
+    }
+
+    if (isTimeoutError(error)) {
+      return apiError(
+        "TIMEOUT",
+        `AI request timed out after ${Math.round(policy.timeoutMs / 1000)}s`,
+        504,
+        { timeoutMs: policy.timeoutMs },
+        { "Retry-After": String(Math.ceil(policy.timeoutMs / 1000)) },
+      );
     }
 
     const err = error as { statusCode?: number; type?: string; code?: unknown };

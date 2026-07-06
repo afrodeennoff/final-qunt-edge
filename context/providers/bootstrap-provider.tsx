@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 
 import { createContext, useContext } from 'react'
 import type { DashboardBootstrapPayload } from '@/lib/types/bootstrap'

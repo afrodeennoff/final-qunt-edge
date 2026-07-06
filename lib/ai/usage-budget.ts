@@ -1,8 +1,7 @@
 import { prisma } from '../prisma'
 import { isAdmin } from '@/server/authz'
-
-const ACTIVE_MONTHLY_AI_TOKEN_LIMIT = 2_000_000
-const INACTIVE_MONTHLY_AI_TOKEN_LIMIT = 150_000
+import { getPlanLimits } from '@/server/plans'
+import { getUserPlan } from '@/server/plans'
 
 function getUtcMonthWindow(now = new Date()): { start: Date; end: Date } {
   const year = now.getUTCFullYear()
@@ -82,10 +81,12 @@ export async function assertWithinAiBudget(
   userId: string,
   isActive: boolean,
 ): Promise<{ allowed: boolean; limit: number; used: number; remaining: number }> {
-  // Admin bypass — unlimited token budget
   if (isAdmin(userId)) return { allowed: true, limit: Infinity, used: 0, remaining: Infinity }
 
-  const limit = isActive ? ACTIVE_MONTHLY_AI_TOKEN_LIMIT : INACTIVE_MONTHLY_AI_TOKEN_LIMIT
+  const plan = await getUserPlan(userId)
+  const limits = getPlanLimits(plan)
+  const limit = limits.maxAiTokens
+
   const used = await getMonthlyAiUsage(userId)
   const remaining = Math.max(0, limit - used)
   const allowed = used < limit

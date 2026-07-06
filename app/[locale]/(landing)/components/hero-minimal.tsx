@@ -1,6 +1,5 @@
 'use client'
 
-import React from 'react'
 import Link from 'next/link'
 import { useCurrentLocale } from '@/locales/client'
 import { ButtonMinimal } from '@/components/ui/button-minimal'
@@ -31,13 +30,13 @@ export default function HeroMinimal({ }: HeroProps) {
                       YOUR TRADING COMMAND CENTER
                     </div>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-4xl font-bold">3.8M</span>
-                      <span className="text-lg font-semibold text-green-500">+</span>
+                      <span className="text-4xl font-black">3.8M</span>
+                      <span className="text-lg font-semibold text-success">+</span>
                     </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="flex items-center gap-1 text-green-500">
+                  <div className="flex items-center gap-1 text-success">
                     <TrendingUp className="h-4 w-4" />
                     <span className="text-sm font-medium">+12.4%</span>
                   </div>
@@ -51,7 +50,7 @@ export default function HeroMinimal({ }: HeroProps) {
 
           {/* Main Content */}
           <div className="space-y-8">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight">
               Qunt <span className="text-primary">Edge.</span>
             </h1>
 
@@ -82,12 +81,12 @@ export default function HeroMinimal({ }: HeroProps) {
                 <span className="font-semibold text-foreground">50K+</span>
                 <span>Traders</span>
               </div>
-              <div className="h-px w-16 bg-border/50" />
+              <div className="h-px w-16 bg-transparent/50" />
               <div className="flex items-center gap-2">
                 <span>4.9/5</span>
                 <span className="font-semibold text-foreground">Rating</span>
               </div>
-              <div className="h-px w-16 bg-border/50" />
+              <div className="h-px w-16 bg-transparent/50" />
               <div className="flex items-center gap-2">
                 <span>$2B+</span>
                 <span className="font-semibold text-foreground">Volume Tracked</span>

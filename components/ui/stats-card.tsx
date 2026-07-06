@@ -25,7 +25,7 @@ export interface StatsCardProps extends Omit<CardProps,"size"> {
  animateValue?: boolean
  formatCurrency?: boolean
  locale?: string
- variant?:"default" |"glass" |"elevated" |"flat"
+  variant?:"default" |"flat"
 }
 
 const SIZE_CONFIG = {
@@ -34,7 +34,7 @@ const SIZE_CONFIG = {
  value:"text-lg",
  title:"text-xs",
  trend:"text-xs",
- padding:"p-3.5",
+  padding:"p-4",
  cardTitleSize:"sm" as const,
  },
  md: {
@@ -42,7 +42,7 @@ const SIZE_CONFIG = {
  value:"text-2xl",
  title:"text-sm",
  trend:"text-sm",
- padding:"p-5",
+  padding:"p-4",
  cardTitleSize:"md" as const,
  },
  lg: {
@@ -84,14 +84,12 @@ function StatsCardSkeleton({ size ="md", className }: StatsCardSkeletonProps) {
  const config = SIZE_CONFIG[size]
 
  return (
- <div
- className={cn("relative overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260_/_0.12)] bg-[linear-gradient(180deg,oklch(0.07_0.013_260_/_0.92)_0%,oklch(0.058_0.011_260_/_0.86)_100%)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.08),0_18px_38px_-26px_rgba(0,0,0,0.78)]",
- config.padding,
- className
- )}
- >
- {/* Top accent line */}
- <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+  <div
+   className={cn("rounded-xl bg-card border-0",
+  config.padding,
+  className
+  )}
+  >
  <div className="flex flex-col gap-3">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -156,7 +154,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
  variant={variant}
  hover={!!onClick}
  clickable={!!onClick}
- className={cn("group", config.padding, className)}
+ className={cn("group flex flex-col justify-center", config.padding, className)}
  onClick={onClick}
  aria-label={title}
  {...props}
@@ -164,12 +162,12 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
  {(title || Icon || trend) && (
  <CardHeader size={size} className="flex-row items-center justify-between pb-2">
  <div className="flex items-center gap-2 flex-1 min-w-0">
- {renderIcon() && (
- <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 border border-primary/15 text-primary group-hover:bg-primary/15 " aria-hidden="true">
- {renderIcon()}
- </div>
- )}
- <h3 className={cn("font-semibold text-muted-foreground/80 truncate micro-sans",
+  {renderIcon() && (
+   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted/50 border-0 text-muted-foreground" aria-hidden="true">
+  {renderIcon()}
+  </div>
+  )}
+ <h3 className={cn("font-black text-muted-foreground/80 truncate micro-sans",
  config.title
  )}>
  {title}
@@ -193,7 +191,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
  </CardHeader>
  )}
 
- <CardContent size={size} className="gap-1.5">
+ <CardContent size={size} className="gap-1.5 flex flex-col justify-center">
  <div
  className={cn("font-bold tracking-tight tabular-nums",
  config.value,
@@ -231,152 +229,5 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
 
 StatsCard.displayName ="StatsCard"
 
-export interface ModernStatsCardProps extends Omit<StatsCardProps,"variant"> {
- glass?: boolean
-}
-
-const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
- (
- {
- title,
- value,
- icon: Icon,
- trend,
- description,
- size ="md",
- isLoading = false,
- animateValue = true,
- formatCurrency = false,
- locale ="en-US",
- glass = false,
- onClick,
- className,
- ...props
- },
- ref
- ) => {
- const config = SIZE_CONFIG[size]
- const displayValue = React.useMemo(() => {
- if (typeof value !=="number") return value
- if (formatCurrency) return formatCurrencyValue(value, locale)
- return value.toLocaleString(locale ==="fr" ?"fr-FR" :"en-US")
- }, [value, formatCurrency, locale])
-
- if (isLoading) {
- return (
- <div
- className={cn("relative overflow-hidden rounded-xl border border-border/30 bg-primary/[0.03]","shadow-[inset_0_1px_0_hsl(var(--primary)/0.06)]",
- config.padding,
- className
- )}
- >
- <div className="flex flex-col gap-3">
- <Skeleton className="h-4 w-1/3" />
- <Skeleton className={cn("h-8 w-32", config.value)} />
- <Skeleton className="h-3 w-24" />
- </div>
- </div>
- )
- }
-
- const rawNumber = typeof value ==="number" && !formatCurrency ? value : undefined
-
- const renderIcon = () => {
- if (!Icon) return null
- if (React.isValidElement(Icon)) return Icon
- if (typeof Icon ==="function") {
- const IconComponent = Icon as LucideIcon
- return <IconComponent className={config.icon} />
- }
- return null
- }
-
- return (
- <div
- ref={ref}
- data-widget-shell="v2"
- role={onClick ?"button" : undefined}
- tabIndex={onClick ? 0 : undefined}
- onClick={onClick}
- className={cn("group relative overflow-hidden rounded-xl border border-border/30 bg-primary/[0.03] ","shadow-[inset_0_1px_0_hsl(var(--primary)/0.06)]",
- glass &&"bg-background/25",
- !!onClick &&"cursor-pointer hover:shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_8px_24px_-8px_rgba(0,0,0,0.3)]",
- config.padding,
- className
- )}
- {...props}
- >
- {/* Top accent line */}
- <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
- 
- {/* Hover glow */}
- <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.06] via-transparent to-transparent opacity-0 group-hover:opacity-100 " />
-
- {(title || trend) && (
- <div className="relative flex items-center justify-between gap-3 mb-2">
- <div className="flex items-center gap-2 flex-1 min-w-0">
- {renderIcon() && (
- <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 border border-primary/15 text-primary group-hover:bg-primary/15 " aria-hidden="true">
- {renderIcon()}
- </div>
- )}
- <h3 className={cn("text-muted-foreground/70 font-semibold truncate micro-sans", config.title)}>
- {title}
- </h3>
- </div>
-
- {trend && (
- <Badge
- variant={getTrendBadgeVariant(trend.isPositive)}
- size="sm"
- 
- className="shrink-0 gap-1"
- aria-label={`${trend.isPositive ? 'Increased' : 'Decreased'} by ${Math.abs(trend.value)}%`}
- >
- {React.createElement(getTrendIcon(trend.isPositive), {
- className:"h-3 w-3 stroke-2","aria-hidden": true,
- })}
- <span>{trend.isPositive ?"+" :""}{trend.value}%</span>
- </Badge>
- )}
- </div>
- )}
-
- <div
- className={cn("relative font-bold tracking-tight tabular-nums",
- config.value,
- trend
- ? trend.isPositive
- ?"text-success"
- :"text-destructive"
- :"text-foreground"
- )}
- aria-label={`Value: ${displayValue}`}
- >
- {rawNumber !== undefined && animateValue ? (
- <NumberFlow
- value={rawNumber}
- locales={locale ==="fr" ?"fr-FR" :"en-US"}
- className="inherit"
- />
- ) : (
- displayValue
- )}
- </div>
-
- {description && (
- <p className={cn("relative text-muted-foreground/55 micro-sans mt-1",
- config.trend
- )}>
- {description}
- </p>
- )}
- </div>
- )
- }
-)
-
-ModernStatsCard.displayName ="ModernStatsCard"
-
-export { StatsCard, ModernStatsCard, StatsCardSkeleton }
+export { StatsCard, StatsCardSkeleton }
 export type { StatsCardSkeletonProps }

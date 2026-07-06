@@ -1,6 +1,5 @@
 import { cn } from './utils'
 import { LucideIcon } from 'lucide-react'
-import React from 'react'
 
 interface BottomNavProps {
   items: {
@@ -21,7 +20,7 @@ export function BottomNav({
   return (
     <div
       className={cn(
-        'fixed bottom-0 left-0 right-0 bg-card border-t border-border',
+        'fixed bottom-0 left-0 right-0 bg-card border-t border-transparent',
         className
       )}
       data-slot="bottom-nav"

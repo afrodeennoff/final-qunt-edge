@@ -53,8 +53,8 @@ export default function OnboardingModal({ onDismiss }: OnboardingModalProps) {
       setTimeout(() => {
         onDismiss?.()
       }, 100)
-    } catch (error) {
-      console.error('Failed to update onboarding status:', error)
+    } catch {
+
     }
   }, [current, changeIsFirstConnection, onDismiss])
 
@@ -69,8 +69,8 @@ export default function OnboardingModal({ onDismiss }: OnboardingModalProps) {
       setTimeout(() => {
         onDismiss?.()
       }, 100)
-    } catch (error) {
-      console.error('Failed to update onboarding status:', error)
+    } catch {
+
     }
   }, [changeIsFirstConnection, onDismiss])
 
@@ -112,7 +112,7 @@ export default function OnboardingModal({ onDismiss }: OnboardingModalProps) {
             <CarouselItem className="pl-0 basis-full">
               <div className="p-6">
                 <DialogHeader>
-                  <DialogTitle className="text-2xl font-bold">
+                  <DialogTitle className="text-2xl font-black">
                     {t('onboarding.welcome')}
                   </DialogTitle>
                   <DialogDescription>
@@ -142,7 +142,7 @@ export default function OnboardingModal({ onDismiss }: OnboardingModalProps) {
             <CarouselItem className="pl-0 basis-full">
               <div className="p-6">
                 <DialogHeader>
-                  <DialogTitle className="text-2xl sm:text-3xl font-bold text-center">
+                  <DialogTitle className="text-2xl sm:text-3xl font-black text-center">
                     {t('pricing.chooseYourPlan')}
                   </DialogTitle>
                   <DialogDescription className="text-center text-base sm:text-lg">

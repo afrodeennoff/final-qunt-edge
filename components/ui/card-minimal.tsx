@@ -36,22 +36,22 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
     const baseClasses = cn(
       'relative overflow-hidden text-foreground',
-      'transition-all duration-[200ms] ease-out',
-      hover && 'hover:shadow-lg hover:-translate-y-px',
-      isInteractive && 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
+      'transition-[opacity,background-color,border-color] duration-[200ms] ease-out',
+      hover && 'hover:shadow-sm',
+      isInteractive && 'cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/30',
       isLoading && 'pointer-events-none opacity-80'
     )
 
     const variantClasses = {
-      default: 'rounded-lg border border-border/50 bg-card shadow-sm',
-      flat: 'rounded-lg border border-border/20 bg-card shadow-none',
-      embedded: 'rounded-lg border-0 bg-card shadow-md',
+      default: 'rounded-xl bg-card border-0 shadow-none',
+      flat: 'rounded-xl border-0 bg-transparent shadow-none',
+      embedded: 'rounded-xl bg-card border-0 shadow-none',
     }
 
     const sizeClasses = {
-      sm: 'p-3 text-sm',
+      sm: 'p-3 type-body-sm',
       md: 'p-4',
-      lg: 'p-6 text-lg',
+      lg: 'p-6 type-body-lg',
     }
 
     return (
@@ -71,7 +71,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       >
         {isLoading && (
           <div className="absolute inset-0 z-10 overflow-hidden rounded-[inherit]">
-            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
           </div>
         )}
         {children}
@@ -91,7 +91,7 @@ CardHeader.displayName = 'CardHeader'
 
 const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn('text-lg font-semibold tracking-tight', className)} {...props} />
+    <h3 ref={ref} className={cn('text-lg font-black tracking-tight', className)} {...props} />
   )
 )
 CardTitle.displayName = 'CardTitle'

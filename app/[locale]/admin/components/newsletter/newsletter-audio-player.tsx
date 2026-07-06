@@ -1,4 +1,5 @@
 "use client"
+import React from 'react'
 
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { Play, Pause, Volume2, VolumeX, Download } from 'lucide-react'
@@ -82,8 +83,8 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  setIsLoading(true)
  await audioRef.current.play()
  }
- } catch (error) {
- console.error('Error playing audio:', error)
+ } catch {
+
  setIsLoading(false)
  }
  }
@@ -139,7 +140,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
 
  if (!audioUrl) {
  return (
- <div className={`p-4 bg-background/0.04 rounded-lg ${className}`}>
+  <div className={`p-4 bg-muted/30 rounded-lg ${className}`}>
  <div className="text-center text-muted-foreground">
  No audio file loaded
  </div>
@@ -148,7 +149,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  }
 
  return (
- <div className={`p-4 bg-background/0.3 border border-border/0.42 rounded-lg ${className}`}>
+  <div className={`p-4 bg-muted/20 border-0 rounded-lg ${className}`}>
  <div className="space-y-4">
  {/* File name */}
  <div className="text-sm font-medium text-foreground truncate">
@@ -182,7 +183,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  className="p-2 bg-semantic-info-bg hover:bg-semantic-info-bg/90 dark:bg-semantic-info-bg dark:hover:bg-semantic-info-bg/90 text-card-foreground rounded-full transition-colors disabled:opacity-50"
  >
  {isLoading ? (
- <div className="w-4 h-4 border-2 border-border/0.42 border-t-transparent rounded-full animate-spin" />
+  <div className="w-4 h-4 border-2 border-transparent border-t-transparent rounded-full animate-spin" />
  ) : isPlaying ? (
  <Pause className="w-4 h-4" />
  ) : (
@@ -217,7 +218,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  {/* Download button */}
  <button
  onClick={handleDownload}
- className="p-2 bg-background/0.03 hover:bg-background/0.04 text-card-foreground rounded-full transition-colors"
+  className="p-2 bg-muted/20 hover:bg-muted/30 text-card-foreground rounded-full transition-colors"
  title="Download audio file"
  >
  <Download className="w-4 h-4" />
@@ -238,7 +239,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  border-radius: 50%;
  background: hsl(var(--primary));
  cursor: pointer;
- border: 2px solid hsl(var(--border));
+ border: 2px solid transparent;
  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
  }
  
@@ -248,7 +249,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  border-radius: 50%;
  background: hsl(var(--primary));
  cursor: pointer;
- border: 2px solid hsl(var(--border));
+ border: 2px solid transparent;
  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
  }
  `}</style>

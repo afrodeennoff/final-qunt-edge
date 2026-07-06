@@ -1,27 +1,36 @@
 "use client"
 
-import { useRef, useEffect, useState, useMemo } from "react"
+import React, { useRef, useEffect, useState, useMemo } from "react"
 import { motion, useReducedMotion, useInView, useSpring, Variants } from "motion/react"
 import { cn } from "@/lib/utils"
 
-export const SPRING_GENTLE = { type:"spring" as const, stiffness: 280, damping: 26, mass: 0.9 }
-export const SPRING_BOUNCY = { type:"spring" as const, stiffness: 340, damping: 24, mass: 0.9 }
+// ============================================================================
+// Spring presets — calm, professional, data-focused
+// ============================================================================
+export const SPRING_SUBTLE = { type: 'spring' as const, stiffness: 320, damping: 32, mass: 0.8 }
+export const SPRING_SNAPPY = { type: 'spring' as const, stiffness: 400, damping: 38, mass: 0.7 }
+export const SPRING_GENTLE = { type: 'spring' as const, stiffness: 240, damping: 28, mass: 1 }
+export const SPRING_RESPONSIVE = { type: 'spring' as const, stiffness: 500, damping: 42, mass: 0.6 }
 
 // ============================================================================
-// StyleSeed motion tokens
+// Motion duration & easing tokens
 // ============================================================================
 
 export const MOTION_DURATION = {
- fast: 100, // --duration-fast: hover, color changes
- normal: 200, // --duration-normal: enter animations, expand
- slow: 300, // --duration-slow: page transitions, spring
+  instant: 60,
+  fast: 100,
+  normal: 160,
+  slow: 220,
+  deliberate: 300,
 } as const
 
 export const MOTION_EASE = {
- default: [0.4, 0, 0.2, 1] as const,
- spring: [0.22, 1, 0.36, 1] as const,
- entrance: [0.16, 1, 0.3, 1] as const,
- bounce: [0.68, -0.55, 0.265, 1.55] as const,
+  snappy: [0.16, 1, 0.3, 1] as const,
+  subtle: [0.22, 1, 0.36, 1] as const,
+  smooth: [0.25, 0.1, 0.25, 1] as const,
+  default: [0.25, 0.46, 0.45, 0.94] as const,
+  decelerate: [0, 0, 0.2, 1] as const,
+  accelerate: [0.4, 0, 1, 1] as const,
 } as const
 
 export const STAGED_REVEAL_CLASS_NAMES = [
@@ -36,43 +45,61 @@ export function getStagedRevealClassName(stage = 0) {
 }
 
 // ============================================================================
-// BLUR_ENTRANCE variant
+// Variant presets
 // ============================================================================
 
-const BLUR_ENTRANCE: Variants = {
- hidden: { opacity: 0, y: 12 },
- show: {
- opacity: 1,
- y: 0,
- transition: { duration: 0.55, ease: MOTION_EASE.spring }
- }
+const BINANCE_ENTRANCE: Variants = {
+  hidden: { opacity: 0, y: 4 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 400, damping: 38, mass: 0.7 }
+  }
 }
 
 export const blurIn: Variants = {
- hidden: {
- opacity: 0,
- scale: 0.98,
- },
- visible: {
- opacity: 1,
- scale: 1,
- transition: {
- duration: 0.36,
- ease: [...MOTION_EASE.entrance] as [number, number, number, number],
- },
- },
+  hidden: { opacity: 0, y: 3, scale: 0.995 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { type: 'spring', stiffness: 400, damping: 38, mass: 0.7 },
+  },
 }
 
 export const scaleIn: Variants = {
- hidden: {
- opacity: 0,
- scale: 0.8,
- },
- visible: {
- opacity: 1,
- scale: 1,
- transition: SPRING_GENTLE,
- },
+  hidden: { opacity: 0, scale: 0.985 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: SPRING_SUBTLE,
+  },
+}
+
+export const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 320, damping: 32, mass: 0.8 },
+  },
+}
+
+export const fadeIn: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.15, ease: MOTION_EASE.snappy },
+  },
+}
+
+export const slideInRight: Variants = {
+  hidden: { opacity: 0, x: 12 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { type: 'spring', stiffness: 320, damping: 32, mass: 0.8 },
+  },
 }
 
 // ============================================================================
@@ -83,43 +110,41 @@ interface MotionSectionProps {
  children: React.ReactNode
  className?: string
  delay?: number
- spring?: typeof SPRING_GENTLE
+  spring?: typeof SPRING_SUBTLE
  threshold?: number
 }
 
 export function MotionSection({
- children,
- className,
- delay = 0,
- spring = SPRING_GENTLE,
- threshold = 0.05,
+  children,
+  className,
+  delay = 0,
+  spring = SPRING_SUBTLE,
+  threshold = 0.05,
 }: MotionSectionProps) {
- const ref = useRef<HTMLElement>(null)
- const prefersReducedMotion = useReducedMotion()
- const isInView = useInView(ref, { once: true, amount: threshold })
+  const ref = useRef<HTMLElement>(null)
+  const prefersReducedMotion = useReducedMotion()
+  const isInView = useInView(ref, { once: true, amount: threshold })
 
- if (prefersReducedMotion) {
- return <section className={className}>{children}</section>
- }
+  if (prefersReducedMotion) {
+    return <section className={className}>{children}</section>
+  }
 
- // CSS animation handles entrance — content is always visible even if FM never hydrates.
- // initial={false} prevents FM from setting inline opacity:0 which causes blank pages.
- return (
- <motion.section
- ref={ref}
- className={cn('animate-fade-up-smooth', className)}
- initial={false}
- animate={isInView ? { opacity: 1, y: 0 } : undefined}
- transition={{
- duration: 0.42,
- delay,
- ease: [0.22, 1, 0.36, 1],
- ...spring,
- }}
- >
- {children}
- </motion.section>
- )
+  return (
+    <motion.section
+      ref={ref}
+      className={cn('animate-binance-reveal', className)}
+      initial={false}
+      animate={isInView ? { opacity: 1, y: 0 } : undefined}
+      transition={{
+        duration: 0.16,
+        delay,
+        ease: MOTION_EASE.snappy,
+        ...spring,
+      }}
+    >
+      {children}
+    </motion.section>
+  )
 }
 
 // ============================================================================
@@ -129,8 +154,8 @@ export function MotionSection({
 interface MotionStaggerProps {
  children: React.ReactNode
  className?: string
- delay?: number // Base delay between items (0.05 - 0.15)
- staggerSpeed?: number // Multiplier for stagger delay
+ delay?: number
+ staggerSpeed?: number
 }
 
 export function MotionStagger({
@@ -149,27 +174,26 @@ export function MotionStagger({
  return <div className={className}>{children}</div>
  }
 
- // CSS entrance instead of FM initial — content always visible
- return (
- <motion.div
- ref={ref}
- className={cn('animate-fade-up-smooth', className)}
- initial={false}
- animate={isInView ? "visible" : undefined}
- variants={{
- hidden: { opacity: 0 },
- visible: {
- opacity: 1,
- transition: {
- staggerChildren: clampedDelay * staggerSpeed,
- delayChildren: 0.1,
- },
- },
- }}
- >
- {children}
- </motion.div>
- )
+  return (
+    <motion.div
+      ref={ref}
+      className={cn('animate-binance-reveal', className)}
+      initial={false}
+      animate={isInView ? "visible" : undefined}
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: {
+            staggerChildren: clampedDelay * staggerSpeed,
+            delayChildren: 0.04,
+          },
+        },
+      }}
+    >
+      {children}
+    </motion.div>
+  )
 }
 
 // ============================================================================
@@ -189,29 +213,28 @@ export function MotionStaggerItem({ children, className, blur = false }: MotionS
  return <div className={className}>{children}</div>
  }
 
- return (
- <motion.div
- className={className}
- variants={
- blur
- ? BLUR_ENTRANCE
- : {
- hidden: { opacity: 0, y: 8, scale: 0.995 },
- visible: {
- opacity: 1,
- y: 0,
- scale: 1,
- transition: {
- duration: 0.38,
- ease: [0.22, 1, 0.36, 1],
- },
- },
- }
- }
- >
- {children}
- </motion.div>
- )
+  return (
+    <motion.div
+      className={className}
+      variants={
+        blur
+          ? BINANCE_ENTRANCE
+          : {
+              hidden: { opacity: 0, y: 3 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: {
+                  duration: 0.14,
+                  ease: MOTION_EASE.snappy,
+                },
+              },
+            }
+      }
+    >
+      {children}
+    </motion.div>
+  )
 }
 
 interface MotionOrchestratedProps {
@@ -233,7 +256,6 @@ export function MotionOrchestrated({
  return <div className={className}>{children}</div>
  }
 
- // CSS entrance instead of FM initial — content always visible
  return (
  <motion.div
  ref={ref}
@@ -273,20 +295,20 @@ export function MotionPhrase({ children, className, delay = 0 }: MotionPhrasePro
  return <span className={className}>{children}</span>
  }
 
- return (
- <motion.span
- initial={{ opacity: 0, y: 8 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{
- duration: MOTION_DURATION.slow / 1000,
- delay: delay / 1000,
- ease: MOTION_EASE.entrance
- }}
- className={className}
- >
- {children}
- </motion.span>
- )
+  return (
+    <motion.span
+      initial={{ opacity: 0, y: 3 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: MOTION_DURATION.fast / 1000,
+        delay: delay / 1000,
+        ease: MOTION_EASE.snappy
+      }}
+      className={className}
+    >
+      {children}
+    </motion.span>
+  )
 }
 
 // ============================================================================
@@ -314,7 +336,7 @@ export function AnimatedCounter({
  const ref = useRef<HTMLSpanElement>(null)
  const isInView = useInView(ref, { once: true, margin:"-10%" })
 
- const spring = useSpring(0, { stiffness: 100, damping: 30 })
+  const spring = useSpring(0, { stiffness: 280, damping: 32 })
  const [displayValue, setDisplayValue] = useState("0")
 
  const formatter = useMemo(
@@ -357,7 +379,7 @@ export function AnimatedCounter({
 
 interface OrbConfig {
  size: number
- x: string // CSS position
+ x: string
  y: string
  duration: number
  delay: number
@@ -366,17 +388,16 @@ interface OrbConfig {
 }
 
 const DEFAULT_ORBS: OrbConfig[] = [
- { size: 300, x:"10%", y:"20%", duration: 20, delay: 0, opacity: 0.15, color:"from-purple-500/30 to-violet-500/30" },
- { size: 400, x:"70%", y:"10%", duration: 25, delay: 5, opacity: 0.12, color:"from-violet-500/20 to-purple-500/20" },
- { size: 250, x:"30%", y:"60%", duration: 18, delay: 2, opacity: 0.18, color:"from-indigo-500/25 to-violet-500/25" },
- { size: 350, x:"80%", y:"50%", duration: 22, delay: 8, opacity: 0.1, color:"from-purple-400/20 to-violet-600/20" },
- { size: 200, x:"50%", y:"80%", duration: 16, delay: 3, opacity: 0.14, color:"from-fuchsia-500/25 to-purple-500/25" },
+  { size: 300, x:"10%", y:"20%", duration: 20, delay: 0, opacity: 0.15, color:"from-primary/30 to-primary/20" },
+  { size: 400, x:"70%", y:"10%", duration: 25, delay: 5, opacity: 0.12, color:"from-primary/20 to-primary/15" },
+  { size: 250, x:"30%", y:"60%", duration: 18, delay: 2, opacity: 0.18, color:"from-primary/25 to-primary/18" },
+  { size: 350, x:"80%", y:"50%", duration: 22, delay: 8, opacity: 0.1, color:"from-primary/20 to-primary/12" },
+  { size: 200, x:"50%", y:"80%", duration: 16, delay: 3, opacity: 0.14, color:"from-primary/22 to-primary/15" },
 ]
 
 interface FloatingOrbsProps {
  className?: string
  orbs?: OrbConfig[]
- blobCount?: number
 }
 
 export function FloatingOrbs({
@@ -390,36 +411,54 @@ export function FloatingOrbs({
  return null
  }
 
- return (
- <div ref={containerRef} className={cn("absolute inset-0 overflow-hidden pointer-events-none", className)}>
- {orbs.map((orb, index) => {
- return (
- <motion.div
- key={index}
- className={cn("absolute rounded-full blur-3xl", orb.color)}
-
- style={{
- width: orb.size,
- height: orb.size,
- left: orb.x,
- top: orb.y,
- opacity: orb.opacity,
- }}
- />
- )
- })}
- </div>
- )
+  return (
+    <div
+      ref={containerRef}
+      className={cn('pointer-events-none absolute inset-0 overflow-hidden', className)}
+      aria-hidden="true"
+    >
+      {orbs.map((orb, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full bg-gradient-to-b"
+          style={{
+            width: orb.size,
+            height: orb.size,
+            left: orb.x,
+            top: orb.y,
+            background: orb.color,
+          }}
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{
+            opacity: orb.opacity,
+            scale: [1, 1.08, 1],
+            x: [0, 15, -10, 8, 0],
+            y: [0, -12, 8, -5, 0],
+          }}
+          transition={{
+            opacity: { duration: 1.5, delay: i * 0.3 },
+            scale: { duration: orb.duration, repeat: Infinity, ease: 'easeInOut', delay: orb.delay },
+            x: { duration: orb.duration * 0.7, repeat: Infinity, ease: 'easeInOut', delay: orb.delay },
+            y: { duration: orb.duration * 0.85, repeat: Infinity, ease: 'easeInOut', delay: orb.delay },
+          }}
+        >
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              filter: 'blur(60px)',
+              background: 'inherit',
+            }}
+          />
+        </motion.div>
+      ))}
+    </div>
+  )
 }
 
 // ============================================================================
 // Utility hook for reduced motion
 // ============================================================================
 
-/**
- * Hook to check if user prefers reduced motion
- * Returns true if prefers-reduced-motion is set
- */
 export function usePrefersReducedMotion() {
- return useReducedMotion()
+  return useReducedMotion()
 }

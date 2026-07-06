@@ -41,8 +41,8 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
  try {
  const data = await getSmartInsights()
  setInsights([...data].sort((a, b) => (b.confidence || 0) - (a.confidence || 0)))
- } catch (error) {
- console.error('Failed to load insights', error)
+ } catch {
+
  setError(true)
  } finally {
  setLoading(false)
@@ -72,7 +72,7 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
 
  const allowedTargets = React.useMemo<ReadonlySet<InsightActionTarget>>(
  () =>
- new Set<InsightActionTarget>(["/dashboard","/dashboard/trades","/dashboard/accounts","/dashboard/reports","/dashboard/behavior","/dashboard/trader-profile","/dashboard/settings","/dashboard/import","/dashboard/data",
+   new Set<InsightActionTarget>(["/dashboard","/dashboard/trades","/dashboard/accounts","/dashboard/statistics","/dashboard/trader-profile","/dashboard/settings","/dashboard/import","/dashboard/data",
  ]),
  []
  );
@@ -123,8 +123,8 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
  </div>
  }
  errorMessage="Failed to load insights. Please try again."
- className="h-full flex flex-col overflow-hidden relative group"
- contentClassName="flex-1 overflow-hidden p-0"
+  className="h-full flex flex-col relative group"
+  contentClassName="flex-1 p-0"
  >
  {/* Background Decoration */}
  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -z-10 pointer-events-none" />
@@ -139,25 +139,25 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
  initial={{ opacity: 0, y: 10 }}
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.95 }}
- className="group/item relative rounded-xl border border-border/0.05 bg-background/40 shadow-[0_0_0_0.5px_rgba(180,210,255,0.05),0_4px_20px_-8px_rgba(0,0,0,0.80)] overflow-hidden transition-[opacity,background-color,border-color] duration-300 hover:border-border/0.08 hover:shadow-[0_0_0_0.5px_rgba(180,210,255,0.09),0_8px_32px_-8px_rgba(0,0,0,0.85)] flex flex-col gap-2 p-3"
+  className="group/item relative rounded-xl border-0 bg-card/60 shadow-sm overflow-hidden transition-[opacity,background-color,border-color] duration-300 hover:shadow-sm flex flex-col gap-2 p-3"
  >
  <div className="flex items-start justify-between gap-2">
  <div className="flex items-center gap-2">
- <div className={cn("flex h-8 w-8 items-center justify-center rounded-full bg-secondary/30 border border-border/55",
- insight.type === 'risk' &&"bg-secondary/35 border-border/55",
- insight.type === 'opportunity' &&"bg-secondary/35 border-border/55",
+ <div className={cn("flex h-8 w-8 items-center justify-center rounded-full bg-secondary/30 border-05",
+ insight.type === 'risk' &&"bg-secondary/35 border-transparent",
+ insight.type === 'opportunity' &&"bg-secondary/35 border-transparent",
  )}>
  {getIcon(insight.type)}
  </div>
  <div>
- <h4 className="text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/35">{insight.title}</h4>
+ <h4 className="text-[11px] font-black uppercase tracking-[0.12em] text-muted-foreground">{insight.title}</h4>
  <span className="text-[10px] text-muted-foreground">
  {formatInsightDate(insight.timestamp)}
  </span>
  </div>
  </div>
  {insight.confidence && (
- <Badge variant="secondary" className="text-[10px] h-5 px-1.5 bg-background/30 border-border/30 text-foreground/70">
+ <Badge variant="secondary" className="text-[10px] h-5 px-1.5 bg-background/30 border-transparent text-foreground/95">
  {insight.confidence}% Conf.
  </Badge>
  )}

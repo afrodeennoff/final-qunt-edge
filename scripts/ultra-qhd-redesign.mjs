@@ -102,7 +102,7 @@ for (const dir of dirs) {
   const files = walkDir(dir)
   for (const file of files) {
     let content = readFileSync(file, 'utf-8')
-    let original = content
+    const original = content
     let changeCount = 0
     
     // Apply global replacements

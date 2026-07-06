@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 
 import { useState, useEffect } from 'react'
 import { useI18n } from '@/locales/client'
@@ -68,7 +69,7 @@ interface TagWidgetProps {
 }
 
 // Hex is intentionally used here because HexColorPicker requires hex input.
-const DEFAULT_TAG_COLOR = 'hsl(var(--muted-foreground))'
+const DEFAULT_TAG_COLOR = 'var(--muted-foreground)'
 
 export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetProps) {
  const t = useI18n()
@@ -206,8 +207,8 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
 
  setEditingTag(null)
  setFormData({ name: '', description: null, color: DEFAULT_TAG_COLOR })
- } catch (error) {
- console.error('Failed to save tag:', error)
+ } catch {
+
  toast.error(t('widgets.tags.error'), {
  description: editingTag ? t('widgets.tags.updateError') : t('widgets.tags.createError'),
  })
@@ -251,8 +252,8 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
  toast.success(t('widgets.tags.success'), {
  description: t('widgets.tags.deleteSuccess'),
  })
- } catch (error) {
- console.error('Failed to delete tag:', error)
+ } catch {
+
  toast.error(t('widgets.tags.error'), {
  description: t('widgets.tags.deleteError'),
  })
@@ -382,7 +383,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
  </div>
  }
  className="h-full flex flex-col"
- contentClassName={cn("flex-1 min-h-0 overflow-hidden pt-0",
+  contentClassName={cn("flex-1 min-h-0 pt-0",
  size === 'small' ?"px-1" :"px-2 sm:px-4"
  )}
  >

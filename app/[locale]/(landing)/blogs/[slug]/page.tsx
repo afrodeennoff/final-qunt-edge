@@ -1,12 +1,12 @@
 import { getBlogPostBySlug } from '@/app/[locale]/admin/actions/blog-actions'
-import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { getCanonicalUrl, getLocaleAlternates } from '@/lib/seo'
+import { sanitizeHtml } from '@/lib/sanitize'
+import { ArrowLeft } from 'lucide-react'
 
 interface Props {
   params: Promise<{
@@ -69,21 +69,24 @@ export default async function BlogDetailPage(props: Props) {
   })
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[800px]">
+    <div className="mx-auto max-w-[800px] px-4 py-8 sm:px-6 lg:px-8">
       <div className="space-y-8">
-        <Link href={`/${params.locale}/blogs`}>
-          <Button variant="ghost" size="sm">
-            ← Back to Blogs
-          </Button>
+        <Link
+          href={`/${params.locale}/blogs`}
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Blogs
         </Link>
 
         {post.coverImage && (
-          <div className="relative w-full overflow-hidden rounded-xl">
+          <div className="relative w-full overflow-hidden rounded-xl bg-muted">
             <Image
               src={post.coverImage}
               alt={post.title}
               width={1600}
               height={900}
+              sizes="(max-width: 768px) 100vw, 1200px"
               priority
               className="max-h-[400px] w-full object-cover"
             />
@@ -95,7 +98,7 @@ export default async function BlogDetailPage(props: Props) {
             {categoryLabel}
           </Badge>
 
-          <h1 className="text-4xl font-bold text-foreground sm:text-5xl">
+          <h1 className="text-4xl font-black leading-tight tracking-tight text-foreground sm:text-5xl">
             {post.title}
           </h1>
 
@@ -108,14 +111,14 @@ export default async function BlogDetailPage(props: Props) {
           </div>
         </div>
 
-        <div className="prose max-w-none">
+        <div className="prose prose-sm max-w-none">
           {post.content ? (
-            <div dangerouslySetInnerHTML={{ __html: post.content }} />
+            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }} />
           ) : (
             <p className="text-muted-foreground">No content available.</p>
           )}
         </div>
       </div>
-    </UnifiedPageShell>
+    </div>
   )
 }

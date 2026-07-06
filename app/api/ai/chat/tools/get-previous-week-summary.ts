@@ -38,31 +38,38 @@ function generateTradeSummary(trades: AnalyticsTrade[]): TradeSummary[] {
     });
 }
 
-export const getPreviousWeekSummary = tool({
+export function createGetPreviousWeekSummaryTool(userId?: string) {
+  return tool({
     description: 'Get trades summary for the previous week (Monday to Sunday of last week). This automatically calculates the previous week boundaries.',
-    inputSchema: z.object({}),
+    inputSchema: z.object({}).catch({}),
     execute: async () => {
-        const now = new Date();
-        const previousWeekStart = startOfWeek(subWeeks(now, 1), { weekStartsOn: 1 });
-        const previousWeekEnd = endOfWeek(subWeeks(now, 1), { weekStartsOn: 1 });
+      if (!userId) {
+        return { error: 'AI tool executed without explicit userId — cross-user access prevented' };
+      }
+      const resolvedUserId = userId;
+      const now = new Date();
+      const previousWeekStart = startOfWeek(subWeeks(now, 1), { weekStartsOn: 1 });
+      const previousWeekEnd = endOfWeek(subWeeks(now, 1), { weekStartsOn: 1 });
 
+      const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
+      const allTrades = tradesResult.trades;
+      const filteredTrades = normalizeTrades(allTrades).filter(trade => {
+        const tradeDate = trade.entryDate;
+        return tradeDate >= previousWeekStart && tradeDate <= previousWeekEnd;
+      });
 
-        const tradesResult = await getAiTrades({ profile: 'analysis' });
-    const allTrades = tradesResult.trades;
-        const filteredTrades = normalizeTrades(allTrades).filter(trade => {
-            const tradeDate = trade.entryDate;
-            return tradeDate >= previousWeekStart && tradeDate <= previousWeekEnd;
-        });
-
-        return {
-            weekPeriod: `${format(previousWeekStart, 'MMM d')} - ${format(previousWeekEnd, 'MMM d, yyyy')}`,
-            dateRange: {
-                start: previousWeekStart.toISOString(),
-                end: previousWeekEnd.toISOString()
-            },
-            summary: generateTradeSummary(filteredTrades),
-            truncated: tradesResult.truncated,
-            dataQualityWarning: tradesResult.dataQualityWarning,
-        };
+      return {
+        weekPeriod: `${format(previousWeekStart, 'MMM d')} - ${format(previousWeekEnd, 'MMM d, yyyy')}`,
+        dateRange: {
+          start: previousWeekStart.toISOString(),
+          end: previousWeekEnd.toISOString()
+        },
+        summary: generateTradeSummary(filteredTrades),
+        truncated: tradesResult.truncated,
+        dataQualityWarning: tradesResult.dataQualityWarning,
+      };
     },
-}) 
+  });
+}
+
+export const getPreviousWeekSummary = createGetPreviousWeekSummaryTool();

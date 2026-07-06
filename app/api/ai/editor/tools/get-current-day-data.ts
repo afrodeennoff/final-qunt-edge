@@ -38,12 +38,15 @@ function generateTradeSummary(trades: AnalyticsTrade[]): TradeSummary[] {
     });
 }
 
-export const getCurrentDayData = tool({
+export function createGetCurrentDayDataTool(userId?: string) {
+  return tool({
     description: 'Get trades database for the current day.',
-    inputSchema: z.object({}),
+    inputSchema: z.object({}).catch({}),
     execute: async () => {
-        const tradesResult = await getAiTrades({ profile: 'detail' });
-    const allTrades = tradesResult.trades || [];
+        if (!userId) return { error: 'AI editor tool executed without explicit user context — cross-user data access prevented' };
+        const resolvedUserId = userId;
+        const tradesResult = await getAiTrades({ userId: resolvedUserId, profile: 'detail' });
+        const allTrades = tradesResult.trades || [];
         const filteredTrades = normalizeTrades(allTrades).filter(trade => {
             const tradeDate = trade.entryDate;
             return isToday(tradeDate);
@@ -55,4 +58,7 @@ export const getCurrentDayData = tool({
             dataQualityWarning: tradesResult.dataQualityWarning,
         };
     },
-}) 
+  });
+}
+
+export const getCurrentDayData = createGetCurrentDayDataTool();

@@ -1,14 +1,23 @@
+import React from 'react'
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
-import { TradeTableReview } from '../components/tables/trade-table-review'
+import dynamic from 'next/dynamic'
+import { Skeleton } from '@/components/ui/skeleton'
 
-export default function DashboardStrategiesPage() {
+const TradeTableReview = dynamic(
+  () => import('../components/tables/trade-table-review').then(m => ({ default: m.TradeTableReview })),
+  { loading: () => <div className="flex h-[80vh] items-center justify-center"><Skeleton className="h-32 w-full max-w-4xl rounded-xl" /></div> }
+)
+
+const DashboardStrategiesPage = React.memo(function DashboardStrategiesPage() {
   return (
     <UnifiedPageShell density="compact">
-      <div className="flex h-[calc(100dvh-10rem)] min-h-[40rem] w-full flex-col pb-[max(env(safe-area-inset-bottom),0.75rem)]">
-        <UnifiedSurface className="h-full overflow-hidden p-0">
+      <div className="flex min-h-full w-full flex-col pb-[max(env(safe-area-inset-bottom),0.75rem)]">
+        <UnifiedSurface className="min-h-full overflow-hidden">
           <TradeTableReview />
         </UnifiedSurface>
       </div>
     </UnifiedPageShell>
   )
-}
+})
+
+export default DashboardStrategiesPage

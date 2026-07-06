@@ -36,25 +36,30 @@ type DecimalLike =
     toString?: () => string
   }
 
-export function decimalToNumber<T extends number | null | undefined>(
+export function decimalToNumber(value: DecimalLike): number
+export function decimalToNumber<T extends number | null>(
   value: DecimalLike,
-  fallback: T = 0 as T
-): T extends number ? number : number | T {
-  if (value === null || value === undefined) return fallback as T extends number ? number : number | T
-  if (typeof value === "number") return (Number.isFinite(value) ? value : fallback) as T extends number ? number : number | T
+  fallback: T
+): number | T
+export function decimalToNumber(
+  value: DecimalLike,
+  fallback: number | null = 0
+): number | null {
+  if (value === null || value === undefined) return fallback
+  if (typeof value === "number") return Number.isFinite(value) ? value : fallback
   if (typeof value === "string") {
     const parsed = Number(value)
-    return (Number.isFinite(parsed) ? parsed : fallback) as T extends number ? number : number | T
+    return Number.isFinite(parsed) ? parsed : fallback
   }
   if (typeof value === "object" && typeof value.toNumber === "function") {
     const parsed = value.toNumber()
-    return (Number.isFinite(parsed) ? parsed : fallback) as T extends number ? number : number | T
+    return Number.isFinite(parsed) ? parsed : fallback
   }
   if (typeof value === "object" && typeof value.toString === "function") {
     const parsed = Number(value.toString())
-    return (Number.isFinite(parsed) ? parsed : fallback) as T extends number ? number : number | T
+    return Number.isFinite(parsed) ? parsed : fallback
   }
-  return fallback as T extends number ? number : number | T
+  return fallback
 }
 
 export function toUtcDate(value: string | Date | null | undefined): Date | null {

@@ -1,3 +1,4 @@
+import React from 'react'
 // components/audio-splitter.tsx"use client"
 
 import { useRef, useState } from 'react'
@@ -110,7 +111,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  }
 
  } catch (error) {
- console.error('Error splitting audio:', error)
+
  const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
  setError(`Failed to split audio: ${errorMessage}`)
  } finally {
@@ -163,9 +164,9 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  }
  
  source.start()
- } catch (error) {
- console.error('Error playing segment:', error)
- }
+  } catch (error) {
+    console.error('Failed to play audio segment:', error)
+  }
  }
 
  const stopAudio = () => {
@@ -177,7 +178,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  }
 
  return (
- <div className="p-4 bg-background/0.3 border border-border/0.42 rounded-lg">
+  <div className="p-4 bg-muted/20 border-0 rounded-lg">
  {error && (
  <div className="mb-4 p-3 bg-semantic-error-bg dark:bg-semantic-error-bg/20 border border-semantic-error-border dark:border-semantic-error-border rounded-md text-semantic-error dark:text-semantic-error">
  {error}
@@ -226,7 +227,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  {segments.map((segment) => (
  <div 
  key={segment.index} 
- className="flex items-center justify-between p-3 bg-background/0.04 dark:bg-background/0.11 rounded-lg border border-border/0.42"
+  className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border-0"
  >
  <div className="flex-1">
  <div className="font-medium text-foreground">
@@ -250,7 +251,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  </button>
  <button
  onClick={() => downloadSegment(segment)}
- className="p-2 text-card-foreground hover:bg-background/0.04 rounded-md transition-colors"
+  className="p-2 text-card-foreground hover:bg-muted/30 rounded-md transition-colors"
  title="Download"
  >
  <Download className="w-4 h-4" />
@@ -274,7 +275,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
 
  {/* Transcription Component - Removed */}
  {segments.length > 0 && (
- <div className="mt-6 p-4 bg-background/0.06 rounded-lg border border-border/0.42">
+  <div className="mt-6 p-4 bg-muted/20 rounded-lg border-0">
  <p className="text-sm text-muted-foreground">
  Transcription feature has been removed. Segments are ready for manual processing.
  </p>

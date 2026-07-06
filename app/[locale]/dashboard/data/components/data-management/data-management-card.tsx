@@ -31,8 +31,6 @@ import { clearAllCache } from '@/lib/indexeddb/trades-cache'
 
 type GroupedTrades = Record<string, Record<string, Trade[]>>
 
-
-
 export function DataManagementCard() {
   const t = useI18n()
   const user = useUserStore((state) => state.user)
@@ -57,8 +55,6 @@ export function DataManagementCard() {
   const [deleteMode, setDeleteMode] = useState<'selected' | 'all'>('selected')
   const [groupedTrades, setGroupedTrades] = useState<GroupedTrades>({})
 
-
-
   const getGroupedTrades = useMemo(() => {
     return trades.reduce<GroupedTrades>((acc, trade) => {
       if (!acc[trade.accountNumber]) {
@@ -77,8 +73,8 @@ export function DataManagementCard() {
     const fetchTradesData = async () => {
       try {
         setGroupedTrades(getGroupedTrades)
-      } catch (error) {
-        console.error("Failed to fetch trades:", error)
+      } catch {
+
         setError(error instanceof Error ? error : new Error('Failed to fetch trades'))
       }
     }
@@ -102,8 +98,8 @@ export function DataManagementCard() {
       await refreshTradesOnly({ force: true })
       setSelectedAccounts([])
       toast.success(accountsToDelete.length > 1 ? t('dataManagement.toast.accountsDeleted') : t('dataManagement.toast.accountDeleted'))
-    } catch (error) {
-      console.error("Failed to delete accounts:", error)
+    } catch {
+
       setError(error instanceof Error ? error : new Error('Failed to delete accounts'))
       toast.error(t('dataManagement.toast.deleteError'), {
         description: t('dataManagement.toast.deleteErrorDesc'),
@@ -131,8 +127,8 @@ export function DataManagementCard() {
       await clearAllCache(user.id)
       await refreshTradesOnly({ force: true })
       toast.success(t('dataManagement.toast.instrumentDeleted'))
-    } catch (error) {
-      console.error("Failed to delete instrument group:", error)
+    } catch {
+
       setError(error instanceof Error ? error : new Error('Failed to delete instrument group'))
       toast.error(t('dataManagement.toast.instrumentDeleteError'), {
         description: t('dataManagement.toast.deleteErrorDesc'),
@@ -200,8 +196,8 @@ export function DataManagementCard() {
       })
 
       toast.success(t('dataManagement.toast.commissionUpdated'))
-    } catch (error) {
-      console.error("Failed to update commission:", error)
+    } catch {
+
       setError(error instanceof Error ? error : new Error('Failed to update commission'))
       toast.error(t('dataManagement.toast.commissionError'), {
         description: t('dataManagement.toast.deleteErrorDesc'),
@@ -238,8 +234,8 @@ export function DataManagementCard() {
       setRenameInstrumentDialogOpen(false)
       setInstrumentToRename({ accountNumber: "", currentName: "" })
       setNewInstrumentName("")
-    } catch (error) {
-      console.error("Failed to rename instrument:", error)
+    } catch {
+
       setError(error instanceof Error ? error : new Error('Failed to rename instrument'))
       toast.error(t('dataManagement.toast.instrumentRenameError'), {
         description: error instanceof Error ? error.message : t('dataManagement.toast.deleteErrorDesc'),
@@ -284,8 +280,8 @@ export function DataManagementCard() {
       setRenameAccountDialogOpen(false)
       setAccountToRename("")
       setNewAccountNumber("")
-    } catch (error) {
-      console.error("Failed to rename account:", error)
+    } catch {
+
       setError(error instanceof Error ? error : new Error('Failed to rename account'))
       toast.error(t('dataManagement.toast.accountRenameError'), {
         description: error instanceof Error ? error.message : t('dataManagement.toast.deleteErrorDesc'),
@@ -303,7 +299,7 @@ export function DataManagementCard() {
     </Alert>
   )
   return (
-    <Card>
+    <Card className="border-0 bg-card shadow-sm">
       <CardHeader>
         <CardTitle className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 justify-between items-start md:items-center">
           <span className="text-xl md:text-2xl">{t('dataManagement.title')}</span>
@@ -472,7 +468,7 @@ export function DataManagementCard() {
               {expandedAccounts[accountNumber] && (
                 <div id={`account-${accountNumber}`} className="space-y-4 pl-2 sm:pl-4">
                   {Object.entries(instruments).map(([instrumentGroup, trades]) => (
-                    <div key={instrumentGroup} className="bg-background/25  p-3 sm:p-4 rounded-lg">
+                    <div key={instrumentGroup} className="rounded-lg border-0 bg-muted/40 p-3 sm:p-4">
                       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div className="flex items-center gap-2">
                           <h3 className="text-md font-medium">

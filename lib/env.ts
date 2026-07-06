@@ -32,6 +32,10 @@ const envSchema = z.object({
   NEXT_PUBLIC_UI_V2_ENABLED: optionalString(),
   CRON_SECRET: optionalMinString(1),
   UNSUBSCRIBE_TOKEN_SECRET: optionalMinString(32),
+  AI_PROVIDER_BASE_URL: optionalUrl(),
+  AI_PROVIDER_API_KEY: optionalMinString(1),
+  AI_DEFAULT_MODEL: optionalModelId(),
+  AI_ANALYTICS_MODEL: optionalModelId(),
   OPENAI_API_KEY: optionalMinString(1),
   AI_BASE_URL: optionalUrl(),
   AI_MODEL: optionalModelId(), // legacy alias
@@ -43,6 +47,10 @@ const envSchema = z.object({
   AI_MODEL_FORMAT_TRADES: optionalModelId(),
   AI_MODEL_ANALYSIS: optionalModelId(),
   AI_MODEL_SEARCH: optionalModelId(),
+  AI_MODEL_JOURNAL_INSIGHTS: optionalModelId(),
+  AI_MODEL_ANALYZE_PATTERNS: optionalModelId(),
+  AI_STRUCTURED_OUTPUT_MODEL: optionalModelId(),
+  NEXT_PUBLIC_APP_URL: optionalUrl(),
   AI_TIMEOUT_MS: optionalString(),
   AI_MAX_STEPS: optionalString(),
   AI_LOG_SAMPLE_RATE: optionalString(),
@@ -54,6 +62,23 @@ const envSchema = z.object({
   UPSTASH_REDIS_REST_URL: optionalUrl(),
   UPSTASH_REDIS_REST_TOKEN: optionalMinString(1),
   OPENROUTER_API_KEY: optionalMinString(1),
+  AI_TRANSCRIBE_BASE_URL: optionalUrl(),
+  AI_TRANSCRIBE_MODEL: optionalModelId(),
+  CF_AIG_TOKEN: optionalMinString(1),
+  AI_SUPPORT_WEBSEARCH_MODEL: optionalModelId(),
+  // Auth / admin gates — previously read raw from process.env with no validation.
+  ALLOWED_ADMIN_USER_ID: optionalString(),
+  ADMIN_USER_ID: optionalString(),
+  ADMIN_EMAIL_DOMAINS: optionalString(),
+  VERCEL_CRON_SECRET: optionalMinString(1),
+  // Service reply-to (defaults handled at call sites).
+  CONTACT_REPLY_TO: optionalString(),
+  // Broker / market-data configuration.
+  TRADOVATE_ENVIRONMENT: optionalString(),
+  DATABENTO_API_KEY: optionalMinString(1),
+  DATABENTO_BASE_URL: optionalUrl(),
+  // MCP stdio remote URL (local dev).
+  MCP_URL: optionalUrl(),
 });
 
 type AppEnv = z.infer<typeof envSchema>;

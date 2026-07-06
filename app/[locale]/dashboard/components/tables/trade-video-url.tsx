@@ -90,8 +90,8 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
  setShowSuccess(false)
  setIsOpen(false)
  }, 1000)
- } catch (error) {
- console.error('Failed to update video URL:', error)
+ } catch {
+
  } finally {
  setIsUpdating(false)
  }
@@ -109,8 +109,8 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
  setShowSuccess(false)
  setIsOpen(false)
  }, 1000)
- } catch (error) {
- console.error('Failed to clear video URL:', error)
+ } catch {
+
  } finally {
  setIsUpdating(false)
  }
@@ -151,15 +151,15 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
  value={draftUrl}
  onChange={(e) => handleUrlChange(e.target.value)}
  className={cn("pr-8",
- !isValid && draftUrl &&"border-border/65 focus-visible:ring-ring/30",
- showSuccess &&"border-border/36 focus-visible:ring-ring",
- isUpdating &&"border-border/65"
+ !isValid && draftUrl &&"border-transparent focus-visible:ring-ring/30",
+ showSuccess &&"border-transparent focus-visible:ring-ring",
+ isUpdating &&"border-transparent"
  )}
  />
  <div className="absolute right-3 top-1/2 -translate-y-1/2">
  {isUpdating && (
  <div className="h-4 w-4">
- <div className="h-4 w-4 animate-spin rounded-full border-2 border-border/65 border-r-transparent" />
+ <div className="h-4 w-4 animate-spin rounded-full border-2 border-transparent border-r-transparent" />
  </div>
  )}
  {showSuccess && !isUpdating && (

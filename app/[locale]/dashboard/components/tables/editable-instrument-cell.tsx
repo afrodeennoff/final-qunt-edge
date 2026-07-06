@@ -53,8 +53,11 @@ export function EditableInstrumentCell({
  return
  }
 
+ // Empty instrument is invalid; close the editor without saving (the server
+ // would reject it anyway) and let the user re-open to retry. Previously this
+ // early-returned WITHOUT closing, trapping the user in edit mode.
  if (trimmedValue === '') {
- // Don't allow empty instrument names
+ handleCancel()
  return
  }
 
@@ -63,8 +66,11 @@ export function EditableInstrumentCell({
  try {
  await onUpdate(tradeIds, { instrument: trimmedValue })
  setIsEditing(false)
- } catch (error) {
- console.error('Error updating instrument:', error)
+ } catch {
+ // Swallowing the error silently hid failures and left the editor stuck open.
+ // Always close the editor on blur; the optimistic update is rolled back by
+ // updateTrades' catch handler, so the value reverts on next render.
+ setIsEditing(false)
  } finally {
  setIsSaving(false)
  }
@@ -90,7 +96,7 @@ export function EditableInstrumentCell({
  onKeyDown={handleKeyDown}
  onBlur={handleSave}
  placeholder="Instrument"
- className="h-7 text-xs font-medium border-border/65 focus-visible:ring-1"
+ className="h-7 text-xs font-medium border-transparent focus-visible:ring-1"
  disabled={isSaving}
  />
  <Button 
@@ -117,7 +123,7 @@ export function EditableInstrumentCell({
 
  return (
  <div
- className={cn("group cursor-pointer hover:bg-secondary/22 rounded px-2 py-1 transition-colors border border-transparent hover:border-border/55 flex items-center gap-2",
+ className={cn("group cursor-pointer hover:bg-secondary/22 rounded px-2 py-1 transition-colors border border-transparent hover:border-transparent flex items-center gap-2",
  className
  )}
  onClick={handleStartEdit}

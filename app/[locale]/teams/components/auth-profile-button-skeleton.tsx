@@ -5,7 +5,7 @@ export function AuthProfileButtonSkeleton() {
  return (
  <div className="relative inline-block">
  <Avatar className="h-8 w-8">
- <AvatarFallback className="bg-background/0.6">
+ <AvatarFallback className="bg-primary/10">
  <Skeleton className="h-full w-full rounded-full" />
  </AvatarFallback>
  </Avatar>

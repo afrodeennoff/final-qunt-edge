@@ -6,49 +6,29 @@ import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'type-body-sm inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border border-transparent select-none overflow-hidden font-medium tracking-normal transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 min-h-[44px]',
+  'type-body-sm inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border select-none font-medium tracking-normal transition-all duration-150 ease-out active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 min-h-[40px] max-md:min-h-[44px] rounded-[10px]',
   {
     variants: {
       variant: {
-        solid:
-          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
-        outline:
-          'rounded-xl border-border/40 bg-background/50 text-foreground hover:border-border/55 hover:bg-primary/6 active:scale-[0.98]',
-        ghost:
-          'rounded-xl text-muted-foreground hover:bg-muted/50 hover:text-foreground active:scale-[0.98]',
-        error:
-          'rounded-xl border-destructive/20 bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 active:scale-[0.98]',
-        destructive:
-          'rounded-xl border-destructive/20 bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 active:scale-[0.98]',
-        link: 'rounded-xl text-primary underline-offset-4 hover:underline',
-        'gradient-primary':
-          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
-        'gradient-secondary':
-          'rounded-xl border-border/40 bg-background/50 text-foreground hover:border-border/55 hover:bg-primary/6 active:scale-[0.98]',
-        shimmer:
-          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
-        default:
-          'rounded-xl border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
-        secondary:
-          'rounded-xl border-border/40 bg-secondary/70 text-secondary-foreground hover:border-border/55 hover:bg-secondary/80 active:scale-[0.98]',
-        mono:
-          'rounded-xl border-border/40 bg-background text-foreground hover:bg-muted/50 font-mono',
-        pill: 'rounded-full border-border/40 bg-background/50 text-foreground hover:border-border/55 hover:bg-primary/6 active:scale-[0.98]',
-        'pill-solid':
-          'rounded-full border-primary/15 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]',
-        'pill-ghost':
-          'rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground active:scale-[0.98]',
+        default: 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80 hover:shadow-sm',
+        destructive: 'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
+        outline: 'border-primary/12 bg-transparent text-foreground hover:bg-primary/4 hover:border-primary/20',
+        ghost: 'border-transparent text-muted-foreground hover:bg-primary/4 hover:text-foreground',
+        link: 'border-transparent text-primary underline-offset-2 hover:underline p-0 h-auto min-h-0',
+        secondary: 'border-primary/12 bg-primary/3 text-foreground hover:bg-primary/6',
+        solid: 'border-transparent bg-primary text-primary-foreground hover:bg-primary/85 shadow-sm',
+        success: 'border-transparent bg-green-600 text-white hover:bg-green-700',
       },
       size: {
-        sm: 'h-8 min-h-[44px] min-w-[32px] px-3 rounded-xl',
-        default: 'h-9 min-h-[44px] min-w-[36px] px-4 rounded-xl',
-        md: 'h-10 min-h-[44px] min-w-[40px] px-5 rounded-xl',
-        lg: 'h-11 min-h-[44px] min-w-[44px] px-6 text-sm rounded-xl',
-        icon: 'h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl',
+        sm: 'h-8 min-h-[36px] min-w-[28px] px-2.5 text-xs',
+        default: 'h-9 min-h-[40px] min-w-[32px] px-3.5',
+        md: 'h-10 min-h-[40px] min-w-[36px] px-4',
+        lg: 'h-11 min-h-[44px] min-w-[40px] px-5 text-sm',
+        icon: 'h-9 w-9 min-h-[36px] min-w-[36px] p-0',
       },
     },
     defaultVariants: {
-      variant: 'solid',
+      variant: 'default',
       size: 'default',
     },
   },
@@ -76,20 +56,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       rightIcon,
       children,
       disabled,
+      type = 'button',
       ...props
     },
     ref,
   ) => {
     const Comp = asChild ? Slot : 'button'
-    const isShimmer = variant === 'shimmer'
 
     const content = (
       <>
-        {isShimmer && isLoading ? (
-          <span className="absolute inset-0 overflow-hidden rounded-[inherit]">
-            <span className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-          </span>
-        ) : null}
         {leftIcon && !isLoading ? <span className="shrink-0">{leftIcon}</span> : null}
         {isLoading ? (
           <>
@@ -107,6 +82,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        type={asChild ? undefined : type}
         disabled={asChild ? undefined : isLoading || disabled}
         aria-busy={isLoading || undefined}
         {...props}

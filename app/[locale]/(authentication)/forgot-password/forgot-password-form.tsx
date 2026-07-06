@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
@@ -28,16 +29,16 @@ export default function ForgotPasswordForm({ locale }: { locale: string }) {
 
  if (isSubmitted) {
  return (
- <div className="flex min-h-screen items-center justify-center p-4">
- <div className="w-full max-w-md rounded-2xl border border-border/50 bg-card p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_32px_-26px_rgba(0,0,0,0.62)] sm:p-8">
+  <div className="flex min-h-dvh items-center justify-center p-4">
+ <div className="w-full max-w-md rounded-2xl border-0 bg-card p-6 shadow-sm transition-shadow duration-200 hover:shadow-md sm:p-8">
  <div className="flex flex-col items-center gap-4 text-center">
- <h2 className="text-2xl font-semibold tracking-tight text-foreground">Check your email</h2>
+ <h2 className="text-2xl font-black tracking-tight text-foreground">Check your email</h2>
  <p className="text-sm text-muted-foreground max-w-sm">
  If an account exists with <strong className="text-foreground">{email}</strong>, you will receive a password reset link shortly.
  </p>
  <Link
  href={`/${locale}/authentication`}
- className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+ className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
  >
  Back to sign in
  </Link>
@@ -48,11 +49,11 @@ export default function ForgotPasswordForm({ locale }: { locale: string }) {
  }
 
  return (
- <div className="flex min-h-screen items-center justify-center p-4">
- <div className="w-full max-w-md rounded-2xl border border-border/50 bg-card p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_32px_-26px_rgba(0,0,0,0.62)] sm:p-8">
+  <div className="flex min-h-dvh items-center justify-center p-4">
+ <div className="w-full max-w-md rounded-2xl border-0 bg-card p-6 shadow-sm transition-shadow duration-200 hover:shadow-md sm:p-8">
  <div className="flex flex-col gap-6">
  <div className="text-center">
- <h2 className="text-2xl font-semibold tracking-tight text-foreground">Forgot your password?</h2>
+ <h2 className="text-2xl font-black tracking-tight text-foreground">Forgot your password?</h2>
  <p className="text-sm text-muted-foreground mt-2">
  Enter your email and we&apos;ll send you a reset link.
  </p>
@@ -68,12 +69,12 @@ export default function ForgotPasswordForm({ locale }: { locale: string }) {
  autoComplete="email"
  data-testid="forgot-password-email"
  disabled={isLoading}
- className="h-11 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[var(--card)] px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20"
+ className="h-11 rounded-xl border-0 bg-card px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
  />
  <Button
  type="submit"
  disabled={isLoading || !email.trim()}
- className="h-11 rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
+ className="h-11 font-semibold px-5 active:scale-[0.97]"
  >
  {isLoading ? 'Sending...' : 'Send reset link'}
  </Button>
@@ -81,7 +82,7 @@ export default function ForgotPasswordForm({ locale }: { locale: string }) {
 
  <Link
  href={`/${locale}/authentication`}
- className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline text-center"
+ className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground underline-offset-4 hover:text-primary hover:underline text-center"
  >
  Back to sign in
  </Link>

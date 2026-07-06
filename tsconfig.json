@@ -42,14 +42,17 @@
   ],
   "exclude": [
     "node_modules",
-    "hyperframes",
     "worktrees",
     "components/sidebar/__tests__/**",
     "tests/e2e/**",
     "tests/performance/performance-regression.test.ts",
-    "lib/performance/enhanced-caching.ts",
-    "lib/performance/enhanced-next-config.ts",
-    "lib/performance/caching-cdn.ts"
+
+    "server/mcp/sdk-transport.ts",
+    "server/mcp/sdk-auth.ts",
+    "server/mcp/servers/**",
+    "server/mcp/__tests__/**",
+    "server/mcp/handlers/__tests__/**",
+    "server/mcp/tool-schemas.ts"
   ],
   "ts-node": {
     "esm": true,

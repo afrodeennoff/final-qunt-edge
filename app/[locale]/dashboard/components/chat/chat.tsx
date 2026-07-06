@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
@@ -210,7 +211,7 @@ const ResumeScrollButton = () => {
  <Button 
  onClick={handleScrollToBottom}
  size="sm"
- className="shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] hover:shadow-xl transition-shadow"
+ className="shadow-sm hover:shadow-sm transition-shadow"
  variant="ghost"
  >
  <ChevronDown className="h-4 w-4 mr-1" />
@@ -234,7 +235,7 @@ const FirstMessageLoading = () => {
      const t = useI18n();
      return (
      <div className="flex flex-col items-center justify-center py-8 gap-4">
-     <DotStream size="60" speed="2.5" color="hsl(var(--primary))" />
+     <DotStream size="60" speed="2.5" color="var(--primary)" />
      <p className="text-muted-foreground text-sm">
      {t("chat.loading.firstMessage")}
      </p>
@@ -318,7 +319,7 @@ function getErrorMessage(error: Error): { title: string; detail?: string } {
     }
 
 // Main Component
-export default function ChatWidget({ size ="large" }: ChatWidgetProps) {
+const ChatWidget = React.memo(function ChatWidget({ size ="large" }: ChatWidgetProps) {
      const timezone = useUserStore((state) => state.timezone);
      const { supabaseUser: user } = useUserStore.getState();
      const locale = useCurrentLocale();
@@ -873,6 +874,8 @@ export default function ChatWidget({ size ="large" }: ChatWidgetProps) {
      </div>
      </div>
      )}
-     </Card>
-     );
-    }
+      </Card>
+      );
+     })
+
+export default ChatWidget

@@ -55,7 +55,7 @@ export function MinimalFeatures({ features, className }: MinimalFeaturesProps) {
                 </p>
               </div>
 
-              <div className="relative flex items-center justify-center overflow-hidden rounded-lg border border-border/20 bg-muted/30 min-h-[200px]">
+              <div className="relative flex items-center justify-center overflow-hidden rounded-lg border-0 bg-muted/30 min-h-[200px]">
                 <div className="p-4">
                   {typeof feature.image === "string" ? (
                     <img
@@ -98,7 +98,7 @@ export const minimalFeatureData: FeatureCard[] = [
     stat: "50+ Metrics",
     image: "/images/analytics-preview.png",
     ctaText: "View Analytics",
-    ctaAction: () => console.log("View analytics")
+    ctaAction: () => {}
   },
   {
     id: "journal",
@@ -108,7 +108,7 @@ export const minimalFeatureData: FeatureCard[] = [
     stat: "98% Accuracy",
     image: "/images/journal-preview.png",
     ctaText: "Start Journaling",
-    ctaAction: () => console.log("Start journaling")
+    ctaAction: () => {}
   },
   {
     id: "calendar",
@@ -118,7 +118,7 @@ export const minimalFeatureData: FeatureCard[] = [
     stat: "24/7 Coverage",
     image: "/images/calendar-preview.png",
     ctaText: "View Calendar",
-    ctaAction: () => console.log("View calendar")
+    ctaAction: () => {}
   },
   {
     id: "data",
@@ -128,6 +128,6 @@ export const minimalFeatureData: FeatureCard[] = [
     stat: "15+ Brokers",
     image: "/images/import-preview.png",
     ctaText: "Connect Brokers",
-    ctaAction: () => console.log("Connect brokers")
+    ctaAction: () => {}
   }
 ]

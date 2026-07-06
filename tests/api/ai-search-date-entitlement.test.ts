@@ -8,6 +8,11 @@ vi.mock("@/lib/ai/route-guard", () => ({
   guardAiRequest: guardAiRequestMock,
 }))
 
+vi.mock("@/lib/ai/client", () => ({
+  checkAiConfig: vi.fn(() => ({ ok: true })),
+  getAiLanguageModel: vi.fn(() => "gpt-4o-mini"),
+}))
+
 vi.mock("@/lib/rate-limit", () => ({
   rateLimit: vi.fn(() => vi.fn(async () => ({
     success: true,

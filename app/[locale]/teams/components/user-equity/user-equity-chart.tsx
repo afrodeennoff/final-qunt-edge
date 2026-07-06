@@ -45,78 +45,78 @@ function CustomTooltip({ active, payload, label, showDailyView }: CustomTooltipP
  year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
  })
  
- return (
- <div className="rounded-lg border bg-background p-2 shadow-xs">
- <div className="grid gap-2">
- <div className="flex flex-col">
- <span className="text-[0.70rem] uppercase text-muted-foreground">
- Date
- </span>
- <span className="font-bold text-muted-foreground">
- {formattedDate}
- </span>
- </div>
- <div className="flex flex-col">
- <span className="text-[0.70rem] uppercase text-muted-foreground">
- Daily P&L
- </span>
- <span className="font-bold text-foreground">
- {dailyPnL >= 0 ? '+' : ''}{dailyPnL.toFixed(2)}
- </span>
- </div>
- <div className="flex flex-col">
- <span className="text-[0.70rem] uppercase text-muted-foreground">
- Cumulative
- </span>
- <span className="font-bold text-foreground">
- {cumulativeValue >= 0 ? '+' : ''}{cumulativeValue.toFixed(2)}
- </span>
- </div>
- <div className="flex flex-col">
- <span className="text-[0.70rem] uppercase text-muted-foreground">
- Trades
- </span>
- <span className="font-bold text-foreground">
- {tradeCount}
- </span>
- </div>
- </div>
- </div>
- )
- } else {
- const pnlValue = payload[0]?.value || 0
- const cumulativeValue = payload[0]?.payload?.cumulativePnL || 0
- 
- return (
- <div className="rounded-lg border bg-background p-2 shadow-xs">
- <div className="grid gap-2">
- <div className="flex flex-col">
- <span className="text-[0.70rem] uppercase text-muted-foreground">
- Trade #{payload[0]?.payload?.tradeNumber || 'N/A'}
- </span>
- <span className="font-bold text-muted-foreground">
- {label}
- </span>
- </div>
- <div className="flex flex-col">
- <span className="text-[0.70rem] uppercase text-muted-foreground">
- P&L
- </span>
- <span className="font-bold text-foreground">
- {pnlValue >= 0 ? '+' : ''}{pnlValue.toFixed(2)}
- </span>
- </div>
- <div className="flex flex-col">
- <span className="text-[0.70rem] uppercase text-muted-foreground">
- Cumulative
- </span>
- <span className="font-bold text-foreground">
- {cumulativeValue >= 0 ? '+' : ''}{cumulativeValue.toFixed(2)}
- </span>
- </div>
- </div>
- </div>
- )
+  return (
+  <div className="rounded-xl border border-transparent bg-card p-3 shadow-lg">
+  <div className="grid gap-2">
+  <div className="flex flex-col">
+  <span className="text-[0.70rem] uppercase text-muted-foreground">
+  Date
+  </span>
+  <span className="font-bold text-muted-foreground">
+  {formattedDate}
+  </span>
+  </div>
+  <div className="flex flex-col">
+  <span className="text-[0.70rem] uppercase text-muted-foreground">
+  Daily P&L
+  </span>
+  <span className="font-bold text-foreground">
+  {dailyPnL >= 0 ? '+' : ''}{dailyPnL.toFixed(2)}
+  </span>
+  </div>
+  <div className="flex flex-col">
+  <span className="text-[0.70rem] uppercase text-muted-foreground">
+  Cumulative
+  </span>
+  <span className="font-bold text-foreground">
+  {cumulativeValue >= 0 ? '+' : ''}{cumulativeValue.toFixed(2)}
+  </span>
+  </div>
+  <div className="flex flex-col">
+  <span className="text-[0.70rem] uppercase text-muted-foreground">
+  Trades
+  </span>
+  <span className="font-bold text-foreground">
+  {tradeCount}
+  </span>
+  </div>
+  </div>
+  </div>
+  )
+  } else {
+  const pnlValue = payload[0]?.value || 0
+  const cumulativeValue = payload[0]?.payload?.cumulativePnL || 0
+  
+  return (
+  <div className="rounded-xl border border-transparent bg-card p-3 shadow-lg">
+  <div className="grid gap-2">
+  <div className="flex flex-col">
+  <span className="text-[0.70rem] uppercase text-muted-foreground">
+  Trade #{payload[0]?.payload?.tradeNumber || 'N/A'}
+  </span>
+  <span className="font-bold text-muted-foreground">
+  {label}
+  </span>
+  </div>
+  <div className="flex flex-col">
+  <span className="text-[0.70rem] uppercase text-muted-foreground">
+  P&L
+  </span>
+  <span className="font-bold text-foreground">
+  {pnlValue >= 0 ? '+' : ''}{pnlValue.toFixed(2)}
+  </span>
+  </div>
+  <div className="flex flex-col">
+  <span className="text-[0.70rem] uppercase text-muted-foreground">
+  Cumulative
+  </span>
+  <span className="font-bold text-foreground">
+  {cumulativeValue >= 0 ? '+' : ''}{cumulativeValue.toFixed(2)}
+  </span>
+  </div>
+  </div>
+  </div>
+  )
  }
  }
  return null
@@ -211,7 +211,7 @@ export function UserEquityChart({ equityCurve, userId, totalPnL, showDailyView =
  const dailyData = groupTradesByDay(equityCurve)
  const chartData = showDailyView ? dailyData : equityCurve
  const xTicks = showDailyView ? getSmartDateTicks(dailyData) : getSmartTicks(equityCurve)
- const trendColor = totalPnL >= 0 ?"hsl(var(--chart-positive))" :"hsl(var(--chart-negative))"
+  const trendColor = totalPnL >= 0 ?"var(--chart-positive)" :"var(--chart-negative)"
 
  return (
  <div data-chart-surface="modern" className="h-32">
@@ -226,10 +226,10 @@ export function UserEquityChart({ equityCurve, userId, totalPnL, showDailyView =
  <stop offset="95%" stopColor={trendColor} stopOpacity={0}/>
  </linearGradient>
  </defs>
- <CartesianGrid 
- strokeDasharray="3 3" 
- className="text-border dark:opacity-[0.12] opacity-[0.2]"
- />
+  <CartesianGrid 
+  strokeDasharray="3 3" 
+  stroke="var(--chart-grid-muted, transparent)"
+  />
  <XAxis 
  dataKey={showDailyView ?"date" :"tradeNumber"}
  tickLine={false}
@@ -271,11 +271,13 @@ export function UserEquityChart({ equityCurve, userId, totalPnL, showDailyView =
  stroke={trendColor}
  fillOpacity={1}
  fill={`url(#color-${userId})`}
- strokeWidth={2}
- dot={false}
- isAnimationActive={false}
- activeDot={{ r: 3, style: { fill: trendColor } }}
- connectNulls={false}
+  strokeWidth={2.5}
+  dot={false}
+  isAnimationActive={false}
+  strokeLinecap="round"
+  strokeLinejoin="round"
+  activeDot={{ r: 4, style: { fill: trendColor, strokeWidth: 0 } }}
+  connectNulls={true}
  />
  </AreaChart>
  </ResponsiveContainer>

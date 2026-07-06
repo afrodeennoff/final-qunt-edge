@@ -101,7 +101,7 @@ const PreviewCard = forwardRef<HTMLDivElement, PreviewCardProps>(
  return (
  <div 
  ref={ref}
- className={cn("cursor-pointer rounded-xl relative group m-1 w-full overflow-hidden border border-border/30 bg-background/0.09 px-2 shadow-[0_16px_34px_-28px_hsl(var(--background)/0.85)]","active:scale-[0.98] transition-[opacity,background-color,border-color] duration-150 ease-in-out",
+ className={cn("cursor-pointer rounded-xl relative group m-1 w-full overflow-hidden border-0 bg-background/0.09 px-2 shadow-[0_16px_34px_-28px_hsl(var(--background)/0.85)]","active:scale-[0.98] transition-[opacity,background-color,border-color] duration-150 ease-in-out",
  className
  )}
  style={style}
@@ -213,13 +213,13 @@ export const AddWidgetSheet = forwardRef<HTMLButtonElement, AddWidgetSheetProps>
  >
  <Plus className="h-4 w-4 shrink-0" />
  {(!isMobile || showLabelOnMobile) && (
- <span className="text-[10px] font-semibold uppercase tracking-[0.18em]">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">
  {t('widgets.addWidget')}
  </span>
  )}
  </Button>
  </SheetTrigger>
- <SheetContent side="right" className="w-[90vw] sm:max-w-[640px] flex flex-col h-dvh overflow-hidden">
+  <SheetContent side="right" className="w-[90vw] sm:max-w-[640px] 2xl:max-w-[780px] flex flex-col h-dvh overflow-hidden">
  <SheetHeader>
  <SheetTitle>{t('widgets.addWidget')}</SheetTitle>
  </SheetHeader>

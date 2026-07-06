@@ -1,6 +1,4 @@
-"use client";
-
-import type { CSSProperties, HTMLAttributes } from "react";
+import React, { type CSSProperties, HTMLAttributes } from "react";
 
 // ============================================================================
 // Shared Types
@@ -13,7 +11,7 @@ export interface IconProps extends HTMLAttributes<SVGSVGElement> {
 }
 
 // Default duotone fill color (blue with 15% opacity)
-const DUOTONE_FILL = "hsl(217 91% 60% / 0.15)";
+const DUOTONE_FILL = "hsl(var(--primary) / 0.15)";
 
 // ============================================================================
 // Base SVG Wrapper Component

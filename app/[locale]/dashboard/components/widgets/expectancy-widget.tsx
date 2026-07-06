@@ -29,19 +29,19 @@ export default function ExpectancyWidget({ size }: { size?: string }) {
  >
  <div className="flex-1 flex flex-col items-center justify-center p-4">
  <div className="flex flex-col items-center justify-center">
- <span className="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/35">Value per trade</span>
- <div className={cn("text-[28px] font-[250] tracking-[-0.04em] text-foreground tabular-nums",
- expectancy > 0 ?"text-[oklch(0.82_0.185_155)]" : expectancy < 0 ?"text-[oklch(0.74_0.255_22)]" :"text-foreground"
+ <span className="mb-3 text-[11px] font-black uppercase tracking-[0.12em] text-muted-foreground">Value per trade</span>
+ <div className={cn("text-[28px] font-[250] tracking-tight text-foreground tabular-nums",
+ expectancy > 0 ?"text-semantic-success" : expectancy < 0 ?"text-semantic-error" :"text-foreground"
  )}>
  {expectancy > 0 ? '+' : ''}{formattedExpectancy}
  </div>
  <div className="mt-5 flex flex-col items-center gap-1">
  <div className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold border",
  expectancy > 0
- ?"bg-[oklch(0.82_0.185_155/0.10)] text-[oklch(0.82_0.185_155)] border-[oklch(0.82_0.185_155/0.20)]"
+ ?"bg-semantic-success-bg text-semantic-success border-semantic-success/30"
  : expectancy < 0
- ?"bg-[oklch(0.64_0.255_22/0.10)] text-[oklch(0.74_0.255_22)] border-[oklch(0.64_0.255_22/0.20)]"
- :"bg-background/30 text-foreground/70 border-border/30"
+ ?"bg-semantic-error-bg text-semantic-error border-semantic-error/30"
+ :"bg-background/30 text-foreground/95 border-transparent"
  )}>
  {expectancy > 0 ?"Positive edge" : expectancy < 0 ?"Negative edge" :"Neutral"}
  </div>

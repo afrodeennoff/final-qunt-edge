@@ -33,7 +33,6 @@ interface ConsentSettings {
   security_storage: boolean;
 }
 
-
 export function ConsentBanner() {
   const t = useTypedI18n()
   const [isVisible, setIsVisible] = useState(false)
@@ -129,7 +128,7 @@ export function ConsentBanner() {
           ease: [0.32, 0.72, 0, 1]
         }}
       >
-        <div className="bg-background/80 border-t border-border/50 p-4 shadow-lg pointer-events-auto">
+        <div className="bg-background/80 border-t-0 p-4 shadow-sm pointer-events-auto">
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex-1">
@@ -175,7 +174,7 @@ export function ConsentBanner() {
           <>
             {showDetails && <div className="fixed inset-0 z-[98] bg-foreground/20" />}
             <Dialog open={showDetails} onOpenChange={setShowDetails}>
-              <DialogContent className="fixed left-[50%] top-[50%] z-[99] max-h-[80vh] w-[90vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-lg border border-border bg-card shadow-xl">
+              <DialogContent className="fixed left-[50%] top-[50%] z-[99] max-h-[80vh] w-[90vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-xl border-0 bg-card shadow-sm">
                 <DialogHeader className="p-6 pb-4">
                   <DialogTitle className="text-lg font-medium text-foreground">
                     {t('landing.consent.preferences.title')}
@@ -194,7 +193,7 @@ export function ConsentBanner() {
                         type="checkbox"
                         checked={true}
                         disabled
-                        className="mt-1 h-5 w-5 rounded border-border bg-muted"
+                        className="mt-1 h-5 w-5 rounded border-transparent bg-muted"
                       />
                       <div>
                         <label htmlFor="consent-necessary-desktop" className="text-sm font-medium text-foreground">
@@ -212,7 +211,7 @@ export function ConsentBanner() {
                         type="checkbox"
                         checked={settings.analytics_storage}
                         onChange={(e) => setSettings({ ...settings, analytics_storage: e.target.checked })}
-                        className="mt-1 h-5 w-5 rounded border-border bg-background"
+                        className="mt-1 h-5 w-5 rounded border-transparent bg-background"
                       />
                       <div>
                         <label htmlFor="consent-analytics-desktop" className="text-sm font-medium text-foreground">
@@ -230,7 +229,7 @@ export function ConsentBanner() {
                         type="checkbox"
                         checked={settings.ad_storage}
                         onChange={(e) => setSettings({ ...settings, ad_storage: e.target.checked })}
-                        className="mt-1 h-5 w-5 rounded border-border bg-background"
+                        className="mt-1 h-5 w-5 rounded border-transparent bg-background"
                       />
                       <div>
                         <label htmlFor="consent-marketing-desktop" className="text-sm font-medium text-foreground">
@@ -246,7 +245,7 @@ export function ConsentBanner() {
                   <div className="mt-6">
                     <Button 
                       onClick={handleSavePreferences}
-                      className="h-11 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+                      className="h-11 w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
                     >
                       {t('landing.consent.preferences.done')}
                     </Button>
@@ -257,7 +256,7 @@ export function ConsentBanner() {
           </>
         ) : (
           <Drawer open={showDetails} onOpenChange={setShowDetails}>
-            <DrawerContent className="z-10000 rounded-t-lg border border-border bg-card">
+            <DrawerContent className="z-10000 rounded-t-lg border-0 bg-card">
               <div className="h-[80vh] flex flex-col">
                 <DrawerHeader className="text-left px-6 py-6">
                   <DrawerTitle className="text-lg font-medium text-foreground">
@@ -277,7 +276,7 @@ export function ConsentBanner() {
                         type="checkbox"
                         checked={true}
                         disabled
-                        className="mt-1 h-4 w-4 rounded border-border bg-muted"
+                        className="mt-1 h-4 w-4 rounded border-transparent bg-muted"
                       />
                       <div>
                         <label htmlFor="consent-necessary-mobile" className="text-sm font-medium text-foreground">
@@ -295,7 +294,7 @@ export function ConsentBanner() {
                         type="checkbox"
                         checked={settings.analytics_storage}
                         onChange={(e) => setSettings({ ...settings, analytics_storage: e.target.checked })}
-                        className="mt-1 h-4 w-4 rounded border-border bg-background"
+                        className="mt-1 h-4 w-4 rounded border-transparent bg-background"
                       />
                       <div>
                         <label htmlFor="consent-analytics-mobile" className="text-sm font-medium text-foreground">
@@ -313,7 +312,7 @@ export function ConsentBanner() {
                         type="checkbox"
                         checked={settings.ad_storage}
                         onChange={(e) => setSettings({ ...settings, ad_storage: e.target.checked })}
-                        className="mt-1 h-4 w-4 rounded border-border bg-background"
+                        className="mt-1 h-4 w-4 rounded border-transparent bg-background"
                       />
                       <div>
                         <label htmlFor="consent-marketing-mobile" className="text-sm font-medium text-foreground">
@@ -330,7 +329,7 @@ export function ConsentBanner() {
                 <DrawerFooter className="px-6 pb-6">
                   <Button
                     onClick={handleSavePreferences}
-                    className="h-11 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+                    className="h-11 w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     {t('landing.consent.preferences.done')}
                   </Button>

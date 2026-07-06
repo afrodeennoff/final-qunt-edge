@@ -6,19 +6,19 @@
  * in chart rendering, canvas drawing, and other JS contexts.
  */
 
-// ── Purple Accent Palette (Primary Brand) ──
+// ── Neon Green Accent Palette (Default Brand) ──
 
 export const accent = {
-  50:  '#f8f6ff',
-  100: '#f0ebff',
-  200: '#ddd5ff',
-  300: '#c5b0ff',
-  400: '#a885ff',
-  500: '#8b5cf6', // Primary purple — matches --primary in :root
-  600: '#7744dd',
-  700: '#5a2fa8',
-  800: '#3d1f70',
-  900: '#261047',
+  50:  '#e6fff2',
+  100: '#b3ffd9',
+  200: '#80ffc0',
+  300: '#4dffa6',
+  400: '#1aff8d',
+  500: '#00ff9f', // Primary neon green — matches --primary
+  600: '#00cc7a',
+  700: '#009955',
+  800: '#006630',
+  900: '#003318',
 } as const
 
 // ── Background Hierarchy (Dark Theme) ──
@@ -76,7 +76,7 @@ export const darkBorders = {
   default: '#1e1a30',
   subtle:  '#1a1628',
   strong:  '#2a2540',
-  focus:   '#7c3aed', // --ring
+  focus:   '#00ff9f', // --ring
 } as const
 
 export const lightBorders = {
@@ -86,49 +86,49 @@ export const lightBorders = {
   focus:   '#007AFF',
 } as const
 
-// ── Frost Border Scale (Purple-tinted) ──
+// ── Frost Border Scale (Green-tinted) ──
 
 export const frostBorders = {
-  1: 'rgba(139,92,246,0.04)',
-  2: 'rgba(139,92,246,0.07)',
-  3: 'rgba(139,92,246,0.10)',
-  4: 'rgba(139,92,246,0.14)',
-  5: 'rgba(139,92,246,0.20)',
+  1: 'rgba(0,255,159,0.04)',
+  2: 'rgba(0,255,159,0.07)',
+  3: 'rgba(0,255,159,0.10)',
+  4: 'rgba(0,255,159,0.14)',
+  5: 'rgba(0,255,159,0.20)',
   6: 'rgba(0,0,0,0.28)',
 } as const
 
 // ── Semantic Colors ──
 
 export const status = {
-  success: '#22c55e',
-  warning: '#f59e0b',
-  error:   '#dc2626',
-  info:    '#3b82f6',
+  success: '#0ECB81',
+  warning: '#00ff9f',
+  error:   '#F6465D',
+  info:    '#00ff9f',
 } as const
 
-// ── Trading-Specific Semantic ──
+// ── Trading-Specific Semantic (Binance-aligned) ──
 
 export const trading = {
-  positive: '#22c55e', // --profit
-  negative: '#dc2626', // --loss
-  neutral:  '#8b82a8', // --muted-foreground
-  info:     '#3b82f6', // --info
+  positive: '#0ECB81', // --profit
+  negative: '#F6465D', // --loss
+  neutral:  '#888888', // --muted-foreground
+  info:     '#00ff9f', // --info (Neon Green)
 } as const
 
 export const tradingBg = {
-  positive: 'rgba(34,197,94,0.12)',
-  negative: 'rgba(220,38,38,0.12)',
-  info:     'rgba(59,130,246,0.12)',
+  positive: 'rgba(14,203,129,0.08)',
+  negative: 'rgba(246,70,93,0.08)',
+  info:     'rgba(0,255,159,0.08)',
 } as const
 
 // ── Marketing Page Tokens ──
 
 export const marketing = {
   bg: {
-    base:     '#09090B',
-    surface:  '#111113',
-    elevated: '#18181B',
-    overlay:  '#27272A',
+    base:     '#000000',
+    surface:  '#000000',
+    elevated: '#000000',
+    overlay:  '#000000',
   },
   text: {
     primary:   '#FAFAFA',
@@ -136,11 +136,11 @@ export const marketing = {
     tertiary:  '#71717A',
   },
   accent: {
-    primary: '#8B5CF6',
-    hover:   '#7C3AED',
-    active:  '#6D28D9',
-    subtle:  'rgba(139,92,246,0.12)',
-    border:  'rgba(139,92,246,0.30)',
+    primary: 'hsl(150, 100%, 50%)',
+    hover:   'hsl(150, 100%, 45%)',
+    active:  'hsl(150, 100%, 38%)',
+    subtle:  'hsla(150, 100%, 50%, 0.08)',
+    border:  'hsla(150, 100%, 50%, 0.25)',
   },
 } as const
 
@@ -148,11 +148,11 @@ export const marketing = {
 // These match the --v2-* CSS custom properties for dark theme
 
 export const v2Dark = {
-  bgBase:     'oklch(0.043 0.007 297)',
-  bgElevated: 'oklch(0.056 0.01 297)',
-  accent:     'oklch(0.4865 0.2423 291.8661)',
-  accentHover:'oklch(0.6192 0.2037 312.7283)',
-  textPrimary:'oklch(0.9 0.01 297)',
+  bgBase:     'oklch(0.043 0.007 150)',
+  bgElevated: 'oklch(0.056 0.01 150)',
+  accent:     'oklch(0.5 0.2 150)',
+  accentHover:'oklch(0.55 0.2 150)',
+  textPrimary:'oklch(0.9 0.01 150)',
 } as const
 
 // ── P3 Wide Gamut Accents ──
@@ -167,14 +167,14 @@ export const p3Accents = {
 // ── Chart Palette ──
 
 export const chartPalette = {
-  1: '#8b5cf6', // Purple
-  2: '#22c55e', // Green
-  3: '#dc2626', // Red
-  4: '#f59e0b', // Amber
-  5: '#3b82f6', // Blue
+  1: '#00ff9f', // Primary Neon Green
+  2: '#0ECB81', // Profit green
+  3: '#F6465D', // Loss red
+  4: 'hsl(170, 80%, 55%)', // Cyan-green (info)
+  5: '#3b82f6', // Blue (secondary)
   6: '#0e7490', // Teal
-  7: '#6c3483', // Deep purple
-  8: '#8b82a8', // Muted
+  7: '#888888', // Muted
+  8: '#666666', // Subtle
 } as const
 
 // ── Utility Functions ──

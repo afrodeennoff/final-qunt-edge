@@ -68,7 +68,7 @@ for (const f of files) {
   if (skipFiles.some(s => f.includes(s))) continue
   
   let c = readFileSync(f, 'utf-8')
-  let orig = c
+  const orig = c
   let changes = 0
   
   for (const r of replacements) {

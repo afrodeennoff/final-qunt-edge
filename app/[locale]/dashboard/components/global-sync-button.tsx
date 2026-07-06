@@ -60,8 +60,8 @@ export function GlobalSyncButton() {
  await refreshAllData({ force: true })
 
  toast.success(t('refreshSuccess'), { id: toastId })
- } catch (error) {
- console.error("Global sync error:", error)
+ } catch {
+
  toast.error(t('refreshError'), { id: toastId })
  } finally {
  setIsRefreshing(false)
@@ -115,7 +115,7 @@ export function GlobalSyncButton() {
  type="button"
  className={cn("group relative flex h-9 items-center gap-2 rounded-full border px-3.5 transition-[opacity,background-color,border-color] duration-200",
  isAnySyncing
- ?"cursor-wait border-v2-accent/20 bg-v2-accent/10 text-foreground"
+ ?"cursor-wait border-primary/20 bg-primary/10 text-foreground"
  :"border-transparent bg-transparent text-muted-foreground hover:bg-background/80/70 hover:text-foreground"
  )}
  >
@@ -124,7 +124,7 @@ export function GlobalSyncButton() {
  )} />
 
  <div className="hidden items-center gap-1 xl:flex">
- <span className="text-[10px] font-semibold uppercase tracking-[0.18em]">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">
  {isAnySyncing ?"Syncing" :"Sync"}
  </span>
  {!isAnySyncing && (rithmicAutoEnabled || tradovate.enableAutoSync) && (
@@ -139,17 +139,17 @@ export function GlobalSyncButton() {
  )}
  </button>
  </DropdownMenuTrigger>
- <DropdownMenuContent align="end" className="w-72 rounded-xl border border-border/20 bg-card/95 text-popover-foreground shadow-xl shadow-black/20">
+ <DropdownMenuContent align="end" className="w-72 rounded-xl border-0 bg-card/95 text-popover-foreground shadow-sm">
  <DropdownMenuLabel className="flex items-center justify-between">
  <span className="text-xs font-bold uppercase tracking-widest">Sync Status</span>
  {isAnySyncing ? (
  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[8px] animate-pulse">Syncing...</Badge>
  ) : (
- <Badge variant="outline" className="bg-background/25 text-muted-foreground border-border/30 text-[8px]">Standby</Badge>
+ <Badge variant="outline" className="bg-background/25 text-muted-foreground border-transparent text-[8px]">Standby</Badge>
  )}
  </DropdownMenuLabel>
 
- <DropdownMenuSeparator className="bg-border/40" />
+ <DropdownMenuSeparator className="bg-transparent/40" />
 
  <div className="p-2 space-y-3">
  {/* Auto Sync Rithmic */}
@@ -177,7 +177,7 @@ export function GlobalSyncButton() {
  </div>
  </div>
 
- <DropdownMenuSeparator className="bg-border/40" />
+ <DropdownMenuSeparator className="bg-transparent/40" />
 
  <div className="p-2">
  <div className="flex items-center justify-between text-[9px] text-muted-foreground mb-2">
@@ -192,7 +192,7 @@ export function GlobalSyncButton() {
  type="button"
  onClick={handleGlobalSync}
  disabled={isAnySyncing}
- className="flex h-9 w-full items-center justify-center gap-2 rounded-full border border-border/20 bg-background/70 text-[10px] font-bold uppercase tracking-[0.18em] text-foreground transition-[opacity,background-color,border-color] hover:border-border/35 hover:bg-background/80 disabled:opacity-50"
+ className="flex h-9 w-full items-center justify-center gap-2 rounded-full border-0 bg-muted text-[10px] font-bold uppercase tracking-[0.12em] text-foreground transition-[opacity,background-color,border-color] hover:border-transparent hover:bg-background/80 disabled:opacity-50"
  >
  <RefreshCw className={cn("w-3.5 h-3.5", isAnySyncing &&"animate-spin")} />
  <span>Force Sync Now</span>

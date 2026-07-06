@@ -7,6 +7,7 @@ import { createClient, type User } from "@supabase/supabase-js"
 import { render } from "@react-email/render"
 import { assertAdminAccess } from "@/server/authz"
 import { buildUnsubscribeUrl } from "@/lib/unsubscribe-url"
+import { getSiteUrl } from "@/lib/site-url"
 
 function getSupabaseAdminClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
@@ -72,7 +73,7 @@ async function getEmailTemplate(template: EmailTemplate): Promise<TemplateCompon
 export async function getDefaultTemplateProps(template: EmailTemplate): Promise<TemplateProps> {
   switch (template) {
     case "black-friday":
-      return { firstName: "Trader", locale: "fr" }
+      return { firstName: "Trader", locale: "en" }
     case "welcome":
       return {
         firstName: "Trader",
@@ -117,7 +118,7 @@ export async function getDefaultTemplateProps(template: EmailTemplate): Promise<
         teamName: "Sample Team",
         inviterName: "John Doe",
         inviterEmail: "john@example.com",
-        joinUrl: "https://qunt-edge.vercel.app",
+        joinUrl: `${getSiteUrl()}/teams/join`,
         language: "en",
       }
     case "missing-data":
@@ -270,14 +271,15 @@ export async function getUsersList(): Promise<UserListItem[]> {
   }
 }
 
-export async function sendEmailsToUsers(
+export async function sendEmailsToUsersInternal(
   template: EmailTemplate,
   userIds: string[],
   customProps: TemplateProps,
   subject?: string
 ) {
-  await assertAdminAccess()
   try {
+    await assertAdminAccess()
+
     const supabase = getSupabaseAdminClient()
 
     if (!process.env.RESEND_API_KEY) {
@@ -285,6 +287,7 @@ export async function sendEmailsToUsers(
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY)
+    const replyTo = process.env.CONTACT_REPLY_TO ?? "team@qunt-edge.com"
     const EmailComponent = await getEmailTemplate(template)
 
     const dbUsers = await prisma.user.findMany({
@@ -337,11 +340,17 @@ export async function sendEmailsToUsers(
       try {
         const emailBatch = batch.map((user) => {
           const unsubscribeUrl = buildUnsubscribeUrl(user.email)
+          // BlackFridayEmail reads prop `locale` (not `language`); derive it from
+          // the recipient's language so EN users don't receive the FR copy.
+          const derivedLocale =
+            (customProps?.locale as string | undefined) ??
+            (user.language === "fr" ? "fr" : "en")
           const mergedProps: TemplateProps = {
             ...customProps,
             firstName: user.firstName,
             email: user.email,
             language: user.language,
+            locale: derivedLocale,
             userEmail: user.email,
             userFirstName: user.firstName,
             unsubscribeUrl,
@@ -349,21 +358,26 @@ export async function sendEmailsToUsers(
 
           const emailSubject = subject || getDefaultSubject(template, user.language)
 
-          return {
-            from: "Qunt Edge <updates@eu.updates.qunt-edge.vercel.app>",
-            to: [user.email],
-            subject: emailSubject,
-            reply_to: "hugo.demenez@qunt-edge.vercel.app",
-            react: React.createElement(EmailComponent, mergedProps),
-            headers: {
-              "List-Unsubscribe": `<${unsubscribeUrl}>`,
-              "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
-            },
-          }
+            return {
+              from: getFromAddress(template),
+              to: [user.email],
+              subject: emailSubject,
+              replyTo,
+              react: React.createElement(EmailComponent, mergedProps),
+              headers: {
+                "List-Unsubscribe": `<${unsubscribeUrl}>`,
+                "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+              },
+            }
         })
 
         const result = await resend.batch.send(emailBatch)
-        successCount += result.data?.data.length || 0
+        if (result.error) {
+          console.error("Failed to send batch:", result.error)
+          errorCount += batch.length
+        } else {
+          successCount += result.data?.data.length || 0
+        }
       } catch (error) {
         console.error("Failed to send batch:", error)
         errorCount += batch.length
@@ -374,6 +388,36 @@ export async function sendEmailsToUsers(
   } catch (error) {
     console.error("Failed to send emails:", error)
     return { error: "Failed to send emails" }
+  }
+}
+
+export async function sendEmailsToUsers(
+  template: EmailTemplate,
+  userIds: string[],
+  customProps: TemplateProps,
+  subject?: string
+) {
+  await assertAdminAccess()
+  return sendEmailsToUsersInternal(template, userIds, customProps, subject)
+}
+
+// Per-template from-address. The generic admin sender previously used a single
+// `updates@` address for all 9 templates, which mismatches the dedicated senders
+// used by the automated flows (welcome/newsletter/renewals) and can hurt DKIM/SPF
+// alignment. EMAIL_FROM_ADDRESS overrides globally if set.
+function getFromAddress(template: EmailTemplate): string {
+  const envFrom = process.env.EMAIL_FROM_ADDRESS
+  if (envFrom) return envFrom
+  const base = "eu.updates.qunt-edge.vercel.app"
+  switch (template) {
+    case "welcome":
+      return `Qunt Edge <welcome@${base}>`
+    case "new-feature":
+      return `Qunt Edge <newsletter@${base}>`
+    case "renewal-notice":
+      return `Qunt Edge <renewals@${base}>`
+    default:
+      return `Qunt Edge <updates@${base}>`
   }
 }
 
@@ -388,8 +432,8 @@ function getDefaultSubject(template: EmailTemplate, language: string): string {
       fr: "Bienvenue sur Qunt Edge",
     },
     "weekly-recap": {
-      en: "Your weekly trading statistics - Qunt Edge",
-      fr: "Vos statistiques de trading de la semaine - Qunt Edge",
+      en: "Your trading statistics for the week 📈",
+      fr: "Vos statistiques de trading de la semaine 📈",
     },
     "new-feature": {
       en: "New features on Qunt Edge",

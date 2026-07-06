@@ -99,7 +99,7 @@ export function WeeklyRecapPreview() {
  setSelectedUserId,
  setSelectedEmail,
  }).catch((err) => {
- console.error("Error loading users:", err)
+
  toast.error("Error", {
  description:"Failed to load users",
  })
@@ -124,7 +124,7 @@ export function WeeklyRecapPreview() {
  setLoadingState,
  setEmailHtml,
  }).catch((err) => {
- console.error("Error generating preview:", err)
+
  setError(err instanceof Error ? err.message :"An error occurred while generating the preview")
  setLoadingState("idle")
  })
@@ -140,7 +140,7 @@ export function WeeklyRecapPreview() {
  }, [isOpen])
 
  return (
- <div className="h-screen flex flex-col">
+  <div className="min-h-dvh flex flex-col">
  <Card className="flex-1 flex flex-col">
  <CardHeader>
  <div className="flex items-center justify-between">
@@ -204,7 +204,7 @@ export function WeeklyRecapPreview() {
  }}
  />
  {isOpen && (
- <CommandList className="absolute top-full left-0 right-0 z-50 mt-1 max-h-[300px] overflow-auto rounded-md border bg-background/0.6 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]">
+ <CommandList className="absolute top-full left-0 right-0 z-50 mt-1 max-h-[300px] overflow-auto rounded-md border bg-card shadow-lg">
  <CommandEmpty>No users found.</CommandEmpty>
  <CommandGroup>
  {filteredUsers.map((user) => (
@@ -318,7 +318,7 @@ export function WeeklyRecapPreview() {
  </div>
 
  {/* Preview - Shows loading animation, error, or iframe */}
- <div className="relative bg-background/0.45 overflow-hidden">
+ <div className="relative bg-primary/5 overflow-hidden">
  {loadingState !=="complete" ? (
  <EmailPreviewLoading stage={loadingState ==="analyzing" ?"analyzing" :"generating"} />
  ) : error ? (

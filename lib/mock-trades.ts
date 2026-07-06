@@ -11,6 +11,9 @@ function valueFromSeed(seed: number, min: number, max: number): number {
 }
 
 export function generateMockTrades(userId: string, count = 60): Trade[] {
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('generateMockTrades cannot be called in production')
+  }
   const now = Date.now();
   const dayMs = 24 * 60 * 60 * 1000;
 

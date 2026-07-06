@@ -187,7 +187,8 @@ async function renewUserToken(synchronization: SynchronizationRecord): Promise<b
 
     // This app uses Tradovate demo endpoints for OAuth/sync flows.
     // `Synchronization` has no persisted `environment` field, so default to demo.
-    const apiBaseUrl = 'https://demo.tradovateapi.com';
+    const DEFAULT_TRADOVATE_ENV = (process.env.TRADOVATE_ENVIRONMENT || 'demo') as string;
+    const apiBaseUrl = DEFAULT_TRADOVATE_ENV === 'live' ? 'https://live.tradovateapi.com' : 'https://demo.tradovateapi.com';
 
     const renewal = await fetch(`${apiBaseUrl}/auth/renewAccessToken`, {
       headers: {
@@ -245,7 +246,7 @@ async function performDailySync(synchronization: SynchronizationRecord): Promise
     }
 
     // Dynamically importing the getTradovateTrades action to avoid circular dependencies
-    const { getTradovateTrades } = await import('@/app/[locale]/dashboard/components/import/tradovate/actions');
+    const { getTradovateTrades } = await import('@/server/imports/tradovate-actions');
 
     // Fetch and save trades
     const result = await getTradovateTrades(accessToken, { userId: synchronization.userId, accountId: synchronization.accountId });

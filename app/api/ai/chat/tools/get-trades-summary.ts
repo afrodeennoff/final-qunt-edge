@@ -1,7 +1,6 @@
 import { groupBy } from "@/lib/utils";
 import { SerializedTrade } from "@/server/database";
 import { getAiTrades } from "@/lib/ai/trade-access";
-import { getUserId } from "@/server/auth";
 import Decimal from "decimal.js";
 import { tool } from "ai";
 import { z } from 'zod/v3';
@@ -39,29 +38,34 @@ function generateTradeSummary(trades: SerializedTrade[]): TradeSummary[] {
   });
 }
 
-export const getTradesSummary = tool({
-  description: 'Get trades between two dates',
-  inputSchema: z.object({
-    startDate: z.string().describe('Date string in format 2025-01-14T14:33:01.000Z'),
-    endDate: z.string().describe('Date string in format 2025-01-14T14:33:01.000Z')
-  }),
-  execute: async ({ startDate, endDate }: { startDate: string, endDate: string }) => {
-    const userId = await getUserId();
-    const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId, profile: 'analysis' });
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
-      throw new Error("Invalid startDate or endDate format");
-    }
-    const filteredTrades = allTrades.filter((trade: SerializedTrade) => {
-      const tradeDate = new Date(trade.entryDate);
-      return tradeDate >= start && tradeDate <= end;
-    });
-    const summary = generateTradeSummary(filteredTrades);
-    return {
-      items: summary,
-      truncated,
-      dataQualityWarning,
-    };
-  },
-})
+export function createGetTradesSummaryTool(userId?: string) {
+  return tool({
+    description: 'Get trades between two dates',
+    inputSchema: z.object({
+      startDate: z.string().describe('Date string in format 2025-01-14T14:33:01.000Z'),
+      endDate: z.string().describe('Date string in format 2025-01-14T14:33:01.000Z')
+    }),
+    execute: async ({ startDate, endDate }: { startDate: string, endDate: string }) => {
+      if (!userId) return { error: 'AI tool executed without explicit user context — cross-user data access prevented' };
+      const resolvedUserId = userId;
+      const { trades: allTrades, truncated, dataQualityWarning } = await getAiTrades({ userId: resolvedUserId, profile: 'analysis' });
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+        throw new Error("Invalid startDate or endDate format");
+      }
+      const filteredTrades = allTrades.filter((trade: SerializedTrade) => {
+        const tradeDate = new Date(trade.entryDate);
+        return tradeDate >= start && tradeDate <= end;
+      });
+      const summary = generateTradeSummary(filteredTrades);
+      return {
+        items: summary,
+        truncated,
+        dataQualityWarning,
+      };
+    },
+  });
+}
+
+export const getTradesSummary = createGetTradesSummaryTool();

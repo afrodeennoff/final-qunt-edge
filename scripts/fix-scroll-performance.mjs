@@ -89,7 +89,7 @@ for (const dir of dirs) {
   const files = walkDir(dir)
   for (const file of files) {
     let content = readFileSync(file, 'utf-8')
-    let original = content
+    const original = content
     let changes = 0
 
     // Apply regex replacements
@@ -123,7 +123,7 @@ for (const dir of dirs) {
 const headerFile = 'app/[locale]/dashboard/components/dashboard-header.tsx'
 try {
   let content = readFileSync(headerFile, 'utf-8')
-  let original = content
+  const original = content
   
   // Remove backdrop-blur from header
   content = content.replace(/backdrop-blur-2xl/g, '')

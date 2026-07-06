@@ -1,4 +1,5 @@
 "use client"
+import React from 'react'
 
 import { useRef, useState, useCallback } from "react"
 import { motion, useReducedMotion, useMotionValue, useTransform, PanInfo } from "motion/react"
@@ -7,17 +8,18 @@ import { SPRING_PRESETS } from "./entrance-exit"
 
 export { SPRING_PRESETS } from "./entrance-exit"
 
-export type HoverEffect ="lift" |"glow" |"scale" |"none"
+// Binance: only subtle scale or none. Lift/glow/magnetic removed (heavy/decorative)
+export type HoverEffect = 'scale' | 'none'
 
 interface InteractiveWrapperProps {
- children: React.ReactNode
- className?: string
- hover?: HoverEffect
- press?: boolean
- magnetic?: boolean
- draggable?: boolean
- onDragEnd?: () => void
- glowColor?: string
+  children: React.ReactNode
+  className?: string
+  hover?: HoverEffect
+  press?: boolean
+  magnetic?: boolean
+  draggable?: boolean
+  onDragEnd?: () => void
+  glowColor?: string
 }
 
 export function InteractiveWrapper({
@@ -28,13 +30,12 @@ export function InteractiveWrapper({
  magnetic = false,
  draggable = false,
  onDragEnd,
- glowColor ="rgba(41, 98, 255, 0.25)",
+ glowColor ="hsl(var(--primary) / 0.25)",
 }: InteractiveWrapperProps) {
  const prefersReducedMotion = useReducedMotion()
  const ref = useRef<HTMLDivElement>(null)
  const dragX = useMotionValue(0)
  const dragY = useMotionValue(0)
-
 
  const handleDragEnd = useCallback((_: unknown, info: PanInfo) => {
  if (prefersReducedMotion) return
@@ -44,28 +45,20 @@ export function InteractiveWrapper({
  onDragEnd?.()
  }, [dragX, dragY, onDragEnd, prefersReducedMotion])
 
- const hoverVariants = {
- lift: {
- scale: 1.02,
- y: -4,
- transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] },
- },
- glow: {
- transition: { duration: 0.2 },
- },
- scale: {
- scale: 1.05,
- transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] },
- },
- none: {},
- }
+  const hoverVariants = {
+    scale: {
+      scale: 1.01,
+      transition: { duration: 0.08, ease: [0.16, 1, 0.3, 1] as const },
+    },
+    none: {},
+  }
 
- const pressVariants = {
- tap: {
- scale: 0.97,
- transition: { duration: 0.1 },
- },
- }
+  const pressVariants = {
+    tap: {
+      scale: 0.985,
+      transition: { duration: 0.06, ease: [0.16, 1, 0.3, 1] as const },
+    },
+  }
 
  if (prefersReducedMotion) {
  return <div className={className}>{children}</div>
@@ -88,16 +81,15 @@ export function InteractiveWrapper({
  }
  whileHover={hover !=="none" ? hoverVariants[hover] : undefined}
  whileTap={press ? pressVariants.tap : undefined}
- transition={magnetic || draggable ? SPRING_PRESETS.gentle : undefined}
+  transition={magnetic || draggable ? SPRING_PRESETS.subtle : undefined}
  >
- {(hover ==="glow" || draggable) && (
- <motion.div
- className="absolute inset-0 rounded-lg pointer-events-none"
- style={{
- background: glowColor,
-
- opacity: 0,
- zIndex: -1,
+  {draggable && (
+    <motion.div
+      className="absolute inset-0 rounded-lg pointer-events-none"
+      style={{
+        background: glowColor,
+        opacity: 0,
+        zIndex: -1,
  }}
  animate={{ opacity: draggable ? 0.4 : 0 }}
  transition={{}}
@@ -126,7 +118,6 @@ export function MagneticButton({
  const prefersReducedMotion = useReducedMotion()
  const ref = useRef<HTMLButtonElement>(null)
 
-
  if (prefersReducedMotion) {
  return (
  <button className={className} onClick={onClick} disabled={disabled}>
@@ -142,7 +133,7 @@ export function MagneticButton({
  onClick={onClick}
  disabled={disabled}
  
- transition={SPRING_PRESETS.gentle}
+  transition={SPRING_PRESETS.subtle}
  whileHover={{ scale: 1.02 }}
  whileTap={{ scale: 0.98 }}
  >
@@ -187,7 +178,7 @@ export function DraggableCard({
  onDragEnd={handleDragEnd}
  style={{ x, y }}
  whileDrag={{ scale: 1.02, rotate: 1 }}
- transition={SPRING_PRESETS.smooth}
+  transition={SPRING_PRESETS.subtle}
  >
  {children}
  </motion.div>
@@ -220,7 +211,7 @@ export function HoverLift({
  y: -liftDistance,
  boxShadow: `0 ${liftDistance + 12}px ${liftDistance + 20}px -${liftDistance + 8}px rgba(0, 0, 0, ${shadowIntensity})`,
  }}
- transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+ transition={{ type: 'spring', stiffness: 300, damping: 30 }}
  >
  {children}
  </motion.div>
@@ -237,7 +228,7 @@ interface GlowOnHoverProps {
 export function GlowOnHover({
  children,
  className,
- glowColor ="rgba(41, 98, 255, 0.4)",
+ glowColor ="hsl(var(--primary) / 0.4)",
  glowSize = 20,
 }: GlowOnHoverProps) {
  const prefersReducedMotion = useReducedMotion()
@@ -252,9 +243,9 @@ export function GlowOnHover({
  whileHover={{
  boxShadow: `0 0 ${glowSize}px -4px ${glowColor}`,
  }}
- transition={{ duration: 0.3 }}
- >
- {children}
- </motion.div>
+  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+  >
+  {children}
+  </motion.div>
  )
 }

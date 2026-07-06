@@ -131,7 +131,7 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
  >
  <div className="grid h-full grid-cols-2">
  {/* Profit/Loss Section */}
- <div className={cn("flex flex-col border-b border-r border-border/0.03",
+ <div className={cn("flex flex-col border-b border-r border-transparent.03",
  size === 'tiny' ?"p-1.5" :"p-3"
  )}>
  <h3 className="mb-1.5 font-terminal text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{t('statistics.profitLoss.title')}</h3>
@@ -176,7 +176,7 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
  </div>
 
  {/* Performance Section */}
- <div className={cn("flex flex-col border-b border-border/0.03",
+ <div className={cn("flex flex-col border-b-0",
  size === 'tiny' ?"p-1.5" :"p-3"
  )}>
  <h3 className="mb-1.5 font-terminal text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{t('statistics.performance.title')}</h3>
@@ -223,7 +223,7 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
  </div>
 
  {/* Activity Section */}
- <div className={cn("flex flex-col border-r border-border/0.03",
+ <div className={cn("flex flex-col border-r border-transparent.03",
  size === 'tiny' ?"p-1.5" :"p-3"
  )}>
  <h3 className="mb-1.5 font-terminal text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{t('statistics.activity.title')}</h3>

@@ -11,7 +11,7 @@ const globalForPrisma = globalThis as unknown as {
 const isProduction = process.env.NODE_ENV === 'production'
 const isNextBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
 const MAX_POOL_LIMIT = 20
-const DEFAULT_SERVERLESS_POOL_MAX = 5
+const DEFAULT_SERVERLESS_POOL_MAX = 10
 const DEFAULT_SERVERLESS_POOL_MIN = 0
 const PRODUCTION_RUNTIME_POOL_FLOOR = DEFAULT_SERVERLESS_POOL_MAX
 const DB_POOL_WARN_UTILIZATION_THRESHOLD = 0.8

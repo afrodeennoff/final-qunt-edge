@@ -11,53 +11,33 @@ import {
  DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
 import { Trade } from "@/lib/data-types";
 import { CalendarEntry } from "@/app/[locale]/dashboard/types/calendar";
 import { Charts } from "./charts";
 import { useI18n, useCurrentLocale } from "@/locales/client";
 import { DailyStats } from "./daily-stats";
 import { DailyComment } from "./daily-comment";
-import { useUserStore } from "../../../../../store/user-store";
 import { TradeTableReview } from "../tables/trade-table-review";
 import StatisticsWidget from "../statistics/statistics-widget";
 
 interface CalendarModalProps {
- isOpen: boolean;
- onOpenChange: (open: boolean) => void;
- selectedDate: Date | null;
- dayData: CalendarEntry | undefined;
- isLoading: boolean;
-}
-
-interface GroupedTrades {
- [accountNumber: string]: Trade[];
-}
-
-function groupTradesByAccount(trades: Trade[]): GroupedTrades {
- return trades.reduce((acc: GroupedTrades, trade) => {
- const account = trade.accountNumber ||"Unknown Account";
- if (!acc[account]) {
- acc[account] = [];
- }
- acc[account].push(trade);
- return acc;
- }, {});
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  selectedDate: Date | null;
+  dayData: CalendarEntry | undefined;
 }
 
 export function CalendarModal({
- isOpen,
- onOpenChange,
- selectedDate,
- dayData,
- isLoading,
+  isOpen,
+  onOpenChange,
+  selectedDate,
+  dayData,
 }: CalendarModalProps) {
- const t = useI18n();
- const locale = useCurrentLocale();
- const timezone = useUserStore((state) => state.timezone);
- const dateLocale = locale ==="fr" ? fr : enUS;
- const [activeTab, setActiveTab] = useState("comment");
- const [formattedDate, setFormattedDate] = useState<string>("");
+  const t = useI18n();
+  const locale = useCurrentLocale();
+  const dateLocale = locale ==="fr" ? fr : enUS;
+  const [activeTab, setActiveTab] = useState("comment");
+  const [formattedDate, setFormattedDate] = useState<string>("");
 
  React.useEffect(() => {
  if (selectedDate) {

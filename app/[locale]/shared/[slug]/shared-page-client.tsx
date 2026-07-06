@@ -48,14 +48,14 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
   return (
     <div className="flex flex-col">
       <div className="mb-2 flex flex-col justify-between gap-2 xs:flex-row xs:items-center xs:gap-0">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">{t('shared.tradingAccounts')}</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">{t('shared.tradingAccounts')}</p>
         <div className="flex flex-wrap items-center gap-1.5 w-full xs:w-auto justify-end">
           {accounts.length > 2 && (
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
-              className="h-7 min-w-0 gap-1 text-xs text-foreground/60 hover:text-foreground"
+              className="h-7 min-w-0 gap-1 text-xs text-foreground hover:text-foreground"
             >
               {isExpanded
                 ? t('shared.showLessAccounts')
@@ -72,7 +72,7 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
             variant="ghost"
             size="sm"
             onClick={toggleAll}
-            className="h-7 min-w-0 whitespace-nowrap text-xs text-foreground/60 hover:text-foreground"
+            className="h-7 min-w-0 whitespace-nowrap text-xs text-foreground hover:text-foreground"
           >
             {accountNumbers.length === accounts.length
               ? t('shared.deselectAll')
@@ -88,15 +88,15 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
             className={cn(
               "flex items-center rounded-xl border px-2 py-2 transition-[opacity,background-color,border-color,transform] duration-200 hover:-translate-y-0.5",
               accountNumbers.includes(account) 
-                ? "border-border/40 bg-card/80 text-foreground shadow-[0_18px_36px_-26px_rgba(255,255,255,0.08)]"
-                : "border-border/30 bg-background/30 text-muted-foreground hover:border-border/40 hover:bg-background/0.09"
+                ? "border-transparent bg-card/80 text-foreground shadow-[0_18px_36px_-26px_rgba(255,255,255,0.08)]"
+                : "border-transparent bg-background/30 text-muted-foreground hover:border-transparent hover:bg-background/0.09"
             )}
           >
             <div
               className={cn(
                 'mr-1.5 h-2.5 w-2.5 shrink-0 rounded-full xs:mr-2',
                 accountNumbers.includes(account)
-                  ? 'bg-v2-accent shadow-[0_0_12px_rgba(56,189,248,0.7)]'
+                  ? 'bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.7)]'
                   : 'bg-foreground/20',
               )}
             />
@@ -117,8 +117,8 @@ export function SharedPageClient() {
   if (isLoading) {
     return (
       <div className="qe-v2-app-shell flex flex-col items-center justify-center px-4 pt-28 sm:pt-32">
-        <div className="flex w-full max-w-lg flex-col items-center gap-3 rounded-[2rem] border border-border/30 bg-[oklch(0.038_0_0)] px-6 py-8 text-center shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_18px_44px_-30px_rgba(0,0,0,0.9)]">
-          <Loader2 className="h-8 w-8 animate-spin text-foreground/60" />
+        <div className="flex w-full max-w-lg flex-col items-center gap-3 rounded-[2rem] border-0 bg-card px-6 py-8 text-center shadow-sm">
+          <Loader2 className="h-8 w-8 animate-spin text-foreground" />
           <p className="text-sm text-muted-foreground">{t('shared.loading')}</p>
         </div>
       </div>
@@ -144,16 +144,16 @@ export function SharedPageClient() {
     <div className="container-fluid qe-v2-app-shell flex-1 pt-24 sm:pt-28">
       <main className="w-full py-6 lg:py-8">
         <MotionSection delay={0.04}>
-          <Card className="mb-6 w-full overflow-hidden border-border/30 bg-[oklch(0.038_0_0)] shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_26px_70px_-38px_rgba(0,0,0,0.92)]">
+          <Card className="mb-6 w-full overflow-hidden border-transparent bg-card shadow-sm">
             <CardContent className="p-4 sm:p-5 lg:p-6">
               <div className="grid gap-4 xl:grid-cols-[minmax(0,1.12fr)_340px] xl:gap-6">
-                <div className="rounded-2xl border border-border/30 bg-background/30 p-5 sm:p-6">
+                <div className="rounded-2xl border-0 bg-background/30 p-5 sm:p-6">
                   <CardHeader className="space-y-4 p-0">
-                    <div className="inline-flex w-fit rounded-full border border-border/0.08 bg-background/30 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+                    <div className="inline-flex w-fit rounded-full border-0 bg-background/30 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
                       Shared Report
                     </div>
                     <div className="flex flex-col gap-2">
-                      <CardTitle className="text-xl font-[350] tracking-[-0.04em] sm:text-2xl lg:text-3xl">
+                      <CardTitle className="text-xl font-[350] tracking-tight sm:text-2xl lg:text-3xl">
                         {sharedParams.title || t('shared.title')}
                       </CardTitle>
                       <CardDescription className="max-w-3xl text-sm leading-[1.7] text-muted-foreground sm:text-base">
@@ -165,7 +165,7 @@ export function SharedPageClient() {
 
                 <MotionStagger className="grid gap-4" delay={0.06}>
                   <MotionStaggerItem>
-                    <Card className="border-border/30 bg-background/30 shadow-none">
+                    <Card className="border-transparent bg-background/30 shadow-none">
                       <CardContent className="p-4">
                         <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">{t('shared.sharedOn')}</p>
                         <p className="text-sm text-foreground/70">
@@ -175,7 +175,7 @@ export function SharedPageClient() {
                     </Card>
                   </MotionStaggerItem>
                   <MotionStaggerItem>
-                    <Card className="border-border/30 bg-background/30 shadow-none">
+                    <Card className="border-transparent bg-background/30 shadow-none">
                       <CardContent className="p-4">
                         <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                           {dateRange.to ? t('shared.period') : t('shared.since')}
@@ -198,7 +198,7 @@ export function SharedPageClient() {
               </div>
 
               <MotionSection delay={0.08}>
-                <Card className="mt-4 border-border/30 bg-background/30 shadow-none">
+                <Card className="mt-4 border-transparent bg-background/30 shadow-none">
                   <CardContent className="p-4">
                     <AccountsSelector accounts={sharedParams.accountNumbers} />
                   </CardContent>

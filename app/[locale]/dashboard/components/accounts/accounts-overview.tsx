@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 
 import { memo, useState, useMemo, useEffect, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -54,6 +55,7 @@ import {
 import { Calendar } from '@/components/ui/calendar'
 import { format, Locale } from 'date-fns'
 import { cn } from '@/lib/utils'
+import { unifiedInsetPanelClassName } from '@/components/layout/unified-page-recipes'
 import { useDashboardActions, useDashboardFilters } from '@/context/data-provider'
 import { getAccountStartDate } from '@/lib/account-metrics'
 import { useI18n } from '@/locales/client'
@@ -214,7 +216,7 @@ function SortRuleItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'type-body-sm flex items-center gap-2 rounded-md border border-border/70 bg-card/80 px-3 py-2 text-foreground shadow-sm',
+        'type-body-sm flex items-center gap-2 rounded-md border-0 bg-card px-3 py-2 text-foreground',
         isDragging && 'opacity-80 shadow-md',
       )}
     >
@@ -290,7 +292,7 @@ function DraggableAccountCard({
           <div
             {...attributes}
             {...listeners}
-            className="absolute right-3 top-3 cursor-grab rounded-md border border-border/70 bg-background/90 p-1.5 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 active:cursor-grabbing"
+            className="absolute right-3 top-3 cursor-grab rounded-md border-0 bg-background/80 p-1.5 opacity-0 transition-opacity group-hover:opacity-100 active:cursor-grabbing"
           >
             <GripVertical className="h-4 w-4 text-muted-foreground" />
           </div>
@@ -457,7 +459,7 @@ function PayoutDialog({
             </div>
 
             {/* Selected Date Display */}
-            <div className="rounded-lg border border-border/70 bg-muted/20 p-3">
+            <div className={cn(unifiedInsetPanelClassName, 'p-3')}>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium">{t('propFirm.payout.selectedDate')}</p>
@@ -470,9 +472,9 @@ function PayoutDialog({
             </div>
 
             {/* Inline Calendar with Custom Header */}
-            <div className="flex max-h-[400px] flex-col rounded-lg border border-border/70 bg-background">
+            <div className="flex max-h-[400px] flex-col rounded-xl bg-card border-0">
               {/* Custom Month/Year Header */}
-              <div className="p-3 border-b bg-muted/20 shrink-0">
+              <div className="p-3 border-b-0 bg-gradient-to-br from-muted/50 to-muted/20 shrink-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Button
@@ -980,8 +982,8 @@ function AccountsOverviewComponent({
             : t('propFirm.payout.successDescription'),
         },
       )
-    } catch (error) {
-      console.error('Failed to handle payout:', error)
+    } catch {
+
       toast.error(t('propFirm.payout.error'), {
         description: t('propFirm.payout.errorDescription'),
       })
@@ -1007,8 +1009,8 @@ function AccountsOverviewComponent({
       toast.success(t('propFirm.payout.deleteSuccess'), {
         description: t('propFirm.payout.deleteSuccessDescription'),
       })
-    } catch (error) {
-      console.error('Failed to delete payout:', error)
+    } catch {
+
       toast.error(t('propFirm.payout.deleteError'), {
         description: t('propFirm.payout.deleteErrorDescription'),
       })
@@ -1030,8 +1032,8 @@ function AccountsOverviewComponent({
       toast.success(t('propFirm.toast.deleteSuccess'), {
         description: t('propFirm.toast.deleteSuccessDescription'),
       })
-    } catch (error) {
-      console.error('Failed to delete account:', error)
+    } catch {
+
       toast.error(t('propFirm.toast.deleteError'), {
         description: t('propFirm.toast.deleteErrorDescription'),
       })
@@ -1102,8 +1104,8 @@ function AccountsOverviewComponent({
       toast.success(t('propFirm.toast.setupSuccess'), {
         description: t('propFirm.toast.setupSuccessDescription'),
       })
-    } catch (error) {
-      console.error('Failed to setup account:', error)
+    } catch {
+
       toast.error(t('propFirm.toast.setupError'), {
         description: t('propFirm.toast.setupErrorDescription'),
       })
@@ -1115,13 +1117,13 @@ function AccountsOverviewComponent({
   return (
     <Card
       className={cn(
-        'flex h-full w-full flex-col overflow-hidden rounded-lg border border-border/70 bg-card/95 shadow-sm',
-        surface === 'embedded' && 'bg-card/95',
+        'group relative flex h-full w-full flex-col overflow-hidden rounded-xl bg-card border-0 transition-all',
+        surface === 'embedded' && 'opacity-95',
       )}
     >
       <CardHeader
         className={cn(
-          'shrink-0 border-b border-border/70 bg-muted/20 px-4 py-4 sm:px-6',
+          'shrink-0 border-b-0 bg-muted/30 px-4 py-3 sm:px-5',
           size === 'small' && 'px-3 py-3',
         )}
       >
@@ -1295,21 +1297,22 @@ function AccountsOverviewComponent({
       </CardHeader>
 
       {/* Unconfigured accounts banner */}
-      {unconfiguredAccounts.length > 0 && !isLoading && (
-        <div className="border-b border-border/70 bg-muted/20 px-4 py-4 sm:px-6">
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span className="type-overline text-muted-foreground">
-                {t('propFirm.status.needsConfiguration')}
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {unconfiguredAccounts.map((accountNumber) => (
-                <div
-                  key={accountNumber}
-                  className="inline-flex items-center gap-2 rounded-md border border-border/70 bg-background/80 px-3 py-1.5 shadow-sm"
-                >
+       {unconfiguredAccounts.length > 0 && !isLoading && (
+          <div className="border-b-0 bg-muted/30 px-4 py-3 sm:px-5">
+           <div className="flex flex-col gap-3">
+             <div className="flex items-center gap-2">
+               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+               <span className="type-overline text-muted-foreground">
+                 {t('propFirm.status.needsConfiguration')}
+               </span>
+             </div>
+             <div className="flex flex-wrap gap-2">
+               {unconfiguredAccounts.map((accountNumber) => (
+                 <div
+                   key={accountNumber}
+                   className="inline-flex items-center gap-2 rounded-md border-0 bg-background/60 px-3 py-1.5"
+                 >
+
                   <span className="type-label tabular-nums text-foreground">{accountNumber}</span>
                   <Button
                     variant="ghost"
@@ -1317,20 +1320,59 @@ function AccountsOverviewComponent({
                     className="h-6 w-6 p-0 hover:bg-accent/40"
                     onClick={() => {
                       // Create a minimal account object for configuration
-                      const tempAccount = {
-                        id: '',
-                        userId: user?.id || '',
-                        number: accountNumber,
-                        propfirm: '',
-                        startingBalance: 0,
-                        profitTarget: 0,
-                        drawdownThreshold: 0,
-                        consistencyPercentage: 30,
-                        resetDate: null,
-                        payouts: [],
-                        balanceToDate: 0,
-                      }
-                      setSelectedAccountForTable(tempAccount as unknown as Account)
+                       const tempAccount = {
+                         id: '',
+                         userId: user?.id || '',
+                         number: accountNumber,
+                         propfirm: '',
+                         startingBalance: 0,
+                         profitTarget: 0,
+                         drawdownThreshold: 0,
+                         consistencyPercentage: 30,
+                         buffer: 0,
+                         considerBuffer: true,
+                         dailyLoss: 0,
+                         trailingDrawdown: false,
+                         trailingStopProfit: null,
+                         trailing: 'Static',
+                         isPerformance: false,
+                         evaluation: true,
+                         groupId: null,
+                         shouldConsiderTradesBeforeReset: true,
+                         minPnlToCountAsDay: null,
+                         tradingNewsAllowed: true,
+                         rulesDailyLoss: '',
+                         accountSize: null,
+                         accountSizeName: null,
+                         balanceRequired: null,
+                         price: null,
+                         priceWithPromo: null,
+                         activationFees: null,
+                         isRecursively: '',
+                         maxFundedAccounts: null,
+                         minTradingDaysForPayout: null,
+                         minDays: null,
+                         minPayout: null,
+                         maxPayout: null,
+                         profitSharing: null,
+                         payoutBonus: null,
+                         payoutPolicy: null,
+                         promoPercentage: null,
+                         promoType: null,
+                         autoRenewal: false,
+                         paymentFrequency: null,
+                          renewalNotice: null,
+                          renewalNoticeLastSentAt: null,
+                          nextPaymentDate: null,
+                         payoutCount: 0,
+                         createdAt: new Date(),
+                         resetDate: null,
+                         payouts: [],
+                         balanceToDate: 0,
+                         metrics: undefined,
+                         dailyMetrics: undefined,
+                       }
+                       setSelectedAccountForTable(tempAccount as Account)
                     }}
                   >
                     <Settings className="h-3.5 w-3.5 text-muted-foreground transition-colors hover:text-foreground" />
@@ -1343,22 +1385,23 @@ function AccountsOverviewComponent({
       )}
 
       <CardContent className="flex-1 overflow-hidden p-0">
-        <div className="h-full flex-1 overflow-y-auto">
+        <div className="h-full flex-1 overflow-y-auto flex flex-col justify-center">
           {filteredAccounts.length === 0 && unconfiguredAccounts.length === 0 && !isLoading ? (
             <div className="flex h-full flex-col items-center justify-center px-6 py-16 text-center text-muted-foreground">
               <Table className="mb-4 h-10 w-10 opacity-20" />
               <p className="type-body">{t('modals.noTrades.description')}</p>
             </div>
           ) : view === 'cards' ? (
-            <div className="space-y-6 px-4 py-4 sm:px-6 sm:py-6">
+            <div className="space-y-6 px-3 py-4 sm:px-4 sm:py-5">
               {sortedGroupEntries.map(({ group, accounts: orderedAccounts }) => (
                 <section
                   key={group.id}
-                  className="overflow-hidden rounded-lg border border-border/70 bg-background/40 shadow-sm"
+                  className="group relative overflow-hidden rounded-xl bg-card border-0 transition-all"
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 px-4 py-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b-0 bg-muted/30 px-4 py-3">
                     <h3 className="type-overline text-muted-foreground">{group.name}</h3>
-                    <div className="rounded-full border border-border/70 bg-background/80 px-2.5 py-1">
+                     <div className="rounded-full border-0 bg-muted/30 px-2.5 py-0.5 text-[10px] font-medium text-muted-foreground/80">
+
                       <span className="type-label tabular-nums text-muted-foreground">
                         {orderedAccounts.length}{' '}
                         {orderedAccounts.length === 1
@@ -1377,7 +1420,7 @@ function AccountsOverviewComponent({
                         items={orderedAccounts.map((account) => account.number)}
                         strategy={rectSortingStrategy}
                       >
-                        <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 2xl:grid-cols-1">
                           {orderedAccounts
                             .map((account) => {
                               if (!account.number) return null
@@ -1398,20 +1441,18 @@ function AccountsOverviewComponent({
                 </section>
               ))}
 
-              {sortedUngroupedAccounts.length > 0 ? (
-                <section className="overflow-hidden rounded-lg border border-border/70 bg-background/40 shadow-sm">
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 px-4 py-4">
+                {sortedUngroupedAccounts.length > 0 ? (
+                 <section
+                    className="group relative overflow-hidden rounded-xl bg-card border-0 transition-all"
+                  >
+                   <div className="flex flex-wrap items-center justify-between gap-3 border-b-0 bg-muted/30 px-4 py-3">
+
                     <h3 className="type-overline text-muted-foreground">
                       {t('propFirm.ungrouped')}
                     </h3>
-                    <div className="rounded-full border border-border/70 bg-background/80 px-2.5 py-1">
-                      <span className="type-label tabular-nums text-muted-foreground">
-                        {sortedUngroupedAccounts.length}{' '}
-                        {sortedUngroupedAccounts.length === 1
-                          ? t('accounts.table.account')
-                          : t('dashboard.tabs.accounts')}
-                      </span>
-                    </div>
+                      <div className="rounded-full border-0 bg-muted/30 px-2.5 py-0.5 text-[10px] font-medium text-muted-foreground/80">
+                        {sortedUngroupedAccounts.length} {sortedUngroupedAccounts.length === 1 ? 'account' : 'accounts'}
+                      </div>
                   </div>
                   <div className="p-4">
                     <DndContext
@@ -1423,7 +1464,7 @@ function AccountsOverviewComponent({
                         items={sortedUngroupedAccounts.map((account) => account.number)}
                         strategy={rectSortingStrategy}
                       >
-                        <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 2xl:grid-cols-1">
                           {sortedUngroupedAccounts
                             .map((account) => {
                               if (!account.number) return null
@@ -1459,7 +1500,7 @@ function AccountsOverviewComponent({
           open={!!selectedAccountForTable}
           onOpenChange={(open) => !open && setSelectedAccountForTable(null)}
         >
-          <DialogContent className="flex max-h-[calc(100dvh-1rem)] h-[min(80dvh,56rem)] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] flex-col overflow-y-auto pb-[max(env(safe-area-inset-bottom),0.75rem)] sm:w-full sm:max-w-7xl">
+          <DialogContent className="flex max-h-[calc(100dvh-1rem)] h-[min(80dvh,60rem)] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] flex-col overflow-y-auto pb-[max(env(safe-area-inset-bottom),0.75rem)] sm:w-full sm:max-w-7xl 2xl:max-w-[min(96vw,1600px)] 3xl:max-w-[1800px]">
             <DialogHeader className="pb-4 border-b">
               <div className="flex items-center justify-between">
                 <div>
@@ -1471,7 +1512,7 @@ function AccountsOverviewComponent({
                   <DialogDescription>{t('propFirm.configurator.description')}</DialogDescription>
                 </div>
                 <div className="flex items-center gap-2 pr-4">
-                  <Button variant="solid" onClick={handleSave} disabled={pendingChanges === null}>
+                  <Button variant="default" onClick={handleSave} disabled={pendingChanges === null}>
                     {isSaving ? t('common.saving') : t('common.save')}
                   </Button>
                   <Button
@@ -1554,8 +1595,8 @@ function AccountsOverviewComponent({
                           toast.success(t('propFirm.payout.deleteSuccess'), {
                             description: t('propFirm.payout.deleteSuccessDescription'),
                           })
-                        } catch (error) {
-                          console.error('Failed to delete payout:', error)
+                        } catch {
+
                           toast.error(t('propFirm.payout.deleteError'), {
                             description: t('propFirm.payout.deleteErrorDescription'),
                           })

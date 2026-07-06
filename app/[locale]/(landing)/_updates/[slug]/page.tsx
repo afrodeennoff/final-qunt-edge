@@ -92,15 +92,15 @@ export async function generateMetadata({
           description: meta.description,
         },
       };
-    } catch (postError) {
-      console.warn("Error fetching post:", postError);
+    } catch {
+
       return {
         title: "Not Found",
         description: "The page you are looking for does not exist.",
       };
     }
-  } catch (paramError) {
-    console.warn("Error resolving params:", paramError);
+  } catch {
+
     return {
       title: "Not Found",
       description: "The page you are looking for does not exist.",
@@ -121,8 +121,8 @@ async function getPageData(slug: string, locale: string) {
       previous: adjacent.previous,
       next: adjacent.next,
     };
-  } catch (postError) {
-    console.warn("Error fetching post data:", postError);
+  } catch {
+
     return null;
   }
 }
@@ -183,7 +183,7 @@ export default async function Page({ params }: PageProps) {
         {/* Back link */}
         <Link
           href={`/${locale}/updates`}
-          className="mb-6 inline-flex items-center gap-2 rounded-lg border frost-border-7 bg-[oklch(0.052_0.009_260_/_0.62)] px-3 py-1.5 text-xs font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:frost-border-12 hover:bg-[oklch(0.056_0.009_260_/_0.72)] hover:text-foreground"
+          className="mb-6 inline-flex items-center gap-2 rounded-lg border-0 bg-muted/10 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-muted/40 hover:text-foreground"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           All Updates
@@ -220,7 +220,7 @@ export default async function Page({ params }: PageProps) {
         />
 
         {meta.image && (
-          <div className="mb-8 rounded-lg overflow-hidden bg-background/0.11 dark:bg-background/0.12">
+          <div className="mb-8 rounded-lg overflow-hidden bg-muted/40 dark:bg-muted/40">
             <Image
               src={meta.image}
               alt={meta.title}
@@ -236,13 +236,13 @@ export default async function Page({ params }: PageProps) {
         <div
           className="prose dark:prose-invert max-w-none 
           prose-pre:p-0 prose-pre:bg-transparent 
-          prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-background/0.11 prose-code:text-muted-foreground
-          dark:prose-code:bg-background/0.14 dark:prose-code:text-muted-foreground/80
+          prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-muted/40 prose-code:text-muted-foreground
+          dark:prose-code:bg-muted/30 dark:prose-code:text-muted-foreground/80
           prose-table:w-full prose-table:mt-6 prose-table:mb-8
-          prose-thead:border-b prose-thead:border-border/30 dark:prose-thead:border-border/36
+          prose-thead:border-b prose-thead:border-transparent dark:prose-thead:border-transparent
           prose-th:px-6 prose-th:py-3 prose-th:text-left prose-th:font-semibold
-          prose-td:px-6 prose-td:py-3 prose-td:border-b prose-td:border-border/30 dark:prose-td:border-border/36
-          prose-tr:transition-colors prose-tr:hover:bg-background/0.12 dark:prose-tr:hover:bg-background/0.14"
+          prose-td:px-6 prose-td:py-3 prose-td:border-b prose-td:border-transparent dark:prose-td:border-transparent
+          prose-tr:transition-colors prose-tr:hover:bg-muted/40 dark:prose-tr:hover:bg-muted/30"
           itemProp="articleBody"
         >
           {content}

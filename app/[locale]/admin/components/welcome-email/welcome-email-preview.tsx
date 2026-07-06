@@ -33,8 +33,8 @@ export function WelcomeEmailPreview() {
  if (result.success && result.html) {
  setEmailHtml(result.html)
  }
- } catch (error) {
- console.error('Error rendering email preview:', error)
+ } catch {
+
  } finally {
  setIsLoading(false)
  }
@@ -44,7 +44,7 @@ export function WelcomeEmailPreview() {
  }, [debouncedContent.firstName, debouncedContent.email, debouncedContent.language])
 
  return (
- <div className="h-screen flex flex-col">
+  <div className="min-h-dvh flex flex-col">
  <Card className="flex-1 flex flex-col">
  <CardHeader>
  <div className="flex items-center justify-between">
@@ -107,7 +107,7 @@ export function WelcomeEmailPreview() {
  </div>
 
  {/* Preview */}
- <div className="relative bg-background/0.45 overflow-hidden">
+  <div className="relative bg-muted/20 overflow-hidden">
  {isLoading ? (
  <div className="flex items-center justify-center h-full">
  <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />

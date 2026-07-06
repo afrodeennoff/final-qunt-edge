@@ -74,7 +74,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         try {
             await saveDashboardLayout(toPrismaLayout(layout))
         } catch (error) {
-            console.error('[DashboardContext] Error saving dashboard layout:', error)
+
             throw error
         } finally {
             setPendingSaves(count => Math.max(0, count - 1))
@@ -98,7 +98,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
             const updatedWidgets = layout.map(item => {
                 const existingWidget = currentWidgets.find(w => w.i === item.i)
                 if (!existingWidget) {
-                    console.warn('[DashboardContext] Widget not found:', item.i)
+
                     return null
                 }
                 return {
@@ -119,19 +119,19 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
             setLayouts(updatedLayouts)
             void persistLayout(updatedLayouts)
         } catch (error) {
-            console.error('[DashboardContext] Error updating layout:', error)
+
             setLayouts(layouts)
         }
     }, [userId, setLayouts, layouts, activeLayout, isMobile, isCustomizing, persistLayout])
 
     const addWidget = useCallback(async (type: WidgetType, size: WidgetSize = 'medium') => {
         if (!layouts) {
-            console.error('[DashboardContext] addWidget failed: missing layouts')
+
             return
         }
 
         if (!userId) {
-            console.error('[DashboardContext] addWidget failed: missing user ID')
+
             return
         }
 
@@ -166,7 +166,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
 
     const removeWidget = useCallback(async (i: string) => {
         if (!layouts) {
-            console.error('[DashboardContext] removeWidget failed: missing layouts')
+
             return
         }
 

@@ -16,7 +16,7 @@ import { getNextWidgetPlacement, normalizeWidgetSize, sizeToGrid } from "@/lib/w
 interface DashboardContextType {
     isCustomizing: boolean
     setIsCustomizing: (val: boolean) => void
-    toggleCustomizing: () => void
+    toggleCustomizing: () => void | Promise<void>
     layouts: DashboardLayoutWithWidgets | null
     currentLayout: Widget[]
     activeLayout: 'desktop' | 'mobile'
@@ -54,7 +54,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
     const [isCustomizing, setIsCustomizing] = useState(false)
     const [pendingSaves, setPendingSaves] = useState(0)
 
-    const activeLayout = useMemo(() => isMobile ? 'mobile' : 'desktop', [isMobile])
+    const activeLayout = useMemo<'desktop' | 'mobile'>(() => isMobile ? 'mobile' : 'desktop', [isMobile])
 
     const userId = user?.id || supabaseUser?.id
 
@@ -87,7 +87,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         try {
             await saveDashboardLayout(toPrismaLayout(layout))
         } catch (error) {
-            console.error('[DashboardContext] Error saving dashboard layout:', error)
+
             throw error
         } finally {
             setPendingSaves(count => Math.max(0, count - 1))
@@ -103,7 +103,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
             const updatedWidgets = layout.map(item => {
                 const existingWidget = currentWidgets.find(w => w.i === item.i)
                 if (!existingWidget) {
-                    console.warn('[DashboardContext] Widget not found:', item.i)
+
                     return null
                 }
                 return {
@@ -125,19 +125,19 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
             setLayouts(updatedLayouts)
             void persistLayout(updatedLayouts)
         } catch (error) {
-            console.error('[DashboardContext] Error updating layout:', error)
+
             setLayouts(layouts)
         }
     }, [userId, setLayouts, layouts, activeLayout, isMobile, isCustomizing, persistLayout])
 
     const addWidget = useCallback(async (type: WidgetType, size: WidgetSize = 'medium') => {
         if (!layouts) {
-            console.error('[DashboardContext] addWidget failed: missing layouts')
+
             return
         }
 
         if (!userId) {
-            console.error('[DashboardContext] addWidget failed: missing user ID')
+
             return
         }
 
@@ -173,7 +173,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
 
     const removeWidget = useCallback(async (i: string) => {
         if (!layouts) {
-            console.error('[DashboardContext] removeWidget failed: missing layouts')
+
             return
         }
 
@@ -243,28 +243,36 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         }
     }, [layouts, persistLayout])
 
+    const contextValue = useMemo(() => ({
+        isCustomizing,
+        setIsCustomizing,
+        toggleCustomizing,
+        layouts,
+        currentLayout,
+        activeLayout,
+        addWidget,
+        removeWidget,
+        changeWidgetType,
+        changeWidgetSize,
+        removeAllWidgets,
+        restoreDefaultLayout,
+        handleLayoutChange,
+        isMobile,
+        autoSaveStatus: {
+            hasPending: pendingSaves > 0,
+            isInitialized: Boolean(userId),
+        },
+        flushPendingSaves,
+    }), [
+        isCustomizing, setIsCustomizing, toggleCustomizing, layouts,
+        currentLayout, activeLayout, addWidget, removeWidget,
+        changeWidgetType, changeWidgetSize, removeAllWidgets,
+        restoreDefaultLayout, handleLayoutChange, isMobile,
+        pendingSaves, userId, flushPendingSaves,
+    ])
+
     return (
-        <DashboardContext.Provider value={{
-            isCustomizing,
-            setIsCustomizing,
-            toggleCustomizing,
-            layouts,
-            currentLayout,
-            activeLayout,
-            addWidget,
-            removeWidget,
-            changeWidgetType,
-            changeWidgetSize,
-            removeAllWidgets,
-            restoreDefaultLayout,
-            handleLayoutChange,
-            isMobile,
-            autoSaveStatus: {
-                hasPending: pendingSaves > 0,
-                isInitialized: Boolean(userId),
-            },
-            flushPendingSaves,
-        }}>
+        <DashboardContext.Provider value={contextValue}>
             {children}
         </DashboardContext.Provider>
     )

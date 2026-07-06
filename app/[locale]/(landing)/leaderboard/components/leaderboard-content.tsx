@@ -69,7 +69,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
           <h2 className="mt-8 text-balance text-3xl font-semibold leading-[1.05] tracking-tight text-foreground">
             No public traders are ranked yet.
           </h2>
-          <p className="mt-4 text-[14px] leading-relaxed text-muted-foreground">
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
             The leaderboard only shows traders who opted into public visibility. Check back after
             more traders publish live performance.
           </p>
@@ -97,12 +97,12 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
               <br />
               Real monthly performance.
             </h2>
-            <p className="mt-5 max-w-xl text-[14px] leading-relaxed text-muted-foreground">
+            <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted-foreground">
               The board highlights opted-in traders using live production metrics, with enough depth
               to understand how they are actually performing instead of who had one lucky day.
             </p>
             {isDemoBoard ? (
-              <div className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/8 px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-success">
+              <div className="mt-6 inline-flex items-center gap-1.5 rounded-full bg-success/10 ring-1 ring-success/20 px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-success">
                 <Shield className="mr-1 h-3 w-3" />
                 Demo rankings shown until live accounts connect
               </div>
@@ -122,9 +122,9 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
                   onClick={() => updateSort(item.key)}
                   className={cn(
                     currentSort === item.key
-                      ? 'inline-flex items-center justify-center rounded-full border border-primary/24 bg-primary/12 px-4 py-2 text-[13px] font-semibold text-foreground shadow-[0_16px_28px_-20px_hsl(var(--primary)/0.75)]'
+                       ? 'inline-flex items-center justify-center rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-semibold text-foreground'
                       : unifiedGhostActionClassName,
-                    'px-4 py-2 text-[13px]',
+                    'px-4 py-2 text-sm',
                   )}
                 >
                   {item.label}
@@ -132,7 +132,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
               ))}
             </div>
 
-            <p className="mt-6 text-[13px] text-muted-foreground/80">
+            <p className="mt-6 text-sm text-muted-foreground/80">
               Want to change what shows on the board?{' '}
               <Link
                 href={`/${locale}/dashboard/trader-profile`}
@@ -148,7 +148,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
               label="Ranked traders"
               value={initialEntries.length.toString()}
               icon={Trophy}
-              accent="purple"
+              accent="green"
               className="animate-scale-reveal animate-scale-reveal-d1"
             />
             <SummaryCard
@@ -162,14 +162,14 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
               label="Average win rate"
               value={`${summary.avgWinRate}%`}
               icon={Activity}
-              accent="purple"
+              accent="green"
               className="animate-scale-reveal animate-scale-reveal-d2"
             />
             <SummaryCard
               label="Trades logged"
               value={summary.totalTrades.toLocaleString()}
               icon={Shield}
-              accent="purple"
+              accent="green"
               className="animate-scale-reveal animate-scale-reveal-d3"
             />
             <div
@@ -178,11 +178,11 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
                 'animate-scale-reveal animate-scale-reveal-d3 p-4 sm:col-span-2',
               )}
             >
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/70">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Methodology
               </p>
-              <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
-                Rankings are based on public opt-in accounts and the current month&apos;s trade
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Rankings are based on public opt-in accounts and the last 90 days&apos; trade
                 data. Sort changes recalculate only the ordering, not the underlying dataset.
               </p>
             </div>
@@ -215,19 +215,14 @@ function formatCurrency(value: number): string {
 }
 
 const ACCENT = {
-  purple: {
-    icon: 'text-primary',
-    badge: 'border-primary/22 bg-primary/10',
-    text: 'text-primary',
-  },
   green: {
     icon: 'text-success',
-    badge: 'border-emerald-500/18 bg-success/8',
+    badge: 'border-success/18 bg-success/8',
     text: 'text-success',
   },
   blue: {
     icon: 'text-primary',
-    badge: 'border-blue-500/20 bg-blue-500/10',
+    badge: 'border-primary/20 bg-primary/10',
     text: 'text-primary',
   },
 } as const
@@ -256,7 +251,7 @@ function SummaryCard({
       >
         <Icon className={cn('h-4 w-4', a.icon)} />
       </div>
-      <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground/70">
+      <p className="mt-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
         {label}
       </p>
       <p className={cn('mt-1 text-2xl font-semibold tracking-tight', a.text)}>{value}</p>

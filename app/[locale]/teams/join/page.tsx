@@ -1,9 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useI18n } from "@/locales/client"
-import { useParams } from 'next/navigation'
-import { useSearchParams } from 'next/navigation'
+import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -15,11 +14,19 @@ import {
   XCircle,
   AlertCircle,
   ArrowRight,
-  Loader2
+  Loader2,
+  LogIn,
+  UserPlus
 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
-import { joinTeamByInvitation, getTeamInvitationDetails } from '../../dashboard/settings/actions'
+import { unifiedSectionPanelClassName, unifiedInsetPanelClassName } from '@/components/layout/unified-page-recipes'
+import {
+  requestToJoinTeam,
+  getTeamInvitationDetails,
+  getTeamForJoin,
+  requestToJoinTeamById
+} from '../../dashboard/settings/actions'
 import Link from 'next/link'
 
 interface TeamInvitation {
@@ -32,72 +39,97 @@ interface TeamInvitation {
   expiresAt: string
 }
 
+interface TeamPublicInfo {
+  id: string
+  name: string
+  memberCount: number
+  createdBy: string
+  createdAt: string
+}
+
 export default function TeamJoinPage() {
   const t = useI18n()
   const params = useParams<{ locale?: string }>()
   const searchParams = useSearchParams()
-  const localePrefix = params?.locale ? `/${params.locale}` : ''
+  const router = useRouter()
+  const locale = params?.locale || 'en'
+  const localePrefix = `/${locale}`
   const dashboardRoot = `${localePrefix}/teams/dashboard`
 
-  // State
+  const invitationToken = searchParams.get('invitation')
+  const teamId = searchParams.get('team')
+  const mode = invitationToken ? 'invitation' : teamId ? 'team' : 'none'
+
   const [invitation, setInvitation] = useState<TeamInvitation | null>(null)
+  const [teamInfo, setTeamInfo] = useState<TeamPublicInfo | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isJoining, setIsJoining] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [joinResult, setJoinResult] = useState<string | null>(null)
 
-  // Get invitation token from URL
-  const invitationToken = searchParams.get('invitation')
-
-  async function loadInvitationDetails() {
-    if (!invitationToken) return
-
+  const loadData = useCallback(async () => {
     setIsLoading(true)
     setError(null)
-
     try {
-      const result = await getTeamInvitationDetails(invitationToken)
-      if (result.success && result.invitation) {
-        setInvitation(result.invitation)
+      if (mode === 'invitation' && invitationToken) {
+        const result = await getTeamInvitationDetails(invitationToken)
+        if (result.success && result.invitation) {
+          setInvitation(result.invitation)
+        } else {
+          setError(result.error || 'Failed to load invitation details')
+        }
+      } else if (mode === 'team' && teamId) {
+        const result = await getTeamForJoin(teamId)
+        if (result.success && result.team) {
+          setTeamInfo(result.team as TeamPublicInfo)
+        } else {
+          setError(result.error || 'Team not found')
+        }
       } else {
-        setError(result.error || 'Failed to load invitation details')
+        setError('No invitation or team specified')
       }
-    } catch (error) {
-      console.error('Error loading invitation details:', error)
-      setError('Failed to load invitation details')
+    } catch {
+      setError('Failed to load data')
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [mode, invitationToken, teamId])
 
   useEffect(() => {
-    if (invitationToken) {
-      loadInvitationDetails()
-    } else {
-      setError('No invitation token provided')
-      setIsLoading(false)
-    }
-  }, [invitationToken])
+    loadData()
+  }, [loadData])
 
-  const handleJoinTeam = async () => {
-    if (!invitationToken || !invitation) return
-
+  const handleRequestToJoin = async () => {
     setIsJoining(true)
     try {
-      const result = await joinTeamByInvitation(invitationToken)
-      if (result.success) {
-        toast.success(t('teams.join.success'))
-        // Redirect to team dashboard after successful join
-        setTimeout(() => {
-          if (typeof window !== 'undefined') {
-            window.location.href = `${dashboardRoot}/${invitation.teamId}`
+      if (mode === 'invitation' && invitationToken) {
+        const result = await requestToJoinTeam(invitationToken)
+        if (result.success) {
+          toast.success('Join request sent! Awaiting admin approval.')
+          setJoinResult('pending_approval')
+          loadData()
+        } else {
+          if (result.error?.includes('must be logged in')) {
+            router.push(`${localePrefix}/authentication?next=${encodeURIComponent(window.location.href)}`)
+            return
           }
-        }, 1500)
-      } else {
-        toast.error(result.error || t('teams.join.error'))
+          toast.error(result.error || 'Failed to send request')
+        }
+      } else if (mode === 'team' && teamId) {
+        const result = await requestToJoinTeamById(teamId)
+        if (result.success) {
+          toast.success('Join request sent! Awaiting admin approval.')
+          setJoinResult('pending_approval')
+        } else {
+          if (result.error?.includes('must be logged in')) {
+            router.push(`${localePrefix}/authentication?next=${encodeURIComponent(window.location.href)}`)
+            return
+          }
+          toast.error(result.error || 'Failed to send request')
+        }
       }
-    } catch (error) {
-      console.error('Error joining team:', error)
-      toast.error(t('teams.join.error'))
+    } catch {
+      toast.error('Failed to send request')
     } finally {
       setIsJoining(false)
     }
@@ -117,8 +149,10 @@ export default function TeamJoinPage() {
     switch (status) {
       case 'pending':
         return <Badge variant="secondary">{t('teams.management.pending')}</Badge>
+      case 'pending_approval':
+        return <Badge variant="outline" className="border-warning/40 text-warning">Pending Approval</Badge>
       case 'accepted':
-        return <Badge variant="default" className="bg-background/0.09 text-foreground">{t('teams.invitations.accepted')}</Badge>
+        return <Badge variant="default" className="bg-emerald-500/10 text-emerald-500">{t('teams.invitations.accepted')}</Badge>
       case 'expired':
         return <Badge variant="destructive">{t('teams.invitations.expired')}</Badge>
       default:
@@ -156,7 +190,7 @@ export default function TeamJoinPage() {
     return (
       <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto">
-          <Card>
+          <Card className={cn(unifiedSectionPanelClassName)}>
             <CardHeader className="text-center">
               <XCircle className="h-12 w-12 text-semantic-error mx-auto mb-4" />
               <CardTitle className="text-xl">{t('teams.join.invalid.title')}</CardTitle>
@@ -164,12 +198,100 @@ export default function TeamJoinPage() {
                 {error}
               </CardDescription>
             </CardHeader>
-            <CardContent className="text-center">
+            <CardContent className="text-center space-y-3">
+              {mode === 'team' && (
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => router.push(`${localePrefix}/authentication`)}
+                >
+                  <LogIn className="h-4 w-4 mr-2" />
+                  Sign in
+                </Button>
+              )}
               <Link href={dashboardRoot}>
-                <Button  variant="outline" className="w-full">
+                <Button variant="outline" className="w-full">
                   {t('teams.join.goToManage')}
                 </Button>
               </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  if (mode === 'team' && teamInfo) {
+    const showRequestBtn = !joinResult
+    const showPending = joinResult === 'pending_approval'
+
+    return (
+      <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
+        <div className="max-w-lg mx-auto">
+          <Card className={cn(unifiedSectionPanelClassName)}>
+            <CardHeader className="text-center pb-2">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                <Building2 className="h-8 w-8 text-primary" />
+              </div>
+              <CardTitle className="text-2xl">{teamInfo.name}</CardTitle>
+              <CardDescription className="text-sm">
+                Request to join this trading team
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent className="space-y-5 pt-4">
+              <div className={cn(unifiedInsetPanelClassName, "p-4 space-y-3")}>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground">Created by</span>
+                  <span className="font-medium">{teamInfo.createdBy}</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground">Members</span>
+                  <span className="font-medium">{teamInfo.memberCount}</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground">Created</span>
+                  <span className="font-medium">{formatDate(teamInfo.createdAt)}</span>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="text-center space-y-3">
+                {showRequestBtn && (
+                  <>
+                    <p className="text-sm text-muted-foreground">
+                      Click below to send a join request. The team admin will review and approve it.
+                    </p>
+                    <Button
+                      onClick={handleRequestToJoin}
+                      disabled={isJoining}
+                      size="lg"
+                      className="w-full gap-2"
+                    >
+                      {isJoining ? (
+                        <><Loader2 className="h-4 w-4 animate-spin" /> Requesting...</>
+                      ) : (
+                        <><UserPlus className="h-4 w-4" /> Request to Join</>
+                      )}
+                    </Button>
+                  </>
+                )}
+
+                {showPending && (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-center gap-2 text-warning">
+                      <AlertCircle className="h-5 w-5" />
+                      <span className="font-medium">Request sent! Awaiting admin approval.</span>
+                    </div>
+                    <Link href={localePrefix}>
+                      <Button variant="outline" className="w-full">
+                        Go to Dashboard
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -181,7 +303,7 @@ export default function TeamJoinPage() {
     return (
       <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto">
-          <Card>
+          <Card className={cn(unifiedSectionPanelClassName)}>
             <CardHeader className="text-center">
               <XCircle className="h-12 w-12 text-semantic-error mx-auto mb-4" />
               <CardTitle className="text-xl">{t('teams.join.notFound.title')}</CardTitle>
@@ -206,7 +328,8 @@ export default function TeamJoinPage() {
   }
 
   const isExpired = new Date(invitation.expiresAt) < new Date()
-  const canJoin = invitation.status === 'pending' && !isExpired
+  const canRequest = invitation.status === 'pending' && !isExpired
+  const isPendingApproval = invitation.status === 'pending_approval' && !isExpired
 
   return (
     <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
@@ -218,7 +341,7 @@ export default function TeamJoinPage() {
           </p>
         </div>
 
-        <Card>
+        <Card className={cn(unifiedSectionPanelClassName, "max-w-2xl mx-auto")}>
           <CardHeader>
             <div className="flex items-center gap-3">
               <Building2 className="h-8 w-8 text-primary" />
@@ -232,20 +355,21 @@ export default function TeamJoinPage() {
           </CardHeader>
 
           <CardContent className="space-y-6">
-            {/* Invitation Status */}
-            <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+            <div className={cn(unifiedInsetPanelClassName, "flex items-center justify-between p-4")}>
               <div className="flex items-center gap-3">
                 {getStatusIcon(invitation.status)}
                 <div>
-                  <p className="font-medium">{t('teams.join.status.title')}</p>
+                  <p className="text-sm font-medium tracking-tight text-foreground">{t('teams.join.status.title')}</p>
                   <p className="text-sm text-muted-foreground">
                     {invitation.status === 'pending' && !isExpired
                       ? t('teams.join.status.ready')
-                      : invitation.status === 'pending' && isExpired
-                        ? t('teams.join.status.expired')
-                        : invitation.status === 'accepted'
-                          ? t('teams.join.status.accepted')
-                          : t('teams.join.status.unknown')
+                      : invitation.status === 'pending_approval'
+                        ? 'Awaiting admin approval'
+                        : invitation.status === 'pending' && isExpired
+                          ? t('teams.join.status.expired')
+                          : invitation.status === 'accepted'
+                            ? t('teams.join.status.accepted')
+                            : t('teams.join.status.unknown')
                     }
                   </p>
                 </div>
@@ -255,27 +379,20 @@ export default function TeamJoinPage() {
 
             <Separator />
 
-            {/* Invitation Details */}
             <div className="space-y-4">
               <h3 className="font-medium">{t('teams.join.details.title')}</h3>
-
               <div className="grid gap-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">{t('teams.join.details.invitedEmail')}</span>
-                  <span className="font-medium">{invitation.email}</span>
+                  <span className="text-sm text-muted-foreground">{t('teams.join.details.invitedEmail')}</span>
+                  <span className="text-sm font-medium text-foreground">{invitation.email}</span>
                 </div>
-
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">{t('teams.join.details.invitedOn')}</span>
-                  <span className="text-sm">{formatDate(invitation.createdAt)}</span>
+                  <span className="text-sm text-muted-foreground">{t('teams.join.details.invitedOn')}</span>
+                  <span className="text-sm text-foreground">{formatDate(invitation.createdAt)}</span>
                 </div>
-
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">{t('teams.join.details.expiresOn')}</span>
-                  <span className={cn(
-                    "text-sm",
-                    isExpired ? "text-semantic-error" : "text-foreground"
-                  )}>
+                  <span className="text-sm text-muted-foreground">{t('teams.join.details.expiresOn')}</span>
+                  <span className={cn("text-sm font-medium", isExpired ? "text-semantic-error" : "text-foreground")}>
                     {formatDate(invitation.expiresAt)}
                   </span>
                 </div>
@@ -284,31 +401,36 @@ export default function TeamJoinPage() {
 
             <Separator />
 
-            {/* Action */}
             <div className="text-center">
-              {canJoin ? (
+              {canRequest ? (
                 <div className="space-y-4">
                   <p className="text-muted-foreground">
                     {t('teams.join.action.description')}
                   </p>
                   <Button 
-                    onClick={handleJoinTeam}
+                    onClick={handleRequestToJoin}
                     disabled={isJoining}
                     size="lg"
-                    className="w-full"
+                    className="w-full gap-2"
                   >
                     {isJoining ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        {t('teams.join.action.joining')}
-                      </>
+                      <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Requesting to join...</>
                     ) : (
-                      <>
-                        {t('teams.join.action.button')}
-                        <ArrowRight className="h-4 w-4 ml-2" />
-                      </>
+                      <><UserPlus className="h-4 w-4" /> Request to Join</>
                     )}
                   </Button>
+                </div>
+              ) : isPendingApproval ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-center gap-2 text-warning">
+                    <AlertCircle className="h-5 w-5" />
+                    <span>Your request is pending admin approval</span>
+                  </div>
+                  <Link href={dashboardRoot}>
+                    <Button variant="outline" className="w-full">
+                      {t('teams.join.goToManage')}
+                    </Button>
+                  </Link>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -324,10 +446,7 @@ export default function TeamJoinPage() {
                     </span>
                   </div>
                   <Link href={dashboardRoot}>
-                    <Button 
-                      variant="outline"
-                      className="w-full"
-                    >
+                    <Button variant="outline" className="w-full">
                       {t('teams.join.goToManage')}
                     </Button>
                   </Link>

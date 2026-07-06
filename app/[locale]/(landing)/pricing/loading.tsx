@@ -1,0 +1,18 @@
+import { Skeleton } from "@/components/ui/skeleton"
+
+export default function PricingLoading() {
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-5xl space-y-4">
+        <Skeleton className="h-8 w-1/4" />
+        <Skeleton className="h-24" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Skeleton className="h-96 w-full" />
+          <Skeleton className="h-96 w-full" />
+          <Skeleton className="h-96 w-full" />
+        </div>
+        <Skeleton className="h-32 w-full" />
+      </div>
+    </div>
+  )
+}

@@ -16,7 +16,7 @@ export default function LocaleNotFound() {
       title="Page not found"
       description="The page you're looking for doesn't exist or has been moved."
       actions={
-        <Button asChild className="rounded-[0.95rem] border border-primary/18 bg-primary px-5 text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92">
+        <Button asChild className="px-5">
           <Link href="/en">
             <Home className="mr-2 h-4 w-4" />
             Go back home
@@ -25,8 +25,8 @@ export default function LocaleNotFound() {
       }
     >
       <div className="flex flex-col items-center gap-6">
-        <div className="rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_100%)] px-8 py-4 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
-          <span className="text-5xl font-semibold tracking-[-0.06em] text-primary">404</span>
+        <div className="rounded-2xl border-0 bg-card px-8 py-4 shadow-[inset_0_1px_0_rgba(0,0,0,0.03),0_16px_32px_-26px_rgba(0,0,0,0.62)]">
+          <span className="text-5xl font-semibold tracking-tight text-primary">404</span>
         </div>
       </div>
     </RouteStateShell>

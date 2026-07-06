@@ -119,10 +119,10 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  }
 
  return (
- <div
- ref={widgetRef}
- className="relative h-full min-h-0 w-full group isolate overflow-hidden"
- >
+    <div
+      ref={widgetRef}
+         className="relative h-full min-h-0 w-full group isolate"
+    >
  <div
  data-widget-shell="true"
  className={cn("h-full min-h-0 w-full",
@@ -134,27 +134,27 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  </div>
  {isCustomizing && (
  <>
- <div className="absolute inset-0 rounded-xl border border-border/25 border-dashed" />
+  <div className="absolute inset-0 rounded-xl border-0 border-dashed" />
  <div className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.12),hsl(var(--background)/0.8)_62%)] opacity-100" />
- <div className="absolute inset-0 flex items-center justify-center opacity-100 drag-handle cursor-grab active:cursor-grabbing">
- <div className="flex flex-col items-center gap-2 rounded-xl border border-border/15 bg-card/70 px-4 py-3 text-foreground shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]">
- <GripVertical className="h-6 w-4" />
- <p className="text-sm font-medium">{t('widgets.dragToMove')}</p>
- </div>
- </div>
+              <div className="absolute inset-0 flex items-center justify-center opacity-100 drag-handle cursor-grab active:cursor-grabbing touch-none select-none">
+                  <div className="flex flex-col items-center gap-2 rounded-xl bg-card px-4 sm:px-6 py-3 text-foreground border-0 min-h-[64px]">
+                <GripVertical className="h-6 w-4" />
+                <p className="text-sm font-medium">{t('widgets.dragToMove')}</p>
+                </div>
+                </div>
  <div className="absolute top-2 right-2 flex gap-2 opacity-100 z-10">
  <Popover open={isSizePopoverOpen} onOpenChange={setIsSizePopoverOpen}>
  <PopoverTrigger asChild>
  <Button 
  variant="outline"
  size="icon"
- className="h-8 w-8 rounded-full border-border/20 bg-card/70 text-foreground hover:bg-background/80 hover:border-border/35"
+  className="h-8 w-8 rounded-full border-0 bg-card text-foreground hover:bg-accent/10"
  aria-label="Change widget size"
  >
  <Maximize2 className="h-4 w-4" />
  </Button>
  </PopoverTrigger>
- <PopoverContent className="w-56 border-border/15 bg-card/90 p-2 text-foreground">
+  <PopoverContent className="w-56 border-0 bg-card p-2 text-foreground">
  <div className="flex flex-col gap-1">
  {isMobile ? (
  <>
@@ -166,7 +166,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-4 rounded",
- size === 'tiny' ?"bg-v2-accent" :"bg-background/25"
+ size === 'tiny' ?"bg-primary" :"bg-background/25"
  )} />
  <span>{t('widgets.size.mobile.small')}</span>
  </div>
@@ -179,7 +179,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-8 rounded",
- size === 'medium' ?"bg-v2-accent" :"bg-background/25"
+ size === 'medium' ?"bg-primary" :"bg-background/25"
  )} />
  <span>{t('widgets.size.mobile.medium')}</span>
  </div>
@@ -192,7 +192,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-12 rounded",
- size === 'large' ?"bg-v2-accent" :"bg-background/25"
+ size === 'large' ?"bg-primary" :"bg-background/25"
  )} />
  <span>{t('widgets.size.mobile.large')}</span>
  </div>
@@ -208,7 +208,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-4 rounded",
- size === 'tiny' ?"bg-v2-accent" :"bg-background/25"
+ size === 'tiny' ?"bg-primary" :"bg-background/25"
  )} />
  <span>{t('widgets.size.tiny')}</span>
  </div>
@@ -221,7 +221,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-6 rounded",
- size === 'small' ?"bg-v2-accent" :"bg-background/25"
+ size === 'small' ?"bg-primary" :"bg-background/25"
  )} />
  <span>{t('widgets.size.small')}</span>
  </div>
@@ -234,7 +234,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-8 rounded",
- size === 'medium' ?"bg-v2-accent" :"bg-background/25"
+ size === 'medium' ?"bg-primary" :"bg-background/25"
  )} />
  <span>{t('widgets.size.medium')}</span>
  </div>
@@ -247,7 +247,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-10 rounded",
- size === 'large' ?"bg-v2-accent" :"bg-background/25"
+ size === 'large' ?"bg-primary" :"bg-background/25"
  )} />
  <span>{t('widgets.size.large')}</span>
  </div>
@@ -260,7 +260,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  >
  <div className="flex items-center gap-2">
  <div className={cn("h-4 w-12 rounded",
- size === 'extra-large' ?"bg-v2-accent" :"bg-background/25"
+ size === 'extra-large' ?"bg-primary" :"bg-background/25"
  )} />
  <span>{t('widgets.size.extra-large')}</span>
  </div>
@@ -275,7 +275,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  <Button 
  variant="destructive"
  size="icon"
- className="h-8 w-8 rounded-full border border-v2-error/20 bg-v2-error/10 text-foreground hover:bg-v2-error/20"
+ className="h-8 w-8 rounded-full border border-destructive/20 bg-destructive/10 text-foreground hover:bg-destructive/20"
  aria-label="Remove widget"
  >
  <Minus className="h-4 w-4" />
@@ -319,7 +319,7 @@ function DebugDataBadge() {
  Boolean(dateRange?.from || dateRange?.to);
 
  return (
- <div className="absolute left-2 top-2 z-30 rounded-md border border-border/12 bg-card/80 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+  <div className="absolute left-2 top-2 z-30 rounded-md border-0 bg-card px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
  T:{trades.length} F:{formattedTrades.length}
  {isFiltered && (
  <span className="ml-2 text-muted-foreground">filtered</span>
@@ -328,7 +328,7 @@ function DebugDataBadge() {
  );
 }
 
-export default function WidgetCanvas() {
+const WidgetCanvas = React.memo(function WidgetCanvas() {
  const isMobile = useDataIsMobile()
  const layouts = useUserStore((state) => state.dashboardLayout)
  const setLayouts = useUserStore((state) => state.setDashboardLayout)
@@ -541,15 +541,19 @@ export default function WidgetCanvas() {
  }
  }, [flushPendingLayoutSave])
 
-
-
  // Add auto-scroll functionality for mobile
  useAutoScroll(isMobile && isCustomizing)
 
  if (!layouts) {
  return (
  <div className="relative mt-0 w-full min-h-0" role="status" aria-label="Loading dashboard">
- <div className="rounded-xl border border-border/12 bg-card/40 p-5 space-y-3" aria-hidden="true">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
+    <div className="rounded-xl bg-card p-4 border-0 space-y-3" aria-hidden="true">
+
  <Skeleton className="h-4 w-48" />
  <Skeleton className="h-3 w-80 max-w-full" />
  <div className="flex gap-2 pt-2">
@@ -557,6 +561,7 @@ export default function WidgetCanvas() {
  <Skeleton className="h-8 w-24 rounded-lg" />
  </div>
  </div>
+    </motion.div>
  <span className="sr-only">Loading dashboard widgets...</span>
  </div>
  )
@@ -565,8 +570,15 @@ export default function WidgetCanvas() {
  if (currentLayout.length === 0) {
  return (
  <div className="relative mt-0 w-full min-h-0" role="status">
- <div className="mx-auto mt-8 max-w-lg rounded-xl border border-border/15 bg-card/50 p-6 text-center shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]" role="alert">
- <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-border/15 bg-card/90 text-muted-foreground">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+    >
+    <div className="mx-auto mt-8 max-w-lg rounded-xl bg-card p-6 text-center border-0" role="alert">
+
+    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-card text-muted-foreground border-0">
+
  <Maximize2 className="h-5 w-5" />
  </div>
  <div className="text-sm font-semibold tracking-tight text-foreground">
@@ -575,22 +587,23 @@ export default function WidgetCanvas() {
  <div className="mt-2 text-sm text-muted-foreground leading-relaxed">
  {translate("widgets.emptyLayoutDescription") ||"Restore the default layout to show charts and stats, or switch to Edit mode to add widgets."}
  </div>
- <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
- <Button 
+  <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+ <Button
  onClick={restoreDefaultLayout}
- className="bg-v2-accent text-v2-accent-foreground hover:bg-v2-accent-hover font-semibold rounded-lg"
+ className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold rounded-lg"
  >
  {translate("widgets.restoreDefaults") ||"Restore default layout"}
  </Button>
- <Button 
+ <Button
  variant="outline"
  onClick={() => setIsCustomizing(true)}
- className="border-border/15 bg-transparent text-foreground hover:bg-background/80 hover:text-foreground rounded-lg"
+  className="border-transparent bg-transparent text-foreground hover:bg-accent/10 hover:text-foreground rounded-lg"
  >
  {translate("widgets.edit") ||"Edit"}
  </Button>
  </div>
  </div>
+    </motion.div>
  </div>
  )
  }
@@ -651,18 +664,18 @@ export default function WidgetCanvas() {
  currentType={widget.type}
  >
  <ErrorBoundary fallback={<WidgetErrorFallback widgetId={widget.i} />}>
- <div
- className={cn("relative h-full w-full overflow-hidden rounded-xl transition-[opacity,background-color,border-color] duration-300 group/widget",
- isCustomizing
- ?"border border-v2-accent/30 bg-card/95 shadow-[var(--v2-glow-ambient)]"
- :"border border-transparent bg-transparent"
- )}
- >
+          <div
+            className={cn("relative h-full w-full rounded-xl transition-[opacity,background-color,border-color] duration-300 group/widget",
+            isCustomizing
+            ?"border-0 bg-card shadow-md"
+            :"border border-transparent bg-transparent"
+            )}
+          >
  {showDataDebug && !isCustomizing && (
  <DebugDataBadge />
  )}
  {isCustomizing ? (
- <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-v2-accent/[0.03] to-transparent" />
+ <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-primary/[0.03] to-transparent" />
  ) : null}
  <div className="relative h-full w-full">
  {renderWidget(widget)}
@@ -677,29 +690,43 @@ export default function WidgetCanvas() {
  </ResponsiveGridLayout>
  </div>
  )}
- {/* Mobile widget expand overlay */}
- {expandedWidget && isMobile && (
- <motion.div
- className="fixed inset-0 z-50 bg-background overflow-auto pb-safe pt-safe"
- initial={{ y: '100%' }}
- animate={{ y: 0 }}
- exit={{ y: '100%' }}
- transition={{ type: 'spring', damping: 25, stiffness: 300 }}
- drag="y"
- dragConstraints={{ top: 0, bottom: 0 }}
- dragElastic={0.4}
- onDragEnd={(_, info) => {
- if (info.offset.y > 100) setExpandedWidget(null)
- }}
- >
- <div className="flex justify-center pt-2 pb-2">
- <div className="h-1 w-10 rounded-full bg-muted-foreground/30" />
- </div>
- <div className="p-4">
- <p className="text-sm text-muted-foreground text-center">Widget expanded view</p>
- </div>
- </motion.div>
- )}
+  {/* Mobile widget expand overlay */}
+  {expandedWidget && isMobile && (
+  <motion.div
+  className="fixed inset-0 z-50 bg-background overflow-auto pb-safe pt-safe"
+  initial={{ y: '100%' }}
+  animate={{ y: 0 }}
+  exit={{ y: '100%' }}
+  transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+  drag="y"
+  dragConstraints={{ top: 0, bottom: 0 }}
+  dragElastic={0.4}
+  onDragEnd={(_, info) => {
+  if (info.offset.y > 100) setExpandedWidget(null)
+  }}
+  >
+  <div className="sticky top-0 z-10 flex justify-center pt-2 pb-2 bg-background">
+  <button
+  onClick={() => setExpandedWidget(null)}
+  className="h-1.5 w-12 rounded-full bg-muted-foreground/30 hover:bg-muted-foreground/50 transition-colors touch-manipulation min-h-[24px]"
+  aria-label="Close expanded widget"
+  />
+  </div>
+  <div className="p-4 h-full">
+  {(() => {
+  const widget = activeWidgets.find(w => w.i === expandedWidget)
+  if (!widget) return null
+  return (
+  <div className="h-full min-h-[300px]">
+  {renderWidget(widget)}
+  </div>
+  )
+  })()}
+  </div>
+  </motion.div>
+  )}
  </div>
  )
-}
+})
+
+export default WidgetCanvas

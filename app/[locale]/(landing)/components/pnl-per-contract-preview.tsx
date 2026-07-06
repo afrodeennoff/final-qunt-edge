@@ -28,7 +28,7 @@ export function PnlPerContractPreview() {
  )
 
  return (
- <div className="mx-6 rounded-xl p-6 bg-primary/[0.03] shadow-card">
+ <div className="mx-6 rounded-xl p-6 bg-muted/40 shadow-card">
  <div className="flex items-center gap-3 mb-4">
  <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
  <BarChart3 className="size-[18px] text-primary" strokeWidth={2} />
@@ -37,7 +37,7 @@ export function PnlPerContractPreview() {
  PnL Per Contract
  </p>
  </div>
- <div className="h-full w-full rounded-xl border bg-primary/[0.03] shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] pointer-events-none border-t border-border/30-muted pt-5">
+  <div className="h-full w-full rounded-xl border-0 bg-card pointer-events-none pt-5">
  <PnLPerContractChartEmbed trades={trades} />
  </div>
  </div>

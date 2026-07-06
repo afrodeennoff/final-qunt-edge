@@ -1,20 +1,7 @@
 'use client'
 
-import React from 'react'
-import {
-  DailyPnLChartEmbed,
-  TimeOfDayPerformanceChart,
-  TimeInPositionByHourChart,
-  PnLBySideChartEmbed,
-  TradeDistributionChartEmbed,
-  WeekdayPnLChartEmbed,
-  PnLPerContractChartEmbed,
-  PnLPerContractDailyChartEmbed,
-  TickDistributionChartEmbed,
-  CommissionsPnLEmbed,
-  ContractQuantityChartEmbed,
-  TimeRangePerformanceChart,
-} from './index'
+import React, { Suspense } from 'react'
+import dynamic from 'next/dynamic'
 import { toast, Toaster } from 'sonner'
 import { useSearchParams } from 'next/navigation'
 import { applyEmbedTheme, THEME_PRESETS, getOverridesFromSearchParams } from './theme'
@@ -28,12 +15,20 @@ import {
 } from '@/components/animation/enhanced-motion'
 import {
   unifiedChipClassName,
-  unifiedHeroPanelClassName,
-  unifiedInsetPanelClassName,
-  unifiedMetricPanelClassName,
 } from '@/components/layout/unified-page-recipes'
-import { WORKSPACE_SHELL_WIDTH } from '@/lib/constants/layout'
-import { cn } from '@/lib/utils'
+
+const TimeRangePerformanceChart = dynamic(() => import('./components/time-range-performance'), { ssr: false })
+const DailyPnLChartEmbed = dynamic(() => import('./components/pnl-bar-chart'), { ssr: false })
+const TimeOfDayPerformanceChart = dynamic(() => import('./components/pnl-time-bar-chart'), { ssr: false })
+const TimeInPositionByHourChart = dynamic(() => import('./components/time-in-position'), { ssr: false })
+const PnLBySideChartEmbed = dynamic(() => import('./components/pnl-by-side'), { ssr: false })
+const TradeDistributionChartEmbed = dynamic(() => import('./components/trade-distribution'), { ssr: false })
+const WeekdayPnLChartEmbed = dynamic(() => import('./components/weekday-pnl'), { ssr: false })
+const PnLPerContractChartEmbed = dynamic(() => import('./components/pnl-per-contract'), { ssr: false })
+const PnLPerContractDailyChartEmbed = dynamic(() => import('./components/pnl-per-contract-daily'), { ssr: false })
+const TickDistributionChartEmbed = dynamic(() => import('./components/tick-distribution'), { ssr: false })
+const CommissionsPnLEmbed = dynamic(() => import('./components/commissions-pnl'), { ssr: false })
+const ContractQuantityChartEmbed = dynamic(() => import('./components/contract-quantity'), { ssr: false })
 
 // Removed ThemeProvider import - using simple theme implementation
 
@@ -245,13 +240,13 @@ export default function EmbedPage() {
       (component) => (
         <div
           key={component.key}
-          className="group relative cursor-pointer rounded-[1.4rem] border frost-border-5 frost-bg-ghost p-1 transition-transform duration-200 hover:-translate-y-0.5"
+          className="group relative cursor-pointer rounded-[1.4rem] border-0 bg-gradient-to-br from-card/40 to-card/5 p-1 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-[0_0_35px_-18px] hover:shadow-primary/15"
           onClick={() => {
             sendChartClickMessage(component.key, formatChartName(component.key))
           }}
           title={`Click to add "${formatChartName(component.key)}" to selection`}
         >
-          <div className="pointer-events-none absolute inset-0 rounded-[inherit] border border-border/0.03 transition-colors duration-200 group-hover:border-border/0.08 group-hover:shadow-[0_4px_12px_-6px_rgba(16,185,129,0.2)]" />
+          <div className="pointer-events-none absolute inset-0 rounded-[inherit] border-0 transition-all duration-300 group-hover:border-primary/20 group-hover:shadow-[0_0_35px_-18px] group-hover:shadow-primary/15" />
           <div className="relative">{component.render()}</div>
         </div>
       ),
@@ -259,8 +254,9 @@ export default function EmbedPage() {
   }, [chartDefinitions, selectedCharts, sendChartClickMessage])
 
   return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
     <I18nProviderClient locale={lang}>
-      <div className="qe-v2-app-shell relative min-h-screen w-full pb-20">
+      <div className="qe-v2-app-shell relative min-h-dvh w-full pb-20">
         <BackgroundGlow variant="default" />
         {/*Dismiss cookie consent banner*/}
         <Script id="embed-autoconsent" strategy="beforeInteractive">
@@ -276,20 +272,20 @@ export default function EmbedPage() {
                 security_storage: true
               }))
             }
-          } catch (e) {}`}
+          } catch (error) {}`}
         </Script>
 
         <Toaster />
         <div className="relative z-10 mx-auto flex max-w-[1600px] flex-col gap-4 px-4 pt-4 lg:gap-6 lg:px-6 lg:pt-6">
           <MotionSection delay={0.03}>
-            <section className="overflow-hidden rounded-[2rem] border border-border/30 bg-black/70 px-5 py-5 shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_24px_70px_-34px_rgba(0,0,0,0.9)] lg:px-6">
+            <section className="overflow-hidden rounded-[2rem] bg-card px-4 py-4 border-0 shadow-[0_0_35px_-18px] shadow-primary/10 lg:px-6">
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_320px]">
-                <div className="rounded-2xl border border-border/30 bg-background/30 p-5">
-                  <div className="inline-flex w-fit rounded-full border border-border/0.08 bg-background/30 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+                <div className="rounded-2xl bg-card p-4 border-0">
+                  <div className={unifiedChipClassName}>
                     Embed Library
                   </div>
                   <div className="pt-4">
-                    <h1 className="text-xl font-[350] tracking-[-0.04em] text-foreground lg:text-2xl">
+                    <h1 className="text-xl font-[350] tracking-tight text-foreground lg:text-2xl">
                       Qunt Edge chart modules
                     </h1>
                     <p className="max-w-3xl pt-2 text-sm leading-[1.75] text-muted-foreground">
@@ -299,14 +295,14 @@ export default function EmbedPage() {
                 </div>
                 <MotionStagger className="grid gap-2 text-xs text-muted-foreground/80 sm:grid-cols-2 lg:grid-cols-1">
                   <MotionStaggerItem>
-                    <div className="rounded-xl border border-border/30 bg-background/30 px-3 py-2.5">
-                      <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Preset</span>
+                    <div className="rounded-xl bg-card px-3 py-2.5 border-0">
+                      <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">Preset</span>
                       <span className="block pt-1 text-sm font-medium text-foreground">{preset ?? 'Default'}</span>
                     </div>
                   </MotionStaggerItem>
                   <MotionStaggerItem>
-                    <div className="rounded-xl border border-border/30 bg-background/30 px-3 py-2.5">
-                      <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Charts</span>
+                    <div className="rounded-xl bg-card px-3 py-2.5 border-0">
+                      <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">Charts</span>
                       <span className="block pt-1 text-sm font-medium text-foreground">
                         {selectedCharts ? Array.from(selectedCharts).length : 'All'}
                       </span>
@@ -323,5 +319,6 @@ export default function EmbedPage() {
         </div>
       </div>
     </I18nProviderClient>
+    </Suspense>
   )
 }

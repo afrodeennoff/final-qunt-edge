@@ -12,6 +12,7 @@ import { prisma } from '@/lib/prisma'
 import { isRedisConfigured } from '@/lib/redis-client'
 import { getCacheMetrics } from '@/lib/cache/cache-service'
 import { createLogger } from '@/lib/logger'
+import { requireServiceAuth } from '@/server/authz'
 
 const log = createLogger('ready')
 
@@ -22,7 +23,7 @@ interface DependencyCheck {
   error?: string
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   await connection()
 
   const requestId = crypto.randomUUID()
@@ -83,21 +84,39 @@ export async function GET() {
   const overallStatus = hasDown ? 'not_ready' : hasDegraded ? 'degraded' : 'ready'
   const httpStatus = hasDown ? 503 : 200
 
-  // Get cache metrics snapshot
-  const cacheMetrics = getCacheMetrics()
-
-  const response = {
+  // Base response — only status, no infrastructure details
+  const response: Record<string, unknown> = {
     status: overallStatus,
     timestamp: new Date().toISOString(),
     requestId,
-    checks,
-    cache: {
+  }
+
+  // SECURITY: Only expose detailed infrastructure info to authenticated internal callers
+  // or in non-production with explicit opt-in
+  let canViewDetails = process.env.NODE_ENV !== 'production' && process.env.READY_DETAILS_PUBLIC === 'true'
+  if (!canViewDetails) {
+    try {
+      requireServiceAuth(request.headers.get('authorization'), {
+        serviceName: 'ready',
+        secretEnvKey: 'HEALTHCHECK_SECRET',
+        requestId,
+      })
+      canViewDetails = true
+    } catch {
+      canViewDetails = false
+    }
+  }
+
+  if (canViewDetails) {
+    const cacheMetrics = getCacheMetrics()
+    response.checks = checks
+    response.cache = {
       hits: cacheMetrics.hits,
       misses: cacheMetrics.misses,
       staleServed: cacheMetrics.staleServed,
       redisHits: cacheMetrics.redisHits,
       redisFailures: cacheMetrics.redisFailures,
-    },
+    }
   }
 
   if (hasDown) {
@@ -109,7 +128,7 @@ export async function GET() {
   return NextResponse.json(response, {
     status: httpStatus,
     headers: {
-      'Cache-Control': 'no-store, max-age=0',
+      'Cache-Control': 'public, max-age=60',
       'X-Request-Id': requestId,
     },
   })

@@ -1,17 +1,18 @@
 import { streamText, stepCountIs } from "ai";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v3";
-import { getCurrentDayData } from "./tools/get-current-day-data";
+import { createGetCurrentDayDataTool } from "./tools/get-current-day-data";
 import { ActionSchema } from "./schema";
-import { getDayData } from "./tools/get-trading-summary";
-import { getAiLanguageModel } from "@/lib/ai/client";
+import { createGetDayDataTool } from "./tools/get-trading-summary";
+import { getAiLanguageModel, checkAiConfig } from "@/lib/ai/client";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import { rateLimit } from "@/lib/rate-limit";
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { apiError } from "@/lib/api-response";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
-import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
+import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout"
+import { detectPromptInjection } from "@/lib/ai/prompt-safety";
 
 export const maxDuration = 90;
 const editorRateLimit = rateLimit({ limit: 15, window: 60_000, identifier: "ai-editor" });
@@ -85,20 +86,13 @@ export async function POST(req: NextRequest) {
   const policy = getAiPolicy("editor");
   const startedAt = Date.now();
 
-  // Check if AI is properly configured
-  const baseURL = process.env.AI_BASE_URL || "https://openrouter.ai/api/v1";
-  const aiApiKey = process.env.OPENROUTER_API_KEY;
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
 
-  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
-    return apiError(
-      "SERVICE_UNAVAILABLE",
-      "AI service is not configured. Please contact support.",
-      503,
-      {
-        type: "ai_not_configured",
-        message: "OPENROUTER_API_KEY is not set"
-      }
-    );
+  // Enforce payload size limit (5MB)
+  const contentLength = parseInt(req.headers.get('content-length') || '0', 10)
+  if (contentLength > 5 * 1024 * 1024) {
+    return NextResponse.json({ error: 'Payload too large' }, { status: 413 })
   }
 
   // Apply AI route guard (auth + entitlements + rate limit)
@@ -113,19 +107,31 @@ export async function POST(req: NextRequest) {
     const validatedAction = ActionSchema.parse(action);
     const systemPrompt = getSystemPrompt(validatedAction, locale, date);
 
+    const editorLog = (await import('@/lib/logger')).createLogger('ai-editor')
+    editorLog.info('AI editor request', { userId, action: validatedAction, hasDate: !!date });
+
+    // Apply prompt safety check
+    const injectionCheck = detectPromptInjection(prompt || "");
+    if (injectionCheck.isInjection) {
+      return NextResponse.json(
+        { error: { code: "PROMPT_INJECTION", message: "Potential prompt injection detected." } },
+        { status: 400 }
+      );
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const tools: Record<string, any> = {};
     if (validatedAction === "suggest_question") {
-      tools.getCurrentDayData = getCurrentDayData;
+      tools.getCurrentDayData = createGetCurrentDayDataTool(userId);
     }
     if (validatedAction === "trades_summary") {
-      tools.getDayData = getDayData;
+      tools.getDayData = createGetDayDataTool(userId);
     }
 
     let toolCallsCount = 0;
 
     const result = streamText({
-      model: getAiLanguageModel("editor"),
+      model: getAiLanguageModel("editor", userId),
       prompt,
       system: systemPrompt,
       temperature:
@@ -170,7 +176,14 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return result.toUIMessageStreamResponse();
+    // Use plain text stream for useCompletion hook in the Tiptap editor (used for journal excerpts etc.)
+    // The textStream gives the final generated text after any tool calls for data-aware actions.
+    // This fixes the AI assist (improve/explain/suggest/trades summary) not working when editing featuredExcerpts.
+    return new Response(result.textStream, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+      },
+    });
   } catch (error) {
     if (isTimeoutError(error)) {
       void logAiRequest({

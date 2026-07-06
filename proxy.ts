@@ -5,6 +5,7 @@ import { geolocation } from '@vercel/functions'
 import { User } from '@supabase/supabase-js'
 import { buildAppCsp, buildEmbedCsp, createNonce } from '@/lib/security/csp'
 import { assertSecurityEnvConsistency } from '@/lib/env'
+import { shouldSkipLocalePrefix } from '@/lib/locale-path'
 import { timingSafeEqual } from 'node:crypto'
 
 try {
@@ -79,7 +80,7 @@ function isSupabaseJsonParseError(error: unknown): boolean {
   return combined.includes('unexpected token') || combined.includes('is not valid json')
 }
 
-function isAdmin(userId: string): boolean {
+function isAdmin(userId: string, email?: string | null): boolean {
   const allowedUserIds = parseCsvEnv(process.env.ALLOWED_ADMIN_USER_ID)
 
   if (userId && allowedUserIds.includes(userId.toLowerCase())) {
@@ -89,6 +90,14 @@ function isAdmin(userId: string): boolean {
   const deprecatedAdminId = process.env.ADMIN_USER_ID
   if (deprecatedAdminId && userId.toLowerCase() === deprecatedAdminId.toLowerCase()) {
     return true
+  }
+
+  const adminDomains = parseCsvEnv(process.env.ADMIN_EMAIL_DOMAINS)
+  if (email && adminDomains.length > 0) {
+    const emailDomain = email.split('@')[1]
+    if (emailDomain && adminDomains.some(d => d.toLowerCase() === emailDomain.toLowerCase())) {
+      return true
+    }
   }
 
   return false
@@ -164,7 +173,7 @@ async function handleAdminAuth(
     }
   }
 
-  if (!isAdmin(user.id)) {
+  if (!isAdmin(user.id, user.email)) {
     return {
       error: NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 }),
     }
@@ -205,6 +214,7 @@ const PUBLIC_DOCUMENT_PATH_PREFIXES = [
   '/newsletter',
   '/disclaimers',
   '/maintenance',
+  '/oauth',
 ]
 const PRIVATE_DOCUMENT_PATH_PREFIXES = [
   '/dashboard',
@@ -228,9 +238,12 @@ const PUBLIC_API_PATH_PREFIXES = [
   '/api/whop/webhook',
   '/api/tradovate/auth',
   '/api/rithmic/callback',
+  '/api/mcp/public',
+  '/api/oauth/',
+  '/.well-known/',
 ]
 const PRIVATE_API_PATH_PREFIXES = ['/api/']
-const CUSTOM_TOKEN_API_PATH_PREFIXES = ['/api/mt5/', '/api/thor/', '/api/etp/']
+const CUSTOM_TOKEN_API_PATH_PREFIXES = ['/api/mt5/', '/api/thor/', '/api/etp/', '/api/mcp']
 
 type RouteClass =
   | 'static-asset'
@@ -294,6 +307,11 @@ function isPrivateApiRoute(pathname: string): boolean {
 
 function isCustomTokenApiRoute(pathname: string): boolean {
   return CUSTOM_TOKEN_API_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+}
+
+/** Remote MCP clients (Cursor, OpenCode, Grok, etc.) use varied Origin headers. */
+function isMcpApiPath(pathname: string): boolean {
+  return pathname.startsWith('/api/mcp')
 }
 
 function classifyRoute(pathname: string): RouteClass {
@@ -404,6 +422,15 @@ async function handlePrivateApiAuth(request: NextRequest): Promise<NextResponse 
   if (isCustomTokenApiRoute(pathname)) {
     // Custom token routes use their own auth (Bearer token or session).
     // Enforce baseline: at least one credential must be present.
+    // Special case for MCP: the MCP endpoints implement their own authentication
+    // model (qunt_usr_* / qunt_adm_* keys). We let them through unconditionally here
+    // so that unauthenticated initialize/ping/discovery succeed (per MCP spec and
+    // for remote clients like Grok), and the MCP handler returns proper JSON-RPC
+    // auth errors only for methods that require it. This prevents proxy-level 401
+    // from breaking protocol handshakes or public discovery on /api/mcp/public.
+    if (pathname.startsWith('/api/mcp')) {
+      return null
+    }
     const authHeader = request.headers.get('authorization')
     const hasCookie = hasSupabaseAuthCookie(request)
     if (!authHeader && !hasCookie) {
@@ -500,21 +527,32 @@ export async function proxy(req: NextRequest) {
 
   // ── CORS handling for API routes ─────────────────────────────────────────
   if (isApiRoute) {
+    const mcpApi = isMcpApiPath(pathname)
+
     // Preflight
     if (req.method === 'OPTIONS') {
       const headers = new Headers()
-      if (origin && isAllowedOrigin(origin)) {
+      if (mcpApi) {
+        headers.set('Access-Control-Allow-Origin', '*')
+      } else if (origin && isAllowedOrigin(origin)) {
         headers.set('Access-Control-Allow-Origin', origin)
       }
       headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
-      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
+      headers.set(
+        'Access-Control-Allow-Headers',
+        mcpApi
+          ? 'Content-Type, Authorization, X-Requested-With, X-API-Key, X-Qunt-Api-Key, Accept, Mcp-Session-Id, MCP-Protocol-Version'
+          : 'Content-Type, Authorization, X-Requested-With',
+      )
       headers.set('Access-Control-Max-Age', '86400')
-      headers.set('Access-Control-Allow-Credentials', 'true')
+      if (!mcpApi) {
+        headers.set('Access-Control-Allow-Credentials', 'true')
+      }
       return new NextResponse(null, { status: 204, headers })
     }
 
-    // Reject cross-origin requests from disallowed origins
-    if (origin && !isAllowedOrigin(origin)) {
+    // Reject cross-origin requests from disallowed origins (MCP exempt — remote AI clients)
+    if (!mcpApi && origin && !isAllowedOrigin(origin)) {
       return NextResponse.json(
         { error: 'Origin not allowed', code: 'CORS_REJECTED' },
         { status: 403 },
@@ -550,11 +588,21 @@ export async function proxy(req: NextRequest) {
       applyPrivateNoStoreHeaders(apiResponse)
     }
     // Attach CORS header for allowed cross-origin API requests
-    if (origin && isAllowedOrigin(origin)) {
+    if (mcpApi) {
+      apiResponse.headers.set('Access-Control-Allow-Origin', '*')
+    } else if (origin && isAllowedOrigin(origin)) {
       apiResponse.headers.set('Access-Control-Allow-Origin', origin)
       apiResponse.headers.set('Access-Control-Allow-Credentials', 'true')
     }
     return apiResponse
+  }
+
+  // OAuth consent lives at /oauth/* (not under [locale]). Skip i18n redirect to /en/oauth/...
+  if (pathname === '/oauth' || pathname.startsWith('/oauth/')) {
+    const oauthResponse = NextResponse.next()
+    applySecurityHeaders(oauthResponse)
+    applyPublicRevalidateHeaders(oauthResponse)
+    return oauthResponse
   }
 
   // Apply i18n middleware first
@@ -690,13 +738,7 @@ export async function proxy(req: NextRequest) {
       return redirectWithPrivateNoStore(authUrl)
     }
 
-    const allowedAdminIds = [
-      process.env.ADMIN_USER_ID,
-      ...parseCsvEnv(process.env.ALLOWED_ADMIN_USER_ID),
-    ].filter((v): v is string => Boolean(v))
-
-    const userIdLower = user.id.toLowerCase()
-    if (!allowedAdminIds.map((id: string) => id.toLowerCase()).includes(userIdLower)) {
+    if (!isAdmin(user.id, user.email)) {
       return redirectWithPrivateNoStore(new URL(`/${locale}/dashboard`, req.url))
     }
   }
@@ -745,7 +787,11 @@ export async function proxy(req: NextRequest) {
       }
 
       // Ensure redirect path has locale if missing and starts with /
-      if (redirectPath.startsWith('/') && !LOCALES.some((l) => redirectPath.startsWith(`/${l}`))) {
+      if (
+        redirectPath.startsWith('/') &&
+        !LOCALES.some((l) => redirectPath.startsWith(`/${l}`)) &&
+        !shouldSkipLocalePrefix(redirectPath.split('?')[0] ?? redirectPath)
+      ) {
         redirectPath = `/${locale}${redirectPath}`
       }
 

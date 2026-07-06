@@ -1,21 +1,35 @@
 "use client"
+import React from 'react'
 
 import { useRef, useEffect, useState } from "react"
 import { motion, useReducedMotion, useInView, AnimatePresence } from "motion/react"
-import { cn } from "@/lib/utils"
-import { SPRING_GENTLE, SPRING_BOUNCY } from "./enhanced-motion"
+import {
+  SPRING_SUBTLE,
+  SPRING_SNAPPY,
+  SPRING_GENTLE,
+  MOTION_EASE,
+} from "./enhanced-motion"
 
-export type VariantType ="fade" |"slide" |"scale" |"bounce"
-export type SlideDirection ="up" |"down" |"left" |"right"
+export type VariantType = 'fade' | 'slide' | 'scale' | 'bounce' | 'blur'
+export type SlideDirection = 'up' | 'down' | 'left' | 'right'
 
 export const SPRING_PRESETS = {
- gentle: SPRING_GENTLE,
- snappy: SPRING_BOUNCY,
- bouncy: { type:"spring" as const, stiffness: 350, damping: 10 },
- smooth: { type:"spring" as const, stiffness: 250, damping: 25 },
+  gentle: SPRING_SUBTLE,
+  snappy: SPRING_SNAPPY,
+  subtle: SPRING_SUBTLE,
+  responsive: SPRING_GENTLE,
 } as const
 
-const MOTION_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
+const getSlideVariants = (direction: SlideDirection) => {
+  const distance = 6
+  const variants: Record<SlideDirection, { x: number; y: number }> = {
+    up: { x: 0, y: distance },
+    down: { x: 0, y: -distance },
+    left: { x: distance, y: 0 },
+    right: { x: -distance, y: 0 },
+  }
+  return variants[direction]
+}
 
 interface AnimateInProps {
  children: React.ReactNode
@@ -29,27 +43,16 @@ interface AnimateInProps {
  staggerDelay?: number
 }
 
-const getSlideVariants = (direction: SlideDirection) => {
- const distance = 40
- const variants: Record<SlideDirection, { x: number; y: number }> = {
- up: { x: 0, y: distance },
- down: { x: 0, y: -distance },
- left: { x: distance, y: 0 },
- right: { x: -distance, y: 0 },
- }
- return variants[direction]
-}
-
 export function AnimateIn({
- children,
- variant ="fade",
- direction ="up",
- delay = 0,
- duration = 0.5,
- className,
- triggerOnScroll = false,
- staggerChildren = false,
- staggerDelay = 0.08,
+  children,
+  variant ="fade",
+  direction ="up",
+  delay = 0,
+  duration = 0.5,
+  className,
+  triggerOnScroll = false,
+  staggerChildren = false,
+  staggerDelay = 0.08,
 }: AnimateInProps) {
  const prefersReducedMotion = useReducedMotion()
  const ref = useRef<HTMLDivElement>(null)
@@ -57,101 +60,113 @@ export function AnimateIn({
 
  const shouldAnimate = triggerOnScroll ? isInView : true
 
- const variants = {
- fade: {
- hidden: { opacity: 0 },
- visible: { opacity: 1 },
- },
- slide: {
- hidden: { opacity: 0, ...getSlideVariants(direction) },
- visible: { opacity: 1, x: 0, y: 0 },
- },
- scale: {
- hidden: { opacity: 0, scale: 0.9 },
- visible: { opacity: 1, scale: 1 },
- },
- bounce: {
- hidden: { opacity: 0, scale: 0.3 },
- visible: { opacity: 1, scale: 1 },
- },
- }
+  const variants = {
+    fade: {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1 },
+    },
+    slide: {
+      hidden: { opacity: 0, ...getSlideVariants(direction) },
+      visible: { opacity: 1, x: 0, y: 0 },
+    },
+    scale: {
+      hidden: { opacity: 0, scale: 0.985 },
+      visible: { opacity: 1, scale: 1 },
+    },
+    bounce: {
+      hidden: { opacity: 0, scale: 0.985 },
+      visible: { opacity: 1, scale: 1 },
+    },
+    blur: {
+      hidden: { opacity: 0, y: 3, scale: 0.995 },
+      visible: { opacity: 1, y: 0, scale: 1 },
+    },
+  }
 
- const transition = prefersReducedMotion
- ? {}
- : variant ==="bounce"
- ? SPRING_PRESETS.bouncy
- : { duration, delay, ease: MOTION_EASE }
+  const transition = prefersReducedMotion
+  ? {}
+  : variant ==="bounce"
+   ? SPRING_PRESETS.snappy
+   : variant === 'blur'
+     ? { duration: 0.3, delay, ease: MOTION_EASE.snappy }
+     : { duration, delay, ease: MOTION_EASE.snappy }
 
- const staggerConfig = staggerChildren
- ? {
- visible: {
- transition: {
- staggerChildren: staggerDelay,
- delayChildren: delay,
- },
- },
- }
- : {}
+  const staggerConfig = staggerChildren
+  ? {
+  visible: {
+  transition: {
+  staggerChildren: staggerDelay,
+  delayChildren: delay,
+  },
+  },
+  }
+  : {}
 
- if (prefersReducedMotion) {
- return <div className={className}>{children}</div>
- }
+  if (prefersReducedMotion) {
+  return <div className={className}>{children}</div>
+  }
 
- return (
- <motion.div
- ref={ref}
- className={className}
- initial="hidden"
- animate={shouldAnimate ?"visible" :"hidden"}
- variants={{ ...variants[variant], ...staggerConfig }}
- transition={transition}
- >
- {children}
- </motion.div>
- )
+  return (
+  <motion.div
+  ref={ref}
+  className={className}
+  initial="hidden"
+  animate={shouldAnimate ?"visible" :"hidden"}
+  variants={{ ...variants[variant], ...staggerConfig }}
+  transition={transition}
+  >
+  {children}
+  </motion.div>
+  )
 }
 
 interface AnimateInItemProps {
- children: React.ReactNode
- variant?: VariantType
- direction?: SlideDirection
- duration?: number
- className?: string
+  children: React.ReactNode
+  variant?: VariantType
+  direction?: SlideDirection
+  duration?: number
+  className?: string
 }
 
 export function AnimateInItem({
- children,
- variant ="fade",
- direction ="up",
- duration = 0.4,
- className,
+  children,
+  variant ="fade",
+  direction ="up",
+  duration = 0.4,
+  className,
 }: AnimateInItemProps) {
- const prefersReducedMotion = useReducedMotion()
+  const prefersReducedMotion = useReducedMotion()
 
- const variants = {
- fade: {
- hidden: { opacity: 0 },
- visible: { opacity: 1 },
- },
- slide: {
- hidden: { opacity: 0, ...getSlideVariants(direction) },
- visible: { opacity: 1, x: 0, y: 0 },
- },
- scale: {
- hidden: { opacity: 0, scale: 0.95 },
- visible: { opacity: 1, scale: 1 },
- },
- bounce: {
- hidden: { opacity: 0, scale: 0.3 },
- visible: { opacity: 1, scale: 1 },
- },
- }
+  const variants = {
+    fade: {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1 },
+    },
+    slide: {
+      hidden: { opacity: 0, ...getSlideVariants(direction) },
+      visible: { opacity: 1, x: 0, y: 0 },
+    },
+    scale: {
+      hidden: { opacity: 0, scale: 0.985 },
+      visible: { opacity: 1, scale: 1 },
+    },
+    bounce: {
+      hidden: { opacity: 0, scale: 0.985 },
+      visible: { opacity: 1, scale: 1 },
+    },
+    blur: {
+      hidden: { opacity: 0, y: 3, scale: 0.995 },
+      visible: { opacity: 1, y: 0, scale: 1 },
+    },
+  }
 
  const transition = prefersReducedMotion
  ? {}
  : variant ==="bounce"
- ? SPRING_PRESETS.bouncy
- : { duration, ease: MOTION_EASE }
+  ? SPRING_PRESETS.snappy
+  : variant === 'blur'
+    ? { duration: 0.3, ease: MOTION_EASE.snappy }
+    : { duration, ease: MOTION_EASE.snappy }
 
  if (prefersReducedMotion) {
  return <div className={className}>{children}</div>
@@ -217,7 +232,7 @@ export function AnimateOut({
  animate="visible"
  exit="hidden"
  variants={variants[variant]}
- transition={{ duration, ease: MOTION_EASE }}
+ transition={{ duration, ease: MOTION_EASE.snappy }}
  >
  {children}
  </motion.div>
@@ -241,15 +256,18 @@ export function LazyIn({
 }: LazyInProps) {
  const prefersReducedMotion = useReducedMotion()
  const [isVisible, setIsVisible] = useState(false)
+ const timerRef = useRef<ReturnType<typeof setTimeout>>(null)
 
  useEffect(() => {
  if (prefersReducedMotion) {
- setIsVisible(true)
+  queueMicrotask(() => setIsVisible(true))
  return
  }
 
- const timer = setTimeout(() => setIsVisible(true), delay * 1000)
- return () => clearTimeout(timer)
+ timerRef.current = setTimeout(() => setIsVisible(true), delay * 1000)
+ return () => {
+  if (timerRef.current) clearTimeout(timerRef.current)
+ }
  }, [delay, prefersReducedMotion])
 
  if (prefersReducedMotion || isVisible) {
@@ -261,7 +279,7 @@ export function LazyIn({
  className={className}
  initial={{ opacity: 0, scale: 0.98 }}
  animate={{ opacity: 1, scale: 1 }}
- transition={{ duration, ease: MOTION_EASE }}
+ transition={{ duration, ease: MOTION_EASE.snappy }}
  >
  {children}
  </motion.div>

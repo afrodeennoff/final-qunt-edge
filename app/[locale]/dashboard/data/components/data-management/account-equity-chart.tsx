@@ -14,15 +14,15 @@ import type { Trade } from '@/lib/data-types'
 const chartConfig = {
   balance: {
     label: "Balance",
-    color: "hsl(var(--chart-6))",
+    color: "var(--chart-6)",
   },
   target: {
     label: "Profit Target",
-    color: "hsl(var(--chart-win))",
+    color: "var(--chart-2)",
   },
   drawdown: {
     label: "Drawdown Level",
-    color: "hsl(var(--chart-loss))",
+    color: "var(--chart-4)",
   },
 } satisfies ChartConfig
 
@@ -218,11 +218,11 @@ export function AccountEquityChart({
 
     const getPayoutColor = (status: string) => {
       switch (status) {
-        case 'PENDING': return 'hsl(var(--muted-foreground))'
-        case 'VALIDATED': return 'hsl(var(--chart-4))'
-        case 'REFUSED': return 'hsl(var(--destructive))'
-        case 'PAID': return 'hsl(var(--chart-win))'
-        default: return 'hsl(var(--muted-foreground))'
+        case 'PENDING': return 'var(--muted-foreground)'
+        case 'VALIDATED': return 'var(--chart-4)'
+        case 'REFUSED': return 'var(--destructive)'
+        case 'PAID': return 'var(--chart-2)'
+        default: return 'var(--muted-foreground)'
       }
     }
 
@@ -232,7 +232,7 @@ export function AccountEquityChart({
         cy={cy}
         r={4}
         fill={getPayoutColor(payload.payoutStatus)}
-        stroke="hsl(var(--chart-axis))"
+        stroke="var(--chart-axis)"
         strokeWidth={1}
       />
     )
@@ -254,7 +254,7 @@ export function AccountEquityChart({
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="3 3" stroke="transparent" />
           <XAxis
             dataKey="date"
             tickLine={false}
@@ -278,7 +278,7 @@ export function AccountEquityChart({
               if (active && payload && payload.length) {
                 const data = payload[0].payload;
                 return (
-                  <div className="bg-background p-2 border-border/30 rounded shadow-xs">
+                  <div className="bg-background p-2 border-transparent rounded shadow-xs">
                     <p className="text-sm font-medium">
                       {format(safeParseDate(data.date) || new Date(), 'MMM dd, yyyy')}
                     </p>
@@ -291,16 +291,16 @@ export function AccountEquityChart({
                         "text-sm font-medium",
                         {
                           "text-muted-foreground": data.payoutStatus === 'PENDING',
-                          "text-[hsl(var(--chart-4))]": data.payoutStatus === 'VALIDATED',
+                          "text-[var(--chart-4)]": data.payoutStatus === 'VALIDATED',
                           "text-destructive": data.payoutStatus === 'REFUSED',
-                          "text-[hsl(var(--chart-win))]": data.payoutStatus === 'PAID',
+                          "text-[var(--chart-2)]": data.payoutStatus === 'PAID',
                         }
                       )}>
                         Payout ({data.payoutStatus.toLowerCase()})
                       </p>
                     )}
                     {data.isAfterReset && (
-                      <p className="text-sm font-medium text-[hsl(var(--chart-7))]">After Reset Date</p>
+                      <p className="text-sm font-medium text-[var(--chart-7)]">After Reset Date</p>
                     )}
                   </div>
                 )
@@ -340,12 +340,12 @@ export function AccountEquityChart({
           {resetDate && (
             <ReferenceLine
               x={resetDate}
-              stroke="hsl(var(--chart-5))"
+              stroke="var(--chart-5)"
               strokeDasharray="3 3"
               label={{
                 value: "Reset Date",
                 position: "insideTopLeft",
-                fill: "hsl(var(--chart-5))",
+                fill: "var(--chart-5)",
                 fontSize: 12,
               }}
             />

@@ -24,7 +24,7 @@ const THEMES: Record<string, Theme> = {
  obsidian: { name: 'Obsidian', primary: 'text-foreground', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/10', pattern: 'radial-gradient(circle at 1.5px 1.5px, hsl(var(--foreground) / 0.35) 1px, transparent 0)' },
  graphite: { name: 'Graphite', primary: 'text-foreground/80', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/5', pattern: 'linear-gradient(hsl(var(--foreground) / 0.35) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground) / 0.35) 1px, transparent 1px)' },
  silver: { name: 'Silver', primary: 'text-foreground', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/15', pattern: 'radial-gradient(hsl(var(--foreground) / 0.35) 2px, transparent 0)' },
- ghost: { name: 'Ghost', primary: 'text-foreground/60', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/5', pattern: 'repeating-linear-gradient(45deg, hsl(var(--foreground) / 0.35) 0, hsl(var(--foreground) / 0.35) 1px, transparent 0, transparent 50%)' }
+ ghost: { name: 'Ghost', primary: 'text-foreground', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/5', pattern: 'repeating-linear-gradient(45deg, hsl(var(--foreground) / 0.35) 0, hsl(var(--foreground) / 0.35) 1px, transparent 0, transparent 50%)' }
 }
 
 const THEME_KEYS = ['obsidian', 'graphite', 'silver', 'ghost'] as const
@@ -148,7 +148,7 @@ const downloadSummaryImage = async (cardEl: HTMLDivElement | null, setIsExportin
  try {
  const html2canvas = (await import("html2canvas")).default
  const canvas = await html2canvas(cardEl, {
- backgroundColor:"hsl(var(--background))",
+ backgroundColor:"var(--background)",
  scale: 2,
  logging: false,
  useCORS: true,
@@ -161,8 +161,8 @@ const downloadSummaryImage = async (cardEl: HTMLDivElement | null, setIsExportin
  link.href = image
  link.download = `QuntEdge-Recap-${format(new Date(), 'yyyy-MM-dd')}.png`
  link.click()
- } catch (err) {
- console.error("Failed to export image:", err)
+ } catch {
+
  } finally {
  setIsExporting(false)
  }
@@ -179,7 +179,7 @@ const shareSummaryImage = async (
  try {
  const html2canvas = (await import("html2canvas")).default
  const canvas = await html2canvas(cardEl, {
- backgroundColor:"hsl(var(--background))",
+ backgroundColor:"var(--background)",
  scale: 2,
  logging: false,
  useCORS: true
@@ -196,16 +196,16 @@ const shareSummaryImage = async (
  title: 'QuntEdge Trading Recap',
  text: 'Check out my trading performance today!'
  })
- } catch (err) {
- console.error("Shared failed:", err)
+ } catch {
+
  fallbackDownload()
  }
  } else {
  fallbackDownload()
  }
  })
- } catch (err) {
- console.error("Failed to share image:", err)
+ } catch {
+
  } finally {
  setIsExporting(false)
  }
@@ -256,21 +256,21 @@ const formatHeroPnlValue = (pnl: number, mode: 'currency' | 'percent', totalAcco
 const getTimeframeLabel = (timeframe: Timeframe): string => (timeframe === 'total' ? 'Lifetime' : timeframe)
 const getDisplaySuffix = (mode: 'currency' | 'percent'): string => (mode === 'percent' ? '%' : '')
 const getSignSymbol = (isPositive: boolean): string => (isPositive ? '+' : '-')
-const getHeroWrapperClass = (isPositive: boolean): string => (isPositive ?"text-foreground" :"text-foreground/60")
+const getHeroWrapperClass = (isPositive: boolean): string => (isPositive ?"text-foreground" :"text-foreground")
 const getHeroSignClass = (isPositive: boolean): string => (isPositive ?"text-foreground/70" :"text-muted-foreground/75")
 
 const getDisplayModeButtonClass = (mode: 'currency' | 'percent', currentMode: 'currency' | 'percent') => cn("px-2.5 py-1 rounded-sm text-[10px] font-bold transition-[opacity,background-color,border-color]",
  mode === currentMode ?"bg-secondary/35 text-foreground shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]" :"text-muted-foreground hover:text-foreground"
 )
 
-const getBlurCardClass = (isActive: boolean) => cn("group border rounded-xl p-4 flex flex-col items-center justify-center text-center transition-[opacity,background-color,border-color] duration-700 cursor-pointer relative overflow-hidden",
+const getBlurCardClass = (isActive: boolean) => cn("group border-0 rounded-xl p-4 flex flex-col items-center justify-center text-center transition-[opacity,background-color,border-color] duration-700 cursor-pointer relative overflow-hidden",
  isActive
- ?"bg-background/0.11 border-border/8 blur-xl scale-[0.98] select-none"
- :"bg-background/0.08 border-border/14 hover:bg-accent/70 hover:border-border/30"
+ ?"bg-background/0.11 border-transparent blur-xl scale-[0.98] select-none"
+ :"bg-background/0.08 border-transparent hover:bg-accent/70 hover:border-transparent"
 )
 
 const getBlurIcon = (isActive: boolean): React.ReactElement => (
- isActive ? <Eye className="w-3 h-3 text-foreground/60" /> : <EyeOff className="w-3 h-3 text-muted-foreground/70" />
+ isActive ? <Eye className="w-3 h-3 text-foreground" /> : <EyeOff className="w-3 h-3 text-muted-foreground/70" />
 )
 
 const getStatTextClass = (value: number): string => (value >= 0 ?"text-foreground" :"text-muted-foreground/70")
@@ -288,14 +288,14 @@ const formatIntervalDisplayValue = (
  return `${percentValue}%`
 }
 
-const getGoalTextClass = (value: number): string => (value < 0 ?"text-foreground/60" :"text-foreground")
+const getGoalTextClass = (value: number): string => (value < 0 ?"text-foreground" :"text-foreground")
 const getGoalBarClass = (value: number): string => (value < 0 ?"bg-foreground/20 shadow-none" :"bg-gradient-to-r from-foreground/60 via-foreground/70 to-foreground/80 shadow-none")
 
 const getDownloadLabel = (isExporting: boolean): string => (isExporting ?"Saving..." :"Download Image")
 
 const getThemeButtonClass = (theme: Theme, isActive: boolean): string => cn("w-2 h-2 rounded-full ml-1",
  theme.primary.replace('text-', 'bg-'),
- isActive ?"ring-2 ring-foreground ring-offset-2 ring-offset-background" :"opacity-30 hover:opacity-100"
+ isActive ?"ring-2 ring-primary ring-offset-2 ring-offset-background" :"opacity-30 hover:opacity-100"
 )
 
 const syncHandleWithUser = (user: { email?: string } | undefined, setHandle: Dispatch<SetStateAction<string>>) => {
@@ -324,11 +324,11 @@ const EditableTarget = ({ customTarget, isEditing, onStartEditing, onFinishEditi
  if (isEditing) {
  return (
  <div className="flex items-baseline relative z-50">
- <span className="text-sm mr-1 text-foreground/60 font-bold">$</span>
+ <span className="text-sm mr-1 text-foreground font-bold">$</span>
  <input
  autoFocus
  type="number"
- className="w-24 border-b border-border/0.03 bg-transparent text-sm font-bold text-foreground placeholder:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
+ className="w-24 border-b-0 bg-transparent text-sm font-bold text-foreground placeholder:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
  defaultValue={customTarget}
  onBlur={(e) => {
  const val = parseFloat(e.target.value)
@@ -351,7 +351,6 @@ const EditableTarget = ({ customTarget, isEditing, onStartEditing, onFinishEditi
  </button>
  )
 }
-
 
 export function DailySummaryModal() {
  const { calendarData, statistics: overallStats } = useDashboardStats()
@@ -442,7 +441,7 @@ export function DailySummaryModal() {
  className="group flex h-9 items-center gap-2 rounded-full border border-transparent bg-transparent px-3.5 text-muted-foreground shadow-none transition-colors hover:bg-background/80/70 hover:text-foreground md:px-4"
  >
  <BarChart3 className="w-4 h-4 group-hover:rotate-12 transition-transform" />
- <span className="hidden md:inline text-[10px] font-semibold uppercase tracking-[0.18em]">PnL Summary</span>
+ <span className="hidden md:inline text-[10px] font-semibold uppercase tracking-[0.12em]">PnL Summary</span>
  </Button>
  </DialogTrigger>
  <DialogContent className="sm:max-w-4xl bg-transparent border-none shadow-none p-0 overflow-visible flex flex-col items-center [&>button]:hidden">
@@ -451,7 +450,7 @@ export function DailySummaryModal() {
  <motion.div
  initial={{ scale: 0.95, opacity: 0 }}
  animate={{ scale: 1, opacity: 1 }}
- className="w-full aspect-[7/4] bg-background text-foreground rounded-2xl overflow-hidden border border-border/30 relative flex flex-col sm:shadow-2xl"
+ className="w-full aspect-[7/4] bg-background text-foreground rounded-2xl overflow-hidden border-0 relative flex flex-col sm:shadow-sm"
  ref={cardRef}
  >
  {/* Refined Background Mesh */}
@@ -462,7 +461,7 @@ export function DailySummaryModal() {
  {/* Header */}
  <div className="flex justify-between items-center mb-8">
  <div className="flex items-center gap-4">
- <div className="w-10 h-10 rounded-xl bg-secondary/30 border border-border/30 flex items-center justify-center shadow-inner">
+ <div className="w-10 h-10 rounded-xl bg-secondary/30 border-0 flex items-center justify-center shadow-inner">
  <Zap className="w-5 h-5 text-foreground" />
  </div>
  <div className="flex flex-col">
@@ -478,7 +477,7 @@ export function DailySummaryModal() {
  <div className="flex items-center gap-4">
  <button
  type="button"
- className="group flex items-center gap-2 cursor-pointer rounded-lg border border-transparent px-3 py-1.5 transition-[opacity,background-color,border-color] hover:border-border/30 hover:bg-secondary/30"
+ className="group flex items-center gap-2 cursor-pointer rounded-lg border border-transparent px-3 py-1.5 transition-[opacity,background-color,border-color] hover:border-transparent hover:bg-secondary/30"
  onClick={(e) => { e.stopPropagation(); setIsEditingHandle(true); }}
  aria-label="Edit handle"
  >
@@ -488,13 +487,13 @@ export function DailySummaryModal() {
  <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground uppercase tracking-wider transition-colors">@{handle}</span>
  )}
  </button>
- <div className="flex items-center bg-primary/[0.03] rounded-lg p-0.5 border border-border/30">
+ <div className="flex items-center bg-primary/[0.03] rounded-lg p-0.5 border-0">
  <button onClick={(e) => { e.stopPropagation(); setDisplayMode('currency'); }} className={currencyButtonClass}>$</button>
  <button onClick={(e) => { e.stopPropagation(); setDisplayMode('percent'); }} className={percentButtonClass}>%</button>
  </div>
  <button
  onClick={() => setIsOpen(false)}
- className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary/30 border border-border/30 text-muted-foreground hover:text-foreground transition-colors"
+ className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary/30 border-0 text-muted-foreground hover:text-foreground transition-colors"
  aria-label="Close summary"
  >
  <X className="w-4 h-4" />
@@ -510,7 +509,7 @@ export function DailySummaryModal() {
  <div className="flex-1 flex flex-col justify-center items-center text-center">
  <div className="mb-4 flex items-center gap-3">
  <span className="w-1.5 h-1.5 rounded-full bg-background/25-foreground/70" />
- <span className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">{timeframeLabel} PnL</span>
+ <span className="text-xs font-bold text-muted-foreground uppercase tracking-[0.12em]">{timeframeLabel} PnL</span>
 
  <div className="ml-auto flex items-center gap-2">
  <select
@@ -550,7 +549,7 @@ export function DailySummaryModal() {
  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
  {weeklyIcon}
  </div>
- <span className="text-[9px] text-fg-muted uppercase tracking-[0.15em] mb-1 font-bold group-hover:text-foreground/80 transition-colors">Weekly</span>
+ <span className="text-[9px] text-fg-muted uppercase tracking-[0.12em] mb-1 font-black group-hover:text-foreground/80 transition-colors">Weekly</span>
  <div className={cn("text-xl font-bold tracking-tight", weeklyStatColor)}>
  {weeklyValueText}
  </div>
@@ -576,20 +575,20 @@ export function DailySummaryModal() {
  {/* Secondary Stats */}
  <div className="col-span-12 lg:col-span-5 flex flex-col gap-4 h-full justify-center">
  {/* Streak - Refined */}
- <div className="flex-1 bg-gradient-to-br from-card/70 to-muted/40 border border-border/14 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:border-border/30 transition-[opacity,background-color,border-color]">
- <div className="text-6xl font-black tracking-tighter text-foreground mb-2 relative z-10 drop-shadow-2xl">{stats.currentStreak}</div>
- <div className="text-[9px] text-fg-muted uppercase tracking-[0.3em] font-bold relative z-10">Win Streak</div>
+ <div className="flex-1 bg-gradient-to-br from-card/70 to-muted/40 border-0 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:border-transparent transition-[opacity,background-color,border-color]">
+ <div className="text-6xl font-black tracking-tighter text-foreground mb-2 relative z-10">{stats.currentStreak}</div>
+ <div className="text-[9px] text-fg-muted uppercase tracking-[0.12em] font-black relative z-10">Win Streak</div>
  <Zap className="absolute -bottom-6 -right-6 w-32 h-32 text-foreground/[0.03] group-hover:text-foreground/[0.05] transition-colors" />
  </div>
 
  <div className="grid grid-cols-2 gap-4">
- <div className="bg-background/0.08 border border-border/14 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors">
+ <div className="bg-background/0.08 border-0 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors">
  <div className="text-2xl font-black text-foreground mb-1">{scoreVal}</div>
- <div className="text-[9px] text-fg-muted uppercase tracking-[0.2em] font-bold">Score</div>
+ <div className="text-[9px] text-fg-muted uppercase tracking-[0.12em] font-bold">Score</div>
  </div>
- <div className="bg-background/0.08 border border-border/14 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors">
+ <div className="bg-background/0.08 border-0 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors">
  <div className="text-2xl font-black text-foreground mb-1">{stats.winRate}%</div>
- <div className="text-[9px] text-fg-muted uppercase tracking-[0.2em] font-bold">Win Rate</div>
+ <div className="text-[9px] text-fg-muted uppercase tracking-[0.12em] font-bold">Win Rate</div>
  </div>
  </div>
  </div>
@@ -599,7 +598,7 @@ export function DailySummaryModal() {
  <div className="mt-auto pt-8">
  <div className="flex justify-between items-end mb-3">
  <div className="flex items-center gap-3">
- <span className="text-[10px] font-bold text-foreground/60 uppercase tracking-[0.2em]">Total Goal</span>
+ <span className="text-[10px] font-bold text-foreground uppercase tracking-[0.12em]">Total Goal</span>
  <EditableTarget
  customTarget={customTarget}
  isEditing={isEditingTarget}
@@ -612,7 +611,7 @@ export function DailySummaryModal() {
  </div>
  <span className={cn("text-sm font-bold", goalTextClass)}>{Math.round(totalGoalProgress)}%</span>
  </div>
- <div className="h-2.5 w-full bg-muted/60 rounded-full overflow-hidden border border-border/8 p-[1px] relative shadow-inner">
+ <div className="h-2.5 w-full bg-muted/60 rounded-full overflow-hidden border-0 p-[1px] relative shadow-inner">
  <motion.div
  initial={{ width: 0 }}
  animate={{ width: `${totalGoalProgress}%` }}

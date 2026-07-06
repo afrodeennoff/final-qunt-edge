@@ -15,7 +15,7 @@ const Circle = forwardRef<
  return (
  <div
  ref={ref}
- className={cn("z-10 flex size-12 items-center justify-center rounded-full border-2 border-border/30 bg-primary/[0.03] p-3 shadow-none",
+ className={cn("z-10 flex size-12 items-center justify-center rounded-full border-2 border-transparent bg-muted/40 p-3 shadow-none",
  className,
  )}
  >
@@ -37,7 +37,7 @@ export function ImportFeature() {
  const div7Ref = useRef<HTMLDivElement>(null);
 
  return (
- <div className="mx-6 rounded-xl p-6 bg-primary/[0.03] shadow-card">
+ <div className="mx-6 rounded-xl p-6 bg-muted/40 shadow-card">
  <div className="flex items-center gap-3 mb-4">
  <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
  <Database className="size-[18px] text-primary" strokeWidth={2} />
@@ -50,7 +50,7 @@ export function ImportFeature() {
  className="relative flex h-[300px] w-full items-center justify-center overflow-hidden p-10"
  ref={containerRef}
  >
- <div className="flex size-full max-h-[200px] max-w-lg flex-col items-stretch justify-between gap-10">
+  <div className="flex size-full max-h-[200px] max-w-lg flex-col items-stretch justify-between gap-8">
  <div className="flex flex-row items-center justify-between">
  <Circle ref={div1Ref}>
  <Image src="/logos/tradovate.png" alt="Tradovate" width={24} height={24} />

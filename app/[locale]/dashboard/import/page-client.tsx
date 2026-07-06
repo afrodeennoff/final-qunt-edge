@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTradovateSyncStore } from '@/store/tradovate-sync-store'
-import { handleTradovateCallback } from '../components/import/tradovate/actions'
+import { handleTradovateCallback } from '../components/import/tradovate/sync/actions'
 import { useI18n } from '@/locales/client'
 import { useCurrentLocale } from '@/locales/client'
 import { useSyncContext } from '@/context/sync-context'
@@ -103,7 +103,7 @@ export default function ImportCallbackPageClient() {
           return
         }
 
-        if (!result.success) {
+        if (!result.accessToken) {
           setError('Invalid response from token exchange')
           setStatus('error')
           return
@@ -117,8 +117,8 @@ export default function ImportCallbackPageClient() {
         try {
           await tradovate.loadAccounts()
           await refreshAllData({ force: true })
-        } catch (loadError) {
-          console.warn('Failed to refresh Tradovate synchronizations', loadError)
+        } catch (error) {
+
         }
 
         setStatus('success')
@@ -160,9 +160,9 @@ export default function ImportCallbackPageClient() {
   }
 
   return (
-    <UnifiedPageShell density="compact" widthClassName="max-w-[1280px]">
+    <UnifiedPageShell density="compact" widthClassName="max-w-[1600px]">
       <div className="mx-auto w-full max-w-md">
-        <Card>
+        <Card className="rounded-xl border-0 bg-card p-4 shadow-sm sm:p-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               {status === 'loading' && <Loader2 className="h-5 w-5 animate-spin" />}

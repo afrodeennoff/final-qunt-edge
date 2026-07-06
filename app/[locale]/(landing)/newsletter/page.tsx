@@ -3,6 +3,7 @@ import { CheckCircle2 } from 'lucide-react'
 import { getScopedI18n } from '@/locales/server'
 import { CardV2 as Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/v2'
 import { buildPublicMetadata } from '@/lib/seo'
+import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
 
 export async function generateMetadata({
   params,
@@ -28,43 +29,41 @@ export default async function NewsletterPage(props: {
   const email = searchParams?.email
 
   return (
-    <main className="min-h-[calc(100vh-4rem)] flex items-start">
-      <div className="w-full px-4 py-6 sm:px-6 sm:py-8 md:py-12 lg:px-8">
-        <div className="mx-auto max-w-2xl space-y-6 sm:space-y-8">
-          {isUnsubscribed && (
-            <Card className="border-border/30 dark:border-border/40 bg-background/0.12 dark:bg-background/0.11">
-              <CardHeader className="space-y-3 sm:space-y-4">
-                <div className="flex items-center gap-x-2.5">
-                  <CheckCircle2 className="h-5 w-5 text-semantic-success shrink-0" />
-                  <CardTitle className="text-lg sm:text-xl">{t('unsubscribed.title')}</CardTitle>
-                </div>
-                <CardDescription className="text-foreground text-sm sm:text-base">
-                  {t('unsubscribed.description')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm sm:text-base text-foreground break-all">
-                  {email && `${t('unsubscribed.email')}: ${email}`}
-                </p>
-              </CardContent>
-            </Card>
-          )}
-
-          <Card className="border-[oklch(0.65_0.22_260_/_0.08)] bg-[oklch(0.65_0.22_260_/_0.035)]">
-            <CardHeader className="space-y-3 sm:space-y-4">
-              <CardTitle className="text-lg sm:text-xl">{t('preferences.title')}</CardTitle>
-              <p className="text-sm text-muted-foreground sm:text-base">
-                {t('preferences.description')}
-              </p>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm sm:text-base text-muted-foreground">
-                {t('preferences.comingSoon')}
+    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+      <UnifiedSurface className="space-y-6">
+        {isUnsubscribed && (
+          <UnifiedSurface variant="subtle">
+            <div className="flex flex-col gap-3 sm:gap-4">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="h-5 w-5 text-success shrink-0" />
+                <CardTitle className="text-lg sm:text-xl">{t('unsubscribed.title')}</CardTitle>
+              </div>
+              <CardDescription className="text-sm sm:text-base leading-relaxed">
+                {t('unsubscribed.description')}
+              </CardDescription>
+            </div>
+            <CardContent className="pt-4">
+              <p className="text-sm sm:text-base text-muted-foreground break-all">
+                {email && `${t('unsubscribed.email')}: ${email}`}
               </p>
             </CardContent>
-          </Card>
-        </div>
-      </div>
-    </main>
+          </UnifiedSurface>
+        )}
+
+        <UnifiedSurface variant="subtle">
+          <CardHeader className="space-y-3 sm:space-y-4">
+            <CardTitle className="text-lg sm:text-xl">{t('preferences.title')}</CardTitle>
+            <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+              {t('preferences.description')}
+            </p>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+              {t('preferences.comingSoon')}
+            </p>
+          </CardContent>
+        </UnifiedSurface>
+      </UnifiedSurface>
+    </UnifiedPageShell>
   )
 }

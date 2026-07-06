@@ -51,11 +51,31 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
   const config: NextConfig = {
     poweredByHeader: false,
     reactStrictMode: true,
-    serverExternalPackages: ['pdf2json', 'canvas', 'sharp'],
+    compiler: {
+      removeConsole: process.env.NODE_ENV === 'production'
+        ? { exclude: ['error', 'warn'] }
+        : undefined,
+    },
+    serverExternalPackages: [
+      'pdf2json',
+      'canvas',
+      'sharp',
+      'openai',
+      '@octokit/rest',
+      'stripe',
+      'resend',
+
+      '@react-email/render',
+      '@react-email/components',
+    ],
     cacheComponents: !cacheComponentsDisabled,
     // Bundle optimization - tree shake heavy libraries
     experimental: {
       ...(cpus ? { cpus } : {}),
+      staleTimes: {
+        dynamic: 30,
+        static: 600,
+      },
       // Optimize package imports for better tree shaking
       // Each package below gets optimized module resolution + dead code elimination
       optimizePackageImports: [
@@ -66,7 +86,6 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
         'date-fns',
         'date-fns-tz',
         'lucide-react',
-        'framer-motion',
         'motion',
         'decimal.js',
         // Form state — used in auth, admin, community pages

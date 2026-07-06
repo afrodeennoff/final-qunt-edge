@@ -70,7 +70,11 @@ export function invalidateUserData(userId: string): void {
  * ```
  */
 export function invalidateAccountMetrics(userId: string): void {
-  updateTags([CACHE_TAGS.ACCOUNT_METRICS(userId)])
+  updateTags([
+    CACHE_TAGS.USER_DATA(userId),
+    CACHE_TAGS.USER_DATA_CORE(userId),
+    CACHE_TAGS.ACCOUNT_METRICS(userId),
+  ])
 }
 
 /**
@@ -109,6 +113,35 @@ export function invalidateDashboardLayout(userId: string): void {
 
 export function invalidateEquityChart(userId: string): void {
   updateTags([CACHE_TAGS.EQUITY_CHART(userId)])
+}
+
+export function invalidateTradeData(userId: string): void {
+  updateTags([
+    CACHE_TAGS.USER_DATA(userId),
+    CACHE_TAGS.TRADES(userId),
+  ])
+}
+
+export function invalidateAccountSettings(userId: string): void {
+  updateTags([
+    CACHE_TAGS.USER_DATA(userId),
+    CACHE_TAGS.USER_DATA_CORE(userId),
+  ])
+}
+
+export function invalidateGroupData(userId: string): void {
+  updateTags([CACHE_TAGS.GROUPS(userId)])
+}
+
+export function invalidateMoodData(userId: string): void {
+  updateTags([
+    CACHE_TAGS.USER_DATA(userId),
+    CACHE_TAGS.MOOD(userId),
+  ])
+}
+
+export function invalidateTagData(userId: string): void {
+  updateTags([CACHE_TAGS.TAGS(userId)])
 }
 
 export function invalidateJournalRelatedCaches(userId: string): void {

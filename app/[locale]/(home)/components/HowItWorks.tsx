@@ -1,94 +1,69 @@
-import { cn } from '@/lib/utils'
-import {
-  unifiedBodyCopyClassName,
-  unifiedSectionEyebrowClassName,
-  unifiedSectionPanelClassName,
-  unifiedInsetPanelClassName,
-} from '@/components/layout/unified-page-recipes'
-import { motion } from 'framer-motion'
+'use client'
+
+import { Plug, BarChart3, Brain, ArrowRight } from 'lucide-react'
 import { InteractiveWrapper } from '@/components/interactive-wrapper'
-import { getTypedI18n } from '@/locales/server'
 
 const steps = [
-  { name: 'Connect', description: 'Link your broker and import your trading history automatically.' },
-  { name: 'Analyze', description: 'AI-powered analytics surface patterns in your execution.' },
-  { name: 'Journal', description: 'Structured debriefs turn every session into actionable insight.' },
-  { name: 'Improve', description: 'Track behavioral metrics and refine your edge over time.' },
-  { name: 'Scale', description: 'Build consistency and graduate to larger allocations.' },
+  {
+    number: '01',
+    icon: Plug,
+    title: 'Connect your broker',
+    desc: 'One-click sync with Tradovate, Rithmic, or MT5. Your trades flow in automatically — no CSVs, no delays.',
+  },
+  {
+    number: '02',
+    icon: BarChart3,
+    title: 'See the truth instantly',
+    desc: 'Every session visualized. Win rate, expectancy, heatmaps, drawdowns. Brutal clarity on what actually works.',
+  },
+  {
+    number: '03',
+    icon: Brain,
+    title: 'Get AI that understands edge',
+    desc: 'Qunt spots your real patterns, flags leaks, and tells you exactly what to fix before the next session.',
+  },
 ]
 
-export default async function HowItWorks() {
-  const t = await getTypedI18n()
-
+export function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative overflow-hidden px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
-      <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-8">
-        <motion.div
-          className={cn(unifiedSectionPanelClassName, 'p-6 lg:sticky lg:top-28 lg:h-fit')}
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <p className={unifiedSectionEyebrowClassName}>{t('landing.home.workflow.eyebrow')}</p>
-          <h2 className="mt-4 text-balance text-[clamp(2.2rem,4.6vw,4rem)] font-medium leading-[0.97] tracking-[-0.05em] text-foreground">
-            {t('landing.home.workflow.title')}
-          </h2>
-          <p className={cn(unifiedBodyCopyClassName, 'mt-5 max-w-xl')}>
-            {t('landing.home.workflow.description')}
-          </p>
-
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className={cn(unifiedInsetPanelClassName, 'space-y-2 p-4')}>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                {t('landing.home.workflow.signalTitle')}
-              </p>
-              <p className="text-sm leading-relaxed text-foreground">
-                {t('landing.home.workflow.signalDescription')}
-              </p>
-            </div>
-            <div className={cn(unifiedInsetPanelClassName, 'space-y-2 p-4')}>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                {t('landing.home.workflow.cadenceTitle')}
-              </p>
-              <p className="text-sm leading-relaxed text-foreground">
-                {t('landing.home.workflow.cadenceDescription')}
-              </p>
-            </div>
+    <section className="animate-fade-in-up border-t-0 py-24">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="mb-14 text-center">
+          <div className="mb-3 inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-[10px] font-mono tracking-[3px] text-primary">
+            HOW IT WORKS
           </div>
-        </motion.div>
+          <h2 className="text-balance text-4xl font-light tracking-tight sm:text-5xl">Three steps. Zero friction.</h2>
+          <p className="mt-3 text-[14px] text-muted-foreground/70">From connected to dangerous in under two minutes.</p>
+        </div>
 
-        <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-5">
-          {steps.map((step, index) => (
-            <InteractiveWrapper key={String(step.name)} hover="scale">
-              <motion.article
-                className={cn(unifiedInsetPanelClassName, 'flex h-full flex-col p-5')}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.45,
-                  delay: index * 0.08,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
+        <div className="animate-stagger grid gap-6 md:grid-cols-3 md:gap-8">
+          {steps.map((step, i) => {
+            const Icon = step.icon
+            return (
+              <InteractiveWrapper key={i} hover="cursor">
+              <div
+                className="animate-fade-in-up group relative rounded-2xl border-0 bg-gradient-to-b from-card/40 to-transparent p-8 transition-all duration-300 hover:border-primary/20 hover:shadow-[0_0_30px_-15px] hover:shadow-primary/8"
               >
-                <div className="mb-6 flex items-center justify-between gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-primary/18 bg-primary/10 text-sm font-semibold text-primary">
-                    0{index + 1}
+                <div className="flex items-center gap-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/60 text-sm font-mono tracking-[1px] text-white shadow-sm">
+                    {step.number}
                   </div>
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                    {t('landing.home.workflow.stage')} {index + 1}
-                  </span>
+                  <Icon className="h-5 w-5 text-primary/50 transition-all duration-300 group-hover:text-primary group-hover:scale-110" />
                 </div>
-                <h3 className="text-[1rem] font-semibold tracking-[-0.02em] text-foreground">
-                  {step.name}
-                </h3>
-                <p className="mt-3 text-sm leading-[1.65] text-muted-foreground">
-                  {step.description}
-                </p>
-              </motion.article>
-            </InteractiveWrapper>
-          ))}
+
+                <h3 className="mt-7 text-xl font-medium tracking-tight text-foreground/90">{step.title}</h3>
+                <p className="mt-3 text-[14px] leading-[1.7] text-muted-foreground/70">{step.desc}</p>
+
+                {i < 2 && (
+                  <div className="absolute -right-4 top-10 hidden md:flex items-center text-primary/25">
+                    <span className="h-px w-6 bg-gradient-to-r from-primary/30 to-transparent" />
+                    <ArrowRight className="h-4 w-4 -ml-1" />
+                  </div>
+                )}
+              </div>
+              </InteractiveWrapper>
+            )
+          })}
         </div>
       </div>
     </section>

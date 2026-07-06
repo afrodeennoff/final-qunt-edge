@@ -3,8 +3,30 @@
 import { useDashboardStats } from '@/context/data-provider'
 import { useMemo } from 'react'
 import { cn } from '@/lib/utils'
-import { LucideIcon, TrendingDown, TrendingUp, Target, Zap } from 'lucide-react'
-import { startOfDay, isWithinInterval, endOfDay, parseISO } from 'date-fns'
+import { LucideIcon, TrendingDown, TrendingUp, Target, Zap, Download } from 'lucide-react'
+import { startOfDay, isWithinInterval, endOfDay, parseISO, format } from 'date-fns'
+
+function downloadPnLSummaryCSV(data: { daily: { pnl: number; wins: number; total: number }; winRate: number }, longTermWinRate: number | null) {
+  const today = format(new Date(), 'yyyy-MM-dd')
+  const rows = [
+    ['Metric', 'Value'],
+    ["Today's PnL", data.daily.pnl.toFixed(2)],
+    ['Trades Today', data.daily.total.toString()],
+    ['Wins Today', data.daily.wins.toString()],
+    ['Win Rate Today', `${data.winRate}%`],
+    ['Long-term Win Rate', longTermWinRate !== null ? `${longTermWinRate}%` : '—'],
+    ['Generated', new Date().toISOString()],
+  ]
+
+  const csvContent = rows.map(r => r.join(',')).join('\n')
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  const url = URL.createObjectURL(blob)
+  link.href = url
+  link.download = `pnl-summary-${today}.csv`
+  link.click()
+  URL.revokeObjectURL(url)
+}
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -91,7 +113,7 @@ export function PnLSummary({ className }: PnLSummaryProps) {
       aria-live="polite"
       aria-label="Daily PnL quick summary"
       className={cn(
-        'flex items-center gap-1 divide-x divide-border/35 overflow-x-auto rounded-xl border border-border/45 bg-background/55 px-2 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/60 shadow-sm',
+        'flex items-center gap-1 divide-x divide-transparent overflow-x-auto rounded-xl border-0 bg-background/55 px-2 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/60 shadow-sm',
         className,
       )}
     >
@@ -100,7 +122,7 @@ export function PnLSummary({ className }: PnLSummaryProps) {
           key={item.label}
           className="flex flex-col items-center px-4 gap-0.5 min-w-[110px] group"
         >
-          <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/35">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             {item.label}
           </span>
           <div className="flex items-center gap-2">
@@ -112,9 +134,9 @@ export function PnLSummary({ className }: PnLSummaryProps) {
             />
             <span
               className={cn(
-                'text-[15px] font-semibold tracking-[-0.03em] tabular-nums',
-                item.accent === 'metric-positive' && 'text-[oklch(0.82_0.185_155)]',
-                item.accent === 'metric-negative' && 'text-[oklch(0.74_0.255_22)]',
+                'text-[15px] font-semibold tracking-tight tabular-nums',
+                item.accent === 'metric-positive' && 'text-semantic-success',
+                item.accent === 'metric-negative' && 'text-semantic-error',
                 !item.accent && 'text-foreground',
               )}
             >
@@ -123,6 +145,14 @@ export function PnLSummary({ className }: PnLSummaryProps) {
           </div>
         </div>
       ))}
+      <button
+        onClick={() => downloadPnLSummaryCSV({ daily: stats.daily, winRate: stats.winRate }, longTermWinRate)}
+        className="ml-2 flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground/60 transition hover:bg-muted/30 hover:text-foreground"
+        aria-label="Download PnL Summary as CSV"
+        title="Download CSV"
+      >
+        <Download className="h-3.5 w-3.5" />
+      </button>
     </div>
   )
 }

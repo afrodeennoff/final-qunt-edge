@@ -121,7 +121,7 @@ describe("ai-budget-enforcement", () => {
     it("includes budget metadata in error response", async () => {
       const response = aiBudgetError(150_000, 160_000, 0)
 
-      expect(response.status).toBe(429)
+      expect(response.status).toBe(402)
       const body = await parseResponseBody(response)
       expect(body.error.code).toBe("BUDGET_EXCEEDED")
       // Budget is in details for consistency with route-guard

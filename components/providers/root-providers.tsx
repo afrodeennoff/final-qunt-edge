@@ -1,4 +1,5 @@
 "use client"
+import React from 'react'
 
 import type { CSSProperties } from "react";
 import { ThemeProvider } from "@/context/theme-provider";
@@ -36,11 +37,11 @@ function shouldRecoverFromChunkError(reason: unknown): boolean {
 
 export function RootProviders({
     children,
-    themeScope = "fixed-purple",
+    themeScope = "fixed-green",
     initialTheme,
 }: {
     children: React.ReactNode
-    themeScope?: "dashboard" | "fixed-purple"
+    themeScope?: "dashboard" | "fixed-green"
     initialTheme?: DashboardTheme
 }) {
     useEffect(() => {
@@ -121,7 +122,7 @@ export function RootProviders({
                     .map((key) => caches.delete(key))
             );
             if (cacheDebugEnabled) {
-                console.warn(`${logPrefix} service worker disabled; existing registrations cleared.`);
+
             }
         };
 
@@ -136,7 +137,7 @@ export function RootProviders({
 
             unregisterAllServiceWorkers().catch((error) => {
                 if (cacheDebugEnabled) {
-                    console.error(`${logPrefix} failed to clear service workers`, error);
+
                 }
             });
 
@@ -155,10 +156,7 @@ export function RootProviders({
 
         const handleControllerChange = () => {
             if (cacheDebugEnabled) {
-                console.warn(`${logPrefix} service worker controller changed`, {
-                    pathname: window.location.pathname,
-                    hasController: Boolean(navigator.serviceWorker.controller),
-                });
+                /* debug: service worker controller changed */
             }
         };
         navigator.serviceWorker.addEventListener("controllerchange", handleControllerChange);
@@ -172,9 +170,9 @@ export function RootProviders({
     return (
         <TooltipProvider>
             <ThemeProvider scope={themeScope} initialTheme={initialTheme}>
-                <Toaster />
                 {children}
             </ThemeProvider>
+            <Toaster />
         </TooltipProvider>
     );
 }
@@ -185,7 +183,7 @@ export function PublicRootProviders({
     children: React.ReactNode
 }) {
     return (
-        <RootProviders themeScope="fixed-purple">
+        <RootProviders themeScope="fixed-green">
             {children}
         </RootProviders>
     );

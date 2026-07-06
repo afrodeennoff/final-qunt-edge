@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
 import { useTypedI18n } from '@/locales/client'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const mockData = [
   { time: '09:30', price: 4312, ema: 4308, volume: 32 },
@@ -21,7 +22,7 @@ const mockData = [
 ]
 
 const AnalysisDemoChart = dynamic(() => import('./analysis-demo-chart'), { loading: () => (
-    <div className="h-full w-full animate-pulse rounded-md border border-border/40 bg-card/60" />
+    <Skeleton className="h-full w-full rounded-md" />
   ) })
 
 export default function AnalysisDemo() {
@@ -69,9 +70,9 @@ export default function AnalysisDemo() {
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-lg border-border/0.04 bg-card/80 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+        <div className="overflow-hidden rounded-lg border-transparent.04 bg-card/80 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
           <div className="grid lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,0.75fr)]">
-            <div className="border-b border-border/0.04 p-5 md:p-6 lg:border-b-0 lg:border-r lg:border-border/0.04">
+            <div className="border-b border-transparent.04 p-5 md:p-6 lg:border-b-0 lg:border-r lg:border-transparent.04">
               <div className="mb-6 flex items-center justify-between gap-4">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
@@ -88,7 +89,7 @@ export default function AnalysisDemo() {
 
               <div
                 className={cn(
-                  'overflow-hidden rounded-md border-border/0.04 bg-background/70 p-3',
+                  'overflow-hidden rounded-md border-transparent.04 bg-background/70 p-3',
                   isMobile ? 'h-[220px]' : 'h-[320px]',
                 )}
               >
@@ -108,7 +109,7 @@ export default function AnalysisDemo() {
 
               <div
                 className={cn(
-                  'rounded-md border-border/0.04 bg-background/70 p-4',
+                  'rounded-md border-transparent.04 bg-background/70 p-4',
                   isMobile ? 'min-h-0' : 'min-h-[224px]',
                 )}
               >
@@ -119,11 +120,11 @@ export default function AnalysisDemo() {
               <MetricCard label={String(t('landing.home.analysis.riskDrift'))} value="-22%" />
               <MetricCard label={String(t('landing.home.analysis.reviewSla'))} value="9m" />
 
-              <div className="rounded-md border-border/0.04 bg-background/70 p-4">
+              <div className="rounded-md border-transparent.04 bg-background/70 p-4">
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
                   {t('landing.home.analysis.anomalyProbability')}
                 </p>
-                <div className="mt-3 h-2 overflow-hidden rounded-full bg-border/60">
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-transparent/60">
                   <div className="h-full w-[72%] rounded-full bg-primary" />
                 </div>
               </div>
@@ -137,7 +138,7 @@ export default function AnalysisDemo() {
 
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md border-border/0.04 bg-background/70 p-4 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/0.08 hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
+    <div className="rounded-md border-transparent.04 bg-background/70 p-4 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-transparent.08 hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
       <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
       <p className="mt-2 tabular-nums text-2xl font-bold text-foreground">{value}</p>
     </div>

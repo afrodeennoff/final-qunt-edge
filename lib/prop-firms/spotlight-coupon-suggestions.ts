@@ -1,4 +1,4 @@
-import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { propFirms } from '@/lib/prop-firms-config'
 import { normalizeFirmName } from '@/lib/prop-firms/normalize'
 import {
   getVerifiedPropFirmProfileByName,

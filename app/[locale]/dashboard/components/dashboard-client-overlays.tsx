@@ -24,7 +24,7 @@ const RithmicSyncNotifications = dynamic(
 export function DashboardClientOverlays() {
  const [ready, setReady] = useState(false);
  const pathname = usePathname();
- const isImportRoute = pathname?.endsWith("/dashboard/import ") || pathname?.endsWith("/dashboard/import/");
+  const isImportRoute = pathname?.endsWith("/dashboard/import") || pathname?.endsWith("/dashboard/import/");
  const { autoSyncEnabled: rithmicAutoEnabled } = useRithmicSyncStore();
  const hasActiveSync = isImportRoute || rithmicAutoEnabled;
 

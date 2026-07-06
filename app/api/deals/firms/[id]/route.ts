@@ -34,7 +34,9 @@ async function handleGet(
       )
     }
     
-    return NextResponse.json(firm)
+    const firmRes = NextResponse.json(firm)
+    firmRes.headers.set('Cache-Control', 'public, max-age=300, s-maxage=600')
+    return firmRes
   } catch (error) {
     logger.error('[api/deals/firms/[id]] Error fetching firm:', error)
     return NextResponse.json(

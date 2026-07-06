@@ -1,29 +1,36 @@
-"use client"
+'use client'
+import React from 'react'
 
-import { ErrorBoundary } from "@/components/error-boundary"
-import MarketingLayoutShell from "../(landing)/components/marketing-layout-shell"
-import { PublicRootProviders } from "@/components/providers/root-providers"
+import { useReducedMotion } from 'motion/react'
+import ErrorBoundary from '@/components/ui/error-boundary'
+import MarketingLayoutShell from '@/app/[locale]/(landing)/components/marketing-layout-shell'
+import { PublicRootProviders } from '@/components/providers/root-providers'
+import { FloatingOrbs } from '@/components/animation/enhanced-motion'
 
 export default function LocaleLayoutInner({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const reduceMotion = useReducedMotion()
+
   return (
     <ErrorBoundary>
       <PublicRootProviders>
-        <MarketingLayoutShell
-          className="home-borderless-shell dark"
-          contentClassName="w-full"
-          showRollingBanner={true}
-          topSpacingClassName=""
-          contentSpacingClassName="pb-safe"
-          shellVariant="black"
-        >
-          <div className="pb-safe">
-            {children}
-          </div>
-        </MarketingLayoutShell>
+        <div className="relative">
+          {!reduceMotion && <FloatingOrbs className="z-0" />}
+            <MarketingLayoutShell
+              contentClassName="w-full flex-1"
+              showRollingBanner={false}
+              topSpacingClassName="pt-16 md:pt-20"
+              contentSpacingClassName="pb-safe pt-8 md:pt-10"
+              shellVariant="black"
+              fullWidth
+              className="public-page"
+            >
+              {children}
+            </MarketingLayoutShell>
+        </div>
       </PublicRootProviders>
     </ErrorBoundary>
   )

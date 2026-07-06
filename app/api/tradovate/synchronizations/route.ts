@@ -1,96 +1,56 @@
-import { apiSuccess, withRateLimited } from '@/lib/api/with-api-route'
-import { NextRequest } from 'next/server'
+import { z } from "zod"
 import {
   getTradovateSynchronizations,
   removeTradovateToken,
-} from '@/server/imports/tradovate-actions'
-import { createRouteClient } from '@/lib/supabase/route-client'
-import { z } from 'zod'
-import { parseJson, toValidationErrorResponse } from '@/app/api/_utils/validate'
-import { apiError } from '@/lib/api-response'
+} from "@/app/[locale]/dashboard/components/import/tradovate/sync/actions"
+import { createRouteClient } from "@/lib/supabase/route-client"
+import { withApiRoute, apiSuccess, apiErrorWithId } from "@/lib/api/with-api-route"
+import { parseJson, toValidationErrorResponse } from "@/app/api/_utils/validate"
 
-const tradovateDeleteBodySchema = z.object({
-  accountId: z.string().min(1),
+const deleteSchema = z.object({
+  accountId: z.string().min(1, "accountId is required"),
 })
 
-async function requireSessionUser(request: Request) {
-  const supabase = createRouteClient(request)
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser()
-  return { user, error }
-}
+export const GET = withApiRoute(
+  async (ctx) => {
+    const supabase = createRouteClient(ctx.request)
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) return apiErrorWithId(ctx.requestId, 'UNAUTHORIZED', 'Unauthorized', 401)
 
-async function handleGet(request: NextRequest) {
-  const requestId = crypto.randomUUID()
-  try {
-    const { user, error } = await requireSessionUser(request)
-    if (error || !user?.id) {
-      return apiError('UNAUTHORIZED', 'Unauthorized', 401, { requestId })
-    }
-
-    const result = await getTradovateSynchronizations()
-    if (result.error) {
-      if (result.error === 'User not authenticated') {
-        return apiError('UNAUTHORIZED', result.error, 401, { requestId })
+    try {
+      const result = await getTradovateSynchronizations()
+      if (result.error) {
+        return apiErrorWithId(ctx.requestId, 'BAD_REQUEST', result.error, 400)
       }
-      return apiError('BAD_REQUEST', result.error, 400, { requestId })
+      return apiSuccess({ success: true, data: result.synchronizations || [] })
+    } catch (error) {
+      return apiErrorWithId(ctx.requestId, 'INTERNAL_ERROR', "Failed to fetch Tradovate synchronizations", 500)
     }
+  },
+  { rateLimitId: 'tradovate-sync-read', rateLimitMax: 30, routeName: 'tradovate-synchronizations' }
+)
 
-    return apiSuccess({
-      success: true,
-      data: result.synchronizations || [],
-    })
-  } catch (error) {
-    console.error('Error fetching Tradovate synchronizations:', error)
-    return apiError('INTERNAL_ERROR', 'Failed to fetch Tradovate synchronizations', 500, {
-      requestId,
-    })
-  }
-}
+export const DELETE = withApiRoute(
+  async (ctx) => {
+    const supabase = createRouteClient(ctx.request)
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) return apiErrorWithId(ctx.requestId, 'UNAUTHORIZED', 'Unauthorized', 401)
 
-async function handleDelete(request: NextRequest) {
-  const requestId = crypto.randomUUID()
-  try {
-    const { user, error } = await requireSessionUser(request)
-    if (error || !user?.id) {
-      return apiError('UNAUTHORIZED', 'Unauthorized', 401, { requestId })
+    try {
+      const { accountId } = await parseJson(ctx.request, deleteSchema)
+      const result = await removeTradovateToken(accountId)
+      const deletedCount = typeof result === "object" && result !== null ? (result as { deletedCount?: number }).deletedCount : undefined
+
+      if (deletedCount === 0) {
+        return apiErrorWithId(ctx.requestId, 'NOT_FOUND', "Synchronization not found", 404)
+      }
+
+      return apiSuccess({ success: true, message: "Synchronization removed" })
+    } catch (error) {
+      const parsed = toValidationErrorResponse(error)
+      if (parsed) return parsed
+      return apiErrorWithId(ctx.requestId, 'INTERNAL_ERROR', "Failed to delete synchronization", 500)
     }
-
-    const { accountId } = await parseJson(request, tradovateDeleteBodySchema)
-
-    const result = await removeTradovateToken(accountId)
-    if (result.error) {
-      return apiError('BAD_REQUEST', result.error, 400, { requestId })
-    }
-
-    if (!result.deletedCount) {
-      return apiError('NOT_FOUND', 'Synchronization not found', 404, { requestId })
-    }
-
-    return apiSuccess({
-      success: true,
-      message: 'Synchronization removed',
-    })
-  } catch (error) {
-    const validationResponse = toValidationErrorResponse(error)
-    if (validationResponse.status !== 500) return validationResponse
-    console.error('Error deleting Tradovate synchronization:', error)
-    return apiError('INTERNAL_ERROR', 'Failed to delete synchronization', 500, { requestId })
-  }
-}
-
-export const GET = withRateLimited(handleGet, {
-  rateLimitId: 'tradovate-syncs',
-  rateLimitMax: 120,
-  rateLimitWindow: 60_000,
-  routeName: 'tradovate-syncs',
-})
-
-export const DELETE = withRateLimited(handleDelete, {
-  rateLimitId: 'tradovate-syncs',
-  rateLimitMax: 120,
-  rateLimitWindow: 60_000,
-  routeName: 'tradovate-syncs',
-})
+  },
+  { rateLimitId: 'tradovate-sync-delete', rateLimitMax: 30, routeName: 'tradovate-synchronizations' }
+)

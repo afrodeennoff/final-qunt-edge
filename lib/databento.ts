@@ -1,8 +1,10 @@
 import { format } from "date-fns";
 
-// Databento API configuration
+// Databento API configuration.
+// Base URL is overridable via DATABENTO_BASE_URL (e.g. for a proxy/cache) and
+// is the single source of truth — import this rather than redeclaring it.
 const DATABENTO_API_KEY = process.env.DATABENTO_API_KEY;
-const DATABENTO_BASE_URL = 'https://hist.databento.com/v0';
+export const DATABENTO_BASE_URL = process.env.DATABENTO_BASE_URL || 'https://hist.databento.com/v0';
 
 export interface DatabentoBars {
   symbol: string;

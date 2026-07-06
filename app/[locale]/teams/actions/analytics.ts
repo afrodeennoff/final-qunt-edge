@@ -14,7 +14,7 @@ type TeamTrade = {
 
 const toDateKey = (date: Date) => date.toISOString().slice(0, 10)
 
-export async function getTeamAnalyticsDataAction(teamId: string) {
+export async function getTeamAnalyticsDataAction(teamId: string, dateFrom?: Date, dateTo?: Date) {
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
@@ -70,7 +70,13 @@ export async function getTeamAnalyticsDataAction(teamId: string) {
         select: { id: true, email: true },
       }),
       prisma.trade.findMany({
-        where: { userId: { in: team.traderIds } },
+        where: {
+          userId: { in: team.traderIds },
+          entryDate: {
+            gte: dateFrom || new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
+            lte: dateTo || new Date(),
+          },
+        },
         select: {
           userId: true,
           pnl: true,

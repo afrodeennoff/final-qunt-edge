@@ -18,7 +18,7 @@ vi.mock("@/lib/supabase/route-client", () => ({
   })),
 }))
 
-vi.mock("@/server/imports/rithmic-sync-actions", () => ({
+vi.mock("@/app/[locale]/dashboard/components/import/rithmic/sync/actions", () => ({
   getRithmicSynchronizations: vi.fn(),
   setRithmicSynchronization: setRithmicSynchronizationMock,
   removeRithmicSynchronization: removeRithmicSynchronizationMock,
@@ -27,6 +27,7 @@ vi.mock("@/server/imports/rithmic-sync-actions", () => ({
 vi.mock("@/lib/rate-limit", () => ({
   rateLimit: vi.fn(() => vi.fn(async () => ({ success: true, limit: 120, remaining: 119, resetTime: 0 }))),
   createRateLimitResponse: vi.fn(),
+  getTrustedClientIp: vi.fn(() => "127.0.0.1"),
 }))
 
 describe("POST /api/rithmic/synchronizations", () => {

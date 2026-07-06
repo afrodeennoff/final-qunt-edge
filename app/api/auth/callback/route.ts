@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr"
+import { shouldSkipLocalePrefix } from '@/lib/locale-path'
 import { ensureUserInDatabase, getWebsiteURL } from '@/server/auth'
 import { NextResponse } from 'next/server'
 import { timingSafeEqual } from 'node:crypto'
@@ -92,6 +93,7 @@ export async function GET(request: Request) {
   const withLocalePrefix = (path: string) => {
     const normalized = `/${path.replace(/^\/+/, '')}`
     if (normalized.startsWith('/api/')) return normalized
+    if (shouldSkipLocalePrefix(normalized)) return normalized
     if (/^\/[a-z]{2}(?:-[a-z]{2})?(?:\/|$)/i.test(normalized)) return normalized
     return `/${safeLocale}${normalized}`
   }

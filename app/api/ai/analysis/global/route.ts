@@ -2,12 +2,13 @@ import { streamText, stepCountIs } from "ai";
 import { NextRequest } from "next/server";
 import { z } from 'zod/v3';
 import { rateLimit } from "@/lib/rate-limit";
-import { getAiLanguageModel } from "@/lib/ai/client";
+import { getAiLanguageModel, checkAiConfig } from "@/lib/ai/client";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { apiError } from "@/lib/api-response";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
+import { createAiTimeoutSignal } from "@/lib/ai/timeout";
 
 // Analysis Tools
 import { generateAnalysisComponent } from "../accounts/generate-analysis-component";
@@ -82,20 +83,8 @@ export async function POST(req: NextRequest) {
   const startedAt = Date.now();
   let toolCallsCount = 0;
 
-  // Check if AI is properly configured
-  const aiApiKey = process.env.OPENROUTER_API_KEY;
-
-  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
-    return apiError(
-      "SERVICE_UNAVAILABLE",
-      "AI service is not configured. Please contact support.",
-      503,
-      {
-        type: "ai_not_configured",
-        message: "OPENROUTER_API_KEY is not set"
-      }
-    );
-  }
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
 
   // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, 'analysis', globalAnalysisRateLimit)
@@ -109,7 +98,7 @@ export async function POST(req: NextRequest) {
     const validatedData = analysisSchema.parse({ username, locale, timezone });
 
     const result = streamText({
-      model: getAiLanguageModel("analysis"),
+      model: getAiLanguageModel("analysis", userId),
       system: getGlobalAnalysisPrompt(validatedData.locale),
       tools: {
         generateAnalysisComponent,
@@ -127,6 +116,7 @@ export async function POST(req: NextRequest) {
         }
       ],
       temperature: policy.temperature,
+      abortSignal: createAiTimeoutSignal(policy.timeoutMs),
       stopWhen: stepCountIs(policy.maxSteps),
       onStepFinish: (step) => {
         toolCallsCount += step.toolCalls?.length ?? 0;

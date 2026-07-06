@@ -34,13 +34,15 @@ async function handleGet(request: NextRequest) {
 
     const totalFirms = Object.keys(propFirms).length
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       totalPaid,
       totalPending,
       totalRefused,
       totalAccounts,
       totalFirms,
     })
+    response.headers.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=60')
+    return response
   } catch (error) {
     console.warn('Error fetching propfirm stats:', error)
     return apiError('INTERNAL_ERROR', 'Failed to fetch propfirm statistics', 500)

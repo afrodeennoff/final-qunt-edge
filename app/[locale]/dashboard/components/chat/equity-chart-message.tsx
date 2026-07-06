@@ -60,7 +60,7 @@ const formatCurrency = (value: number) =>
  `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 // Reduced color array for better performance
-const ACCOUNT_COLORS = ["hsl(var(--chart-loss))","hsl(var(--chart-2))","hsl(var(--chart-win))","hsl(var(--chart-4))","hsl(var(--chart-5))","hsl(var(--chart-6))","hsl(var(--chart-7))","hsl(var(--chart-8))",
+const ACCOUNT_COLORS = ["var(--chart-3)","var(--chart-2)","var(--chart-1)","var(--chart-4)","var(--chart-5)","var(--chart-6)","var(--chart-7)","var(--chart-8)",
 ] as const;
 
 // Color map function
@@ -103,8 +103,8 @@ const renderDot = (props: DotRendererProps) => {
  cx={cx}
  cy={cy}
  r={5}
- fill="hsl(var(--destructive))"
- stroke="hsl(var(--chart-axis))"
+ fill="var(--destructive)"
+ stroke="var(--chart-axis)"
  strokeWidth={2}
  />
  );
@@ -128,7 +128,7 @@ const renderDot = (props: DotRendererProps) => {
  cy={cy}
  r={4}
  fill={getPayoutColor(status)}
- stroke="hsl(var(--chart-axis))"
+ stroke="var(--chart-axis)"
  strokeWidth={1}
  />
  );
@@ -145,8 +145,8 @@ const renderDot = (props: DotRendererProps) => {
  cx={cx}
  cy={cy}
  r={5}
- fill="hsl(var(--destructive))"
- stroke="hsl(var(--chart-axis))"
+ fill="var(--destructive)"
+ stroke="var(--chart-axis)"
  strokeWidth={2}
  />
  );
@@ -161,7 +161,7 @@ const renderDot = (props: DotRendererProps) => {
  cy={cy}
  r={4}
  fill={getPayoutColor(status)}
- stroke="hsl(var(--chart-axis))"
+ stroke="var(--chart-axis)"
  strokeWidth={1}
  />
  );
@@ -177,15 +177,15 @@ const renderDot = (props: DotRendererProps) => {
 const getPayoutColor = (status: string) => {
  switch (status) {
  case"PENDING":
- return"hsl(var(--muted-foreground))";
+ return"var(--muted-foreground)";
  case"VALIDATED":
- return"hsl(var(--chart-4))";
+ return"var(--chart-4)";
  case"REFUSED":
- return"hsl(var(--destructive))";
- case"PAID":
- return"hsl(var(--chart-win))";
+ return"var(--destructive)";
+case"PAID":
+  return"var(--chart-2)";
  default:
- return"hsl(var(--muted-foreground))";
+ return"var(--muted-foreground)";
  }
 };
 
@@ -236,7 +236,7 @@ const EquityChartTooltip = React.memo(
  });
 
  return (
- <div className="rounded-lg border-border/30 bg-background p-2 shadow-xs">
+ <div className="rounded-lg border-transparent bg-background p-2 shadow-xs">
  <div className="grid gap-2">
  <div className="flex flex-col">
  <span className="text-[0.70rem] uppercase text-muted-foreground">
@@ -341,7 +341,7 @@ export function EquityChartMessage({
  return {
  equity: {
  label:"Total Equity",
- color:"hsl(var(--chart-1))",
+ color:"var(--chart-1)",
  },
  } as ChartConfig;
  }
@@ -365,8 +365,8 @@ export function EquityChartMessage({
  strokeWidth={2}
  dot={renderDot}
  isAnimationActive={false}
- activeDot={{ r: 3, style: { fill:"hsl(var(--chart-2))" } }}
- stroke="hsl(var(--chart-2))"
+ activeDot={{ r: 3, style: { fill:"var(--chart-2)" } }}
+ stroke="var(--chart-2)"
  connectNulls={false}
  />
  );
@@ -424,7 +424,7 @@ export function EquityChartMessage({
  >
  <CartesianGrid
  strokeDasharray="3 3"
- className="text-border dark:opacity-[0.12] opacity-[0.2]"
+ className="text-transparent dark:opacity-[0.12] opacity-[0.2]"
  />
  <XAxis
  dataKey="date"
@@ -451,7 +451,7 @@ export function EquityChartMessage({
  />
  <ReferenceLine
  y={0}
- stroke="hsl(var(--muted-foreground))"
+ stroke="var(--muted-foreground)"
  strokeDasharray="3 3"
  strokeOpacity={0.5}
  />

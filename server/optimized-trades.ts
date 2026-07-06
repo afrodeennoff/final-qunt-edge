@@ -1,8 +1,10 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/prisma/generated/prisma'
 import { executeOptimizedQuery } from '@/lib/query-optimizer'
 import { getDatabaseUserId } from './auth'
+import { getDataRetentionDays } from './usage-limits'
 
 export async function getOptimizedTradesForUser(userId: string, filters?: {
   accountNumbers?: string[]
@@ -31,8 +33,15 @@ export async function getOptimizedTradesForUser(userId: string, filters?: {
         where.instrument = { in: filters.instruments }
       }
 
+      const retentionDays = await getDataRetentionDays(userId)
+      if (retentionDays !== null) {
+        const cutoff = new Date()
+        cutoff.setDate(cutoff.getDate() - retentionDays)
+        where.entryDate = { ...((where.entryDate as object) || {}), gte: cutoff }
+      }
+
       if (filters?.dateRange?.from || filters?.dateRange?.to) {
-        where.entryDate = {}
+        where.entryDate = { ...((where.entryDate as object) || {}) }
         if (filters.dateRange.from) (where.entryDate as Record<string, unknown>).gte = filters.dateRange.from
         if (filters.dateRange.to) (where.entryDate as Record<string, unknown>).lte = filters.dateRange.to
       }
@@ -73,23 +82,30 @@ export async function getTradesByAccountOptimized(accountNumber: string, userId:
 
   return executeOptimizedQuery(
     'getTradesByAccount',
-    () => prisma.trade.findMany({
-      where: {
-        accountNumber,
-        userId,
-      },
-      select: {
-        id: true,
-        instrument: true,
-        entryDate: true,
-        closeDate: true,
-        pnl: true,
-        commission: true,
-        tags: true,
-      },
-      orderBy: { entryDate: 'desc' },
-    }),
-    `trades-account-${accountNumber}`,
+    async () => {
+      const where: Record<string, unknown> = { accountNumber, userId }
+      const retentionDays = await getDataRetentionDays(userId)
+      if (retentionDays !== null) {
+        const cutoff = new Date()
+        cutoff.setDate(cutoff.getDate() - retentionDays)
+        where.entryDate = { gte: cutoff }
+      }
+      return prisma.trade.findMany({
+        where,
+        select: {
+          id: true,
+          instrument: true,
+          entryDate: true,
+          closeDate: true,
+          pnl: true,
+          commission: true,
+          tags: true,
+        },
+        orderBy: { entryDate: 'desc' },
+        take: 10_000,
+      })
+    },
+    `trades-account-${userId}-${accountNumber}`,
     600
   )
 }
@@ -103,13 +119,22 @@ export async function getTradeCountByInstrument(userId: string) {
 
   return executeOptimizedQuery(
     'getTradeCountByInstrument',
-    () => prisma.trade.groupBy({
-      by: ['instrument'],
-      where: { userId },
-      _count: { id: true },
-      _sum: { pnl: true },
-      orderBy: { _count: { id: 'desc' } },
-    }),
+    async () => {
+      const where: Record<string, unknown> = { userId }
+      const retentionDays = await getDataRetentionDays(userId)
+      if (retentionDays !== null) {
+        const cutoff = new Date()
+        cutoff.setDate(cutoff.getDate() - retentionDays)
+        where.entryDate = { gte: cutoff }
+      }
+      return prisma.trade.groupBy({
+        by: ['instrument'],
+        where,
+        _count: { id: true },
+        _sum: { pnl: true },
+        orderBy: { _count: { id: 'desc' } },
+      })
+    },
     `trade-counts-${userId}`,
     1800
   )
@@ -124,20 +149,30 @@ export async function getDailyPnLOptimized(userId: string, accountNumbers?: stri
 
   return executeOptimizedQuery(
     'getDailyPnL',
-    () => prisma.$queryRaw`
-      SELECT
-        DATE(entry_date) as date,
-        SUM(pnl - commission) as net_pnl,
-        COUNT(*) as trade_count
-      FROM "Trade"
-      WHERE user_id = ${userId}
-        ${accountNumbers && accountNumbers.length > 0
-          ? prisma.$queryRaw`AND account_number = ANY(${accountNumbers})`
-          : prisma.$queryRaw``}
-      GROUP BY DATE(entry_date)
-      ORDER BY date DESC
-      LIMIT 365
-    `,
+    async () => {
+      const retentionDays = await getDataRetentionDays(userId)
+      let retentionFilter = Prisma.empty
+      if (retentionDays !== null) {
+        const cutoff = new Date()
+        cutoff.setDate(cutoff.getDate() - retentionDays)
+        retentionFilter = Prisma.sql`AND entry_date >= ${cutoff}`
+      }
+      return prisma.$queryRaw`
+        SELECT
+          DATE(entry_date) as date,
+          SUM(pnl - commission) as net_pnl,
+          COUNT(*) as trade_count
+        FROM "Trade"
+        WHERE user_id = ${userId}
+          ${accountNumbers && accountNumbers.length > 0
+            ? prisma.$queryRaw`AND account_number = ANY(${accountNumbers})`
+            : prisma.$queryRaw``}
+          ${retentionFilter}
+        GROUP BY DATE(entry_date)
+        ORDER BY date DESC
+        LIMIT 365
+      `
+    },
     `daily-pnl-${userId}`,
     300
   )
@@ -166,12 +201,20 @@ export async function getAccountSummaryOptimized(userId: string) {
 
       const accountNumbers = accounts.map(a => a.number)
 
+      const tradeWhere: Record<string, unknown> = {
+        userId,
+        accountNumber: { in: accountNumbers },
+      }
+      const retentionDays = await getDataRetentionDays(userId)
+      if (retentionDays !== null) {
+        const cutoff = new Date()
+        cutoff.setDate(cutoff.getDate() - retentionDays)
+        tradeWhere.entryDate = { gte: cutoff }
+      }
+
       const tradeStats = await prisma.trade.groupBy({
         by: ['accountNumber'],
-        where: {
-          userId,
-          accountNumber: { in: accountNumbers },
-        },
+        where: tradeWhere,
         _count: { id: true },
         _sum: { pnl: true, commission: true },
       })
@@ -201,14 +244,21 @@ export async function batchUpdateTradesOptimized(
     throw new Error('Forbidden: Cannot modify another user\'s trades')
   }
 
-  return prisma.$transaction(
-    updates.map(update =>
-      prisma.trade.updateMany({
-        where: { id: update.id, userId },
-        data: update.data,
-      })
+  const BATCH_SIZE = 20
+  const results: Array<{ count: number }> = []
+  for (let i = 0; i < updates.length; i += BATCH_SIZE) {
+    const batch = updates.slice(i, i + BATCH_SIZE)
+    const batchResults = await prisma.$transaction(
+      batch.map(update =>
+        prisma.trade.updateMany({
+          where: { id: update.id, userId },
+          data: update.data,
+        })
+      )
     )
-  )
+    results.push(...batchResults)
+  }
+  return results
 }
 
 export async function getRecentTradesWithPagination(
@@ -227,9 +277,16 @@ export async function getRecentTradesWithPagination(
   return executeOptimizedQuery(
     'getRecentTradesPaginated',
     async () => {
+      const where: Record<string, unknown> = { userId }
+      const retentionDays = await getDataRetentionDays(userId)
+      if (retentionDays !== null) {
+        const cutoff = new Date()
+        cutoff.setDate(cutoff.getDate() - retentionDays)
+        where.entryDate = { gte: cutoff }
+      }
       const [trades, totalCount] = await Promise.all([
         prisma.trade.findMany({
-          where: { userId },
+          where,
           select: {
             id: true,
             accountNumber: true,
@@ -243,7 +300,7 @@ export async function getRecentTradesWithPagination(
           skip,
           take: pageSize,
         }),
-        prisma.trade.count({ where: { userId } }),
+        prisma.trade.count({ where }),
       ])
 
       return {

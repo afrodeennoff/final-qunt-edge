@@ -106,7 +106,7 @@ let totalReplacements = 0;
 for (const file of files) {
   try {
     let content = fs.readFileSync(file, 'utf8');
-    let original = content;
+    const original = content;
 
     for (const [pattern, replacement] of REPLACEMENTS) {
       const matches = content.match(pattern);

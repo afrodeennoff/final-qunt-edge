@@ -51,13 +51,13 @@ export default function Navbar() {
         initial={false}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="pointer-events-auto flex items-center h-11 w-full px-3 gap-0 bg-[var(--card)] backdrop-blur-[28px] saturate-150 border-b border-[rgba(0,0,0,0.06)] shadow-[0_1px_0_rgba(0,0,0,0.04)]"
+        className="pointer-events-auto flex items-center h-14 w-full px-3 gap-0 bg-card border-b-0"
       >
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Left Side: Sidebar Toggle & Brand */}
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="h-8 w-8 rounded-[7px] text-muted-foreground/55 border border-transparent hover:border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.06)] hover:text-foreground/80" />
-            <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
+            <SidebarTrigger className="h-8 w-8 rounded-[7px] text-muted-foreground/55 border border-transparent hover:border-transparent hover:bg-muted/40 hover:text-foreground/80" />
+            <div className="mx-1 hidden h-5 w-px bg-transparent/50 sm:block" />
           </div>
 
           {/* Center: PnL Metrics (Desktop Only) */}
@@ -68,7 +68,7 @@ export default function Navbar() {
           {/* Right Side: Actions */}
           <div className="flex items-center gap-3">
             {/* Config Group */}
-            <div className="flex items-center gap-1.5 rounded-xl border border-border/45 bg-primary/6 p-1">
+            <div className="flex items-center gap-1.5 rounded-xl border-0 bg-primary/6 p-1">
               <Button
                 id="customize-mode"
                 variant="ghost"
@@ -77,7 +77,7 @@ export default function Navbar() {
                 className={cn(
                   'h-9 w-auto px-3 sm:px-4 gap-2 rounded-xl transition-[opacity,background-color,border-color] duration-500',
                   isCustomizing
-                    ? 'bg-primary text-white shadow-[0_0_16px_hsl(var(--primary)/0.45)] font-semibold'
+                    ? 'bg-primary text-primary-foreground shadow-[0_0_16px_hsl(var(--primary)/0.45)] font-semibold'
                     : 'text-muted-foreground/70 hover:bg-primary/8 hover:text-foreground',
                 )}
               >
@@ -92,7 +92,7 @@ export default function Navbar() {
                   variant="ghost"
                   size="sm"
                   onClick={flushPendingSaves}
-                  className="hidden sm:flex h-9 gap-2 rounded-xl border border-border/45 px-3 text-foreground transition-[opacity,background-color,border-color] hover:border-primary/18 hover:bg-primary/8"
+                  className="hidden sm:flex h-9 gap-2 rounded-xl border-0 px-3 text-foreground transition-[opacity,background-color,border-color] hover:border-primary/18 hover:bg-primary/8"
                 >
                   <CloudUpload className="w-3.5 h-3.5 animate-bounce" />
                   <span className="text-[10px] font-black uppercase tracking-widest">Save Now</span>
@@ -100,7 +100,7 @@ export default function Navbar() {
               )}
 
               {!autoSaveStatus.hasPending && isCustomizing && (
-                <div className="hidden sm:flex items-center gap-2 px-3 text-foreground/60">
+                <div className="hidden sm:flex items-center gap-2 px-3 text-foreground">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span className="text-[10px] font-black uppercase tracking-widest">Saved</span>
                 </div>
@@ -112,7 +112,7 @@ export default function Navbar() {
                 showLabelOnMobile
               />
 
-              <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
+              <div className="mx-1 hidden h-5 w-px bg-transparent/50 sm:block" />
 
               <ShareButton currentLayout={currentLayout} />
             </div>
@@ -129,7 +129,7 @@ export default function Navbar() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-9 gap-2 rounded-xl border border-primary/18 bg-primary/8 px-5 text-[10px] font-black uppercase tracking-[0.2em] text-foreground shadow-none transition-[opacity,background-color,border-color] duration-500 hover:border-primary/26 hover:bg-primary/12"
+                      className="h-9 gap-2 rounded-xl border border-primary/18 bg-primary/8 px-5 text-[10px] font-black uppercase tracking-[0.12em] text-foreground shadow-none transition-[opacity,background-color,border-color] duration-500 hover:border-primary/26 hover:bg-primary/12"
                       aria-label="Upgrade to Elite plan"
                     >
                       <Sparkles className="w-3.5 h-3.5 animate-pulse" aria-hidden="true" />
@@ -139,16 +139,16 @@ export default function Navbar() {
                 )}
               </div>
 
-              <div className="mx-1 hidden h-6 w-px bg-border/50 sm:block" />
+              <div className="mx-1 hidden h-5 w-px bg-transparent/50 sm:block" />
 
               {/* Real-time Actions */}
-              <div className="flex items-center gap-2 rounded-xl border border-border/35 bg-background/55 p-1.5 shadow-inner">
+              <div className="flex items-center gap-2 rounded-xl border-0 bg-background/55 p-1.5 shadow-inner">
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={handleRefresh}
                   disabled={isLoading}
-                  className="h-8 w-8 rounded-xl text-fg-muted transition-[opacity,background-color,border-color] active:scale-90"
+                  className="h-8 w-8 rounded-xl text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/10 transition-[opacity,background-color,border-color] active:scale-90"
                   aria-label="Refresh dashboard data"
                 >
                   <RefreshCw

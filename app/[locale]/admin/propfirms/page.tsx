@@ -9,7 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { AlertTriangle, CheckCircle2, PencilLine } from 'lucide-react'
-import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { propFirms } from '@/lib/prop-firms-config'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import { AdminPageHeader, AdminSection, AdminStatCard } from '../components/admin-surface'
 import { ConfirmDeleteButton } from '../components/confirm-delete-button'
@@ -99,7 +99,7 @@ export default async function PropFirmsListPage({
         orderBy: { name: 'asc' },
       })
     } catch (error) {
-      console.warn('[Admin PropFirms] Falling back to reference rows:', error)
+      console.error('Failed to fetch prop firms:', error)
     }
   }
 
@@ -163,7 +163,7 @@ export default async function PropFirmsListPage({
       >
         <div className="space-y-3 lg:hidden">
           {firms.length === 0 ? (
-            <div className="rounded-xl border border-border/30 px-4 py-8 text-center text-sm text-muted-foreground">
+            <div className="rounded-xl border-0 px-4 py-8 text-center text-sm text-muted-foreground">
               No prop firms found yet.
             </div>
           ) : (
@@ -176,7 +176,7 @@ export default async function PropFirmsListPage({
               return (
                 <div
                   key={firm.id}
-                  className="rounded-xl border border-border/30 bg-background/40 p-4"
+                  className="rounded-xl border-0 bg-card p-4"
                 >
                   <div className="flex flex-col gap-4">
                     <div className="space-y-1">
@@ -237,10 +237,10 @@ export default async function PropFirmsListPage({
         <div className="hidden overflow-x-auto lg:block">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border/30">
-                <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Name</th>
-                <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Category</th>
-                <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Platform</th>
+               <tr className="border-b-0 bg-muted/30">
+                <th   className="type-label pb-3 pr-4 text-left font-medium text-muted-foreground">Name</th>
+                <th   className="type-label pb-3 pr-4 text-left font-medium text-muted-foreground">Category</th>
+                <th   className="type-label pb-3 pr-4 text-left font-medium text-muted-foreground">Platform</th>
                 <th className="pb-3 pr-4 text-center font-medium text-muted-foreground">Reviews</th>
                 <th className="pb-3 pr-4 text-center font-medium text-muted-foreground">Coupons</th>
                 <th className="pb-3 pr-4 text-center font-medium text-muted-foreground">State</th>
@@ -264,7 +264,7 @@ export default async function PropFirmsListPage({
                   return (
                     <tr
                       key={firm.id}
-                      className="border-b border-border/30 last:border-0"
+                      className="border-b-0 last:border-0 hover:bg-primary/[0.02] transition-colors"
                     >
                       <td className="py-3 pr-4">
                         <div className="space-y-1">

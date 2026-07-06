@@ -33,7 +33,7 @@ function ProfitFactorCardInner({ size = 'medium' }: ProfitFactorCardProps) {
  >
  <div className="mx-auto inline-flex items-center justify-center gap-2.5 text-center">
  <Scale className={cn("h-4 w-4 shrink-0", isProfitable ?"metric-positive" :"metric-negative")} />
- <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">PF</span>
+ <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">PF</span>
  <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground">
  {formattedPF}
  </span>
@@ -64,7 +64,7 @@ function ProfitFactorCardInner({ size = 'medium' }: ProfitFactorCardProps) {
  :"bg-secondary/14"
  )}>
  <Scale className={cn("h-3 w-3", isProfitable ?"metric-positive" :"metric-negative")} />
- <span className={cn("micro-sans font-bold text-[11px] uppercase tracking-[0.18em]",
+ <span className={cn("micro-sans font-bold text-[11px] uppercase tracking-[0.12em]",
  isProfitable ?"metric-positive" :"metric-negative"
  )}>
  {formattedPF} PF

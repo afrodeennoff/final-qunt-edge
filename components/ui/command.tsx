@@ -28,7 +28,7 @@ type CommandDialogProps = DialogProps
 const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
  return (
  <Dialog {...props}>
- <DialogContent className="overflow-hidden p-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_4px_20px_rgba(0,0,0,0.3)]">
+  <DialogContent className="overflow-hidden p-0 shadow-[inset_0_1px_0_hsl(var(--primary)/0.04),0_4px_20px_rgba(0,0,0,0.15)]">
  <Command className="**:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 **:[[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 **:[[cmdk-input]]:h-12 **:[[cmdk-item]]:px-2 **:[[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
  {children}
  </Command>
@@ -107,7 +107,7 @@ const CommandSeparator = React.forwardRef<
  <CommandPrimitive.Separator
  ref={ref}
  data-slot="command-separator"
- className={cn("-mx-1 h-px bg-border", className)}
+ className={cn("-mx-1 h-px bg-transparent", className)}
  {...props}
  />
 ))

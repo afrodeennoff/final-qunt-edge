@@ -26,25 +26,14 @@ export const maxDuration = 30;
 
 // Import shared handler
 import { handleTimeOfDayAnalysis } from "../../analyze/handlers";
+import { checkAiConfig } from "@/lib/ai/client";
 
 export async function POST(req: NextRequest) {
   const policy = getAiPolicy("analysis");
   const startedAt = Date.now();
 
-  // Check if AI is properly configured
-  const aiApiKey = process.env.OPENROUTER_API_KEY;
-
-  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
-    return apiError(
-      "SERVICE_UNAVAILABLE",
-      "AI service is not configured. Please contact support.",
-      503,
-      {
-        type: "ai_not_configured",
-        message: "OPENROUTER_API_KEY is not set"
-      }
-    );
-  }
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
 
   // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, "analysis", timeOfDayAnalysisRateLimit);
@@ -75,6 +64,16 @@ export async function POST(req: NextRequest) {
       return apiError("VALIDATION_FAILED", "Invalid analysis request payload", 400, {
         issues: error.errors,
       });
+    }
+
+    if (isTimeoutError(error)) {
+      return apiError(
+        "TIMEOUT",
+        `AI request timed out after ${Math.round(policy.timeoutMs / 1000)}s`,
+        504,
+        { timeoutMs: policy.timeoutMs },
+        { "Retry-After": String(Math.ceil(policy.timeoutMs / 1000)) },
+      );
     }
 
     void logAiRequest({

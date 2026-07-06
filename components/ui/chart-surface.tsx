@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 
 import { Skeleton } from "@/components/ui/skeleton"
@@ -56,8 +54,8 @@ export function ChartSurface({
  <Skeleton className="h-3.5 w-16 animate-shimmer" />
  </div>
  <div className="relative">
- <Skeleton className="h-[220px] w-full animate-shimmer" />
- <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(var(--foreground)_/_0.03)] to-transparent animate-shimmer" />
+<Skeleton className="h-[220px] w-full animate-shimmer" />
+  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/5 to-transparent animate-shimmer" />
  </div>
  <div className="flex items-center justify-between mt-3">
  <Skeleton className="h-2.5 w-20 animate-shimmer" />
@@ -116,35 +114,38 @@ export function ChartSurface({
  return children
  }
 
- return (
- <div
- data-chart-surface="modern"
- className={cn("relative flex h-full flex-col overflow-hidden rounded-[var(--radius-xl)] border","border-border/10","bg-[linear-gradient(180deg,hsl(var(--card)_/_0.92)_0%,hsl(var(--card)_/_0.86)_100%)]","shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03),0_20px_38px_-28px_rgba(0,0,0,0.68)]","","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.32] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
- className
- )}
- style={height ? { height } : undefined}
- >
- {hasHeader && (
- <div
- className={cn("flex shrink-0 items-center border-b border-border/8 bg-[hsl(var(--foreground)_/_0.04)]",
- isSmall ?"h-10 px-2.5" :"h-12 px-3.5",
- headerClassName
- )}
- >
+  return (
+    <div
+      data-chart-surface="modern"
+      className={cn("relative flex h-full flex-col rounded-xl border-0 bg-card",
+      className
+      )}
+      style={{
+        ...(height ? { height } : {}),
+        background: 'var(--card)',
+      }}
+    >
+  {hasHeader && (
+  <div
+  className={cn("flex shrink-0 items-center border-b border-transparent bg-card",
+  isSmall ?"h-9 px-2" :"h-10 px-3",
+  headerClassName
+  )}
+  >
  <div className="flex w-full items-center justify-between gap-[var(--space-2)]">
  <div className="min-w-0 flex items-center gap-[var(--space-2)]">
  {title ? (
- <span
- className={cn("line-clamp-1 text-fg-primary",
- isSmall ?"text-[13px] font-semibold tracking-[-0.01em]" :"text-sm font-semibold tracking-[-0.01em]"
- )}
- >
+  <span
+  className={cn("line-clamp-1 text-foreground",
+  isSmall ?"text-[13px] font-black tracking-[-0.01em]" :"text-sm font-black tracking-[-0.01em]"
+  )}
+  >
  {title}
  </span>
  ) : null}
  {info}
  {subtitle ? (
- <span className="hidden text-[11px] text-fg-muted sm:inline">{subtitle}</span>
+  <span className="hidden text-[11px] text-muted-foreground sm:inline">{subtitle}</span>
  ) : null}
  </div>
  {actions ? <div className="shrink-0">{actions}</div> : null}
@@ -153,7 +154,7 @@ export function ChartSurface({
  )}
  <div
  className={cn("flex flex-col flex-1 min-h-0",
- shouldPadBody ? (isSmall ?"p-1.5" :"p-2.5 sm:p-3") :"p-0",
+  shouldPadBody ? (isSmall ?"p-2" :"p-3") :"p-0",
  bodyClassName
  )}
  >
@@ -161,8 +162,8 @@ export function ChartSurface({
  </div>
  {hasFooter && (
  <div
- className={cn("flex shrink-0 items-center border-t border-border/10",
- isSmall ?"h-8 px-2.5" :"h-10 px-3.5",
+ className={cn("flex shrink-0 items-center border-t-0",
+  isSmall ?"h-8 px-3" :"h-10 px-3",
  footerClassName
  )}
  >

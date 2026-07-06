@@ -185,8 +185,12 @@ export function requireServiceAuth(
 
   if (candidate) {
     try {
-      const isValid = timingSafeEqual(Buffer.from(candidate), Buffer.from(secret))
-      if (!isValid) {
+      // timingSafeEqual requires equal-length buffers; guard first to avoid a
+      // RangeError that would short-circuit the comparison on length mismatch
+      // (a minor timing side-channel on the secret length).
+      const candidateBuf = Buffer.from(candidate)
+      const secretBuf = Buffer.from(secret)
+      if (candidateBuf.length !== secretBuf.length || !timingSafeEqual(candidateBuf, secretBuf)) {
         throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
       }
       return { service: serviceName, requestId }

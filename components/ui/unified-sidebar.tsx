@@ -13,7 +13,6 @@ import {
   SidebarHeader,
   SidebarGroup,
   SidebarMenu,
-  SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar'
 
@@ -188,7 +187,7 @@ export function UnifiedSidebar({
         onNavigate={handleNavigate}
       />
       {/* Swipe zone for opening sidebar on mobile */}
-      {isMobileScreen && !isMobile && (
+      {isMobileScreen && (
         <div
           className="fixed left-0 top-0 bottom-0 w-5 z-30"
           onTouchStart={(e) => {
@@ -257,7 +256,7 @@ function SidebarContentRender({
       variant="inset"
       collapsible="icon"
       className={cn(
-        'pointer-events-auto overflow-hidden text-sidebar-foreground',
+        'pointer-events-auto overflow-hidden text-sidebar-foreground border border-transparent',
         styleVariant === 'minimal' ? 'bg-sidebar/98' : 'bg-sidebar/96',
       )}
     >
@@ -284,7 +283,7 @@ function SidebarContentRender({
         )}
       </SidebarContent>
 
-      <SidebarFooter className="p-3">
+      <SidebarFooter className="p-3 border-t border-transparent">
         <SidebarUserMenu
           user={user}
           timezone={timezone}
@@ -294,7 +293,6 @@ function SidebarContentRender({
           isMobile={isMobile}
         />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   )
 }

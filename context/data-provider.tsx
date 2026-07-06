@@ -54,6 +54,7 @@ import {
   saveGroupAction,
   deleteGroupAction,
   moveAccountToGroupAction,
+  bulkMoveAccountsToGroupAction,
   renameGroupAction,
 } from '@/server/groups'
 import { createClient } from '@/lib/supabase'
@@ -81,6 +82,7 @@ import { defaultLayouts } from '@/lib/default-layouts'
 import { MOBILE_BREAKPOINT } from '@/lib/config/breakpoints'
 import { shouldUseDevMockTrades } from '@/lib/feature-flags'
 import { removeAccountFromGroups } from '@/context/data-provider-utils'
+import { toast } from 'sonner'
 
 import { generateMockTrades } from '@/lib/mock-trades'
 import { isValid, startOfDay, endOfDay } from 'date-fns'
@@ -312,6 +314,7 @@ export const DataProvider: React.FC<{
   const [refreshError, setRefreshError] = useState<string | null>(null)
   const bootstrappedSharedSlugRef = useRef<string | null>(null)
   const appliedBootstrapRef = useRef(false)
+  const bootstrapAppliedAtRef = useRef<number | null>(null)
   const dashboardLayoutRef = useRef(dashboardLayout)
   const activeUserIdRef = useRef<string | null>(null)
   const loadInProgressRef = useRef(false)
@@ -427,6 +430,7 @@ export const DataProvider: React.FC<{
     if (!bootstrapSnapshot || appliedBootstrapRef.current) return
 
     appliedBootstrapRef.current = true
+    bootstrapAppliedAtRef.current = Date.now()
     activeUserIdRef.current = bootstrapSnapshot.user?.id ?? null
 
     setUser(bootstrapSnapshot.user)
@@ -494,11 +498,12 @@ export const DataProvider: React.FC<{
       const allTrades: Trade[] = []
       let page = 1
       let hasMore = true
-      const pageSize = 500
+      const pageSize = 2000
+      const MAX_TRADES = 15000
 
-      while (hasMore) {
+      while (hasMore && allTrades.length < MAX_TRADES) {
         const response = await withTimeout(
-          getTradesAction(userId, page, pageSize, force && page === 1, false),
+          getTradesAction(userId, page, pageSize, true, false),
           15000,
           `getTradesAction(page=${page})`,
         )
@@ -565,7 +570,7 @@ export const DataProvider: React.FC<{
         )
       }
 
-      setAccounts(normalizeAccountsForClient(accountsWithMetrics))
+      setAccounts(accountsWithMetrics)
     },
     [setAccounts, withTimeout],
   )
@@ -846,7 +851,7 @@ export const DataProvider: React.FC<{
               // Calculate metrics in background after cache write
               calculateAccountMetricsAction(normalizedAccounts)
                 .then((accountsWithMetrics) => {
-                  setAccounts(normalizeAccountsForClient(accountsWithMetrics))
+                  setAccounts(accountsWithMetrics)
                 })
                 .catch((e) => {
                   logger.warn(
@@ -967,6 +972,19 @@ export const DataProvider: React.FC<{
         return
       }
 
+      // Skip server refresh when bootstrap data was applied within the last 30 seconds
+      // — the SSR data is already fresh and a re-fetch would be redundant
+      const BOOTSTRAP_FRESHNESS_MS = 30_000
+      if (
+        bootstrapSnapshot &&
+        bootstrapAppliedAtRef.current !== null &&
+        Date.now() - bootstrapAppliedAtRef.current < BOOTSTRAP_FRESHNESS_MS
+      ) {
+        // Bootstrap data is fresh; skip loadData but still load subscription data
+        await loadSubscriptionData()
+        return
+      }
+
       const dataPromise = bootstrapSnapshot
         ? loadData({ withLoading: false })
         : loadData()
@@ -1006,6 +1024,18 @@ export const DataProvider: React.FC<{
           const cachedTrades = await getTradesCache(userId)
           if (cachedTrades && Array.isArray(cachedTrades) && cachedTrades.length > 0) {
             setTrades(sanitizeTradesForState(cachedTrades))
+            // Background refresh so the dev cache can never drift from the server
+            // (e.g. after a server-action mutation that bypassed cache invalidation).
+            // Non-blocking: do not await.
+            void (async () => {
+              try {
+                const fresh = await fetchAllTrades(userId, true)
+                setTrades(sanitizeTradesForState(fresh))
+                await setTradesCache(userId, fresh)
+              } catch (err) {
+                logger.error({ err }, 'dev background trade refresh failed')
+              }
+            })()
             if (withLoading) setIsLoading(false)
             return
           }
@@ -1071,7 +1101,7 @@ export const DataProvider: React.FC<{
           20000,
           'calculateAccountMetricsAction(refresh)',
         )
-        setAccounts(normalizeAccountsForClient(accountsWithMetrics))
+        setAccounts(accountsWithMetrics)
 
         setUser(data.userData)
         setSubscription(data.subscription as PrismaSubscription | null)
@@ -1167,6 +1197,7 @@ export const DataProvider: React.FC<{
         // Only clear error on full success
         setRefreshError(null)
         logger.info('Successfully refreshed trades and user data')
+        toast.success('Dashboard data updated')
       } catch (error) {
         logger.error({ error }, 'Error refreshing all data')
         setRefreshError(error instanceof Error ? error.message : 'Failed to refresh dashboard data')
@@ -1344,7 +1375,7 @@ export const DataProvider: React.FC<{
       if (requiresDate) {
         try {
           entryDate = toZonedTime(rawDate, timezoneName)
-        } catch {
+        } catch (error) {
           entryDate = rawDate
         }
 
@@ -1412,24 +1443,19 @@ export const DataProvider: React.FC<{
   const statistics = useMemo(() => {
     const stats = calculateStatistics(formattedTrades, accounts)
 
-    // Calculate gross profits and gross losses including commissions
-    const grossProfits = formattedTrades.reduce((sum, trade) => {
-      const totalPnL = (trade.pnl || 0) - (trade.commission || 0)
-      return totalPnL > 0 ? sum + totalPnL : sum
-    }, 0)
+    let grossProfits = 0
+    let grossLosses = 0
+    for (let i = 0; i < formattedTrades.length; i++) {
+      const totalPnL = (formattedTrades[i].pnl || 0) - (formattedTrades[i].commission || 0)
+      if (totalPnL > 0) grossProfits += totalPnL
+      else grossLosses += totalPnL
+    }
+    grossLosses = Math.abs(grossLosses)
 
-    const grossLosses = Math.abs(
-      formattedTrades.reduce((sum, trade) => {
-        const totalPnL = (trade.pnl || 0) - (trade.commission || 0)
-        return totalPnL < 0 ? sum + totalPnL : sum
-      }, 0),
-    )
-
-    // Calculate profit factor (handle division by zero)
     const profitFactor =
       grossLosses === 0
         ? grossProfits > 0
-          ? Number.POSITIVE_INFINITY
+          ? 999
           : 1
         : grossProfits / grossLosses
 
@@ -1444,39 +1470,40 @@ export const DataProvider: React.FC<{
     [formattedTrades, accounts],
   )
 
-  const isPlusUser = () => {
+  const isPlusUser = useCallback(() => {
     if (isAdmin) return true
-    // Use Whop subscription store for more accurate subscription status
     const whopSubscription = useSubscriptionStore.getState().subscription
     if (whopSubscription) {
       const planName = whopSubscription.plan?.name?.toLowerCase() || ''
       return planName.includes('plus') || planName.includes('pro')
     }
 
-    // Fallback to database subscription
     const dbSubscription = useUserStore.getState().subscription
     return Boolean(
       dbSubscription?.status === 'ACTIVE' &&
       ['PLUS', 'PRO'].includes(dbSubscription?.plan?.split('_')[0].toUpperCase() || ''),
     )
-  }
+  }, [isAdmin])
 
   const clearDashboardBrowserCache = useCallback(
-    (scope: 'trades' | 'all', reason: string) => {
+    async (scope: 'trades' | 'all', reason: string) => {
       const userId = activeUserIdRef.current
       if (!userId) return
 
-      const clearPromise = scope === 'all' ? clearAllCache(userId) : clearTradesCache(userId)
-      clearPromise.catch((err) =>
-        logger.error({ err, reason, userId }, 'Failed to clear dashboard browser cache'),
-      )
+      try {
+        await (scope === 'all' ? clearAllCache(userId) : clearTradesCache(userId))
+      } catch (err) {
+        logger.error({ err, reason, userId }, 'Failed to clear dashboard browser cache')
+      }
     },
     [],
   )
 
+  const saveAccountUserId = supabaseUser?.id
+
   const saveAccount = useCallback(
     async (newAccount: Account) => {
-      if (!supabaseUser?.id) return
+      if (!saveAccountUserId) return
 
       try {
         // Get the current account to preserve other properties
@@ -1501,12 +1528,13 @@ export const DataProvider: React.FC<{
           )
           const accountWithMetrics = normalizeAccountForClient(accountsWithMetrics[0])
 
-          setAccounts([...accounts, accountWithMetrics])
+          setAccounts([...useUserStore.getState().accounts, accountWithMetrics])
 
           // If the new account has a groupId, update the groups state to include it
           if (accountWithMetrics.groupId) {
+            const currentGroups = useUserStore.getState().groups
             setGroups(
-              groups.map((group) => {
+              currentGroups.map((group) => {
                 if (group.id === accountWithMetrics.groupId) {
                   return {
                     ...group,
@@ -1517,7 +1545,7 @@ export const DataProvider: React.FC<{
               }),
             )
           }
-          clearDashboardBrowserCache('all', 'saveAccount:create')
+          await clearDashboardBrowserCache('all', 'saveAccount:create')
           return
         }
 
@@ -1545,7 +1573,7 @@ export const DataProvider: React.FC<{
         const groupIdChanged = oldGroupId !== newGroupId
 
         // Update the account in the local state with recalculated metrics
-        const updatedAccounts = accounts.map((account: Account) => {
+        const updatedAccounts = useUserStore.getState().accounts.map((account: Account) => {
           if (account.number === accountWithMetrics.number) {
             return accountWithMetrics
           }
@@ -1617,7 +1645,7 @@ export const DataProvider: React.FC<{
                 const newGroup = {
                   id: newGroupId,
                   name: 'New Group', // Temporary name
-                  userId: supabaseUser.id,
+                  userId: saveAccountUserId,
                   createdAt: new Date(),
                   updatedAt: new Date(),
                   accounts: [accountWithMetrics],
@@ -1639,7 +1667,7 @@ export const DataProvider: React.FC<{
               const newGroup = {
                 id: newGroupId,
                 name: 'New Group',
-                userId: supabaseUser.id,
+                userId: saveAccountUserId,
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 accounts: [accountWithMetrics],
@@ -1668,15 +1696,14 @@ export const DataProvider: React.FC<{
             )
           }
         }
-        clearDashboardBrowserCache('all', 'saveAccount:update')
+        await clearDashboardBrowserCache('all', 'saveAccount:update')
       } catch (error) {
         logger.error({ error }, 'Error updating account')
         throw error
       }
     },
     [
-      supabaseUser?.id,
-      accounts,
+      saveAccountUserId,
       setAccounts,
       groups,
       setGroups,
@@ -1857,7 +1884,7 @@ export const DataProvider: React.FC<{
           }),
         )
 
-        await Promise.all(accountIds.map((id) => moveAccountToGroupAction(id, targetGroupId)))
+        await bulkMoveAccountsToGroupAction(accountIds, targetGroupId)
         clearDashboardBrowserCache('all', 'moveAccountsToGroup')
       } catch (error) {
         logger.error({ error }, 'Error moving accounts to group, rolling back')
@@ -2025,6 +2052,17 @@ export const DataProvider: React.FC<{
 
       const previousTrades = [...trades]
 
+      // Server-only transform keys consumed by updateTradesAction. These are not
+      // real Trade fields; spreading them into local trade objects pollutes state
+      // with ghost fields AND the actual entryDate/instrument values are computed
+      // server-side, so the optimistic copy would show stale values until refresh.
+      const hadServerOnlyKeys =
+        'entryDateOffset' in update ||
+        'closeDateOffset' in update ||
+        'instrumentTrim' in update ||
+        'instrumentPrefix' in update ||
+        'instrumentSuffix' in update
+
       try {
         const updatedTrades = trades.map((trade: Trade) =>
           tradeIds.includes(trade.id)
@@ -2037,12 +2075,19 @@ export const DataProvider: React.FC<{
         setTrades(updatedTrades)
         const updatedCount = await updateTradesAction(tradeIds, update)
 
-        clearDashboardBrowserCache('trades', 'updateTrades')
+        clearDashboardBrowserCache('all', 'updateTrades')
 
         if (updatedCount === 0 || updatedCount !== tradeIds.length) {
           throw new Error(
             `Failed to persist trade updates (updated ${updatedCount}/${tradeIds.length})`,
           )
+        }
+
+        // If the update contained server-only offset/instrument transforms, the
+        // optimistic local copy has ghost fields and stale computed values. Force
+        // a refresh so client state matches the server-computed values.
+        if (hadServerOnlyKeys) {
+          await refreshTradesOnly({ force: true })
         }
       } catch (error) {
         logger.error({ error }, 'Error updating trades, rolling back')
@@ -2050,7 +2095,7 @@ export const DataProvider: React.FC<{
         throw error
       }
     },
-    [supabaseUser?.id, trades, setTrades, clearDashboardBrowserCache],
+    [supabaseUser?.id, trades, setTrades, clearDashboardBrowserCache, refreshTradesOnly],
   )
 
   const groupTrades = useCallback(
@@ -2066,7 +2111,7 @@ export const DataProvider: React.FC<{
         )
         await groupTradesAction(tradeIds)
 
-        clearDashboardBrowserCache('trades', 'groupTrades')
+        clearDashboardBrowserCache('all', 'groupTrades')
       } catch (error) {
         logger.error({ error }, 'Error grouping trades, rolling back')
         setTrades(previousTrades)
@@ -2088,7 +2133,7 @@ export const DataProvider: React.FC<{
         )
         await ungroupTradesAction(tradeIds)
 
-        clearDashboardBrowserCache('trades', 'ungroupTrades')
+        clearDashboardBrowserCache('all', 'ungroupTrades')
       } catch (error) {
         logger.error({ error }, 'Error ungrouping trades, rolling back')
         setTrades(previousTrades)
@@ -2114,7 +2159,7 @@ export const DataProvider: React.FC<{
         // Delete from database
         await deleteTradesByIdsAction(tradeIds)
 
-        clearDashboardBrowserCache('trades', 'deleteTrades')
+        clearDashboardBrowserCache('all', 'deleteTrades')
       } catch (error) {
         // On error, refresh to restore the correct state
         logger.error({ error }, 'Error deleting trades')

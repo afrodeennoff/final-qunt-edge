@@ -6,30 +6,42 @@ import { MARKETING_SHELL_WIDTH } from '@/lib/constants/layout'
 import { cn } from '@/lib/utils'
 
 export const marketingHeroTitleClassName =
-  'text-balance text-[48px] font-[275] leading-[var(--leading-none)] tracking-[var(--tracking-tighter)] text-foreground sm:text-[64px] lg:text-[80px] xl:text-[96px]'
+  'text-balance text-[48px] font-light tracking-tight text-foreground sm:text-[64px] lg:text-[80px] xl:text-[96px]'
 
 export const marketingSectionTitleClassName =
-  'text-balance text-[32px] font-[350] leading-[var(--leading-snug)] tracking-[var(--tracking-tight)] text-foreground sm:text-[40px] lg:text-[48px]'
+  'text-balance text-[32px] font-light tracking-tight text-foreground sm:text-[40px] lg:text-[48px]'
 
-export const marketingBodyClassName = 'text-[14px] leading-[var(--leading-relaxed)] text-muted-foreground/80 sm:text-[15px]'
+export const marketingBodyClassName = 'text-[14px] leading-relaxed text-muted-foreground/70'
 
 export function MarketingSection({
   children,
   id,
   className,
   innerClassName,
+  glow = false,
 }: {
   children: ReactNode
   id?: string
   className?: string
   innerClassName?: string
+  glow?: boolean
 }) {
   return (
     <section
       id={id}
-      className={cn('scroll-smooth-butter px-4 py-16 sm:px-6 lg:px-8 lg:py-20', className)}
+      className={cn(
+        'scroll-smooth-butter relative px-4 py-8 sm:px-6 lg:px-8 sm:py-10',
+        'border-t border-0',
+        className,
+      )}
     >
-      <div className={cn('mx-auto w-full', MARKETING_SHELL_WIDTH, innerClassName)}>{children}</div>
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      {glow && (
+        <div className="pointer-events-none absolute inset-0 flex items-start justify-center">
+          <div className="h-64 w-64 rounded-full bg-primary/[0.03] blur-3xl" />
+        </div>
+      )}
+      <div className={cn('relative z-10 mx-auto w-full', MARKETING_SHELL_WIDTH, innerClassName)}>{children}</div>
     </section>
   )
 }
@@ -54,15 +66,15 @@ export function MarketingSectionHeader({
   return (
     <header
       className={cn(
-        'space-y-4',
+        'space-y-3',
         align === 'center' ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl',
         className,
       )}
     >
       {eyebrow ? (
-        <p className="text-[10.5px] font-semibold uppercase tracking-[0.10em] text-[var(--mkt-accent)]">
+        <span className="inline-block rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
           {eyebrow}
-        </p>
+        </span>
       ) : null}
       <Title className={marketingSectionTitleClassName}>{title}</Title>
       {description ? (
@@ -88,16 +100,16 @@ export function MarketingFeatureCard({
   className?: string
 }) {
   return (
-    <Card variant="glass" className={cn('relative overflow-hidden rounded-[12px] border border-[var(--mkt-border-subtle)] bg-[linear-gradient(160deg,var(--mkt-bg-surface)_0%,var(--mkt-bg-surface)_100%)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_32px_-20px_rgba(0,0,0,0.64)] transition-[border-color,box-shadow,background,transform] duration-200 hover:border-[var(--mkt-border-accent)] hover:bg-[linear-gradient(135deg,var(--mkt-bg-surface)_0%,rgba(139,92,246,0.04)_100%)] hover:-translate-y-[2px] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_20px_40px_-20px_rgba(0,0,0,0.72)]', className)}>
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--mkt-accent-border)] bg-[var(--mkt-accent-subtle)] text-[var(--mkt-accent)]">
+    <Card className={cn('p-5', className)}>
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 ring-1 ring-inset ring-primary/10 text-primary">
         {icon}
       </div>
       <div className="mt-4">
-        <h3 className="text-base font-semibold tracking-tight text-[var(--mkt-text-primary)]">{title}</h3>
+        <h3 className="text-base font-semibold tracking-tight text-foreground">{title}</h3>
         <p className={cn(marketingBodyClassName, 'mt-2 line-clamp-2 text-sm')}>{description}</p>
       </div>
       {footer ? (
-        <div className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+        <div className="mt-4 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
           {footer}
         </div>
       ) : null}
@@ -115,14 +127,14 @@ export function MarketingStatBlock({
   className?: string
 }) {
   return (
-    <Card variant="flat" className={cn('p-6 text-center', className)}>
-      <p className="text-[32px] font-[250] tracking-[-0.05em] tabular-nums text-foreground leading-none">
+    <div className={cn('rounded-xl bg-card p-6 border-0 text-center', className)}>
+      <p className="text-[32px] font-light tracking-[-0.05em] tabular-nums text-foreground leading-none font-mono">
         {value}
       </p>
-      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+      <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/60">
         {label}
       </p>
-    </Card>
+    </div>
   )
 }
 
@@ -140,16 +152,16 @@ export function MarketingStepCard({
   className?: string
 }) {
   return (
-    <Card variant="glass" className={cn('h-full p-6', className)}>
+    <Card className={cn('h-full p-6', className)}>
       <div className="flex items-center justify-between gap-3">
         <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           {step}
         </span>
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--mkt-accent-border)] bg-[var(--mkt-accent-subtle)] text-[var(--mkt-accent)]">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 ring-1 ring-inset ring-primary/10 text-primary">
           {icon}
         </span>
       </div>
-      <h3 className="mt-6 text-base font-semibold tracking-[-0.01em] text-foreground">{title}</h3>
+      <h3 className="mt-6 text-base font-semibold tracking-tight text-foreground">{title}</h3>
       <p className={cn(marketingBodyClassName, 'mt-2 text-sm')}>{description}</p>
     </Card>
   )
@@ -182,25 +194,24 @@ export function MarketingPricingCard({
 }) {
   return (
     <Card
-      variant={highlighted ? 'elevated' : 'glass'}
       hover
       className={cn(
         'relative flex h-full flex-col p-7',
-        highlighted && 'border-[var(--mkt-accent-border)] shadow-[var(--mkt-shadow-glow)]',
+        highlighted && 'border-primary/40 shadow-sm',
         className,
       )}
     >
       {badge ? (
-        <Badge variant="frost-info" className="absolute right-5 top-5">
+        <Badge className="absolute right-5 top-5">
           {badge}
         </Badge>
       ) : null}
-      <div className={cn(badge && 'pr-24')}>
-        <h3 className="text-base font-semibold tracking-[-0.01em] text-foreground">{name}</h3>
+      <div className={cn(badge && 'sm:pr-24')}>
+        <h3 className="text-base font-semibold tracking-tight text-foreground">{name}</h3>
         <p className={cn(marketingBodyClassName, 'mt-2 text-sm')}>{description}</p>
       </div>
       <div className="mt-8 flex items-end gap-3">
-        <span className="text-5xl font-semibold leading-none tracking-[-0.05em] text-foreground">
+        <span className="text-5xl font-black leading-none tracking-[-0.05em] text-foreground">
           {price}
         </span>
         {period ? <span className="pb-1 text-sm text-muted-foreground">{period}</span> : null}
@@ -212,14 +223,14 @@ export function MarketingPricingCard({
             key={index}
             className="flex items-start gap-2.5 text-sm leading-6 text-muted-foreground"
           >
-            <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--mkt-accent-subtle)] text-[var(--mkt-accent)]">
+            <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-success/10 text-success">
               <Check className="h-3 w-3" />
             </span>
             <span>{feature}</span>
           </li>
         ))}
       </ul>
-      <Button asChild variant={highlighted ? 'solid' : 'outline'} size="lg" className={cn('mt-8 w-full', highlighted && 'rounded-[0.95rem] border border-[var(--mkt-accent-border)] text-white shadow-[var(--mkt-shadow-glow-sm)] hover:shadow-[var(--mkt-shadow-glow)]')} style={highlighted ? { background: 'var(--mkt-gradient-purple)' } : undefined}>
+      <Button asChild variant={highlighted ? 'default' : 'outline'} size="lg" className={cn('mt-8 w-full', highlighted && 'rounded-lg border border-primary/30 shadow-[0_0_25px_-12px] shadow-primary/30')} style={highlighted ? { background: 'var(--primary)' } : undefined}>
         <Link href={href}>{cta}</Link>
       </Button>
     </Card>
@@ -240,17 +251,17 @@ export function MarketingHyperframe({
   className?: string
 }) {
   return (
-    <Card id={id} variant="elevated" className={cn('overflow-hidden p-0', className)}>
-      <div className="flex items-center justify-between border-b border-border/50 bg-[var(--card)] px-4 py-2.5">
+    <Card id={id} className={cn('overflow-hidden p-0', className)}>
+      <div className="flex items-center justify-between border-b-0 bg-gradient-to-br from-card/30 to-card/5 px-4 py-2.5">
         <div className="flex items-center gap-1.5 px-2 py-1" aria-hidden>
-          <span className="h-3 w-3 rounded-full bg-destructive/80 opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
-          <span className="h-3 w-3 rounded-full bg-warning/80 opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
-          <span className="h-3 w-3 rounded-full bg-success/80 opacity-90 shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.12)]" />
+          <span className="h-3 w-3 rounded-full bg-destructive/80" />
+          <span className="h-3 w-3 rounded-full bg-warning/80" />
+          <span className="h-3 w-3 rounded-full bg-success/80" />
         </div>
-        <div className="rounded-full border border-border/50 bg-secondary/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
+        <div className="rounded-full bg-muted/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground border-0">
           {label}
         </div>
-        <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/80 sm:flex">
+        <div className="hidden min-w-24 justify-end text-[10px] font-semibold uppercase tracking-[0.12em] text-primary/80 sm:flex">
           {status}
         </div>
       </div>

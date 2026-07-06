@@ -42,7 +42,7 @@ export function PerformanceVisualizationChart() {
  const mid = chartHeight / 2
 
  return (
- <div className="mx-6 rounded-xl p-6 bg-primary/[0.03] shadow-card">
+ <div className="mx-6 rounded-xl p-6 bg-muted/40 shadow-card">
  <div className="flex items-center gap-3 mb-4">
  <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
  <TrendingUp className="size-[18px] text-primary" strokeWidth={2} />
@@ -51,7 +51,7 @@ export function PerformanceVisualizationChart() {
  Performance Viz
  </p>
  </div>
- <div data-chart-surface="modern" className="h-full w-full rounded-xl border bg-primary/[0.03] px-4 py-3 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+  <div data-chart-surface="modern" className="h-full w-full rounded-xl border-0 bg-card px-4 py-3">
  <div className="mb-3 flex items-center justify-between text-sm text-foreground/80">
  <div className="flex items-center gap-3">
  <span className="flex items-center gap-1">
@@ -69,7 +69,7 @@ export function PerformanceVisualizationChart() {
  <div className="w-full h-[280px]">
  <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-full w-full">
  {/* Baseline */}
- <line x1={0} x2={chartWidth} y1={mid} y2={mid} className="stroke-border" strokeWidth={1} />
+ <line x1={0} x2={chartWidth} y1={mid} y2={mid} className="stroke-transparent" strokeWidth={1} />
 
  {/* Bars for per-contract PnL */}
  {normalized.map((point, idx) => {

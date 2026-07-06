@@ -40,6 +40,7 @@ vi.mock('next/cache', () => ({
 
 vi.mock('@/server/auth', () => ({
   createClient: vi.fn(),
+  getDatabaseUserId: vi.fn(),
 }))
 
 vi.mock('@/server/team-membership', () => ({
@@ -206,6 +207,7 @@ describe('teams security', () => {
 
   describe('getTeamAnalytics', () => {
     it('returns analytics data for valid team request', async () => {
+      prismaMock.team.findFirst.mockResolvedValue({ id: 'team_1' } as any)
       prismaMock.teamAnalytics.findFirst.mockResolvedValue({
         teamId: 'team_1',
         period: 'monthly',
@@ -223,6 +225,7 @@ describe('teams security', () => {
     })
 
     it('creates default analytics when none exist', async () => {
+      prismaMock.team.findFirst.mockResolvedValue({ id: 'team_1' } as any)
       prismaMock.teamAnalytics.findFirst.mockResolvedValue(null)
       prismaMock.teamAnalytics.create.mockResolvedValue({
         teamId: 'team_1',
@@ -241,6 +244,7 @@ describe('teams security', () => {
     })
 
     it('supports different period options', async () => {
+      prismaMock.team.findFirst.mockResolvedValue({ id: 'team_1' } as any)
       prismaMock.teamAnalytics.findFirst.mockResolvedValue({
         teamId: 'team_1',
         period: 'weekly',

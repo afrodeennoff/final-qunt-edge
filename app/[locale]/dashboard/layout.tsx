@@ -1,3 +1,4 @@
+import React from 'react'
 import type { Metadata } from 'next'
 import { createClient } from '@/server/auth'
 import { redirect } from 'next/navigation'
@@ -6,7 +7,6 @@ import { DashboardProviders } from '@/components/providers/dashboard-providers'
 import { SidebarRootProviders } from '@/components/providers/root-providers'
 import { DashboardScrollReset } from './components/dashboard-scroll-reset'
 import { ErrorBoundary } from '@/components/error-boundary'
-import { DashboardSidebar } from '@/components/sidebar/dashboard-sidebar'
 import dynamic from 'next/dynamic'
 import { isAdminUser } from '@/server/authz'
 import { getUserDashboardTheme } from '@/server/user-data'
@@ -18,7 +18,6 @@ import {
 import { cookies } from 'next/headers'
 import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from '@/lib/sidebar-state'
 import { SidebarLayoutShell } from '@/components/ui/sidebar-layout-shell'
-import { MobileBottomNav } from '@/components/mobile-bottom-nav'
 import { GestureProvider } from '@/components/providers/gesture-provider'
 import { PullToRefreshIndicator } from '@/components/pull-to-refresh'
 import { shouldUseServerBootstrap } from '@/lib/feature-flags'
@@ -39,6 +38,25 @@ const DashboardHeader = dynamic(
 const DashboardClientOverlays = dynamic(
   () => import('./components/dashboard-client-overlays').then((m) => m.DashboardClientOverlays),
   { loading: () => <div /> },
+)
+
+const DashboardSidebar = dynamic(
+  () => import('@/components/sidebar/dashboard-sidebar').then(m => ({ default: m.DashboardSidebar })),
+  {
+    loading: () => <div className="hidden lg:flex w-64 shrink-0 bg-background/50 animate-pulse" />,
+  }
+)
+
+const MobileBottomNav = dynamic(
+  () => import('@/components/mobile-bottom-nav').then(m => ({ default: m.MobileBottomNav })),
+  {
+    loading: () => <div className="h-16 animate-pulse bg-background/50 lg:hidden" />,
+  }
+)
+
+const FloatingChat = dynamic(
+  () => import('../dashboard/statistics/components/floating-chat').then(m => ({ default: m.FloatingChat })),
+  { loading: () => null },
 )
 
 export const metadata: Metadata = {
@@ -71,18 +89,20 @@ export default async function DashboardLayout({
 
   // Server dashboard bootstrap — loads all data for first paint when flag is enabled.
   // Falls back to client-side loadData() when flag is disabled or bootstrap fails.
-  let initialBootstrap: DashboardBootstrapPayload | null = null
-  if (shouldUseServerBootstrap(user.id)) {
-    try {
-      // Dynamic import to avoid issues when bootstrap module is not yet stable
-      const { getDashboardBootstrap } = await import('@/server/dashboard-bootstrap')
-      initialBootstrap = await getDashboardBootstrap()
-    } catch (err) {
-      console.warn('[Dashboard] Bootstrap failed, falling back to client loadData:', err)
-    }
-  }
+  // Parallelize with theme fetch for faster SSR.
+  const bootstrapPromise: Promise<DashboardBootstrapPayload | null> = shouldUseServerBootstrap(user.id)
+    ? import('@/server/dashboard-bootstrap')
+        .then(({ getDashboardBootstrap }) => getDashboardBootstrap())
+        .catch((err) => {
 
-  const userTheme = normalizeDashboardTheme(await getUserDashboardTheme())
+          return null
+        })
+    : Promise.resolve(null)
+
+  const [userTheme, initialBootstrap] = await Promise.all([
+    getUserDashboardTheme().then(normalizeDashboardTheme),
+    bootstrapPromise,
+  ])
   const themeScript = serializeThemeVars(userTheme)
   const cookieStore = await cookies()
   const defaultSidebarOpen = parseSidebarStateCookieValue(
@@ -95,7 +115,7 @@ export default async function DashboardLayout({
         id="init-dashboard-theme"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
-          __html: `(function(){try{var root=document.documentElement;${themeScript};root.setAttribute('data-theme','${userTheme ?? DEFAULT_DASHBOARD_THEME}')}catch(e){console.error('[Theme] Bootstrap failed',e)}})()`,
+          __html: `(function(){try{var root=document.documentElement;${themeScript};root.setAttribute("data-theme","${userTheme ?? DEFAULT_DASHBOARD_THEME}")}catch(e){}})()`,
         }}
       />
       <SidebarRootProviders
@@ -119,7 +139,7 @@ export default async function DashboardLayout({
                 <PullToRefreshIndicator />
                 <div
                   className={cn(
-                    'mx-auto flex w-full flex-col',
+                    'mx-auto flex w-full flex-col min-h-full',
                     WORKSPACE_SHELL_WIDTH,
                   )}
                 >
@@ -127,6 +147,7 @@ export default async function DashboardLayout({
                 </div>
               </GestureProvider>
             </SidebarLayoutShell>
+            <FloatingChat />
           </DashboardProvider>
         </DashboardProviders>
       </SidebarRootProviders>

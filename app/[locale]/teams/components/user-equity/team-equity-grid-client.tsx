@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useState, useRef, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import { getTeamEquityData, exportTeamTradesAction } from '../../actions/stats'
 import { Card } from '@/components/ui/card'
-import { UserEquityChart } from './user-equity-chart'
 import { ExternalLink, Download } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { Switch } from '@/components/ui/switch'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,6 +16,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Filter, X } from 'lucide-react'
 import { useTypedI18n } from '@/locales/client'
 import { toast } from 'sonner'
+
+const UserEquityChart = dynamic(() => import('./user-equity-chart').then(m => ({ default: m.UserEquityChart })), {
+  loading: () => <Skeleton className="h-32 w-full rounded-lg" />,
+})
 
 interface UserEquityData {
  userId: string
@@ -105,25 +110,25 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  setUsers(prev => [...prev, ...data.users])
  setHasMore(data.hasMore)
  setCurrentPage(currentPage + 1)
- } catch (error) {
- console.error('Error loading more users:', error)
- } finally {
- setIsLoadingMore(false)
- }
- }, [teamId, currentPage, hasMore, isLoadingMore])
+    } catch (err) {
+      console.error('Error loading more users:', err)
+    } finally {
+      setIsLoadingMore(false)
+    }
+  }, [teamId, currentPage, hasMore, isLoadingMore])
 
- // Load initial data
- useEffect(() => {
- const loadInitialData = async () => {
- setIsInitialLoading(true)
- try {
- const data = await getTeamEquityData(teamId, 1, 10)
- setUsers(data.users)
- setHasMore(data.hasMore)
- setCurrentPage(2)
- } catch (error) {
- console.error('Error loading initial data:', error)
- } finally {
+  // Load initial data
+  useEffect(() => {
+    const loadInitialData = async () => {
+      setIsInitialLoading(true)
+      try {
+        const data = await getTeamEquityData(teamId, 1, 10)
+        setUsers(data.users)
+        setHasMore(data.hasMore)
+        setCurrentPage(2)
+      } catch (err) {
+        console.error('Error loading initial data:', err)
+      } finally {
  setIsInitialLoading(false)
  }
  }
@@ -182,8 +187,8 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  document.body.removeChild(link)
  
  toast.success(t('teams.equity.exportSuccess'))
- } catch (error) {
- console.error('Error exporting trades:', error)
+ } catch {
+
  toast.error(t('teams.equity.exportError'))
  } finally {
  setIsExporting(false)
@@ -195,7 +200,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  if (isInitialLoading) {
  return (
  <div className="flex justify-center items-center py-8">
- <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-border/0.56"></div>
+ <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary/50"></div>
  </div>
  )
  }
@@ -413,7 +418,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  </div>
 
  {/* Additional Metrics */}
- <div className="pt-2 border-t">
+  <div className="pt-2 border-t border-transparent">
  <div className="grid grid-cols-2 gap-2 text-xs">
  <div className="flex justify-between">
  <span className="text-muted-foreground">{t('teams.equity.maxDD')}:</span>
@@ -439,7 +444,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  <div ref={loadingRef} className="flex justify-center py-4">
  {isLoadingMore ? (
  <div className="animate-pulse">
- <div className="h-8 bg-background/0.12 rounded w-32"></div>
+ <div className="h-8 bg-muted/40 rounded-xl w-32"></div>
  </div>
  ) : (
  <div className="text-sm text-muted-foreground">{t('teams.equity.scrollToLoadMore')}</div>

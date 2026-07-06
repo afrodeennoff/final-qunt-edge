@@ -44,7 +44,7 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
  setSelectedMood(storedMood.mood)
  return
  }
- } catch (error) {
+ } catch {
  // Invalid JSON in localStorage, clear and continue
  localStorage.removeItem(STORAGE_KEY)
  }
@@ -62,8 +62,8 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
  date: today
  }))
  }
- } catch (error) {
- console.error('Error loading mood:', error)
+ } catch {
+
  }
  }
 
@@ -90,8 +90,8 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
  }))
 
  toast.success(t('mood.saved'))
- } catch (error) {
- console.error('Error saving mood:', error)
+ } catch {
+
  toast.error(t('mood.error'))
  } finally {
  setIsLoading(null)

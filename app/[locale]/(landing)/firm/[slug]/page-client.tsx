@@ -102,33 +102,6 @@ const trustChecklist = [
   'Profile, rules, and ROI tabs stay tied to the same firm record.',
 ]
 
-type FirmSourceNotes = {
-  overview: string[]
-  rules: string[]
-}
-
-type FirmSourceMeta = {
-  founded?: string
-  countryCode?: string
-  yearsInOperation?: number
-}
-
-function getFirmSourceMeta(): FirmSourceMeta {
-  return {}
-}
-
-function getFirmSourceNotes(): FirmSourceNotes {
-  return { overview: [], rules: [] }
-}
-
-const radarChartConfig = {
-  score: {
-    label: 'Score',
-    color: 'hsl(var(--chart-1))',
-  },
-} satisfies ChartConfig
-
-type AccountSizeEntry = [string, NonNullable<FirmData['accountSizes']>[string]]
 type FactIcon = React.ComponentType<{ className?: string }>
 
 function formatFirmCurrency(value: number): string {
@@ -140,9 +113,16 @@ function formatFirmCurrency(value: number): string {
   }).format(value)
 }
 
-function getAccountSizeEntries(accountSizes?: FirmData['accountSizes']): AccountSizeEntry[] {
+function getAccountSizeEntries(accountSizes?: FirmData['accountSizes']): [string, NonNullable<FirmData['accountSizes']>[string]][] {
   return accountSizes ? Object.entries(accountSizes) : []
 }
+
+const radarChartConfig = {
+  score: {
+    label: 'Score',
+    color: 'hsl(var(--chart-1))',
+  },
+} satisfies ChartConfig
 
 function withDetailFallback(value?: string | null): string {
   return value ?? 'Not listed'
@@ -157,17 +137,15 @@ function getVisibleCouponCount(firm: FirmData): number {
 }
 
 function buildAdditionalDetails(firm: FirmData): Array<{ icon: FactIcon; label: string; value: string }> {
-  const sourceMeta = getFirmSourceMeta()
-
   return [
     { icon: Building2, label: 'Category', value: withDetailFallback(firm.category) },
-    { icon: Landmark, label: 'Founded', value: withDetailFallback(firm.spotlight?.founded ?? sourceMeta.founded) },
+    { icon: Landmark, label: 'Founded', value: withDetailFallback(firm.spotlight?.founded) },
     { icon: Shield, label: 'Drawdown Type', value: withDetailFallback(firm.drawdownType) },
     { icon: Wallet, label: 'Max Allocation', value: withDetailFallback(firm.maxAllocation) },
     { icon: DollarSign, label: 'Profit Split', value: withDetailFallback(firm.profitSplit) },
     { icon: Clock, label: 'Payout Frequency', value: withDetailFallback(firm.payoutModel) },
     { icon: Layers, label: 'Platform', value: withDetailFallback(firm.platform) },
-    { icon: Award, label: 'Country', value: withDetailFallback(firm.spotlight?.countryCode ?? sourceMeta.countryCode) },
+    { icon: Award, label: 'Country', value: withDetailFallback(firm.spotlight?.countryCode) },
   ]
 }
 
@@ -237,7 +215,7 @@ function getResearchFitValue(firm: FirmData): string {
 }
 
 function getResearchFitHelper(firm: FirmData): string {
-  return `${withDetailFallback(firm.drawdownType)} • ${withDetailFallback(firm.payoutModel)}`
+  return `${withDetailFallback(firm.drawdownType)} \u2022 ${withDetailFallback(firm.payoutModel)}`
 }
 
 function buildResearchSnapshot(firm: FirmData): Array<{ label: string; value: string; helper: string }> {
@@ -348,7 +326,7 @@ function buildRules(firm: FirmData): Array<{ title: string; value: string; descr
     {
       title: 'Payout Model',
       value: firm.payoutModel ?? 'Not listed',
-      description: 'Current payout cadence published for this firm record and checked against the current help center where available.',
+      description: 'Current payout cadence published for this firm record and checked against the available help center where possible.',
     },
     {
       title: 'Profit Split',
@@ -369,10 +347,9 @@ function getHeaderReviewLabel(firm: FirmData): string {
 }
 
 function getHeaderOptionalItems(firm: FirmData): string[] {
-  const sourceMeta = getFirmSourceMeta()
-  const yearsInOperation = firm.spotlight?.yearsInOperation ?? sourceMeta.yearsInOperation
-  const countryCode = firm.spotlight?.countryCode ?? sourceMeta.countryCode
-  const founded = firm.spotlight?.founded ?? sourceMeta.founded
+  const yearsInOperation = firm.spotlight?.yearsInOperation
+  const countryCode = firm.spotlight?.countryCode
+  const founded = firm.spotlight?.founded
 
   return [
     yearsInOperation ? `${yearsInOperation} years in operation` : null,
@@ -417,14 +394,14 @@ function FactTile({
   value: string
 }) {
   return (
-    <div className="rounded-xl border border-border/20 bg-card/80 px-4 py-4">
+    <div className="rounded-xl bg-muted/40 px-4 py-4">
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/40 bg-background/0.05">
-          <Icon className="h-4 w-4 text-v2-accent" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
+          <Icon className="h-4 w-4 text-primary" />
         </div>
         <div>
-          <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
-          <p className="mt-2 text-sm font-semibold text-foreground">{value || 'N/A'}</p>
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{label}</p>
+          <p className="mt-1.5 text-sm font-semibold text-foreground">{value || 'N/A'}</p>
         </div>
       </div>
     </div>
@@ -435,14 +412,17 @@ function MetricCard({ label, value, highlight = false }: { label: string; value:
   return (
     <div
       className={cn(
-        'rounded-xl border border-border/20 px-4 py-4',
+        'rounded-xl px-4 py-4',
         highlight
-          ? 'bg-[linear-gradient(145deg,rgba(20,184,166,0.16),rgba(20,184,166,0.05))]'
-          : 'bg-card/80'
+          ? 'bg-gradient-to-br from-success/15 to-success/5'
+          : 'bg-muted/40'
       )}
     >
-      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
-      <p className={`mt-2 text-2xl font-semibold tracking-[-0.03em] ${highlight ? 'text-v2-success' : 'text-foreground'}`}>{value}</p>
+      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p className={cn(
+        'mt-1.5 text-2xl font-bold tracking-tight',
+        highlight ? 'text-success' : 'text-foreground'
+      )}>{value}</p>
     </div>
   )
 }
@@ -468,38 +448,37 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
   }
 
   return (
-    <Card className="rounded-xl border-border/40 bg-background/35">
-      <CardContent className="flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between">
+    <div className="rounded-xl bg-muted/40">
+      <div className="flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
-          <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Referral link</p>
-          <CardTitle className="mt-3 text-2xl text-foreground">Open the official company site.</CardTitle>
-          <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Referral link</p>
+          <h3 className="mt-3 text-xl font-bold text-foreground">Open the official company site.</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             Use the firm link below if you want to continue from research into signup.
-          </CardDescription>
-          <div className="mt-4 flex items-center gap-2 rounded-xl border border-border/40 bg-background/50 px-3 py-3">
+          </p>
+          <div className="mt-4 flex items-center gap-2 rounded-xl bg-muted px-3 py-3">
             <code className="min-w-0 flex-1 truncate text-xs text-foreground/80">{referralUrl}</code>
             <button
               onClick={handleCopy}
-              className="shrink-0 rounded-xl border border-border/40 bg-background/35 p-2 transition-colors hover:bg-background/0.01"
+              className="shrink-0 rounded-xl bg-muted p-2 transition-colors hover:bg-foreground/10"
               title="Copy link"
               type="button"
             >
-              {copied ? <Check className="h-4 w-4 text-v2-accent" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
+              {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
             </button>
           </div>
         </div>
-
         <a
           href={referralUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-v2-accent px-6 py-3 text-sm font-semibold text-v2-accent-foreground transition-colors hover:bg-v2-accent-hover"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
         >
           Visit Firm
           <ExternalLink className="h-4 w-4" />
         </a>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
 
@@ -507,17 +486,17 @@ function ChallengeCard({
   size,
   profitSplit,
 }: {
-  size: AccountSizeEntry[1]
+  size: NonNullable<FirmData['accountSizes']>[string]
   profitSplit: string
 }) {
-  const targetPercent = getTargetPercent(size)
-  const dailyLossPercent = getDailyLossPercent(size)
-  const drawdownPercent = getDrawdownPercent(size)
-  const dailyLossValue = getDailyLossValue(size)
+  const targetPercent = size.target > 0 ? `${((size.target / size.balance) * 100).toFixed(1)}%` : null
+  const dailyLossPercent = size.dailyLoss !== null && size.dailyLoss > 0 ? `${((size.dailyLoss / size.balance) * 100).toFixed(1)}%` : null
+  const drawdownPercent = `${((size.drawdown / size.balance) * 100).toFixed(1)}%`
+  const dailyLossValue = size.dailyLoss !== null ? formatFirmCurrency(size.dailyLoss) : 'No limit'
 
   return (
-    <Card className="rounded-xl border-border/40 bg-background/35">
-      <CardContent className="p-6">
+    <div className="rounded-xl bg-card">
+      <div className="p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -526,14 +505,14 @@ function ChallengeCard({
               {size.trailing ? <Badge variant="default">{size.trailing}</Badge> : null}
             </div>
 
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               <ChallengeStat label="Account Size" value={formatFirmCurrency(size.balance)} />
               <ChallengeStat label="Profit Target" value={formatFirmCurrency(size.target)} note={targetPercent} />
               <ChallengeStat label="Max Daily Loss" value={dailyLossValue} note={dailyLossPercent} />
               <ChallengeStat label="Max Drawdown" value={formatFirmCurrency(size.drawdown)} note={drawdownPercent} />
             </div>
 
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               <ChallengeStat label="Profit Split" value={`${size.profitSharing}%`} />
               <ChallengeStat label="Evaluation" value={size.evaluation ? 'Required' : 'None'} />
               <ChallengePrice size={size} />
@@ -541,34 +520,17 @@ function ChallengeCard({
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
-}
-
-function getTargetPercent(size: AccountSizeEntry[1]): string | null {
-  return size.target > 0 ? `${((size.target / size.balance) * 100).toFixed(1)}%` : null
-}
-
-function getDailyLossPercent(size: AccountSizeEntry[1]): string | null {
-  if (size.dailyLoss === null || size.dailyLoss <= 0) return null
-  return `${((size.dailyLoss / size.balance) * 100).toFixed(1)}%`
-}
-
-function getDrawdownPercent(size: AccountSizeEntry[1]): string {
-  return `${((size.drawdown / size.balance) * 100).toFixed(1)}%`
-}
-
-function getDailyLossValue(size: AccountSizeEntry[1]): string {
-  return size.dailyLoss !== null ? formatFirmCurrency(size.dailyLoss) : 'No limit'
 }
 
 function ChallengeStat({ label, value, note }: { label: string; value: string; note?: string | null }) {
   return (
     <div>
-      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
-      <p className="mt-1 text-xl font-semibold text-foreground">{value}</p>
-      {note ? <p className="text-xs text-muted-foreground">{note}</p> : null}
+      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p className="mt-1 text-xl font-bold text-foreground">{value}</p>
+      {note ? <p className="mt-0.5 text-xs text-muted-foreground">{note}</p> : null}
     </div>
   )
 }
@@ -576,7 +538,7 @@ function ChallengeStat({ label, value, note }: { label: string; value: string; n
 function ChallengePrice({
   size,
 }: {
-  size: AccountSizeEntry[1]
+  size: NonNullable<FirmData['accountSizes']>[string]
 }) {
   const hasPromoPrice = size.priceWithPromo > 0 && size.priceWithPromo < size.price
   const promoDiscount = hasPromoPrice && size.price > 0
@@ -585,11 +547,11 @@ function ChallengePrice({
 
   return (
     <div>
-      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Price</p>
+      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Price</p>
       <div className="mt-1 flex items-baseline gap-2">
         {hasPromoPrice ? (
           <>
-            <span className="text-lg font-semibold text-foreground">{formatFirmCurrency(size.priceWithPromo)}</span>
+            <span className="text-lg font-bold text-foreground">{formatFirmCurrency(size.priceWithPromo)}</span>
             <span className="text-sm text-muted-foreground line-through">{formatFirmCurrency(size.price)}</span>
             {promoDiscount ? (
               <Badge variant="default" className="text-[10px]">
@@ -598,7 +560,7 @@ function ChallengePrice({
             ) : null}
           </>
         ) : (
-          <span className="text-lg font-semibold text-foreground">
+          <span className="text-lg font-bold text-foreground">
             {size.price === 0 ? 'Included' : formatFirmCurrency(size.price)}
           </span>
         )}
@@ -612,33 +574,27 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
 
   if (entries.length === 0) {
     return (
-      <Card className="rounded-xl border-border/40 bg-background/35">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-v2-accent" />
-            <CardTitle className="text-2xl text-foreground">Challenge sizes</CardTitle>
-          </div>
-          <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
-            No challenge size data is available in the current snapshot. The overview above still covers the current platform, payout model, and allocation details.
-          </CardDescription>
-        </CardContent>
-      </Card>
+      <div className="rounded-xl bg-card p-6">
+        <div className="flex items-center gap-2">
+          <Target className="h-5 w-5 text-primary" />
+          <h3 className="text-xl font-bold text-foreground">Challenge sizes</h3>
+        </div>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          No challenge size data is available in the current snapshot. The overview above still covers the current platform, payout model, and allocation details.
+        </p>
+      </div>
     )
   }
 
   return (
     <div className="space-y-5">
-      <Card className="rounded-xl border-border/40 bg-background/35">
-        <CardContent className="p-6">
-        <div className="flex items-center gap-2">
-          <Target className="h-5 w-5 text-v2-accent" />
-          <CardTitle className="text-2xl text-foreground">Challenge sizes</CardTitle>
-        </div>
-        <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
-          Current account sizes, pricing, and trading limits from the live snapshot.
-        </CardDescription>
-        </CardContent>
-      </Card>
+      <div className="flex items-center gap-2">
+        <Target className="h-5 w-5 text-primary" />
+        <h3 className="text-xl font-bold text-foreground">Challenge sizes</h3>
+      </div>
+      <p className="-mt-3 text-sm leading-relaxed text-muted-foreground">
+        Current account sizes, pricing, and trading limits from the live snapshot.
+      </p>
 
       <div className="grid gap-4">
         {entries.map(([key, size]) => (
@@ -649,39 +605,45 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
   )
 }
 
+function SectionHeader({ icon: Icon, title, description }: { icon: React.ComponentType<{ className?: string }>; title: string; description: string }) {
+  return (
+    <div>
+      <div className="flex items-center gap-2">
+        <Icon className="h-5 w-5 text-primary" />
+        <h3 className="text-xl font-bold text-foreground">{title}</h3>
+      </div>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
+    </div>
+  )
+}
+
 function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
   const details = buildAdditionalDetails(firm)
 
   return (
-    <Card className="rounded-xl border-border/40 bg-background/35">
-      <CardContent className="p-6">
-        <div className="flex items-center gap-2">
-          <svg className="h-5 w-5 text-v2-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <CardTitle className="text-2xl text-foreground">Additional Details</CardTitle>
-        </div>
-        <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
-          Key profile details pulled from the current firm record and verified public sources.
-        </CardDescription>
+    <div className="rounded-xl bg-card p-6 sm:p-8">
+      <SectionHeader
+        icon={() => <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+        title="Additional Details"
+        description="Key profile details pulled from the current firm record and verified public sources."
+      />
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {details.map((detail) => (
-            <div key={detail.label} className="rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/40 bg-background/35">
-                  <detail.icon className="h-4 w-4 text-v2-accent" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{detail.label}</p>
-                  <p className="mt-2 text-sm font-semibold text-foreground">{detail.value}</p>
-                </div>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {details.map((detail) => (
+          <div key={detail.label} className="rounded-xl bg-muted/30 px-4 py-4">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
+                <detail.icon className="h-4 w-4 text-primary" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{detail.label}</p>
+                <p className="mt-1.5 text-sm font-semibold text-foreground">{detail.value}</p>
               </div>
             </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -689,97 +651,72 @@ function OverviewSection({ firm }: { firm: FirmData }) {
   const overviewFacts = buildOverviewFacts(firm)
   const trustMetrics = buildTrustMetrics(firm)
   const researchSnapshot = buildResearchSnapshot(firm)
-  const sourceNotes = getFirmSourceNotes().overview
 
   return (
-    <div className="space-y-5">
-      <Card className="rounded-xl border-border/40 bg-background/35">
-        <CardContent className="p-6 sm:p-8">
-          <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Research snapshot</p>
-          <CardTitle className="mt-4 text-3xl text-foreground">A quick read on reviews, payouts, and fit.</CardTitle>
-          <CardDescription className="mt-4 text-base leading-7 text-foreground/80">
-            Use this snapshot to scan the current profile before opening the tabs below.
-          </CardDescription>
+    <div className="space-y-6">
+      <div className="rounded-xl bg-card p-6 sm:p-8">
+        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Research snapshot</p>
+        <h3 className="mt-3 text-2xl font-bold text-foreground">A quick read on reviews, payouts, and fit.</h3>
 
-          <div className="mt-5 flex flex-wrap gap-2">
-            {['User reviews', 'Database payouts', 'Verified profile notes'].map((label) => (
-              <Badge
-                key={label}
-                variant="default"
-                className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.14em]"
-              >
-                {label}
-              </Badge>
+        <div className="mt-5 flex flex-wrap gap-2">
+          {['User reviews', 'Database payouts', 'Verified profile notes'].map((label) => (
+            <Badge
+              key={label}
+              variant="default"
+              className="rounded-full px-3 py-1 text-[11px] uppercase tracking-wider"
+            >
+              {label}
+            </Badge>
+          ))}
+        </div>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {researchSnapshot.map((item) => (
+            <div key={item.label} className="rounded-xl bg-muted/30 px-4 py-4">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{item.label}</p>
+              <p className="mt-1.5 text-xl font-bold text-foreground">{item.value}</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{item.helper}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="rounded-xl bg-card p-6 sm:p-8">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Profile summary</p>
+          <h3 className="mt-3 text-2xl font-bold text-foreground">Firm profile at a glance</h3>
+          <p className="mt-3 text-sm leading-relaxed text-foreground/80">
+            {firm.description ?? firm.shortDesc ?? 'Structured company summary coming soon.'}
+          </p>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {overviewFacts.map((fact) => (
+              <FactTile key={fact.label} icon={fact.icon} label={fact.label} value={fact.value} />
             ))}
           </div>
+        </div>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {researchSnapshot.map((item) => (
-              <div key={item.label} className="rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{item.label}</p>
-                <p className="mt-2 text-xl font-semibold text-foreground">{item.value}</p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.helper}</p>
+        <div className="rounded-xl bg-card p-6 sm:p-8">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Trust signals</p>
+          <h3 className="mt-3 text-2xl font-bold text-foreground">What to check before you click out</h3>
+          <div className="mt-6 space-y-3">
+            {trustChecklist.map((item) => (
+              <div key={item} className="flex items-start gap-3 rounded-xl bg-muted/30 px-4 py-4">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <p className="text-sm leading-relaxed text-muted-foreground">{item}</p>
               </div>
             ))}
           </div>
 
-          {sourceNotes.length > 0 ? (
-            <div className="mt-6 rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Official source notes</p>
-              <div className="mt-3 space-y-2">
-                {sourceNotes.map((note) => (
-                  <div key={note} className="flex items-start gap-2 text-sm leading-6 text-muted-foreground">
-                    <Check className="mt-1 h-4 w-4 shrink-0 text-v2-accent" />
-                    <p>{note}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : null}
-        </CardContent>
-      </Card>
-
-      <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-        <Card className="rounded-xl border-border/40 bg-background/35">
-          <CardContent className="p-6 sm:p-8">
-            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Profile summary</p>
-            <CardTitle className="mt-4 text-3xl text-foreground">Firm profile at a glance</CardTitle>
-            <CardDescription className="mt-4 text-base leading-7 text-foreground/80">
-              {firm.description ?? firm.shortDesc ?? 'Structured company summary coming soon.'}
-            </CardDescription>
-
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              {overviewFacts.map((fact) => (
-                <FactTile key={fact.label} icon={fact.icon} label={fact.label} value={fact.value} />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-xl border-border/40 bg-background/35">
-          <CardContent className="p-6 sm:p-8">
-            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Trust signals</p>
-            <CardTitle className="mt-4 text-3xl text-foreground">What to check before you click out</CardTitle>
-            <div className="mt-6 space-y-3">
-              {trustChecklist.map((item) => (
-                <div key={item} className="flex items-start gap-3 rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-v2-accent" />
-                  <p className="text-sm leading-7 text-muted-foreground">{item}</p>
-                </div>
-              ))}
-            </div>
-            
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {trustMetrics.map((metric) => (
-                <MetricCard key={metric.label} label={metric.label} value={metric.value} highlight={metric.highlight} />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {trustMetrics.map((metric) => (
+              <MetricCard key={metric.label} label={metric.label} value={metric.value} highlight={metric.highlight} />
+            ))}
+          </div>
+        </div>
       </section>
 
       <AdditionalDetailsSection firm={firm} />
-
       {firm.referralUrl ? <ReferralCTA referralUrl={firm.referralUrl} /> : null}
     </div>
   )
@@ -791,7 +728,7 @@ function StarRating({ rating, size = 'md' }: { rating: number; size?: 'sm' | 'md
     md: 'h-4 w-4',
     lg: 'h-5 w-5',
   }
-  
+
   return (
     <div className="flex items-center gap-1">
       {[1, 2, 3, 4, 5].map((star) => (
@@ -799,7 +736,7 @@ function StarRating({ rating, size = 'md' }: { rating: number; size?: 'sm' | 'md
           key={star}
           className={cn(
             sizeClasses[size],
-            star <= rating ? 'text-warning' : 'text-muted-foreground/40'
+            star <= rating ? 'text-warning' : 'text-muted-foreground/30'
           )}
           fill="currentColor"
           viewBox="0 0 20 20"
@@ -845,7 +782,7 @@ function SocialIcon({ type, url }: { type: 'website' | 'twitter' | 'discord' | '
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-background/0.01 text-foreground/80 transition-colors hover:bg-background/0.01 hover:text-foreground"
+      className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-foreground/80 transition-colors hover:bg-foreground/10 hover:text-foreground"
     >
       {icons[type]}
     </a>
@@ -856,67 +793,51 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
   const stats = firm.catalogueStats
   if (!stats) {
     return (
-      <Card className="rounded-xl border-border/40 bg-background/35">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-2">
-            <DollarSign className="h-5 w-5 text-v2-accent" />
-            <CardTitle className="text-2xl text-foreground">Payout History</CardTitle>
-          </div>
-          <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
-            No payout data available in the current database snapshot.
-          </CardDescription>
-        </CardContent>
-      </Card>
+      <div className="rounded-xl bg-card p-6">
+        <SectionHeader icon={DollarSign} title="Payout History" description="No payout data available in the current database snapshot." />
+      </div>
     )
   }
 
   const avgPayout = stats.paidPayoutCount > 0 ? stats.paidPayoutAmount / stats.paidPayoutCount : 0
 
   return (
-    <Card className="rounded-xl border-border/40 bg-background/35">
-      <CardContent className="p-6">
-        <div className="flex items-center gap-2">
-          <DollarSign className="h-5 w-5 text-v2-accent" />
-          <CardTitle className="text-2xl text-foreground">Payout History</CardTitle>
-        </div>
-        <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
-          Aggregated payout statistics from tracked trader accounts in the database.
-        </CardDescription>
+    <div className="rounded-xl bg-card p-6 sm:p-8">
+      <SectionHeader icon={DollarSign} title="Payout History" description="Aggregated payout statistics from tracked trader accounts in the database." />
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Total Paid Out</p>
-            <p className="mt-2 text-2xl font-semibold text-v2-success">{formatCompactCurrency(stats.paidPayoutAmount)}</p>
-          </div>
-          <div className="rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Payouts Made</p>
-            <p className="mt-2 text-2xl font-semibold text-foreground">{stats.paidPayoutCount.toLocaleString()}</p>
-          </div>
-          <div className="rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Avg Payout</p>
-            <p className="mt-2 text-2xl font-semibold text-foreground">{formatCompactCurrency(avgPayout)}</p>
-          </div>
-          <div className="rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Pending</p>
-            <p className="mt-2 text-2xl font-semibold text-foreground">{formatCompactCurrency(stats.pendingPayoutAmount)}</p>
-          </div>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl bg-muted/30 px-4 py-4">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Total Paid Out</p>
+          <p className="mt-1.5 text-2xl font-bold text-success">{formatCompactCurrency(stats.paidPayoutAmount)}</p>
         </div>
+        <div className="rounded-xl bg-muted/30 px-4 py-4">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Payouts Made</p>
+          <p className="mt-1.5 text-2xl font-bold text-foreground">{stats.paidPayoutCount.toLocaleString()}</p>
+        </div>
+        <div className="rounded-xl bg-muted/30 px-4 py-4">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Avg Payout</p>
+          <p className="mt-1.5 text-2xl font-bold text-foreground">{formatCompactCurrency(avgPayout)}</p>
+        </div>
+        <div className="rounded-xl bg-muted/30 px-4 py-4">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Pending</p>
+          <p className="mt-1.5 text-2xl font-bold text-foreground">{formatCompactCurrency(stats.pendingPayoutAmount)}</p>
+        </div>
+      </div>
 
-        <div className="mt-6">
-          <div className="flex items-center justify-between rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Payout Success Rate</p>
-              <p className="mt-1 text-sm text-muted-foreground">Based on {stats.accountsCount.toLocaleString()} tracked accounts</p>
-            </div>
-            <div className="text-right">
-              <p className="text-2xl font-semibold text-v2-success">
-                {stats.accountsCount > 0 ? Math.min(100, Math.round((stats.paidPayoutCount / stats.accountsCount) * 100)) : 0}%
-              </p>
-            </div>
+      <div className="mt-6">
+        <div className="flex items-center justify-between rounded-xl bg-muted/30 px-4 py-4">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Payout Success Rate</p>
+            <p className="mt-1 text-sm text-muted-foreground">Based on {stats.accountsCount.toLocaleString()} tracked accounts</p>
+          </div>
+          <div className="text-right">
+            <p className="text-2xl font-bold text-success">
+              {stats.accountsCount > 0 ? Math.min(100, Math.round((stats.paidPayoutCount / stats.accountsCount) * 100)) : 0}%
+            </p>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
 
@@ -925,183 +846,135 @@ function ROISection({ firm }: { firm: FirmData }) {
 
   if (accountSizes.length === 0) {
     return (
-      <Card className="rounded-xl border-border/40 bg-background/35">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-v2-accent" />
-            <CardTitle className="text-2xl text-foreground">ROI Analysis</CardTitle>
-          </div>
-          <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
-            No account size data available for ROI comparison.
-          </CardDescription>
-        </CardContent>
-      </Card>
+      <div className="rounded-xl bg-card p-6">
+        <SectionHeader icon={TrendingUp} title="ROI Analysis" description="No account size data available for ROI comparison." />
+      </div>
     )
   }
 
   return (
-    <Card className="rounded-xl border-border/40 bg-background/35">
-      <CardContent className="p-6">
-        <div className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-v2-accent" />
-          <CardTitle className="text-2xl text-foreground">ROI Analysis</CardTitle>
-        </div>
-        <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
-          Illustrative fee-to-target comparison based on the current challenge templates and the published firm path.
-        </CardDescription>
+    <div className="rounded-xl bg-card p-6 sm:p-8">
+      <SectionHeader icon={TrendingUp} title="ROI Analysis" description="Illustrative fee-to-target comparison based on the current challenge templates and the published firm path." />
+      <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+        This comparison helps you scan the current setup; it is not a promise of profit.
+      </p>
 
-        <p className="mt-3 text-xs leading-6 text-muted-foreground">
-          This comparison helps you scan the current setup; it is not a promise of profit.
-        </p>
+      <div className="mt-6 grid gap-4">
+        {accountSizes.map(([key, size]) => {
+          const roiPotential = size.target > 0 && size.price > 0
+            ? Math.round((size.target / size.price) * 100)
+            : 0
+          const profitTargetPct = size.balance > 0
+            ? ((size.target / size.balance) * 100).toFixed(1)
+            : '0'
 
-        <div className="mt-6 grid gap-4">
-          {accountSizes.map(([key, size]) => {
-            const roiPotential = size.target > 0 && size.price > 0
-              ? Math.round((size.target / size.price) * 100)
-              : 0
-            const profitTargetPct = size.balance > 0
-              ? ((size.target / size.balance) * 100).toFixed(1)
-              : '0'
-
-            return (
-              <div key={key} className="rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          return (
+            <div key={key} className="rounded-xl bg-muted/30 px-4 py-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-foreground">{size.name}</p>
+                  <p className="text-xs text-muted-foreground">{formatCompactCurrency(size.balance)} account</p>
+                </div>
+                <div className="grid grid-cols-3 gap-6">
                   <div>
-                    <p className="text-sm font-semibold text-foreground">{size.name}</p>
-                    <p className="text-xs text-muted-foreground">{formatCompactCurrency(size.balance)} account</p>
+                    <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Challenge Fee</p>
+                    <p className="mt-1 text-base font-bold text-foreground">
+                      {size.price > 0 ? formatCompactCurrency(size.price) : 'Free'}
+                    </p>
                   </div>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Challenge Fee</p>
-                      <p className="mt-1 text-lg font-semibold text-foreground">
-                        {size.price > 0 ? formatCompactCurrency(size.price) : 'Free'}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Profit Target</p>
-                      <p className="mt-1 text-lg font-semibold text-foreground">{profitTargetPct}%</p>
-                    </div>
-                    <div>
-                      <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">ROI Potential</p>
-                      <p className={`mt-1 text-lg font-semibold ${roiPotential > 200 ? 'text-v2-success' : 'text-foreground'}`}>
-                        {roiPotential > 0 ? `${roiPotential}%` : 'N/A'}
-                      </p>
-                    </div>
+                  <div>
+                    <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Profit Target</p>
+                    <p className="mt-1 text-base font-bold text-foreground">{profitTargetPct}%</p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">ROI Potential</p>
+                    <p className={cn('mt-1 text-base font-bold', roiPotential > 200 ? 'text-success' : 'text-foreground')}>
+                      {roiPotential > 0 ? `${roiPotential}%` : 'N/A'}
+                    </p>
                   </div>
                 </div>
               </div>
-            )
-          })}
-        </div>
-      </CardContent>
-    </Card>
+            </div>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 
 function RulesSection({ firm }: { firm: FirmData }) {
   const accountSizes = getAccountSizeEntries(firm.accountSizes)
   const rules = buildRules(firm)
-  const sourceNotes = getFirmSourceNotes().rules
 
   return (
-    <div className="space-y-5">
-      <Card className="rounded-xl border-border/40 bg-background/35">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-v2-accent" />
-            <CardTitle className="text-2xl text-foreground">Trading Rules</CardTitle>
-          </div>
-          <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
-            Key trading rules and restrictions from the current profile and challenge templates.
-          </CardDescription>
+    <div className="space-y-6">
+      <div className="rounded-xl bg-card p-6 sm:p-8">
+        <SectionHeader icon={FileText} title="Trading Rules" description="Key trading rules and restrictions from the current profile and challenge templates." />
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            {rules.map((rule) => (
-              <div key={rule.title} className="rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{rule.title}</p>
-                <p className="mt-2 text-xl font-semibold text-foreground">{rule.value}</p>
-                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{rule.description}</p>
-              </div>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          {rules.map((rule) => (
+            <div key={rule.title} className="rounded-xl bg-muted/30 px-4 py-4">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{rule.title}</p>
+              <p className="mt-1.5 text-xl font-bold text-foreground">{rule.value}</p>
+              <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{rule.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {accountSizes.length > 0 && (
+        <div className="rounded-xl bg-card p-6 sm:p-8">
+          <SectionHeader icon={Shield} title="Risk Parameters" description="Loss limits and drawdown rules for each account size." />
+
+          <div className="mt-6 grid gap-3 lg:hidden">
+            {accountSizes.map(([key, size]) => (
+              <article key={key} className="rounded-xl bg-muted/30 p-4">
+                <h3 className="text-base font-semibold text-foreground">{size.name}</h3>
+                <dl className="mt-3 grid grid-cols-3 gap-3 text-sm">
+                  <div>
+                    <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Daily Loss</dt>
+                    <dd className="mt-1 font-semibold text-foreground">
+                      {size.dailyLoss !== null ? formatCompactCurrency(size.dailyLoss) : 'No limit'}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Max Drawdown</dt>
+                    <dd className="mt-1 font-semibold text-foreground">{formatCompactCurrency(size.drawdown)}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Profit Target</dt>
+                    <dd className="mt-1 font-semibold text-foreground">{formatCompactCurrency(size.target)}</dd>
+                  </div>
+                </dl>
+              </article>
             ))}
           </div>
 
-          {sourceNotes.length > 0 ? (
-            <div className="mt-6 rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Official rule notes</p>
-              <div className="mt-3 space-y-2">
-                {sourceNotes.map((note) => (
-                  <div key={note} className="flex items-start gap-2 text-sm leading-6 text-muted-foreground">
-                    <Check className="mt-1 h-4 w-4 shrink-0 text-v2-accent" />
-                    <p>{note}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : null}
-        </CardContent>
-      </Card>
-
-      {accountSizes.length > 0 && (
-        <Card className="rounded-xl border-border/40 bg-background/35">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-v2-accent" />
-              <CardTitle className="text-2xl text-foreground">Risk Parameters</CardTitle>
-            </div>
-            <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
-              Loss limits and drawdown rules for each account size.
-            </CardDescription>
-
-            <div className="mt-6 grid gap-3 lg:hidden">
-              {accountSizes.map(([key, size]) => (
-                <article key={key} className="rounded-xl border border-border/30 bg-background/50 p-4">
-                  <h3 className="text-base font-semibold text-foreground">{size.name}</h3>
-                  <dl className="mt-3 grid grid-cols-3 gap-3 text-sm">
-                    <div>
-                      <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Daily Loss</dt>
-                      <dd className="mt-1 font-medium text-foreground">
-                        {size.dailyLoss !== null ? formatCompactCurrency(size.dailyLoss) : 'No limit'}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Max Drawdown</dt>
-                      <dd className="mt-1 font-medium text-foreground">{formatCompactCurrency(size.drawdown)}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Profit Target</dt>
-                      <dd className="mt-1 font-medium text-foreground">{formatCompactCurrency(size.target)}</dd>
-                    </div>
-                  </dl>
-                </article>
-              ))}
-            </div>
-
-            <div className="mt-6 hidden overflow-x-auto lg:block">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border/40">
-                    <th className="px-4 py-3 text-left text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Account</th>
-                    <th className="px-4 py-3 text-right text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Daily Loss</th>
-                    <th className="px-4 py-3 text-right text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Max Drawdown</th>
-                    <th className="px-4 py-3 text-right text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Profit Target</th>
+          <div className="mt-6 hidden overflow-x-auto lg:block">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border/10">
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Account</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">Daily Loss</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">Max Drawdown</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">Profit Target</th>
+                </tr>
+              </thead>
+              <tbody>
+                {accountSizes.map(([key, size]) => (
+                  <tr key={key} className="border-b border-border/5 transition-colors hover:bg-muted/20">
+                    <td className="px-4 py-3 font-medium text-foreground">{size.name}</td>
+                    <td className="px-4 py-3 text-right text-muted-foreground">
+                      {size.dailyLoss !== null ? formatCompactCurrency(size.dailyLoss) : 'No limit'}
+                    </td>
+                    <td className="px-4 py-3 text-right text-muted-foreground">{formatCompactCurrency(size.drawdown)}</td>
+                    <td className="px-4 py-3 text-right text-muted-foreground">{formatCompactCurrency(size.target)}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {accountSizes.map(([key, size]) => (
-                    <tr key={key} className="border-b border-border/20">
-                      <td className="px-4 py-3 font-medium text-foreground">{size.name}</td>
-                      <td className="px-4 py-3 text-right text-muted-foreground">
-                        {size.dailyLoss !== null ? formatCompactCurrency(size.dailyLoss) : 'No limit'}
-                      </td>
-                      <td className="px-4 py-3 text-right text-muted-foreground">{formatCompactCurrency(size.drawdown)}</td>
-                      <td className="px-4 py-3 text-right text-muted-foreground">{formatCompactCurrency(size.target)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       )}
     </div>
   )
@@ -1111,59 +984,51 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
   const stats = firm.catalogueStats
 
   return (
-    <Card className="rounded-xl border-border/40 bg-background/35">
-      <CardContent className="p-6">
-        <div className="flex items-center gap-2">
-          <Award className="h-5 w-5 text-v2-accent" />
-          <CardTitle className="text-2xl text-foreground">Payout Proof</CardTitle>
+    <div className="rounded-xl bg-card p-6 sm:p-8">
+      <SectionHeader icon={Award} title="Payout Proof" description="Payout evidence pulled from tracked trader records in the database." />
+
+      {stats && stats.paidPayoutCount > 0 ? (
+        <div className="mt-6 space-y-4">
+          <div className="rounded-xl bg-muted/30 px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Verified Payouts</p>
+                <p className="mt-1.5 text-3xl font-bold text-success">{stats.paidPayoutCount.toLocaleString()}</p>
+              </div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10">
+                <Check className="h-6 w-6 text-success" />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl bg-muted/30 px-4 py-4">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Total Paid</p>
+              <p className="mt-1.5 text-2xl font-bold text-foreground">{formatCompactCurrency(stats.paidPayoutAmount)}</p>
+            </div>
+            <div className="rounded-xl bg-muted/30 px-4 py-4">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Active Accounts</p>
+              <p className="mt-1.5 text-2xl font-bold text-foreground">{stats.accountsCount.toLocaleString()}</p>
+            </div>
+          </div>
+
+          <div className="rounded-xl bg-muted/30 px-4 py-4">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Account Size Distribution</p>
+            <p className="mt-1.5 text-sm text-foreground">{stats.sizeBreakdown}</p>
+          </div>
         </div>
-        <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
-          Payout evidence pulled from tracked trader records in the database.
-        </CardDescription>
-
-        {stats && stats.paidPayoutCount > 0 ? (
-          <div className="mt-6 space-y-4">
-            <div className="rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Verified Payouts</p>
-                  <p className="mt-2 text-3xl font-semibold text-v2-success">{stats.paidPayoutCount.toLocaleString()}</p>
-                </div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-v2-success/10">
-                  <Check className="h-6 w-6 text-v2-success" />
-                </div>
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Total Paid</p>
-                <p className="mt-2 text-2xl font-semibold text-foreground">{formatCompactCurrency(stats.paidPayoutAmount)}</p>
-              </div>
-              <div className="rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Active Accounts</p>
-                <p className="mt-2 text-2xl font-semibold text-foreground">{stats.accountsCount.toLocaleString()}</p>
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-border/40 bg-background/40 px-4 py-4">
-              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Account Size Distribution</p>
-              <p className="mt-2 text-sm text-foreground">{stats.sizeBreakdown}</p>
-            </div>
+      ) : (
+        <div className="mt-6 flex flex-col items-center justify-center py-8 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+            <Award className="h-6 w-6 text-muted-foreground" />
           </div>
-        ) : (
-          <div className="mt-6 flex flex-col items-center justify-center py-8 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-background/25">
-              <Award className="h-6 w-6 text-muted-foreground" />
-            </div>
-            <p className="mt-4 text-base font-medium text-foreground">No payout proof yet</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Payout data will appear here as tracked trader records accumulate in the database.
-            </p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+          <p className="mt-4 text-base font-semibold text-foreground">No payout proof yet</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Payout data will appear here as tracked trader records accumulate in the database.
+          </p>
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -1190,7 +1055,7 @@ function HeaderRatingSummary({
       {headerMetaItems.map((item) => (
         <span
           key={item}
-          className="rounded-full border border-border/40 bg-background/45 px-2.5 py-1 text-xs text-muted-foreground"
+          className="rounded-full bg-muted/60 px-2.5 py-1 text-xs text-muted-foreground"
         >
           {item}
         </span>
@@ -1212,7 +1077,7 @@ function HeaderActions({ referralUrl }: { referralUrl?: string | null }) {
         href={referralUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-5 py-2.5 text-sm font-semibold text-v2-accent-foreground transition-colors hover:bg-v2-accent-hover"
+        className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
       >
         Visit Official Website
         <ExternalLink className="h-4 w-4" />
@@ -1233,9 +1098,9 @@ function HeaderRadarMini({ firm }: { firm: FirmData }) {
 
   return (
     <div className="w-full lg:w-auto">
-      <Card className="w-full rounded-xl border-border/20 bg-card/80 lg:w-[276px]">
-        <CardContent className="flex flex-col items-center p-3.5">
-          <p className="text-center text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Radar Snapshot</p>
+      <div className="w-full rounded-xl bg-muted/20 lg:w-[276px]">
+        <div className="flex flex-col items-center p-3.5">
+          <p className="text-center text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Radar Snapshot</p>
           <ChartContainer
             config={radarChartConfig}
             className="mx-auto mt-2.5 aspect-square max-h-[220px] w-full"
@@ -1265,8 +1130,8 @@ function HeaderRadarMini({ firm }: { firm: FirmData }) {
             </RadarChart>
           </ChartContainer>
           <p className="mt-1.5 text-center text-xs text-muted-foreground">{`Live score: ${averageScore}/100`}</p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }
@@ -1278,12 +1143,12 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   const headerMetrics = buildHeaderMetrics(firm)
 
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-border/30 bg-card/90 p-5 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] sm:p-7 lg:p-9">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.08),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.04),_transparent_40%)]" />
+    <section className="relative overflow-hidden rounded-2xl bg-card p-6 sm:p-7 lg:p-9">
+      <div className="absolute inset-0 bg-gradient-to-br from-foreground/[0.04] to-transparent" />
       <div className="relative space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">
           <div className="flex items-start gap-6">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/40 bg-background/0.01 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] shadow-foreground/20">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-muted shadow-sm">
               {firm.logoUrl ? (
                 <Image
                   src={firm.logoUrl}
@@ -1293,7 +1158,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
                   className="object-contain p-2"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-v2-accent">
+                <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-primary">
                   {firmInitials(firm.name)}
                 </div>
               )}
@@ -1307,18 +1172,18 @@ function FirmHeader({ firm }: { firm: FirmData }) {
                   <Badge variant="default">{firm.payoutModel}</Badge>
                 )}
               </div>
-              
-              <h1 className="mt-3 text-[clamp(2.2rem,5.8vw,4.85rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground">
+
+              <h1 className="mt-3 text-[clamp(2rem,5vw,4rem)] font-bold leading-[0.96] tracking-tight text-foreground">
                 {firm.name}
                 {spotlightPromoText && (
-                  <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-v2-accent px-2 py-0.5 align-middle text-[10px] font-semibold uppercase tracking-wider text-v2-accent-foreground">
+                  <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 align-middle text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
                     {spotlightPromoText}
                   </span>
                 )}
               </h1>
 
               <HeaderRatingSummary spotlightRating={spotlightRating} headerMetaItems={headerMetaItems} />
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground">
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                 Approved trader reviews sit beside database-backed payout totals and verified profile notes, so the tabs below stay grounded in source data.
               </p>
             </div>
@@ -1340,18 +1205,18 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   )
 }
 
-export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; localePrefix: string }) {
+const FirmDetailClient = React.memo(function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; localePrefix: string }) {
   const [activeTab, setActiveTab] = React.useState('overview')
   const visibleReviewCount = getVisibleReviewCount(firm)
   const visibleCouponCount = getVisibleCouponCount(firm)
 
   return (
-    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,rgba(10,10,10,0.96)_24%,hsl(var(--background))_100%)]">
-      <div className="mx-auto w-full max-w-[1240px] flex-1 overflow-y-auto px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+    <div className="flex min-h-dvh flex-col bg-gradient-to-b from-background to-background/95">
+      <div className="mx-auto w-full max-w-[1200px] flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
         <FirmHeader firm={firm} />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-          <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-xl border border-border/20 bg-background/70 p-2">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-10">
+          <TabsList className="h-auto w-full justify-start gap-1 overflow-x-auto rounded-xl bg-muted/50 p-1.5">
             {[
               ['overview', 'Overview'],
               ['challenges', 'Challenges'],
@@ -1366,9 +1231,9 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
                 key={value}
                 value={value}
                 className={cn(
-                  'shrink-0 rounded-xl border border-transparent px-4 py-2.5 text-sm text-foreground/80 transition-colors',
-                  'hover:border-border/20 hover:bg-background/0.08',
-                  'data-[state=active]:border-v2-accent/30 data-[state=active]:bg-v2-accent data-[state=active]:text-v2-accent-foreground'
+                  'shrink-0 rounded-lg px-4 py-2 text-sm font-medium text-foreground/70 transition-colors',
+                  'hover:text-foreground',
+                  'data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                 )}
               >
                 {label}
@@ -1376,39 +1241,41 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
             ))}
           </TabsList>
 
-          <TabsContent value="overview" className="mt-5">
+          <TabsContent value="overview" className="mt-6">
             <OverviewSection firm={firm} />
           </TabsContent>
 
-          <TabsContent value="challenges" className="mt-5">
+          <TabsContent value="challenges" className="mt-6">
             <ChallengesSection accountSizes={firm.accountSizes} profitSplit={firm.profitSplit ?? 'N/A'} />
           </TabsContent>
 
-          <TabsContent value="rules" className="mt-5">
+          <TabsContent value="rules" className="mt-6">
             <RulesSection firm={firm} />
           </TabsContent>
 
-          <TabsContent value="roi" className="mt-5">
+          <TabsContent value="roi" className="mt-6">
             <ROISection firm={firm} />
           </TabsContent>
 
-          <TabsContent value="payouts" className="mt-5">
+          <TabsContent value="payouts" className="mt-6">
             <PayoutHistorySection firm={firm} />
           </TabsContent>
 
-          <TabsContent value="proof" className="mt-5">
+          <TabsContent value="proof" className="mt-6">
             <PayoutProofSection firm={firm} />
           </TabsContent>
 
-          <TabsContent value="reviews" className="mt-5">
+          <TabsContent value="reviews" className="mt-6">
             <FirmReviewsSection firmId={firm.id} />
           </TabsContent>
 
-          <TabsContent value="coupons" className="mt-5">
+          <TabsContent value="coupons" className="mt-6">
             <FirmCouponsSection firmId={firm.id} localePrefix={localePrefix} referralUrl={firm.referralUrl} />
           </TabsContent>
         </Tabs>
       </div>
     </div>
   )
-}
+})
+
+export { FirmDetailClient }

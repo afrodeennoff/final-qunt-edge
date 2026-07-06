@@ -26,11 +26,11 @@ export function ChartCard({
 }: ChartCardProps) {
   return (
     <div
-      className={cn('rounded-2xl p-6 bg-card shadow-card border border-[hsl(var(--border)/0.18)]', className)}
+      className={cn('rounded-2xl p-6 bg-card border-0', className)}
       data-slot="chart-card"
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-[18px] font-semibold text-foreground">
+        <h3 className="text-[18px] font-black text-foreground">
           {title}
         </h3>
         <div className="flex gap-1 bg-muted p-1 rounded-full">
@@ -54,7 +54,7 @@ export function ChartCard({
       <div className="-mx-2">{children}</div>
 
       {stats && stats.length > 0 && (
-        <div className="border-t border-border pt-5 mt-6 grid grid-cols-3 gap-3">
+        <div className="border-t border-transparent pt-5 mt-6 grid grid-cols-3 gap-3">
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
               <p className="text-[12px] text-muted-foreground mb-1">{stat.label}</p>

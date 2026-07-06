@@ -27,12 +27,12 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
 
  return (
  <div className="relative">
- <div className="absolute left-4 top-0 h-full w-0.5 bg-border/70 dark:bg-border/85" />
+ <div className="absolute left-4 top-0 h-full w-0.5 bg-transparent/70 dark:bg-transparent/85" />
  
  <div className="space-y-12 pl-12">
  {completedMilestones.map((milestone) => (
  <div key={milestone.id} className="relative">
- <div className="absolute -left-[44px] flex h-7 w-7 items-center justify-center rounded-full border border-border/30 bg-background/0.14 dark:border-border/32 dark:bg-background/0.14">
+ <div className="absolute -left-[44px] flex h-7 w-7 items-center justify-center rounded-full border-0 bg-muted/30 dark:border-transparent dark:bg-muted/30">
  <div className="h-3 w-3 rounded-full bg-muted/40 dark:bg-muted/30" />
  </div>
  
@@ -49,21 +49,22 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
  
  {/* Display YouTube video for French locale if available */}
  {locale === 'fr' && milestone.youtubeVideoId && (
- <div className="mt-4 rounded-lg overflow-hidden bg-background/0.11 dark:bg-background/0.12">
+ <div className="mt-4 rounded-lg overflow-hidden bg-muted/40 dark:bg-muted/40">
  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
- <iframe
- className="absolute top-0 left-0 w-full h-full"
- src={`https://www.youtube.com/embed/${milestone.youtubeVideoId}`}
- title={milestone.title}
- allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
- allowFullScreen
- />
+  <iframe
+  className="absolute top-0 left-0 w-full h-full"
+  src={`https://www.youtube.com/embed/${milestone.youtubeVideoId}`}
+  title={milestone.title}
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+  loading="lazy"
+  />
  </div>
  </div>
  )}
  
  {milestone.image && !milestone.youtubeVideoId && (
- <div className="mt-4 rounded-lg overflow-hidden bg-background/0.11 dark:bg-background/0.12">
+ <div className="mt-4 rounded-lg overflow-hidden bg-muted/40 dark:bg-muted/40">
  <Image
  src={milestone.image}
  alt={milestone.title}

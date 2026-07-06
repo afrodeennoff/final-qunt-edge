@@ -25,7 +25,7 @@ function StatsGridSkeleton() {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {[1, 2, 3, 4].map((i) => (
-        <div key={i} className={cn(unifiedInsetPanelClassName, 'p-5')}>
+        <div key={i} className={cn(unifiedInsetPanelClassName, 'p-4')}>
           <Skeleton className="h-4 w-20 mb-2" />
           <Skeleton className="h-8 w-24" />
           <Skeleton className="h-3 w-16 mt-2" />
@@ -37,7 +37,7 @@ function StatsGridSkeleton() {
 
 function ChartSkeleton() {
   return (
-    <div className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6 lg:col-span-4')}>
+    <div className={cn(unifiedSectionPanelClassName, 'p-4 sm:p-5 lg:col-span-4')}>
       <Skeleton className="h-6 w-32 mb-4" />
       <Skeleton className="h-[350px] w-full rounded-lg" />
     </div>
@@ -62,7 +62,7 @@ function SidebarSkeleton() {
           <Skeleton key={i} className="h-9 w-full" />
         ))}
       </div>
-      <div className="pt-4 border-t border-[rgba(0,0,0,0.06)] space-y-2">
+        <div className="pt-4 border-t border-transparent space-y-2">
         {[1, 2, 3].map((i) => (
           <Skeleton key={i} className="h-8 w-full" />
         ))}
@@ -74,11 +74,11 @@ function SidebarSkeleton() {
 export default function DashboardLoading() {
   return (
     <div className="flex h-full">
-      <aside className="hidden lg:block w-64 border-r border-[rgba(0,0,0,0.06)] p-4">
+      <aside className="hidden lg:block w-64 border-r border-transparent bg-muted/40 p-4">
         <SidebarSkeleton />
       </aside>
 
-      <main className="flex-1 p-4 lg:p-6 overflow-auto">
+      <main className="flex-1 p-4 lg:p-6 overflow-auto max-w-[2400px] mx-auto">
         <DashboardHeaderSkeleton />
         <StatsGridSkeleton />
 

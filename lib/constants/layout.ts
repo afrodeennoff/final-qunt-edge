@@ -5,16 +5,14 @@ export const HEADER_HEIGHT = 'h-[4.5rem]'
 
 export const HEADER_Z_INDEX = 'z-50'
 
-export const HEADER_BORDER = 'border-b border-[oklch(0.60_0.22_297_/_0.07)]'
-
-export const HEADER_BG = 'bg-[oklch(0.05_0.01_297_/_0.94)]'
+export const HEADER_BG = 'bg-card'
 
 // Content padding constants
-export const CONTENT_PADDING = 'px-4 sm:px-6 lg:px-8 xl:px-10'
+export const CONTENT_PADDING = 'px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12'
 
 export const CONTENT_PADDING_Y = 'py-6 sm:py-8 lg:py-8'
 
-export const WORKSPACE_SHELL_WIDTH = 'max-w-[1800px]'
+export const WORKSPACE_SHELL_WIDTH = 'max-w-[1600px] sm:max-w-[1400px]'
 
 export const MARKETING_SHELL_WIDTH = 'max-w-[1360px]'
 
@@ -48,7 +46,6 @@ export const ULTRA_HIGH_RES_WIDTHS = {
 export const LOCALE_SOFT_BORDER_STYLE: CSSProperties = {
   ['--border' as string]: '214 10% 6%',
   ['--input' as string]: '214 10% 6%',
-  ['--sidebar-border' as string]: '214 10% 5%',
   ['--v2-border' as string]: '214 10% 6%',
   ['--v2-border-subtle' as string]: '214 9% 4%',
   ['--frost-border' as string]: 'rgba(24, 30, 37, 0.14)',
@@ -66,5 +63,4 @@ export const LOCALE_SOFT_BORDER_STYLE: CSSProperties = {
 
 export const APP_SHELL_SOFT_BORDER_STYLE: CSSProperties = {
   ...LOCALE_SOFT_BORDER_STYLE,
-  ['--sidebar-border' as string]: '214 10% 4%',
 }

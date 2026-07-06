@@ -133,7 +133,7 @@ const userMessage = {
 
 const assistantMessage = {
   ...text,
-  backgroundColor: '#f3e8ff',
+  backgroundColor: '#e6fff0',
   padding: '10px',
   borderRadius: '5px',
   marginBottom: '10px',

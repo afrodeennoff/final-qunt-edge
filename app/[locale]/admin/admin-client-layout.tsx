@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -63,21 +64,21 @@ export function AdminClientLayout({
     >
       <SidebarNav />
       <SidebarInset className="qe-v2-app-shell relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-x-6 top-0 z-0 h-32 rounded-b-2xl border border-border/20 bg-primary/[0.02]" />
+        <div className="pointer-events-none absolute inset-x-6 top-0 z-0 h-32 rounded-b-2xl border-0 bg-primary/[0.02]" />
         <header
           className={`${HEADER_Z_INDEX} sticky top-0 px-3 pb-2 pt-3 sm:px-4 sm:pb-3 sm:pt-4 lg:px-6`}
         >
-          <div className="mx-auto flex w-full max-w-[1800px] items-center">
+          <div className="mx-auto flex w-full max-w-[1600px] sm:max-w-[1400px] items-center">
             <div className={cn(unifiedSectionPanelClassName, 'relative flex min-h-[4.5rem] w-full flex-col gap-4 overflow-hidden rounded-2xl px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between')}>
               <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/20 to-transparent" />
               <div className="flex min-w-0 items-center gap-3">
-                <SidebarTrigger className="h-10 w-10 rounded-xl border border-border/30 bg-background/40 text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:border-border/50 hover:bg-background/60 hover:text-foreground md:h-9 md:w-9" />
+                <SidebarTrigger className="h-10 w-10 rounded-xl border-0 bg-muted/30 text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:bg-muted/50 hover:text-foreground md:h-9 md:w-9" />
                 <div className="flex min-w-0 flex-1 flex-col">
                   <div className="flex items-center gap-2.5">
-                    <span className="hidden rounded-full border border-border/30 bg-background/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground sm:inline-flex">
+                    <span className="hidden rounded-full border-0 bg-muted/30 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground sm:inline-flex">
                       Admin
                     </span>
-                    <h1 className="truncate whitespace-nowrap text-sm font-bold uppercase tracking-[0.18em] text-foreground">
+                    <h1 className="truncate whitespace-nowrap text-sm font-bold uppercase tracking-[0.12em] text-foreground">
                       Operations Studio
                     </h1>
                   </div>
@@ -88,19 +89,19 @@ export function AdminClientLayout({
               </div>
 
               <div className="grid gap-2 sm:grid-cols-2 lg:w-auto">
-                <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2.5')}>
-                  <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                <div className={cn(unifiedMetricPanelClassName, 'min-w-0 sm:min-w-[220px] px-3 py-2.5')}>
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                     Mode
                   </span>
-                  <span className="block pt-1 text-sm text-foreground/60">
+                  <span className="block pt-1 text-sm text-foreground">
                     Editorial and growth ops
                   </span>
                 </div>
-                <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2.5')}>
-                  <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                <div className={cn(unifiedMetricPanelClassName, 'min-w-0 sm:min-w-[220px] px-3 py-2.5')}>
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                     Scope
                   </span>
-                  <span className="block pt-1 text-sm text-foreground/60">
+                  <span className="block pt-1 text-sm text-foreground">
                     Publishing, offers, mail, recap
                   </span>
                 </div>

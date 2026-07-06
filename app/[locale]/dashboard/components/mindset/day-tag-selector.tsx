@@ -37,7 +37,7 @@ interface DayTagSelectorProps {
 }
 
 // Hex is intentionally used because tag creation flow and picker pipeline rely on hex values.
-const DEFAULT_TAG_COLOR = 'hsl(var(--muted-foreground))'
+const DEFAULT_TAG_COLOR = 'var(--muted-foreground)'
 
 export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelectorProps) {
  const t = useI18n()
@@ -110,8 +110,8 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
  
  setInputValue('')
  setIsOpen(false)
- } catch (error) {
- console.error('Failed to create and apply tag:', error)
+ } catch {
+
  } finally {
  setIsApplying(null)
  }
@@ -378,5 +378,5 @@ function getContrastColor(hexColor: string): string {
  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
  
  // Return black or white based on luminance
- return luminance > 0.5 ? 'hsl(var(--background))' : 'hsl(var(--foreground))'
+ return luminance > 0.5 ? 'var(--background)' : 'var(--foreground)'
 }

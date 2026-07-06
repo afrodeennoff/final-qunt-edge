@@ -125,7 +125,7 @@ export default async function Image({
                         style={{
                             fontSize: "18px",
                             fontWeight: "400",
-                            color: "#6B7280",
+                            color: "#94A3B8",
                             letterSpacing: "0.01em",
                         }}
                     >

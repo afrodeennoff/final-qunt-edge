@@ -13,7 +13,7 @@ const Circle = forwardRef<
  return (
  <div
  ref={ref}
- className={cn("z-10 flex h-12 w-12 items-center justify-center rounded-full border-2 border-border/30 bg-primary/[0.03] p-3 shadow-none",
+ className={cn("z-10 flex h-12 w-12 items-center justify-center rounded-full border-2 border-transparent bg-muted/40 p-3 shadow-none",
  className,
  )}
  >
@@ -56,7 +56,7 @@ export function AnimatedBeamDemo() {
  const div2Ref = useRef<HTMLDivElement>(null);
 
  return (
- <div className="mx-6 rounded-xl p-6 bg-primary/[0.03] shadow-card">
+ <div className="mx-6 rounded-xl p-6 bg-muted/40 shadow-card">
  <div className="flex items-center gap-3 mb-4">
  <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
  <Bot className="size-[18px] text-primary" strokeWidth={2} />
@@ -66,10 +66,10 @@ export function AnimatedBeamDemo() {
  </p>
  </div>
  <div
- className="relative flex w-full max-w-md mx-auto justify-self-center items-center justify-center overflow-hidden rounded-lg border bg-background p-10 md:shadow-xl"
+ className="relative flex w-full max-w-md mx-auto justify-self-center items-center justify-center overflow-hidden rounded-lg border-0 bg-background p-10 md:shadow-sm"
  ref={containerRef}
  >
- <div className="flex h-full w-full flex-col items-stretch justify-between gap-10">
+  <div className="flex h-full w-full flex-col items-stretch justify-between gap-8">
  <div className="flex flex-row justify-between">
  <Circle ref={div1Ref}>
  <Icons.user />

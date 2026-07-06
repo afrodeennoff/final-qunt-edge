@@ -13,7 +13,7 @@ vi.mock('@/lib/supabase/route-client', () => ({
   })),
 }))
 
-vi.mock('@/server/imports/tradovate-actions', () => ({
+vi.mock('@/app/[locale]/dashboard/components/import/tradovate/sync/actions', () => ({
   getTradovateSynchronizations: vi.fn(),
   removeTradovateToken: removeTradovateTokenMock,
 }))
@@ -23,6 +23,7 @@ vi.mock('@/lib/rate-limit', () => ({
     vi.fn(async () => ({ success: true, limit: 20, remaining: 19, resetTime: 0 })),
   ),
   createRateLimitResponse: vi.fn(),
+  getTrustedClientIp: vi.fn(() => '127.0.0.1'),
 }))
 
 describe('DELETE /api/tradovate/synchronizations', () => {

@@ -137,7 +137,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
  // Get tag color by name
  const getTagColor = (tagName: string) => {
  const tag = tags?.find(t => t.name === tagName)
- return tag?.color || 'hsl(var(--muted-foreground))'
+ return tag?.color || 'var(--muted-foreground)'
  }
 
  // Format date range for display
@@ -211,7 +211,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
  animate={{ height:"auto", opacity: 1 }}
  exit={{ height: 0, opacity: 0 }}
  transition={{ duration: 0.2 }}
- className="overflow-hidden border-t border-border/10 bg-background/35"
+ className="overflow-hidden border-t-0 bg-background/35"
  >
  <div className="px-3 py-2 sm:px-6">
  <div className="relative flex items-center overflow-hidden">

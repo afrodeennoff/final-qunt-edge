@@ -1,16 +1,26 @@
+import React from 'react'
 import { setStaticParamsLocale } from 'next-international/server'
 import { Metadata } from 'next'
 import { getI18n, getStaticParams } from '@/locales/server'
 import dynamic from 'next/dynamic'
-import { ErrorBoundary } from '@/components/error-boundary'
 import {
   buildBreadcrumbSchema,
   buildOrganizationSchema,
   buildPublicMetadata,
   buildSoftwareApplicationSchema,
 } from '@/lib/seo'
+import { Skeleton } from '@/components/ui/skeleton'
+import { getUnifiedFirms } from '@/server/deals'
+import { getActiveDeals } from '@/server/deals'
+import { getLeaderboardData } from '@/app/[locale]/(landing)/leaderboard/data/leaderboard-query'
 
 type Locale = 'en' | 'fr'
+
+export interface HomeLiveHighlights {
+  topFirms: Array<{ name: string; paidPayout: number; accounts: number }>
+  topCoupons: Array<{ firmName: string; code: string; discount: number }>
+  topLeaders: Array<{ username: string; monthlyPnl: number }>
+}
 
 export function generateStaticParams() {
   return getStaticParams()
@@ -36,9 +46,36 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   const { locale } = await params
   setStaticParamsLocale(locale)
 
-  const softwareSchema = buildSoftwareApplicationSchema(locale, '/')
-  const organizationSchema = buildOrganizationSchema()
-  const breadcrumbSchema = buildBreadcrumbSchema(locale, [{ name: 'Home', path: '/' }])
+  const [softwareSchema, organizationSchema, breadcrumbSchema, unifiedFirms, activeDeals, leaders] = await Promise.all([
+    buildSoftwareApplicationSchema(locale, '/'),
+    buildOrganizationSchema(),
+    buildBreadcrumbSchema(locale, [{ name: 'Home', path: '/' }]),
+    getUnifiedFirms(),
+    getActiveDeals(),
+    getLeaderboardData('monthly_pnl'),
+  ])
+
+  const topFirms = [...unifiedFirms]
+    .sort((a, b) => (b.catalogueStats?.paidPayoutAmount ?? 0) - (a.catalogueStats?.paidPayoutAmount ?? 0))
+    .slice(0, 5)
+    .map((f) => ({
+      name: f.name,
+      paidPayout: f.catalogueStats?.paidPayoutAmount ?? 0,
+      accounts: f.catalogueStats?.accountsCount ?? 0,
+    }))
+
+  const topCoupons = activeDeals.slice(0, 5).map((d) => ({
+    firmName: d.firmName,
+    code: d.couponCode,
+    discount: d.discountPercent ?? 0,
+  }))
+
+  const topLeaders = leaders.slice(0, 5).map((l) => ({
+    username: l.username,
+    monthlyPnl: l.monthlyPnl ?? 0,
+  }))
+
+  const liveHighlights: HomeLiveHighlights = { topFirms, topCoupons, topLeaders }
 
   return (
     <>
@@ -54,28 +91,64 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <ErrorBoundary fallback={<div className="flex items-center justify-center min-h-screen">Loading content...</div>}>
-        <HomeContent locale={locale} />
-      </ErrorBoundary>
+      <HomeContent liveHighlights={liveHighlights} />
     </>
   )
 }
 
 const HomeContent = dynamic(() => import('./components/HomeContent'), {
   loading: () => (
-    <div className="home-borderless relative min-w-0 overflow-x-hidden bg-transparent">
-      <div className="pointer-events-none absolute inset-x-4 top-0 h-48 rounded-b-[2.5rem] border border-border/40 bg-background/40 sm:inset-x-6 lg:inset-x-10 animate-pulse" />
-      <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-5 lg:block" />
-      <div className="pointer-events-none absolute inset-x-0 top-[22%] h-px bg-border/50" />
-
-      <main className="relative z-10 mx-auto w-full max-w-[1400px] min-w-0 px-4 sm:px-6 lg:px-8">
-        <div className="pt-24 sm:pt-32 lg:pt-40">
-          <div className="mx-auto max-w-3xl space-y-8 text-center">
-            <div className="h-16 w-96 animate-pulse bg-muted rounded mx-auto" />
+    <div className="qe-home-ref relative min-w-0 overflow-x-hidden bg-[var(--qe-ref-surface)] text-[var(--qe-ref-text)]">
+      <main className="relative z-10 mx-auto w-full max-w-[1100px] min-w-0 px-6">
+        {/* Hero skeleton */}
+        <section className="pt-20 pb-16 sm:pt-24 sm:pb-20">
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div className="space-y-5">
+              <Skeleton className="h-6 w-56 rounded-full bg-[var(--qe-ref-card)]" />
+              <Skeleton className="h-[92px] w-full max-w-[520px] rounded-2xl bg-[var(--qe-ref-card)]" />
+              <Skeleton className="h-4 w-[340px] rounded bg-[var(--qe-ref-card)]" />
+              <div className="flex gap-3 pt-4">
+                <Skeleton className="h-12 w-40 rounded-full bg-[var(--qe-ref-green)]/30" />
+                <Skeleton className="h-12 w-32 rounded-full bg-[var(--qe-ref-card)]" />
+              </div>
+            </div>
+            <div className="relative">
+              <Skeleton className="h-[360px] w-full max-w-[460px] rounded-2xl bg-[var(--qe-ref-surface-2)] mx-auto" />
+            </div>
           </div>
-        </div>
+        </section>
+
+        {/* Features skeleton */}
+        <section className="pb-16 sm:pb-20">
+          <div className="text-center mb-10 space-y-3">
+            <Skeleton className="mx-auto h-4 w-48 rounded-full bg-[var(--qe-ref-card)]" />
+            <Skeleton className="mx-auto h-[52px] w-[420px] rounded-2xl bg-[var(--qe-ref-card)]" />
+            <Skeleton className="mx-auto h-4 w-[520px] rounded bg-[var(--qe-ref-card)]" />
+          </div>
+          <div className="grid gap-4 sm:gap-5 md:grid-cols-2">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-[280px] rounded-xl bg-[var(--qe-ref-surface-2)]" />
+            ))}
+          </div>
+        </section>
+
+        {/* Advanced Trading skeleton */}
+        <section className="pb-16 sm:pb-20">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+            <div className="space-y-4">
+              <Skeleton className="h-4 w-40 rounded-full bg-[var(--qe-ref-card)]" />
+              <Skeleton className="h-[48px] w-full max-w-[480px] rounded-2xl bg-[var(--qe-ref-card)]" />
+              <Skeleton className="h-4 w-[320px] rounded bg-[var(--qe-ref-card)]" />
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-14 w-full rounded-xl bg-[var(--qe-ref-surface-2)]" />
+              ))}
+              <Skeleton className="h-10 w-24 rounded-full bg-[var(--qe-ref-green)]/30 mt-4" />
+            </div>
+            <Skeleton className="h-[300px] w-full max-w-[400px] rounded-2xl bg-[var(--qe-ref-surface-2)] mx-auto" />
+          </div>
+        </section>
       </main>
     </div>
   ),
   ssr: true
-})
+}) as unknown as React.ComponentType<{ liveHighlights?: HomeLiveHighlights }>

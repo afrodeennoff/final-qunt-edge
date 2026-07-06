@@ -55,6 +55,23 @@ function formatSizeBreakdown(
   return visible.length > 0 ? visible.join(' + ') : 'No sized accounts'
 }
 
+// In-flight request deduplication — prevents connection pool exhaustion
+// when multiple callers hit the same timeframe concurrently during a single render.
+const inflightRequests = new Map<string, Promise<PropfirmCatalogueData>>()
+
+// Last known good result — returned on DB timeout so the UI never shows empty data
+let lastKnownGoodData: PropfirmCatalogueData | null = null
+
+function isConnectionError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false
+  const msg = error.message.toLowerCase()
+  return msg.includes('timeout') || msg.includes('connect') || msg.includes('econnrefused') || msg.includes('pool')
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 export async function getPropfirmCatalogueData(timeframe: Timeframe = 'currentMonth'): Promise<PropfirmCatalogueData> {
   'use cache'
   cacheLife({ stale: 3_600, revalidate: 3_600, expire: 7_200 })
@@ -63,7 +80,52 @@ export async function getPropfirmCatalogueData(timeframe: Timeframe = 'currentMo
     return { stats: [] }
   }
 
+  // Deduplicate concurrent in-flight requests for the same timeframe
+  const inflight = inflightRequests.get(timeframe)
+  if (inflight) return inflight
+
+  const promise = executeCatalogueQuery(timeframe)
+  inflightRequests.set(timeframe, promise)
+
   try {
+    return await promise
+  } finally {
+    if (inflightRequests.get(timeframe) === promise) {
+      inflightRequests.delete(timeframe)
+    }
+  }
+}
+
+async function executeCatalogueQuery(timeframe: Timeframe): Promise<PropfirmCatalogueData> {
+  try {
+    const data = await runRawQueries(timeframe)
+    lastKnownGoodData = data
+    return data
+  } catch (error) {
+    console.warn('Error fetching propfirm catalogue data:', error)
+
+    // Retry once on connection/timeout errors — brief backoff lets pool recover
+    if (isConnectionError(error)) {
+      try {
+        await sleep(1_000)
+        const data = await runRawQueries(timeframe)
+        lastKnownGoodData = data
+        return data
+      } catch (retryError) {
+        console.warn('Retry failed for propfirm catalogue data:', retryError)
+      }
+    }
+
+    // Graceful degradation: return last known good data instead of empty stats
+    if (lastKnownGoodData) {
+      return lastKnownGoodData
+    }
+
+    return { stats: [] }
+  }
+}
+
+async function runRawQueries(timeframe: Timeframe): Promise<PropfirmCatalogueData> {
     const { startDate, endDate } = getTimeframeDateRange(timeframe)
 
     // Get account counts per propfirm (excluding empty propfirm strings)
@@ -226,9 +288,4 @@ export async function getPropfirmCatalogueData(timeframe: Timeframe = 'currentMo
     })
 
     return { stats }
-  } catch (error) {
-    console.warn('Error fetching propfirm catalogue data:', error)
-    // Return empty stats on error
-    return { stats: [] }
-  }
 }

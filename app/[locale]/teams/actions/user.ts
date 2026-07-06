@@ -115,6 +115,83 @@ function inferPortfolioValueFromTrades(trades: Array<{ pnl: unknown; commission:
   return Math.max(1, Math.abs(minimumPnl) + 1)
 }
 
+export type TraderFullData = {
+  id: string
+  email: string
+  trades: Array<{
+    id: string
+    pnl: number
+    commission: number
+    instrument: string
+    side: string | null
+    quantity: number
+    entryPrice: number
+    closePrice: number
+    entryDate: string
+    closeDate: string
+    tags: string[]
+    comment: string | null
+    timeInPosition: number
+    riskRewardRatio: number | null
+  }>
+}
+
+export async function getTraderFullData(traderId: string): Promise<{ success: boolean; data?: TraderFullData; error?: string }> {
+  try {
+    const requestUserId = await getRequestUserId()
+    if (!requestUserId) return { success: false, error: "Unauthorized" }
+
+    const hasAccess = await canAccessTrader(requestUserId, traderId)
+    if (!hasAccess) return { success: false, error: "Unauthorized" }
+
+    const trader = await prisma.user.findUnique({
+      where: { id: traderId },
+      select: { id: true, email: true },
+    })
+    if (!trader) return { success: false, error: "Trader not found" }
+
+    const trades = await prisma.trade.findMany({
+      where: { userId: traderId },
+      orderBy: { closeDate: 'desc' },
+    })
+
+    const tradeIds = trades.map(t => t.id)
+    const analyticsList = tradeIds.length > 0 ? await prisma.tradeAnalytics.findMany({
+      where: { tradeId: { in: tradeIds } },
+      select: { tradeId: true, riskRewardRatio: true },
+    }) : []
+
+    const rrMap = new Map(analyticsList.map(a => [a.tradeId, a.riskRewardRatio != null ? Number(a.riskRewardRatio) : null]))
+
+    return {
+      success: true,
+      data: {
+        id: trader.id,
+        email: trader.email,
+        trades: trades.map(t => ({
+          id: t.id,
+          pnl: Number(t.pnl),
+          commission: Number(t.commission),
+          instrument: t.instrument,
+          side: t.side,
+          quantity: Number(t.quantity),
+          entryPrice: Number(t.entryPrice),
+          closePrice: Number(t.closePrice),
+          entryDate: t.entryDate.toISOString(),
+          closeDate: t.closeDate.toISOString(),
+          tags: t.tags,
+          comment: t.comment,
+          timeInPosition: Number(t.timeInPosition),
+          riskRewardRatio: rrMap.get(t.id) ?? null,
+        })),
+      },
+    }
+  } catch (error) {
+    console.error("Error fetching trader full data:", error)
+    return { success: false, error: "Failed to fetch trader data" }
+  }
+}
+
 export async function getTraderVarSummary(traderId: string): Promise<TraderVarSummaryResponse> {
   try {
     const requestUserId = await getRequestUserId()

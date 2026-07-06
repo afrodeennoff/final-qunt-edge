@@ -47,10 +47,10 @@ export default function TeamsPageClient() {
           <div className="relative grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.8fr)] xl:items-end">
             <div className="space-y-5">
               <span className={unifiedChipClassName}>Teams</span>
-              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.35rem)] font-medium leading-[0.98] tracking-[-0.04em] text-foreground">
+              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.35rem)] font-black leading-[1.1] tracking-tight text-foreground">
                 A shared trading desk, rebuilt as one command surface.
               </h1>
-              <p className="max-w-2xl text-sm leading-[1.75] text-muted-foreground sm:text-base">
+              <p className="max-w-2xl text-sm leading-[1.55] text-muted-foreground sm:text-base">
                 Monitor trader performance, review analytics, and coordinate decisions across your
                 desk with workflows designed for funded teams, coaching groups, and operational
                 trading leads.
@@ -70,7 +70,7 @@ export default function TeamsPageClient() {
             <div
               className={cn(
                 unifiedInsetPanelClassName,
-                'animate-scale-reveal animate-scale-reveal-d1 p-5 sm:p-6',
+                'animate-scale-reveal animate-scale-reveal-d1 p-4 sm:p-5',
               )}
             >
               <div className="flex items-center gap-3">
@@ -78,7 +78,7 @@ export default function TeamsPageClient() {
                   <LineChart className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                     Desk snapshot
                   </p>
                   <p className="mt-1 text-lg font-semibold text-foreground">One review surface</p>
@@ -95,16 +95,16 @@ export default function TeamsPageClient() {
                     key={label}
                     className={cn(
                       unifiedInsetPanelClassName,
-                      'animate-scale-reveal p-4',
+                      'animate-scale-reveal p-3 sm:p-4',
                       index === 0 && 'animate-scale-reveal-d1',
                       index === 1 && 'animate-scale-reveal-d2',
                       index === 2 && 'animate-scale-reveal-d3',
                     )}
                   >
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                       {label}
                     </p>
-                    <p className="mt-2 text-sm leading-relaxed text-foreground">{value}</p>
+                    <p className="mt-2 text-sm leading-[1.55] text-foreground">{value}</p>
                   </div>
                 ))}
               </div>
@@ -120,7 +120,7 @@ export default function TeamsPageClient() {
         >
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                 Desk foundations
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">

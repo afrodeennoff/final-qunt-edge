@@ -67,7 +67,7 @@ export function aiBudgetError(
   remaining: number,
 ): Response {
   return aiError(
-    429,
+    402,
     'BUDGET_EXCEEDED',
     'Monthly AI token budget exhausted',
     {

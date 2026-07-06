@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import { InteractiveWrapper } from '@/components/interactive-wrapper'
 import type { UnifiedFirm } from '@/server/deals'
 
 interface FirmCardsGridProps {
@@ -12,7 +14,7 @@ interface FirmCardsGridProps {
 export default function FirmCardsGrid({ firms, locale }: FirmCardsGridProps) {
   if (firms.length === 0) {
     return (
-      <div className="mt-6 rounded-lg border border-border/0.04 bg-background/70 p-8 text-center">
+      <div className="mt-6 rounded-lg border-0 bg-background/70 p-8 text-center">
         <p className="text-sm text-muted-foreground">
           No firms match your current filters. Try adjusting your search.
         </p>
@@ -23,9 +25,10 @@ export default function FirmCardsGrid({ firms, locale }: FirmCardsGridProps) {
   return (
     <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {firms.slice(0, 6).map((firm) => (
-        <div
-          key={firm.id}
-          className="group rounded-lg border border-border/0.04 bg-card/70 p-4 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/0.08 hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32)]"
+        <InteractiveWrapper key={firm.id} hover="cursor">
+        <Card
+          hover
+          className="group p-4"
         >
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
@@ -75,7 +78,8 @@ export default function FirmCardsGrid({ firms, locale }: FirmCardsGridProps) {
             View details
             <ArrowRight className="h-3 w-3" />
           </Link>
-        </div>
+        </Card>
+        </InteractiveWrapper>
       ))}
     </div>
   )

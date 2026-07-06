@@ -2,19 +2,24 @@ import { streamText, stepCountIs, convertToModelMessages, type ToolSet } from "a
 import { NextRequest } from "next/server";
 import { z } from "zod/v3";
 import { getFinancialNews } from "./tools/get-financial-news";
-import { getJournalEntries } from "./tools/get-journal-entries";
-import { getMostTradedInstruments } from "./tools/get-most-traded-instruments";
-import { getLastTradesData } from "./tools/get-last-trade-data";
-import { getTradesDetails } from "./tools/get-trades-details";
-import { getTradesSummary } from "./tools/get-trades-summary";
-import { getCurrentWeekSummary } from "./tools/get-current-week-summary";
-import { getPreviousWeekSummary } from "./tools/get-previous-week-summary";
-import { getWeekSummaryForDate } from "./tools/get-week-summary-for-date";
-import { getPreviousConversation } from "./tools/get-previous-conversation";
-import { generateEquityChart } from "./tools/generate-equity-chart";
+import { createGetLastTradesDataTool } from "./tools/get-last-trade-data";
+import { createGetTradesDetailsTool } from "./tools/get-trades-details";
+import { createGetTradesSummaryTool } from "./tools/get-trades-summary";
+import { createGetCurrentWeekSummaryTool } from "./tools/get-current-week-summary";
+import { createGetPreviousWeekSummaryTool } from "./tools/get-previous-week-summary";
+import { createGetWeekSummaryForDateTool } from "./tools/get-week-summary-for-date";
+import { createGetPreviousConversationTool } from "./tools/get-previous-conversation";
+import { createGenerateEquityChartTool } from "./tools/generate-equity-chart";
+import { createGetJournalEntriesTool } from "./tools/get-journal-entries";
+import { createGetMostTradedInstrumentsTool } from "./tools/get-most-traded-instruments";
+import { createGetOverallPerformanceMetricsTool } from "./tools/get-overall-performance-metrics";
+import { createGetPerformanceTrendsTool } from "./tools/get-performance-trends";
+import { createGetTimeOfDayPerformanceTool } from "./tools/get-time-of-day-performance";
+import { createGetInstrumentPerformanceTool } from "./tools/get-instrument-performance";
+import { suggestFollowUp } from "./tools/suggest-follow-up";
 import { startOfWeek, endOfWeek, subWeeks } from "date-fns";
 import { buildSystemPrompt } from "./prompts";
-import { getAiLanguageModel } from "@/lib/ai/client";
+import { getAiLanguageModel, checkAiConfig } from "@/lib/ai/client";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import { apiError } from "@/lib/api-response";
@@ -32,15 +37,12 @@ const chatRateLimit = rateLimit({ limit: 30, window: 60_000, identifier: "ai-cha
 type ChatIntent = "analytics_data" | "coaching" | "news_context" | "general";
 const chatMessageSchema = z.object({
   role: z.string(),
+  id: z.string().optional(),
   content: z.unknown().optional(),
-  parts: z.array(
-    z.object({
-      type: z.string().optional(),
-      text: z.string().optional(),
-    }),
-  ).optional(),
+  parts: z.any().optional(),
   text: z.string().optional(),
-})
+  toolInvocations: z.unknown().optional(),
+}).passthrough()
 const chatRequestSchema = z.object({
   messages: z.array(chatMessageSchema).min(1, "messages are required"),
   username: z.string().optional(),
@@ -50,21 +52,30 @@ const chatRequestSchema = z.object({
 type ParsedChatRequest = z.infer<typeof chatRequestSchema>;
 type ParsedChatMessage = ParsedChatRequest["messages"][number];
 
-const availableChatTools = {
-  getJournalEntries,
-  getPreviousConversation,
-  getMostTradedInstruments,
-  getLastTradesData,
-  getTradesDetails,
-  getTradesSummary,
-  getCurrentWeekSummary,
-  getPreviousWeekSummary,
-  getWeekSummaryForDate,
-  getFinancialNews,
-  generateEquityChart,
-} satisfies ToolSet;
+function createAvailableChatTools(userId: string) {
+  // Use userId-bound tool creators so execute() closures have the authenticated user even
+  // when the AI SDK invokes them outside the original request auth context (cookies() etc).
+  return {
+    getPreviousConversation: createGetPreviousConversationTool(userId),
+    getLastTradesData: createGetLastTradesDataTool(userId),
+    getTradesDetails: createGetTradesDetailsTool(userId),
+    getTradesSummary: createGetTradesSummaryTool(userId),
+    getCurrentWeekSummary: createGetCurrentWeekSummaryTool(userId),
+    getPreviousWeekSummary: createGetPreviousWeekSummaryTool(userId),
+    getWeekSummaryForDate: createGetWeekSummaryForDateTool(userId),
+    getFinancialNews,
+    generateEquityChart: createGenerateEquityChartTool(userId),
+    getJournalEntries: createGetJournalEntriesTool(userId),
+    getMostTradedInstruments: createGetMostTradedInstrumentsTool(userId),
+    getOverallPerformanceMetrics: createGetOverallPerformanceMetricsTool(userId),
+    getPerformanceTrends: createGetPerformanceTrendsTool(userId),
+    getTimeOfDayPerformance: createGetTimeOfDayPerformanceTool(userId),
+    getInstrumentPerformance: createGetInstrumentPerformanceTool(userId),
+    suggestFollowUp,
+  } satisfies ToolSet;
+}
 
-type ChatToolName = keyof typeof availableChatTools;
+type ChatToolName = keyof ReturnType<typeof createAvailableChatTools>;
 
 function extractLastUserText(messages: ParsedChatMessage[]): string {
   const lastUserMessage = [...messages].reverse().find((message) => message?.role === "user");
@@ -111,7 +122,6 @@ function getToolingPolicy(intent: ChatIntent) {
     return {
       requiresTool: true,
       allowedToolNames: [
-        "getMostTradedInstruments",
         "getLastTradesData",
         "getTradesDetails",
         "getTradesSummary",
@@ -130,13 +140,29 @@ function getToolingPolicy(intent: ChatIntent) {
     };
   }
 
+  if (intent === "coaching") {
+    return {
+      requiresTool: true,
+      allowedToolNames: [
+        "getJournalEntries",
+        "getTradesSummary",
+        "getTradesDetails",
+        "getCurrentWeekSummary",
+        "getPreviousWeekSummary",
+        "getWeekSummaryForDate",
+        "generateEquityChart",
+      ] as ChatToolName[],
+    };
+  }
+
+  // general
   return {
     requiresTool: false,
     allowedToolNames: null as ChatToolName[] | null,
   };
 }
 
-function withToolGuards<T extends ToolSet>(tools: T, maxCallsPerTool = 2): T {
+function withToolGuards<T extends ToolSet>(tools: T, maxCallsPerTool = 5): T {
   const callCount = new Map<string, number>();
   const seenArgs = new Set<string>();
   const guarded = {} as Partial<T>;
@@ -197,21 +223,8 @@ export async function POST(req: NextRequest) {
   const policy = getAiPolicy("chat");
   const startedAt = Date.now();
 
-  // Check if AI is properly configured
-  const baseURL = process.env.AI_BASE_URL || "https://openrouter.ai/api/v1";
-  const aiApiKey = process.env.OPENROUTER_API_KEY;
-
-  if (!aiApiKey || aiApiKey.trim() === "" || aiApiKey.includes("your_")) {
-    return apiError(
-      "SERVICE_UNAVAILABLE",
-      "AI service is not configured. Please contact support.",
-      503,
-      {
-        type: "ai_not_configured",
-        message: "OPENROUTER_API_KEY is not set"
-      }
-    );
-  }
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
 
   // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, 'chat', chatRateLimit)
@@ -272,6 +285,9 @@ export async function POST(req: NextRequest) {
     const intent = classifyIntent(latestText);
     const toolPolicy = getToolingPolicy(intent);
 
+    const chatLog = (await import('@/lib/logger')).createLogger('ai-chat')
+    chatLog.info('AI chat request with bound tools', { userId, intent, requiresTool: toolPolicy.requiresTool });
+
     const convertedMessages = await convertToModelMessages(
       messages as Parameters<typeof convertToModelMessages>[0],
     );
@@ -293,14 +309,14 @@ export async function POST(req: NextRequest) {
     const dataQualityPrompt =
       `\n\nDATA QUALITY RULE: If a tool output contains 'dataQualityWarning' or 'truncated: true', clearly disclose that the analysis may be incomplete.`;
 
-    const availableTools = withToolGuards(availableChatTools);
+    const availableTools = withToolGuards(createAvailableChatTools(userId));
 
-    const scopedTools = scopeTools(availableTools, toolPolicy.allowedToolNames);
+    const scopedTools = scopeTools(availableTools, toolPolicy.allowedToolNames as any);
 
     let toolCallsCount = 0;
 
     const result = streamText({
-      model: getAiLanguageModel("chat"),
+      model: getAiLanguageModel("chat", userId),
       messages: convertedMessages,
       system: `${systemPrompt}${intentPrompt}${dataQualityPrompt}${promptSafetyPreamble}`,
       temperature: policy.temperature,

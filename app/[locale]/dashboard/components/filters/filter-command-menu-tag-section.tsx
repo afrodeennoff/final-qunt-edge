@@ -1,4 +1,5 @@
 "use client"
+import React from 'react'
 
 import { useState, useEffect, useRef } from "react"
 import { Plus, ChevronRight, Trash2 } from "lucide-react"
@@ -29,7 +30,7 @@ interface TagFormData {
 }
 
 // Hex is intentionally used because HexColorPicker requires hex input.
-const DEFAULT_TAG_COLOR = 'hsl(var(--muted-foreground))'
+const DEFAULT_TAG_COLOR = 'var(--muted-foreground)'
 
 export function TagSection({ searchValue }: TagSectionProps) {
  const { tagFilter, setTagFilter } = useDashboardFilters()
@@ -122,8 +123,8 @@ export function TagSection({ searchValue }: TagSectionProps) {
  toast.success(t('widgets.tags.success'), {
  description: t('widgets.tags.createSuccess'),
  })
- } catch (error) {
- console.error('Failed to create tag:', error)
+ } catch {
+
  toast.error(t('widgets.tags.error'), {
  description: t('widgets.tags.createError'),
  })
@@ -163,8 +164,8 @@ export function TagSection({ searchValue }: TagSectionProps) {
  toast.success(t('widgets.tags.success'), {
  description: t('widgets.tags.deleteSuccess'),
  })
- } catch (error) {
- console.error('Failed to delete tag:', error)
+ } catch {
+
  toast.error(t('widgets.tags.error'), {
  description: t('widgets.tags.deleteError'),
  })

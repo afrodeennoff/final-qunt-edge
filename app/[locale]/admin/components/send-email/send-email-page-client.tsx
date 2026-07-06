@@ -486,7 +486,7 @@ function PreviewCard({
  <span className="text-xs text-muted-foreground">
  {t("admin.sendEmail.preview.device.label")}
  </span>
- <div className="inline-flex rounded-md border bg-muted/50 p-1 text-sm">
+  <div className="inline-flex rounded-md border border-primary/15 bg-primary/5 p-1 text-sm">
  <Button 
  type="button"
  variant={previewDevice ==="desktop" ?"secondary" :"ghost"}
@@ -559,8 +559,8 @@ export function SendEmailPageClient() {
  try {
  const list = await getUsersList()
  setUsers(list)
- } catch (error) {
- console.error("Failed to load users:", error)
+ } catch {
+
  toast.error(t("admin.sendEmail.toast.loadUsersError"))
  } finally {
  setLoadingUsers(false)
@@ -600,8 +600,8 @@ export function SendEmailPageClient() {
  } else {
  toast.error(result.error || t("admin.sendEmail.toast.previewError"))
  }
- } catch (error) {
- console.error("Failed to update preview:", error)
+ } catch {
+
  toast.error(t("admin.sendEmail.toast.previewError"))
  } finally {
  setLoadingPreview(false)
@@ -665,8 +665,8 @@ export function SendEmailPageClient() {
  )
  setSelectedUsers([])
  setCustomSubject("")
- } catch (error) {
- console.error("Failed to send emails:", error)
+ } catch {
+
  toast.error(t("admin.sendEmail.toast.sendError"))
  } finally {
  setSending(false)

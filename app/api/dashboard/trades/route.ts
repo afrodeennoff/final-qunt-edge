@@ -43,12 +43,8 @@ async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<st
       )
     }
 
-    const result = await getTradesAction(null, page, pageSize, false, false)
-    return apiSuccess(result, 200, {
-      headers: {
-        'Cache-Control': 'no-store, max-age=0',
-      },
-    })
+    const result = await getTradesAction(null, page, pageSize, true, false)
+    return apiSuccess(result, 200, 'private, max-age=30')
   } catch (error) {
     return apiError(
       'INTERNAL_ERROR',

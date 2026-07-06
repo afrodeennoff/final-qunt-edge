@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 
 import { useRef, useState, useCallback, useMemo } from "react"
 import { Button } from "@/components/ui/button"
@@ -33,7 +34,7 @@ async function convertFilesToDataURLs(files: Iterable<File>): Promise<ChatAttach
  });
  };
  reader.onerror = (error) => {
- console.error('File reader error for:', file.name, error)
+
  reject(error);
  };
  reader.readAsDataURL(file);
@@ -68,7 +69,7 @@ export function ChatInput({
  fileInputRef.current.accept ="image/*"
  fileInputRef.current.click()
  } else {
- console.error('File input ref is null')
+
  }
  }
 
@@ -91,8 +92,8 @@ export function ChatInput({
  try {
  const fileParts = await convertFilesToDataURLs(supportedFiles)
  onFilesChange?.(fileParts)
- } catch (error) {
- console.error('Error converting files:', error)
+ } catch {
+
  }
  }
  }
@@ -140,8 +141,8 @@ export function ChatInput({
  if (decodedUrl.includes('.webp')) return 'image/webp'
  if (decodedUrl.includes('.svg')) return 'image/svg+xml'
  }
- } catch (e) {
- console.warn('Failed to parse Google redirect URL:', e)
+ } catch {
+
  }
  return 'image/*'
  }
@@ -226,8 +227,8 @@ export function ChatInput({
  try {
  const fileParts = await convertFilesToDataURLs(supportedFiles)
  onFilesChange?.([...files, ...fileParts])
- } catch (error) {
- console.error('Error converting dropped files:', error)
+ } catch {
+
  }
  }
  }, [files, onFilesChange])
@@ -245,8 +246,8 @@ export function ChatInput({
  onFilesChange?.([...files, newFile])
  setUrlInput("")
  setShowUrlInput(false)
- } catch (error) {
- console.error('Invalid URL:', error)
+ } catch {
+
  // You could add a toast notification here
  }
  }
@@ -274,7 +275,7 @@ export function ChatInput({
 
  {/* URL input */}
  {showUrlInput && (
- <div className="mb-3 p-3 border border-border/30 rounded-lg bg-background/50">
+ <div className="mb-3 p-3 border-0 rounded-lg bg-background/50">
  <div className="flex items-center gap-2">
  <Input
  value={urlInput}
@@ -319,7 +320,7 @@ export function ChatInput({
  <div className="mb-3 flex flex-wrap gap-2">
  {files.map((file, index) => (
  <div key={index} className="relative group">
- <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-border/30 bg-muted/50 flex items-center justify-center">
+ <div className="relative w-16 h-16 rounded-lg overflow-hidden border-0 bg-muted/50 flex items-center justify-center">
  {file.mediaType.startsWith('image/') ? (
  <img
  src={file.url}

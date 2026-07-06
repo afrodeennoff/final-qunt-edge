@@ -1,5 +1,6 @@
 "use client"
 
+import { shouldSkipLocalePrefix } from '@/lib/locale-path'
 import { signInWithDiscord, signInWithEmail, verifyOtp, signInWithGoogle, signInWithPasswordAction } from "@/server/auth"
 
 import * as React from "react"
@@ -32,6 +33,7 @@ import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { useAuthPreferenceStore } from "@/store/auth-preference-store"
 import { useCurrentLocale } from "@/locales/client"
+import { motion, AnimatePresence } from 'motion/react'
 
 const formSchema = z.object({
  email: z.string().email(),
@@ -42,7 +44,10 @@ const otpFormSchema = z.object({
  otp: z.string().length(6,"Verification code must be 6 digits"),
 })
 
-type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
+type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement> & {
+  /** When set (e.g. MCP OAuth consent), overrides ?next= from the URL. */
+  forcedNextUrl?: string | null
+}
 
 type AuthMethod = 'email' | 'discord' | 'google' | null
 
@@ -57,6 +62,7 @@ function normalizeNextPath(next: string | null): string | null {
 function withLocalePrefix(path: string, locale: string): string {
  const normalized = normalizeNextPath(path) || `/${path}`
  if (normalized.startsWith('/api/')) return normalized
+ if (shouldSkipLocalePrefix(normalized)) return normalized
  // Already locale-prefixed? Keep it.
  if (/^\/[a-z]{2}(?:-[a-z]{2})?(?:\/|$)/i.test(normalized)) return normalized
  return `/${locale}${normalized}`
@@ -82,7 +88,7 @@ function getQueryErrorMessage(errorCode: string | null, authErrorCode: string | 
  return null
 }
 
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+export function UserAuthForm({ className, forcedNextUrl, ...props }: UserAuthFormProps) {
  const [isLoading, setIsLoading] = React.useState<boolean>(false)
  const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false)
  const [countdown, setCountdown] = React.useState<number>(0)
@@ -94,7 +100,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  const [promoCode, setPromoCode] = React.useState<string | null>(null)
  const [authMethod, setAuthMethod] = React.useState<AuthMethod>(null)
  const [showOtpInput, setShowOtpInput] = React.useState<boolean>(false)
- const [nextUrl, setNextUrl] = React.useState<string | null>(null)
+ const [nextUrl, setNextUrl] = React.useState<string | null>(forcedNextUrl ?? null)
  const router = useRouter()
  const locale = useCurrentLocale()
  const { lastAuthPreference, setLastAuthPreference } = useAuthPreferenceStore()
@@ -113,7 +119,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  try {
  const urlParams = new URLSearchParams(window.location.search)
  const subscription = urlParams.get('subscription')
- const next = normalizeNextPath(urlParams.get('next'))
+ const next = forcedNextUrl ?? normalizeNextPath(urlParams.get('next'))
  const errorCode = urlParams.get('error')
  const authErrorCode = urlParams.get('auth_error')
  const referral = urlParams.get('referral')
@@ -149,23 +155,23 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  toast.error(t('error'), { description: queryErrorMessage })
  }
  } catch (error) {
- console.warn('Failed to parse URL params:', error)
+
  }
- }, [t])
+ }, [t, forcedNextUrl])
 
  React.useEffect(() => {
  router.prefetch(redirectDestination)
  }, [redirectDestination, router])
 
- React.useEffect(() => {
- if (!alreadySignedIn || typeof window === 'undefined') return
+  React.useEffect(() => {
+    if (!alreadySignedIn || typeof window === 'undefined') return
 
- const redirectHandle = window.setTimeout(() => {
- window.location.replace(redirectDestination)
- }, 250)
+    const redirectHandle = window.setTimeout(() => {
+      router.replace(redirectDestination)
+    }, 250)
 
- return () => window.clearTimeout(redirectHandle)
- }, [alreadySignedIn, redirectDestination])
+    return () => window.clearTimeout(redirectHandle)
+  }, [alreadySignedIn, redirectDestination, router])
 
  React.useEffect(() => {
  if (countdown > 0) {
@@ -371,9 +377,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 	 toast.success(t('success'), { description: t('auth.signIn') })
 	 }
 	 if (typeof window !== 'undefined') {
-	 window.location.assign(result.next || redirectDestination)
+	 router.push(result.next || redirectDestination)
 	 }
- setLastAuthPreference('password')
+  setLastAuthPreference('password')
  } catch (error) {
  const parsedError = parseAuthError(error)
 
@@ -417,15 +423,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 	 description:"Successfully verified. Redirecting...",
 	 })
 	 if (typeof window !== 'undefined') {
-	 window.location.assign(redirectDestination)
+	 router.push(redirectDestination)
 	 }
- } catch (error) {
- toast.error("Error", {
- description: error instanceof Error ? error.message :"Failed to verify code",
- })
- } finally {
- setIsLoading(false)
- }
+  } catch (error) {
+    toast.error("Error", {
+    description: error instanceof Error ? error.message :"Failed to verify code",
+    })
+  } finally {
+    setIsLoading(false)
+  }
  }
 
  async function onSubmitDiscord(event: React.SyntheticEvent) {
@@ -511,8 +517,16 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
  return (
  <div className={cn("grid gap-6", className)} {...props}>
+ <AnimatePresence>
  {alreadySignedIn && (
- <div className="flex items-center justify-between gap-3 rounded-2xl border border-success/30 bg-success/10 px-4 py-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260_/_0.03)]">
+ <motion.div
+ initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+ animate={{ opacity: 1, height: 'auto', marginBottom: 24 }}
+ exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+ transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+ style={{ overflow: 'hidden' }}
+ >
+ <div className="flex items-center justify-between gap-3 rounded-2xl border border-success/40 bg-success/10 px-4 py-3 shadow-sm transition-shadow duration-200 hover:shadow-md">
  <div className="flex items-center gap-3">
  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-success/15">
  <svg className="h-4 w-4 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -526,29 +540,31 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </div>
  <Button
  size="sm"
- className="shrink-0 rounded-[0.95rem] border-success/30 bg-success/20 text-success hover:bg-success/30"
- onClick={() => window.location.assign(redirectDestination)}
+ className="shrink-0 rounded-[0.95rem] border-success/40 bg-success/20 text-success hover:bg-success/30 active:scale-[0.97]"
+  onClick={() => router.push(redirectDestination)}
  >
  Go to Dashboard
  </Button>
  </div>
+ </motion.div>
  )}
+ </AnimatePresence>
  <Tabs value={tab} onValueChange={(v) => { setTab(v as 'magic' | 'password'); setLastAuthPreference(v as 'magic' | 'password'); }}>
- <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/0.04 bg-background/0.08 p-1">
+ <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border-0 bg-muted/40 p-1 hover:bg-muted/30 transition-colors duration-200">
  <TabsTrigger
  value="magic"
- className="h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_1px_2px_rgba(0,0,0,0.14)]"
+ className="h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground active:scale-[0.97]"
  >
  <span className="truncate">{t('auth.tabs.magic')}</span>
  </TabsTrigger>
  <TabsTrigger
  value="password"
- className="relative h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_1px_2px_rgba(0,0,0,0.14)]"
+ className="relative h-9 rounded-[0.7rem] text-xs font-semibold text-muted-foreground transition-[background-color,color] duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground active:scale-[0.97]"
  >
  <span className="truncate">{t('auth.tabs.password')}</span>
  <Badge
  variant="secondary"
- className="absolute -right-1.5 -top-1.5 border border-border/0.04 bg-accent/70 px-1 py-0 text-[8px] text-foreground"
+ className="absolute -right-1.5 -top-1.5 border-0 bg-accent/70 px-1 py-0 text-[8px] text-foreground"
  >
  {t('auth.new')}
  </Badge>
@@ -573,7 +589,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  autoComplete="email"
  autoCorrect="off"
  disabled={isLoading || (isEmailSent || authMethod === 'discord' || authMethod === 'google')}
- className="h-11 rounded-xl border-border/0.06 bg-background/0.08 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+ className="h-11 rounded-xl border-transparent bg-background/30 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-0"
  {...field}
  />
  </FormControl>
@@ -581,23 +597,39 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </FormItem>
  )}
  />
+ <AnimatePresence mode="wait">
  {!isEmailSent ? (
+ <motion.div
+ key="submit-btn"
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ exit={{ opacity: 0 }}
+ transition={{ duration: 0.15 }}
+ >
  <Button
  disabled={isLoading || countdown > 0 || authMethod === 'discord' || authMethod === 'google'}
  type="submit"
- className="h-11 rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
+ className="h-11 font-semibold px-5 active:scale-[0.97]"
  >
  {isLoading && authMethod === 'email' && (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
  )}
  {t('auth.signInWithEmail')}
  </Button>
+ </motion.div>
  ) : (
+ <motion.div
+ key="sent-actions"
+ initial={{ opacity: 0, y: 8 }}
+ animate={{ opacity: 1, y: 0 }}
+ exit={{ opacity: 0 }}
+ transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+ >
  <div className="space-y-2">
  <Button
  type="button"
  variant="outline"
- className="h-11 w-full rounded-xl border-border/0.06 bg-background/0.08 text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/70 hover:text-foreground"
+ className="h-11 w-full rounded-xl border-transparent bg-background/30 text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/70 hover:text-foreground active:scale-[0.97]"
  onClick={openMailClient}
  disabled={authMethod === 'discord' || authMethod === 'google'}
  >
@@ -607,7 +639,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <Button
  type="submit"
  variant="ghost"
- className="h-10 w-full rounded-xl text-muted-foreground hover:bg-accent/60 hover:text-foreground"
+ className="h-10 w-full rounded-xl text-muted-foreground hover:bg-accent/60 hover:text-foreground active:scale-[0.97]"
  disabled={countdown > 0 || authMethod === 'discord' || authMethod === 'google'}
  >
  {countdown > 0 ? (
@@ -617,18 +649,28 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  )}
  </Button>
  </div>
+ </motion.div>
  )}
+ </AnimatePresence>
  </form>
  </Form>
+ <AnimatePresence>
  {showOtpInput && (
+ <motion.div
+ initial={{ opacity: 0, height: 0, marginTop: 0 }}
+ animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+ exit={{ opacity: 0, height: 0, marginTop: 0 }}
+ transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+ style={{ overflow: 'hidden' }}
+ >
  <Form {...otpForm}>
- <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-xl border border-border/0.04 bg-background/0.06 p-4">
+ <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="space-y-4 rounded-xl border-0 bg-background/30 p-4">
  <FormField
  control={otpForm.control}
  name="otp"
  render={({ field }) => (
  <FormItem className="space-y-2">
- <FormLabel className="block text-center text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+ <FormLabel className="block text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
  {t('auth.verificationCode')}
  </FormLabel>
  <FormControl>
@@ -659,7 +701,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  />
  <Button
  type="submit"
- className="h-11 w-full rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
+ className="h-11 w-full font-semibold px-5"
  disabled={isLoading}
  >
  {isLoading ? (
@@ -669,7 +711,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </Button>
  </form>
  </Form>
+ </motion.div>
  )}
+ </AnimatePresence>
  </TabsContent>
 
  <TabsContent value="password" className="mt-4">
@@ -690,7 +734,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  autoComplete="email"
  autoCorrect="off"
  disabled={isLoading}
- className="h-11 rounded-xl border-border/0.06 bg-background/0.08 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+ className="h-11 rounded-xl border-transparent bg-background/30 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-0"
  {...field}
  />
  </FormControl>
@@ -711,7 +755,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  type="password"
  autoComplete="current-password"
  disabled={isLoading}
- className="h-11 rounded-xl border-border/0.06 bg-background/0.08 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+ className="h-11 rounded-xl border-transparent bg-background/30 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-0"
  {...field}
  />
  </FormControl>
@@ -721,14 +765,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  />
  <Link
  href={withLocalePrefix("/authentication/forgot-password", locale)}
- className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
+  className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
  >
  Forgot your password?
  </Link>
  <Button
  disabled={isLoading}
  type="submit"
- className="h-11 rounded-[0.95rem] border border-primary/18 bg-primary font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.14)] hover:bg-primary/92"
+ className="h-11 font-semibold px-5 active:scale-[0.97]"
  >
  {isLoading && authMethod === 'email' && (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -742,10 +786,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
  <div className="relative py-1">
  <div className="absolute inset-0 flex items-center">
- <span className="w-full border-t border-border/0.04" />
+ <span className="w-full border-t-0" />
  </div>
- <div className="relative flex justify-center text-[10px] uppercase tracking-[0.14em]">
- <span className="bg-primary/[0.03] px-2 text-muted-foreground">
+ <div className="relative flex justify-center text-[10px] font-black uppercase tracking-[0.12em]">
+ <span className="bg-primary/5 px-2 text-muted-foreground">
  {t('auth.continueWith')}
  </span>
  </div>
@@ -756,7 +800,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  type="button"
  disabled={isLoading || authMethod === 'email'}
  onClick={onSubmitDiscord}
- className="h-11 rounded-xl border-border/0.06 bg-background/0.08 text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/70 hover:text-foreground"
+ className="h-11 rounded-xl border-transparent bg-background/30 text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/70 hover:text-foreground active:scale-[0.97]"
  >
  {isLoading && authMethod === 'discord' ? (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -770,7 +814,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  type="button"
  disabled={isLoading || authMethod === 'email'}
  onClick={onSubmitGoogle}
- className="h-11 rounded-xl border-border/0.06 bg-background/0.08 text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/70 hover:text-foreground"
+ className="h-11 rounded-xl border-transparent bg-background/30 text-foreground transition-[opacity,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/70 hover:text-foreground active:scale-[0.97]"
  >
  {isLoading && authMethod === 'google' ? (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

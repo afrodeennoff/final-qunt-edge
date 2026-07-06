@@ -4,6 +4,7 @@ import { createClient, getDatabaseUserId } from '@/server/auth'
 import { resolveWritableUserId, saveTradesForUserAction } from '@/server/database'
 import { TickDetails } from '@/prisma/generated/prisma'
 import type { ImportTradeDraft as Trade } from '@/lib/trade-types'
+import { decimalToNumber } from '@/lib/trade-types'
 import crypto from 'crypto'
 import { generateDeterministicTradeId } from '@/lib/trade-id-utils'
 import { getTickDetails } from '@/server/tick-details'
@@ -55,6 +56,9 @@ const TRADOVATE_ENVIRONMENTS = {
     api: 'https://demo.tradovateapi.com'   // API calls
   }
 }
+
+const TRADOVATE_DEFAULT_ENV: 'demo' | 'live' =
+  (process.env.TRADOVATE_ENVIRONMENT as 'demo' | 'live') || 'demo'
 
 const MAX_TRADOVATE_TRADES = 5_000
 
@@ -732,7 +736,7 @@ export async function handleTradovateCallback(code: string, state: string): Prom
     const storeResult = await storeTradovateToken(
       tokens.access_token,
       expiresAt,
-      'demo', //Environment default to demo for now
+      TRADOVATE_DEFAULT_ENV,
       accountId
     )
     if (storeResult.error) {
@@ -759,7 +763,7 @@ export async function handleTradovateCallback(code: string, state: string): Prom
 }
 
 // New function using Tradovate's renewAccessToken endpoint
-export async function renewTradovateAccessToken(accessToken: string, environment: 'demo' | 'live' = 'demo', accountId?: string): Promise<TradovateOAuthResult> {
+export async function renewTradovateAccessToken(accessToken: string, environment: 'demo' | 'live' = TRADOVATE_DEFAULT_ENV, accountId?: string): Promise<TradovateOAuthResult> {
   try {
     const apiBaseUrl = environment === 'demo' ? TRADOVATE_ENVIRONMENTS.demo.api : 'https://live.tradovateapi.com'
 
@@ -1024,8 +1028,8 @@ async function buildTradesFromFillPairs(
 
       // Calculate P&L using tick value (more accurate for futures)
       const tickDetail = tickDetails.find(detail => detail.ticker === contractSymbol)
-      const tickSize = tickDetail?.tickSize || 0.25 // Default tick size for MES
-      const tickValue = tickDetail?.tickValue || 5.0 // Default tick value for MES
+      const tickSize = decimalToNumber(tickDetail?.tickSize) || 0.25 // Default tick size for MES
+      const tickValue = decimalToNumber(tickDetail?.tickValue) || 5.0 // Default tick value for MES
 
       // Determine entry and exit prices based on trade direction
       const entryPrice = isBuyFirst ? fillPair.buyPrice : fillPair.sellPrice
@@ -1035,8 +1039,8 @@ async function buildTradesFromFillPairs(
 
       // Calculate price difference (exit - entry)
       const priceDifference = exitPrice - entryPrice
-      const ticks = priceDifference / Number(tickSize)
-      let pnl = ticks * Number(tickValue) * fillPair.qty
+      const ticks = priceDifference / tickSize
+      let pnl = ticks * tickValue * fillPair.qty
 
       // For short trades, we need to reverse the P&L calculation
       // Short: sell first (entry), buy later (exit) = profit when exit price < entry price
@@ -1138,7 +1142,7 @@ async function buildTradesFromFillPairs(
 export async function storeTradovateToken(
   accessToken: string,
   expiresAt: string,
-  environment: 'demo' | 'live' = 'demo',
+  environment: 'demo' | 'live' = TRADOVATE_DEFAULT_ENV,
   accountId: string = 'default'
 ) {
   try {
@@ -1197,13 +1201,18 @@ export async function storeTradovateToken(
   }
 }
 
-export async function getTradovateToken(accountId: string = 'default') {
+export async function getTradovateToken(accountId: string = 'default', userId?: string) {
   try {
-    const identity = await resolveSyncUserIdentity()
-    if ('error' in identity) {
-      return { error: identity.error }
+    let databaseUserId: string
+    if (userId) {
+      databaseUserId = await resolveWritableUserId(userId)
+    } else {
+      const identity = await resolveSyncUserIdentity()
+      if ('error' in identity) {
+        return { error: identity.error }
+      }
+      databaseUserId = identity.databaseUserId
     }
-    const { databaseUserId } = identity
 
     const syncData = await prisma.synchronization.findFirst({
       where: {
@@ -1281,7 +1290,7 @@ export async function getTradovateToken(accountId: string = 'default') {
     return {
       accessToken,
       expiresAt: syncData.tokenExpiresAt?.toISOString() || '',
-      environment: 'demo', // Default to demo for now
+      environment: TRADOVATE_DEFAULT_ENV,
       accountId: syncData.accountId
     }
   } catch (error) {
@@ -1371,7 +1380,7 @@ export async function setCustomTradovateToken(
   accessToken: string,
   expiresAt: string,
   accountId: string = 'custom',
-  environment: 'demo' | 'live' = 'demo'
+  environment: 'demo' | 'live' = TRADOVATE_DEFAULT_ENV
 ) {
   try {
     const supabase = await createClient()
@@ -1420,7 +1429,7 @@ export async function setCustomTradovateToken(
 // Function to test a custom access token without storing it
 export async function testCustomTradovateToken(
   accessToken: string,
-  environment: 'demo' | 'live' = 'demo'
+  environment: 'demo' | 'live' = TRADOVATE_DEFAULT_ENV
 ) {
   try {
     // Validate token format (basic check)

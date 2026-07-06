@@ -73,7 +73,7 @@ export function LinkedAccounts() {
       const identitiesArray = (userIdentities?.identities || []) as UserIdentity[]
       setIdentities(identitiesArray)
     } catch (error) {
-      console.error('Failed to load identities:', error)
+
       setIdentities([])
     } finally {
       setLoading(false)
@@ -86,7 +86,7 @@ export function LinkedAccounts() {
       await linkDiscordAccount()
       // Note: The redirect will happen automatically, so we don't need to handle success here
     } catch (error) {
-      console.error('Failed to link Discord:', error)
+
       toast.error(t('auth.linkingFailed'))
       setLinking(false)
     }
@@ -98,7 +98,7 @@ export function LinkedAccounts() {
       await linkGoogleAccount()
       // Note: The redirect will happen automatically, so we don't need to handle success here
     } catch (error) {
-      console.error('Failed to link Google:', error)
+
       toast.error(t('auth.linkingFailed'))
       setLinking(false)
     }
@@ -110,7 +110,7 @@ export function LinkedAccounts() {
       toast.success(t('auth.accountUnlinked'))
       await loadIdentities() // Reload the list
     } catch (error) {
-      console.error('Failed to unlink identity:', error)
+
       toast.error(error instanceof Error ? error.message : t('auth.unlinkingFailed'))
     }
   }
@@ -146,7 +146,7 @@ export function LinkedAccounts() {
 
   if (loading) {
     return (
-      <Card>
+      <Card className="border-transparent bg-card/50 shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Link className="h-5 w-5" />
@@ -166,7 +166,7 @@ export function LinkedAccounts() {
   }
 
   return (
-    <Card>
+    <Card className="border-transparent bg-card/50 shadow-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Link className="h-5 w-5" />
@@ -183,7 +183,7 @@ export function LinkedAccounts() {
             <h4 className="text-sm font-medium mb-3">{t('auth.primaryAccount')}</h4>
             <div className="gap-3">
               {identities.map((identity, index) => (
-                <div key={identity.id || index} className="flex items-center justify-between p-3 border rounded-lg">
+                <div key={identity.id || index} className="flex items-center justify-between p-3 border-0 rounded-lg">
                   <div className="flex items-center gap-3">
                     {getProviderIcon(identity.provider)}
                     <div>

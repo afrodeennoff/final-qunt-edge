@@ -4,6 +4,7 @@ import 'server-only'
 const KEY_PREFIX = 'qunt:v1'
 const VERSION_CACHE_TTL_MS = 30_000
 const MAX_IN_MEMORY_CACHE_ENTRIES = 500
+const MAX_NAMESPACE_VERSION_ENTRIES = 200
 const CACHE_SWEEP_INTERVAL_MS = 60_000
 const LOCAL_REDIS_TIMEOUT_MS = 2000
 
@@ -89,6 +90,21 @@ function getCachedNamespaceVersion(namespace: string): number | null {
  * Set cached namespace version with TTL
  */
 function setCachedNamespaceVersion(namespace: string, version: number): void {
+  if (versionCache.size >= MAX_NAMESPACE_VERSION_ENTRIES && !versionCache.has(namespace)) {
+    // Evict oldest expired entry, or oldest overall
+    let evicted = false
+    for (const [key, entry] of versionCache.entries()) {
+      if (entry.expiresAt <= getNow()) {
+        versionCache.delete(key)
+        evicted = true
+        break
+      }
+    }
+    if (!evicted) {
+      const oldestKey = versionCache.keys().next().value as string | undefined
+      if (oldestKey) versionCache.delete(oldestKey)
+    }
+  }
   versionCache.set(namespace, {
     version,
     expiresAt: getNow() + VERSION_CACHE_TTL_MS,
@@ -395,6 +411,7 @@ async function runUpstashRedisCommand(command: string[]): Promise<string | numbe
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(command),
+    signal: AbortSignal.timeout(LOCAL_REDIS_TIMEOUT_MS),
   })
 
   if (!response.ok) {

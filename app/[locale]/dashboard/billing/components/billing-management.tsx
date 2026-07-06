@@ -100,7 +100,7 @@ export default function BillingManagement() {
 
   return (
     <div className="w-full space-y-6">
-      <Card className="rounded-2xl border border-border/45 bg-card/60 shadow-sm">
+      <Card className="rounded-xl border-0 bg-card shadow-sm">
         <CardHeader className="px-0">
           <CardTitle>{t('billing.currentPlan')}</CardTitle>
           <div className="mt-1.5 text-sm text-muted-foreground flex items-center gap-2">
@@ -156,7 +156,7 @@ export default function BillingManagement() {
           </div>
         </CardHeader>
         <CardContent className="px-0">
-          <div className="space-y-6 rounded-xl border border-border/45 bg-background/70 p-4 sm:p-6">
+          <div className="space-y-6 rounded-xl border-0 bg-muted p-4 sm:p-6">
             {/* Current Plan Details */}
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
               {isLoading ? (
@@ -172,7 +172,7 @@ export default function BillingManagement() {
                   <div>
                     {subscription?.plan?.interval === 'lifetime' ? (
                       <div className="space-y-1">
-                        <div className="text-2xl font-bold text-foreground">
+                        <div className="text-2xl font-black text-foreground">
                           {t('pricing.lifetimeAccess')}
                         </div>
                         <p className="text-sm text-muted-foreground">
@@ -181,7 +181,7 @@ export default function BillingManagement() {
                       </div>
                     ) : subscription?.promotion ? (
                       <div className="space-y-1">
-                        <div className="text-2xl font-bold flex items-center gap-2">
+                        <div className="text-2xl font-black flex items-center gap-2">
                           <span className="text-muted-foreground line-through">
                             {formatAmount(subscription.plan.amount)}
                           </span>
@@ -231,7 +231,7 @@ export default function BillingManagement() {
                         </div>
                       </div>
                     ) : (
-                      <div className="text-2xl font-bold">
+                      <div className="text-2xl font-black">
                         {subscription?.plan?.amount ? (
                           <>
                             {formatAmount(subscription.plan.amount)}
@@ -360,7 +360,7 @@ export default function BillingManagement() {
       {!isLoading &&
         (subscription?.status === 'ACTIVE' || subscription?.status === 'PENDING') &&
         subscription?.plan?.interval !== 'lifetime' && (
-          <Card className="rounded-2xl border border-border/45 bg-card/60 shadow-sm">
+          <Card className="rounded-xl border-0 bg-card shadow-sm">
             <CardContent className="px-0">
               <div className="flex flex-col gap-4">
                 {!subscription.cancel_at_period_end && (
@@ -479,7 +479,7 @@ export default function BillingManagement() {
         )}
 
       {/* Available Plans */}
-      <Card className="rounded-2xl border border-border/45 bg-card/60 shadow-sm">
+      <Card className="rounded-xl border-0 bg-card shadow-sm">
         <CardHeader className="px-0">
           <CardTitle>{t('billing.availablePlans')}</CardTitle>
           <CardDescription>{t('billing.choosePlan')}</CardDescription>
@@ -490,13 +490,13 @@ export default function BillingManagement() {
       </Card>
 
       {/* Payment History */}
-      <Card className="rounded-2xl border border-border/45 bg-card/60 shadow-sm">
+      <Card className="rounded-xl border-0 bg-card shadow-sm">
         <CardHeader className="px-0">
           <CardTitle>{t('billing.paymentHistory')}</CardTitle>
           <CardDescription>{t('billing.paymentHistoryDesc')}</CardDescription>
         </CardHeader>
         <CardContent className="px-0">
-          <div className="rounded-xl border border-border/45 bg-background/70">
+          <div className="rounded-xl border-0 bg-muted">
             {isLoading ? (
               <div className="p-4 space-y-4">
                 {[1, 2, 3].map((i) => (

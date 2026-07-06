@@ -10,6 +10,7 @@ import { cacheLife, cacheTag, updateTag } from 'next/cache'
 const PROFILE_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as const
 const USER_TABLE_CANDIDATES = ['User', 'user'] as const
 const LEADERBOARD_VISIBILITY_COLUMN = 'showOnLeaderboard'
+const HIDE_LATEST_TRADE_COLUMN = 'hideLatestTrade'
 
 export type UserProfileData = {
   supabaseUser: User | null
@@ -150,6 +151,87 @@ async function _getLeaderboardVisibilityCached(userId: string): Promise<{ showOn
   cacheLife(PROFILE_CACHE_LIFETIME)
   cacheTag(`profile-${userId}`)
   return _getLeaderboardVisibility(userId)
+}
+
+async function hasHideLatestTradeColumn(): Promise<boolean> {
+  for (const tableName of USER_TABLE_CANDIDATES) {
+    if (await isPrismaColumnAvailable(tableName, HIDE_LATEST_TRADE_COLUMN)) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * Toggle the current user's latest trade visibility on their public profile.
+ * Returns the new value of hideLatestTrade.
+ */
+export async function toggleHideLatestTrade(): Promise<{ success: boolean; hideLatestTrade: boolean; error?: string }> {
+  const userId = await getDatabaseUserId()
+
+  if (!(await hasHideLatestTradeColumn())) {
+    return { success: false, hideLatestTrade: false, error: 'Hide latest trade unavailable' }
+  }
+
+  let currentUser: { hideLatestTrade: boolean } | null = null
+
+  try {
+    currentUser = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { hideLatestTrade: true },
+    })
+  } catch (error) {
+    if (!isUserProfileUnavailableError(error)) {
+      throw error
+    }
+    return { success: false, hideLatestTrade: false, error: 'Hide latest trade unavailable' }
+  }
+
+  if (!currentUser) {
+    return { success: false, hideLatestTrade: false, error: "User not found" }
+  }
+
+  const newValue = !currentUser.hideLatestTrade
+
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { hideLatestTrade: newValue },
+    })
+    await updateTag(`profile-${userId}`)
+  } catch (error) {
+    if (!isUserProfileUnavailableError(error)) {
+      throw error
+    }
+    return { success: false, hideLatestTrade: currentUser.hideLatestTrade, error: 'Hide latest trade unavailable' }
+  }
+
+  return { success: true, hideLatestTrade: newValue }
+}
+
+/**
+ * Get the current user's hideLatestTrade setting.
+ */
+export async function getHideLatestTrade(): Promise<{ hideLatestTrade: boolean }> {
+  const userId = await getDatabaseUserId()
+
+  try {
+    if (!(await hasHideLatestTradeColumn())) {
+      return { hideLatestTrade: false }
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { hideLatestTrade: true },
+    })
+
+    return { hideLatestTrade: user?.hideLatestTrade ?? false }
+  } catch (error) {
+    if (!isPrismaSchemaMismatchError(error)) {
+      throw error
+    }
+    return { hideLatestTrade: false }
+  }
 }
 
 export async function getLeaderboardVisibility(): Promise<{ showOnLeaderboard: boolean }> {

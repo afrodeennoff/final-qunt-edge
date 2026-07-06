@@ -12,6 +12,7 @@ import {
   Hr,
   Link,
 } from '@react-email/components';
+import { getSiteUrl } from '@/lib/site-url';
 
 const copy = {
   en: {
@@ -61,9 +62,10 @@ type Locale = keyof typeof copy;
 const formatCopy = (text: string, firstName: string) =>
   text.replace('{firstName}', firstName);
 
-const BlackFridayEmail = (props: { firstName: string; locale?: Locale }) => {
-  const { firstName, locale = 'en' } = props;
+const BlackFridayEmail = (props: { firstName: string; locale?: Locale; siteUrl?: string }) => {
+  const { firstName, locale = 'en', siteUrl } = props;
   const content = copy[locale] ?? copy.en;
+  const resolvedSiteUrl = siteUrl ?? getSiteUrl();
 
   return (
     <Html>
@@ -91,7 +93,7 @@ const BlackFridayEmail = (props: { firstName: string; locale?: Locale }) => {
                 </Text>
                 <Text className="text-[36px] font-bold mb-[4px] m-0">
                   <span className="line-through text-gray-400 mr-[12px]">300€</span>
-                  <span className="text-[#8b5cf6]">250€</span>
+                  <span className="text-[#33ff85]">250€</span>
                 </Text>
                 <Text className="text-[14px] text-gray-600 m-0">
                   {content.highlightDeadline}
@@ -108,8 +110,8 @@ const BlackFridayEmail = (props: { firstName: string; locale?: Locale }) => {
 
               <Section className="text-center mb-[32px]">
                 <Button 
-                  className="bg-[#7c3aed] text-white text-[16px] px-[24px] py-[12px] rounded-[6px] font-medium box-border"
-                  href="https://qunt-edge.vercel.app/pricing"
+                  className="bg-[#00b347] text-white text-[16px] px-[24px] py-[12px] rounded-[6px] font-medium box-border"
+                  href={`${resolvedSiteUrl}/pricing`}
                 >
                   {content.cta}
                 </Button>
@@ -128,7 +130,7 @@ const BlackFridayEmail = (props: { firstName: string; locale?: Locale }) => {
               <Hr className="border-gray-200 my-[24px]" />
 
               <Text className="text-gray-500 text-[12px] text-center m-0">
-                <Link href="https://qunt-edge.vercel.app" className="text-gray-500 underline">
+                <Link href={resolvedSiteUrl} className="text-gray-500 underline">
                   Qunt Edge
                 </Link>
                 {' • '}

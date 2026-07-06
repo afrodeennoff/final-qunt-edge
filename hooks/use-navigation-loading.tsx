@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
 
-
 export function useNavigationLoading() {
   const pathname = usePathname()
   const searchParams = useSearchParams()

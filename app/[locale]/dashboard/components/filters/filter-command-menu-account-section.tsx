@@ -154,8 +154,8 @@ export function AccountSection({ searchValue }: AccountSectionProps) {
  toast.success(t('common.success'), {
  description: t('filters.groupDeleted', { name: groupName })
  })
- } catch (error) {
- console.error("Error deleting group:", error)
+ } catch {
+
  toast.error(t('common.error'), {
  description: t('filters.errorDeletingGroup', { name: groupName })
  })

@@ -114,6 +114,7 @@ type CoreUserCompatRecord = {
   isFirstConnection?: boolean | null
   isBeta?: boolean | null
   language?: string | null
+  avatarUrl?: string | null
   createdAt: Date
   updatedAt: Date
 }
@@ -130,6 +131,9 @@ function toCompatUser(record: CoreUserCompatRecord, authUserId: string): User {
     language: record.language ?? 'en',
     dashboardTheme: DEFAULT_DASHBOARD_THEME,
     showOnLeaderboard: false,
+    hideLatestTrade: false,
+    avatarUrl: record.avatarUrl ?? null,
+    usernameChangedAt: null,
     etpToken: null,
     etpTokenHash: null,
     etpTokenExpiresAt: null,
@@ -138,6 +142,7 @@ function toCompatUser(record: CoreUserCompatRecord, authUserId: string): User {
     thorTokenExpiresAt: null,
     mt5TokenHash: null,
     mt5TokenExpiresAt: null,
+    journalTagDefaults: {},
     createdAt: record.createdAt,
     updatedAt: record.updatedAt
   }
@@ -154,6 +159,7 @@ async function findCoreUserByIdCompat(userId: string, authUserId: string): Promi
         isFirstConnection: true,
         isBeta: true,
         language: true,
+        avatarUrl: true,
         createdAt: true,
         updatedAt: true
       }
@@ -171,6 +177,7 @@ async function findCoreUserByIdCompat(userId: string, authUserId: string): Promi
         id: true,
         email: true,
         username: true,
+        avatarUrl: true,
         createdAt: true,
         updatedAt: true
       }
@@ -183,7 +190,7 @@ async function findCoreUserByIdCompat(userId: string, authUserId: string): Promi
 async function loadGlobalTickDetails() {
   return withPrismaSchemaMismatchFallback(
     'user-data-global-tick-details',
-    () => prisma.tickDetails.findMany(),
+    () => prisma.tickDetails.findMany({ take: 1000, orderBy: { ticker: 'asc' } }),
     []
   )
 }
@@ -191,7 +198,7 @@ async function loadGlobalTickDetails() {
 async function loadGlobalFinancialEvents(locale: string) {
   return withPrismaSchemaMismatchFallback(
     `user-data-global-financial-events-${locale}`,
-    () => prisma.financialEvent.findMany({ where: { lang: locale } }),
+    () => prisma.financialEvent.findMany({ where: { lang: locale }, take: 500 }),
     []
   )
 }
@@ -221,6 +228,7 @@ async function loadCoreUserData(authUserId: string | null, userId: string): Prom
           isFirstConnection: true,
           isBeta: true,
           language: true,
+          avatarUrl: true,
           createdAt: true,
           updatedAt: true
         }
@@ -294,7 +302,8 @@ async function loadSupplementalUserData(userId: string): Promise<{
     withPrismaSchemaMismatchFallback(
       `user-data-supplemental-moods-${userId}`,
       () => prisma.mood.findMany({
-        where: { userId: userId }
+        where: { userId: userId },
+        take: 730,
       }),
       []
     )

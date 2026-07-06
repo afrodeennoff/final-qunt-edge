@@ -102,8 +102,8 @@ interface AccountsAnalysisProps {
 export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  const t = useI18n();
  const currentLocale = useCurrentLocale();
- const { supabaseUser } = useUserStore();
- const { timezone } = useUserStore();
+ const supabaseUser = useUserStore(state => state.supabaseUser);
+ const timezone = useUserStore(state => state.timezone);
 
  // Analysis store
  const {
@@ -118,9 +118,17 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  const { messages, sendMessage, status, stop, error } = useChat({
  transport: new DefaultChatTransport({
  api:"/api/ai/analysis/accounts",
+ body: () => ({
+ username:
+ supabaseUser?.user_metadata?.full_name ||
+ supabaseUser?.email?.split("@")[0] ||"User",
+ locale: currentLocale,
+ timezone: timezone,
+ currentTime: new Date().toISOString(),
+ }),
  }),
  onError: (error) => {
- console.error("Chat error:", error);
+ console.error('Accounts analysis chat error:', error);
  },
  });
 
@@ -193,7 +201,6 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  onStatusChange,
  ]);
 
-
  return (
  <Card className="relative">
  <CardHeader>
@@ -218,21 +225,9 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  ) : (
  <Button 
  onClick={() =>
- sendMessage(
- {
+ sendMessage({
  text: `Analyze my account trading performance and provide detailed insights in ${currentLocale} language. Use the generateAnalysisComponent tool to create structured analysis components.`,
- },
- {
- body: {
- username:
- supabaseUser?.user_metadata?.full_name ||
- supabaseUser?.email?.split("@")[0] ||"User",
- locale: currentLocale,
- timezone: timezone,
- currentTime: new Date().toISOString(),
- },
- },
- )
+ })
  }
  size="sm"
  variant="outline"
@@ -311,23 +306,23 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  <div className="overflow-x-auto">
  <table className="w-full text-sm">
  <thead>
- <tr className="border-b">
- <th className="text-left p-2 font-medium">
+  <tr className="border-b-0 bg-muted/30">
+ <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.account")}
  </th>
- <th className="text-left p-2 font-medium">
+ <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.netPnL")}
  </th>
- <th className="text-left p-2 font-medium">
+ <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.winRate")}
  </th>
- <th className="text-left p-2 font-medium">
+ <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.totalTrades")}
  </th>
- <th className="text-left p-2 font-medium">
+ <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.profitFactor")}
  </th>
- <th className="text-left p-2 font-medium">
+ <th   className="type-label text-left p-3 text-muted-foreground font-medium">
  {t("analysis.riskLevel")}
  </th>
  </tr>
@@ -335,8 +330,8 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  <tbody>
  {accountPerformanceData.accounts.map(
  (account: any, index: number) => (
- <tr key={index} className="border-b">
- <td className="p-2 font-medium">
+  <tr key={index} className="border-b-0 hover:bg-primary/[0.02] transition-colors">
+ <td   className="p-2.5 font-medium">
  {account.accountNumber}
  </td>
  <td
@@ -344,16 +339,16 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  >
  ${account.netPnL?.toLocaleString() || 0}
  </td>
- <td className="p-2">
+ <td   className="p-2.5">
  {account.winRate?.toFixed(1) || 0}%
  </td>
- <td className="p-2">
+ <td   className="p-2.5">
  {account.totalTrades || 0}
  </td>
- <td className="p-2">
+ <td   className="p-2.5">
  {account.profitFactor?.toFixed(2) || 0}
  </td>
- <td className="p-2">
+ <td   className="p-2.5">
  <Badge
  variant="outline"
  className={
@@ -361,7 +356,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  ?"text-destructive border-destructive/30"
  : account.riskLevel ==="medium"
  ?"text-semantic-warning border-semantic-warning-border/30"
- :"text-foreground border-border/30"
+ :"text-foreground border-transparent"
  }
  >
  {account.riskLevel ||"N/A"}
@@ -549,7 +544,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
 
  {/* Strengths and Improvements */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
- <Card className="p-6 border-border/40 bg-background/30">
+ <Card className="p-6 border-transparent bg-background/30">
  <h4 className="text-[10px] font-bold uppercase tracking-widest mb-3 text-primary">
  {t("analysis.strengths")}
  </h4>
@@ -570,7 +565,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  </ul>
  </Card>
 
- <Card className="p-6 border-border/40 bg-background/30">
+ <Card className="p-6 border-transparent bg-background/30">
  <h4 className="text-[10px] font-bold uppercase tracking-widest mb-3 text-semantic-warning">
  {t("analysis.improvements")}
  </h4>
@@ -593,7 +588,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  </div>
 
  {/* Recommendations */}
- <Card className="p-6 border-border/40 bg-background/30">
+ <Card className="p-6 border-transparent bg-background/30">
  <h4 className="text-[10px] font-bold uppercase tracking-widest mb-3 text-semantic-info">
  {t("analysis.recommendations")}
  </h4>
@@ -625,7 +620,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
  ?.generatedAt || new Date(),
  ).toLocaleString()}
  </div>
- <div>{t("analysis.model")}: GPT-4o</div>
+ <div>{t("analysis.model")}: Qunt AI</div>
  </div>
  </div>
  </>

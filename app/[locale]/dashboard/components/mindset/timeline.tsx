@@ -1,4 +1,5 @@
 "use client"
+import React from 'react'
 
 import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
@@ -64,7 +65,7 @@ export function Timeline({ onSelectDate, selectedDate, moodHistory, className, o
  toast.success(t('mindset.deleteSuccess'), {
  description: t('mindset.deleteSuccessDescription'),
  })
- } catch (error) {
+ } catch {
  toast.error(t('mindset.deleteError'), {
  description: t('mindset.deleteErrorDescription'),
  })

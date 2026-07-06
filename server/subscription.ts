@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { createClient } from './auth';
+import { logger } from '@/lib/logger';
 
 interface SubscriptionInfo {
     isActive: boolean;
@@ -28,7 +29,7 @@ export async function getSubscriptionDetails(): Promise<SubscriptionInfo | null>
 
     // Input validation
     if (!email || !isValidEmail(email)) {
-        console.error('[getSubscriptionDetails] Invalid email format:', email)
+        logger.error('[getSubscriptionDetails] Invalid email format', { email })
         return null
     }
     const normalizedEmail = email.toLowerCase().trim()
@@ -76,7 +77,7 @@ export async function getSubscriptionDetails(): Promise<SubscriptionInfo | null>
         }
 
     } catch (error) {
-        console.error('[getSubscriptionDetails] Database error:', {
+        logger.error('[getSubscriptionDetails] Database error', {
             email: normalizedEmail,
             error: error instanceof Error ? error.message : 'Unknown error'
         })

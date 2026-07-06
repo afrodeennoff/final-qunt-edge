@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useI18n } from '@/locales/client'
+import type { ApiKeyResult } from '@/server/mcp-key-service'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -33,6 +34,10 @@ import {
   Eye,
   EyeOff,
   Palette,
+  Key,
+  Copy,
+  Plus,
+  Trash2,
 } from 'lucide-react'
 import { signOut, setPasswordAction } from '@/server/auth'
 import Link from 'next/link'
@@ -45,7 +50,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { leaveTeam, getUserTeams, updateUsernameAction } from './actions'
+import { leaveTeam, getUserTeams, updateUsernameAction, updateUserProfile, getUsernameCooldown, updateAvatarAction } from './actions'
 import { toast } from 'sonner'
 import {
   AlertDialog,
@@ -58,6 +63,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Skeleton } from '@/components/ui/skeleton'
 import { LinkedAccounts } from '@/components/linked-accounts'
 import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
 
@@ -105,7 +120,7 @@ function TeamSettingsCard({
   const hasTeams = userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0
 
   return (
-    <Card className="border-border/35 bg-popover/45 shadow-sm">
+    <Card className="border-0 bg-card shadow-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Building2 className="h-5 w-5" />
@@ -121,7 +136,7 @@ function TeamSettingsCard({
               {userTeams.ownedTeams.map((team) => (
                 <div
                   key={team.id}
-                  className="flex items-center justify-between p-3 border-border/45 rounded-lg"
+                  className="flex items-center justify-between rounded-xl border-0 p-3"
                 >
                   <div>
                     <p className="font-medium">{team.name}</p>
@@ -134,7 +149,7 @@ function TeamSettingsCard({
               {userTeams.joinedTeams.map((team) => (
                 <div
                   key={team.id}
-                  className="flex items-center justify-between p-3 border-border/45 rounded-lg"
+                  className="flex items-center justify-between rounded-xl border-0 p-3"
                 >
                   <div>
                     <p className="font-medium">{team.name}</p>
@@ -226,13 +241,13 @@ function PasswordSettingsCard({
   onUpdatePassword: () => Promise<void>
 }) {
   return (
-    <Card className="border-border/35 bg-popover/45 shadow-sm">
+    <Card className="rounded-xl border-0 bg-card shadow-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="h-5 w-5" />
           {t('auth.setPassword')}
         </CardTitle>
-        <CardDescription>{t('auth.setPasswordDescription')}</CardDescription>
+        <CardDescription className="text-sm">{t('auth.setPasswordDescription')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid gap-4">
@@ -293,7 +308,391 @@ function PasswordSettingsCard({
   )
 }
 
-export default function SettingsPage() {
+function ApiKeySection() {
+  const [keys, setKeys] = useState<ApiKeyResult[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [newKeyName, setNewKeyName] = useState('')
+  const [createdKey, setCreatedKey] = useState<string | null>(null)
+  const [isCreating, setIsCreating] = useState(false)
+  const [origin, setOrigin] = useState('')
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    setOrigin(window.location.origin)
+  }, [])
+
+  const loadKeys = async () => {
+    setIsLoading(true)
+    setError(null)
+    const { listUserApiKeys } = await import('@/server/mcp-key-service')
+    const result = await listUserApiKeys()
+    if (result.success) {
+      setKeys(result.keys)
+    } else {
+      setError(result.error || 'Failed to load API keys')
+    }
+    setIsLoading(false)
+  }
+
+  useEffect(() => { loadKeys() }, [])
+
+  const handleCreate = async () => {
+    if (!newKeyName.trim()) return
+    setIsCreating(true)
+    setError(null)
+    const { generateUserApiKey } = await import('@/server/mcp-key-service')
+    const result = await generateUserApiKey(newKeyName.trim())
+    if (result.success) {
+      setCreatedKey(result.result.key ?? null)
+      setNewKeyName('')
+      await loadKeys()
+    } else {
+      const msg = result.error || 'Failed to create key'
+      setError(msg)
+      toast.error(msg)
+    }
+    setIsCreating(false)
+  }
+
+  const handleRevoke = async (keyId: string) => {
+    const { revokeApiKey } = await import('@/server/mcp-key-service')
+    const result = await revokeApiKey(keyId)
+    if (result.success) {
+      toast.success('API key revoked')
+      await loadKeys()
+    } else {
+      toast.error(result.error || 'Failed to revoke key')
+    }
+  }
+
+  return (
+    <Card className="rounded-xl border-0 bg-card shadow-sm lg:col-span-2">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <Key className="h-5 w-5" />
+              API Keys
+            </CardTitle>
+            <CardDescription className="mt-1">
+              Secure access to your trading data for AI agents and external tools via MCP.
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-6">
+        {/* Quick Connect - MCP Endpoint */}
+        {origin && (
+          <div>
+            <div className="mb-2 flex items-center gap-2">
+              <p className="text-sm font-semibold text-foreground">MCP Server Endpoint</p>
+              <Badge variant="outline" className="text-[10px]">Primary</Badge>
+            </div>
+            <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
+              <div className="flex items-center gap-3">
+                <code className="flex-1 text-sm font-mono text-foreground/90 break-all select-all">
+                  {origin}/api/mcp
+                </code>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="shrink-0"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${origin}/api/mcp`)
+                    toast.success('Endpoint copied')
+                  }}
+                >
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy
+                </Button>
+              </div>
+              <p className="mt-2 text-[12px] text-muted-foreground">
+                 Use any of your API keys below as a Bearer token.
+               </p>
+               <p className="mt-1 text-[11px] text-muted-foreground/70">
+                  Streamable HTTP compatible (works with Grok Remote MCP via xAI API, Claude Custom Connectors, Cursor, Jan AI, Cline, etc.).
+                 For stdio-only clients: run <code className="font-mono">MCP_KEY=your_key bun run mcp:stdio</code> (forwards to this hosted instance, exposes all 95+ tools).
+               </p>
+             </div>
+           </div>
+         )}
+
+        {/* Your API Keys */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-sm font-semibold">Your API Keys</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowCreateDialog(true)}
+              className="gap-2"
+            >
+              <Plus className="h-4 w-4" /> Create New Key
+            </Button>
+          </div>
+
+          {isLoading ? (
+            <div className="space-y-2">
+              {[1, 2].map((i) => <Skeleton key={i} className="h-16 w-full rounded-xl" />)}
+            </div>
+          ) : keys.length === 0 ? (
+            <div className="rounded-xl border-0/60 bg-muted/20 p-6 text-center">
+              <Key className="mx-auto h-8 w-8 mb-3 text-muted-foreground/60" />
+              <p className="text-sm text-muted-foreground mb-1">No API keys yet</p>
+              <p className="text-xs text-muted-foreground">Create one to connect AI tools or external services.</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {keys.map((apiKey) => (
+                <div
+                  key={apiKey.id}
+                  className="flex items-center justify-between rounded-xl border-0 bg-card/50 p-4 hover:bg-muted/20 transition-colors"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-3">
+                      <p className="font-medium text-sm">{apiKey.name}</p>
+                      <Badge variant="outline" className="text-[10px] font-mono">{apiKey.keyPrefix}...</Badge>
+                      <Badge variant="secondary" className="text-[10px]">{apiKey.role}</Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Created {new Date(apiKey.createdAt).toLocaleDateString()} 
+                      {apiKey.lastUsedAt ? ` · Last used ${new Date(apiKey.lastUsedAt).toLocaleDateString()}` : ' · Never used'}
+                    </p>
+                  </div>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive h-8 w-8">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Revoke API Key</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Revoking <strong>{apiKey.name}</strong> will immediately disable access for any tool using it. This cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleRevoke(apiKey.id)}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Revoke Key
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Setup Guides */}
+        <div>
+          <p className="text-sm font-semibold mb-3">Setup Guides</p>
+          <div className="grid gap-3 md:grid-cols-2">
+            {/* Claude Desktop */}
+            <div className="rounded-xl border-0 bg-muted/20 p-4">
+              <div className="font-medium text-sm mb-2 flex items-center gap-2">Claude Desktop</div>
+              <ol className="text-xs text-muted-foreground space-y-1.5 list-decimal list-inside">
+                <li>Open Claude Desktop → Settings → Developer</li>
+                <li>Click “Edit Config”</li>
+                <li>Paste the config below (replace <code>YOUR_KEY_HERE</code>)</li>
+              </ol>
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-3 w-full"
+                onClick={() => {
+                  const config = `{
+  "mcpServers": {
+    "qunt-edge": {
+      "url": "${origin}/api/mcp",
+      "headers": { "Authorization": "Bearer YOUR_KEY_HERE" }
+    }
+  }
+}`;
+                  navigator.clipboard.writeText(config);
+                  toast.success("Claude config copied");
+                }}
+              >
+                Copy Claude Config
+              </Button>
+            </div>
+
+            {/* Jan AI */}
+            <div className="rounded-xl border-0 bg-muted/20 p-4">
+              <div className="font-medium text-sm mb-2 flex items-center gap-2">Jan AI</div>
+              <ol className="text-xs text-muted-foreground space-y-1.5 list-decimal list-inside">
+                <li>Settings → Features → MCP Servers (or Extensions → MCP Servers)</li>
+                <li>Add Remote Server / + Add MCP Server</li>
+                <li>Transport: HTTP</li>
+                <li>URL: the endpoint above</li>
+                <li>Headers: name = <code>Authorization</code>, value = <code>Bearer YOUR_KEY</code> (include the word Bearer + space)</li>
+              </ol>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const text = `MCP Server URL: ${origin}/api/mcp\n\nHeader name: Authorization\nHeader value: Bearer YOUR_API_KEY\n\n(Do NOT put 'Bearer' as the header name — it must be 'Authorization')`;
+                    navigator.clipboard.writeText(text);
+                    toast.success("Jan AI config copied");
+                  }}
+                >
+                  Copy Jan AI Details
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const curl = `curl -X POST ${origin}/api/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{"jsonrpc":"2.0","method":"tools/list","id":1}'`;
+                    navigator.clipboard.writeText(curl);
+                    toast.success("Test curl copied — replace YOUR_API_KEY");
+                  }}
+                >
+                  Copy Test Curl
+                </Button>
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-2">Can't connect? Run the curl in terminal first. If curl works but Jan doesn't: fix header in Jan, toggle server, or restart Jan. Use a fresh key from above.</p>
+            </div>
+
+            {/* Other Tools */}
+            <div className="rounded-xl border-0 bg-muted/20 p-4 md:col-span-2">
+              <div className="font-medium text-sm mb-2">Windsurf, Cline & Other MCP Clients</div>
+              <p className="text-xs text-muted-foreground mb-3">
+                Most modern MCP-compatible tools support remote servers. Use the endpoint above and authenticate with <code>Bearer YOUR_KEY</code>.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${origin}/api/mcp`);
+                    toast.success("Endpoint copied");
+                  }}
+                >
+                  Copy Endpoint
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const text = `Authorization: Bearer YOUR_API_KEY`;
+                    navigator.clipboard.writeText(text);
+                    toast.success("Header copied");
+                  }}
+                >
+                  Copy Auth Header
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Guidebook */}
+        <div className="rounded-xl border-0 bg-muted/10 p-5">
+          <p className="font-semibold text-sm mb-3">Guidebook — What You Can Do</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-sm text-muted-foreground">
+            <div className="space-y-1">
+              <p className="font-medium text-foreground text-xs uppercase tracking-wider">Available Capabilities</p>
+              <ul className="text-xs space-y-0.5 list-disc list-inside">
+                <li>Account health & drawdown status</li>
+                <li>Trade history & performance metrics</li>
+                <li>Risk analysis (Sharpe, Kelly, etc.)</li>
+                <li>Journal entries & mood tracking</li>
+                <li>Prop firm challenge progress</li>
+              </ul>
+            </div>
+            <div className="space-y-1">
+              <p className="font-medium text-foreground text-xs uppercase tracking-wider">Security Best Practices</p>
+              <ul className="text-xs space-y-0.5 list-disc list-inside">
+                <li>Never share your API key</li>
+                <li>Revoke keys you no longer use</li>
+                <li>Use descriptive names for each key</li>
+                <li>Rotate keys periodically</li>
+              </ul>
+            </div>
+          </div>
+          <p className="text-[11px] text-muted-foreground mt-4 border-t-0 pt-3">
+            Your data stays private. The MCP server only responds to authenticated requests from your own AI tools.
+          </p>
+        </div>
+
+        {/* Error State (Migration) */}
+        {error && (
+          <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-4">
+            <p className="font-semibold text-destructive text-sm">Database setup required</p>
+            <p className="text-sm text-destructive/90 mt-1">{error}</p>
+          </div>
+        )}
+
+        {/* Create Dialog */}
+        <Dialog open={showCreateDialog} onOpenChange={(open) => { setShowCreateDialog(open); if (!open) setCreatedKey(null) }}>
+          <DialogTrigger asChild>
+            <Button variant="outline" className="w-full gap-2">
+              <Plus className="h-4 w-4" /> Create New API Key
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create API Key</DialogTitle>
+              <DialogDescription>
+                Give this key a clear name. You will only see the full key once.
+              </DialogDescription>
+            </DialogHeader>
+
+            {createdKey ? (
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-medium mb-2">Your new API key:</p>
+                  <div className="rounded-xl border-0 bg-muted/40 p-4">
+                    <code className="text-xs break-all select-all font-mono block">{createdKey}</code>
+                  </div>
+                  <p className="text-xs text-destructive mt-2 font-medium">Copy this key now — it will never be shown again.</p>
+                </div>
+
+                <div className="rounded-lg border-0 bg-muted/20 p-3 text-xs">
+                  <p className="font-semibold mb-1">Next steps:</p>
+                  <ol className="list-decimal list-inside space-y-0.5 text-muted-foreground">
+                    <li>Copy the key above</li>
+                    <li>Use endpoint: <span className="font-mono">{origin}/api/mcp</span></li>
+                    <li>Authenticate with: <code>Bearer YOUR_KEY</code></li>
+                  </ol>
+                </div>
+              </div>
+            ) : (
+              <>
+                <Input
+                  placeholder="e.g. Claude Desktop, Jan AI, Trading Bot, Cursor"
+                  value={newKeyName}
+                  onChange={(e) => setNewKeyName(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
+                />
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setShowCreateDialog(false)}>Cancel</Button>
+                  <Button onClick={handleCreate} disabled={isCreating || !newKeyName.trim()}>
+                    {isCreating ? 'Creating...' : 'Create API Key'}
+                  </Button>
+                </DialogFooter>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
+      </CardContent>
+    </Card>
+  )
+}
+
+const SettingsPage = React.memo(function SettingsPage() {
   const t = useI18n()
   const changeLocale = useChangeLocale()
   const currentLocale = useCurrentLocale()
@@ -316,11 +715,31 @@ export default function SettingsPage() {
 
   const [userTeams, setUserTeams] = useState<UserTeamsState>({ ownedTeams: [], joinedTeams: [] })
   const [username, setUsername] = useState(() => storedUsername ?? '')
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(user?.user_metadata?.avatar_url ?? null)
+  const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [isUpdatingUsername, setIsUpdatingUsername] = useState(false)
+  const [usernameCooldown, setUsernameCooldown] = useState<{ canChange: boolean; remainingDays: number } | null>(null)
+  const fullName = user?.user_metadata?.full_name || ''
+  const parsedFirstName = fullName.includes(' ') ? fullName.split(' ').slice(0, -1).join(' ') : fullName
+  const parsedLastName = fullName.includes(' ') ? fullName.split(' ').slice(-1)[0] : ''
+  const [firstName, setFirstName] = useState(() => parsedFirstName)
+  const [lastName, setLastName] = useState(() => parsedLastName)
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false)
 
   useEffect(() => {
     setUsername(storedUsername ?? '')
   }, [storedUsername])
+
+  useEffect(() => {
+    getUsernameCooldown().then(setUsernameCooldown).catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    const fn = user?.user_metadata?.full_name || ''
+    setFirstName(fn.includes(' ') ? fn.split(' ').slice(0, -1).join(' ') : fn)
+    setLastName(fn.includes(' ') ? fn.split(' ').slice(-1)[0] : '')
+  }, [user?.user_metadata?.full_name])
 
   const languages: { value: Locale; label: string }[] = [
     { value: 'en', label: 'English' },
@@ -349,6 +768,10 @@ export default function SettingsPage() {
         ownedTeams: result.ownedTeams,
         joinedTeams: result.joinedTeams,
       })
+    }).catch((error) => {
+      if (!isCancelled) {
+
+      }
     })
 
     return () => {
@@ -366,7 +789,33 @@ export default function SettingsPage() {
     }
   }
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setIsUpdatingAvatar(true)
+    try {
+      const formData = new FormData()
+      formData.append('avatar', file)
+      const result = await updateAvatarAction(formData)
+      if (result.success && result.avatarUrl) {
+        setAvatarUrl(result.avatarUrl)
+        toast.success('Avatar updated')
+      } else {
+        toast.error(result.error || 'Failed to update avatar')
+      }
+    } catch {
+      toast.error('Failed to update avatar')
+    } finally {
+      setIsUpdatingAvatar(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
+
   const handleUpdateUsername = async () => {
+    if (usernameCooldown && !usernameCooldown.canChange) {
+      toast.error(`Username can be changed again in ${usernameCooldown.remainingDays} days`)
+      return
+    }
     setIsUpdatingUsername(true)
     try {
       const result = await updateUsernameAction(username)
@@ -376,10 +825,31 @@ export default function SettingsPage() {
       } else {
         toast.error(result.error || 'Failed to update username')
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to update username')
     } finally {
       setIsUpdatingUsername(false)
+    }
+  }
+
+  const handleUpdateProfile = async () => {
+    const combined = `${firstName.trim()} ${lastName.trim()}`.trim()
+    if (!combined) {
+      toast.error('Name cannot be empty')
+      return
+    }
+    setIsUpdatingProfile(true)
+    try {
+      const result = await updateUserProfile(combined)
+      if (result.success) {
+        toast.success('Profile updated successfully')
+      } else {
+        toast.error(result.error || 'Failed to update profile')
+      }
+    } catch {
+      toast.error('Failed to update profile')
+    } finally {
+      setIsUpdatingProfile(false)
     }
   }
 
@@ -411,20 +881,42 @@ export default function SettingsPage() {
     <UnifiedPageShell density="compact">
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Profile Section */}
-        <Card className="border-border/35 bg-popover/45 shadow-sm">
+        <Card className="rounded-xl border-0 bg-card shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <User className="h-5 w-5" />
               {t('dashboard.profile')}
             </CardTitle>
-            <CardDescription>Manage your personal information and account details</CardDescription>
+            <CardDescription className="text-sm">Manage your personal information and account details</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16">
-                <AvatarImage src={user?.user_metadata.avatar_url} />
-                <AvatarFallback className="text-lg">{user?.email![0].toUpperCase()}</AvatarFallback>
-              </Avatar>
+              <div className="relative shrink-0">
+                <Avatar className="h-16 w-16">
+                  <AvatarImage src={avatarUrl ?? undefined} />
+                  <AvatarFallback className="text-lg">{user?.email![0].toUpperCase()}</AvatarFallback>
+                </Avatar>
+                {isUpdatingAvatar && (
+                  <div className="absolute inset-0 flex items-center justify-center rounded-full bg-background/60">
+                    <span className="text-xs font-medium">...</span>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
+                  aria-label="Change avatar"
+                >
+                  +
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  className="hidden"
+                  onChange={handleAvatarUpload}
+                />
+              </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <h3 className="font-semibold">{user?.email}</h3>
@@ -440,11 +932,11 @@ export default function SettingsPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" placeholder="Enter your first name" />
+                  <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Enter your first name" />
                 </div>
                 <div>
                   <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" placeholder="Enter your last name" />
+                  <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Enter your last name" />
                 </div>
               </div>
               <div>
@@ -464,7 +956,7 @@ export default function SettingsPage() {
                   />
                   <Button
                     onClick={handleUpdateUsername}
-                    disabled={isUpdatingUsername || !username.trim()}
+                    disabled={isUpdatingUsername || !username.trim() || (usernameCooldown !== null && !usernameCooldown.canChange)}
                     size="sm"
                   >
                     {isUpdatingUsername ? 'Updating...' : 'Update'}
@@ -473,20 +965,25 @@ export default function SettingsPage() {
                 <p className="text-xs text-muted-foreground mt-1">
                   Unique username for your profile (3-30 characters, letters, numbers, underscores)
                 </p>
+                {usernameCooldown && !usernameCooldown.canChange && (
+                  <p className="text-xs text-amber-500 mt-1">
+                    You can change your username again in {usernameCooldown.remainingDays} day{usernameCooldown.remainingDays === 1 ? '' : 's'}
+                  </p>
+                )}
               </div>
-              <Button>Update Profile</Button>
+              <Button onClick={handleUpdateProfile} disabled={isUpdatingProfile}>{isUpdatingProfile ? 'Updating...' : 'Update Profile'}</Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Preferences Section */}
-        <Card className="border-border/35 bg-popover/45 shadow-sm">
+        <Card className="rounded-xl border-0 bg-card shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5" />
               Preferences
             </CardTitle>
-            <CardDescription>Customize your dashboard appearance and behavior</CardDescription>
+            <CardDescription className="text-sm">Customize your dashboard appearance and behavior</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Accent Color Settings */}
@@ -496,7 +993,7 @@ export default function SettingsPage() {
                 Accent Color
               </Label>
               <div className="mt-2">
-                <div className="rounded-md border border-border/20 bg-background/30 p-3">
+                <div className="rounded-md border-0 bg-muted/40 p-3">
                   <p className="mb-3 text-sm text-muted-foreground">
                     Choose your dashboard accent color
                   </p>
@@ -539,7 +1036,7 @@ export default function SettingsPage() {
               <div className="mt-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="w-[200px] justify-start">
+                    <Button variant="outline" className="w-full sm:w-[200px] justify-start">
                       <Globe className="mr-2 h-4 w-4" />
                       {languages.find((lang) => lang.value === currentLocale)?.label}
                     </Button>
@@ -573,7 +1070,7 @@ export default function SettingsPage() {
               <div className="mt-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="w-[200px] justify-start">
+                    <Button variant="outline" className="w-full sm:w-[200px] justify-start">
                       <Clock className="mr-2 h-4 w-4" />
                       {timezone}
                     </Button>
@@ -605,13 +1102,13 @@ export default function SettingsPage() {
         </Card>
 
         {/* Notifications Section */}
-        <Card className="border-border/35 bg-popover/45 shadow-sm">
+        <Card className="rounded-xl border-0 bg-card shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
               Notifications
             </CardTitle>
-            <CardDescription>Configure how you receive notifications and alerts</CardDescription>
+            <CardDescription className="text-sm">Configure how you receive notifications and alerts</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
@@ -692,14 +1189,16 @@ export default function SettingsPage() {
           onUpdatePassword={handlePasswordUpdate}
         />
 
+        <ApiKeySection />
+
         {/* Account Management Section */}
-        <Card className="border-border/35 bg-popover/45 shadow-sm">
+        <Card className="rounded-xl border-0 bg-card shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
               Account Management
             </CardTitle>
-            <CardDescription>Manage your account settings and data</CardDescription>
+            <CardDescription className="text-sm">Manage your account settings and data</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4">
@@ -740,4 +1239,6 @@ export default function SettingsPage() {
       </div>
     </UnifiedPageShell>
   )
-}
+})
+
+export default SettingsPage

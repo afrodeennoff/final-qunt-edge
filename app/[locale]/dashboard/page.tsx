@@ -3,9 +3,16 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getCanonicalUrl } from "@/lib/seo";
 import { CheckoutSuccessHandler } from "./components/checkout-success-handler";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const WidgetCanvas = dynamic(() => import("./components/widget-canvas"), {
-  loading: () => null,
+  loading: () => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 lg:p-6">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <Skeleton key={i} className="h-28 sm:h-32 w-full rounded-xl" />
+      ))}
+    </div>
+  ),
 });
 
 export async function generateMetadata({
@@ -39,7 +46,15 @@ export default async function DashboardPage(props: {
   return (
     <>
       {checkoutSuccess && <CheckoutSuccessHandler />}
-      <Suspense fallback={null}>
+      <Suspense
+        fallback={
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 lg:p-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-28 sm:h-32 w-full rounded-xl" />
+            ))}
+          </div>
+        }
+      >
         <WidgetCanvas />
       </Suspense>
     </>

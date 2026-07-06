@@ -3,14 +3,14 @@ import {
   streamText,
   UIMessage,
 } from "ai";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { askForEmailForm } from "./tools/ask-for-email-form";
 import { z } from "zod/v3";
 import { rateLimit } from "@/lib/rate-limit";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { apiError } from "@/lib/api-response";
 import { guardAiRequest } from "@/lib/ai/route-guard";
-import { getAiLanguageModelById } from "@/lib/ai/client";
+import { getAiLanguageModelById, checkAiConfig } from "@/lib/ai/client";
 import { isSupportModelId } from "@/lib/ai/support-models";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import {
@@ -19,7 +19,9 @@ import {
   logAiError,
   sanitizeAiError,
 } from "@/lib/ai/error-utils";
-import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
+import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout"
+import { sanitizeUserMessages, enforcePromptSafety } from "@/lib/ai/prompt-safety";
+import { getEnv } from "@/lib/env";
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 const supportRateLimit = rateLimit({ limit: 12, window: 60_000, identifier: "ai-support" });
@@ -35,6 +37,9 @@ export async function POST(req: NextRequest) {
   const policy = getAiPolicy("support");
   const startedAt = Date.now();
   let selectedModel = policy.model;
+
+  const configCheck = checkAiConfig();
+  if (!configCheck.ok) return configCheck.response;
 
   // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, 'support', supportRateLimit)
@@ -59,11 +64,8 @@ export async function POST(req: NextRequest) {
     }
 
     selectedModel = model && isSupportModelId(model) ? model : policy.model;
-    const webSearchModel = process.env.AI_SUPPORT_WEBSEARCH_MODEL;
+    const webSearchModel = getEnv().AI_SUPPORT_WEBSEARCH_MODEL;
     const webSearchFallback = webSearch && !webSearchModel;
-    if (!process.env.OPENROUTER_API_KEY) {
-      return apiError("SERVICE_UNAVAILABLE", "Support AI service is not configured", 503);
-    }
 
     // Remove first message if it's assistant message
     if (messages.length > 0 && messages[0].role === "assistant") {
@@ -80,6 +82,16 @@ export async function POST(req: NextRequest) {
     });
 
     const modelMessages = await convertToModelMessages(messages);
+
+    // Apply prompt safety
+    const sanitized = sanitizeUserMessages(
+      messages.map(m => ({ role: m.role, text: m.parts?.filter((p): p is { type: "text"; text: string } => p?.type === "text").map(p => p.text).join("\n") ?? "" }))
+    );
+    const safety = enforcePromptSafety(sanitized);
+    if (!safety.safe) {
+      return NextResponse.json(safety.response!.body, { status: safety.response!.status });
+    }
+
     const result = streamText({
       model: webSearch && webSearchModel ? getAiLanguageModelById(webSearchModel) : getAiLanguageModelById(selectedModel),
       abortSignal: createAiTimeoutSignal(policy.timeoutMs),

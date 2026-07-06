@@ -4,6 +4,7 @@ import { getDatabaseUserId } from './auth'
 import { prisma } from '@/lib/prisma'
 import { cacheTag, cacheLife } from 'next/cache'
 import { CACHE_TAGS, invalidateTagRelatedCaches } from '@/lib/cache/cache-invalidation'
+import { logger } from '@/lib/logger'
 
 async function _getTags(userId: string) {
   const tags = await prisma.tag.findMany({
@@ -47,7 +48,7 @@ export async function createTagAction(formData: {
     invalidateTagRelatedCaches(userId)
     return { tag }
   } catch (error) {
-    console.error('Failed to create tag:', error)
+    logger.error('Failed to create tag:', { error: error instanceof Error ? error.message : String(error) })
     throw new Error('Failed to create tag')
   }
 }
@@ -85,37 +86,19 @@ export async function updateTagAction(id: string, formData: {
         data: formData,
       })
 
-      // Find all trades that have this tag
-      const trades = await tx.trade.findMany({
-        where: {
-          userId,
-          tags: {
-            has: oldTag.name
-          }
-        }
-      })
-
-      // Update each trade to use the new tag name
-      await Promise.all(
-        trades.map(trade =>
-          tx.trade.update({
-            where: { id: trade.id },
-            data: {
-              tags: {
-                set: trade.tags.map(tag => 
-                  tag === oldTag.name ? formData.name : tag
-                )
-              }
-            }
-          })
-        )
-      )
+      // Update all trades that have the old tag name to use the new tag name
+      await tx.$executeRaw`
+        UPDATE "Trade" SET tags = (
+          SELECT array_agg(CASE WHEN unnest = ${oldTag.name} THEN ${formData.name} ELSE unnest END)
+          FROM unnest(tags) AS unnest
+        ) WHERE "userId" = ${userId} AND ${oldTag.name} = ANY(tags)
+      `
     })
 
     invalidateTagRelatedCaches(userId)
     return { success: true }
   } catch (error) {
-    console.error('Failed to update tag:', error)
+    logger.error('Failed to update tag:', { error: error instanceof Error ? error.message : String(error) })
     throw new Error('Failed to update tag')
   }
 }
@@ -140,28 +123,10 @@ export async function deleteTagAction(id: string) {
     // Start a transaction to ensure both operations succeed or fail together
     await prisma.$transaction(async (tx) => {
       // Remove tag from all trades that have it
-      const trades = await tx.trade.findMany({
-        where: {
-          userId,
-          tags: {
-            has: tag.name
-          }
-        }
-      })
-
-      // Update each trade to remove the tag
-      await Promise.all(
-        trades.map(trade =>
-          tx.trade.update({
-            where: { id: trade.id },
-            data: {
-              tags: {
-                set: trade.tags.filter(t => t !== tag.name)
-              }
-            }
-          })
-        )
-      )
+      await tx.$executeRaw`
+        UPDATE "Trade" SET tags = array_remove(tags, ${tag.name})
+        WHERE "userId" = ${userId} AND ${tag.name} = ANY(tags)
+      `
 
       // Delete the tag itself
       await tx.tag.delete({
@@ -175,7 +140,7 @@ export async function deleteTagAction(id: string) {
     invalidateTagRelatedCaches(userId)
     return { success: true }
   } catch (error) {
-    console.error('Failed to delete tag:', error)
+    logger.error('Failed to delete tag:', { error: error instanceof Error ? error.message : String(error) })
     throw new Error('Failed to delete tag')
   }
 }
@@ -187,7 +152,8 @@ export async function syncTradeTagsToTagTableAction() {
     // Get all unique tags from trades
     const trades = await prisma.trade.findMany({
       where: { userId },
-      select: { tags: true }
+      select: { tags: true },
+      take: 10_000,
     })
 
     // Extract unique tags from trades
@@ -213,7 +179,7 @@ export async function syncTradeTagsToTagTableAction() {
         data: tagsToCreate.map(tag => ({
           name: tag,
           userId,
-          color: '#CBD5E1', // Default color
+          color: 'hsl(var(--muted-foreground))', // Default color (theme token)
         })),
         skipDuplicates: true,
       })
@@ -225,7 +191,7 @@ export async function syncTradeTagsToTagTableAction() {
       totalUniqueTags: uniqueTradeTags.length
     }
   } catch (error) {
-    console.error('Failed to sync tags:', error)
+    logger.error('Failed to sync tags:', { error: error instanceof Error ? error.message : String(error) })
     throw new Error('Failed to sync tags')
   }
 } 

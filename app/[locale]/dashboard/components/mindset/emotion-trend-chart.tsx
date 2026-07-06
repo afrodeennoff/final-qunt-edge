@@ -16,11 +16,11 @@ interface EmotionTrendChartProps {
 }
 
 function getEmotionColor(val: number): string {
- if (val < 20) return"hsl(var(--destructive))"
- if (val < 40) return"hsl(var(--chart-5))"
- if (val < 60) return"hsl(var(--chart-2))"
- if (val < 80) return"hsl(var(--chart-3))"
- return"hsl(var(--primary))"
+ if (val < 20) return"var(--destructive)"
+ if (val < 40) return"var(--chart-5)"
+ if (val < 60) return"var(--chart-2)"
+ if (val < 80) return"var(--chart-3)"
+ return"var(--primary)"
 }
 
 export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
@@ -29,7 +29,7 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
  if (data.length === 0) {
  return (
  <div
- className={cn("journal-glass-elevated mb-4 rounded-xl border border-border/30 bg-background/0.11 p-4",
+ className={cn("mb-4 rounded-xl border-0 bg-card p-4",
  className
  )}
  >
@@ -62,7 +62,7 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
 
  return (
  <div
- className={cn("journal-glass-elevated mb-4 rounded-xl border border-border/30 bg-background/0.11 p-4",
+ className={cn("mb-4 rounded-xl border-0 bg-card p-4",
  className
  )}
  >
@@ -76,8 +76,8 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
  <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-full w-full" preserveAspectRatio="none">
  <defs>
  <linearGradient id="emotionTrendGradient" x1="0%" y1="0%" x2="0%" y2="100%">
- <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.22" />
- <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+ <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.22" />
+ <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
  </linearGradient>
  </defs>
 
@@ -86,7 +86,7 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
  <path
  d={linePath}
  fill="none"
- stroke="hsl(var(--primary))"
+ stroke="var(--primary)"
  strokeWidth="0.8"
  strokeLinecap="round"
  strokeLinejoin="round"

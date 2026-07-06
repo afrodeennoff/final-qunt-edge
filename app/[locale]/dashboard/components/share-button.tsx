@@ -38,7 +38,6 @@ import { Calendar } from "@/components/ui/calendar"
 import { Input } from "@/components/ui/input"
 import { SharedLayoutsManager } from "./shared-layouts-manager"
 import { cn } from "@/lib/utils"
-import confetti from 'canvas-confetti'
 import { fr } from 'date-fns/locale'
 import { Switch } from "@/components/ui/switch"
 import { useTradingDomainStore } from '@/store/trading-domain-store'
@@ -69,7 +68,8 @@ function useIsMobile() {
  return isMobile
 }
 
-function triggerConfetti() {
+async function triggerConfetti() {
+ const confetti = (await import('canvas-confetti')).default
  const count = 200
  const defaults = {
  origin: { y: 0.7 },
@@ -339,7 +339,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  triggerConfetti()
  }, 1000)
  } catch (error) {
- console.error('Error sharing trades:', error)
+
  toast.error(t('share.error'), {
  description: error instanceof Error ? error.message : t('share.error.description'),
  })
@@ -351,7 +351,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  await navigator.clipboard.writeText(shareUrl)
  toast.success(t('share.urlCopied'))
  } catch (error) {
- console.error('Error copying URL:', error)
+
  }
  }
 
@@ -391,7 +391,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  >
  <Share className="h-4 w-4 shrink-0" />
  {!isMobile && (
- <span className="text-[10px] font-semibold uppercase tracking-[0.18em]">
+ <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">
  {t("share.button")}
  </span>
  )}
@@ -548,7 +548,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  <div className="flex-1">
  <div className="space-y-2">
  <Label>{t("share.startDateLabel")}</Label>
- <div className="border-border/30 rounded-lg bg-primary/[0.03] p-2">
+ <div className="border-transparent rounded-lg bg-primary/[0.03] p-2">
  <Calendar
  mode="single"
  selected={selectedDateRange.from}
@@ -570,7 +570,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  <div className="flex-1">
  <div className="space-y-2">
  <Label>{t("share.endDateLabel")}</Label>
- <div className="border-border/30 rounded-lg bg-primary/[0.03] p-2">
+ <div className="border-transparent rounded-lg bg-primary/[0.03] p-2">
  <Calendar
  mode="single"
  selected={selectedDateRange.to}

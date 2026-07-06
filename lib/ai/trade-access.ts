@@ -1,6 +1,8 @@
 import { getAllTradesForAi, type AiTradesFetchResult } from './get-all-trades'
 import type { SerializedTrade } from '@/server/trades'
-import { getUserId } from '@/server/auth'
+import { createLogger } from '@/lib/logger'
+
+const log = createLogger('ai-trade-access')
 
 /**
  * Access profile levels for AI trade analysis.
@@ -195,25 +197,16 @@ export async function getAiTrades(params: SummaryGetAiTradesParams): Promise<Sum
 export async function getAiTrades(params: RowGetAiTradesParams): Promise<RowAiTradesResult>
 export async function getAiTrades(params: GetAiTradesParams): Promise<ProfiledAiTradesResult> {
   const { profile, forceRefresh = false } = params
-  let sessionUserId: string | null = null
-  try {
-    sessionUserId = await getUserId()
-  } catch (error) {
-    // Some utility/test contexts call getAiTrades outside request scope.
-    // In that case, explicit caller userId is required.
-    if (!params.userId) {
-      throw error
-    }
-  }
 
-  if (sessionUserId && params.userId && params.userId !== sessionUserId) {
-    throw new Error('FORBIDDEN_USER_CONTEXT_MISMATCH')
-  }
+  // AI data access *requires* explicit userId from the authenticated guard/MCP context.
+  // No more fallbacks to getUserId() here — that breaks inside tool executes.
+  const effectiveUserId = params.userId
 
-  const effectiveUserId = sessionUserId ?? params.userId
   if (!effectiveUserId) {
-    throw new Error('MISSING_USER_CONTEXT')
+    throw new Error('MISSING_USER_CONTEXT: getAiTrades requires explicit userId. All AI tool creators and route handlers must pass the userId obtained from guardAiRequest (or MCP ctx).')
   }
+
+  log.info('getAiTrades called for AI', { userId: effectiveUserId, profile, forceRefresh });
 
   const cacheKey = `${effectiveUserId}:${profile}:${forceRefresh}`
 
@@ -229,6 +222,7 @@ export async function getAiTrades(params: GetAiTradesParams): Promise<ProfiledAi
     forceRefresh,
     pageSize: 500,
     maxPages: 200,
+    userId: effectiveUserId,
   })
 
   // Compute aggregates (available for all profiles)
@@ -257,6 +251,13 @@ export async function getAiTrades(params: GetAiTradesParams): Promise<ProfiledAi
 
   // Memoize result
   cache.set(cacheKey, result)
+
+  log.info('getAiTrades completed', { 
+    userId: effectiveUserId, 
+    profile, 
+    trades: fetchResult.trades.length, 
+    truncated: fetchResult.truncated 
+  });
 
   return result
 }

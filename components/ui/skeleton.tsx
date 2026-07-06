@@ -1,3 +1,4 @@
+import React from 'react'
 import { cn } from "@/lib/utils"
 
 export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -5,19 +6,19 @@ export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 function Skeleton({
- className,
- as: Component = 'div',
- ...props
+  className,
+  as: Component = 'div',
+  ...props
 }: SkeletonProps) {
- return (
- <Component
- className={cn(
- "animate-pulse rounded-xl border border-border/30 bg-muted/60",
- className
- )}
- {...props}
- />
- )
+  return (
+  <Component
+  className={cn(
+  "skeleton-pulse rounded-xl bg-muted/30 border-0",
+  className
+  )}
+  {...props}
+  />
+  )
 }
 
 export function DashboardHeaderSkeleton() {

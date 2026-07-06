@@ -1,15 +1,11 @@
 export const SUPPORT_MODEL_OPTIONS = [
   {
-    name: 'GLM 4.7 Flash',
-    value: 'glm-4.7-flash',
+    name: 'Llama 4 Scout 17B (Groq)',
+    value: 'groq/meta-llama/llama-4-scout-17b-16e-instruct',
   },
   {
-    name: 'GPT 4o Mini',
-    value: 'gpt-4o-mini',
-  },
-  {
-    name: 'GPT 4.1 Mini',
-    value: 'gpt-4.1-mini',
+    name: 'Qwen 3 32B (Groq)',
+    value: 'groq/qwen/qwen3-32b',
   },
 ] as const;
 

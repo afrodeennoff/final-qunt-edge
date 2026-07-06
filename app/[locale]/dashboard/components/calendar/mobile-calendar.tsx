@@ -113,8 +113,8 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  if (date.getFullYear() === currentYear && date.getMonth() === currentMonth) {
  return total + dayData.pnl
  }
- } catch (e) {
- console.error("Error parsing date string in calculateMonthlyTotal:", dateString, e)
+ } catch {
+
  }
  return total
  }, 0)
@@ -130,8 +130,8 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  // Use UTC for parsing the key to avoid local shifts, then compare components
  const date = toDate(dateString + 'T00:00:00Z')
  return date.getFullYear() === currentYear && date.getMonth() === currentMonth
- } catch (e) {
- console.error("Error parsing date string in getMaxPnl:", dateString, e)
+ } catch {
+
  return false
  }
  })
@@ -153,8 +153,8 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  }, [calendarData])
 
  return (
- <Card className="h-full flex flex-col overflow-hidden border-border/30 bg-background/0.14">
- <div className="shrink-0 border-b border-border/30 p-3">
+ <Card className="h-full flex flex-col overflow-hidden border-transparent bg-background/0.14">
+ <div className="shrink-0 border-b-0 p-3">
  <div className="flex items-start justify-between gap-2">
  <div className="min-w-0">
  <CardTitle className="truncate text-base font-semibold capitalize">
@@ -167,24 +167,24 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  </div>
  </div>
  <div className="flex items-center gap-1.5">
- <Button variant="outline" size="icon" onClick={handlePrevMonth} className="h-10 w-10 border-border/30 bg-background/0.14" aria-label="Previous month">
+ <Button variant="outline" size="icon" onClick={handlePrevMonth} className="h-10 w-10 border-transparent bg-background/0.14" aria-label="Previous month">
  <ChevronLeft className="h-4 w-4" />
  </Button>
- <Button variant="outline" size="icon" onClick={handleNextMonth} className="h-10 w-10 border-border/30 bg-background/0.14" aria-label="Next month">
+ <Button variant="outline" size="icon" onClick={handleNextMonth} className="h-10 w-10 border-transparent bg-background/0.14" aria-label="Next month">
  <ChevronRight className="h-4 w-4" />
  </Button>
  </div>
  </div>
- <div className="mt-2 flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
- <span className="rounded-md border border-border/55 bg-background/0.14 px-1.5 py-0.5">Days {monthStats.activeDays}</span>
- <span className="rounded-md border border-semantic-success-border/40 bg-semantic-success-bg/10 px-1.5 py-0.5 text-semantic-success">W {monthStats.wins}</span>
- <span className="rounded-md border border-semantic-error-border/40 bg-semantic-error-bg/10 px-1.5 py-0.5 text-semantic-error">L {monthStats.losses}</span>
- </div>
+  <div className="mt-2 flex items-center gap-1 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+  <span className="rounded-md border-05 bg-background/0.14 px-1.5 py-0.5 leading-none">Days {monthStats.activeDays}</span>
+  <span className="rounded-md border-semantic-success-border/30 bg-semantic-success/12 px-1.5 py-0.5 leading-none text-semantic-success">W {monthStats.wins}</span>
+  <span className="rounded-md border-semantic-error-border/30 bg-semantic-error/12 px-1.5 py-0.5 leading-none text-semantic-error">L {monthStats.losses}</span>
+  </div>
  </div>
  <div className="flex-1 min-h-0 p-2">
  <div className="mb-2 grid grid-cols-7 gap-1">
  {weekdayHeaders.map((day) => (
- <div key={day.key} className="rounded-md border border-border/55 bg-secondary/30 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+ <div key={day.key} className="rounded-md border-05 bg-secondary/30 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
  {day.label}
  </div>
  ))}
@@ -198,8 +198,8 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  let dateInTZ: Date;
  try {
  dateInTZ = toDate(dateString, { timeZone: timezone });
- } catch (e) {
- console.error("Error parsing date string for display:", dateString, e);
+ } catch {
+
  // Render a placeholder or skip if parsing fails
  return <div key={dateString} className="text-muted-foreground text-[10px] uppercase font-bold">Error</div>;
  }
@@ -217,7 +217,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  type="button"
  key={dateString} // Key is the timezone-correct date string
  className={cn("relative flex cursor-pointer flex-col justify-between rounded-lg border p-1 transition-[opacity,background-color,border-color]",
- dayData ?"border-border/55" :"border-border/55 bg-background/0.14",
+ dayData ?"border-transparent" :"border-transparent bg-background/0.14",
  dayPnl > 0 &&"border-semantic-success-border/40",
  dayPnl < 0 &&"border-semantic-error-border/40",
  isDateStringToday(dateString, timezone) &&"border-primary/70 bg-primary/10",
@@ -233,7 +233,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  )}
  style={{ opacity: intensity * 0.8 }}
  />
- <div className={cn("inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/55 bg-background/0.14 text-xs font-semibold",
+ <div className={cn("inline-flex h-6 w-6 items-center justify-center rounded-md border-05 bg-background/0.14 text-xs font-semibold",
  dayPnl > 0 &&"text-semantic-success",
  dayPnl < 0 &&"text-semantic-error"
  )}>
@@ -252,13 +252,13 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  >
  {formatCurrency(dayPnl)}
  </div>
- <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-muted/40">
- <div
- className={cn("h-full rounded-full",
- dayPnl >= 0 ?"bg-semantic-success/80" :"bg-semantic-error/80"
- )}
- style={{ width: `${Math.max(8, Math.round(intensity * 100))}%` }}
- />
+  <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-muted/40">
+   <div
+   className={cn("h-full rounded-full transition-all duration-500 ease-out",
+   dayPnl >= 0 ?"bg-semantic-success/80" :"bg-semantic-error/80"
+   )}
+   style={{ width: `${Math.max(8, Math.round(intensity * 100))}%` }}
+   />
  </div>
  </>
  ) : (
@@ -277,9 +277,8 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  }}
  selectedDate={selectedDate}
  // Look up dayData using the selectedDate formatted back into a YYYY-MM-DD string *in the target timezone*
- dayData={selectedDate ? calendarData[formatInTimeZone(selectedDate, timezone, 'yyyy-MM-dd')] : undefined}
- isLoading={isLoading}
- />
+  dayData={selectedDate ? calendarData[formatInTimeZone(selectedDate, timezone, 'yyyy-MM-dd')] : undefined}
+  />
  </Card>
  )
 }

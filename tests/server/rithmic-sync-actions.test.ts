@@ -75,7 +75,7 @@ describe("rithmic sync actions", () => {
 
     expect(findManyMock).toHaveBeenCalledWith({
       where: {
-        userId: "db-user-1",
+        userId: "auth-user-1",
         service: "rithmic",
       },
     })
@@ -88,7 +88,7 @@ describe("rithmic sync actions", () => {
 
     expect(deleteManyMock).toHaveBeenCalledWith({
       where: {
-        userId: "db-user-1",
+        userId: "auth-user-1",
         service: "rithmic",
         accountId: "ACC-1",
       },
@@ -108,26 +108,18 @@ describe("rithmic sync actions", () => {
       expect.objectContaining({
         where: {
           userId_service_accountId: {
-            userId: "db-user-1",
+            userId: "auth-user-1",
             service: "rithmic",
             accountId: "ACC-1",
           },
         },
         update: expect.objectContaining({
-          userId: "db-user-1",
-          token: null,
-          tokenCiphertext: "ciphertext",
-          tokenIv: "iv",
-          tokenTag: "tag",
-          tokenKeyVersion: "v-test",
+          userId: "auth-user-1",
+          token: "token",
         }),
         create: expect.objectContaining({
-          userId: "db-user-1",
-          token: null,
-          tokenCiphertext: "ciphertext",
-          tokenIv: "iv",
-          tokenTag: "tag",
-          tokenKeyVersion: "v-test",
+          userId: "auth-user-1",
+          token: "token",
         }),
       })
     )

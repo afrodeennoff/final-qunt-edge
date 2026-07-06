@@ -26,10 +26,10 @@ export default function TeamMembersPage() {
           <div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <Users className="h-4 w-4 text-primary" />
-              <p className="text-[10px] font-black uppercase tracking-[0.2em]">Access Control</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.12em]">Access Control</p>
             </div>
             <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Members & Roles</h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            <p className="mt-2 max-w-2xl text-sm leading-[1.55] text-muted-foreground">
               Manage invitations, responsibilities, and permission boundaries across the team.
             </p>
           </div>
@@ -46,9 +46,9 @@ export default function TeamMembersPage() {
         </div>
       </header>
 
-      <Card className="border-border/40 bg-background/72">
-        <CardContent className="p-2 sm:p-3">
-          <TeamManagement />
+      <Card variant="default" className="border-transparent">
+        <CardContent className="p-4 sm:p-5">
+          <TeamManagement variant="embedded" />
         </CardContent>
       </Card>
     </section>

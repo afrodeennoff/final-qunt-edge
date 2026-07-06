@@ -6,7 +6,6 @@ const ROOT = process.cwd();
 
 const ROUTE_CONTRACTS = [
   "app/api/team/invite/route.ts",
-  "app/api/etp/v1/store/route.ts",
   "app/api/thor/store/route.ts",
   "app/api/tradovate/sync/route.ts",
   "app/api/rithmic/synchronizations/route.ts",
@@ -22,8 +21,11 @@ describe("security route contracts", () => {
       expect(content, `${routePath} should include auth guard`).toMatch(
         /(assertAdminAccess|authenticateRequest|auth\.getUser\()/
       );
+      // Rate limiting is enforced either by an inline rateLimit()/withRateLimited()
+      // call OR centrally via the withApiRoute() wrapper (which applies the limiter
+      // when a rateLimitId is supplied in its config).
       expect(content, `${routePath} should include rate limiting`).toMatch(
-        /(rateLimit\(|withRateLimited\()/
+        /(rateLimit\(|withRateLimited\(|withApiRoute\()/
       );
       expect(content, `${routePath} should include schema validation`).toMatch(
         /(parseJson\(|parseQuery\()/

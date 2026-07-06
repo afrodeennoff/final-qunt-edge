@@ -23,7 +23,7 @@ const SheetOverlay = React.forwardRef<
     ref={ref}
     data-slot="sheet-overlay"
     className={cn(
-      'fixed inset-0 z-50 bg-[oklch(0.015_0.004_260_/_0.78)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+      'fixed inset-0 z-50 bg-background/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
       className,
     )}
     {...props}
@@ -31,7 +31,7 @@ const SheetOverlay = React.forwardRef<
 ))
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
 
-const sheetVariants = cva("fixed z-50 gap-4 border-border/0.06 bg-[oklch(0.042_0.005_264)] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_48px_120px_-48px_rgba(0,0,0,0.95)] transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+const sheetVariants = cva("fixed z-50 gap-4 border-0 bg-card p-6 transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-150 data-[state=open]:duration-200",
  {
  variants: {
  side: {
@@ -65,7 +65,7 @@ const SheetContent = React.forwardRef<
  {...props}
  >
  {children}
- <SheetPrimitive.Close className="absolute right-4 top-4 rounded-lg border border-border/0.06 bg-background/0.04 p-1.5 opacity-60 ring-offset-background transition-[opacity,background-color,border-color] duration-200 hover:bg-background/0.12 hover:opacity-100 hover:border-border/0.08 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-background/0.06">
+ <SheetPrimitive.Close className="absolute right-4 top-4 rounded-lg border-0 bg-background/0.04 p-1.5 opacity-60 ring-offset-background transition-[opacity,background-color,border-color] duration-150 active:scale-[0.95] hover:bg-background/0.12 hover:opacity-100 hover:border-transparent.08 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-background/0.06">
  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
  <span className="sr-only">Close</span>
  </SheetPrimitive.Close>

@@ -1,3 +1,4 @@
+import React from 'react'
 import MarketingLayoutShell from "./components/marketing-layout-shell";
 import { PublicRootProviders } from "@/components/providers/root-providers";
 
@@ -40,11 +41,12 @@ export default async function RootLayout(
     <PublicRootProviders>
       <MarketingLayoutShell
         contentClassName="w-full flex-1"
-        showRollingBanner={false}
-        topSpacingClassName=""
-        contentSpacingClassName="pb-safe"
+        showRollingBanner={true}
+        topSpacingClassName="pt-8 md:pt-16"
+        contentSpacingClassName="pb-safe pt-4 md:pt-6"
         shellVariant="black"
         fullWidth
+        className="public-page"
       >
         {children}
       </MarketingLayoutShell>

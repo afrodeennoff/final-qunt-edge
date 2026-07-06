@@ -13,19 +13,19 @@ export function PricingPageClient() {
     <UnifiedPageShell widthClassName="max-w-[1320px]" className="py-12 sm:py-16">
       <div className="space-y-6">
         <section
-          className={cn(unifiedHeroPanelClassName, 'animate-fade-up-smooth p-5 sm:p-8 lg:p-10')}
+          className={cn(unifiedHeroPanelClassName, 'animate-fade-up-smooth p-6 sm:p-8 lg:p-10')}
         >
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(700px_260px_at_12%_6%,rgba(255,255,255,0.07),transparent_72%)]" />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(540px_220px_at_88%_6%,rgba(255,255,255,0.045),transparent_74%)]" />
 
           <div className="relative grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.72fr)] xl:items-end">
-            <header className="space-y-4 lg:space-y-5">
+            <header className="space-y-4 lg:space-y-6">
               <span className={unifiedChipClassName}>
                 <Sparkles className="h-3.5 w-3.5" />
                 Pricing plans
               </span>
 
-              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.3rem)] font-medium leading-[0.98] tracking-[-0.035em] text-foreground">
+              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.3rem)] font-medium leading-[0.98] tracking-tight text-foreground">
                 Pick a plan that matches your execution cadence.
               </h1>
 
@@ -85,7 +85,7 @@ function PricingMetaChip({
   return (
     <div
       className={cn(
-        'rounded-xl border border-border/40 bg-card/55 px-4 py-3 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
+        'rounded-xl border-0 bg-muted/10 px-4 py-3 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]',
         className,
       )}
     >

@@ -54,41 +54,35 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
     <Card
       hover
       clickable={Boolean(onClick)}
-      className="flex h-full min-h-[18rem] w-full flex-col overflow-hidden border-border/70 bg-card/95"
+      className="group relative flex h-full min-h-[18rem] w-full flex-col overflow-hidden rounded-xl border-0 bg-card transition-all"
       onClick={onClick}
     >
-      <CardHeader className="flex-none gap-3 border-b border-border/60 p-4 pb-3">
+      <CardHeader className="flex-none gap-2 border-b-0 bg-muted/30 px-4 py-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <CardTitle size={isCompact ? 'md' : 'xl'} className="truncate">
+            <CardTitle size={isCompact ? 'md' : 'lg'} className="truncate font-semibold tracking-tight">
               {account.propfirm || t('propFirm.card.unnamedAccount')}
             </CardTitle>
-            <p className="type-body-sm mt-1 truncate tabular-nums text-muted-foreground">
+            <p className="mt-0.5 text-[12px] tabular-nums text-muted-foreground/70">
               {account.number}
             </p>
           </div>
           {account.nextPaymentDate && daysUntilNextPayment !== null ? (
             <div
               className={cn(
-                'type-label shrink-0 rounded-full border border-border/60 bg-muted/40 px-2.5 py-1 tabular-nums',
-                daysUntilNextPayment < 5 ? 'text-destructive' : 'text-muted-foreground',
+                'shrink-0 rounded-full border-0 bg-muted/30 px-2 py-0.5 text-[10px] tabular-nums text-muted-foreground',
+                daysUntilNextPayment < 5 && 'text-destructive',
               )}
             >
-              {daysUntilNextPayment}
-              {t('propFirm.card.daysBeforeNextPayment')}
+              {daysUntilNextPayment}d
             </div>
           ) : null}
         </div>
       </CardHeader>
-      <CardContent className="flex flex-1 flex-col gap-4 p-4 pt-4">
-        <div className="flex items-end justify-between gap-3 border-b border-border/60 pb-4">
-          <span className="type-overline text-muted-foreground">{t('propFirm.card.balance')}</span>
-          <span
-            className={cn(
-              'truncate text-foreground tabular-nums',
-              isCompact ? 'type-h4 font-semibold' : 'type-h3 font-semibold',
-            )}
-          >
+      <CardContent className="flex flex-1 flex-col justify-center gap-3 p-4">
+        <div className="flex items-baseline justify-between gap-3 border-b-0 pb-3">
+          <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground/70">{t('propFirm.card.balance')}</span>
+          <span className={cn('font-semibold tabular-nums text-foreground', isCompact ? 'text-lg' : 'text-2xl')}>
             $
             {currentBalance.toLocaleString(undefined, {
               minimumFractionDigits: 2,
@@ -102,123 +96,61 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
               <TradeProgressChart account={account} />
             ) : null}
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between gap-3">
-                <span className="type-label text-muted-foreground">
-                  {t('propFirm.card.remainingToTarget')}
-                </span>
-                <span
-                  className={cn(
-                    'type-label tabular-nums',
-                    remainingToTarget <= 0 ? 'metric-positive' : 'metric-negative',
-                  )}
-                >
-                  $
-                  {remainingToTarget.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between gap-2 text-[12px]">
+                <span className="text-muted-foreground/70">{t('propFirm.card.remainingToTarget')}</span>
+                <span className={cn('tabular-nums font-medium', remainingToTarget <= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]')}>
+                  ${remainingToTarget.toFixed(0)}
                 </span>
               </div>
               <Progress
                 value={progress}
-                className={cn('bg-muted', isCompact ? 'h-1' : 'h-1.5')}
-                indicatorClassName={cn(
-                  'transition-[opacity,background-color,border-color] duration-500 bg-primary',
-                  progress <= 20
-                    ? 'opacity-20 shadow-none'
-                    : progress <= 40
-                      ? 'opacity-40 shadow-none'
-                      : progress <= 60
-                        ? 'opacity-60 shadow-none'
-                        : progress <= 80
-                          ? 'opacity-85 shadow-none chart-positive-emphasis'
-                          : 'opacity-100 shadow-none chart-positive-emphasis',
-                )}
+                className="h-1.5 bg-muted/40"
+                indicatorClassName="bg-primary transition-all"
               />
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center justify-between gap-3">
-                <span className="type-label text-muted-foreground">
-                  {t('propFirm.card.drawdown')}
-                </span>
-                <span
-                  className={cn(
-                    'type-label truncate tabular-nums',
-                    remainingLoss > drawdownThreshold * 0.5 ? 'metric-positive' : 'metric-negative',
-                  )}
-                >
-                  {remainingLoss > 0
-                    ? t('propFirm.card.remainingLoss', { amount: remainingLoss.toFixed(2) })
-                    : t('propFirm.card.drawdownBreached')}
+              <div className="flex items-center justify-between gap-2 text-xs">
+                <span className="text-muted-foreground/70">{t('propFirm.card.drawdown')}</span>
+                <span className={cn('tabular-nums font-medium', remainingLoss > drawdownThreshold * 0.5 ? 'text-success' : 'text-destructive')}>
+                  {remainingLoss > 0 ? `$${remainingLoss.toFixed(0)} left` : 'Breached'}
                 </span>
               </div>
               <Progress
                 value={drawdownProgress}
-                className={cn('bg-muted', isCompact ? 'h-1' : 'h-1.5')}
-                indicatorClassName={cn(
-                  'transition-[opacity,background-color,border-color] duration-500 bg-primary/50',
-                  drawdownProgress <= 40
-                    ? 'opacity-90 chart-positive-emphasis'
-                    : drawdownProgress <= 70
-                      ? 'opacity-50'
-                      : 'opacity-100 chart-negative-muted',
-                )}
+                className="h-2 bg-muted/40"
+                indicatorClassName="bg-primary transition-all"
               />
             </div>
 
             {metrics && (size === 'large' || size === 'extra-large') ? (
-              <div className="mt-auto space-y-2 border-t border-border/60 pt-4">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="type-label text-muted-foreground">
-                    {t('propFirm.card.consistency')}
-                  </span>
-                  <span
-                    className={cn(
-                      'type-label tabular-nums',
-                      !metrics.hasProfitableData
-                        ? 'text-muted-foreground italic'
-                        : metrics.isConsistent || consistencyPercentage === 100
-                          ? 'metric-positive'
-                          : 'metric-negative',
-                    )}
-                  >
-                    {!metrics.hasProfitableData
-                      ? t('propFirm.status.unprofitable')
-                      : metrics.isConsistent || consistencyPercentage === 100
-                        ? t('propFirm.status.consistent')
-                        : t('propFirm.status.inconsistent')}
+              <div className="mt-auto space-y-1.5 border-t-0 pt-3 text-[12px]">
+                <div className="flex justify-between text-muted-foreground/70">
+                  <span>Consistency</span>
+                  <span className={cn(
+                    'font-medium',
+                    !metrics.hasProfitableData ? 'text-muted-foreground' :
+                    metrics.isConsistent || consistencyPercentage === 100 ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'
+                  )}>
+                    {!metrics.hasProfitableData ? '—' : metrics.isConsistent || consistencyPercentage === 100 ? 'Consistent' : 'Inconsistent'}
                   </span>
                 </div>
-                <div className="flex items-center justify-between gap-3 type-body-sm text-muted-foreground">
-                  <span>{t('propFirm.card.maxAllowedDailyProfit')}</span>
-                  <span className="tabular-nums">
-                    ${metrics.maxAllowedDailyProfit?.toLocaleString() || '-'}
-                  </span>
+                <div className="flex justify-between text-muted-foreground/70">
+                  <span>Max Daily Profit Allowed</span>
+                  <span className="tabular-nums text-foreground">${metrics.maxAllowedDailyProfit?.toFixed(0) || '—'}</span>
                 </div>
-                <div className="flex items-center justify-between gap-3 type-body-sm text-muted-foreground">
-                  <span>{t('propFirm.card.highestDailyProfit')}</span>
-                  <span className="tabular-nums">
-                    ${metrics.highestProfitDay?.toLocaleString() || '-'}
-                  </span>
+                <div className="flex justify-between text-muted-foreground/70">
+                  <span>Highest Profit Day</span>
+                  <span className="tabular-nums text-foreground">${metrics.highestProfitDay?.toFixed(0) || '—'}</span>
                 </div>
-                <div className="flex items-center justify-between gap-3 border-t border-border/40 pt-3">
-                  <span className="type-label text-muted-foreground">
-                    {t('propFirm.card.tradingDays')}
-                  </span>
-                  <span
-                    className={cn(
-                      'type-label tabular-nums',
-                      metrics.validTradingDays === metrics.totalTradingDays
-                        ? 'metric-positive'
-                        : 'metric-negative',
-                    )}
-                  >
+                <div className="flex justify-between border-t-0 pt-2 text-muted-foreground/70">
+                  <span>Trading Days</span>
+                  <span className={cn(
+                    'font-medium tabular-nums',
+                    metrics.validTradingDays === metrics.totalTradingDays ? 'text-[color:var(--success)]' : 'text-[color:var(--destructive)]'
+                  )}>
                     {metrics.validTradingDays}/{metrics.totalTradingDays}
-                    {minPnlToCountAsDay > 0 ? (
-                      <span className="ml-1 text-muted-foreground">(≥${minPnlToCountAsDay})</span>
-                    ) : null}
                   </span>
                 </div>
               </div>

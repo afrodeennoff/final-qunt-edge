@@ -6,11 +6,17 @@ import { computeMetricsForAccounts } from '@/lib/account-metrics'
 import { Account, Trade as NormalizedTrade, TradeInput } from '@/lib/data-types'
 import { decimalToNumber } from '@/lib/trade-types'
 import { prisma } from '@/lib/prisma'
+import { checkAccountLimit } from '@/server/usage-limits'
 import {
   invalidateAccountRelatedCaches,
   invalidateAllUserCaches,
   invalidateDashboardDataCaches,
+  invalidateAccountMetrics,
+  invalidateAccountSettings,
+  invalidateTradeData,
+  invalidateGroupData,
 } from '@/lib/cache/cache-invalidation'
+import { logger } from '@/lib/logger'
 
 type GroupedTrade = Pick<Trade, 'id' | 'accountNumber' | 'instrument'>
 type GroupedTrades = Record<string, Record<string, GroupedTrade[]>>
@@ -39,7 +45,8 @@ export async function fetchGroupedTradesAction(_userId?: string): Promise<FetchT
       id: true,
       accountNumber: true,
       instrument: true,
-    }
+    },
+    take: 10_000,
   })
 
   const groupedTrades = trades.reduce<GroupedTrades>((acc, trade) => {
@@ -132,22 +139,25 @@ export async function updateCommissionForGroupAction(accountNumber: string, inst
       return // No trades to update
     }
 
-    // Calculate new commission for each trade and prepare batch updates
-    const updateOperations = trades.map(trade => {
-      const updatedCommission = new Prisma.Decimal(newCommission).times(new Prisma.Decimal(trade.quantity))
-      return tx.trade.updateMany({
-        where: {
-          id: trade.id,
-          userId
-        },
-        data: {
-          commission: updatedCommission
-        }
-      })
-    })
+    // Batch update all trades with a single parameterized SQL statement
+    const params: (string | number)[] = []
+    const whenClauses: string[] = []
+    const idRefs: string[] = []
 
-    // Execute all updates in parallel within the transaction
-    await Promise.all(updateOperations)
+    for (const trade of trades) {
+      const base = params.length + 1
+      const updatedCommission = new Prisma.Decimal(newCommission).times(new Prisma.Decimal(trade.quantity))
+      whenClauses.push(`WHEN $${base}::text THEN $${base + 1}::decimal(18,2)`)
+      idRefs.push(`$${base}::text`)
+      params.push(trade.id, Number(updatedCommission))
+    }
+
+    const userIdIdx = params.length + 1
+    params.push(userId)
+
+    const sql = `UPDATE "Trade" SET commission = CASE id ${whenClauses.join(' ')} END WHERE id IN (${idRefs.join(', ')}) AND user_id = $${userIdIdx}::text`
+
+    await tx.$executeRawUnsafe(sql, ...params)
   })
 
   invalidateAccountRelatedCaches(userId)
@@ -215,10 +225,10 @@ export async function renameAccountAction(oldAccountNumber: string, newAccountNu
       })
     })
 
-    invalidateAccountRelatedCaches(userId)
-    invalidateAllUserCaches(userId)
+    invalidateAccountSettings(userId)
+    invalidateTradeData(userId)
   } catch (error) {
-    console.error('Error renaming account:', error)
+    logger.error('Error renaming account:', { error: error instanceof Error ? error.message : String(error) })
     if (error instanceof Error) {
       throw error
     }
@@ -280,8 +290,12 @@ export async function setupAccountAction(account: Account): Promise<Account> {
     aboveBuffer,
     considerBuffer,
     trades,
+    payoutCount: _payoutCount,
+    nextPaymentDate: _nextPaymentDate,
+    renewalNoticeLastSentAt: _renewalNoticeLastSentAt,
+    updatedAt: _updatedAt,
     ...baseAccountData
-  } = account
+  } = account as Account & { updatedAt?: unknown }
 
   // Only include considerBuffer when explicitly provided to avoid overriding unintentionally
   const considerBufferUpdate = considerBuffer === undefined ? {} : { considerBuffer }
@@ -289,14 +303,11 @@ export async function setupAccountAction(account: Account): Promise<Account> {
   // Security: Validate groupId ownership before connecting
   if (groupId) {
     const group = await prisma.group.findUnique({
-      where: { id: groupId },
-      select: { userId: true }
+      where: { id: groupId, userId },
+      select: { id: true }
     })
     if (!group) {
       throw new Error('Group not found')
-    }
-    if (group.userId !== userId) {
-      throw new Error('Unauthorized: cannot connect to another user\'s group')
     }
   }
 
@@ -354,6 +365,10 @@ export async function setupAccountAction(account: Account): Promise<Account> {
       }
     })
   } else {
+    const limitCheck = await checkAccountLimit(userId)
+    if (!limitCheck.allowed) {
+      throw new Error(`Account limit reached (${limitCheck.current}/${limitCheck.limit}). Upgrade to Pro for unlimited accounts.`)
+    }
     savedAccount = await prisma.account.create({
       data: {
         ...accountDataForCreate,
@@ -383,9 +398,8 @@ export async function setupAccountAction(account: Account): Promise<Account> {
     payouts: savedAccount.payouts,
     group: savedAccount.group,
   } as unknown as Account
-  invalidateAccountRelatedCaches(userId)
-  // Invalidate all user-related caches
-  invalidateAllUserCaches(userId)
+  invalidateAccountMetrics(userId)
+  invalidateAccountSettings(userId)
   return result
 }
 
@@ -397,9 +411,10 @@ export async function deleteAccountAction(account: Account) {
       userId: userId
     }
   })
-  invalidateAccountRelatedCaches(userId)
-  // Invalidate all user-related caches
-  invalidateAllUserCaches(userId)
+  invalidateAccountSettings(userId)
+  invalidateAccountMetrics(userId)
+  invalidateTradeData(userId)
+  invalidateGroupData(userId)
 }
 
 export async function getAccountsAction() {
@@ -428,7 +443,7 @@ export async function getAccountsAction() {
       payouts: account.payouts,
     }))
   } catch (error) {
-    console.error('Error fetching accounts:', error)
+    logger.error('Error fetching accounts:', { error: error instanceof Error ? error.message : String(error) })
     throw new Error('Failed to fetch accounts')
   }
 }
@@ -519,12 +534,10 @@ export async function savePayoutAction(payout: Payout) {
       return payoutResult
     })
 
-    invalidateAccountRelatedCaches(userId)
-    // Invalidate all user-related caches
-    invalidateAllUserCaches(userId)
+    invalidateAccountMetrics(userId)
     return result
   } catch (error) {
-    console.error('Error adding payout:', error)
+    logger.error('Error adding payout:', { error: error instanceof Error ? error.message : String(error) })
     throw new Error('Failed to add payout')
   }
 }
@@ -577,12 +590,10 @@ export async function deletePayoutAction(payoutId: string) {
       });
     });
 
-    invalidateAccountRelatedCaches(userId)
-    // Invalidate all user-related caches
-    invalidateAllUserCaches(userId)
+    invalidateAccountMetrics(userId)
     return true;
   } catch (error) {
-    console.error('Failed to delete payout:', error);
+    logger.error('Failed to delete payout:', { error: error instanceof Error ? error.message : String(error) });
     throw new Error('Failed to delete payout');
   }
 }
@@ -601,11 +612,10 @@ export async function renameInstrumentAction(accountNumber: string, oldInstrumen
         instrument: newInstrumentName
       }
     })
-    invalidateAccountRelatedCaches(userId)
-    // Invalidate all user-related caches
-    invalidateAllUserCaches(userId)
+    invalidateAccountSettings(userId)
+    invalidateTradeData(userId)
   } catch (error) {
-    console.error('Error renaming instrument:', error)
+    logger.error('Error renaming instrument:', { error: error instanceof Error ? error.message : String(error) })
     if (error instanceof Error) {
       throw error
     }
@@ -625,12 +635,14 @@ export async function checkAndResetAccountsAction() {
         lte: today,
       },
     },
+    select: { id: true },
   })
 
-  for (const account of accountsToReset) {
-    await prisma.account.update({
+  if (accountsToReset.length > 0) {
+    await prisma.account.updateMany({
       where: {
-        id: account.id
+        id: { in: accountsToReset.map(a => a.id) },
+        userId,
       },
       data: {
         resetDate: null,
@@ -647,6 +659,10 @@ export async function checkAndResetAccountsAction() {
 export async function createAccountAction(accountNumber: string) {
   try {
     const userId = await getDatabaseUserId()
+    const limitCheck = await checkAccountLimit(userId)
+    if (!limitCheck.allowed) {
+      throw new Error(`Account limit reached (${limitCheck.current}/${limitCheck.limit}). Upgrade to Pro for unlimited accounts.`)
+    }
     const account = await prisma.account.create({
       data: {
         number: accountNumber,
@@ -662,7 +678,7 @@ export async function createAccountAction(accountNumber: string) {
     invalidateAllUserCaches(userId)
     return account
   } catch (error) {
-    console.error('Error creating account:', error)
+    logger.error('Error creating account:', { error: error instanceof Error ? error.message : String(error) })
     throw error
   }
 }
@@ -712,6 +728,7 @@ export async function calculateAccountBalanceAction(
       pnl: true,
       commission: true,
     },
+    take: 100_000,
   });
 
   // Group trades by account number
@@ -795,6 +812,7 @@ export async function calculateAccountMetricsAction(
       closeDate: true,
       tags: true,
     },
+    take: 100_000,
   });
 
   // Normalize trades for metrics calculation

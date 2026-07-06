@@ -7,6 +7,7 @@ import { eachDayOfInterval, startOfDay, endOfDay, isValid } from 'date-fns'
 import { withPrismaSchemaMismatchFallback } from '@/lib/prisma-guard'
 import { cacheLife, cacheTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
+import { logger } from '@/lib/logger'
 
 const EQUITY_CHART_CACHE_LIFETIME = { stale: 60, revalidate: 60, expire: 600 } as const
 
@@ -71,24 +72,44 @@ async function getEquityChartData(userId: string, params: EquityChartParams) {
   const transactionResult = await withPrismaSchemaMismatchFallback(
     'dashboard:equity-chart:transaction',
     async () => {
+      const tradesWhere: Parameters<typeof prisma.trade.findMany>[0] = {
+        where: { userId },
+        orderBy: { entryDate: 'desc' },
+        take: 10_000,
+        select: {
+          id: true,
+          accountNumber: true,
+          entryDate: true,
+          pnl: true,
+          commission: true,
+          instrument: true,
+          timeInPosition: true,
+          tags: true,
+        },
+      }
+      if (params.accountNumbers.length > 0) {
+        (tradesWhere.where as Record<string, unknown>).accountNumber = { in: params.accountNumbers }
+      }
+      if (params.dateRange?.from) {
+        (tradesWhere.where as Record<string, unknown>).entryDate = {
+          ...(tradesWhere.where as Record<string, unknown>).entryDate as Record<string, unknown> || {},
+          gte: new Date(params.dateRange.from),
+        }
+      }
+      if (params.dateRange?.to) {
+        (tradesWhere.where as Record<string, unknown>).entryDate = {
+          ...(tradesWhere.where as Record<string, unknown>).entryDate as Record<string, unknown> || {},
+          lte: new Date(params.dateRange.to),
+        }
+      }
+
       const [trades, accounts, groups] = await prisma.$transaction([
-        prisma.trade.findMany({
-          where: { userId },
-          orderBy: { entryDate: 'desc' },
-          take: 10_000,
-          select: {
-            id: true,
-            accountNumber: true,
-            entryDate: true,
-            pnl: true,
-            commission: true,
-            instrument: true,
-            timeInPosition: true,
-            tags: true,
-          },
-        }),
+        prisma.trade.findMany(tradesWhere),
         prisma.account.findMany({
-          where: { userId },
+          where: {
+            userId,
+            ...(params.accountNumbers.length > 0 ? { number: { in: params.accountNumbers } } : {}),
+          },
           select: {
             number: true,
             groupId: true,
@@ -460,7 +481,7 @@ export async function getEquityChartDataAction(params: EquityChartParams): Promi
 
     return await getEquityChartDataCached(userId, params)
   } catch (error) {
-    console.error('[getEquityChartDataAction] Error:', error)
+    logger.error('[getEquityChartDataAction] Error:', { error: error instanceof Error ? error.message : String(error) })
     return EMPTY_EQUITY_CHART_RESULT
   }
 }

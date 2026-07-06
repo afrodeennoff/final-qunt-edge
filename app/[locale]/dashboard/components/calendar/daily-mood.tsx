@@ -41,7 +41,7 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
  setSelectedMood(storedMood.mood)
  return
  }
- } catch (error) {
+ } catch {
  // Invalid JSON in localStorage, clear and continue
  localStorage.removeItem(STORAGE_KEY)
  }
@@ -59,8 +59,8 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
  date: focusedDay
  }))
  }
- } catch (error) {
- console.error('Error loading mood:', error)
+ } catch {
+
  }
  }
 
@@ -90,8 +90,8 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
  }))
 
  toast.success(t('mood.saved'))
- } catch (error) {
- console.error('Error saving mood:', error)
+ } catch {
+
  toast.error(t('mood.error'))
  } finally {
  setIsLoading(null)

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { toast } from 'sonner'
 import { useI18n } from "@/locales/client"
 import { Synchronization } from '@/prisma/generated/prisma'
+import { api, ApiError } from '@/lib/api-client'
 
 interface TradovateSyncResult {
   error: boolean;
@@ -63,25 +64,14 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
   // Load accounts from API
   const loadAccounts = useCallback(async () => {
     try {
-      const response = await fetch("/api/tradovate/synchronizations", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      })
-
-      if (response.status === 401) {
-        setAccounts([])
-        return
-      }
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch Tradovate synchronizations")
-      }
-
-      const result = await response.json()
+      const result = await api.get<{ data: Synchronization[] }>('/api/tradovate/synchronizations')
       const data = Array.isArray(result.data) ? result.data : []
       setAccounts(data.map(normalizeSynchronization))
     } catch (error) {
-      console.warn('Failed to load Tradovate accounts:', error)
+      if (error instanceof ApiError && error.status === 401) {
+        setAccounts([])
+        return
+      }
     }
   }, [normalizeSynchronization])
 
@@ -89,22 +79,11 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
     const previousAccounts = accounts
 
     setAccounts(prev => prev.filter(acc => acc.accountId !== accountId))
-    const response = await fetch("/api/tradovate/synchronizations", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ accountId })
-    })
-
-    let payload: { success?: boolean; message?: string } | null = null
     try {
-      payload = await response.json()
-    } catch {
-      payload = null
-    }
-
-    if (!response.ok || !payload?.success) {
+      await api.delete('/api/tradovate/synchronizations', { body: { accountId } })
+    } catch (error) {
       setAccounts(previousAccounts)
-      throw new Error(payload?.message || `Failed to delete synchronization (${response.status})`)
+      throw error
     }
   }, [accounts])
 
@@ -128,26 +107,20 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
           return { error: true, message: errorMsg }
         }
 
-        const response = await fetch("/api/tradovate/sync", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ accountId })
-        })
-
-        const payload = await response.json()
-
-        // Handle duplicate trades (already imported)
-        if (payload?.message === "DUPLICATE_TRADES") {
-          const message = t('tradovateSync.multiAccount.alreadyImportedTrades')
-          return { error: false, message, savedCount: 0 }
+        let payload: { savedCount?: number; ordersCount?: number; message?: string }
+        try {
+          payload = await api.post<{ savedCount?: number; ordersCount?: number; message?: string }>(
+            '/api/tradovate/sync',
+            { accountId },
+          )
+        } catch (error) {
+          if (error instanceof ApiError && error.message === 'DUPLICATE_TRADES') {
+            const message = t('tradovateSync.multiAccount.alreadyImportedTrades')
+            return { error: false, message, savedCount: 0 }
+          }
+          throw error
         }
 
-        if (!response.ok || !payload?.success) {
-          const errorMsg = payload?.message || `Sync error for account ${accountId}`
-          throw new Error(errorMsg)
-        }
-
-        // Track progress
         const savedCount = payload.savedCount || 0
         const ordersCount = payload.ordersCount || 0
 
@@ -198,7 +171,6 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
     } catch (error) {
       const errorMsg = `Sync error for account ${accountId}: ${error instanceof Error ? error.message : t('tradovateSync.sync.unknownError')}`
 
-      console.error('Sync error:', error)
       return { success: false, message: errorMsg }
     }
   }, [accounts, t, refreshAllData, loadAccounts])
@@ -244,7 +216,7 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
       }
 
     } catch (error) {
-      console.warn('Error during bulk sync:', error)
+
       toast.error(t('tradovateSync.bulk.error'), { id: toastId })
     } finally {
       isAutoSyncingRef.current = false
@@ -273,7 +245,7 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
         }
       }
     } catch (error) {
-      console.warn('Error during tradovate auto-sync check:', error)
+
     }
   }, [isSyncRouteActive, enableAutoSync, accounts, syncInterval, performSyncForAccount]);
 

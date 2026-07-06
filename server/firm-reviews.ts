@@ -372,7 +372,7 @@ export async function deleteReview(reviewId: string) {
   const userId = await getDatabaseUserId()
   
   const review = await prisma.propFirmReview.findUnique({
-    where: { id: reviewId },
+    where: { id: reviewId, userId },
   })
   
   if (!review) {

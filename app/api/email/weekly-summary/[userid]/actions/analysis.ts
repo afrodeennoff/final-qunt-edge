@@ -51,9 +51,28 @@ export async function generateTradingAnalysis(
       return acc
     }, {} as Record<number, DailyPnL[]>)
 
-    // Get the two most recent weeks
+    // Get the two most recent weeks. Most users trade within a single calendar
+    // week, so guard against a one-week dataset to avoid the model hallucinating
+    // a week-over-week comparison that has no reference data.
     const weekNumbers = Object.keys(tradesByWeek).map(Number).sort((a, b) => b - a)
     const lastTwoWeeks = weekNumbers.slice(0, 2).map(weekNum => tradesByWeek[weekNum])
+    const hasPreviousWeek = lastTwoWeeks.length >= 2
+
+    const formatWeeksFr = (weeks: typeof lastTwoWeeks) =>
+      weeks.map((week, index) => {
+        const weekLabel = index === 0 ? 'Semaine en cours' : 'Semaine précédente'
+        return `${weekLabel}:\n${week.map(day =>
+          `- ${day.date.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long' })}: ${day.pnl}€`
+        ).join('\n')}`
+      }).join('\n\n')
+
+    const formatWeeksEn = (weeks: typeof lastTwoWeeks) =>
+      weeks.map((week, index) => {
+        const weekLabel = index === 0 ? 'Current Week' : 'Previous Week'
+        return `${weekLabel}:\n${week.map(day =>
+          `- ${day.date.toLocaleDateString('en-US', { weekday: 'long', day: '2-digit', month: 'long' })}: ${day.pnl}€`
+        ).join('\n')}`
+      }).join('\n\n')
 
     const { partialObjectStream } = streamObject({
       model: getAiLanguageModel("analysis"),
@@ -62,16 +81,12 @@ export async function generateTradingAnalysis(
         ? `Tu es un coach en trading qui aide les traders à progresser. Tu es toujours positif et encourageant.
 ${QUNT_EDGE_CONTEXT.fr}
 
-Voici les résultats de trading des deux dernières semaines :
+${hasPreviousWeek
+  ? 'Voici les résultats de trading des deux dernières semaines :'
+  : 'Voici les résultats de trading de la semaine en cours :'}
 
 Données de performance journalières :
-${lastTwoWeeks.map((week, index) => {
-          const isCurrentWeek = index === 0;
-          const weekLabel = isCurrentWeek ? 'Semaine en cours' : 'Semaine précédente';
-          return `${weekLabel}:\n${week.map(day =>
-            `- ${day.date.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long' })}: ${day.pnl}€`
-          ).join('\n')}`
-        }).join('\n\n')}
+${formatWeeksFr(lastTwoWeeks)}
 
 Pour l'analyse (intro) :
 1. Fais une phrase simple qui explique comment s'est passée la semaine en cours
@@ -80,9 +95,9 @@ Pour l'analyse (intro) :
 4. Tu peux faire jusqu'à 60 mots
 5. Regarde comment les résultats changent chaque jour
 6. Dis ce qui va bien et ce qui peut être amélioré, mais toujours gentiment
-7. Compare avec la semaine précédente si possible
+7. ${hasPreviousWeek ? 'Compare avec la semaine précédente si possible' : 'Concentre-toi sur la semaine en cours (aucune donnée de semaine précédente disponible)'}
 8. Prends en compte le jour de la semaine pour l'analyse
-9. Mets l'accent sur la semaine en cours, en utilisant la semaine précédente comme point de référence
+9. ${hasPreviousWeek ? 'Mets l\'accent sur la semaine en cours, en utilisant la semaine précédente comme point de référence' : 'Mets l\'accent sur la semaine en cours'}
 
 Pour les conseils (tips) :
 1. Donne un conseil simple et facile à suivre
@@ -100,16 +115,12 @@ Fais une analyse qui aide le trader à progresser :`
         : `You are a trading coach who helps traders improve. You are always positive and encouraging.
 ${QUNT_EDGE_CONTEXT.en}
 
-Here are the trading results for the last two weeks:
+${hasPreviousWeek
+  ? 'Here are the trading results for the last two weeks:'
+  : 'Here are the trading results for the current week:'}
 
 Daily performance data:
-${lastTwoWeeks.map((week, index) => {
-          const isCurrentWeek = index === 0;
-          const weekLabel = isCurrentWeek ? 'Current Week' : 'Previous Week';
-          return `${weekLabel}:\n${week.map(day =>
-            `- ${day.date.toLocaleDateString('en-US', { weekday: 'long', day: '2-digit', month: 'long' })}: ${day.pnl}€`
-          ).join('\n')}`
-        }).join('\n\n')}
+${formatWeeksEn(lastTwoWeeks)}
 
 For the analysis (intro):
 1. Write a simple sentence explaining how the current week went
@@ -118,9 +129,9 @@ For the analysis (intro):
 4. You can use up to 60 words
 5. Look at how the results change each day
 6. Say what's working well and what can be better, but always kindly
-7. Compare with the previous week if possible
+7. ${hasPreviousWeek ? 'Compare with the previous week if possible' : 'Focus on the current week (no previous-week data is available)'}
 8. Take into account the day of the week for analysis
-9. Focus on the current week, using the previous week as a reference point
+9. ${hasPreviousWeek ? 'Focus on the current week, using the previous week as a reference point' : 'Focus on the current week'}
 
 For the tips:
 1. Give a simple and easy-to-follow tip

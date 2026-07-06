@@ -12,7 +12,6 @@ import { useDashboardFilters } from "@/context/data-provider"
 import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { useUserStore } from "../../../../../store/user-store"
 
-
 interface AccountFilterProps {
  showAccountNumbers: boolean
  className?: string
@@ -147,7 +146,7 @@ export function AccountFilter({ showAccountNumbers, className }: AccountFilterPr
  return (
  <div className="space-y-2">
  <Label className="text-sm font-medium">{t('filters.accounts')}</Label>
- <Command className="rounded-lg border border-border/50" shouldFilter={false}>
+ <Command className="rounded-lg border-00" shouldFilter={false}>
  <div className="border-b">
  <CommandInput 
  placeholder={t('filters.search')} 

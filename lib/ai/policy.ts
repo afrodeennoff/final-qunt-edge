@@ -7,7 +7,9 @@ export type AiFeature =
   | "mappings"
   | "format-trades"
   | "analysis"
-  | "search";
+  | "search"
+  | "journal-insights"
+  | "analyze-patterns";
 
 export interface AiFeaturePolicy {
   feature: AiFeature;
@@ -19,7 +21,6 @@ export interface AiFeaturePolicy {
   logSampleRate: number;
 }
 
-const DEFAULT_MODEL = "glm-4.7-flash";
 const DEFAULT_TIMEOUT_MS = 60_000;
 const DEFAULT_MAX_STEPS = 10;
 const DEFAULT_LOG_SAMPLE_RATE = 0.25;
@@ -40,7 +41,7 @@ function normalizeSampleRate(value: number): number {
 
 function getBasePolicy() {
   const env = getEnv();
-  const model = env.AI_MODEL_DEFAULT || env.AI_MODEL || DEFAULT_MODEL;
+  const model = env.AI_DEFAULT_MODEL || env.AI_MODEL_DEFAULT || env.AI_MODEL;
   const timeoutMs = Math.max(5000, parseNumber(env.AI_TIMEOUT_MS, DEFAULT_TIMEOUT_MS));
   const maxSteps = Math.max(1, Math.floor(parseNumber(env.AI_MAX_STEPS, DEFAULT_MAX_STEPS)));
   const logSampleRate = normalizeSampleRate(
@@ -67,22 +68,29 @@ export function getAiPolicy(feature: AiFeature): AiFeaturePolicy {
     "format-trades": { temperature: 0.1 },
     analysis: { temperature: 0.25 },
     search: { temperature: 0.1 },
+    "journal-insights": { temperature: 0.2 },
+    "analyze-patterns": { temperature: 0.2 },
   };
+
+  const structuredOutputModel = env.AI_STRUCTURED_OUTPUT_MODEL;
 
   const featureModelOverride: Record<AiFeature, string | undefined> = {
     chat: env.AI_MODEL_CHAT,
     support: env.AI_MODEL_SUPPORT,
     editor: env.AI_MODEL_EDITOR,
-    mappings: env.AI_MODEL_MAPPINGS,
-    "format-trades": env.AI_MODEL_FORMAT_TRADES,
-    analysis: env.AI_MODEL_ANALYSIS,
-    search: env.AI_MODEL_SEARCH,
+    mappings: env.AI_MODEL_MAPPINGS || structuredOutputModel,
+    "format-trades": env.AI_MODEL_FORMAT_TRADES || structuredOutputModel,
+    analysis: env.AI_ANALYTICS_MODEL || env.AI_MODEL_ANALYSIS || structuredOutputModel,
+    search: env.AI_MODEL_SEARCH || structuredOutputModel,
+    "journal-insights": env.AI_MODEL_JOURNAL_INSIGHTS || env.AI_ANALYTICS_MODEL || structuredOutputModel,
+    "analyze-patterns": env.AI_MODEL_ANALYZE_PATTERNS || env.AI_ANALYTICS_MODEL || structuredOutputModel,
   };
 
+  const provider = env.AI_PROVIDER_BASE_URL ? 'custom' : DEFAULT_PROVIDER;
   return {
     feature,
-    provider: DEFAULT_PROVIDER,
-    model: featureModelOverride[feature] || base.model,
+    provider,
+    model: featureModelOverride[feature] || base.model || "",
     timeoutMs: base.timeoutMs,
     maxSteps: base.maxSteps,
     temperature: defaultsByFeature[feature].temperature,

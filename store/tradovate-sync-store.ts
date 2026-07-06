@@ -17,6 +17,9 @@ interface TradovateAccount {
 
 type TradovateEnvironment = 'demo' | 'live'
 
+const TRADOVATE_DEFAULT_ENV: TradovateEnvironment =
+  (process.env.NEXT_PUBLIC_TRADOVATE_ENVIRONMENT as TradovateEnvironment) || 'demo'
+
 interface TradovateState {
   isAuthenticated: boolean
   oauthState?: string
@@ -43,7 +46,7 @@ export const useTradovateSyncStore = create<TradovateSyncStore>()(
       oauthState: undefined,
       accounts: undefined,
       lastSync: undefined,
-      environment: 'demo',
+      environment: TRADOVATE_DEFAULT_ENV,
 
       setAuthenticated: (authenticated: boolean) => {
         set({ isAuthenticated: authenticated })

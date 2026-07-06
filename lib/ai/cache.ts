@@ -7,7 +7,7 @@
  * @module lib/ai/cache
  */
 
-import { getOrLoad, set, invalidate, invalidateNamespace, CachePolicies, buildCacheKey } from '@/lib/cache/cache-service'
+import { get, set, invalidateNamespace, CachePolicies, buildCacheKey } from '@/lib/cache/cache-service'
 import { createLogger } from '@/lib/logger'
 
 const log = createLogger('ai-cache')
@@ -42,9 +42,10 @@ const cacheStats = {
   errors: 0,
 }
 
-function buildAiCacheKey(feature: string, options: unknown): string {
-  const optionsStr = stableStringify(options)
-  const hash = hashString(optionsStr)
+function buildAiCacheKey(feature: string, options: unknown, userId?: string): string {
+  const parts = [feature, stableStringify(options)]
+  if (userId) parts.push(userId)
+  const hash = hashString(parts.join('|'))
   return buildCacheKey(AI_CACHE_DOMAIN, feature, hash)
 }
 
@@ -75,25 +76,16 @@ export function resetAiCacheStats() {
  */
 export async function cacheAiResponse<T>(
   feature: string,
-  options: unknown
+  options: unknown,
+  userId?: string
 ): Promise<T | null> {
-  const key = buildAiCacheKey(feature, options)
+  const key = buildAiCacheKey(feature, options, userId)
   const policy = CachePolicies.aiDerived(AI_CACHE_TTL)
 
   try {
-    const cached = await getOrLoad<T>(
-      key,
-      async () => {
-        cacheStats.misses++
-        // Return a sentinel so getOrLoad doesn't cache the miss
-        // We use a separate flow for read-then-write
-        return null as unknown as T
-      },
-      policy,
-      `ai-${feature}`
-    )
+    const cached = await get<T>(key, policy)
 
-    if (cached !== null) {
+    if (cached !== undefined) {
       cacheStats.hits++
       return cached
     }
@@ -117,9 +109,10 @@ export async function cacheAiResponse<T>(
 export async function setAiResponseCache<T>(
   feature: string,
   options: unknown,
-  result: T
+  result: T,
+  userId?: string
 ): Promise<void> {
-  const key = buildAiCacheKey(feature, options)
+  const key = buildAiCacheKey(feature, options, userId)
   const policy = CachePolicies.aiDerived(AI_CACHE_TTL)
 
   try {

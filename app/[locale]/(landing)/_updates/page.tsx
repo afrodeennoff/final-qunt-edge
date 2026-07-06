@@ -1,4 +1,3 @@
-import React from 'react'
 import { getI18n } from '@/locales/server'
 import CompletedTimeline from '../components/completed-timeline'
 import { getAllPosts } from '@/lib/posts'
@@ -52,7 +51,7 @@ export default async function UpdatesPage(props: PageProps) {
           <h2 className="mb-6 text-2xl font-semibold text-fg-primary">
               {t('updates.weeklyVideo')}
           </h2>
-          <div className="overflow-hidden rounded-xl border border-border/30 bg-primary/[0.03]">
+          <div className="overflow-hidden rounded-xl border-0 bg-muted/40">
             <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
               <iframe
                 className="absolute left-0 top-0 h-full w-full"

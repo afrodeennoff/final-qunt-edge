@@ -74,7 +74,7 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
       <div className="mt-5 hidden overflow-x-auto lg:block">
         <table className="w-full min-w-[880px] border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-border/20 text-xs uppercase tracking-[0.1em] text-muted-foreground">
+             <tr className="border-b-0 bg-gradient-to-br from-card/30 to-card/5 text-xs uppercase tracking-[0.12em] text-muted-foreground">
               <th className="px-3 py-3 font-semibold">Firm</th>
               <th className="px-3 py-3 font-semibold">Typical Entry</th>
               <th className="px-3 py-3 font-semibold">Drawdown Model</th>
@@ -85,8 +85,8 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
           </thead>
           <tbody>
             {firms.map((firm) => (
-              <tr key={firm.id} className="border-b border-border/0.03 transition-colors hover:bg-background/50 last:border-b-0">
-                <td className="sticky left-0 bg-primary/[0.03] px-3 py-4 font-semibold text-foreground">{firm.name}</td>
+               <tr key={firm.id} className="border-b-0 transition-colors hover:bg-primary/[0.02] last:border-b-0">
+                <td className="sticky left-0 bg-muted/40 px-3 py-4 font-semibold text-foreground">{firm.name}</td>
                 <td className="px-3 py-4 text-muted-foreground">
                   {formatChallengeFee(getLowestChallengeFee(firm))}
                 </td>

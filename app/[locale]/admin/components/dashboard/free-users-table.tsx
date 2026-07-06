@@ -81,8 +81,8 @@ export function FreeUsersTable() {
  try {
  const data = await getFreeUsers()
  setUsers(data)
- } catch (error) {
- console.error('Failed to load free users:', error)
+ } catch {
+
  } finally {
  setIsLoading(false)
  }
@@ -108,7 +108,7 @@ export function FreeUsersTable() {
  <Button onClick={fetchUsers} variant="outline">
  Refresh
  </Button>
- <div className="rounded-md border">
+  <div className="overflow-x-auto">
  <Table>
  <TableHeader>
  <TableRow>

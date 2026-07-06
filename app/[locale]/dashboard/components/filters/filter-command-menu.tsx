@@ -1,4 +1,5 @@
 "use client"
+import React from 'react'
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import { Search } from "lucide-react"
@@ -200,8 +201,8 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  setSearchValue("")
  toast.success(t('filters.commandMenu.dateRangeApplied'))
  }
- } catch (error) {
- console.error('Error parsing date:', error)
+ } catch {
+
  toast.error(t('filters.commandMenu.dateParseError'))
  } finally {
  setIsParsingDate(false)
@@ -275,7 +276,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  variant="outline"
  className={cn(
  variant ==="navbar"
- ?"h-9 w-9 rounded-full border-border/20 bg-background/60 p-0 justify-center text-foreground shadow-none hover:border-border/35 hover:bg-background/80"
+ ?"h-9 w-9 rounded-full border-transparent bg-background/60 p-0 justify-center text-foreground shadow-none hover:border-transparent hover:bg-background/80"
  :"justify-start text-left font-normal",
  variant ==="toolbar" &&"h-10 rounded-full",
  className
@@ -341,8 +342,8 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  placeholder={t('filters.commandMenu.searchPlaceholder')}
  className={cn(
  variant ==="navbar"
- ?"h-9 w-full rounded-full border border-transparent bg-background/20 pl-9 pr-20 text-foreground shadow-none transition-[opacity,background-color,border-color] hover:bg-background/80/60 focus-visible:border-border/15 focus-visible:bg-background/80/70 focus-visible:ring-0"
- :"w-full rounded-full border-border/20 bg-background/60 pl-9 pr-20 text-foreground shadow-none transition-[opacity,background-color,border-color] hover:border-border/35 hover:bg-background/80 focus-visible:ring-1 focus-visible:ring-v2-border/20",
+ ?"h-9 w-full rounded-full border border-transparent bg-background/20 pl-9 pr-20 text-foreground shadow-none transition-[opacity,background-color,border-color] hover:bg-background/80/60 focus-visible:border-transparent focus-visible:bg-background/80/70 focus-visible:ring-0"
+ :"w-full rounded-full border-transparent bg-background/60 pl-9 pr-20 text-foreground shadow-none transition-[opacity,background-color,border-color] hover:border-transparent hover:bg-background/80 focus-visible:ring-1 focus-visible:ring-transparent/20",
  variant ==="toolbar" &&"h-10 rounded-full",
  isParsingDate &&"opacity-50",
  isParsingDate &&"border-primary ring-2 ring-primary ring-offset-2 animate-pulse"
@@ -419,7 +420,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  const CommandContent = (
  <Command 
  ref={commandRef} 
- className={cn("rounded-xl border border-border/18 bg-card/95 shadow-xl shadow-black/20",
+ className={cn("rounded-xl border-0 bg-card/95 shadow-sm",
  (isMobileDevice || isMobile) &&"h-full"
  )} 
  shouldFilter={false}
@@ -467,7 +468,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  )}
  </div>
  )}
- <div className="border-b border-border/0.03 bg-background/55 px-3 pb-2 pt-3">
+ <div className="border-b-0 bg-background/55 px-3 pb-2 pt-3">
  <p className="text-xs font-medium text-muted-foreground mb-2">
  {t('filters.commandMenu.categories.title')}
  </p>
@@ -551,7 +552,7 @@ export function FilterCommandMenu({ className, variant ="navbar" }: FilterComman
  <SheetTrigger asChild>
  {MobileTriggerButton}
  </SheetTrigger>
- <SheetContent side="right" className="w-[90vw] sm:max-w-[640px] flex flex-col h-dvh overflow-hidden p-0">
+  <SheetContent side="right" className="w-[90vw] sm:max-w-[640px] 2xl:max-w-[780px] flex flex-col h-dvh overflow-hidden p-0">
  <SheetHeader className="px-4 pt-4">
  <SheetTitle>{t('filters.title')}</SheetTitle>
  </SheetHeader>

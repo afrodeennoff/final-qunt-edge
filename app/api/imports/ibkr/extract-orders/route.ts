@@ -1,11 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { withRateLimited } from '@/lib/api/with-api-route'
 import { orderSchema } from '../fifo-computation/schema'
 import { type FinancialInstrument } from './schema'
-import { addMoney, toMoneyNumber } from '@/lib/financial-math'
-import { normalizeToUtcTimestamp } from '@/lib/date-utils'
-import { apiError } from '@/lib/api-response'
-import { createRouteClient } from '@/lib/supabase/route-client'
 
 export const maxDuration = 60 // Allow up to 60 seconds for AI processing
 
@@ -21,16 +15,7 @@ interface TradeOrder {
   orderType?: string;
 }
 
-function parseNumericValue(rawValue: string): number {
-  const normalized = rawValue.replace(/,/g, '')
-  const parsed = Number(normalized)
-  if (!Number.isFinite(parsed)) {
-    throw new Error(`Invalid numeric value: ${rawValue}`)
-  }
-  return parsed
-}
-
-const parseOrders = (text: string): TradeOrder[] => {
+export const parseOrders = (text: string): TradeOrder[] => {
   // First, let's extract just the trades section
   const tradesMatch = text.match(/Trades[\s\S]*?(?=Financial Instrument Information|$)/);
   if (!tradesMatch) return [];
@@ -64,7 +49,7 @@ const parseOrders = (text: string): TradeOrder[] => {
     ] = match;
 
     // Convert datetime to ISO format
-    const isoTimestamp = normalizeToUtcTimestamp(`${date}T${time}Z`)
+    const isoTimestamp = new Date(`${date}T${time}`).toISOString();
     
     // Generate a short unique ID: side + index + last 2 digits of seconds
     const timeSeconds = time.split(':')[2];
@@ -74,12 +59,9 @@ const parseOrders = (text: string): TradeOrder[] => {
       rawSymbol: symbol,
       side: side as 'BUY' | 'SELL',
       quantity: Math.abs(parseInt(quantity)), // Use absolute value for quantity
-      price: parseNumericValue(price),
+      price: parseFloat(price.replace(/,/g, '')),
       timestamp: isoTimestamp,
-      commission: toMoneyNumber(
-        addMoney(parseNumericValue(fee), parseNumericValue(commission)),
-        8
-      ),
+      commission: parseFloat(fee.replace(/,/g, ''))+parseFloat(commission.replace(/,/g, '')),
       accountNumber: `U***${accountId}`,
       orderId: orderId,
       orderType: orderType
@@ -92,11 +74,12 @@ const parseOrders = (text: string): TradeOrder[] => {
 };
 
 
-const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
+export const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
   const instrumentInformationMatch = text.match(/Financial Instrument Information[\s\S]*?(?=Order Types|Generated:|$)/);
   if (!instrumentInformationMatch) return [];
   
   const instrumentInformationText = instrumentInformationMatch[0];
+  console.warn('instrumentInformationText', instrumentInformationText);
   
   // The text appears to be concatenated, so let's work with it as a single string
   // Pattern: "Financial Instrument Information Symbol Description Conid ... Code Futures SYMBOL DESC CONID ..."
@@ -118,7 +101,7 @@ const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
   
   const instruments: FinancialInstrument[] = [];
   let match;
-  
+
   while ((match = instrumentPattern.exec(dataText)) !== null) {
     const [
       _,
@@ -145,22 +128,20 @@ const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
     });
   }
   
+  console.warn('instruments', instruments)
   return instruments;
 };
 
-async function handlePost(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const supabase = createRouteClient(request)
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user?.id) {
-      return apiError('UNAUTHORIZED', 'Authentication required', 401)
-    }
-
     const json = await request.json()
     const { text } = json
 
     if (!text) {
-      return apiError('VALIDATION_FAILED', 'No text provided', 400)
+      return new Response(JSON.stringify({ error: 'No text provided' }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const parsedOrders = parseOrders(text)
@@ -177,19 +158,18 @@ async function handlePost(request: NextRequest) {
       }
     });
 
-    return NextResponse.json({ 
+    return new Response(JSON.stringify({ 
       orders: validOrders, 
       instruments: instrumentInformation 
+    }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error('Error processing request:', error);
-    return apiError('INTERNAL_ERROR', error instanceof Error ? error.message : 'Failed to process request', 500)
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Failed to process request' }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
-}
-
-export const POST = withRateLimited(handlePost, {
-  rateLimitId: 'ibkr-extract',
-  rateLimitMax: 15,
-  rateLimitWindow: 60_000,
-  routeName: 'ibkr-extract',
-})
+} 

@@ -41,49 +41,49 @@ export function DataDebug() {
  variant="outline"
  size="icon"
  onClick={() => setIsOpen(true)}
- className="rounded-full bg-background/80 border-border/14 hover:bg-foreground/10 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+ className="rounded-full bg-background/80 border-transparent hover:bg-foreground/10 shadow-sm"
  >
  <Bug className="h-4 w-4 text-primary" />
  </Button>
  ) : (
- <div className="w-80 bg-background/90 border border-border/14 rounded-xl p-4 shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-300">
- <div className="flex items-center justify-between mb-4 border-b border-border/8 pb-2">
+ <div className="w-80 bg-background/90 border-0 rounded-xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
+ <div className="flex items-center justify-between mb-4 border-b-0 pb-2">
  <div className="flex items-center gap-2">
  <Bug className="h-4 w-4 text-primary" />
  <span className="text-xs font-bold uppercase tracking-widest text-foreground">Debug Dashboard</span>
  </div>
- <button onClick={() => setIsOpen(false)} className="text-foreground/60 hover:text-foreground transition-colors">
+ <button onClick={() => setIsOpen(false)} className="text-foreground hover:text-foreground transition-colors">
  <X className="h-4 w-4" />
  </button>
  </div>
 
  <div className="space-y-3">
  <div className="flex justify-between items-center text-[10px]">
- <span className="text-foreground/60 uppercase font-black tracking-tighter">Trades in Store</span>
+ <span className="text-foreground uppercase font-black tracking-tighter">Trades in Store</span>
  <span className="text-foreground font-mono">{trades.length}</span>
  </div>
  <div className="flex justify-between items-center text-[10px]">
- <span className="text-foreground/60 uppercase font-black tracking-tighter">Filtered Trades</span>
+ <span className="text-foreground uppercase font-black tracking-tighter">Filtered Trades</span>
  <span className="text-foreground font-mono">{formattedTrades.length}</span>
  </div>
  <div className="flex justify-between items-center text-[10px]">
- <span className="text-foreground/60 uppercase font-black tracking-tighter">Accounts</span>
+ <span className="text-foreground uppercase font-black tracking-tighter">Accounts</span>
  <span className="text-foreground font-mono">{accounts.length}</span>
  </div>
  <div className="flex justify-between items-center text-[10px]">
- <span className="text-foreground/60 uppercase font-black tracking-tighter">Environment</span>
+ <span className="text-foreground uppercase font-black tracking-tighter">Environment</span>
  <span className={cn("font-mono", process.env.NODE_ENV === 'development' ?"text-semantic-success" :"text-semantic-warning")}>
  {process.env.NODE_ENV}
  </span>
  </div>
  <div className="flex justify-between items-center text-[10px]">
- <span className="text-foreground/60 uppercase font-black tracking-tighter">Data Logic</span>
+ <span className="text-foreground uppercase font-black tracking-tighter">Data Logic</span>
  <span className={cn("font-mono px-1.5 py-0.5 rounded text-[8px]", isMock ?"bg-semantic-warning-bg/10 text-semantic-warning" :"bg-semantic-success-bg/10 text-semantic-success")}>
  {isMock ?"MOCK (Fallback)" :"LIVE (Synced)"}
  </span>
  </div>
  <div className="flex justify-between items-center text-[10px]">
- <span className="text-foreground/60 uppercase font-black tracking-tighter">User ID</span>
+ <span className="text-foreground uppercase font-black tracking-tighter">User ID</span>
  <span className="text-foreground font-mono truncate max-w-[120px]">
  {user?.id || supabaseUser?.id ||"None"}
  </span>
@@ -96,7 +96,7 @@ export function DataDebug() {
  size="sm"
  onClick={() => refreshAllData({ force: true })}
  disabled={isLoading}
- className="h-8 text-[9px] font-bold uppercase tracking-widest border-border/8 bg-foreground/5 hover:bg-foreground/10"
+ className="h-8 text-[9px] font-bold uppercase tracking-widest border-transparent bg-foreground/5 hover:bg-foreground/10"
  >
  <RefreshCw className={cn("h-3 w-3 mr-2", isLoading &&"animate-spin")} />
  Sync Now

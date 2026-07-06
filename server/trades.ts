@@ -11,7 +11,8 @@ import { v5 as uuidv5 } from 'uuid'
 import { logger } from '@/lib/logger'
 import { z } from 'zod'
 import { invalidateNamespace } from '@/lib/cache/cache-service'
-import { invalidateTradeDataCaches } from '@/lib/cache/cache-invalidation'
+import { invalidateTradeDataCaches, invalidateAccountRelatedCaches } from '@/lib/cache/cache-invalidation'
+import { getDataRetentionDays } from './usage-limits'
 
 const TRADE_PAGE_CACHE_LIFETIME = {
   stale: 3_600,
@@ -22,7 +23,7 @@ const TRADE_PAGE_CACHE_LIFETIME = {
 const importTradeSchema = z.object({
   accountNumber: z.string().min(1, 'Account number is required'),
   instrument: z.string().min(1, 'Instrument is required'),
-  side: z.string().optional(),
+  side: z.string().nullish(),
   quantity: z.union([z.string(), z.number()]).transform(v => v.toString()),
   entryPrice: z.union([z.string(), z.number()]).transform(v => v.toString()),
   closePrice: z.union([z.string(), z.number()]).transform(v => v.toString()),
@@ -46,9 +47,9 @@ const importTradeSchema = z.object({
     }
   }),
   timeInPosition: z.union([z.string(), z.number()]).optional().transform(v => v?.toString()),
-  entryId: z.string().optional(),
-  closeId: z.string().optional(),
-  comment: z.string().optional(),
+  entryId: z.string().nullish(),
+  closeId: z.string().nullish(),
+  comment: z.string().nullish(),
   tags: z.array(z.string()).optional(),
   groupId: z.string().nullish(),
 }).refine((trade) => {
@@ -147,6 +148,7 @@ export async function invalidateTradeRelatedCaches(userId: string): Promise<void
   await Promise.all([
     invalidateNamespace('ai-trades'),
     invalidateNamespace('behavior-insights'),
+    invalidateNamespace('query-optimizer'),
   ])
 }
 
@@ -158,10 +160,16 @@ export async function resolveWritableUserId(rawUserId: string): Promise<string> 
     select: { id: true },
   })
 
-  const byAuthId = await prisma.user.findUnique({
-    where: { auth_user_id: rawUserId },
-    select: { id: true },
-  })
+  let byAuthId: { id: string } | null = null
+  try {
+    byAuthId = await prisma.user.findUnique({
+      where: { auth_user_id: rawUserId },
+      select: { id: true },
+    })
+  } catch {
+    // auth_user_id column may not exist in some deployments — skip gracefully
+  }
+
   if (byAuthId?.id && byAuthId.id !== rawUserId) {
     logger.warn('[resolveWritableUserId] Divergent auth mapping detected; using auth_user_id row', {
       rawUserId,
@@ -359,10 +367,11 @@ async function saveTradesForResolvedUser(
     // Invalidate caches AFTER successful transaction commit
     if (result.count > 0) {
       invalidateTradeDataCaches(userId)
-      // Also invalidate Redis namespaces for AI/behavior caches
+      // Also invalidate Redis namespaces for AI/behavior/query caches
       await Promise.all([
         invalidateNamespace('ai-trades'),
         invalidateNamespace('behavior-insights'),
+        invalidateNamespace('query-optimizer'),
       ])
     }
 
@@ -398,17 +407,39 @@ export async function saveTradesAction(
   _options?: { userId?: string }
 ): Promise<TradeResponse> {
   void _options
-  const rawUserId = await getUserId()
-  const userId = await resolveWritableUserId(rawUserId)
-  return saveTradesForResolvedUser(data, userId, rawUserId)
+  try {
+    const rawUserId = await getUserId()
+    const userId = await resolveWritableUserId(rawUserId)
+    return await saveTradesForResolvedUser(data, userId, rawUserId)
+  } catch (error) {
+    logger.error('[saveTradesAction] Unhandled error', { error })
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      error: 'DATABASE_ERROR',
+      numberOfTradesAdded: 0,
+      skippedCount: data.length,
+      details: message,
+    }
+  }
 }
 
 export async function saveTradesForUserAction(
   data: unknown[],
   rawUserId: string
 ): Promise<TradeResponse> {
-  const userId = await resolveWritableUserId(rawUserId)
-  return saveTradesForResolvedUser(data, userId, rawUserId)
+  try {
+    const userId = await resolveWritableUserId(rawUserId)
+    return await saveTradesForResolvedUser(data, userId, rawUserId)
+  } catch (error) {
+    logger.error('[saveTradesForUserAction] Unhandled error', { error })
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      error: 'DATABASE_ERROR',
+      numberOfTradesAdded: 0,
+      skippedCount: data.length,
+      details: message,
+    }
+  }
 }
 
 // Pre-computed statistics type
@@ -529,19 +560,29 @@ export async function getTradesAction(
   page: number = 1,
   pageSize: number = 50,
   forceRefresh: boolean = false,
-  includeStats: boolean = true
+  includeStats: boolean = true,
+  /** Trusted path for internal AI / MCP callers that already performed auth */
+  trustedUserId?: string
 ): Promise<PaginatedTrades & { statistics?: PrecomputedStats }> {
-  const authenticatedUserId = await getDatabaseUserId()
-  if (!authenticatedUserId) throw new Error('User not found')
+  let currentUserId: string
 
-  let currentUserId = authenticatedUserId
+  if (trustedUserId) {
+    // Bypass request-scoped auth (getDatabaseUserId / cookies) for AI tool executes
+    // The caller (route guard or MCP ctx) already verified the user.
+    currentUserId = await resolveWritableUserId(trustedUserId)
+  } else {
+    const authenticatedUserId = await getDatabaseUserId()
+    if (!authenticatedUserId) throw new Error('User not found')
 
-  if (userId) {
-    const resolvedUserId = await resolveWritableUserId(userId)
-    if (resolvedUserId !== authenticatedUserId) {
-      throw new Error('Forbidden')
+    currentUserId = authenticatedUserId
+
+    if (userId) {
+      const resolvedUserId = await resolveWritableUserId(userId)
+      if (resolvedUserId !== authenticatedUserId) {
+        throw new Error('Forbidden')
+      }
+      currentUserId = resolvedUserId
     }
-    currentUserId = resolvedUserId
   }
 
   const tag = `trades-${currentUserId}`
@@ -555,8 +596,8 @@ export async function getTradesAction(
       ? loadTradesPage(currentUserId, page, pageSize, includeStats)
       : getTradesPageCached(currentUserId, page, pageSize, includeStats))
   } catch (error) {
-    logger.error('getTradesAction failed', { error })
-    throw error
+    logger.error('getTradesAction failed; falling back to direct fetch', { error })
+    return loadTradesPage(currentUserId, page, pageSize, includeStats)
   }
 }
 
@@ -567,6 +608,12 @@ async function loadTradesPage(
   computeStats: boolean
 ): Promise<PaginatedTrades & { statistics?: PrecomputedStats }> {
   const where: Prisma.TradeWhereInput = { userId: uid }
+  const retentionDays = await getDataRetentionDays(uid)
+  if (retentionDays !== null) {
+    const cutoff = new Date()
+    cutoff.setDate(cutoff.getDate() - retentionDays)
+    where.entryDate = { gte: cutoff }
+  }
 
   const [trades, total] = await Promise.all([
     prisma.trade.findMany({
@@ -625,7 +672,7 @@ async function loadTradesPage(
         where,
         orderBy: { entryDate: 'desc' },
         select: { pnl: true },
-        take: 5_000,
+        take: 500,
       }),
     ])
 
@@ -716,43 +763,36 @@ export async function updateTradesAction(tradesIds: string[], update: Partial<No
     }
 
     if (entryDateOffset || closeDateOffset || instrumentTrim || instrumentPrefix || instrumentSuffix) {
-      const trades = await prisma.trade.findMany({
-        where: { id: { in: tradesIds }, userId },
-        select: { id: true, entryDate: true, closeDate: true, instrument: true }
-      })
+      const updates: string[] = []
 
-      const updateOps = trades.map((trade) => {
-        const data = {} as Prisma.TradeUpdateManyMutationInput
+      if (entryDateOffset) {
+        updates.push(`"entryDate" = "entryDate" + interval '${entryDateOffset} hours'`)
+      }
 
-        if (entryDateOffset) {
-          const d = new Date(trade.entryDate)
-          d.setHours(d.getHours() + entryDateOffset)
-          data.entryDate = formatTimestamp(d.toISOString())
-        }
-        if (closeDateOffset && trade.closeDate) {
-          const d = new Date(trade.closeDate)
-          d.setHours(d.getHours() + closeDateOffset)
-          data.closeDate = formatTimestamp(d.toISOString())
-        }
+      if (closeDateOffset) {
+        updates.push(`"closeDate" = "closeDate" + interval '${closeDateOffset} hours'`)
+      }
 
-        let newInst = trade.instrument
+      if (instrumentTrim || instrumentPrefix || instrumentSuffix) {
+        let expr = '"instrument"'
         if (instrumentTrim) {
-          newInst = newInst.substring(instrumentTrim.fromStart, newInst.length - instrumentTrim.fromEnd)
+          const { fromStart, fromEnd } = instrumentTrim
+          expr = `SUBSTRING(${expr} FROM ${fromStart + 1} FOR GREATEST(0, LENGTH(${expr}) - ${fromStart} - ${fromEnd}))`
         }
-        if (instrumentPrefix) newInst = instrumentPrefix + newInst
-        if (instrumentSuffix) newInst = newInst + instrumentSuffix
-
-        if (newInst !== trade.instrument) data.instrument = newInst
-
-        if (Object.keys(data).length > 0) {
-          return prisma.trade.update({ where: { id: trade.id }, data })
+        if (instrumentPrefix) {
+          expr = `'${instrumentPrefix}' || ${expr}`
         }
-        return null
-      }).filter((op): op is ReturnType<typeof prisma.trade.update> => op !== null)
+        if (instrumentSuffix) {
+          expr = `${expr} || '${instrumentSuffix}'`
+        }
+        updates.push(`"instrument" = ${expr}`)
+      }
 
-      for (let index = 0; index < updateOps.length; index += TRADE_UPDATE_BATCH_SIZE) {
-        const batch = updateOps.slice(index, index + TRADE_UPDATE_BATCH_SIZE)
-        await prisma.$transaction(batch)
+      if (updates.length > 0) {
+        const ids = tradesIds.map(id => `'${id}'`).join(', ')
+        await prisma.$executeRawUnsafe(
+          `UPDATE "public"."Trade" SET ${updates.join(', ')} WHERE "id" IN (${ids}) AND "userId" = '${userId}'`
+        )
       }
     }
 
@@ -781,6 +821,7 @@ export async function updateTradesAction(tradesIds: string[], update: Partial<No
     }
 
     await invalidateTradeRelatedCaches(userId)
+    invalidateAccountRelatedCaches(userId)
     return ownedTrades.length
   } catch (error) {
     logger.error('[updateTrades] Error', { error })
@@ -838,7 +879,17 @@ export async function addTagToTrade(tradeId: string, tag: string) {
       throw new Error('Trade not found')
     }
     if (trade.tags.includes(tag.trim())) {
-      return await prisma.trade.findUnique({ where: { id: tradeId } })
+      return await prisma.trade.findUnique({
+        where: { id: tradeId, userId },
+        select: {
+          id: true, userId: true, accountNumber: true, instrument: true,
+          side: true, quantity: true, entryPrice: true, closePrice: true,
+          pnl: true, commission: true, entryId: true, closeId: true,
+          entryDate: true, closeDate: true, timeInPosition: true,
+          comment: true, tags: true, groupId: true, images: true,
+          videoUrl: true, createdAt: true,
+        }
+      })
     }
     const updatedTrade = await prisma.trade.update({
       where: { id: tradeId, userId },
@@ -1023,4 +1074,46 @@ export async function addTagsToTradesForDay(date: string, tags: string[]) {
     logger.error('[trades] Failed to add tags to trades for day', { error })
     throw error
   }
+}
+
+export async function createSingleTradeAction(data: {
+  instrument?: string
+  side?: string
+  entryDate?: string
+  quantity?: number | string
+  entryPrice?: number | string
+  closePrice?: number | string
+  pnl?: number | string
+}): Promise<SerializedTrade> {
+  const rawUserId = await getUserId()
+  const userId = await resolveWritableUserId(rawUserId)
+  const now = new Date()
+  const entryDate = data.entryDate ? new Date(data.entryDate) : now
+
+  const qty = new Prisma.Decimal(data.quantity ?? 1)
+  const entry = new Prisma.Decimal(data.entryPrice ?? 0)
+  const close = new Prisma.Decimal(data.closePrice ?? 0)
+  const pnl = new Prisma.Decimal(data.pnl ?? 0)
+
+  const tradeData: Prisma.TradeUncheckedCreateInput = {
+    userId,
+    accountNumber: 'Manual',
+    instrument: data.instrument || 'Manual',
+    side: data.side || null,
+    quantity: qty,
+    entryPrice: entry,
+    closePrice: close,
+    pnl,
+    commission: new Prisma.Decimal(0),
+    entryDate,
+    closeDate: entryDate,
+    timeInPosition: new Prisma.Decimal(0),
+  }
+
+  const trade = await prisma.trade.create({
+    data: tradeData,
+  })
+
+  await invalidateTradeRelatedCaches(userId)
+  return serializeTrade(trade)
 }

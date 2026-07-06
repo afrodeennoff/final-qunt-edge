@@ -1,4 +1,5 @@
 "use client"
+import React from 'react'
 
 import { useEffect, useState, useRef } from "react"
 import {
@@ -120,10 +121,15 @@ async function loadSubscribersData(): Promise<Subscriber[]> {
 
 async function loadNeedsInferenceCount(): Promise<number> {
  const response = await fetch("/api/email/format-name")
+
+ if (!response.ok) {
+   throw new Error(`HTTP ${response.status}: Failed to check inference needed`)
+ }
+
  const data = await response.json()
 
  if (!data.success) {
- throw new Error(data.error ||"Failed to check inference needed")
+   throw new Error(data.error ||"Failed to check inference needed")
  }
 
  return Number(data.needsInference || 0)
@@ -555,9 +561,9 @@ export function SubscriberTable() {
  setLoading(true)
  try {
  setSubscribers(await loadSubscribersData())
- } catch (error) {
+ } catch {
  toast.error("Failed to load subscribers")
- console.error(error)
+
  } finally {
  setLoading(false)
  }
@@ -567,15 +573,27 @@ export function SubscriberTable() {
  const checkInferenceNeeded = async () => {
  try {
  setNeedsInference(await loadNeedsInferenceCount())
- } catch (error) {
- console.error('Failed to check inference needed:', error)
+ } catch {
+
  }
  }
 
  // Fetch subscribers on mount and after revalidation
  useEffect(() => {
- fetchSubscribers()
- checkInferenceNeeded()
+ let isMounted = true
+
+ const loadData = async () => {
+   if (!isMounted) return
+   await fetchSubscribers()
+   if (!isMounted) return
+   await checkInferenceNeeded()
+ }
+
+ loadData()
+
+ return () => {
+   isMounted = false
+ }
  }, [])
 
  const handleCSVUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -588,9 +606,9 @@ export function SubscriberTable() {
  const count = await importSubscriberCsv(file)
  toast.success(`Successfully imported ${count} subscribers`)
  await fetchSubscribers() // Refresh the list
- } catch (error) {
+ } catch {
  toast.error("Failed to import subscribers")
- console.error(error)
+
  } finally {
  setUploading(false)
  // Reset the file input
@@ -603,9 +621,9 @@ export function SubscriberTable() {
  await deleteSubscriberByEmail(email)
  toast.success("Subscriber deleted successfully")
  await fetchSubscribers() // Refresh the list
- } catch (error) {
+ } catch {
  toast.error("Failed to delete subscriber")
- console.error(error)
+
  }
  }
 
@@ -619,9 +637,9 @@ export function SubscriberTable() {
  try {
  await sendTestEmailToSubscriber(email, firstName, content)
  toast.success("Test email sent successfully")
- } catch (error) {
+ } catch {
  toast.error("Failed to send test email")
- console.error(error)
+
  } finally {
  setSendingTest(null)
  }
@@ -638,9 +656,9 @@ export function SubscriberTable() {
  }))
  await fetchSubscribers()
  await checkInferenceNeeded()
- } catch (error) {
+ } catch {
  toast.error(t('newsletter.admin.nameInference.error'))
- console.error(error)
+
  } finally {
  setInferringNames(false)
  }

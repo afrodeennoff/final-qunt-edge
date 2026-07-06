@@ -165,8 +165,16 @@ export async function GET() {
         if (validEmails.length > 0) {
           try {
             const result = await resend.batch.send(validEmails)
-            successCount += result.data?.data.length || 0
-            errorCount += batch.length - (result.data?.data.length || 0)
+            if (result.error) {
+              logSanitized("error", "cron.batch-send-failed", {
+                batchSize: validEmails.length,
+                errorMessage: snippet(result.error.message),
+              })
+              errorCount += validEmails.length
+            } else {
+              successCount += result.data?.data.length || 0
+              errorCount += batch.length - (result.data?.data.length || 0)
+            }
           } catch (error) {
             logSanitized("error", "cron.batch-send-failed", {
               batchSize: validEmails.length,

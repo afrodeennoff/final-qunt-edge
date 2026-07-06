@@ -5,6 +5,7 @@ import { z } from "zod"
 import { requireServiceAuth, toErrorResponse } from "@/server/authz"
 import { parseJson, parseQuery } from "@/app/api/_utils/validate"
 import { createHash } from "node:crypto"
+import { getAiLanguageModel } from "@/lib/ai/client"
 
 // Schema for the AI response
 const nameInferenceSchema = z.object({
@@ -113,7 +114,7 @@ export async function POST(req: NextRequest) {
 
     // Use AI to infer names from emails
     const { output } = await generateText({
-      model: 'openai/gpt-5-mini',
+      model: getAiLanguageModel("editor"),
       output: Output.object({ schema: nameInferenceSchema }),
       prompt: `You are an expert at inferring names from email addresses. Analyze the following email addresses and try to extract first and last names where possible.
 

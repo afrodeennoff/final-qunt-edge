@@ -34,7 +34,7 @@ import {
   Tags,
   Trash2,
 } from 'lucide-react'
-import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { propFirms } from '@/lib/prop-firms-config'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import { AdminPageHeader, AdminSection, AdminStatCard } from '../components/admin-surface'
 import {
@@ -161,7 +161,7 @@ async function loadCoupons() {
       orderBy: [{ isActive: 'desc' }, { expiresAt: 'asc' }, { updatedAt: 'desc' }],
     })
   } catch (error) {
-    console.warn('[Admin Coupons] Failed to load coupons:', error)
+
     return []
   }
 }
@@ -221,7 +221,7 @@ function CouponBadges({
         </Badge>
       ) : null}
       {expired ? (
-        <Badge variant="outline" className="border-border/40 text-muted-foreground">
+        <Badge variant="outline" className="border-transparent text-muted-foreground">
           Expired
         </Badge>
       ) : null}
@@ -258,7 +258,7 @@ function CouponFormGroup({
   children: ReactNode
 }) {
   return (
-    <div className="space-y-4 rounded-xl border border-border/30 bg-background/40 p-4">
+    <div className="space-y-4 rounded-xl border-0 bg-background/40 p-4">
       <div className="space-y-1">
         <p className="text-sm font-semibold text-foreground">{title}</p>
         {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
@@ -280,11 +280,11 @@ function CouponEditCard({
 
   return (
     <Card
-      variant="frost"
+      variant="elevated"
       hover
-      className="overflow-hidden border-border/45 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+      className="overflow-hidden border-0 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
-      <CardHeader size="sm" className="space-y-3 border-b border-border/45">
+      <CardHeader size="sm" className="space-y-3 border-b border-transparent">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -453,7 +453,7 @@ function CouponEditCard({
           </div>
         </form>
 
-        <div className="flex items-center justify-between gap-3 border-t border-border/45 pt-4">
+        <div className="flex items-center justify-between gap-3 border-t border-transparent/45 pt-4">
           <div className="text-xs text-muted-foreground">
             Updated {new Date(coupon.updatedAt).toLocaleString()}
           </div>
@@ -489,11 +489,11 @@ function CouponSuggestionCard({
 }) {
   return (
     <Card
-      variant="frost"
+      variant="elevated"
       hover
-      className="overflow-hidden border-border/45 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+      className="overflow-hidden border-0 bg-card/98 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
     >
-      <CardHeader size="sm" className="space-y-3 border-b border-border/45">
+      <CardHeader size="sm" className="space-y-3 border-b border-transparent">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -979,8 +979,8 @@ export default async function AdminCouponsPage({
         badge={<Badge variant="secondary">{activeCount} active</Badge>}
       >
         {coupons.length === 0 ? (
-          <Card variant="frost" className="border-border/40 bg-background/80">
-            <CardContent size="sm" className="py-10 text-center text-sm text-muted-foreground">
+          <Card variant="elevated" className="border-0 bg-background/80">
+            <CardContent size="sm" className="py-8 text-center text-sm text-muted-foreground">
               No coupons yet. Create the first one above.
             </CardContent>
           </Card>

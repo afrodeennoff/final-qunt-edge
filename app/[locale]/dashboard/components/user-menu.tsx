@@ -301,7 +301,7 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: MenuVarian
  className="gap-3 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
  >
  <span
- className="h-4 w-4 shrink-0 rounded-full ring-1 ring-border/50"
+ className="h-4 w-4 shrink-0 rounded-full ring-1 ring-transparent/50"
  style={{ backgroundColor: THEME_PALETTES[t_name]['--primary'] }}
  />
  <span className="truncate text-sm font-medium">{THEME_LABELS[t_name]}</span>

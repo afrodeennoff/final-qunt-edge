@@ -13,11 +13,11 @@ export function EmotionGauge({ value, onChange }: EmotionGaugeProps) {
  const rotation = percentage * 1.8 - 90
 
  const getEmotionColor = (val: number) => {
- if (val < 20) return"hsl(var(--destructive))"
- if (val < 40) return"hsl(var(--chart-5))"
- if (val < 60) return"hsl(var(--chart-2))"
- if (val < 80) return"hsl(var(--chart-3))"
- return"hsl(var(--primary))"
+ if (val < 20) return"var(--destructive)"
+ if (val < 40) return"var(--chart-5)"
+ if (val < 60) return"var(--chart-2)"
+ if (val < 80) return"var(--chart-3)"
+ return"var(--primary)"
  }
 
  const getEmotionLabel = (val: number) => {
@@ -29,7 +29,7 @@ export function EmotionGauge({ value, onChange }: EmotionGaugeProps) {
  }
 
  return (
- <div className="journal-glass mb-4 rounded-xl border border-border/30 bg-background/0.11 p-4">
+ <div className="mb-4 rounded-xl border-0 bg-card p-4">
  <div>
  <div className="text-center">
  <p className="text-sm font-medium text-foreground">{t("mindset.emotion.title")}</p>
@@ -38,7 +38,7 @@ export function EmotionGauge({ value, onChange }: EmotionGaugeProps) {
 
  <div className="relative flex h-32 items-center justify-center">
  <div className="absolute inset-0 flex items-center justify-center">
- <div className="h-24 w-48 overflow-hidden rounded-t-full border-8 border-border/25" />
+ <div className="h-24 w-48 overflow-hidden rounded-t-full border-8 border-transparent" />
  </div>
 
  <div

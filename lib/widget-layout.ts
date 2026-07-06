@@ -8,8 +8,8 @@ const MOBILE_GRID_BY_SIZE: Record<WidgetSize, { w: number; h: number }> = {
   small: { w: 12, h: 2 },
   "small-long": { w: 12, h: 2 },
   medium: { w: 12, h: 3 },
-  large: { w: 12, h: 4 },
-  "extra-large": { w: 12, h: 4 },
+  large: { w: 12, h: 6 },
+  "extra-large": { w: 12, h: 6 },
 };
 
 const DESKTOP_GRID_BY_SIZE: Record<WidgetSize, { w: number; h: number }> = {
@@ -17,8 +17,8 @@ const DESKTOP_GRID_BY_SIZE: Record<WidgetSize, { w: number; h: number }> = {
   small: { w: 3, h: 4 },
   "small-long": { w: 6, h: 2 },
   medium: { w: 6, h: 4 },
-  large: { w: 6, h: 8 },
-  "extra-large": { w: 12, h: 8 },
+  large: { w: 6, h: 10 },
+  "extra-large": { w: 12, h: 10 },
 };
 
 export const FALLBACK_WIDGET_TYPE: WidgetType = "statisticsWidget";

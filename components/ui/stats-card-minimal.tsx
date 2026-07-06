@@ -27,14 +27,14 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
     ...props
   }, ref) => {
     const trendIcon = {
-      up: <TrendingUp className="h-3 w-3 text-green-500" />,
-      down: <TrendingDown className="h-3 w-3 text-red-500" />,
+      up: <TrendingUp className="h-3 w-3 text-success" />,
+      down: <TrendingDown className="h-3 w-3 text-destructive" />,
       neutral: <Minus className="h-3 w-3 text-muted-foreground" />,
     }
 
     const trendColor = {
-      up: 'text-green-500',
-      down: 'text-red-500',
+      up: 'text-success',
+      down: 'text-destructive',
       neutral: 'text-muted-foreground',
     }
 
@@ -72,7 +72,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
       <div
         ref={ref}
         className={cn(
-          'rounded-lg border border-border/20 bg-card shadow-sm transition-all duration-[200ms] ease-out',
+          'rounded-lg border-0 bg-card shadow-sm transition-[box-shadow,background-color] duration-[200ms] ease-out',
           'hover:shadow-md hover:-translate-y-0.5',
           sizeClasses[size],
           className

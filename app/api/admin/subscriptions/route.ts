@@ -33,7 +33,7 @@ const patchExtendTrialSchema = z.object({
 
 const patchSimpleActionSchema = z.object({
   subscriptionId: z.string().min(1),
-  action: z.enum(['grantFreeAccess', 'cancel', 'reactivate']),
+  action: z.enum(['grantFreeAccess', 'grantProTrial', 'cancel', 'reactivate']),
 })
 
 const patchBodySchema = z.union([
@@ -96,7 +96,7 @@ export async function GET(req: NextRequest) {
 
     const userIds = Array.from(new Set(subscriptions.map((sub) => sub.userId)))
 
-    const [transactionStats, invoiceStats, refundStats] = await Promise.all([
+    const [transactionStats, invoiceStats, refundStats, accountCounts, tradeCounts] = await Promise.all([
       prisma.paymentTransaction.groupBy({
         by: ['userId'],
         where: {
@@ -120,6 +120,16 @@ export async function GET(req: NextRequest) {
         },
         _count: { id: true },
       }),
+      prisma.account.groupBy({
+        by: ['userId'],
+        where: { userId: { in: userIds } },
+        _count: { id: true },
+      }),
+      prisma.trade.groupBy({
+        by: ['userId'],
+        where: { userId: { in: userIds } },
+        _count: { id: true },
+      }),
     ])
 
     const transactionByUser = new Map(
@@ -131,6 +141,12 @@ export async function GET(req: NextRequest) {
     const refundsByUser = new Map(
       refundStats.map((row) => [row.userId, row._count.id])
     )
+    const accountsByUser = new Map(
+      accountCounts.map((row) => [row.userId, row._count.id])
+    )
+    const tradesByUser = new Map(
+      tradeCounts.map((row) => [row.userId, row._count.id])
+    )
 
     const subscriptionsWithStats = subscriptions.map((sub) => {
       const tx = transactionByUser.get(sub.userId)
@@ -140,6 +156,8 @@ export async function GET(req: NextRequest) {
         transactionCount: tx?._count.id || 0,
         invoiceCount: invoicesByUser.get(sub.userId) || 0,
         refundCount: refundsByUser.get(sub.userId) || 0,
+        accountCount: accountsByUser.get(sub.userId) || 0,
+        tradeCount: tradesByUser.get(sub.userId) || 0,
       }
     })
 
@@ -218,6 +236,20 @@ export async function PATCH(req: NextRequest) {
             status: 'PENDING' as const,
             trialEndsAt: newTrialEnd,
             endDate: newTrialEnd,
+          },
+        })
+        break
+
+      case 'grantProTrial':
+        const trialEnd = new Date()
+        trialEnd.setDate(trialEnd.getDate() + 14)
+        updatedSubscription = await prisma.subscription.update({
+          where: { id: subscriptionId },
+          data: {
+            status: 'PENDING' as const,
+            plan: 'PLUS',
+            trialEndsAt: trialEnd,
+            endDate: trialEnd,
           },
         })
         break

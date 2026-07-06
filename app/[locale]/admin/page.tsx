@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { AdminDashboard } from '@/app/[locale]/admin/components/dashboard/admin-dashboard';
 import { assertAdminAccess } from '@/server/authz';
 import { getSiteOrigin } from '@/lib/site-url';
+import { Skeleton } from '@/components/ui/skeleton';
 const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/admin";
 
@@ -40,10 +41,31 @@ export async function generateMetadata({
   };
 }
 
+const adminFallback = (
+  <div className="space-y-6">
+    <div className="flex items-center justify-between">
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-4 w-72" />
+      </div>
+    </div>
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <Skeleton key={i} className="h-28 w-full rounded-xl" />
+      ))}
+    </div>
+    <Skeleton className="h-64 w-full rounded-xl" />
+    <div className="grid gap-4 xl:grid-cols-2">
+      <Skeleton className="h-48 w-full rounded-xl" />
+      <Skeleton className="h-48 w-full rounded-xl" />
+    </div>
+  </div>
+)
+
 export default async function AdminPage() {
   await assertAdminAccess()
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={adminFallback}>
       <AdminDashboard />
     </Suspense>
   );
