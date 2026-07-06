@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { getDatabaseUserId } from '@/server/auth'
 import { MemberRole, Prisma } from '@/prisma/generated/prisma'
 import { ensureTeamMembership } from '@/server/team-membership'
+import { requireFeature } from '@/server/plan-guard'
+import { Feature } from '@/server/plans'
 import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { logger } from '@/lib/logger'
 
@@ -18,6 +20,9 @@ function invalidateTeamsCache(userIds: string[]): void {
 
 export async function createTeam(userId: string, name: string, organizationId?: string) {
   try {
+    await requireFeature(Feature.CREATE_TEAM).catch(() => {
+      throw new Error('Creating teams is a Pro feature. Upgrade to unlock.')
+    })
     const team = await prisma.$transaction(async (tx) => {
       const createdTeam = await tx.team.create({
         data: {

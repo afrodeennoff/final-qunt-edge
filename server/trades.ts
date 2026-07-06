@@ -12,6 +12,7 @@ import { logger } from '@/lib/logger'
 import { z } from 'zod'
 import { invalidateNamespace } from '@/lib/cache/cache-service'
 import { invalidateTradeDataCaches, invalidateAccountRelatedCaches } from '@/lib/cache/cache-invalidation'
+import { getDataRetentionDays } from './usage-limits'
 
 const TRADE_PAGE_CACHE_LIFETIME = {
   stale: 3_600,
@@ -607,6 +608,12 @@ async function loadTradesPage(
   computeStats: boolean
 ): Promise<PaginatedTrades & { statistics?: PrecomputedStats }> {
   const where: Prisma.TradeWhereInput = { userId: uid }
+  const retentionDays = await getDataRetentionDays(uid)
+  if (retentionDays !== null) {
+    const cutoff = new Date()
+    cutoff.setDate(cutoff.getDate() - retentionDays)
+    where.entryDate = { gte: cutoff }
+  }
 
   const [trades, total] = await Promise.all([
     prisma.trade.findMany({

@@ -7,6 +7,7 @@
 import { prisma } from '@/lib/prisma'
 import type { McpAuthContext } from '../../mcp-auth'
 import { requireUserId, assertNoCrossUserAccess } from '../security'
+import { getDataRetentionDays } from '@/server/usage-limits'
 
 // Trade handler stubs — extraction in progress per plan Tasks 6-12
 // Full extraction follows the exact getAccountHealthHandler pattern
@@ -16,7 +17,13 @@ export async function listTradesHandler(ctx: McpAuthContext, args: Record<string
   const limit = Math.min(Math.max(Number(args.limit) || 50, 1), 200)
   const offset = Math.max(Number(args.offset) || 0, 0)
   const where: Record<string, unknown> = { userId }
-  if (args.startDate) where.entryDate = { gte: new Date(args.startDate as string) }
+  const retentionDays = await getDataRetentionDays(userId)
+  if (retentionDays !== null) {
+    const cutoff = new Date()
+    cutoff.setDate(cutoff.getDate() - retentionDays)
+    where.entryDate = { gte: cutoff }
+  }
+  if (args.startDate) where.entryDate = { ...((where.entryDate as object) || {}), gte: new Date(args.startDate as string) }
   if (args.endDate) where.entryDate = { ...((where.entryDate as object) || {}), lte: new Date(args.endDate as string) }
   // Support account filter by id (uuid) or number; always verify ownership to prevent any cross-user
   const acctId = typeof args.accountId === 'string' && args.accountId ? args.accountId : undefined
@@ -37,7 +44,13 @@ export async function getPerformanceSummaryHandler(ctx: McpAuthContext, args: Re
   const requestedUserId = typeof args.userId === 'string' ? args.userId : undefined
   assertNoCrossUserAccess(requestedUserId, userId)
   const where: Record<string, unknown> = { userId }
-  if (args.startDate) where.entryDate = { gte: new Date(args.startDate as string) }
+  const retentionDays = await getDataRetentionDays(userId)
+  if (retentionDays !== null) {
+    const cutoff = new Date()
+    cutoff.setDate(cutoff.getDate() - retentionDays)
+    where.entryDate = { gte: cutoff }
+  }
+  if (args.startDate) where.entryDate = { ...((where.entryDate as object) || {}), gte: new Date(args.startDate as string) }
   if (args.endDate) where.entryDate = { ...((where.entryDate as object) || {}), lte: new Date(args.endDate as string) }
   // Account filter with ownership verification
   const acctId = typeof args.accountId === 'string' && args.accountId ? args.accountId : undefined
@@ -70,6 +83,12 @@ export async function getRiskMetricsHandler(ctx: McpAuthContext, args: Record<st
   const requestedUserId = typeof args.userId === 'string' ? args.userId : undefined
   assertNoCrossUserAccess(requestedUserId, userId)
   const where: Record<string, unknown> = { userId }
+  const retentionDays = await getDataRetentionDays(userId)
+  if (retentionDays !== null) {
+    const cutoff = new Date()
+    cutoff.setDate(cutoff.getDate() - retentionDays)
+    where.entryDate = { gte: cutoff }
+  }
   // Support account filter; verify ownership (no cross-user even on filter)
   const acctId = typeof args.accountId === 'string' && args.accountId ? args.accountId : undefined
   const acctNum = typeof args.accountNumber === 'string' && args.accountNumber ? args.accountNumber : undefined

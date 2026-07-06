@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/prisma/generated/prisma'
 import { getDatabaseUserId } from './auth'
+import { getDataRetentionDays } from './usage-limits'
 import type {
   StatisticsResult, TickerStat, DailyStat, SetupStat, WeekdayStat,
 } from '@/app/[locale]/dashboard/statistics/types'
@@ -33,7 +34,9 @@ export async function getStatisticsAction(
 ): Promise<StatisticsResult> {
   const userId = await getDatabaseUserId()
 
-  const effectivePeriod = periodDays && periodDays > 0 ? periodDays : 365
+  const requestedPeriod = periodDays && periodDays > 0 ? periodDays : 365
+  const retentionDays = await getDataRetentionDays(userId)
+  const effectivePeriod = retentionDays !== null ? Math.min(requestedPeriod, retentionDays) : requestedPeriod
   const cutoff = new Date(Date.now() - effectivePeriod * 86400000)
 
   const baseWhere: Prisma.TradeWhereInput = { userId, entryDate: { gte: cutoff } }

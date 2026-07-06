@@ -6,6 +6,7 @@ import { computeMetricsForAccounts } from '@/lib/account-metrics'
 import { Account, Trade as NormalizedTrade, TradeInput } from '@/lib/data-types'
 import { decimalToNumber } from '@/lib/trade-types'
 import { prisma } from '@/lib/prisma'
+import { checkAccountLimit } from '@/server/usage-limits'
 import {
   invalidateAccountRelatedCaches,
   invalidateAllUserCaches,
@@ -364,6 +365,10 @@ export async function setupAccountAction(account: Account): Promise<Account> {
       }
     })
   } else {
+    const limitCheck = await checkAccountLimit(userId)
+    if (!limitCheck.allowed) {
+      throw new Error(`Account limit reached (${limitCheck.current}/${limitCheck.limit}). Upgrade to Pro for unlimited accounts.`)
+    }
     savedAccount = await prisma.account.create({
       data: {
         ...accountDataForCreate,
@@ -654,6 +659,10 @@ export async function checkAndResetAccountsAction() {
 export async function createAccountAction(accountNumber: string) {
   try {
     const userId = await getDatabaseUserId()
+    const limitCheck = await checkAccountLimit(userId)
+    if (!limitCheck.allowed) {
+      throw new Error(`Account limit reached (${limitCheck.current}/${limitCheck.limit}). Upgrade to Pro for unlimited accounts.`)
+    }
     const account = await prisma.account.create({
       data: {
         number: accountNumber,

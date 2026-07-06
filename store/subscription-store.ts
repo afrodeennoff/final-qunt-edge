@@ -1,31 +1,43 @@
 import { create } from 'zustand'
 import { SubscriptionWithPrice } from '@/server/billing'
 
+export interface PlanLimitsResponse {
+  plan: string | null
+  accounts: { used: number; max: number | null }
+  trades: { used: number; max: number | null }
+  screenshots: { used: number; max: number | null }
+  dataRetentionDays: number | null
+  maxTeamMembers: number | null
+  features: string[]
+}
+
 interface SubscriptionStore {
-  // Subscription data (detailed billing info)
   subscription: SubscriptionWithPrice | null
+  limits: PlanLimitsResponse | null
   isLoading: boolean
   error: string | null
 
-  // Actions
   setSubscription: (subscription: SubscriptionWithPrice | null) => void
+  setLimits: (limits: PlanLimitsResponse | null) => void
   setIsLoading: (loading: boolean) => void
   setError: (error: string | null) => void
   clearSubscription: () => void
   refreshSubscription: () => Promise<void>
+  refreshLimits: () => Promise<void>
 }
 
 export const useSubscriptionStore = create<SubscriptionStore>()((set) => ({
-  // Initial state
   subscription: null,
+  limits: null,
   isLoading: true,
   error: null,
 
-  // Actions
   setSubscription: (subscription) => set({
     subscription: subscription,
     error: null
   }),
+
+  setLimits: (limits) => set({ limits }),
 
   setIsLoading: (loading) => set({ isLoading: loading }),
 
@@ -33,6 +45,7 @@ export const useSubscriptionStore = create<SubscriptionStore>()((set) => ({
 
   clearSubscription: () => set({
     subscription: null,
+    limits: null,
     error: null
   }),
 
@@ -52,6 +65,17 @@ export const useSubscriptionStore = create<SubscriptionStore>()((set) => ({
       });
     } finally {
       set({ isLoading: false });
+    }
+  },
+
+  refreshLimits: async () => {
+    try {
+      const res = await fetch('/api/user/limits');
+      if (!res.ok) throw new Error('Failed to fetch limits');
+      const limits = await res.json();
+      set({ limits });
+    } catch {
+      // silently fail — limits are non-critical
     }
   }
 }))

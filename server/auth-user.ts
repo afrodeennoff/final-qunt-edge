@@ -311,6 +311,22 @@ export async function ensureUserInDatabase(
         await ensureDashboardLayoutBackfill(newUser.id)
       }
 
+      // Auto-create FREE subscription record for new users
+      try {
+        await prisma.subscription.upsert({
+          where: { userId: newUser.id },
+          update: {},
+          create: {
+            userId: newUser.id,
+            email: user.email || '',
+            plan: 'FREE',
+            status: 'ACTIVE',
+          },
+        })
+      } catch (subError) {
+        logger.warn('[ensureUserInDatabase] Failed to create FREE subscription', { error: subError })
+      }
+
       return newUser;
     } catch (createError: unknown) {
       if (isPrismaSchemaMismatchError(createError)) {
