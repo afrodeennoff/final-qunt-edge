@@ -39,34 +39,34 @@ export async function guardAiRequest(
     return { ok: true, userId: user.id, email: user.email }
   }
 
-  const entitlement = await canAccessAiFeature(user.id, feature)
-  if (!entitlement.allowed) {
-    return {
-      ok: false,
-      response: apiError('FORBIDDEN', entitlement.reason ?? 'Feature not available for current plan', 403, {
-        plan: entitlement.plan,
-        feature,
-      }),
-    }
-  }
-
-  try {
-    const budget = await assertWithinAiBudget(user.id, entitlement.isActive)
-    if (!budget.allowed) {
+  // In dev/test, all AI features are free — skip entitlement + budget checks
+  if (process.env.NODE_ENV === 'production') {
+    const entitlement = await canAccessAiFeature(user.id, feature)
+    if (!entitlement.allowed) {
       return {
         ok: false,
-        response: apiError('BUDGET_EXCEEDED', 'Monthly AI budget exceeded for your plan.', 402, {
-          feature,
+        response: apiError('FORBIDDEN', entitlement.reason ?? 'Feature not available for current plan', 403, {
           plan: entitlement.plan,
-          limit: budget.limit,
-          used: budget.used,
-          remaining: budget.remaining,
+          feature,
         }),
       }
     }
-  } catch {
-    // In test/dev fallback, do not block core route behavior when budget backing store is unavailable.
-    if (process.env.NODE_ENV === 'production') {
+
+    try {
+      const budget = await assertWithinAiBudget(user.id, entitlement.isActive)
+      if (!budget.allowed) {
+        return {
+          ok: false,
+          response: apiError('BUDGET_EXCEEDED', 'Monthly AI budget exceeded for your plan.', 402, {
+            feature,
+            plan: entitlement.plan,
+            limit: budget.limit,
+            used: budget.used,
+            remaining: budget.remaining,
+          }),
+        }
+      }
+    } catch {
       return {
         ok: false,
         response: apiError('SERVICE_UNAVAILABLE', 'AI budget service temporarily unavailable.', 503),

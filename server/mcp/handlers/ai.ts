@@ -31,19 +31,22 @@ async function guardMcpAiRequest(ctx: McpAuthContext, feature: 'chat' | 'analysi
     return { userId, authUserId }
   }
 
-  const mappedFeature = feature === 'analyze-trade' ? 'analysis' : feature
-  const entitlement = await canAccessAiFeature(authUserId, mappedFeature)
-  if (!entitlement.allowed) {
-    throw new Error(entitlement.reason || 'AI feature not available for current plan')
-  }
-
-  try {
-    const budget = await assertWithinAiBudget(userId, entitlement.isActive)
-    if (!budget.allowed) {
-      throw new Error(`Monthly AI budget exceeded. Limit: ${budget.limit}, used: ${budget.used}`)
+  // In dev/test, all AI features are free — skip entitlement + budget checks
+  if (process.env.NODE_ENV === 'production') {
+    const mappedFeature = feature === 'analyze-trade' ? 'analysis' : feature
+    const entitlement = await canAccessAiFeature(authUserId, mappedFeature)
+    if (!entitlement.allowed) {
+      throw new Error(entitlement.reason || 'AI feature not available for current plan')
     }
-  } catch (e) {
-    throw e
+
+    try {
+      const budget = await assertWithinAiBudget(userId, entitlement.isActive)
+      if (!budget.allowed) {
+        throw new Error(`Monthly AI budget exceeded. Limit: ${budget.limit}, used: ${budget.used}`)
+      }
+    } catch (e) {
+      throw e
+    }
   }
 
   const limiter = feature === 'chat' ? mcpChatRateLimit : feature === 'analyze-trade' ? mcpAnalyzeTradeRateLimit : mcpAnalysisRateLimit
