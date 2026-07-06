@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 import { getTraderFullData, type TraderFullData } from '../actions/user'
 import { DashboardStatCard } from "@/components/ui/dashboard-stat-card"
 import { unifiedInsetPanelClassName, unifiedSectionPanelClassName } from '@/components/layout/unified-page-recipes'
@@ -40,6 +40,15 @@ function buildDayPnl(trades: Trade[]): Map<string, number> {
   for (const t of trades) {
     const key = format(parseISO(t.closeDate), 'yyyy-MM-dd')
     map.set(key, (map.get(key) ?? 0) + t.pnl - t.commission)
+  }
+  return map
+}
+
+function buildDayTradeCount(trades: Trade[]): Map<string, number> {
+  const map = new Map<string, number>()
+  for (const t of trades) {
+    const key = format(parseISO(t.closeDate), 'yyyy-MM-dd')
+    map.set(key, (map.get(key) ?? 0) + 1)
   }
   return map
 }
@@ -87,6 +96,7 @@ function computeStats(trades: Trade[]) {
   const avgLoss = losses.length > 0 ? -(grossLoss / losses.length) : 0
 
   const dayPnl = buildDayPnl(trades)
+  const dayTradesCount = buildDayTradeCount(trades)
   const dayValues = [...dayPnl.values()]
   const bestDay = dayValues.length ? Math.max(...dayValues) : 0
   const worstDay = dayValues.length ? Math.min(...dayValues) : 0
@@ -114,12 +124,12 @@ function computeStats(trades: Trade[]) {
     bestDay, worstDay,
     maxConsecWins, maxConsecLosses,
     avgHoldingMinutes,
-    dayPnl, dayValues,
+    dayPnl, dayTradesCount, dayValues,
     wins: wins.length, losses: losses.length,
   }
 }
 
-function CalendarSection({ dayPnl }: { dayPnl: Map<string, number> }) {
+const CalendarSection = memo(function CalendarSection({ dayPnl, dayTradesCount }: { dayPnl: Map<string, number>; dayTradesCount: Map<string, number> }) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const monthStart = startOfMonth(currentMonth)
   const monthEnd = endOfMonth(currentMonth)
@@ -134,6 +144,8 @@ function CalendarSection({ dayPnl }: { dayPnl: Map<string, number> }) {
   const pos = monthVals.filter(v => v > 0).length
   const neg = monthVals.filter(v => v < 0).length
   const total = weekTotals.reduce((s, v) => s + v, 0)
+  const monthTradeDays = days.filter(d => isSameMonth(d, currentMonth))
+  const totalTradesInMonth = monthTradeDays.reduce((s, d) => s + (dayTradesCount.get(format(d, 'yyyy-MM-dd')) ?? 0), 0)
 
   const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
@@ -164,13 +176,14 @@ function CalendarSection({ dayPnl }: { dayPnl: Map<string, number> }) {
           {week.map((d) => {
             const key = format(d, 'yyyy-MM-dd')
             const val = dayPnl.get(key)
+            const count = dayTradesCount.get(key) ?? 0
             const inMonth = isSameMonth(d, currentMonth)
             const today = isToday(d)
             return (
               <div
                 key={key}
                 className={cn(
-                  'flex items-center justify-center h-9 w-full text-[11px] font-semibold rounded-sm transition-colors',
+                  'relative flex items-center justify-center h-9 w-full text-[11px] font-semibold rounded-sm transition-colors',
                   !inMonth && 'text-transparent',
                   today && 'ring-1 ring-primary/40',
                   val != null && val > 0 && 'bg-semantic-success-bg text-semantic-success',
@@ -178,9 +191,14 @@ function CalendarSection({ dayPnl }: { dayPnl: Map<string, number> }) {
                   val == null && inMonth && 'bg-muted/10 text-muted-foreground/30',
                   val === 0 && inMonth && 'bg-muted/10 text-muted-foreground/30',
                 )}
-                title={val != null ? `${key}: ${fmt(val)}` : key}
+                title={val != null ? `${key}: ${fmt(val)} (${count} trade${count !== 1 ? 's' : ''})` : key}
               >
-                {inMonth ? format(d, 'd') : ''}
+                {inMonth ? (
+                  <div className="flex flex-col items-center leading-none">
+                    <span>{format(d, 'd')}</span>
+                    {count > 0 && <span className="text-[7px] font-bold text-muted-foreground/50 leading-none">{count}</span>}
+                  </div>
+                ) : ''}
               </div>
             )
           })}
@@ -196,15 +214,16 @@ function CalendarSection({ dayPnl }: { dayPnl: Map<string, number> }) {
       <div className="mt-3 flex items-center gap-4 text-[10px] text-muted-foreground pt-2 border-t border-border/10">
         <span>{pos} winning days</span>
         <span>{neg} losing days</span>
+        <span>{totalTradesInMonth} trades</span>
         <span className={total > 0 ? 'text-semantic-success' : total < 0 ? 'text-semantic-error' : ''}>
           Total: {fmt(total)}
         </span>
       </div>
     </div>
   )
-}
+})
 
-function EquityChart({ data }: { data: { date: string; pnl: number; cum: number }[] }) {
+const EquityChart = memo(function EquityChart({ data }: { data: { date: string; pnl: number; cum: number }[] }) {
   if (!data.length) return null
   return (
     <div className={cn(unifiedInsetPanelClassName, 'p-4 sm:p-5')}>
@@ -230,15 +249,15 @@ function EquityChart({ data }: { data: { date: string; pnl: number; cum: number 
               formatter={(value: number) => [fmt(value), '']}
             />
             <ReferenceLine y={0} stroke="var(--border)" opacity={0.4} />
-            <Area type="monotone" dataKey="cum" stroke="var(--primary)" strokeWidth={2} fill="url(#eqGrad)" />
+            <Area type="monotone" dataKey="cum" stroke="var(--primary)" strokeWidth={2} fill="url(#eqGrad)" isAnimationActive={false} />
           </AreaChart>
         </ResponsiveContainer>
       </div>
     </div>
   )
-}
+})
 
-function RecentTrades({ trades }: { trades: Trade[] }) {
+const RecentTrades = memo(function RecentTrades({ trades }: { trades: Trade[] }) {
   const recent = trades.slice(0, 15)
   return (
     <div className={cn(unifiedInsetPanelClassName, 'p-4 sm:p-5')}>
@@ -294,9 +313,9 @@ function RecentTrades({ trades }: { trades: Trade[] }) {
       </div>
     </div>
   )
-}
+})
 
-function MonthlyBreakdown({ trades }: { trades: Trade[] }) {
+const MonthlyBreakdown = memo(function MonthlyBreakdown({ trades }: { trades: Trade[] }) {
   const months = useMemo(() => buildMonthlyBreakdown(trades), [trades])
   if (!months.length) return null
   return (
@@ -325,7 +344,7 @@ function MonthlyBreakdown({ trades }: { trades: Trade[] }) {
       </div>
     </div>
   )
-}
+})
 
 export function TraderDetailClient({ userId }: { userId: string }) {
   const [data, setData] = useState<TraderFullData | null>(null)
@@ -457,10 +476,42 @@ export function TraderDetailClient({ userId }: { userId: string }) {
 
       {/* Mentor Insight */}
       <div className={cn(unifiedInsetPanelClassName, 'p-4 sm:p-5')}>
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-center gap-2 mb-3">
           <Award className="h-4 w-4 text-primary" />
           <span className="text-xs font-black uppercase tracking-[0.12em] text-muted-foreground">Mentor Insight</span>
         </div>
+
+        {/* Score Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+          <div className="rounded-lg bg-muted/10 p-2 text-center">
+            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Win Rate</div>
+            <div className={cn('text-sm font-bold', stats.winRate >= 50 ? 'text-semantic-success' : stats.winRate >= 35 ? 'text-warning' : 'text-semantic-error')}>
+              {stats.winRate.toFixed(1)}%
+            </div>
+          </div>
+          <div className="rounded-lg bg-muted/10 p-2 text-center">
+            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Profit Factor</div>
+            <div className={cn('text-sm font-bold', stats.profitFactor >= 1.5 ? 'text-semantic-success' : stats.profitFactor >= 1 ? 'text-warning' : 'text-semantic-error')}>
+              {stats.profitFactor.toFixed(2)}
+            </div>
+          </div>
+          <div className="rounded-lg bg-muted/10 p-2 text-center">
+            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Avg R</div>
+            <div className={cn('text-sm font-bold', stats.avgRRR != null && stats.avgRRR >= 1.5 ? 'text-semantic-success' : stats.avgRRR != null && stats.avgRRR >= 0.5 ? 'text-warning' : 'text-muted-foreground/60')}>
+              {stats.avgRRR != null ? `${stats.avgRRR.toFixed(2)}R` : '-'}
+            </div>
+          </div>
+          <div className="rounded-lg bg-muted/10 p-2 text-center">
+            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Consistency</div>
+            <div className="text-sm font-bold flex items-center justify-center gap-1">
+              <span className="text-semantic-success">{stats.maxConsecWins}W</span>
+              <span className="text-muted-foreground/30">/</span>
+              <span className="text-semantic-error">{stats.maxConsecLosses}L</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Assessment */}
         <p className="text-sm leading-relaxed text-foreground/85">
           {stats.totalTrades === 0 ? 'No activity yet.' :
             stats.winRate < 35 && stats.netPnl < 0 ?
@@ -474,11 +525,32 @@ export function TraderDetailClient({ userId }: { userId: string }) {
               `Underwater by ${fmt(stats.netPnl)} across ${stats.totalTrades} trades. Avg R multiple: ${stats.avgRRR != null ? stats.avgRRR.toFixed(2) : 'N/A'}. Review trade plans and risk rules.`
           }
         </p>
+
+        {/* Recommendation */}
+        <div className="mt-3 flex items-start gap-2.5 rounded-lg bg-muted/10 p-3">
+          <Target className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+          <div>
+            <div className="text-[10px] font-bold uppercase tracking-[0.1em] text-foreground/70 mb-1">Recommendation</div>
+            <p className="text-[12px] leading-relaxed text-muted-foreground">
+              {stats.totalTrades === 0 ? 'Start trading to receive personalized insights.' :
+                stats.winRate < 35 && stats.netPnl < 0 ?
+                  `Reduce position size by 50% until you reach 40%+ win rate. Set a max daily loss limit of ${fmt(Math.abs(stats.avgLoss) * 2)}. Review every loss — tag them with a reason.` :
+                stats.maxConsecLosses > 5 ?
+                  `Pause trading for 48 hours. When returning, trade 0.25x normal size for 20 trades. Identify what changed — market regime, time of day, or emotional state?` :
+                stats.netPnl > 0 && stats.avgRRR != null && stats.avgRRR > 1.5 ?
+                  `Your edge is confirmed — scale up gradually by increasing size 10% per 20-trade block. Track which setups produce the best R multiple and double down on those.` :
+                stats.netPnl > 0 ?
+                  `You're profitable but room to improve. Aim for an avg R multiple above 1.0 by letting winners run longer. Review your exits — are you cutting winning trades too early?` :
+                  `Stop trading live size. Switch to demo or micro size until you achieve breakeven over 30 trades. Focus on one setup only and master entries before increasing size.`
+              }
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Two-column layout: Calendar + Equity */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <CalendarSection dayPnl={stats.dayPnl} />
+        <CalendarSection dayPnl={stats.dayPnl} dayTradesCount={stats.dayTradesCount} />
         <EquityChart data={equity} />
       </div>
 

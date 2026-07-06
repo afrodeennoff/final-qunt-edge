@@ -18,9 +18,10 @@ const ROOT_DESCRIPTION =
 const fontDmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-dm-sans',
-  weight: ['400', '600'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
   preload: true,
+  adjustFontFallback: true,
   fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
 })
 

@@ -2332,6 +2332,134 @@
     background-clip: padding-box;
     -webkit-mask-image: none;
   }
+
+  /* ── OVERSCROLL & TOUCH PERFORMANCE ── */
+  html {
+    overscroll-behavior: none;
+  }
+
+  body {
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Smooth touch momentum for all scrollable areas */
+  .overflow-auto,
+  .overflow-x-auto,
+  .overflow-y-auto,
+  .overflow-scroll,
+  [data-scrollable='true'],
+  [role='region'][aria-label*='scroll'],
+  .scroll-smooth-native {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* GPU-accelerated scrolling on mobile */
+  @media (hover: none) and (pointer: coarse) {
+    .overflow-auto,
+    .overflow-x-auto,
+    .overflow-y-auto,
+    .overflow-scroll {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
+    /* Prevent sticky hover on touch devices */
+    button:not(:active),
+    a:not(:active),
+    [role='button']:not(:active) {
+      -webkit-tap-highlight-color: transparent;
+    }
+  }
+
+  /* Consistent content-visibility for scrollable sections */
+  section:not([data-no-cv]) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+  }
+}
+
+/* Consolidated reduced-motion — single source of truth */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-page-enter,
+  .animate-page-exit,
+  .animate-binance-reveal,
+  .animate-content-reveal,
+  .animate-shimmer-sweep,
+  .animate-fade-up-smooth,
+  .animate-scale-reveal,
+  .widget-enter-smooth,
+  .hero-entrance,
+  .auth-entrance-1,
+  .auth-entrance-2,
+  .animate-in-fade,
+  .animate-in-slide-up,
+  .animate-in-slide-down,
+  .animate-in-slide-left,
+  .animate-in-slide-right,
+  .animate-in-scale,
+  .animate-in-bounce,
+  .animate-out-fade,
+  .animate-out-slide-up,
+  .animate-out-slide-down,
+  .animate-out-scale,
+  .shimmer-gradient,
+  .pulse-soft-custom,
+  .animate-fade-in,
+  .animate-fade-in-delayed,
+  .animate-fade-in-delayed-2,
+  .animate-fade-in-delayed-3,
+  .animate-slide-up,
+  .animate-scale-in,
+  .animate-float,
+  .animate-shimmer,
+  .terminal-cursor::after {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .hover-lift, .hover-glow, .hover-scale, .hover-brighten,
+  .hover-binance, .hover-binance-scale, .hover-binance-row,
+  .hover-spring, .hover-spring-subtle {
+    transition: none !important;
+  }
+
+  .hover-lift:hover, .hover-scale:hover, .hover-binance-scale:hover,
+  .hover-spring:hover, .hover-spring-subtle:hover,
+  .hover-binance:hover, .hover-binance-row:hover {
+    transform: none !important;
+    background-color: inherit !important;
+  }
+
+  .hover-glow:hover { box-shadow: none !important; }
+  .hover-brighten:hover { filter: none !important; }
+
+  .transition-binance, .transition-binance-fast, .transition-binance-subtle,
+  .transition-butter, .transition-elastic, .transition-butter-fast,
+  .transition-butter-slow, .transition-spring, .transition-spring-fast,
+  .transition-spring-slow, .transition-bounce, .transition-bounce-subtle,
+  .transition-bounce-elastic, .transition-smooth, .transition-smooth-fast,
+  .transition-smooth-slow {
+    transition-duration: 0.01ms !important;
+  }
+
+  html { scroll-behavior: auto !important; }
+  .animate-scroll { animation: none !important; }
+  .stagger-children > *, .stagger-reveal-fast > *,
+  .stagger-reveal > * { animation: none !important; opacity: 1 !important; }
+  .stagger-item { animation: none !important; opacity: 1 !important; }
+  .animate-float-gentle, .animate-glow-breathe,
+  .marketing-pulse, .animate-shimmer-sweep,
+  section { content-visibility: visible !important; }
 }
 
 /* ===== BINANCE TRADING TERMINAL MOTION (minimal, fast, professional) ===== */

@@ -6,7 +6,7 @@ import { StatsTable, type StatsTableRow } from './stats-table'
 import type { SetupStat, WeekdayStat, TickerStat } from '../types'
 import { useUserStore } from '@/store/user-store'
 import { cn } from '@/lib/utils'
-import { ChevronDown, X, Wallet, Download, Eye, EyeOff } from 'lucide-react'
+import { ChevronDown, X, Wallet, Download, Eye, EyeOff, Award, Target } from 'lucide-react'
 import { useDashboardStats } from '@/context/data-provider'
 import { getJournalTradesAction } from '@/server/journal'
 import {
@@ -428,6 +428,74 @@ export default function StatisticsClient() {
         </div>
       </div>
 
+      {/* Mentor Insight */}
+      <div className={cn(unifiedSectionPanelClassName, 'p-5')}>
+        <div className="flex items-center gap-2 mb-3">
+          <Award className="h-4 w-4 text-primary" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50">Mentor Insight</span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+          <div className="rounded-lg bg-muted/20 p-2.5 text-center">
+            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Win Rate</div>
+            <div className={cn('text-sm font-bold', (data.grandWinRate ?? 0) >= 50 ? 'text-success' : (data.grandWinRate ?? 0) >= 35 ? 'text-warning' : 'text-destructive')}>
+              {(data.grandWinRate ?? 0).toFixed(1)}%
+            </div>
+          </div>
+          <div className="rounded-lg bg-muted/20 p-2.5 text-center">
+            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Profit Factor</div>
+            <div className={cn('text-sm font-bold', (data.profitFactor ?? 0) >= 1.5 ? 'text-success' : (data.profitFactor ?? 0) >= 1 ? 'text-warning' : 'text-destructive')}>
+              {(data.profitFactor ?? 0).toFixed(2)}
+            </div>
+          </div>
+          <div className="rounded-lg bg-muted/20 p-2.5 text-center">
+            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Avg R</div>
+            <div className={cn('text-sm font-bold', (data.avgRR ?? 0) >= 1.5 ? 'text-success' : (data.avgRR ?? 0) >= 0.5 ? 'text-warning' : 'text-muted-foreground/60')}>
+              {(data.avgRR ?? 0).toFixed(2)}R
+            </div>
+          </div>
+          <div className="rounded-lg bg-muted/20 p-2.5 text-center">
+            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Consistency</div>
+            <div className="text-sm font-bold flex items-center justify-center gap-1">
+              <span className="text-success">{(data.maxConsecWins ?? 0)}W</span>
+              <span className="text-muted-foreground/30">/</span>
+              <span className="text-destructive">{(data.maxConsecLosses ?? 0)}L</span>
+            </div>
+          </div>
+        </div>
+        <p className="text-sm leading-relaxed text-foreground/85">
+          {(data.grandTotal ?? 0) === 0 ? 'Start trading to generate insights.' :
+            (data.grandWinRate ?? 0) < 35 && (data.grandPnl ?? 0) < 0 ?
+              `High loss rate (${(data.grandWinRate ?? 0).toFixed(0)}%) with negative PnL of ${formatPnl(data.grandPnl)}. Avg win is ${formatPnl(data.avgWin)} vs avg loss of ${formatPnl(data.avgLoss)}. Consider reducing position sizes and filtering setups more carefully.` :
+            (data.maxConsecLosses ?? 0) > 5 ?
+              `${data.maxConsecLosses} consecutive losses detected — likely tilt or strategy drift. Take a step back and review recent trades for pattern changes.` :
+            (data.grandPnl ?? 0) > 0 && (data.avgRR ?? 0) > 1.5 ?
+              `Strong overall performance: ${(data.grandWinRate ?? 0).toFixed(0)}% win rate with ${(data.avgRR ?? 0).toFixed(2)}R avg. Your risk-reward discipline is excellent. Consider scaling up.` :
+            (data.grandPnl ?? 0) > 0 ?
+              `Profitable overall (${formatPnl(data.grandPnl)}) across ${data.grandTotal} trades. Win rate is ${(data.grandWinRate ?? 0).toFixed(1)}%. Look for ways to increase your avg R multiple above 1.0.` :
+              `Net loss of ${formatPnl(data.grandPnl)} over ${data.grandTotal} trades. Focus on risk management and cutting losses before they grow.`
+          }
+        </p>
+        <div className="mt-3 flex items-start gap-2.5 rounded-lg bg-muted/20 p-3">
+          <Target className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+          <div>
+            <div className="text-[10px] font-bold uppercase tracking-[0.1em] text-foreground/70 mb-1">Recommendation</div>
+            <p className="text-[12px] leading-relaxed text-muted-foreground">
+              {(data.grandTotal ?? 0) === 0 ? 'No data to analyze yet.' :
+                (data.grandWinRate ?? 0) < 35 && (data.grandPnl ?? 0) < 0 ?
+                  `Reduce position size by 50% and implement a max loss limit. Review each loser and tag the reason. Focus on improving your win rate above 40% before scaling back up.` :
+                (data.maxConsecLosses ?? 0) > 5 ?
+                  `Pause and analyze the last ${data.maxConsecLosses} losses. Is there a common pattern — time of day, market condition, or setup? Return at reduced size.` :
+                (data.grandPnl ?? 0) > 0 && (data.avgRR ?? 0) > 1.5 ?
+                  `Your strategy has a clear edge. Track win rate by setup and double down on the best performers. Consider increasing size by 10-15%.` :
+                (data.grandPnl ?? 0) > 0 ?
+                  `Focus on letting winners run. Your avg win (${formatPnl(data.avgWin)}) should be at least 1.5x your avg loss (${formatPnl(data.avgLoss)}). Review exit timing.` :
+                  `Switch to reduced size until profitable for 30 consecutive trades. Use a trade checklist before every entry. Master one setup at a time.`
+              }
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div>
         <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50 mb-3">Performance Summary</div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -464,7 +532,7 @@ export default function StatisticsClient() {
                 formatter={(value: number) => [formatPnl(value), 'Cumulative PnL']}
                 labelFormatter={(label: number) => `Trade #${label}`}
               />
-              <Line type="monotone" dataKey="pnl" stroke="var(--primary)" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="pnl" stroke="var(--primary)" strokeWidth={2} dot={false} isAnimationActive={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -480,7 +548,7 @@ export default function StatisticsClient() {
                 <XAxis dataKey="range" tickLine={false} axisLine={false} tick={{ fontSize: 9, fill: 'var(--muted-foreground)' }} angle={-25} textAnchor="end" height={60} />
                 <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} width={30} />
                 <Tooltip contentStyle={tooltipContentStyle} formatter={(value: number) => [value, 'Trades']} />
-                <Bar dataKey="count" radius={[2, 2, 0, 0]}>
+                <Bar dataKey="count" radius={[2, 2, 0, 0]} isAnimationActive={false}>
                   {pnlDistData.map((entry, i) => (
                     <Cell key={i} fill={entry.fill} />
                   ))}
