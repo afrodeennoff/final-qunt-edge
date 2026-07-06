@@ -54,6 +54,11 @@ const MobileBottomNav = dynamic(
   }
 )
 
+const FloatingChat = dynamic(
+  () => import('../dashboard/statistics/components/floating-chat').then(m => ({ default: m.FloatingChat })),
+  { loading: () => null },
+)
+
 export const metadata: Metadata = {
   robots: {
     index: false,
@@ -142,6 +147,7 @@ export default async function DashboardLayout({
                 </div>
               </GestureProvider>
             </SidebarLayoutShell>
+            <FloatingChat />
           </DashboardProvider>
         </DashboardProviders>
       </SidebarRootProviders>

@@ -4,7 +4,6 @@ import { useRef, useState, useMemo, useEffect, useCallback } from 'react'
 import { computeStatistics, type ComputableTrade } from '@/lib/compute-statistics'
 import { StatsTable, type StatsTableRow } from './stats-table'
 import type { SetupStat, WeekdayStat, TickerStat } from '../types'
-import { FloatingChat } from './floating-chat'
 import { useUserStore } from '@/store/user-store'
 import { cn } from '@/lib/utils'
 import { ChevronDown, X, Wallet, Download, Eye, EyeOff, Award, Target, Sparkles, Loader2 } from 'lucide-react'
@@ -1016,7 +1015,6 @@ function AiInsightSection({ metrics }: { metrics: Record<string, unknown> }) {
           </div>
         </div>
       )}
-      <FloatingChat />
     </div>
   )
 }
