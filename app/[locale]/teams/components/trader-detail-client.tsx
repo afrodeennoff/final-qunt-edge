@@ -211,7 +211,7 @@ const CalendarSection = memo(function CalendarSection({ dayPnl, dayTradesCount }
         </div>
       ))}
 
-      <div className="mt-3 flex items-center gap-4 text-[10px] text-muted-foreground pt-2 border-t border-border/10">
+      <div className="mt-3 flex items-center gap-4 text-[10px] text-muted-foreground pt-2 border-t border-transparent">
         <span>{pos} winning days</span>
         <span>{neg} losing days</span>
         <span>{totalTradesInMonth} trades</span>
@@ -248,8 +248,8 @@ const EquityChart = memo(function EquityChart({ data }: { data: { date: string; 
               labelStyle={{ color: 'var(--muted-foreground)', fontSize: 10 }}
               formatter={(value: number) => [fmt(value), '']}
             />
-            <ReferenceLine y={0} stroke="var(--border)" opacity={0.4} />
-            <Area type="monotone" dataKey="cum" stroke="var(--primary)" strokeWidth={2} fill="url(#eqGrad)" isAnimationActive={false} />
+            <ReferenceLine y={0} stroke="var(--border)" opacity={0.2} />
+            <Area type="monotone" dataKey="cum" stroke="var(--primary)" strokeWidth={2.5} fill="url(#eqGrad)" isAnimationActive={false} strokeLinecap="round" strokeLinejoin="round" connectNulls={true} />
           </AreaChart>
         </ResponsiveContainer>
       </div>
@@ -268,7 +268,7 @@ const RecentTrades = memo(function RecentTrades({ trades }: { trades: Trade[] })
       <div className="overflow-x-auto -mx-1">
         <table className="w-full text-[11px]">
           <thead>
-            <tr className="text-muted-foreground border-b border-border/10">
+            <tr className="text-muted-foreground border-b border-transparent">
               <th className="text-left font-semibold pb-2 pr-3">Date</th>
               <th className="text-left font-semibold pb-2 pr-3">Instrument</th>
               <th className="text-left font-semibold pb-2 pr-3">Side</th>
@@ -281,7 +281,7 @@ const RecentTrades = memo(function RecentTrades({ trades }: { trades: Trade[] })
             {recent.map((t) => {
               const pnl = t.pnl - t.commission
               return (
-                <tr key={t.id} className="border-b border-border/5 hover:bg-muted/10 transition-colors">
+                <tr key={t.id} className="border-b border-transparent hover:bg-muted/10 transition-colors">
                   <td className="py-2 pr-3 text-muted-foreground whitespace-nowrap">{format(parseISO(t.closeDate), 'MMM dd')}</td>
                   <td className="py-2 pr-3 font-medium">{t.instrument}</td>
                   <td className="py-2 pr-3">
@@ -328,7 +328,7 @@ const MonthlyBreakdown = memo(function MonthlyBreakdown({ trades }: { trades: Tr
         {months.map(([key, m]) => {
           const winRate = m.trades > 0 ? (m.wins / m.trades) * 100 : 0
           return (
-            <div key={key} className="flex items-center gap-3 py-1.5 border-b border-border/5 last:border-0">
+            <div key={key} className="flex items-center gap-3 py-1.5 border-b border-transparent last:border-0">
               <span className="w-16 text-[11px] font-semibold text-foreground/80">{key}</span>
               <div className="flex-1 h-2 rounded-full bg-muted/15 overflow-hidden">
                 <div className={cn('h-full rounded-full transition-all', m.pnl >= 0 ? 'bg-semantic-success-bg' : 'bg-semantic-error-bg')} style={{ width: `${Math.min(100, Math.max(2, Math.abs(m.pnl / 1000)))}%` }} />

@@ -33,11 +33,6 @@ function useNavItems(): MobileNavItem[] {
         label: 'Trades',
       },
       {
-        href: `/${locale}/dashboard/analytics`,
-        icon: Sparkles,
-        label: 'Lab',
-      },
-      {
         href: `/${locale}/dashboard/accounts`,
         icon: Activity,
         label: 'Accounts',

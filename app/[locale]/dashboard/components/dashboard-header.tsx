@@ -59,7 +59,6 @@ export function DashboardHeader() {
     if (pathname.includes('/dashboard/trades')) return 'Journal'
     if (pathname.includes('/dashboard/accounts')) return 'Accounts'
     if (pathname.includes('/dashboard/statistics')) return 'Statistics'
-    if (pathname.includes('/dashboard/analytics')) return 'Trading Copilot'
     if (pathname.includes('trader-profile')) return 'Profile'
     if (pathname.includes('calendar')) return 'Calendar'
     if (pathname.includes('data')) return 'Data'
@@ -77,9 +76,7 @@ export function DashboardHeader() {
         ? 'Track account growth, balances, and consistency'
         : pathname.includes('/dashboard/statistics')
           ? 'Performance breakdown by ticker, day, and setup tag'
-          : pathname.includes('/dashboard/analytics')
-            ? 'Behavioral analytics, performance reports, and AI-driven trade insights'
-            : pathname.includes('trader-profile')
+          : pathname.includes('trader-profile')
                   ? 'Your public trader profile'
                   : pathname.includes('calendar')
                     ? 'Calendar view of your trading activity'

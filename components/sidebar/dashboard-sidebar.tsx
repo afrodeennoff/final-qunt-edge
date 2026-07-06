@@ -72,12 +72,6 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
 
         // ── Review ──
         {
-            href: `/${locale}/dashboard/analytics`,
-            icon: <BarChart3 className={NAV_ICON_SIZE} />,
-            label: "Analytics",
-            group: "Review"
-        },
-        {
             href: `/${locale}/dashboard/statistics`,
             icon: <BarChart3 className={NAV_ICON_SIZE} />,
             label: "Statistics",

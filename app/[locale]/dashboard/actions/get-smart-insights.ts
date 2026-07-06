@@ -8,7 +8,7 @@ export type InsightActionTarget =
   | "/dashboard"
   | "/dashboard/trades"
   | "/dashboard/accounts"
-  | "/dashboard/analytics"
+  | "/dashboard/statistics"
   | "/dashboard/trader-profile"
   | "/dashboard/settings"
   | "/dashboard/import"
@@ -112,8 +112,8 @@ export async function getSmartInsights(): Promise<SmartInsight[]> {
                 metric: `-${consecutiveLosses} Streak`,
                 trend: 'down',
                 action: {
-                    label: 'Open Behavior',
-                    href: '/dashboard/analytics'
+                    label: 'View Statistics',
+                    href: '/dashboard/statistics'
                 },
                 timestamp: new Date()
             });
@@ -136,8 +136,8 @@ export async function getSmartInsights(): Promise<SmartInsight[]> {
             metric: `${maxTradesInDay} Trades/Day`,
             trend: "down",
             action: {
-              label: "Open Reports",
-              href: "/dashboard/analytics",
+              label: "Open Statistics",
+              href: "/dashboard/statistics",
             },
             timestamp: new Date(),
           });

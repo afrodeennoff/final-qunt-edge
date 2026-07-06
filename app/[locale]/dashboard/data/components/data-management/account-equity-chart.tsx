@@ -254,7 +254,7 @@ export function AccountEquityChart({
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="3 3" stroke="transparent" />
           <XAxis
             dataKey="date"
             tickLine={false}

@@ -173,7 +173,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
 
  if (segments.length === 0) {
  return (
-  <Card className="bg-muted/50 border-border/10">
+  <Card className="bg-muted/50 border-transparent">
  <CardContent className="p-6 text-center">
  <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
  <p className="text-muted-foreground">
@@ -185,7 +185,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  }
 
  return (
-  <Card className="bg-card border-border/10">
+  <Card className="bg-card border-transparent">
  <CardHeader>
  <CardTitle className="flex items-center gap-2 text-foreground">
  <Mic className="w-5 h-5" />
@@ -253,7 +253,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  onClick={downloadTranscription}
  variant="outline"
  size="sm"
-  className="text-foreground border-border/10 hover:bg-accent/70"
+  className="text-foreground border-transparent hover:bg-accent/70"
  >
  <Download className="w-4 h-4 mr-2" />
  Download

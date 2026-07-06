@@ -271,11 +271,13 @@ export function UserEquityChart({ equityCurve, userId, totalPnL, showDailyView =
  stroke={trendColor}
  fillOpacity={1}
  fill={`url(#color-${userId})`}
- strokeWidth={2}
- dot={false}
- isAnimationActive={false}
- activeDot={{ r: 3, style: { fill: trendColor } }}
- connectNulls={false}
+  strokeWidth={2.5}
+  dot={false}
+  isAnimationActive={false}
+  strokeLinecap="round"
+  strokeLinejoin="round"
+  activeDot={{ r: 4, style: { fill: trendColor, strokeWidth: 0 } }}
+  connectNulls={true}
  />
  </AreaChart>
  </ResponsiveContainer>

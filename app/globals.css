@@ -357,20 +357,20 @@
 
   /* ── Core tokens defined below (dark defaults) — light overrides in .light class ── */
 
-  /* ── CHART PALETTE — vibrant ── */
-  --chart-1: #007AFF;
+  /* ── CHART PALETTE — ultra vibrant ── */
+  --chart-1: #2979FF;
   --chart-2: #00E676;
   --chart-3: #FF1744;
   --chart-4: #FF9100;
   --chart-5: #D500F9;
-  --chart-6: #00BCD4;
+  --chart-6: #00E5FF;
   --chart-7: #76FF03;
   --chart-8: #FFEA00;
   --chart-axis: color-mix(in srgb, var(--foreground) 58%, transparent);
   --chart-axis-muted: color-mix(in srgb, var(--foreground) 50%, transparent);
-  --chart-grid: color-mix(in srgb, rgba(255,255,255,0.5) 8%, transparent);
-  --chart-grid-muted: color-mix(in srgb, rgba(255,255,255,0.5) 5%, transparent);
-  --chart-grid-cursor: color-mix(in srgb, var(--foreground) 25%, transparent);
+  --chart-grid: color-mix(in srgb, rgba(255,255,255,0.5) 6%, transparent);
+  --chart-grid-muted: color-mix(in srgb, rgba(255,255,255,0.5) 4%, transparent);
+  --chart-grid-cursor: color-mix(in srgb, var(--foreground) 20%, transparent);
   --chart-tooltip: color-mix(in srgb, var(--card) 96%, transparent);
   --chart-tooltip-border: color-mix(in srgb, var(--border) 60%, transparent);
   --chart-foreground-muted: color-mix(in srgb, var(--foreground) 60%, transparent);
@@ -610,27 +610,27 @@
   --destructive-foreground: #000000;
 
   /* ── SEMANTIC TOKENS (Tailwind v4 — bare HSL channel values) ── */
-  --semantic-success: 152 100% 45%;
+  --semantic-success: 152 100% 48%;
   --semantic-success-fg: 0 0% 0%;
-  --semantic-success-bg: 152 100% 45% / 0.20;
-  --semantic-success-border: 152 100% 45% / 0.40;
-  --semantic-error: 354 100% 55%;
+  --semantic-success-bg: 152 100% 48% / 0.25;
+  --semantic-success-border: 152 100% 48% / 0.50;
+  --semantic-error: 354 100% 58%;
   --semantic-error-fg: 0 0% 0%;
-  --semantic-error-bg: 354 100% 55% / 0.20;
-  --semantic-error-border: 354 100% 55% / 0.40;
-  --semantic-warning: 38 100% 50%;
+  --semantic-error-bg: 354 100% 58% / 0.25;
+  --semantic-error-border: 354 100% 58% / 0.50;
+  --semantic-warning: 38 100% 55%;
   --semantic-warning-fg: 0 0% 0%;
-  --semantic-warning-bg: 38 100% 50% / 0.20;
-  --semantic-warning-border: 38 100% 50% / 0.40;
+  --semantic-warning-bg: 38 100% 55% / 0.25;
+  --semantic-warning-border: 38 100% 55% / 0.50;
   --semantic-info: 150 100% 50%;
   --semantic-info-fg: 0 0% 0%;
-  --semantic-info-bg: 150 100% 50% / 0.20;
-  --semantic-info-border: 150 100% 50% / 0.40;
+  --semantic-info-bg: 150 100% 50% / 0.25;
+  --semantic-info-border: 150 100% 50% / 0.50;
 
   /* ── BORDER & RING ── */
-  --border: hsl(150, 15%, 22%);
-  --border-subtle: hsl(150, 10%, 18%);
-  --input: hsl(150, 12%, 16%);
+  --border: color-mix(in srgb, var(--foreground) 3%, transparent);
+  --border-subtle: color-mix(in srgb, var(--foreground) 2%, transparent);
+  --input: color-mix(in srgb, var(--foreground) 4%, transparent);
   --ring: hsl(150, 100%, 50%);
 
   /* ── SIDEBAR ── */
@@ -825,8 +825,8 @@
   --warning-foreground: #FFFFFF;
   --destructive: #C0392B;
   --destructive-foreground: #FFFFFF;
-  --border: rgba(0,0,0,0.13);
-  --input: rgba(0,0,0,0.15);
+  --border: color-mix(in srgb, var(--foreground) 6%, transparent);
+  --input: color-mix(in srgb, var(--foreground) 8%, transparent);
   --ring: #007AFF;
   --chart-1: #007AFF;
   --chart-2: #00E676;

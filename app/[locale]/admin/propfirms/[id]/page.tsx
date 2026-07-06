@@ -464,7 +464,7 @@ export default async function PropFirmEditPage({
       <form action={handleAction}>
         <Card
           variant="elevated"
-          className="border-border/10 bg-card shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
+          className="border-transparent bg-card shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
         >
           <CardHeader className="space-y-1 border-b-0">
             <CardTitle>Firm details</CardTitle>
@@ -1038,7 +1038,7 @@ function CouponEditorCard({
               </Badge>
             ) : null}
             {timing.isExpired ? (
-              <Badge variant="outline" className="border-border/10 text-muted-foreground">
+              <Badge variant="outline" className="border-transparent text-muted-foreground">
                 Expired
               </Badge>
             ) : null}

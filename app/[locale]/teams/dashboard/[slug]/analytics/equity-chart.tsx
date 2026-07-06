@@ -41,13 +41,21 @@ export default function EquityChart({ data, formatCurrency, CustomTooltip }: Equ
           tickLine={false}
         />
         <Tooltip content={<CustomTooltip />} />
+        <defs>
+          <linearGradient id="eqGrad2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.25} />
+            <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
+          </linearGradient>
+        </defs>
         <Area
           type="monotone"
           dataKey="cumulativePnL"
           stroke="var(--primary)"
           strokeWidth={2.5}
-          fill="var(--primary)"
-          fillOpacity={0.12}
+          fill="url(#eqGrad2)"
+          isAnimationActive={false}
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </AreaChart>
     </ResponsiveContainer>

@@ -416,9 +416,9 @@ export default function DocsDashboardPage() {
           </div>
 
           <div className={cardMain}>
-            <div className="font-semibold mb-1">Analytics Page Synergy</div>
-            <p className={bodySmall}>The dedicated /dashboard/analytics page and the Copilot page are simply larger, full-screen versions of the same data engine. Any filter or layout you perfect on the main Dashboard can be bookmarked and reused there. The underlying data provider is identical.</p>
-            <Link href={`/${locale}/docs/analytics`} className="text-xs text-[var(--qe-ref-green)] hover:underline mt-2 inline-block">Read the full Analytics &amp; Copilot documentation →</Link>
+            <div className="font-semibold mb-1">Statistics &amp; Mentor Insights</div>
+            <p className={bodySmall}>The dedicated /dashboard/statistics page is your analytical command center with the enhanced Mentor Insight panel — behavioral analysis, performance metrics, and improvement recommendations all in one place.</p>
+            <Link href={`/${locale}/docs/statistics`} className="text-xs text-[var(--qe-ref-green)] hover:underline mt-2 inline-block">Read the full Statistics documentation →</Link>
           </div>
         </div>
       </div>

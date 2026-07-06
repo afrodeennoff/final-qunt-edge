@@ -27,7 +27,7 @@ const TableHeader = React.forwardRef<
     ref={ref}
     data-slot="table-header"
     className={cn(
-      'sticky top-0 z-10 border-b-0 bg-muted/30 [&_tr]:border-b [&_tr]:border-border/10',
+      'sticky top-0 z-10 border-b-0 bg-muted/30 [&_tr]:border-b [&_tr]:border-transparent',
       className,
     )}
     {...props}

@@ -126,7 +126,7 @@ export function NewsletterEditor() {
  }
 
  return (
-  <Card className="border-border/10 bg-card">
+  <Card className="border-transparent bg-card">
  <CardHeader>
  <CardTitle className="text-foreground">Composer une Newsletter</CardTitle>
  </CardHeader>
@@ -140,7 +140,7 @@ export function NewsletterEditor() {
  onChange={e => setYoutubeUrl(e.target.value)}
  placeholder="e.g., https://youtube.com/watch?v=dQw4w9WgXcQ"
  required
-  className="border-border/10 bg-background text-foreground placeholder:text-muted-foreground"
+  className="border-transparent bg-background text-foreground placeholder:text-muted-foreground"
   />
  </div>
 
@@ -170,7 +170,7 @@ export function NewsletterEditor() {
  onChange={e => setDescription(e.target.value)}
  placeholder="Describe what you've worked on in this video. For example: 'I implemented a new trade management feature with interactive charts...'"
  required
-  className="min-h-[100px] border-border/10 bg-background text-foreground placeholder:text-muted-foreground"
+  className="min-h-[100px] border-transparent bg-background text-foreground placeholder:text-muted-foreground"
  disabled={isLoadingTranscript}
  />
  </div>
@@ -198,7 +198,7 @@ export function NewsletterEditor() {
  <Button
  type="button"
  variant="outline"
-  className="flex-1 border-border/10 bg-muted/40 text-foreground hover:bg-muted/30"
+  className="flex-1 border-transparent bg-muted/40 text-foreground hover:bg-muted/30"
  onClick={handleSend}
  disabled={loading || generating || !content.subject}
  >

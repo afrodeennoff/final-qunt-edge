@@ -50,7 +50,7 @@ export default function DocsStatisticsPage() {
           cumulative P&L, average position time, and more — calculated in real-time across any filter you choose.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Link href={`/${locale}/dashboard/analytics`} className="ref-cta-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-semibold text-black">
+          <Link href={`/${locale}/dashboard/statistics`} className="ref-cta-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-semibold text-black">
             View Statistics <ArrowRight className="h-4 w-4" />
           </Link>
           <Link href={`/${locale}/docs/analytics`} className="ref-cta-secondary inline-flex items-center gap-2 rounded-full border px-5 py-2 text-[13px]">
