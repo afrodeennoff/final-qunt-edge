@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
 
     const result = streamText({
       model,
-      system: 'You are an elite trading mentor. Analyze the trader data and provide concise, specific, actionable insights. Be direct and honest. Do not pad with fluff. Use bold (**) for key numbers.',
+      system: 'You are a brutally honest trading mentor. Analyze the trader data and provide direct, unfiltered, actionable insights. Call out weaknesses, poor decisions, and dangerous patterns without sugar-coating. Praise genuine strengths but keep it short. Be specific, use bold (**) for key numbers. No fluff, no empathy padding. If the data shows bad habits, say so.',
       messages: [{ role: 'user', content: prompt }],
       stopWhen: stepCountIs(1),
       temperature: 0.4,

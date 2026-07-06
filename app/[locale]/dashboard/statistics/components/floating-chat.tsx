@@ -69,7 +69,7 @@ export function FloatingChat() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex w-[90vw] max-w-[380px] flex-col rounded-xl border bg-card shadow-2xl" style={{ height: 'min(70vh, 520px)' }}>
+    <div className="fixed bottom-4 right-4 z-50 flex w-[90vw] max-w-[570px] flex-col rounded-xl border bg-card shadow-2xl" style={{ height: 'min(80vh, 780px)' }}>
       <div className="flex items-center justify-between border-b px-4 py-3">
         <div className="flex items-center gap-2">
           <MessageSquare className="h-4 w-4 text-primary" />
