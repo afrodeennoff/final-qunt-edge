@@ -469,54 +469,60 @@ export default function StatisticsClient() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
           <div className="rounded-lg bg-muted/15 p-3">
             <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60 mb-1.5">Psychology Analysis</div>
-            <div className="text-[11px] leading-relaxed text-foreground/80">
+            <div className="space-y-1.5">
               {(() => {
                 const wr = data.grandWinRate ?? 0
                 const cl = data.maxConsecLosses ?? 0
                 const cw = data.maxConsecWins ?? 0
                 const pf = data.profitFactor ?? 0
-                const issues: string[] = []
-                if (cl >= 5) issues.push(`Tilt risk: ${cl} consecutive losses may trigger revenge trading — take a mandatory cool-down after 3 losses.`)
-                if (cl >= 3 && cl < 5) issues.push(`Mild tilt risk: ${cl} losses in a row. Watch for impulsivity — stick to your plan.`)
-                if (cw >= 8) issues.push(`Overconfidence alert: ${cw} consecutive wins can inflate ego. Stick to position sizing rules.`)
-                if (wr < 40 && pf < 1) issues.push(`Loss aversion pattern: low win rate + negative PF suggests fear-driven exits on winners and hope-driven holds on losers.`)
-                if (wr > 65 && pf > 2) issues.push(`Strong discipline: high win rate + profit factor >2 shows excellent emotional control. Maintain this.`)
-                if (data.grandPnl < 0 && data.avgWin > Math.abs(data.avgLoss) * 2) issues.push(`Paradox: winners are large but overall negative. You have a good eye for moves but too many small losers erode gains. Tighten filters.`)
-                if (!issues.length) issues.push(`Balanced psychology profile. No extreme behavioral patterns detected in this sample.`)
-                return issues.join(' ')
+                const items: { text: string; severity: 'high' | 'medium' | 'low' | 'neutral' }[] = []
+                if (cl >= 5) items.push({ text: `Tilt risk: ${cl} consecutive losses — mandatory cool-down after 3`, severity: 'high' })
+                if (cl >= 3 && cl < 5) items.push({ text: `Mild tilt: ${cl} losses in a row — stick to your plan`, severity: 'medium' })
+                if (cw >= 8) items.push({ text: `Overconfidence alert: ${cw} wins in a row — maintain position sizing`, severity: 'medium' })
+                if (wr < 40 && pf < 1) items.push({ text: 'Loss aversion: fear-driven exits on winners, hope-driven holds on losers', severity: 'high' })
+                if (wr > 65 && pf > 2) items.push({ text: `Strong discipline: ${wr.toFixed(0)}% WR + PF ${pf.toFixed(2)} — excellent emotional control`, severity: 'low' })
+                if (data.grandPnl < 0 && data.avgWin > Math.abs(data.avgLoss) * 2) items.push({ text: 'Good entries but small losers accumulate — tighten entry filters', severity: 'high' })
+                if (!items.length) items.push({ text: 'Balanced psychology — no extreme patterns detected', severity: 'neutral' })
+                return items.slice(0, 4).map((item, i) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <span className={cn('w-1.5 h-1.5 rounded-full mt-[5px] shrink-0', item.severity === 'high' ? 'bg-destructive' : item.severity === 'medium' ? 'bg-warning' : item.severity === 'low' ? 'bg-success' : 'bg-muted-foreground/30')} />
+                    <span className="text-[11px] text-foreground/80 leading-relaxed">{item.text}</span>
+                  </div>
+                ))
               })()}
             </div>
           </div>
           <div className="rounded-lg bg-muted/15 p-3">
             <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60 mb-1.5">Pattern Analysis</div>
-            <div className="text-[11px] leading-relaxed text-foreground/80">
+            <div className="space-y-1.5">
               {(() => {
-                const parts: string[] = []
+                const items: { text: string; severity?: 'high' | 'medium' | 'low' }[] = []
                 if (data.grandTotal > 0) {
-                  parts.push(`${data.grandTotal} trades analyzed.`)
                   if (data.grandWinRate > 0) {
                     const expectedLossStreak = Math.round(Math.log(100) / -Math.log(1 - data.grandWinRate / 100))
                     if (data.maxConsecLosses > expectedLossStreak * 1.5) {
-                      parts.push(`Losing streak (${data.maxConsecLosses}) is unusually long vs expected (${expectedLossStreak}) — may indicate a regime change or emotional trading.`)
+                      items.push({ text: `Loss streak (${data.maxConsecLosses}) exceeds expected (${expectedLossStreak}) — possible regime change or emotional trading`, severity: 'high' })
                     }
                   }
                   if (data.bestDay > 0 || data.worstDay < 0) {
-                    parts.push(`Best day: ${formatPnl(data.bestDay)} | Worst day: ${formatPnl(data.worstDay)}.`)
+                    items.push({ text: `Range: ${formatPnl(data.bestDay)} best → ${formatPnl(data.worstDay)} worst`, severity: 'low' })
                   }
-                  const avgDailyRange = data.allPnls.length > 0
-                    ? data.allPnls.reduce((s, d) => s + Math.abs(d.pnl), 0) / data.allPnls.length
-                    : 0
-                  const day0 = data.allPnls[0]
-                  const dayN = data.allPnls[data.allPnls.length - 1]
-                  if (day0 && dayN && data.allPnls.length >= 10) {
-                    const firstHalf = data.allPnls.slice(0, Math.floor(data.allPnls.length / 2)).reduce((s, d) => s + d.pnl, 0)
-                    const secondHalf = data.allPnls.slice(Math.floor(data.allPnls.length / 2)).reduce((s, d) => s + d.pnl, 0)
-                    if (firstHalf > 0 && secondHalf < 0) parts.push(`Performance declining: first half was profitable (${formatPnl(firstHalf)}), second half is negative (${formatPnl(secondHalf)}). Investigate recent changes.`)
-                    if (firstHalf < 0 && secondHalf > 0) parts.push(`Improving trajectory: early losses (${formatPnl(firstHalf)}) turned around (${formatPnl(secondHalf)}). Recent changes are working.`)
+                  if (data.allPnls.length >= 10) {
+                    const mid = Math.floor(data.allPnls.length / 2)
+                    const firstHalf = data.allPnls.slice(0, mid).reduce((s, d) => s + d.pnl, 0)
+                    const secondHalf = data.allPnls.slice(mid).reduce((s, d) => s + d.pnl, 0)
+                    if (firstHalf > 0 && secondHalf < 0) items.push({ text: `Declining: profitable early (${formatPnl(firstHalf)}), negative later (${formatPnl(secondHalf)})`, severity: 'high' })
+                    if (firstHalf < 0 && secondHalf > 0) items.push({ text: `Improving: early losses (${formatPnl(firstHalf)}) turned around (${formatPnl(secondHalf)})`, severity: 'low' })
                   }
+                  items.unshift({ text: `${data.grandTotal} trades analyzed`, severity: 'low' })
                 }
-                if (!parts.length) parts.push('Not enough trade data for pattern analysis.')
-                return parts.join(' ')
+                if (!items.length) items.push({ text: 'Not enough trade data for pattern analysis', severity: 'low' })
+                return items.map((item, i) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <span className={cn('w-1.5 h-1.5 rounded-full mt-[5px] shrink-0', !item.severity || item.severity === 'low' ? 'bg-success' : item.severity === 'medium' ? 'bg-warning' : 'bg-destructive')} />
+                    <span className="text-[11px] text-foreground/80 leading-relaxed">{item.text}</span>
+                  </div>
+                ))
               })()}
             </div>
           </div>
@@ -552,6 +558,7 @@ export default function StatisticsClient() {
 
         {/* Insight Narrative */}
         <div className="rounded-lg bg-muted/15 p-3.5 mb-3">
+          <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60 mb-2">Insight</div>
           <p className="text-sm leading-relaxed text-foreground/85">
             {(data.grandTotal ?? 0) === 0 ? 'Start trading to generate personalized insights.' :
               (data.grandWinRate ?? 0) < 35 && (data.grandPnl ?? 0) < 0 ?
@@ -574,19 +581,40 @@ export default function StatisticsClient() {
           <Target className="h-4 w-4 text-primary shrink-0 mt-0.5" />
           <div className="min-w-0 flex-1">
             <div className="text-[10px] font-bold uppercase tracking-[0.1em] text-foreground/70 mb-1">Action Plan</div>
-            <p className="text-[12px] leading-relaxed text-muted-foreground">
-              {(data.grandTotal ?? 0) === 0 ? 'No data to analyze yet.' :
-                (data.grandWinRate ?? 0) < 35 && (data.grandPnl ?? 0) < 0 ?
-                  `1. Cut position size by 50% immediately. 2. Set a daily loss limit of ${formatPnl(Math.abs(data.avgLoss) * 2)}. 3. Log every loss with a reason tag. 4. Focus on one setup type until win rate exceeds 40%. 5. Review after 20 trades.` :
-                (data.maxConsecLosses ?? 0) > 5 ?
-                  `1. Pause live trading for 24-48 hours. 2. Review the last ${data.maxConsecLosses} losses for common factors (time, instrument, pattern). 3. Return at 25% normal size. 4. Set a hard stop after 3 consecutive losses.` :
-                (data.grandPnl ?? 0) > 0 && (data.avgRR ?? 0) > 1.5 ?
-                  `1. Track win rate by setup configuration. 2. Increase size 10% on top-performing setups. 3. Maintain current risk parameters. 4. Review monthly for strategy drift.` :
-                (data.grandPnl ?? 0) > 0 ?
-                  `1. Focus on exit timing — aim for avg R above 1.0. 2. Let winners run at least 1.5x your avg loss (${formatPnl(data.avgWin)} target vs ${formatPnl(Math.abs(data.avgLoss))} avg loss). 3. Review 10 best and 10 worst trades for patterns.` :
-                  `1. Reduce to micro size immediately. 2. Implement a pre-trade checklist (3 confirmations required). 3. Set a weekly loss limit. 4. Master one setup until profitable over 20 trades. 5. Join a trading community for accountability.`
+            <ol className="list-decimal space-y-1 pl-[1px]">
+              {(data.grandTotal ?? 0) === 0 ? <li className="text-[12px] text-muted-foreground">No data to analyze yet.</li> :
+                (data.grandWinRate ?? 0) < 35 && (data.grandPnl ?? 0) < 0 ? <>
+                  <li className="text-[12px] text-muted-foreground">Cut position size by 50% immediately</li>
+                  <li className="text-[12px] text-muted-foreground">Set daily loss limit of {formatPnl(Math.abs(data.avgLoss) * 2)}</li>
+                  <li className="text-[12px] text-muted-foreground">Log every loss with a reason tag</li>
+                  <li className="text-[12px] text-muted-foreground">Focus on one setup type until win rate exceeds 40%</li>
+                  <li className="text-[12px] text-muted-foreground">Review after 20 trades</li>
+                </> :
+                (data.maxConsecLosses ?? 0) > 5 ? <>
+                  <li className="text-[12px] text-muted-foreground">Pause live trading for 24-48 hours</li>
+                  <li className="text-[12px] text-muted-foreground">Review the last {data.maxConsecLosses} losses for common factors (time, instrument, pattern)</li>
+                  <li className="text-[12px] text-muted-foreground">Return at 25% normal size</li>
+                  <li className="text-[12px] text-muted-foreground">Set a hard stop after 3 consecutive losses</li>
+                </> :
+                (data.grandPnl ?? 0) > 0 && (data.avgRR ?? 0) > 1.5 ? <>
+                  <li className="text-[12px] text-muted-foreground">Track win rate by setup configuration</li>
+                  <li className="text-[12px] text-muted-foreground">Increase size 10% on top-performing setups</li>
+                  <li className="text-[12px] text-muted-foreground">Maintain current risk parameters</li>
+                  <li className="text-[12px] text-muted-foreground">Review monthly for strategy drift</li>
+                </> :
+                (data.grandPnl ?? 0) > 0 ? <>
+                  <li className="text-[12px] text-muted-foreground">Focus on exit timing — aim for avg R above 1.0</li>
+                  <li className="text-[12px] text-muted-foreground">Let winners run to at least 1.5x your avg loss ({formatPnl(data.avgWin)} target vs {formatPnl(Math.abs(data.avgLoss))} avg loss)</li>
+                  <li className="text-[12px] text-muted-foreground">Review 10 best and 10 worst trades for patterns</li>
+                </> : <>
+                  <li className="text-[12px] text-muted-foreground">Reduce to micro size immediately</li>
+                  <li className="text-[12px] text-muted-foreground">Implement a pre-trade checklist (3 confirmations required)</li>
+                  <li className="text-[12px] text-muted-foreground">Set a weekly loss limit</li>
+                  <li className="text-[12px] text-muted-foreground">Master one setup until profitable over 20 trades</li>
+                  <li className="text-[12px] text-muted-foreground">Join a trading community for accountability</li>
+                </>
               }
-            </p>
+            </ol>
           </div>
         </div>
       </div>
