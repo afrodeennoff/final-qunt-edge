@@ -1385,6 +1385,10 @@ model AiRequestLog {
   errorCategory String?
   errorCode     String?
 
+  budgetLimit     Int?
+  budgetUsed      Int?
+  budgetRemaining Int?
+
   createdAt DateTime @default(now())
 
   user User? @relation("UserAiRequestLogs", fields: [userId], references: [id], onDelete: SetNull)
