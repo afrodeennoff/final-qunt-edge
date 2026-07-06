@@ -124,7 +124,11 @@ export function FloatingChat() {
             <AlertCircle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
             <div>
               <span className="font-semibold">Chat error</span>
-              <p className="mt-0.5 text-destructive/80">Connection issue. Please try your question again.</p>
+              <p className="mt-0.5 text-destructive/80">
+                {(error instanceof Error ? error.message : typeof error === 'object' && error !== null
+                  ? (error as Record<string, unknown>).message as string ?? ''
+                  : '') || 'Connection issue. Please try your question again.'}
+              </p>
             </div>
           </div>
         )}

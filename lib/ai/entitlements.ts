@@ -21,13 +21,42 @@ type EntitlementResult = {
   isActive: boolean
 }
 
+// Features available without a subscription, subject to FREE_TIER_FEATURE_LIMITS
 const INACTIVE_ALLOWED_FEATURES = new Set<AiGuardFeature>([
+  'chat',
   'search',
   'mappings',
   'format-trades',
   'journal-insights',
   'analyze-patterns',
 ])
+
+// Per-feature monthly request limits for free-tier users.
+// Omitted features are unlimited on the free tier.
+const FREE_TIER_FEATURE_LIMITS: Partial<Record<AiGuardFeature, number>> = {
+  chat: 2,
+}
+
+function getUtcMonthStartEnd(): { start: Date; end: Date } {
+  const now = new Date()
+  const year = now.getUTCFullYear()
+  const month = now.getUTCMonth()
+  return {
+    start: new Date(Date.UTC(year, month, 1, 0, 0, 0, 0)),
+    end: new Date(Date.UTC(year, month + 1, 1, 0, 0, 0, 0)),
+  }
+}
+
+async function countMonthlyFeatureUsage(userId: string, feature: AiGuardFeature): Promise<number> {
+  const { start, end } = getUtcMonthStartEnd()
+  return prisma.aiUsageLedger.count({
+    where: {
+      userId,
+      feature,
+      createdAt: { gte: start, lt: end },
+    },
+  })
+}
 
 export async function canAccessAiFeature(
   userId: string,
@@ -58,22 +87,38 @@ export async function canAccessAiFeature(
   const isActive = hasActiveSubscription || Boolean(fallbackSubscription?.isActive)
   const plan = userSubscription?.plan ?? fallbackSubscription?.plan ?? undefined
 
+  // Active subscription (paid tier) — unlimited everything
   if (isActive) {
     return { allowed: true, plan, isActive: true }
   }
 
-  if (INACTIVE_ALLOWED_FEATURES.has(feature)) {
+  // Free tier — check if the feature is available at all
+  if (!INACTIVE_ALLOWED_FEATURES.has(feature)) {
     return {
-      allowed: true,
-      reason: 'Allowed on inactive plan for baseline features.',
+      allowed: false,
+      reason: 'Active subscription required for this AI feature.',
       plan,
       isActive: false,
     }
   }
 
+  // Free tier — check per-feature request limit
+  const freeLimit = FREE_TIER_FEATURE_LIMITS[feature]
+  if (freeLimit !== undefined) {
+    const usageCount = await countMonthlyFeatureUsage(userId, feature)
+    if (usageCount >= freeLimit) {
+      return {
+        allowed: false,
+        reason: `You've used your ${freeLimit} free ${feature} requests. Upgrade to Pro for unlimited access.`,
+        plan,
+        isActive: false,
+      }
+    }
+  }
+
   return {
-    allowed: false,
-    reason: 'Active subscription required for this AI feature.',
+    allowed: true,
+    reason: 'Allowed on inactive plan for baseline features.',
     plan,
     isActive: false,
   }

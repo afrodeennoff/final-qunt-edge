@@ -43,12 +43,15 @@ export async function guardAiRequest(
   if (process.env.NODE_ENV === 'production') {
     const entitlement = await canAccessAiFeature(user.id, feature)
     if (!entitlement.allowed) {
+      const requiresUpgrade = entitlement.reason?.toLowerCase().includes('upgrade')
       return {
         ok: false,
-        response: apiError('FORBIDDEN', entitlement.reason ?? 'Feature not available for current plan', 403, {
-          plan: entitlement.plan,
-          feature,
-        }),
+        response: apiError(
+          requiresUpgrade ? 'UPGRADE_REQUIRED' : 'FORBIDDEN',
+          entitlement.reason ?? 'Feature not available for current plan',
+          requiresUpgrade ? 402 : 403,
+          { plan: entitlement.plan, feature },
+        ),
       }
     }
 
