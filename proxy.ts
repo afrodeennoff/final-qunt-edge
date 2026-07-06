@@ -80,7 +80,7 @@ function isSupabaseJsonParseError(error: unknown): boolean {
   return combined.includes('unexpected token') || combined.includes('is not valid json')
 }
 
-function isAdmin(userId: string): boolean {
+function isAdmin(userId: string, email?: string | null): boolean {
   const allowedUserIds = parseCsvEnv(process.env.ALLOWED_ADMIN_USER_ID)
 
   if (userId && allowedUserIds.includes(userId.toLowerCase())) {
@@ -90,6 +90,14 @@ function isAdmin(userId: string): boolean {
   const deprecatedAdminId = process.env.ADMIN_USER_ID
   if (deprecatedAdminId && userId.toLowerCase() === deprecatedAdminId.toLowerCase()) {
     return true
+  }
+
+  const adminDomains = parseCsvEnv(process.env.ADMIN_EMAIL_DOMAINS)
+  if (email && adminDomains.length > 0) {
+    const emailDomain = email.split('@')[1]
+    if (emailDomain && adminDomains.some(d => d.toLowerCase() === emailDomain.toLowerCase())) {
+      return true
+    }
   }
 
   return false
@@ -165,7 +173,7 @@ async function handleAdminAuth(
     }
   }
 
-  if (!isAdmin(user.id)) {
+  if (!isAdmin(user.id, user.email)) {
     return {
       error: NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 }),
     }
@@ -730,13 +738,7 @@ export async function proxy(req: NextRequest) {
       return redirectWithPrivateNoStore(authUrl)
     }
 
-    const allowedAdminIds = [
-      process.env.ADMIN_USER_ID,
-      ...parseCsvEnv(process.env.ALLOWED_ADMIN_USER_ID),
-    ].filter((v): v is string => Boolean(v))
-
-    const userIdLower = user.id.toLowerCase()
-    if (!allowedAdminIds.map((id: string) => id.toLowerCase()).includes(userIdLower)) {
+    if (!isAdmin(user.id, user.email)) {
       return redirectWithPrivateNoStore(new URL(`/${locale}/dashboard`, req.url))
     }
   }

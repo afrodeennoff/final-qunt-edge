@@ -2,6 +2,15 @@ import { randomUUID } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { isTimeoutError } from "@/lib/ai/timeout";
 
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`Telemetry ${label} timed out after ${ms}ms`)), ms)
+    ),
+  ]);
+}
+
 export type AiErrorCategory =
   | "validation"
   | "tool_failure"
@@ -126,14 +135,18 @@ async function recordDeterministicBudgetUsage(input: AiRequestLogInput): Promise
   }
 
   try {
-    await prisma.aiUsageLedger.create({
-      data: {
-        userId: input.userId,
-        route: input.route,
-        feature: input.feature,
-        totalTokens,
-      },
-    });
+    await withTimeout(
+      prisma.aiUsageLedger.create({
+        data: {
+          userId: input.userId,
+          route: input.route,
+          feature: input.feature,
+          totalTokens,
+        },
+      }),
+      2000,
+      "AiusageLedger.create",
+    );
   } catch (error) {
     console.error("[AI Telemetry] Failed to persist deterministic AI usage", error);
   }
@@ -148,49 +161,53 @@ export async function logAiRequest(input: AiRequestLogInput): Promise<void> {
   }
 
   try {
-    await prisma.$executeRaw`
-      INSERT INTO "public"."AiRequestLog" (
-        "id",
-        "userId",
-        "route",
-        "feature",
-        "model",
-        "provider",
-        "promptTokens",
-        "completionTokens",
-        "totalTokens",
-        "latencyMs",
-        "toolCallsCount",
-        "finishReason",
-        "success",
-        "errorCategory",
-        "errorCode",
-        "createdAt",
-        "budgetLimit",
-        "budgetUsed",
-        "budgetRemaining"
-      ) VALUES (
-        ${randomUUID()},
-        ${input.userId ?? null},
-        ${input.route},
-        ${input.feature},
-        ${input.model},
-        ${input.provider},
-        ${input.usage?.promptTokens ?? null},
-        ${input.usage?.completionTokens ?? null},
-        ${input.usage?.totalTokens ?? null},
-        ${Math.round(input.latencyMs)},
-        ${input.toolCallsCount ?? 0},
-        ${input.finishReason ?? null},
-        ${input.success},
-        ${input.errorCategory ?? null},
-        ${input.errorCode ?? null},
-        ${new Date()},
-        ${input.budgetMetadata?.budgetLimit ?? null},
-        ${input.budgetMetadata?.budgetUsed ?? null},
-        ${input.budgetMetadata?.budgetRemaining ?? null}
-      )
-    `;
+    await withTimeout(
+      prisma.$executeRaw`
+        INSERT INTO "public"."AiRequestLog" (
+          "id",
+          "userId",
+          "route",
+          "feature",
+          "model",
+          "provider",
+          "promptTokens",
+          "completionTokens",
+          "totalTokens",
+          "latencyMs",
+          "toolCallsCount",
+          "finishReason",
+          "success",
+          "errorCategory",
+          "errorCode",
+          "createdAt",
+          "budgetLimit",
+          "budgetUsed",
+          "budgetRemaining"
+        ) VALUES (
+          ${randomUUID()},
+          ${input.userId ?? null},
+          ${input.route},
+          ${input.feature},
+          ${input.model},
+          ${input.provider},
+          ${input.usage?.promptTokens ?? null},
+          ${input.usage?.completionTokens ?? null},
+          ${input.usage?.totalTokens ?? null},
+          ${Math.round(input.latencyMs)},
+          ${input.toolCallsCount ?? 0},
+          ${input.finishReason ?? null},
+          ${input.success},
+          ${input.errorCategory ?? null},
+          ${input.errorCode ?? null},
+          ${new Date()},
+          ${input.budgetMetadata?.budgetLimit ?? null},
+          ${input.budgetMetadata?.budgetUsed ?? null},
+          ${input.budgetMetadata?.budgetRemaining ?? null}
+        )
+      `,
+      2000,
+      "AiRequestLog.insert",
+    );
   } catch (error) {
     console.error("[AI Telemetry] Failed to persist AI log", error);
   }

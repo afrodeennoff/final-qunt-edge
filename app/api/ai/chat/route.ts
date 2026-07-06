@@ -36,6 +36,7 @@ const chatRateLimit = rateLimit({ limit: 30, window: 60_000, identifier: "ai-cha
 type ChatIntent = "analytics_data" | "coaching" | "news_context" | "general";
 const chatMessageSchema = z.object({
   role: z.string(),
+  id: z.string().optional(),
   content: z.unknown().optional(),
   parts: z.array(
     z.object({
@@ -44,7 +45,8 @@ const chatMessageSchema = z.object({
     }),
   ).optional(),
   text: z.string().optional(),
-})
+  toolInvocations: z.unknown().optional(),
+}).passthrough()
 const chatRequestSchema = z.object({
   messages: z.array(chatMessageSchema).min(1, "messages are required"),
   username: z.string().optional(),
