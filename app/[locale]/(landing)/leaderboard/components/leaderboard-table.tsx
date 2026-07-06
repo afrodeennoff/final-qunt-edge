@@ -11,9 +11,9 @@ import {
 } from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
 
-const rowDividerClassName = 'border-transparent'
+const rowDividerClassName = 'border-border/5'
 const tableSurfaceClassName =
-  'overflow-hidden rounded-xl border-0 bg-muted/40 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
+  'overflow-hidden rounded-xl border-0 bg-muted/40'
 
 interface LeaderboardTableProps {
   entries: LeaderboardEntry[]
@@ -87,7 +87,7 @@ export function LeaderboardTableSkeleton() {
                 <th
                   key={heading}
                   className={cn(
-                    'border-b px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground/70',
+                    'border-b px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground',
                     rowDividerClassName,
                   )}
                 >
@@ -147,7 +147,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
         )}
       >
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground/70">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Leaderboard table
           </p>
           <h3 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
@@ -192,7 +192,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
                     <th
                       key={heading}
                       className={cn(
-                        'border-b px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground/70',
+                        'border-b px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground',
                         rowDividerClassName,
                       )}
                     >
@@ -231,10 +231,10 @@ function LeaderboardEntryCard({ entry, locale }: { entry: LeaderboardEntry; loca
             #{entry.rank}
           </span>
           <div className="min-w-0">
-            <p className="truncate text-[15px] font-semibold tracking-tight text-foreground">
+            <p className="truncate text-base font-bold text-foreground">
               {entry.username}
             </p>
-            <p className="truncate text-[11px] uppercase tracking-[0.16em] text-muted-foreground/70">
+            <p className="truncate text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Top instrument {entry.topInstrument ?? '—'}
             </p>
           </div>
@@ -253,7 +253,7 @@ function LeaderboardEntryCard({ entry, locale }: { entry: LeaderboardEntry; loca
           ['Accounts', `${entry.accountCount}`],
         ].map(([label, value]) => (
           <div key={label} className={cn(unifiedInsetPanelClassName, 'px-3 py-2.5')}>
-            <dt className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground/70">
+            <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               {label}
             </dt>
             <dd className="mt-1 text-[14px] font-medium text-foreground">{value}</dd>
@@ -290,10 +290,10 @@ function LeaderboardEntryRow({ entry, locale }: { entry: LeaderboardEntry; local
         </span>
       </td>
       <td className={cn('border-b px-6 py-4 align-middle', rowDividerClassName)}>
-        <p className="text-[15px] font-semibold tracking-tight text-foreground">
+        <p className="text-base font-bold text-foreground">
           {entry.username}
         </p>
-        <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground/70">
+        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Top instrument {entry.topInstrument ?? '—'}
         </p>
       </td>

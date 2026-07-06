@@ -25,19 +25,19 @@ export default async function BlogsPage() {
   const posts = await getBlogPosts(true)
 
   return (
-    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
-      <UnifiedSurface className="space-y-6">
-        <header className="space-y-3">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Blog</p>
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+    <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
+      <div className="space-y-8">
+        <header className="space-y-4">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Blog</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             {t('blogs.title')}
           </h1>
-          <p className="text-sm text-muted-foreground sm:text-base leading-relaxed">
+          <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
             {t('blogs.description')}
           </p>
         </header>
         <BlogList initialPosts={posts} />
-      </UnifiedSurface>
-    </UnifiedPageShell>
+      </div>
+    </div>
   )
 }

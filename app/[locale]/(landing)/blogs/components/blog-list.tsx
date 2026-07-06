@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { BlogCategory } from '@/prisma/generated/prisma'
 import { BlogCard } from './blog-card'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+
 type BlogPost = {
   id: string
   title: string
@@ -23,6 +24,15 @@ type Props = {
   initialPosts: BlogPost[]
 }
 
+const categories: Array<{ value: BlogCategory | 'ALL'; label: string }> = [
+  { value: 'ALL', label: 'All' },
+  { value: BlogCategory.TRADING_TIPS, label: 'Trading Tips' },
+  { value: BlogCategory.MARKET_ANALYSIS, label: 'Market Analysis' },
+  { value: BlogCategory.PSYCHOLOGY, label: 'Psychology' },
+  { value: BlogCategory.RISK_MANAGEMENT, label: 'Risk Management' },
+  { value: BlogCategory.PLATFORM_UPDATES, label: 'Platform Updates' },
+]
+
 export function BlogList({ initialPosts }: Props) {
   const [selectedCategory, setSelectedCategory] = useState<BlogCategory | 'ALL'>('ALL')
   const [searchQuery, setSearchQuery] = useState('')
@@ -32,15 +42,6 @@ export function BlogList({ initialPosts }: Props) {
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase())
     return matchesCategory && matchesSearch
   })
-
-  const categories: Array<{ value: BlogCategory | 'ALL'; label: string }> = [
-    { value: 'ALL', label: 'All' },
-    { value: BlogCategory.TRADING_TIPS, label: 'Trading Tips' },
-    { value: BlogCategory.MARKET_ANALYSIS, label: 'Market Analysis' },
-    { value: BlogCategory.PSYCHOLOGY, label: 'Psychology' },
-    { value: BlogCategory.RISK_MANAGEMENT, label: 'Risk Management' },
-    { value: BlogCategory.PLATFORM_UPDATES, label: 'Platform Updates' },
-  ]
 
   return (
     <div className="space-y-6">
@@ -55,21 +56,24 @@ export function BlogList({ initialPosts }: Props) {
 
       <div className="flex flex-wrap gap-2">
         {categories.map((category) => (
-          <Button
+          <button
             key={category.value}
-            variant={selectedCategory === category.value ? 'default' : 'outline'}
-            size="sm"
             onClick={() => setSelectedCategory(category.value)}
-            className="rounded-xl"
+            className={cn(
+              'rounded-full px-4 py-2 text-sm font-medium transition-colors',
+              selectedCategory === category.value
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
+            )}
           >
             {category.label}
-          </Button>
+          </button>
         ))}
       </div>
 
       {filteredPosts.length === 0 ? (
-        <div className="py-12 text-center">
-          <p className="text-muted-foreground">No blog posts found</p>
+        <div className="rounded-xl bg-muted/30 py-12 text-center">
+          <p className="text-sm text-muted-foreground">No blog posts found</p>
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

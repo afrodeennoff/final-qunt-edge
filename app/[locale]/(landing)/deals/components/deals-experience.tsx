@@ -73,16 +73,13 @@ const TABS: ReadonlyArray<{ id: string; label: string }> = [
 ]
 
 const DEALS_SPOTLIGHT_AUTO_SLIDE_MS = 5000
-const dealsPanelClassName =
-  'rounded-xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)]'
-const dealsInsetPanelClassName =
-  'rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)]'
-const dealsChipClassName =
-  'rounded-full border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-surface-2)]'
+const dealsPanelClassName = 'rounded-xl bg-card'
+const dealsInsetPanelClassName = 'rounded-xl bg-muted/40'
+const dealsChipClassName = 'rounded-full bg-muted/50'
 const dealsGhostButtonClassName =
-  'inline-flex items-center justify-center gap-2 rounded-full border border-[var(--qe-ref-card-border)] bg-transparent px-4 py-2.5 text-sm font-medium text-[var(--qe-ref-text-muted)] transition hover:border-[var(--qe-ref-green)]/40 hover:text-[var(--qe-ref-text)]'
+  'inline-flex items-center justify-center gap-2 rounded-full bg-muted/40 px-4 py-2.5 text-sm font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground'
 const dealsPrimaryButtonClassName =
-  'inline-flex items-center justify-center gap-2 rounded-full bg-[var(--qe-ref-green)] px-5 py-2.5 text-sm font-semibold text-black transition hover:opacity-90'
+  'inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90'
 
 const faqFallbackItems: ReadonlyArray<{ question: string; answer: string }> = [
   {
@@ -512,9 +509,9 @@ function DealsBoard({
             </section>
 
             {/* PropFirmPerk-style All Deals header */}
-            <div className="mb-4 flex items-end justify-between gap-4 border-b border-[var(--qe-ref-card-border)] pb-4">
+            <div className="mb-4 flex items-end justify-between gap-4 border-b pb-4">
               <div>
-                <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[var(--qe-ref-green)]">ALL PROP FIRM DEALS</div>
+                <div className="text-xs font-medium uppercase tracking-wider text-primary">ALL PROP FIRM DEALS</div>
                 <h2 className="text-2xl font-semibold tracking-tight mt-1">Compare challenge fees &amp; verified discounts</h2>
                 <p className="text-sm text-muted-foreground mt-1">See your true cost after promo. Click any firm for full rules.</p>
               </div>
@@ -865,7 +862,7 @@ function BiggestDealsCarousel({
                 <span
                   className={cn(
                     dealsChipClassName,
-                    'px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground',
+                    'px-3 py-1 text-xs font-medium uppercase tracking-wider text-muted-foreground',
                   )}
                 >
                   {activeDeal.category}
@@ -873,7 +870,7 @@ function BiggestDealsCarousel({
                 <span
                   className={cn(
                     dealsChipClassName,
-                    'px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground',
+                    'px-3 py-1 text-xs font-medium uppercase tracking-wider text-muted-foreground',
                   )}
                 >
                   {activeDeal.platform}
@@ -881,7 +878,7 @@ function BiggestDealsCarousel({
               </div>
 
               <div className="space-y-3">
-                <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Lead spotlight
                 </p>
                 <h3 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
@@ -896,7 +893,7 @@ function BiggestDealsCarousel({
               </div>
 
               <div className={cn(dealsInsetPanelClassName, 'p-4')}>
-                <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Coupon code
                 </p>
                 <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -1007,11 +1004,11 @@ function BackgroundDealTeaser({ deal, align }: { deal: DealItem; align: 'left' |
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className={cn(dealsInsetPanelClassName, 'p-3')}>
-            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Coupon</p>
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Coupon</p>
             <p className="mt-1 text-sm font-semibold text-foreground/70">{deal.couponCode}</p>
           </div>
           <div className={cn(dealsInsetPanelClassName, 'p-3')}>
-            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Fee</p>
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Fee</p>
             <p className="mt-1 text-sm font-semibold text-foreground/70">
               {formatPrice(deal.challengeFee)}
             </p>
@@ -1100,7 +1097,7 @@ function BrowseDealsSection({
     <section className={cn(dealsPanelClassName, 'overflow-hidden p-4 sm:p-6')}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Browse all live deals
           </p>
           <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground">
@@ -1144,7 +1141,7 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
       )}
     >
       <div className="space-y-4">
-        <div className="inline-flex items-center gap-2 rounded-full border border-transparent bg-primary/10 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+        <div className="inline-flex items-center gap-2 rounded-full border border-transparent bg-primary/10 px-4 py-2 text-xs font-medium uppercase tracking-wider text-primary">
           <Sparkles className="h-3.5 w-3.5 text-primary" />
           Verified prop firm discounts
         </div>
@@ -1157,13 +1154,13 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
         </p>
         <div className={cn(dealsInsetPanelClassName, 'grid gap-3 p-4 sm:grid-cols-3')}>
           <div className="space-y-1">
-            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               1. Scan the board
             </p>
             <p className="text-sm font-semibold text-foreground">Find live pricing fast</p>
           </div>
           <div className="space-y-1">
-            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               2. Validate fit
             </p>
             <p className="text-sm font-semibold text-foreground">
@@ -1171,7 +1168,7 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
             </p>
           </div>
           <div className="space-y-1">
-            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               3. Move with context
             </p>
             <p className="text-sm font-semibold text-foreground">Compare firms before you claim</p>
@@ -1214,7 +1211,7 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
           />
         </div>
         <div className={cn(dealsInsetPanelClassName, 'p-4 sm:p-6')}>
-          <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Board rhythm
           </p>
           <h2 className="mt-2 text-lg font-semibold text-foreground">
@@ -1342,7 +1339,7 @@ function DealsFilterPanel({
       </div>
 
       <div className={cn(dealsPanelClassName, 'overflow-hidden p-6')}>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Board snapshot
         </p>
         <div className="mt-4 space-y-3">
@@ -1412,7 +1409,7 @@ function DealsSection({
 }) {
   return (
     <section className={cn(dealsPanelClassName, 'overflow-hidden p-4 sm:p-6')}>
-      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
         {title}
       </p>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{description}</p>
@@ -1558,7 +1555,7 @@ function RadarRow({ label, value }: { label: string; value: string }) {
 function InsightCard({ label, value, helper }: { label: string; value: string; helper: string }) {
   return (
     <div className={cn(dealsPanelClassName, 'overflow-hidden p-6')}>
-      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
         {label}
       </p>
       <p className="mt-3 text-2xl font-bold tracking-tight text-foreground">{value}</p>
@@ -1659,18 +1656,18 @@ function DealRowCard({
   const daysLeft = getDaysLeft(deal.expiryDate)
 
   return (
-    <div className="group rounded-2xl border border-[var(--qe-ref-card-border)] bg-[var(--qe-ref-card)] overflow-hidden flex flex-col transition-all hover:border-[var(--qe-ref-green)]/30 hover:shadow-lg">
+    <div className="group rounded-xl bg-card overflow-hidden flex flex-col transition-all hover:border-primary/30 hover:shadow-lg">
       {/* Top bar: Firm + Discount */}
-      <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-[var(--qe-ref-card-border)]">
+      <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b">
         <div className="flex items-center gap-3 min-w-0">
           {deal.logoUrl ? (
             <img
               src={deal.logoUrl}
               alt={deal.firmName}
-              className="h-9 w-9 rounded-lg object-cover border border-[var(--qe-ref-card-border)]"
+              className="h-9 w-9 rounded-lg object-cover border"
             />
           ) : (
-            <div className="h-9 w-9 rounded-lg bg-[var(--qe-ref-surface-2)] flex items-center justify-center text-[10px] font-bold text-muted-foreground">
+            <div className="h-9 w-9 rounded-lg bg-muted/40 flex items-center justify-center text-[10px] font-bold text-muted-foreground">
               {deal.firmName.slice(0, 2).toUpperCase()}
             </div>
           )}
@@ -1685,7 +1682,7 @@ function DealRowCard({
         </div>
 
         <div className="text-right shrink-0">
-          <div className="inline-flex items-center rounded-full bg-[var(--qe-ref-green)]/10 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-[var(--qe-ref-green)]">
+          <div className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-primary">
             {deal.discountPercent}% OFF
           </div>
         </div>
@@ -1714,26 +1711,26 @@ function DealRowCard({
       </div>
 
       {/* True Cost highlight - the star of the card */}
-      <div className="mx-4 mb-3 rounded-xl bg-[var(--qe-ref-surface-2)] px-4 py-3 flex items-end justify-between">
+      <div className="mx-4 mb-3 rounded-xl bg-muted/40 px-4 py-3 flex items-end justify-between">
         <div>
-          <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Your true cost</div>
-          <div className="text-3xl font-semibold tabular-nums tracking-tighter text-[var(--qe-ref-green)] mt-0.5">
+          <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Your true cost</div>
+          <div className="text-3xl font-semibold tabular-nums tracking-tighter text-primary mt-0.5">
             ${trueCost}
           </div>
         </div>
         {savings > 0 && (
           <div className="text-right">
             <div className="text-[10px] text-muted-foreground">You save</div>
-            <div className="text-lg font-semibold tabular-nums text-[var(--qe-ref-green)]">+${savings}</div>
+            <div className="text-lg font-semibold tabular-nums text-primary">+${savings}</div>
           </div>
         )}
       </div>
 
       {/* Actions */}
-      <div className="mt-auto border-t border-[var(--qe-ref-card-border)] px-4 py-3 flex gap-2 bg-[var(--qe-ref-card)]">
+      <div className="mt-auto border-t px-4 py-3 flex gap-2 bg-card">
         <button
           onClick={() => onCopyCode(deal.couponCode)}
-          className="flex-1 rounded-xl border border-[var(--qe-ref-card-border)] py-2 text-sm font-medium hover:bg-[var(--qe-ref-surface-2)] transition"
+          className="flex-1 rounded-xl border py-2 text-sm font-medium hover:bg-muted/40 transition"
         >
           {copiedCode === deal.couponCode ? 'Copied ✓' : 'Copy code'}
         </button>
@@ -1743,14 +1740,14 @@ function DealRowCard({
             href={buyHref}
             target="_blank"
             rel="noreferrer"
-            className="flex-1 rounded-xl bg-[var(--qe-ref-green)] py-2 text-center text-sm font-semibold text-black hover:opacity-90 transition"
+            className="flex-1 rounded-xl bg-primary py-2 text-center text-sm font-semibold text-primary-foreground hover:opacity-90 transition"
           >
             Buy Now →
           </a>
         ) : (
           <Link
             href={buyHref}
-            className="flex-1 rounded-xl bg-[var(--qe-ref-green)] py-2 text-center text-sm font-semibold text-black hover:opacity-90 transition"
+            className="flex-1 rounded-xl bg-primary py-2 text-center text-sm font-semibold text-primary-foreground hover:opacity-90 transition"
           >
             Buy Now →
           </Link>
