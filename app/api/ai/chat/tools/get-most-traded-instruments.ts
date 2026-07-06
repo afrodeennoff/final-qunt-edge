@@ -5,7 +5,7 @@ import { z } from 'zod/v3';
 export function createGetMostTradedInstrumentsTool(userId?: string) {
   return tool({
     description: 'Get the most traded instruments',
-    inputSchema: z.object({}),
+    inputSchema: z.object({}).catch({}),
     execute: async () => {
       if (!userId) return { error: 'AI tool executed without explicit user context — cross-user data access prevented' };
       const resolvedUserId = userId;

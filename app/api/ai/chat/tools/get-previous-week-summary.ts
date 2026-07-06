@@ -41,7 +41,7 @@ function generateTradeSummary(trades: AnalyticsTrade[]): TradeSummary[] {
 export function createGetPreviousWeekSummaryTool(userId?: string) {
   return tool({
     description: 'Get trades summary for the previous week (Monday to Sunday of last week). This automatically calculates the previous week boundaries.',
-    inputSchema: z.object({}),
+    inputSchema: z.object({}).catch({}),
     execute: async () => {
       if (!userId) {
         return { error: 'AI tool executed without explicit userId — cross-user access prevented' };

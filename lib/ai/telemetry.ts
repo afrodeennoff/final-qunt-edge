@@ -1,14 +1,33 @@
 import { randomUUID } from "crypto";
-import { prisma } from "@/lib/prisma";
+import pg from "pg";
 import { isTimeoutError } from "@/lib/ai/timeout";
 
-function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
-  return Promise.race([
-    promise,
-    new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error(`Telemetry ${label} timed out after ${ms}ms`)), ms)
-    ),
-  ]);
+let telemetryPool: pg.Pool | null = null;
+function getTelemetryPool(): pg.Pool | null {
+  if (telemetryPool) return telemetryPool;
+  const connStr = process.env.DIRECT_URL || process.env.DATABASE_URL || "";
+  if (!connStr) return null;
+  telemetryPool = new pg.Pool({
+    connectionString: connStr,
+    max: 1,
+    min: 0,
+    idleTimeoutMillis: 5000,
+    connectionTimeoutMillis: 3000,
+  });
+  return telemetryPool;
+}
+
+async function telemetryQuery(query: string, params: unknown[]): Promise<void> {
+  const pool = getTelemetryPool();
+  if (!pool) {
+    console.warn("[AI Telemetry] No database connection configured for telemetry");
+    return;
+  }
+  try {
+    await pool.query(query, params);
+  } catch (error) {
+    console.error("[AI Telemetry] Failed to persist telemetry", error);
+  }
 }
 
 export type AiErrorCategory =
@@ -134,22 +153,11 @@ async function recordDeterministicBudgetUsage(input: AiRequestLogInput): Promise
     return;
   }
 
-  try {
-    await withTimeout(
-      prisma.aiUsageLedger.create({
-        data: {
-          userId: input.userId,
-          route: input.route,
-          feature: input.feature,
-          totalTokens,
-        },
-      }),
-      2000,
-      "AiusageLedger.create",
-    );
-  } catch (error) {
-    console.error("[AI Telemetry] Failed to persist deterministic AI usage", error);
-  }
+  await telemetryQuery(
+    `INSERT INTO "public"."AiUsageLedger" ("id","userId","route","feature","totalTokens","createdAt")
+     VALUES ($1,$2,$3,$4,$5,$6)`,
+    [randomUUID(), input.userId, input.route, input.feature, totalTokens, new Date()],
+  );
 }
 
 export async function logAiRequest(input: AiRequestLogInput): Promise<void> {
@@ -160,55 +168,34 @@ export async function logAiRequest(input: AiRequestLogInput): Promise<void> {
     return;
   }
 
-  try {
-    await withTimeout(
-      prisma.$executeRaw`
-        INSERT INTO "public"."AiRequestLog" (
-          "id",
-          "userId",
-          "route",
-          "feature",
-          "model",
-          "provider",
-          "promptTokens",
-          "completionTokens",
-          "totalTokens",
-          "latencyMs",
-          "toolCallsCount",
-          "finishReason",
-          "success",
-          "errorCategory",
-          "errorCode",
-          "createdAt",
-          "budgetLimit",
-          "budgetUsed",
-          "budgetRemaining"
-        ) VALUES (
-          ${randomUUID()},
-          ${input.userId ?? null},
-          ${input.route},
-          ${input.feature},
-          ${input.model},
-          ${input.provider},
-          ${input.usage?.promptTokens ?? null},
-          ${input.usage?.completionTokens ?? null},
-          ${input.usage?.totalTokens ?? null},
-          ${Math.round(input.latencyMs)},
-          ${input.toolCallsCount ?? 0},
-          ${input.finishReason ?? null},
-          ${input.success},
-          ${input.errorCategory ?? null},
-          ${input.errorCode ?? null},
-          ${new Date()},
-          ${input.budgetMetadata?.budgetLimit ?? null},
-          ${input.budgetMetadata?.budgetUsed ?? null},
-          ${input.budgetMetadata?.budgetRemaining ?? null}
-        )
-      `,
-      2000,
-      "AiRequestLog.insert",
-    );
-  } catch (error) {
-    console.error("[AI Telemetry] Failed to persist AI log", error);
-  }
+  await telemetryQuery(
+    `INSERT INTO "public"."AiRequestLog" (
+      "id","userId","route","feature","model","provider",
+      "promptTokens","completionTokens","totalTokens",
+      "latencyMs","toolCallsCount","finishReason",
+      "success","errorCategory","errorCode",
+      "createdAt","budgetLimit","budgetUsed","budgetRemaining"
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)`,
+    [
+      randomUUID(),
+      input.userId ?? null,
+      input.route,
+      input.feature,
+      input.model,
+      input.provider,
+      input.usage?.promptTokens ?? null,
+      input.usage?.completionTokens ?? null,
+      input.usage?.totalTokens ?? null,
+      Math.round(input.latencyMs),
+      input.toolCallsCount ?? 0,
+      input.finishReason ?? null,
+      input.success,
+      input.errorCategory ?? null,
+      input.errorCode ?? null,
+      new Date(),
+      input.budgetMetadata?.budgetLimit ?? null,
+      input.budgetMetadata?.budgetUsed ?? null,
+      input.budgetMetadata?.budgetRemaining ?? null,
+    ],
+  );
 }

@@ -41,7 +41,7 @@ function generateTradeSummary(trades: AnalyticsTrade[]): TradeSummary[] {
 export function createGetCurrentWeekSummaryTool(userId?: string) {
   return tool({
     description: 'Get trades summary for the current week (Monday to Sunday). This automatically calculates the current week boundaries.',
-    inputSchema: z.object({}),
+    inputSchema: z.object({}).catch({}),
     execute: async () => {
         const now = new Date();
         const currentWeekStart = startOfWeek(now, { weekStartsOn: 1 });

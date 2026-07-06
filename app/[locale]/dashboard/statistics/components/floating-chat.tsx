@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, useMemo } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai'
 import { MessageSquare, X, Send, Loader2, AlertCircle } from 'lucide-react'
@@ -112,7 +112,7 @@ export function FloatingChat() {
             </div>
           )
         })}
-        {isBusy && messages[messages.length - 1]?.role === 'assistant' && (
+        {isBusy && (
           <div className="flex justify-start">
             <div className="rounded-xl bg-muted px-3.5 py-2">
               <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />

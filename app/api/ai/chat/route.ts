@@ -38,12 +38,7 @@ const chatMessageSchema = z.object({
   role: z.string(),
   id: z.string().optional(),
   content: z.unknown().optional(),
-  parts: z.array(
-    z.object({
-      type: z.string().optional(),
-      text: z.string().optional(),
-    }),
-  ).optional(),
+  parts: z.any().optional(),
   text: z.string().optional(),
   toolInvocations: z.unknown().optional(),
 }).passthrough()

@@ -41,7 +41,7 @@ function generateTradeSummary(trades: AnalyticsTrade[]): TradeSummary[] {
 export function createGetCurrentDayDataTool(userId?: string) {
   return tool({
     description: 'Get trades database for the current day.',
-    inputSchema: z.object({}),
+    inputSchema: z.object({}).catch({}),
     execute: async () => {
         if (!userId) return { error: 'AI editor tool executed without explicit user context — cross-user data access prevented' };
         const resolvedUserId = userId;
