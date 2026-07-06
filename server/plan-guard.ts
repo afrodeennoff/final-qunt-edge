@@ -1,17 +1,7 @@
 'use server'
 
 import { getDatabaseUserId } from './auth'
-import { getUserPlan, hasFeature } from './plans'
-
-export class PlanGateError extends Error {
-  constructor(
-    public feature: string,
-    public plan: string | null,
-  ) {
-    super(`Feature "${feature}" requires a Pro subscription`)
-    this.name = 'PlanGateError'
-  }
-}
+import { getUserPlan, hasFeature, PlanGateError } from './plans'
 
 export async function requireFeature(feature: string): Promise<{ userId: string; plan: string | null }> {
   const userId = await getDatabaseUserId()

@@ -1,5 +1,15 @@
 import { prisma } from '@/lib/prisma'
 
+export class PlanGateError extends Error {
+  constructor(
+    public feature: string,
+    public plan: string | null,
+  ) {
+    super(`Feature "${feature}" requires a Pro subscription`)
+    this.name = 'PlanGateError'
+  }
+}
+
 export const Feature = {
   BASIC_ANALYTICS: 'basic_analytics',
   EQUITY_CURVE: 'equity_curve',
