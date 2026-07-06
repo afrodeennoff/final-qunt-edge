@@ -4,9 +4,10 @@ import { useRef, useState, useMemo, useEffect, useCallback } from 'react'
 import { computeStatistics, type ComputableTrade } from '@/lib/compute-statistics'
 import { StatsTable, type StatsTableRow } from './stats-table'
 import type { SetupStat, WeekdayStat, TickerStat } from '../types'
+import { FloatingChat } from './floating-chat'
 import { useUserStore } from '@/store/user-store'
 import { cn } from '@/lib/utils'
-import { ChevronDown, X, Wallet, Download, Eye, EyeOff, Award, Target } from 'lucide-react'
+import { ChevronDown, X, Wallet, Download, Eye, EyeOff, Award, Target, Sparkles, Loader2 } from 'lucide-react'
 import { useDashboardStats } from '@/context/data-provider'
 import { getJournalTradesAction } from '@/server/journal'
 import {
@@ -302,9 +303,155 @@ export default function StatisticsClient() {
           ))}
         </div>
         <div className="rounded-2xl bg-card p-5 h-32 animate-pulse" />
-      </div>
-    )
+    </div>
+  )
+}
+
+function parseBold(text: string): (string | { bold: string })[] {
+  const parts: (string | { bold: string })[] = []
+  const regex = /\*\*(.+?)\*\*/g
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index))
+    parts.push({ bold: match[1] })
+    lastIndex = match.index + match[0].length
   }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex))
+  return parts
+}
+
+function AiInsightSection({ metrics }: { metrics: Record<string, unknown> }) {
+  const [insight, setInsight] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [expanded, setExpanded] = useState(false)
+  const [error, setError] = useState('')
+  const abortRef = useRef<AbortController | null>(null)
+
+  const hasMetrics = (metrics?.grandTotal as number) > 0
+
+  async function generate() {
+    if (loading) return
+    setLoading(true)
+    setInsight('')
+    setError('')
+    setExpanded(true)
+
+    const payload = {
+      metrics: {
+        grandTotal: metrics.grandTotal ?? 0,
+        grandWinRate: metrics.grandWinRate ?? 0,
+        grandPnl: metrics.grandPnl ?? 0,
+        profitFactor: metrics.profitFactor ?? 0,
+        avgRR: metrics.avgRR ?? 0,
+        avgWin: metrics.avgWin ?? 0,
+        avgLoss: metrics.avgLoss ?? 0,
+        maxConsecWins: metrics.maxConsecWins ?? 0,
+        maxConsecLosses: metrics.maxConsecLosses ?? 0,
+        grossProfit: metrics.grossProfit ?? 0,
+        grossLoss: metrics.grossLoss ?? 0,
+        expectancy: metrics.expectancy ?? 0,
+        bestDay: metrics.bestDay ?? 0,
+        worstDay: metrics.worstDay ?? 0,
+      },
+    }
+
+    try {
+      abortRef.current = new AbortController()
+      const res = await fetch('/api/ai/statistics-insight', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: abortRef.current.signal,
+      })
+
+      if (!res.ok) {
+        const errText = await res.text().catch(() => '')
+        throw new Error(errText || `Status ${res.status}`)
+      }
+
+      const reader = res.body?.getReader()
+      if (!reader) throw new Error('No response body')
+
+      const decoder = new TextDecoder()
+      let buffer = ''
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        setInsight(buffer)
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') return
+      setError('AI analysis failed. Please try again.')
+    } finally {
+      setLoading(false)
+      abortRef.current = null
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      abortRef.current?.abort()
+    }
+  }, [])
+
+  return (
+    <div className="mt-4 rounded-lg bg-muted/15 p-4">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">AI Mentor Analysis</span>
+        </div>
+        <button
+          onClick={generate}
+          disabled={loading || !hasMetrics}
+          className="flex items-center gap-1.5 rounded-md bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20 disabled:opacity-40 transition-colors"
+        >
+          {loading ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            <Sparkles className="h-3.5 w-3.5" />
+          )}
+          {loading ? 'Analyzing...' : 'Generate AI Insight'}
+        </button>
+      </div>
+
+      {!hasMetrics && !expanded && (
+        <p className="text-sm text-muted-foreground/60">Add trades to unlock AI-powered analysis of your performance.</p>
+      )}
+
+      {error && (
+        <div className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div>
+      )}
+
+      {insight && (
+        <div className="space-y-1.5 text-sm leading-relaxed text-foreground/85">
+          {insight.split('\n').filter(Boolean).map((line, i) => {
+            if (line.startsWith('- ') || line.startsWith('* ')) {
+              const content = line.slice(2)
+              return (
+                <div key={i} className="flex items-start gap-2">
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary/60" />
+                  <span>{parseBold(content).map((part, j) => typeof part === 'string' ? part : <strong key={j} className="text-foreground font-semibold">{part.bold}</strong>)}</span>
+                </div>
+              )
+            }
+            if (/^\d+\./.test(line)) {
+              return (
+                <div key={i} className="flex items-start gap-2">
+                  <span className="mt-0.5 text-xs font-semibold text-primary/70 shrink-0">{line.match(/^\d+/)?.[0]}.</span>
+                  <span>{parseBold(line.replace(/^\d+\.\s*/, '')).map((part, j) => typeof part === 'string' ? part : <strong key={j} className="text-foreground font-semibold">{part.bold}</strong>)}</span>
+                </div>
+              )
+            }
+            return <p key={i}>{parseBold(line).map((part, j) => typeof part === 'string' ? part : <strong key={j} className="text-foreground font-semibold">{part.bold}</strong>)}</p>
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
 
   if (!data || (data.grandTotal ?? 0) === 0) {
     return <div className="p-6 text-muted-foreground text-sm">No trades found for the selected period/account.</div>
@@ -617,6 +764,10 @@ export default function StatisticsClient() {
             </ol>
           </div>
         </div>
+
+        {/* AI Mentor Analysis */}
+        <AiInsightSection metrics={data} />
+
       </div>
 
       <div>
@@ -865,6 +1016,7 @@ export default function StatisticsClient() {
           </div>
         </div>
       )}
+      <FloatingChat />
     </div>
   )
 }
