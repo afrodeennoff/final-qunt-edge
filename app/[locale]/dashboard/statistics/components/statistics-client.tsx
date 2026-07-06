@@ -429,47 +429,47 @@ export default function StatisticsClient() {
       </div>
 
       {/* Mentor Insight */}
-      <div className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
-        <div className="flex items-center gap-2 mb-4">
-          <Award className="h-4 w-4 text-primary" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/50">Mentor Insight</span>
+      <div className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-7')}>
+        <div className="flex items-center gap-2 mb-5">
+          <Award className="h-5 w-5 text-primary" />
+          <span className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground/60">Mentor Insight</span>
         </div>
 
         {/* Score Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-          <div className="rounded-lg bg-muted/20 p-2.5 text-center">
-            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Win Rate</div>
-            <div className={cn('text-sm font-bold', (data.grandWinRate ?? 0) >= 50 ? 'text-success' : (data.grandWinRate ?? 0) >= 35 ? 'text-warning' : 'text-destructive')}>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+          <div className="rounded-lg bg-muted/20 p-4 text-center">
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Win Rate</div>
+            <div className={cn('text-xl font-bold', (data.grandWinRate ?? 0) >= 50 ? 'text-success' : (data.grandWinRate ?? 0) >= 35 ? 'text-warning' : 'text-destructive')}>
               {(data.grandWinRate ?? 0).toFixed(1)}%
             </div>
           </div>
-          <div className="rounded-lg bg-muted/20 p-2.5 text-center">
-            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Profit Factor</div>
-            <div className={cn('text-sm font-bold', (data.profitFactor ?? 0) >= 1.5 ? 'text-success' : (data.profitFactor ?? 0) >= 1 ? 'text-warning' : 'text-destructive')}>
+          <div className="rounded-lg bg-muted/20 p-4 text-center">
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Profit Factor</div>
+            <div className={cn('text-xl font-bold', (data.profitFactor ?? 0) >= 1.5 ? 'text-success' : (data.profitFactor ?? 0) >= 1 ? 'text-warning' : 'text-destructive')}>
               {(data.profitFactor ?? 0).toFixed(2)}
             </div>
           </div>
-          <div className="rounded-lg bg-muted/20 p-2.5 text-center">
-            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Avg R</div>
-            <div className={cn('text-sm font-bold', (data.avgRR ?? 0) >= 1.5 ? 'text-success' : (data.avgRR ?? 0) >= 0.5 ? 'text-warning' : 'text-muted-foreground/60')}>
+          <div className="rounded-lg bg-muted/20 p-4 text-center">
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Avg R</div>
+            <div className={cn('text-xl font-bold', (data.avgRR ?? 0) >= 1.5 ? 'text-success' : (data.avgRR ?? 0) >= 0.5 ? 'text-warning' : 'text-muted-foreground/80')}>
               {(data.avgRR ?? 0).toFixed(2)}R
             </div>
           </div>
-          <div className="rounded-lg bg-muted/20 p-2.5 text-center">
-            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Consistency</div>
-            <div className="text-sm font-bold flex items-center justify-center gap-1">
+          <div className="rounded-lg bg-muted/20 p-4 text-center">
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Consistency</div>
+            <div className="text-xl font-bold flex items-center justify-center gap-1.5">
               <span className="text-success">{(data.maxConsecWins ?? 0)}W</span>
-              <span className="text-muted-foreground/30">/</span>
+              <span className="text-muted-foreground/40">/</span>
               <span className="text-destructive">{(data.maxConsecLosses ?? 0)}L</span>
             </div>
           </div>
         </div>
 
         {/* Psychology & Behavior Analysis */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-          <div className="rounded-lg bg-muted/15 p-3">
-            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60 mb-1.5">Psychology Analysis</div>
-            <div className="space-y-1.5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+          <div className="rounded-lg bg-muted/15 p-4">
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-2">Psychology Analysis</div>
+            <div className="space-y-2">
               {(() => {
                 const wr = data.grandWinRate ?? 0
                 const cl = data.maxConsecLosses ?? 0
@@ -484,17 +484,17 @@ export default function StatisticsClient() {
                 if (data.grandPnl < 0 && data.avgWin > Math.abs(data.avgLoss) * 2) items.push({ text: 'Good entries but small losers accumulate — tighten entry filters', severity: 'high' })
                 if (!items.length) items.push({ text: 'Balanced psychology — no extreme patterns detected', severity: 'neutral' })
                 return items.slice(0, 4).map((item, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <span className={cn('w-1.5 h-1.5 rounded-full mt-[5px] shrink-0', item.severity === 'high' ? 'bg-destructive' : item.severity === 'medium' ? 'bg-warning' : item.severity === 'low' ? 'bg-success' : 'bg-muted-foreground/30')} />
-                    <span className="text-[11px] text-foreground/80 leading-relaxed">{item.text}</span>
+                  <div key={i} className="flex items-start gap-2.5">
+                    <span className={cn('w-2 h-2 rounded-full mt-1 shrink-0', item.severity === 'high' ? 'bg-destructive' : item.severity === 'medium' ? 'bg-warning' : item.severity === 'low' ? 'bg-success' : 'bg-muted-foreground/30')} />
+                    <span className="text-sm text-foreground/85 leading-relaxed">{item.text}</span>
                   </div>
                 ))
               })()}
             </div>
           </div>
-          <div className="rounded-lg bg-muted/15 p-3">
-            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60 mb-1.5">Pattern Analysis</div>
-            <div className="space-y-1.5">
+          <div className="rounded-lg bg-muted/15 p-4">
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-2">Pattern Analysis</div>
+            <div className="space-y-2">
               {(() => {
                 const items: { text: string; severity?: 'high' | 'medium' | 'low' }[] = []
                 if (data.grandTotal > 0) {
@@ -518,17 +518,17 @@ export default function StatisticsClient() {
                 }
                 if (!items.length) items.push({ text: 'Not enough trade data for pattern analysis', severity: 'low' })
                 return items.map((item, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <span className={cn('w-1.5 h-1.5 rounded-full mt-[5px] shrink-0', !item.severity || item.severity === 'low' ? 'bg-success' : item.severity === 'medium' ? 'bg-warning' : 'bg-destructive')} />
-                    <span className="text-[11px] text-foreground/80 leading-relaxed">{item.text}</span>
+                  <div key={i} className="flex items-start gap-2.5">
+                    <span className={cn('w-2 h-2 rounded-full mt-1 shrink-0', !item.severity || item.severity === 'low' ? 'bg-success' : item.severity === 'medium' ? 'bg-warning' : 'bg-destructive')} />
+                    <span className="text-sm text-foreground/85 leading-relaxed">{item.text}</span>
                   </div>
                 ))
               })()}
             </div>
           </div>
-          <div className="rounded-lg bg-muted/15 p-3">
-            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60 mb-1.5">Key Areas to Improve</div>
-            <div className="space-y-1.5">
+          <div className="rounded-lg bg-muted/15 p-4">
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-2">Key Areas to Improve</div>
+            <div className="space-y-2">
               {(() => {
                 const items: { label: string; severity: 'high' | 'medium' | 'low' }[] = []
                 if ((data.grandWinRate ?? 0) < 40) items.push({ label: 'Entry quality — improve setup filtering', severity: 'high' })
@@ -543,12 +543,12 @@ export default function StatisticsClient() {
                 if (data.expectancy < 0) items.push({ label: `Negative expectancy (${formatPnl(data.expectancy)}) — review strategy viability`, severity: 'high' })
                 if (!items.length) items.push({ label: 'All metrics healthy. Maintain current approach.', severity: 'low' })
                 return items.slice(0, 5).map((item, i) => (
-                  <div key={i} className="flex items-center gap-2">
+                  <div key={i} className="flex items-center gap-2.5">
                     <span className={cn(
-                      'w-1.5 h-1.5 rounded-full shrink-0',
+                      'w-2 h-2 rounded-full shrink-0',
                       item.severity === 'high' ? 'bg-destructive' : item.severity === 'medium' ? 'bg-warning' : 'bg-success'
                     )} />
-                    <span className="text-[11px] text-foreground/80">{item.label}</span>
+                    <span className="text-sm text-foreground/85">{item.label}</span>
                   </div>
                 ))
               })()}
@@ -557,9 +557,9 @@ export default function StatisticsClient() {
         </div>
 
         {/* Insight Narrative */}
-        <div className="rounded-lg bg-muted/15 p-3.5 mb-3">
-          <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60 mb-2">Insight</div>
-          <p className="text-sm leading-relaxed text-foreground/85">
+        <div className="rounded-lg bg-muted/15 p-4 mb-4">
+          <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-2">Insight</div>
+          <p className="text-sm leading-relaxed text-foreground/90">
             {(data.grandTotal ?? 0) === 0 ? 'Start trading to generate personalized insights.' :
               (data.grandWinRate ?? 0) < 35 && (data.grandPnl ?? 0) < 0 ?
                 `High loss rate (${(data.grandWinRate ?? 0).toFixed(0)}%) with negative PnL of ${formatPnl(data.grandPnl)}. Avg win is ${formatPnl(data.avgWin)} vs avg loss of ${formatPnl(data.avgLoss)}. ${data.maxConsecLosses >= 3 ? `A ${data.maxConsecLosses}-loss streak indicates potential tilt. ` : ''}Reduce position size by 50% and focus on getting win rate above 40% before scaling.` :
@@ -577,41 +577,41 @@ export default function StatisticsClient() {
         </div>
 
         {/* Actionable Recommendation */}
-        <div className="flex items-start gap-2.5 rounded-lg bg-muted/20 p-3">
-          <Target className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 rounded-lg bg-muted/20 p-4">
+          <Target className="h-5 w-5 text-primary shrink-0 mt-0.5" />
           <div className="min-w-0 flex-1">
-            <div className="text-[10px] font-bold uppercase tracking-[0.1em] text-foreground/70 mb-1">Action Plan</div>
-            <ol className="list-decimal space-y-1 pl-[1px]">
-              {(data.grandTotal ?? 0) === 0 ? <li className="text-[12px] text-muted-foreground">No data to analyze yet.</li> :
+            <div className="text-xs font-bold uppercase tracking-[0.1em] text-foreground/80 mb-2">Action Plan</div>
+            <ol className="list-decimal space-y-1.5 pl-4">
+              {(data.grandTotal ?? 0) === 0 ? <li className="text-sm text-foreground/80">No data to analyze yet.</li> :
                 (data.grandWinRate ?? 0) < 35 && (data.grandPnl ?? 0) < 0 ? <>
-                  <li className="text-[12px] text-muted-foreground">Cut position size by 50% immediately</li>
-                  <li className="text-[12px] text-muted-foreground">Set daily loss limit of {formatPnl(Math.abs(data.avgLoss) * 2)}</li>
-                  <li className="text-[12px] text-muted-foreground">Log every loss with a reason tag</li>
-                  <li className="text-[12px] text-muted-foreground">Focus on one setup type until win rate exceeds 40%</li>
-                  <li className="text-[12px] text-muted-foreground">Review after 20 trades</li>
+                  <li className="text-sm text-foreground/85">Cut position size by 50% immediately</li>
+                  <li className="text-sm text-foreground/85">Set daily loss limit of {formatPnl(Math.abs(data.avgLoss) * 2)}</li>
+                  <li className="text-sm text-foreground/85">Log every loss with a reason tag</li>
+                  <li className="text-sm text-foreground/85">Focus on one setup type until win rate exceeds 40%</li>
+                  <li className="text-sm text-foreground/85">Review after 20 trades</li>
                 </> :
                 (data.maxConsecLosses ?? 0) > 5 ? <>
-                  <li className="text-[12px] text-muted-foreground">Pause live trading for 24-48 hours</li>
-                  <li className="text-[12px] text-muted-foreground">Review the last {data.maxConsecLosses} losses for common factors (time, instrument, pattern)</li>
-                  <li className="text-[12px] text-muted-foreground">Return at 25% normal size</li>
-                  <li className="text-[12px] text-muted-foreground">Set a hard stop after 3 consecutive losses</li>
+                  <li className="text-sm text-foreground/85">Pause live trading for 24-48 hours</li>
+                  <li className="text-sm text-foreground/85">Review the last {data.maxConsecLosses} losses for common factors (time, instrument, pattern)</li>
+                  <li className="text-sm text-foreground/85">Return at 25% normal size</li>
+                  <li className="text-sm text-foreground/85">Set a hard stop after 3 consecutive losses</li>
                 </> :
                 (data.grandPnl ?? 0) > 0 && (data.avgRR ?? 0) > 1.5 ? <>
-                  <li className="text-[12px] text-muted-foreground">Track win rate by setup configuration</li>
-                  <li className="text-[12px] text-muted-foreground">Increase size 10% on top-performing setups</li>
-                  <li className="text-[12px] text-muted-foreground">Maintain current risk parameters</li>
-                  <li className="text-[12px] text-muted-foreground">Review monthly for strategy drift</li>
+                  <li className="text-sm text-foreground/85">Track win rate by setup configuration</li>
+                  <li className="text-sm text-foreground/85">Increase size 10% on top-performing setups</li>
+                  <li className="text-sm text-foreground/85">Maintain current risk parameters</li>
+                  <li className="text-sm text-foreground/85">Review monthly for strategy drift</li>
                 </> :
                 (data.grandPnl ?? 0) > 0 ? <>
-                  <li className="text-[12px] text-muted-foreground">Focus on exit timing — aim for avg R above 1.0</li>
-                  <li className="text-[12px] text-muted-foreground">Let winners run to at least 1.5x your avg loss ({formatPnl(data.avgWin)} target vs {formatPnl(Math.abs(data.avgLoss))} avg loss)</li>
-                  <li className="text-[12px] text-muted-foreground">Review 10 best and 10 worst trades for patterns</li>
+                  <li className="text-sm text-foreground/85">Focus on exit timing — aim for avg R above 1.0</li>
+                  <li className="text-sm text-foreground/85">Let winners run to at least 1.5x your avg loss ({formatPnl(data.avgWin)} target vs {formatPnl(Math.abs(data.avgLoss))} avg loss)</li>
+                  <li className="text-sm text-foreground/85">Review 10 best and 10 worst trades for patterns</li>
                 </> : <>
-                  <li className="text-[12px] text-muted-foreground">Reduce to micro size immediately</li>
-                  <li className="text-[12px] text-muted-foreground">Implement a pre-trade checklist (3 confirmations required)</li>
-                  <li className="text-[12px] text-muted-foreground">Set a weekly loss limit</li>
-                  <li className="text-[12px] text-muted-foreground">Master one setup until profitable over 20 trades</li>
-                  <li className="text-[12px] text-muted-foreground">Join a trading community for accountability</li>
+                  <li className="text-sm text-foreground/85">Reduce to micro size immediately</li>
+                  <li className="text-sm text-foreground/85">Implement a pre-trade checklist (3 confirmations required)</li>
+                  <li className="text-sm text-foreground/85">Set a weekly loss limit</li>
+                  <li className="text-sm text-foreground/85">Master one setup until profitable over 20 trades</li>
+                  <li className="text-sm text-foreground/85">Join a trading community for accountability</li>
                 </>
               }
             </ol>
